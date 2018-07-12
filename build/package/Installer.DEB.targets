@@ -125,12 +125,7 @@
       <TestSdkDebTaskEnvironmentVariables Include="PreviousStageProps=$(NextStagePropsPath)" />
 
       <!-- Consumed By Publish -->
-      <!-- 
-      https://github.com/dotnet/core-sdk/issues/27
-      
-      Add the following line back once the aspnetcore base runtime version file is fixed:
       <GeneratedInstallers Include="$(SdkInstallerFile)" />
-   -->
     </ItemGroup>
   </Target>
 </Project>
