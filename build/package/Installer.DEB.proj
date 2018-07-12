@@ -19,6 +19,9 @@
       <AspNetSimpleVersion>$(AspNetCoreSharedFxBaseRuntimeVersion)</AspNetSimpleVersion>
       <AspNetSimpleVersion Condition=" '$(AspNetVersionPrereleaseSeparator)' != -1 ">$(AspNetCoreSharedFxBaseRuntimeVersion.Substring(0, $(AspNetVersionPrereleaseSeparator)))</AspNetSimpleVersion>
 
+      <AspNetVersionPatchreleaseSeparator>$(AspNetSimpleVersion.LastIndexOf('.'))</AspNetVersionPatchreleaseSeparator>
+      <AspNetSimpleVersion Condition=" '$(AspNetVersionPatchreleaseSeparator)' != -1 ">$(AspNetSimpleVersion.Substring(0, $(AspNetVersionPatchreleaseSeparator)))</AspNetSimpleVersion>
+      
       <!-- dotnet-runtime package may not currently be available -->
       <InstallAspNetCoreSharedFxArgs>--ignore-depends=dotnet-runtime-$(AspNetSimpleVersion)</InstallAspNetCoreSharedFxArgs>
     </PropertyGroup>
