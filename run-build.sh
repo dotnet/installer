@@ -49,7 +49,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 REPOROOT="$DIR"
-
+CONFIGURATION="debug"
 ARCHITECTURE="x64"
 STAGE0_SOURCE_DIR=
 
@@ -69,7 +69,7 @@ while [[ $# > 0 ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
         -c|--configuration)
-            export CONFIGURATION=$2
+            CONFIGURATION=$2
             shift
             ;;
         --nopackage)
@@ -124,6 +124,8 @@ while [[ $# > 0 ]]; do
 
     shift
 done
+
+export CONFIGURATION=$CONFIGURATION
 
 # The first 'pass' call to "dotnet msbuild build.proj" has a hard-coded "WriteDynamicPropsToStaticPropsFiles" target
 #    therefore, this call should not have other targets defined. Remove all targets passed in as 'extra parameters'.
@@ -190,7 +192,7 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 if [ $BUILD -eq 1 ]; then
     dotnet msbuild build.proj /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles ${argsnotargets[@]}
-    dotnet msbuild build.proj /m /v:normal /fl /flp:v=diag /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args
+    dotnet msbuild build.proj /m /v:normal /fl /flp:v=diag /bl /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args
 else
     echo "Not building due to --nobuild"
     echo "Command that would be run is: 'dotnet msbuild build.proj /m /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args'"
