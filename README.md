@@ -73,7 +73,7 @@ To download the .NET Core runtime **without** the SDK, visit https://github.com/
 | **Linux arm64** | [![][linux-arm64-badge-master]][linux-arm64-version-master]<br>[tar.gz][linux-arm64-targz-master] - [Checksum][linux-arm64-targz-checksum-master] | N/A | [![][linux-arm64-badge-2.1.401]][linux-arm64-version-2.1.401]<br>[tar.gz][linux-arm64-targz-2.1.401] - [Checksum][linux-arm64-targz-checksum-2.1.401] | [![][linux-arm64-badge-2.1.4XX]][linux-arm64-version-2.1.4XX]<br>[tar.gz][linux-arm64-targz-2.1.4XX] - [Checksum][linux-arm64-targz-checksum-2.1.4XX] | [![][linux-arm64-badge-2.2.1XX]][linux-arm64-version-2.2.1XX]<br>[tar.gz][linux-arm64-targz-2.2.1XX] - [Checksum][linux-arm64-targz-checksum-2.2.1XX] |
 | **RHEL 6** | [![][rhel-6-badge-master]][rhel-6-version-master]<br>[tar.gz][rhel-6-targz-master] - [Checksum][rhel-6-targz-checksum-master] | N/A | [![][rhel-6-badge-2.1.401]][rhel-6-version-2.1.401]<br>[tar.gz][rhel-6-targz-2.1.401] - [Checksum][rhel-6-targz-checksum-2.1.401] | [![][rhel-6-badge-2.1.4XX]][rhel-6-version-2.1.4XX]<br>[tar.gz][rhel-6-targz-2.1.4XX] - [Checksum][rhel-6-targz-checksum-2.1.4XX] | [![][rhel-6-badge-2.2.1XX]][rhel-6-version-2.2.1XX]<br>[tar.gz][rhel-6-targz-2.2.1XX] - [Checksum][rhel-6-targz-checksum-2.2.1XX] |
 | **Linux-musl** | [![][linux-musl-badge-master]][linux-musl-version-master]<br>[tar.gz][linux-musl-targz-master] - [Checksum][linux-musl-targz-checksum-master] | N/A | [![][linux-musl-badge-2.1.401]][linux-musl-version-2.1.401]<br>[tar.gz][linux-musl-targz-2.1.401] - [Checksum][linux-musl-targz-checksum-2.1.401] | [![][linux-musl-badge-2.1.4XX]][linux-musl-version-2.1.4XX]<br>[tar.gz][linux-musl-targz-2.1.4XX] - [Checksum][linux-musl-targz-checksum-2.1.4XX] | [![][linux-musl-badge-2.2.1XX]][linux-musl-version-2.2.1XX]<br>[tar.gz][linux-musl-targz-2.2.1XX] - [Checksum][linux-musl-targz-checksum-2.2.1XX] |
-| **Package Feed** | https://dotnet.myget.org/F/dotnet-core/api/v3/index.json | https://dotnet.myget.org/F/dotnet-core/api/v3/index.json | https://dotnet.myget.org/F/dotnet-core/api/v3/index.json | https://dotnet.myget.org/F/dotnet-core/api/v3/index.json | https://dotnet.myget.org/F/dotnet-core/api/v3/index.json |
+| **Package Feed** | [Feed Link][feed-location-master] | [Feed Link][feed-location-2.1.2XX] | [Feed Link][feed-location-2.1.401] | [Feed Link][feed-location-2.1.4XX] | [Feed Link][feed-location-2.2.1XX] |
 | **Constituent Repo Shas** | **N/A** | **N/A** | [Git SHAs][sdk-shas-2.1.401] | **N/A** | [Git SHAs][sdk-shas-2.2.1XX] |
 
 Latest Coherent Build<sup>2</sup>
@@ -333,6 +333,20 @@ Reference notes:
 [linux-musl-targz-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-musl-x64.tar.gz.sha
 
 [sdk-shas-2.1.401]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.1#built-repositories
+
+[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
+
+[feed-location-master]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
+[feed-location-2.1.2XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
+[feed-location-2.1.401]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
+[feed-location-2.1.4XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
+[feed-location-2.2.1XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+
+[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
 
 [sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
 
