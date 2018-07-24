@@ -25,31 +25,31 @@ Build Status
 |:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
 |[![][win-x64-build-badge]][win-x64-build]|[![][win-x86-build-badge]][win-x86-build]|[![][osx-build-badge]][osx-build]|[![][linux-build-badge]][linux-build]|[![][linux-arm-build-badge]][linux-arm-build]|[![][linux-arm64-build-badge]][linux-arm64-build]|[![][linuxnative-build-badge]][linuxnative-build]|[![][rhel6-build-badge]][rhel6-build]|[![][linux-musl-build-badge]][linux-musl-build]|
 
-[win-x64-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9472/badge
+[win-x64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9472/badge
 [win-x64-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9472
 
-[win-x86-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9464/badge
+[win-x86-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9464/badge
 [win-x86-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9464
 
-[osx-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9470/badge
+[osx-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9470/badge
 [osx-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9470
 
-[linux-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9469/badge
+[linux-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9469/badge
 [linux-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9469
 
-[linux-arm-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9467/badge
+[linux-arm-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9467/badge
 [linux-arm-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9467
 
-[linux-arm64-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9468/badge
+[linux-arm64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9468/badge
 [linux-arm64-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9468
 
-[linuxnative-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9465/badge
+[linuxnative-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9465/badge
 [linuxnative-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9465
 
-[rhel6-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9471/badge
+[rhel6-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9471/badge
 [rhel6-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9471
 
-[linux-musl-build-badge]: https://devdiv.visualstudio.com/0bdbc590-a062-4c3f-b0f6-9383f67865ee/_apis/build/status/9466/badge
+[linux-musl-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9466/badge
 [linux-musl-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9466
 
 Installers and Binaries
