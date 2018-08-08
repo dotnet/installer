@@ -27,7 +27,7 @@ namespace Microsoft.DotNet.Scripts
     /// CORESETUP_VERSION_FRAGMENT - The fragment to combine with DOTNET_VERSION_URL to get the current dotnet/core-setup package versions. (ex. "dotnet/core-setup/master")
     /// GITHUB_ORIGIN_OWNER - The owner of the GitHub fork to push the commit and create the PR from. (ex. "dotnet-bot")
     /// GITHUB_UPSTREAM_OWNER - The owner of the GitHub base repo to create the PR to. (ex. "dotnet")
-    /// GITHUB_PROJECT - The repo name under the ORIGIN and UPSTREAM owners. (ex. "cli")
+    /// GITHUB_PROJECT - The repo name under the ORIGIN and UPSTREAM owners. (ex. "core-sdk")
     /// GITHUB_UPSTREAM_BRANCH - The branch in the GitHub base repo to create the PR to. (ex. "master");
     /// GITHUB_PULL_REQUEST_NOTIFICATIONS - A semi-colon ';' separated list of GitHub users to notify on the PR.
     /// </remarks>
@@ -42,7 +42,7 @@ namespace Microsoft.DotNet.Scripts
         private Lazy<string> _dotNetVersionUrl = new Lazy<string>(() => GetEnvironmentVariable("DOTNET_VERSION_URL", "https://raw.githubusercontent.com/dotnet/versions/master/build-info"));
 
         private Lazy<string> _gitHubUpstreamOwner = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_UPSTREAM_OWNER", "dotnet"));
-        private Lazy<string> _gitHubProject = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_PROJECT", "cli"));
+        private Lazy<string> _gitHubProject = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_PROJECT", "core-sdk"));
         private Lazy<string> _gitHubUpstreamBranch = new Lazy<string>(() => GetEnvironmentVariable("GITHUB_UPSTREAM_BRANCH", GetDefaultUpstreamBranch()));
         private Lazy<string[]> _gitHubPullRequestNotifications = new Lazy<string[]>(() =>
                                                 GetEnvironmentVariable("GITHUB_PULL_REQUEST_NOTIFICATIONS", "")
