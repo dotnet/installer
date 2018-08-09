@@ -23,7 +23,7 @@ namespace Microsoft.DotNet.Cli.Build
 
         public override bool Execute()
         {
-            string versionsRepoPath = $"build-info/dotnet/cli/{BranchName}";
+            string versionsRepoPath = $"build-info/dotnet/core-sdk/{BranchName}";
 
             GitHubAuth auth = new GitHubAuth(GitHubPassword);
             GitHubVersionsRepoUpdater repoUpdater = new GitHubVersionsRepoUpdater(auth);
