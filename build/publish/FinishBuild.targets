@@ -38,7 +38,8 @@
          just publish the latest version and list a "core-sdk" package with version -->
     <WriteVersionToVersionsRepo BranchName="$(BranchName)"
                                 Name="core-sdk"
-                                Version="$(FullNugetVersion"
+                                Version="$(FullNugetVersion)"
+                                VersionsRepoPath="build-info/dotnet/core-sdk/$(BranchName)"
                                 GitHubPassword="$(GITHUB_PASSWORD)"
                                 Condition=" '$(GITHUB_PASSWORD)' != '' " />
   </Target>
