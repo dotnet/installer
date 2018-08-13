@@ -26,12 +26,12 @@ namespace Microsoft.DotNet.Scripts
 
             List<BuildInfo> buildInfos = new List<BuildInfo>(s_config.VersionFragments.Select<KeyValuePair<string, string>, BuildInfo>(fragment => 
                     GetBuildInfo(fragment.Key, fragment.Value, fetchLatestReleaseFile: false)));
-            IEnumerable<IDependencyUpdater> updaters = GetUpdaters();
+            IEnumerable<IDependencyUpdater> updaters = GetUpdaters().ToArray();
             var dependencyBuildInfos = buildInfos.Select(buildInfo =>
                 new BuildDependencyInfo(
                     buildInfo,
                     upgradeStableVersions: true,
-                    disabledPackages: Enumerable.Empty<string>()));
+                    disabledPackages: Enumerable.Empty<string>())).ToArray();
             DependencyUpdateResults updateResults = DependencyUpdateUtils.Update(updaters, dependencyBuildInfos);
 
             if (!onlyUpdate && updateResults.ChangesDetected())
