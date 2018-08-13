@@ -5,31 +5,37 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.VersionTools.Automation;
+using Microsoft.DotNet.VersionTools.Automation.GitHubApi;
 using System.IO;
-
 
 namespace Microsoft.DotNet.Cli.Build
 {
-    public class UpdateVersionsRepo : Task
+    public class WriteVersionToVersionsRepo : Task
     {
         [Required]
         public string BranchName { get; set; }
 
         [Required]
-        public string PackagesDirectory { get; set; }
+        public string Name { get; set; }
+
+        [Required]
+        public string Version { get; set; }
 
         [Required]
         public string GitHubPassword { get; set; }
 
+        [Required]
+        public string VersionsRepoPath { get; set; }
+        
         public override bool Execute()
         {
-            string versionsRepoPath = $"build-info/dotnet/core-sdk/{BranchName}";
-
             GitHubAuth auth = new GitHubAuth(GitHubPassword);
-            GitHubVersionsRepoUpdater repoUpdater = new GitHubVersionsRepoUpdater(auth);
+
+            GitHubWriteVersionUpdater repoUpdater = new GitHubWriteVersionUpdater(auth);
             repoUpdater.UpdateBuildInfoAsync(
-                Directory.GetFiles(PackagesDirectory, "*.nupkg"),
-                versionsRepoPath).Wait();
+                Name,
+                Version,
+                VersionsRepoPath).Wait();
 
             return true;
         }

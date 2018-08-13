@@ -32,10 +32,15 @@
                        Channel="$(Channel)"
                        CommitHash="$(CommitHash)"
                        Coherent="$(Coherent)" />
-
-    <UpdateVersionsRepo BranchName="$(BranchName)"
-                        PackagesDirectory="$(PackagesDirectory)"
-                        GitHubPassword="$(GITHUB_PASSWORD)"
-                        Condition=" '$(GITHUB_PASSWORD)' != '' " />
+                       
+    <!-- Core-Sdk does not produce a core-sdk package that can be used to signal on
+         dotnet/versions that a new core-sdk version is available.  Instead,
+         just publish the latest version and list a "core-sdk" package with version -->
+    <WriteVersionToVersionsRepo BranchName="$(BranchName)"
+                                Name="core-sdk"
+                                Version="$(FullNugetVersion)"
+                                VersionsRepoPath="build-info/dotnet/core-sdk/$(BranchName)"
+                                GitHubPassword="$(GITHUB_PASSWORD)"
+                                Condition=" '$(GITHUB_PASSWORD)' != '' " />
   </Target>
 </Project>
