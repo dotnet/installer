@@ -83,8 +83,11 @@ Latest Coherent Build<sup>2</sup>
 | [![][coherent-version-badge-master]][coherent-version-master] | [![][coherent-version-badge-2.1.2XX]][coherent-version-2.1.2XX] | [![][coherent-version-badge-2.1.401]][coherent-version-2.1.401] | [![][coherent-version-badge-2.1.4XX]][coherent-version-2.1.4XX] | [![][coherent-version-badge-2.2.1XX]][coherent-version-2.2.1XX] |
 
 Reference notes:
-> **1**: *Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing these directly from the .deb files (via dpkg or similar), then you'll need to install the [corresponding Host, Host FX Resolver, and Shared Framework packages](https://github.com/dotnet/core-setup#daily-builds) before installing the Sdk package.*
-> <br><br>**2**: *A 'coherent' build is defined as a build where the Runtime version matches between the CLI and Asp.NET.*
+> **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
+> * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/core-setup#daily-builds)
+> * [ASP.NET Core Shared Framework](https://github.com/aspnet/universe#aspnet-core-shared-framework)
+>
+> **2**: A 'coherent' build is defined as a build where the Runtime version matches between the CLI and Asp.NET.
 
 [win-x64-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_x64_Release_version_badge.svg
 [win-x64-version-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/latest.version
