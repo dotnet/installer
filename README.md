@@ -2,19 +2,19 @@
 
 [![.NET Slack Status](https://aspnetcoreslack.herokuapp.com/badge.svg?2)](http://tattoocoder.com/aspnet-slack-sign-up/) [![Join the chat at https://gitter.im/dotnet/cli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotnet/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This repo contains the source code for cross-platform [.NET Core](http://github.com/dotnet/core) SDK. It aggregates the .NET Toolchain, the .NET Core runtime, the templates, the offline packages cache and the ASP.NET Runtime store. It produces zip and tarballs as well as the native packages for various supported platforms.
+This repo contains the source code for the cross-platform [.NET Core](http://github.com/dotnet/core) SDK. It aggregates the .NET Toolchain, the .NET Core runtime, the templates, the offline packages cache, and the ASP.NET Runtime store. It produces zip, tarballs, and native packages for various supported platforms.
 
-Looking for V1 of the .NET Core tooling?
+Looking for V2 of the .NET Core tooling?
 ----------------------------------------
 
-If you are looking for the v2.0 release of the .NET Core tools (CLI, MSBuild and the new csproj), head over to https://dot.net/core and download!
+Download v2.0 of the .NET Core tools (CLI, MSBuild and the new csproj) at https://dot.net/core.
 
-> **Note:** the master branch of the .NET Core SDK repo is based on an upcoming update of the SDK and is considered pre-release. For production-level usage, please use the
+> **Note:** The master branch of the .NET Core SDK repo is based on an forthcoming version of the SDK and is pre-release. For production-level usage, use the
 > released version of the tools available at https://dot.net/core
 
 Found an issue?
 ---------------
-You can consult the [Documents Index for the CLI repo](https://github.com/dotnet/cli/blob/master/Documentation/README.md) to find out the current issues and to see the workarounds and to see how to file new issues.
+You can consult the [Documents Index for the CLI repo](https://github.com/dotnet/cli/blob/master/Documentation/README.md) to find out current issues, see workarounds, and to see how to file new issues.
 
 This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
 
