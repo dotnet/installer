@@ -42,6 +42,9 @@
     <AspNetCoreSharedFxArchiveFileName>aspnetcore-runtime-internal-$(AspNetCoreVersion)-$(AspNetCoreSharedFxArchiveRid)$(ArchiveExtension)</AspNetCoreSharedFxArchiveFileName>
     <AspNetCoreSharedFxArchiveFile>$(PackagesDirectory)/$(AspNetCoreSharedFxArchiveFileName)</AspNetCoreSharedFxArchiveFile>
 
+    <WinFormsAndWpfSharedFxArchiveFileName>dotnet-extension-$(WinFormsAndWpfVersion)-$(Architecture)$(ArchiveExtension)</WinFormsAndWpfSharedFxArchiveFileName>
+    <WinFormsAndWpfSharedFxArchiveFile>$(PackagesDirectory)/$(WinFormsAndWpfSharedFxArchiveFileName)</WinFormsAndWpfSharedFxArchiveFile>
+
     <!-- Used to detect if ASP.NET Core is built against the same version of Microsoft.NETCore.App. -->
     <AspNetCoreSharedFxBaseRuntimeVersionFileName>aspnetcore_base_runtime.version</AspNetCoreSharedFxBaseRuntimeVersionFileName>
     <AspNetCoreSharedFxBaseRuntimeVersionFile Condition=" '$(AspNetCoreSharedFxBaseRuntimeVersionFileName)' != '' ">$(PackagesDirectory)/$(AspNetCoreSharedFxBaseRuntimeVersionFileName)</AspNetCoreSharedFxBaseRuntimeVersionFile>
@@ -50,6 +53,7 @@
   <PropertyGroup>
     <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
     <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
+    <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupBlobRootUrl)dotnet-extensions/</WinFormsAndWpfSharedFxRootUrl>
     <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppPackageVersion)</CoreSetupDownloadDirectory>
     <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
   </PropertyGroup>
@@ -112,6 +116,14 @@
       <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFile)</DownloadFileName>
       <ExtractDestination></ExtractDestination>
     </_DownloadAndExtractItem>
+  </ItemGroup>
 
+  <ItemGroup Condition=" '$(IncludeWpfAndWinForms)' != 'false' ">
+    <_DownloadAndExtractItem Include="WinFormsAndWpfSharedFxArchiveFile"
+                             Condition="!Exists('$(WinFormsAndWpfSharedFxArchiveFile)')">
+      <Url>$(WinFormsAndWpfSharedFxRootUrl)$(WinFormsAndWpfVersion)/$(WinFormsAndWpfSharedFxArchiveFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+      <DownloadFileName>$(WinFormsAndWpfSharedFxArchiveFile)</DownloadFileName>
+      <ExtractDestination>$(WinFormsAndWpfSharedFxPublishDirectory)/shared</ExtractDestination>
+    </_DownloadAndExtractItem>
   </ItemGroup>
 </Project>

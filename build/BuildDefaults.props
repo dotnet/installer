@@ -34,5 +34,8 @@
     <NoWarn>NU1701;NU5104</NoWarn>
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' ">true</IncludeWpfAndWinForms>
+    <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' ">false</IncludeWpfAndWinForms>
   </PropertyGroup>
 </Project>
