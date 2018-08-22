@@ -118,6 +118,23 @@ Copyright (c) .NET Foundation. All rights reserved.
     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
     <LatestPatchVersionForNetCore2_1 Condition="'%24(LatestPatchVersionForNetCore2_1)' == ''">2.1.2</LatestPatchVersionForNetCore2_1>
   </PropertyGroup>
+  <ItemGroup>
+    <KnownFrameworkReference Include="Microsoft.Windows.UI"
+                              RuntimeFrameworkName="Microsoft.Private.WPF"
+                              DefaultRuntimeFrameworkVersion="$(WinFormsAndWpfVersion)"
+                              LatestRuntimeFrameworkVersion="$(WinFormsAndWpfVersion)"
+                              TargetingPackName="Microsoft.Private.WPF"
+                              TargetingPackVersion="$(WinFormsAndWpfVersion)"
+                              />
+
+    <KnownFrameworkReference Include="Microsoft.AspNetCore"
+                              RuntimeFrameworkName="Microsoft.AspNetCore.App"
+                              DefaultRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              LatestRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              TargetingPackName="Microsoft.AspNetCore.App"
+                              TargetingPackVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              />
+  </ItemGroup>
 </Project>
 ]]>
     </BundledVersionsPropsContent>
