@@ -14,6 +14,9 @@
     <CoreSetupBlobAccessToken Condition="'$(PB_AssetRootAccessTokenSuffix)' != ''">$(PB_AssetRootAccessTokenSuffix)</CoreSetupBlobAccessToken>
     <CoreSetupBlobAccessTokenParam Condition=" '$(CoreSetupBlobAccessToken)' != '' ">?$(CoreSetupBlobAccessToken)</CoreSetupBlobAccessTokenParam>
 
+    <DotnetExtensionsBlobRootUrl>$(PB_AssetRootUrl)</DotnetExtensionsBlobRootUrl>
+    <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
+
     <!-- Values related to the upload of assets to blob storage -->
     <ArtifactCloudDropAccountName>$(ARTIFACT_STORAGE_ACCOUNT)</ArtifactCloudDropAccountName>
     <ArtifactCloudDropAccountName Condition="'$(ArtifactCloudDropAccountName)' == ''">dotnetcli</ArtifactCloudDropAccountName>
