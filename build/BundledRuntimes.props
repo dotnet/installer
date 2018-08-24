@@ -23,6 +23,9 @@
     <DownloadedSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-runtime$(InstallerStartSuffix)-$(MicrosoftNETCoreAppPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedSharedFrameworkInstallerFileName>
     <DownloadedSharedFrameworkInstallerFile Condition=" '$(InstallerExtension)' != '' ">$(PackagesDirectory)/$(DownloadedSharedFrameworkInstallerFileName)</DownloadedSharedFrameworkInstallerFile>
 
+    <DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-extension-$(WinFormsAndWpfVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName>
+    <DownloadedWinFormsAndWpfSharedFrameworkInstallerFile Condition=" '$(InstallerExtension)' != '' ">$(PackagesDirectory)/$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFile>
+
     <!-- Use the portable "linux-x64" Rid when downloading Linux shared framework compressed file. -->
     <SharedFrameworkRid>$(CoreSetupRid)</SharedFrameworkRid>
     <SharedFrameworkRid Condition=" '$(ProductMonikerRid)' == 'linux-musl-x64' ">$(ProductMonikerRid)</SharedFrameworkRid>
@@ -53,7 +56,7 @@
   <PropertyGroup>
     <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
     <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
-    <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupBlobRootUrl)dotnet-extensions/</WinFormsAndWpfSharedFxRootUrl>
+    <WinFormsAndWpfSharedFxRootUrl>$(DotnetExtensionsBlobRootUrl)dotnet-extensions/</WinFormsAndWpfSharedFxRootUrl>
     <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppPackageVersion)</CoreSetupDownloadDirectory>
     <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
   </PropertyGroup>
@@ -124,6 +127,13 @@
       <Url>$(WinFormsAndWpfSharedFxRootUrl)$(WinFormsAndWpfVersion)/$(WinFormsAndWpfSharedFxArchiveFileName)$(CoreSetupBlobAccessTokenParam)</Url>
       <DownloadFileName>$(WinFormsAndWpfSharedFxArchiveFile)</DownloadFileName>
       <ExtractDestination>$(WinFormsAndWpfSharedFxPublishDirectory)/shared</ExtractDestination>
+    </_DownloadAndExtractItem>
+
+    <_DownloadAndExtractItem Include="DownloadedWinFormsAndWpfSharedFrameworkInstallerFile"
+                         Condition="'$(SkipBuildingInstallers)' != 'true' And !Exists('$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFile)') And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+      <Url>$(WinFormsAndWpfSharedFxRootUrl)$(WinFormsAndWpfVersion)/$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+      <DownloadFileName>$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFile)</DownloadFileName>
+      <ExtractDestination></ExtractDestination>
     </_DownloadAndExtractItem>
   </ItemGroup>
 </Project>

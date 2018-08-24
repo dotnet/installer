@@ -40,9 +40,15 @@
       <OverwriteExtractionDestination Condition="'$(OverwriteExtractionDestination)' == ''">True</OverwriteExtractionDestination>
     </PropertyGroup>
 
-    <DownloadFile Condition=" '@(_DownloadAndExtractItem)' != '' "
+
+    <DownloadFile Condition=" '@(_DownloadAndExtractItem)' != '' And '%(_DownloadAndExtractItem.Local)' != 'true'"
                   Uri="%(_DownloadAndExtractItem.Url)"
                   DestinationPath="%(_DownloadAndExtractItem.DownloadFileName)" />
+
+    <Copy Condition=" '@(_DownloadAndExtractItem)' != '' And '%(_DownloadAndExtractItem.Local)' == 'true'"
+          SourceFiles="%(_DownloadAndExtractItem.Url)"
+          DestinationFiles="%(_DownloadAndExtractItem.DownloadFileName)" />
+                  
 
     <ZipFileExtractToDirectory Condition=" '%(_DownloadAndExtractItem.ExtractDestination)' != '' AND $([System.String]::new('%(_DownloadAndExtractItem.DownloadFileName)').EndsWith('.zip')) "
                                SourceArchive="%(_DownloadAndExtractItem.DownloadFileName)"

@@ -105,6 +105,9 @@ Copyright (c) .NET Foundation. All rights reserved.
     <NETCoreSdkVersion>$(SdkVersion)</NETCoreSdkVersion>
     <_NETCoreSdkIsPreview>$(_NETCoreSdkIsPreview)</_NETCoreSdkIsPreview>
 
+    <AddDotnetfeedProjectSource Condition="'%24(AddDotnetfeedProjectSource)' == ''">%24(_NETCoreSdkIsPreview)</AddDotnetfeedProjectSource>
+    <RestoreAdditionalProjectSources Condition="'%24(AddDotnetfeedProjectSource)' == 'true'">%24(RestoreAdditionalProjectSources);https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</RestoreAdditionalProjectSources>
+
     <!-- Default patch versions for each minor version of ASP.NET Core -->
     <DefaultPatchVersionForAspNetCoreAll2_1>$(_DefaultPatchVersionForAspNetCoreAll2_1)</DefaultPatchVersionForAspNetCoreAll2_1>
     <DefaultPatchVersionForAspNetCoreApp2_1>$(_DefaultPatchVersionForAspNetCoreApp2_1)</DefaultPatchVersionForAspNetCoreApp2_1>
@@ -115,6 +118,23 @@ Copyright (c) .NET Foundation. All rights reserved.
     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
     <LatestPatchVersionForNetCore2_1 Condition="'%24(LatestPatchVersionForNetCore2_1)' == ''">2.1.2</LatestPatchVersionForNetCore2_1>
   </PropertyGroup>
+  <ItemGroup>
+    <KnownFrameworkReference Include="Microsoft.Windows.UI"
+                              RuntimeFrameworkName="Microsoft.Private.WPF"
+                              DefaultRuntimeFrameworkVersion="$(WinFormsAndWpfVersion)"
+                              LatestRuntimeFrameworkVersion="$(WinFormsAndWpfVersion)"
+                              TargetingPackName="Microsoft.Private.WPF"
+                              TargetingPackVersion="$(WinFormsAndWpfVersion)"
+                              />
+
+    <KnownFrameworkReference Include="Microsoft.AspNetCore"
+                              RuntimeFrameworkName="Microsoft.AspNetCore.App"
+                              DefaultRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              LatestRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              TargetingPackName="Microsoft.AspNetCore.App"
+                              TargetingPackVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                              />
+  </ItemGroup>
 </Project>
 ]]>
     </BundledVersionsPropsContent>
