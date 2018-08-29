@@ -119,11 +119,11 @@ Copyright (c) .NET Foundation. All rights reserved.
     <LatestPatchVersionForNetCore2_1 Condition="'%24(LatestPatchVersionForNetCore2_1)' == ''">2.1.2</LatestPatchVersionForNetCore2_1>
   </PropertyGroup>
   <ItemGroup>
-    <KnownFrameworkReference Include="Microsoft.Windows.UI"
-                              RuntimeFrameworkName="Microsoft.Private.WPF"
+    <KnownFrameworkReference Include="Microsoft.DesktopUI"
+                              RuntimeFrameworkName="Microsoft.DesktopUI.App"
                               DefaultRuntimeFrameworkVersion="$(MicrosoftPrivateWpfPackageVersion)"
                               LatestRuntimeFrameworkVersion="$(MicrosoftPrivateWpfPackageVersion)"
-                              TargetingPackName="Microsoft.Private.WPF"
+                              TargetingPackName="Microsoft.DesktopUI.App"
                               TargetingPackVersion="$(MicrosoftPrivateWpfPackageVersion)"
                               />
 
