@@ -18,13 +18,16 @@
 
   <PropertyGroup>
     <MicrosoftNETCoreAppPackageVersion>3.0.0-preview1-26909-04</MicrosoftNETCoreAppPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+    
+    <!-- https://github.com/dotnet/cli/issues/9851  -->
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion_ForMSBuildSdkResolverOnly>3.0.0-preview1-26816-04</MicrosoftNETCoreDotNetHostResolverPackageVersion_ForMSBuildSdkResolverOnly>
+
   </PropertyGroup>
 
   <PropertyGroup>
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplatesPackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates20PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates20PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates20PackageVersion>1.0.2-beta3-20180716-1864993</MicrosoftDotNetTestProjectTemplates20PackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta4-20180803-1918431</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates22PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates22PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates22PackageVersion>1.0.2-beta4-20180821-1966911</MicrosoftDotNetTestProjectTemplates22PackageVersion>
     
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
     <NUnit3TemplatesVersion>1.5.1</NUnit3TemplatesVersion>
@@ -48,7 +51,7 @@
   <PropertyGroup>
     <BuildTasksFeedToolVersion>2.1.0-prerelease-02430-04</BuildTasksFeedToolVersion>
     <VersionToolsVersion>$(BuildTasksFeedToolVersion)</VersionToolsVersion>
-    <DotnetDebToolVersion>2.0.0-preview2-25331-01</DotnetDebToolVersion>
+    <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
   </PropertyGroup>
 
 </Project>
