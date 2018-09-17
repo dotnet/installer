@@ -12,7 +12,7 @@ namespace Microsoft.DotNet.Cli.Build
 
         protected override string Args
         {
-            get { return $"{base.Args} {GetProjectPath()} {GetConfiguration()} {GetNoBuild()} {GetOutput()} {GetVersionSuffix()} {GetRuntime()} {GetIncludeSymbols()} {MsbuildArgs}"; }
+            get { return $"{base.Args} {GetProjectPath()} {GetConfiguration()} {GetNoBuild()} {GetOutput()} {GetVersionSuffix()} {GetReleaseSuffix()} {GetRuntime()} {GetIncludeSymbols()} {MsbuildArgs}"; }
         }
 
         public string Configuration { get; set; }
@@ -26,6 +26,8 @@ namespace Microsoft.DotNet.Cli.Build
         public string ProjectPath { get; set; }
 
         public string VersionSuffix { get; set; }
+
+        public string ReleaseSuffix { get; set; }
 
         public string Runtime { get; set; }
 
@@ -76,6 +78,18 @@ namespace Microsoft.DotNet.Cli.Build
             if (!string.IsNullOrEmpty(VersionSuffix))
             {
                 return $"--version-suffix {VersionSuffix}";
+            }
+            else
+            {
+                return $"--version-suffix \"\"";
+            }
+        }
+
+        private string GetReleaseSuffix()
+        {
+            if (!string.IsNullOrEmpty(ReleaseSuffix))
+            {
+                return $"-property:ReleaseSuffix={ReleaseSuffix}";
             }
 
             return null;

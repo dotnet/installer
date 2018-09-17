@@ -101,15 +101,20 @@
         UseHardlinksIfPossible="False" />
 
       <!-- Proactively remove all possible Shared Framework and Debian Packages -->
-      <Exec Command="sudo dpkg -r $(SdkDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(AspNetCoreSharedFxDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(AspNetCoreSharedFxDebianPackageFileName)" />
-      <Exec Command="sudo dpkg -r $(SharedFxDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(SharedFxDebianPackageFileName)" />
-      <Exec Command="sudo dpkg -r $(HostFxrDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(HostFxrDebianPackageFileName)" />
-      <Exec Command="sudo dpkg -r $(HostDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(RuntimeDepsPackageName)" />
+      <ItemGroup>
+        <SetupDebPackageToRemove Include="$(SdkDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(SharedFxDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedFxDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(HostDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
+      </ItemGroup>
+      <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
+      <Exec Command="sudo rm -rf /usr/share/dotnet/sdk/NuGetFallbackFolder" />
+      <Exec Command="!(dpkg-query -W %(SetupDebPackageToRemove.Identity)) || sudo dpkg -r %(SetupDebPackageToRemove.Identity)" />
   </Target>
 
   <Target Name="TestSdkDeb"
@@ -139,12 +144,19 @@
                   ToolPath="$(DebianInstalledDirectory)" />
 
       <!-- Clean up Packages -->
-      <Exec Command="sudo dpkg -r $(SdkDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(AspNetCoreSharedFxDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(SharedFxDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(HostFxrDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(HostDebianPackageName)" />
-      <Exec Command="sudo dpkg -r $(RuntimeDepsPackageName)" />
+      <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
+      <Exec Command="sudo rm -rf /usr/share/dotnet/sdk/NuGetFallbackFolder" />
+
+      <ItemGroup>
+        <TestSdkDebPackageToRemove Include="$(SdkDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(SharedFxDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(HostDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
+      </ItemGroup>
+      <!-- If package installed remove it -->
+      <Exec Command="!(dpkg-query -W %(TestSdkDebPackageToRemove.Identity)) || sudo dpkg -r %(TestSdkDebPackageToRemove.Identity)" />
   </Target>
 
   <Target Name="PrepareDotnetDebDirectories">
@@ -184,8 +196,9 @@
   <Target Name="TestDebuild">
       <Message Text="Don't remove this" />
 
-      <!-- run Debuild -->
-      <Exec Command="/usr/bin/env debuild -h" ContinueOnError="true">
+      <!-- run Debuild  -->
+      <!-- NB: IgnoreExitCode prevents Exec from failing, but does not prevent us from retrieving the exit code. -->
+      <Exec Command="/usr/bin/env debuild -h > /dev/null 2>&amp;1" IgnoreExitCode="true">
           <Output TaskParameter="ExitCode" PropertyName="DebuildExitCode" />
       </Exec>
 
