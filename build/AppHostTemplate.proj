@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
-           Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in $(AllFileOfRestoredAppHostPackage)" />
+           Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in @(AllFileOfRestoredAppHostPackage)" />
 
     <Copy
         SourceFiles="@(NativeRestoredAppHostNETCore)"
