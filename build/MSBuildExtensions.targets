@@ -103,6 +103,7 @@ Copyright (c) .NET Foundation. All rights reserved.
     <BundledNETCorePlatformsPackageVersion>$(_NETCorePlatformsPackageVersion)</BundledNETCorePlatformsPackageVersion>
     @(BundledVersionsVariable->'<%(Identity)>%(Value)</%(Identity)>', '%0A    ')
     <NETCoreSdkVersion>$(SdkVersion)</NETCoreSdkVersion>
+    <NETCoreSdkRuntimeIdentifier>$(CoreSetupRid)</NETCoreSdkRuntimeIdentifier>
     <_NETCoreSdkIsPreview>$(_NETCoreSdkIsPreview)</_NETCoreSdkIsPreview>
 
     <AddDotnetfeedProjectSource Condition="'%24(AddDotnetfeedProjectSource)' == ''">%24(_NETCoreSdkIsPreview)</AddDotnetfeedProjectSource>
