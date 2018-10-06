@@ -59,6 +59,46 @@
     </GetUseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion>
 
     <ItemGroup>
+      <ImplicitPackageVariable Include="Microsoft.NETCore.App"
+                               TargetFrameworkVersion="1.0"
+                               DefaultVersion="1.0.5"
+                               LatestVersion="1.0.12" />
+      <ImplicitPackageVariable Include="Microsoft.NETCore.App"
+                               TargetFrameworkVersion="1.1"
+                               DefaultVersion="1.1.2"
+                               LatestVersion="1.1.9" />
+      <ImplicitPackageVariable Include="Microsoft.NETCore.App"
+                               TargetFrameworkVersion="2.0"
+                               DefaultVersion="2.0.0"
+                               LatestVersion="2.0.9" />
+      <ImplicitPackageVariable Include="Microsoft.NETCore.App"
+                               TargetFrameworkVersion="2.1"
+                               DefaultVersion="2.1.0"
+                               LatestVersion="2.1.5" />
+      <ImplicitPackageVariable Include="Microsoft.NETCore.App"
+                               TargetFrameworkVersion="2.2"
+                               DefaultVersion="$(_NETCoreAppPackageVersion)"
+                               LatestVersion="$(_NETCoreAppPackageVersion)" />
+      
+      <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
+                               TargetFrameworkVersion="2.1"
+                               DefaultVersion="2.1.1"
+                               LatestVersion="2.1.5"/>
+      <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
+                               TargetFrameworkVersion="2.1"
+                               DefaultVersion="2.1.1"
+                               LatestVersion="2.1.5"/>
+      <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
+                               TargetFrameworkVersion="2.2"
+                               DefaultVersion="$(_AspNetCoreAppPackageVersion)"
+                               LatestVersion="$(_AspNetCoreAppPackageVersion)"/>
+      <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
+                               TargetFrameworkVersion="2.2"
+                               DefaultVersion="$(_AspNetCoreAllPackageVersion)"
+                               LatestVersion="$(_AspNetCoreAllPackageVersion)"/>
+    </ItemGroup>
+    
+    <ItemGroup>
       <BundledVersionsVariable Include="BundledAspNetCoreAllTargetFrameworkVersion" Value="$(_AspNetCoreAllTargetFrameworkVersion)" />
       <BundledVersionsVariable Include="BundledAspNetCoreAllPackageVersion" Value="$(_AspNetCoreAllPackageVersion)" />
       <BundledVersionsVariable Include="BundledAspNetCoreAppTargetFrameworkVersion" Value="$(_AspNetCoreAppTargetFrameworkVersion)" />
@@ -120,6 +160,9 @@ Copyright (c) .NET Foundation. All rights reserved.
     <LatestPatchVersionForNetCore2_1 Condition="'%24(LatestPatchVersionForNetCore2_1)' == ''">2.1.2</LatestPatchVersionForNetCore2_1>
   </PropertyGroup>
   <ItemGroup>
+    @(ImplicitPackageVariable->'<ImplicitPackageReferenceVersion Include="%(Identity)" TargetFrameworkVersion="%(TargetFrameworkVersion)" DefaultVersion="%(DefaultVersion)" LatestVersion="%(LatestVersion)"/>', '%0A    ')
+
+    
     <KnownFrameworkReference Include="Microsoft.DesktopUI"
                               RuntimeFrameworkName="Microsoft.DesktopUI.App"
                               DefaultRuntimeFrameworkVersion="$(MicrosoftDesktopUIPackageVersion)"
