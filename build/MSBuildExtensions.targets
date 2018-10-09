@@ -76,7 +76,7 @@
                                DefaultVersion="2.1.0"
                                LatestVersion="2.1.5" />
       <ImplicitPackageVariable Include="Microsoft.NETCore.App"
-                               TargetFrameworkVersion="2.2"
+                               TargetFrameworkVersion="3.0"
                                DefaultVersion="$(_NETCoreAppPackageVersion)"
                                LatestVersion="$(_NETCoreAppPackageVersion)" />
       
@@ -88,14 +88,6 @@
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.1"
                                LatestVersion="2.1.5"/>
-      <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
-                               TargetFrameworkVersion="2.2"
-                               DefaultVersion="$(_AspNetCoreAppPackageVersion)"
-                               LatestVersion="$(_AspNetCoreAppPackageVersion)"/>
-      <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
-                               TargetFrameworkVersion="2.2"
-                               DefaultVersion="$(_AspNetCoreAllPackageVersion)"
-                               LatestVersion="$(_AspNetCoreAllPackageVersion)"/>
     </ItemGroup>
     
     <ItemGroup>
