@@ -52,7 +52,9 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
-            TempOutputPath = Path.GetTempFileName();
+            string tempDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirPath);
+            TempOutputPath = Path.Combine(tempDirPath, Path.GetFileName(DestinationPath));
 
             var toolResult = base.Execute();
 
@@ -65,6 +67,7 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 File.Delete(TempOutputPath);
             }
+            Directory.Delete(tempDirPath);
 
             if (toolResult && CreateSymbols)
             {
