@@ -21,7 +21,11 @@ namespace Microsoft.DotNet.Cli.Build
 
         public override bool Execute()
         {
-            FS.Mkdirp(Path.GetDirectoryName(DestinationPath));
+            string destinationDir = Path.GetDirectoryName(DestinationPath);
+            if (!Directory.Exists(destinationDir))
+            {
+                Directory.CreateDirectory(destinationDir);
+            }
 
             if (File.Exists(DestinationPath) && !Overwrite)
             {
