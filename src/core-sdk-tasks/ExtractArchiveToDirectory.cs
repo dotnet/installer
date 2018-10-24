@@ -10,7 +10,10 @@ using System.IO.Compression;
 
 namespace Microsoft.DotNet.Build.Tasks
 {
-    public sealed class TarGzFileExtractToDirectory : ToolTask
+    /// <summary>
+    /// Extracts a .zip or .tar.gz file to a directory.
+    /// </summary>
+    public sealed class ExtractArchiveToDirectory : ToolTask
     {
         /// <summary>
         /// The path to the archive to extract.
@@ -27,7 +30,7 @@ namespace Microsoft.DotNet.Build.Tasks
         /// <summary>
         /// Indicates if the destination directory should be cleaned if it already exists.
         /// </summary>
-        public bool OverwriteDestination { get; set; }
+        public bool CleanDestination { get; set; }
 
         protected override bool ValidateParameters()
         {
@@ -37,7 +40,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
             if (Directory.Exists(DestinationDirectory))
             {
-                if (OverwriteDestination == true)
+                if (CleanDestination == true)
                 {
                     Log.LogMessage(MessageImportance.Low, "'{0}' already exists, trying to delete before unzipping...", DestinationDirectory);
                     Directory.Delete(DestinationDirectory, recursive: true);
@@ -62,7 +65,25 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
-            bool retVal = base.Execute();
+            bool retVal = true;
+
+            //  Inherits from ToolTask in order to shell out to tar.
+            //  If the file is a .zip, then don't call the base Execute method, just run as a normal task
+            if (Path.GetExtension(SourceArchive).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                if (ValidateParameters())
+                {
+                    ZipFile.ExtractToDirectory(SourceArchive, DestinationDirectory, overwriteFiles: true);
+                }
+                else
+                {
+                    retVal = false;
+                }
+            }
+            else
+            {
+                retVal = base.Execute();
+            }
 
             if (!retVal)
             {
@@ -90,17 +111,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         protected override string GenerateCommandLineCommands()
         {
-            return $"xf {GetSourceArchive()} -C {GetDestinationDirectory()}";
-        }
-        
-        private string GetSourceArchive()
-        {
-            return SourceArchive;
-        }
-
-        private string GetDestinationDirectory()
-        {
-            return DestinationDirectory;
+            return $"xf {SourceArchive} -C {DestinationDirectory}";
         }
     }
 }
