@@ -14,33 +14,40 @@
       <bal:WixStandardBootstrapperApplication
         LicenseFile="dummyeula.rtf"
         ShowFilesInUse="yes"
-        ShowVersion="yes"
-        />
+        ShowVersion="yes" />
 
       <PayloadGroupRef Id="DotnetCoreBAPayloads" />
     </BootstrapperApplicationRef>
 
     <swid:Tag Regid="microsoft.com" InstallPath="[installpath]" />
-        
+
     <util:RegistrySearch Id="CheckSDKInstallLocation"
             Variable="SDKInstallLocationExists"
             Result="exists"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="InstallLocation"
-            Win64="$(var.Win64AttributeValue)" />
+            Value="InstallLocation" />
     <util:RegistrySearch Id="SDKInstallLocation"
             After="CheckSDKInstallLocation"
             Condition="SDKInstallLocationExists"
-            Variable="PreferredInstallLocation"
+            Variable="installpath"
             Result="value"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="InstallLocation" 
-            Win64="$(var.Win64AttributeValue)" />
+            Value="InstallLocation" />
 
-    <Variable Name="PreferredInstallLocation" Value="[ProgramFiles6432Folder]dotnet"  bal:Overridable="yes" />
-    <Variable Name="installpath" Type="string" Value="[PreferredInstallLocation]" bal:Overridable="yes" />
+    <util:FileSearch Id="DotnetExeSearch"
+            Variable="DotnetExeExists"
+            Condition="NOT SDKInstallLocationExists"
+            Result="exists"
+            Path="[ProgramFiles6432Folder]dotnet\dotnet.exe"/>
+    <util:DirectorySearch Id="DotnetExeLocation"
+            After="DotnetExeSearch"
+            Condition="DotnetExeExists"
+            Variable="installpath"
+            Path="[ProgramFiles6432Folder]dotnet"/>
+
+    <Variable Name="installpath" Type="string" Value="[ProgramFiles6432Folder]dotnet" bal:Overridable="yes" />
     <Variable Name="BUNDLEMONIKER" Type="string" Value="$(var.ProductMoniker)" bal:Overridable="no" />
     <Variable Name="DOTNETSDKVERSION" Type="string" Value="$(var.DisplayVersion)" bal:Overridable="no" />
     <Variable Name="DOTNETRUNTIMEVERSION" Type="string" Value="$(var.DotNetRuntimeVersion)" bal:Overridable="no" />
@@ -64,9 +71,9 @@
         <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)" After="CLISDKMsi">
             <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
-      <?if $(var.Platform)=x86?>
+      <?if $(var.Platform)~=x86?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x86"/>
-      <?elseif $(var.Platform)=x64?>
+      <?elseif $(var.Platform)~=x64?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x64"/>
       <?endif?>
     </Chain>
