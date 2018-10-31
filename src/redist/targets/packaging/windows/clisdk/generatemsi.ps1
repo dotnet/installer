@@ -14,10 +14,7 @@ param(
     [Parameter(Mandatory=$true)][string]$StableFileIdForApphostTransform
 )
 
-. "$PSScriptRoot\..\..\..\scripts\common\_common.ps1"
-$RepoRoot = Convert-Path "$PSScriptRoot\..\..\.."
-
-$InstallFileswsx = "install-files.wxs"
+$InstallFileswsx = ".\install-files.wxs"
 $InstallFilesWixobj = "install-files.wixobj"
 
 function RunHeat
@@ -25,29 +22,32 @@ function RunHeat
     $result = $true
     pushd "$WixRoot"
 
-    Write-Output Running heat..
+    Write-Information "Running heat.."
 
     # -t $StableFileIdForApphostTransform to avoid sign check baseline apphost.exe name changes every build. Sign check uses File Id in MSI as whitelist name.
     # Template apphost.exe get a new "File Id" in msi different every time (since File Id is generated according to file
     # path, and file path has version number)
     # use XSLT tranform to match the file path contains "AppHostTemplate\apphost.exe" and give it the same ID all the time.
 
-    .\heat.exe dir `"$inputDir`" -template fragment  `
+    $heatOutput = .\heat.exe dir `"$inputDir`" -template fragment  `
         -sreg -gg  `
         -var var.DotnetSrc  `
         -cg InstallFiles  `
         -srd  `
         -dr DOTNETHOME  `
         -t $StableFileIdForApphostTransform  `
-        -out $InstallFileswsx | Out-Host
+        -out install-files.wxs
+
+    Write-Information "Heat output: $heatOutput"
 
     if($LastExitCode -ne 0)
     {
         $result = $false
-        Write-Output "Heat failed with exit code $LastExitCode."
+        Write-Information "Heat failed with exit code $LastExitCode."
     }
 
     popd
+    Write-Information "RunHeat result: $result"
     return $result
 }
 
@@ -56,12 +56,11 @@ function RunCandle
     $result = $true
     pushd "$WixRoot"
 
-    Write-Output Running candle..
-    $AuthWsxRoot =  Join-Path $RepoRoot "packaging\windows\clisdk"
+    Write-Information "Running candle.."
 
-    .\candle.exe -nologo `
+    $candleOutput = .\candle.exe -nologo `
         -dDotnetSrc="$inputDir" `
-        -dMicrosoftEula="$RepoRoot\packaging\windows\clisdk\dummyeula.rtf" `
+        -dMicrosoftEula="$PSScriptRoot\clisdk\dummyeula.rtf" `
         -dProductMoniker="$ProductMoniker" `
         -dBuildVersion="$DotnetMSIVersion" `
         -dDisplayVersion="$DotnetCLIDisplayVersion" `
@@ -69,15 +68,17 @@ function RunCandle
         -dUpgradeCode="$UpgradeCode" `
         -arch "$Architecture" `
         -ext WixDependencyExtension.dll `
-        "$AuthWsxRoot\dotnet.wxs" `
-        "$AuthWsxRoot\provider.wxs" `
-        "$AuthWsxRoot\registrykeys.wxs" `
-        $InstallFileswsx | Out-Host
+        "$PSScriptRoot\dotnet.wxs" `
+        "$PSScriptRoot\provider.wxs" `
+        "$PSScriptRoot\registrykeys.wxs" `
+        $InstallFileswsx
+
+    Write-Information "Candle output: $candleOutput"
 
     if($LastExitCode -ne 0)
     {
         $result = $false
-        Write-Output "Candle failed with exit code $LastExitCode."
+        Write-Information "Candle failed with exit code $LastExitCode."
     }
 
     popd
@@ -89,26 +90,27 @@ function RunLight
     $result = $true
     pushd "$WixRoot"
 
-    Write-Output Running light..
+    Write-Information "Running light.."
     $CabCache = Join-Path $WixRoot "cabcache"
-    $AuthWsxRoot =  Join-Path $RepoRoot "packaging\windows\clisdk"
 
-    .\light.exe -nologo -ext WixUIExtension -ext WixDependencyExtension -ext WixUtilExtension `
+    $lightOutput = .\light.exe -nologo -ext WixUIExtension -ext WixDependencyExtension -ext WixUtilExtension `
         -cultures:en-us `
         dotnet.wixobj `
         provider.wixobj `
         registrykeys.wixobj `
         $InstallFilesWixobj `
         -b "$inputDir" `
-        -b "$AuthWsxRoot" `
+        -b "$PSScriptRoot" `
         -reusecab `
         -cc "$CabCache" `
-        -out $DotnetMSIOutput | Out-Host
+        -out $DotnetMSIOutput
+
+    Write-Information "Light output: $lightOutput"
 
     if($LastExitCode -ne 0)
     {
         $result = $false
-        Write-Output "Light failed with exit code $LastExitCode."
+        Write-Information "Light failed with exit code $LastExitCode."
     }
 
     popd
@@ -120,7 +122,7 @@ if(!(Test-Path $inputDir))
     throw "$inputDir not found"
 }
 
-Write-Output "Creating dotnet MSI at $DotnetMSIOutput"
+Write-Information "Creating dotnet MSI at $DotnetMSIOutput"
 
 if([string]::IsNullOrEmpty($WixRoot))
 {
@@ -129,16 +131,19 @@ if([string]::IsNullOrEmpty($WixRoot))
 
 if(-Not (RunHeat))
 {
+    Write-Information "Heat failed"
     Exit -1
 }
 
 if(-Not (RunCandle))
 {
+    Write-Information "Candle failed"
     Exit -1
 }
 
 if(-Not (RunLight))
 {
+    Write-Information "Light failed"
     Exit -1
 }
 
@@ -148,6 +153,6 @@ if(!(Test-Path $DotnetMSIOutput))
     Exit -1
 }
 
-Write-Output -ForegroundColor Green "Successfully created dotnet MSI - $DotnetMSIOutput"
+Write-Information -ForegroundColor Green "Successfully created dotnet MSI - $DotnetMSIOutput"
 
 exit $LastExitCode

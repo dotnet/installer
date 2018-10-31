@@ -20,20 +20,17 @@ param(
     [Parameter(Mandatory=$true)][string]$AspNetCoreVersion
 )
 
-. "$PSScriptRoot\..\..\..\scripts\common\_common.ps1"
-$RepoRoot = Convert-Path "$PSScriptRoot\..\..\.."
-
 function RunCandleForBundle
 {
     $result = $true
     pushd "$WixRoot"
 
     Write-Output Running candle for bundle..
-    $AuthWsxRoot =  Join-Path $RepoRoot "packaging\windows\clisdk"
+    $AuthWsxRoot =  $PSScriptRoot
 
     .\candle.exe -nologo `
         -dDotnetSrc="$inputDir" `
-        -dMicrosoftEula="$RepoRoot\packaging\windows\clisdk\dummyeula.rtf" `
+        -dMicrosoftEula="$PSScriptRoot\dummyeula.rtf" `
         -dProductMoniker="$ProductMoniker" `
         -dBuildVersion="$DotnetMSIVersion" `
         -dDisplayVersion="$DotnetCLIDisplayVersion" `
@@ -71,7 +68,7 @@ function RunLightForBundle
     pushd "$WixRoot"
 
     Write-Output Running light for bundle..
-    $AuthWsxRoot =  Join-Path $RepoRoot "packaging\windows\clisdk"
+    $AuthWsxRoot =  $PSScriptRoot
 
     .\light.exe -nologo `
         -cultures:en-us `
