@@ -5,7 +5,7 @@
     <Package Compressed="yes" InstallScope="perMachine" InstallerVersion="200" />
 
     <Condition Message="$(var.ProductName) must be installed as part of an SDK bundle installation.">
-        <![CDATA[ALLOWCLISDKMSIINSTALL]]>
+        Installed OR ALLOWCLISDKMSIINSTALL
     </Condition>
 
     <MajorUpgrade DowngradeErrorMessage="$(var.DowngradeErrorMessage)" Schedule="afterInstallInitialize"/>
