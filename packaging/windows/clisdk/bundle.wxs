@@ -54,16 +54,16 @@
     <Variable Name="ASPNETCOREVERSION" Type="string" Value="$(var.AspNetCoreVersion)" bal:Overridable="no" />
 
     <Chain DisableSystemRestore="yes" ParallelCache="yes">
-      <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)" After="CLISDKMsi">
+      <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
-      <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)" After="CLISDKMsi">
+      <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
-      <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)" After="CLISDKMsi">
+      <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
-      <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)" After="CLISDKMsi">
+      <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
       <MsiPackage Id="CLISDKMsi" SourceFile="$(var.CLISDKMsiSourcePath)">
