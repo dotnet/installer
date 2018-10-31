@@ -54,22 +54,22 @@
     <Variable Name="ASPNETCOREVERSION" Type="string" Value="$(var.AspNetCoreVersion)" bal:Overridable="no" />
 
     <Chain DisableSystemRestore="yes" ParallelCache="yes">
-        <MsiPackage Id="CLISDKMsi" SourceFile="$(var.CLISDKMsiSourcePath)">
-            <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
-            <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
-            <MsiProperty Name="ALLOWCLISDKMSIINSTALL" Value="True" />
-        </MsiPackage>
-        <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)" After="CLISDKMsi">
-            <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
-        </MsiPackage>
-        <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)" After="CLISDKMsi">
-            <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
-        </MsiPackage>
-        <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)" After="CLISDKMsi">
-            <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
-        </MsiPackage>
-        <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)" After="CLISDKMsi">
-            <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+      <MsiPackage Id="CLISDKMsi" SourceFile="$(var.CLISDKMsiSourcePath)">
+        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
+        <MsiProperty Name="ALLOWCLISDKMSIINSTALL" Value="True" />
+      </MsiPackage>
+      <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)" After="CLISDKMsi">
+        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+      </MsiPackage>
+      <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)" After="CLISDKMsi">
+        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+      </MsiPackage>
+      <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)" After="CLISDKMsi">
+        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+      </MsiPackage>
+      <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)" After="CLISDKMsi">
+        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
       </MsiPackage>
       <?if $(var.Platform)~=x86?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x86"/>
