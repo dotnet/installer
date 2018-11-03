@@ -87,7 +87,7 @@ Reference notes:
 > * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/core-setup#daily-builds)
 > * [ASP.NET Core Shared Framework](https://github.com/aspnet/universe#aspnet-core-shared-framework)
 >
-> **2**: A 'coherent' build is defined as a build where the Runtime version matches between the CLI and Asp.NET.
+> **2**: A 'coherent' build is defined as a build where the Runtime version matches between the CLI and ASP.NET Core.
 
 [win-x64-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_x64_Release_version_badge.svg
 [win-x64-version-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/latest.version
