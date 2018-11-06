@@ -14,7 +14,7 @@
 
     <Feature Id="MainFeature" Title="Main Feature" Level="1">
       <ComponentGroupRef Id="InstallFiles" />
-      <ComponentGroupRef Id="AuthoredRegistryKeys"/>
+      <ComponentGroupRef Id="AuthoredRegistryKeys_x86node"/>
     </Feature>
     <Feature Id="Provider" Absent="disallow" AllowAdvertise="no" Description="Used for Ref Counting" Display="hidden" Level="1" InstallDefault="local" Title="RefCounting" TypicalDefault="install">
       <ComponentRef Id="$(var.DependencyKeyId)" />
