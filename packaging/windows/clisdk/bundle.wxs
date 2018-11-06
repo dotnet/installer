@@ -26,7 +26,7 @@
             Result="exists"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="InstallLocation" />
+            Value="PreferredInstallLocation" />
     <util:RegistrySearch Id="SDKInstallLocation"
             After="CheckSDKInstallLocation"
             Condition="SDKInstallLocationExists"
@@ -34,7 +34,7 @@
             Result="value"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="InstallLocation" />
+            Value="PreferredInstallLocation" />
 
     <util:FileSearch Id="DotnetExeSearch"
             Variable="DotnetExeExists"

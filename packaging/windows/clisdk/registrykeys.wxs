@@ -2,15 +2,15 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include "Variables.wxi" ?>
   <Fragment>
-    <ComponentGroup Id="AuthoredRegistryKeys">
-      <Component Id="SetupRegistry_x86" Directory="TARGETDIR" Win64="no">
+    <ComponentGroup Id="AuthoredRegistryKeys_x86node">
+      <Component Id="SetupRegistry" Directory="TARGETDIR" Win64="no">
         <RegistryKey Root="HKLM" Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk">
           <RegistryValue Action="write" Name="$(var.NugetVersion)" Type="integer" Value="1" KeyPath="yes"/>
         </RegistryKey>
       </Component>
-      <Component Id="InstallLocation_x86" Directory="TARGETDIR" Win64="no" Permanent="yes">
+      <Component Id="SDKInstallLocation" Directory="TARGETDIR" Win64="no" Permanent="yes">
         <RegistryKey Root="HKLM" Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk">
-          <RegistryValue Action="write" Name="InstallLocation" Type="string" Value="[DOTNETHOME]" KeyPath="yes"/>
+          <RegistryValue Action="write" Name="PreferredInstallLocation" Type="string" Value="[DOTNETHOME]" KeyPath="yes"/>
         </RegistryKey>
       </Component>
     </ComponentGroup>
