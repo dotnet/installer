@@ -19,7 +19,7 @@
       <PayloadGroupRef Id="DotnetCoreBAPayloads" />
     </BootstrapperApplicationRef>
 
-    <swid:Tag Regid="microsoft.com" InstallPath="[installpath]" />
+    <swid:Tag Regid="microsoft.com" InstallPath="[DOTNETHOME]" />
 
     <util:RegistrySearch Id="CheckSDKInstallLocation"
             Variable="SDKInstallLocationExists"
@@ -48,6 +48,7 @@
             Path="[ProgramFiles6432Folder]dotnet"/>
 
     <Variable Name="installpath" Type="string" Value="[ProgramFiles6432Folder]dotnet" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME" Type="string" Value="[installpath]" bal:Overridable="yes" />
     <Variable Name="BUNDLEMONIKER" Type="string" Value="$(var.ProductMoniker)" bal:Overridable="no" />
     <Variable Name="DOTNETSDKVERSION" Type="string" Value="$(var.DisplayVersion)" bal:Overridable="no" />
     <Variable Name="DOTNETRUNTIMEVERSION" Type="string" Value="$(var.DotNetRuntimeVersion)" bal:Overridable="no" />
@@ -55,19 +56,19 @@
 
     <Chain DisableSystemRestore="yes" ParallelCache="yes">
       <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage Id="CLISDKMsi" SourceFile="$(var.CLISDKMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[installpath]" />
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
         <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
         <MsiProperty Name="ALLOWCLISDKMSIINSTALL" Value="True" />
       </MsiPackage>
