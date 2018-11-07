@@ -26,7 +26,7 @@
             Result="exists"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="PreferredInstallLocation" />
+            Value="InstallLocation" />
     <util:RegistrySearch Id="SDKInstallLocation"
             After="CheckSDKInstallLocation"
             Condition="SDKInstallLocationExists"
@@ -34,7 +34,7 @@
             Result="value"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
-            Value="PreferredInstallLocation" />
+            Value="InstallLocation" />
 
     <util:FileSearch Id="DotnetExeSearch"
             Variable="DotnetExeExists"
@@ -55,26 +55,26 @@
     <Variable Name="ASPNETCOREVERSION" Type="string" Value="$(var.AspNetCoreVersion)" bal:Overridable="no" />
 
     <Chain DisableSystemRestore="yes" ParallelCache="yes">
-      <MsiPackage Id="SharedFXMsi" SourceFile="$(var.SharedFXMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.SharedFXMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <MsiPackage Id="HostFXRMsi" SourceFile="$(var.HostFXRMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.HostFXRMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <MsiPackage Id="SharedHostMsi" SourceFile="$(var.SharedHostMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.SharedHostMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <MsiPackage Id="WinFormsAndWpfMsi" SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <MsiPackage Id="CLISDKMsi" SourceFile="$(var.CLISDKMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.CLISDKMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
         <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
         <MsiProperty Name="ALLOWCLISDKMSIINSTALL" Value="True" />
       </MsiPackage>
-      <?if $(var.Platform)~=x86?>
+      <?if $(var.Platform)=x86?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x86"/>
-      <?elseif $(var.Platform)~=x64?>
+      <?elseif $(var.Platform)=x64?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x64"/>
       <?endif?>
     </Chain>
