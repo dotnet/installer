@@ -43,7 +43,7 @@ done
 
 dockerbuild()
 {
-    BUILD_COMMAND=/opt/code/run-build.sh $DIR/scripts/dockerrun.sh --non-interactive "$@"
+    BUILD_COMMAND=/opt/code/run-build.sh $DIR/eng/dockerrun.sh --non-interactive "$@"
 }
 
 # Check if we need to build in docker

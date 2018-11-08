@@ -17,7 +17,7 @@ REPOROOT="$DIR"
 
 ARCHITECTURE="x64"
 
-source "$REPOROOT/scripts/common/_prettyprint.sh"
+source "$REPOROOT/eng/_prettyprint.sh"
 
 LINUX_PORTABLE_INSTALL_ARGS=
 CUSTOM_BUILD_ARGS=
