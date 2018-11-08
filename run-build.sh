@@ -30,12 +30,6 @@ args=( )
 while [[ $# > 0 ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
-        -c|--configuration)
-            export CONFIGURATION=$2
-            args+=("--configuration")
-            args+=("$2")
-            shift
-            ;;
         -a|--architecture)
             ARCHITECTURE="$2"
             args+=("/p:Architecture=$ARCHITECTURE")
