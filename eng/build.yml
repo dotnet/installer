@@ -37,6 +37,7 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
                   --test --pack --publish
+                  --noprettyprint
                   --configuration $(BuildConfig)
                   $(DockerParameter)
                   --architecture $(BuildArchitecture)
@@ -49,6 +50,7 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Darwin') }}:
       - script: ./build.sh
                   --test --pack --publish
+                  --noprettyprint
                   --configuration $(BuildConfig)
         displayName: Build
 

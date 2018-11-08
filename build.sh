@@ -34,6 +34,9 @@ while [[ $# > 0 ]]; do
             export DOCKER_IMAGENAME=$2
             shift
             ;;
+        --noprettyprint)
+            export DOTNET_CORESDK_NOPRETTYPRINT=1
+            ;;
         *)
             args="$args $1"
             ;;

@@ -5,7 +5,7 @@
 #
 
 # Detect build servers
-if [[ ! -z "$JENKINS_URL" || ! -z "$BUILD_BUILDID" ]]; then
+if [[ ! -z "$JENKINS_URL" || ! -z "$BUILD_BUILDID" || ! -z "$DOTNET_CORESDK_NOPRETTYPRINT" ]]; then
     # Jenkins or VSO build, disable colors because they make things gross.
     NO_COLOR=1
 fi
