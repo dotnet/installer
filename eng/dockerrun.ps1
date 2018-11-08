@@ -29,6 +29,7 @@ if ($noninteractive)
 docker run $interactiveFlag -t --rm --sig-proxy=true `
   --name "$dockerContainerName" `
   -v "${RepoRoot}:/opt/code" `
+  -e DOTNET_CORESDK_IGNORE_TAR_EXIT_CODE=1 `
   -e CHANNEL `
   -e DOTNET_BUILD_SKIP_CROSSGEN `
   -e PUBLISH_TO_AZURE_BLOB `
