@@ -14,4 +14,10 @@
     <IsShipping>true</IsShipping>
     <CoreSdkTargetFramework>netcoreapp3.0</CoreSdkTargetFramework>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <DeterministicSourcePaths>false</DeterministicSourcePaths>
+  </PropertyGroup>
 </Project>

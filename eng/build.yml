@@ -22,6 +22,7 @@ phases:
       DockerParameter: $(_DockerParameter)
       LinuxPortable: $(_LinuxPortable)
       RuntimeId: $(_RuntimeIdentifier)
+      AdditionalBuildParameters: $(_AdditionalBuildParameters)
 
     steps:
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
@@ -29,6 +30,7 @@ phases:
                   -test -pack -publish
                   -Configuration $(BuildConfig)
                   -Architecture $(BuildArchitecture)
+                  $(AdditionalBuildParameters)
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
@@ -43,6 +45,7 @@ phases:
                   --architecture $(BuildArchitecture)
                   $(LinuxPortable)
                   $(RuntimeId)
+                  $(AdditionalBuildParameters)
         displayName: Build
         env:
           DropSuffix: $(_DropSuffix)
