@@ -8,7 +8,7 @@
           <RegistryValue Action="write" Name="$(var.NugetVersion)" Type="integer" Value="1" KeyPath="yes"/>
         </RegistryKey>
       </Component>
-      <Component Id="SDKInstallLocation" Directory="TARGETDIR" Win64="no" Permanent="yes">
+      <Component Id="SDKInstallLocation" Directory="TARGETDIR" Win64="no">
         <RegistryKey Root="HKLM" Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk">
           <RegistryValue Action="write" Name="InstallLocation" Type="string" Value="[DOTNETHOME]" KeyPath="yes"/>
         </RegistryKey>

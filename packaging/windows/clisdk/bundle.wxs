@@ -30,13 +30,14 @@
     <util:RegistrySearch Id="SDKInstallLocation"
             After="CheckSDKInstallLocation"
             Condition="SDKInstallLocationExists"
-            Variable="installpath"
+            Variable="DOTNETHOME"
             Result="value"
             Root="HKLM"
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk"
             Value="InstallLocation" />
 
     <util:FileSearch Id="DotnetExeSearch"
+            After="SDKInstallLocation"
             Variable="DotnetExeExists"
             Condition="NOT SDKInstallLocationExists"
             Result="exists"
@@ -44,11 +45,10 @@
     <util:DirectorySearch Id="DotnetExeLocation"
             After="DotnetExeSearch"
             Condition="DotnetExeExists"
-            Variable="installpath"
+            Variable="DOTNETHOME"
             Path="[ProgramFiles6432Folder]dotnet"/>
 
-    <Variable Name="installpath" Type="string" Value="[ProgramFiles6432Folder]dotnet" bal:Overridable="yes" />
-    <Variable Name="DOTNETHOME" Type="string" Value="[installpath]" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME" Type="string" Value="[ProgramFiles6432Folder]dotnet" bal:Overridable="yes" />
     <Variable Name="BUNDLEMONIKER" Type="string" Value="$(var.ProductMoniker)" bal:Overridable="no" />
     <Variable Name="DOTNETSDKVERSION" Type="string" Value="$(var.DisplayVersion)" bal:Overridable="no" />
     <Variable Name="DOTNETRUNTIMEVERSION" Type="string" Value="$(var.DotNetRuntimeVersion)" bal:Overridable="no" />
