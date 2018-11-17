@@ -34,6 +34,14 @@ namespace Microsoft.DotNet.Cli.Build.Framework
             }
         }
 
+        public static bool IsFreeBSD
+        {
+            get
+            {
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Create("FREEBSD"));
+            }
+        }
+
         public static bool IsUbuntu
         {
             get
@@ -83,7 +91,7 @@ namespace Microsoft.DotNet.Cli.Build.Framework
         {
             get
             {
-                return IsLinux || IsOSX;
+                return IsLinux || IsOSX || IsFreeBSD;
             }
         }
 
@@ -124,6 +132,8 @@ namespace Microsoft.DotNet.Cli.Build.Framework
                     return IsUbuntu;
                 case BuildPlatform.OSX:
                     return IsOSX;
+                case BuildPlatform.FreeBSD:
+                    return IsFreeBSD;
                 case BuildPlatform.CentOS:
                     return IsCentOS;
                 case BuildPlatform.RHEL:
@@ -181,6 +191,10 @@ namespace Microsoft.DotNet.Cli.Build.Framework
             else if (IsOpenSuse)
             {
                 return BuildPlatform.OpenSuse;
+            }
+            else if (IsFreeBSD)
+            {
+                return BuildPlatform.FreeBSD;
             }
             else
             {
