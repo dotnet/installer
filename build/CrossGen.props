@@ -11,5 +11,7 @@
     <LibCLRJitRid Condition="'$(Architecture)' == 'arm' And '$(OSName)' == 'linux'">x64_arm</LibCLRJitRid>
     <LibCLRJitPath>$(NuGetPackagesDir)/$(RuntimeNETCoreAppPackageName)/$(MicrosoftNETCoreAppPackageVersion)/runtimes/$(LibCLRJitRid)/native/$(DynamicLibPrefix)clrjit$(DynamicLibExtension)</LibCLRJitPath>
     <SharedFrameworkNameVersionPath>$(OutputDirectory)/shared/$(SharedFrameworkName)/$(MicrosoftNETCoreAppPackageVersion)</SharedFrameworkNameVersionPath>
+    <DIASymReaderCrossgenFilter>*</DIASymReaderCrossgenFilter>
+    <DIASymReaderCrossgenFilter Condition="'$(rid)' == 'win-arm'">x86</DIASymReaderCrossgenFilter>
   </PropertyGroup>
 </Project>
