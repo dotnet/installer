@@ -36,7 +36,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
 
-    <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' ">true</IncludeWpfAndWinForms>
+    <!-- https://github.com/dotnet/core-sdk/issues/163 - consider adding WpfAndWinforms to arm -->
+    <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' AND !$(Architecture.StartsWith('arm')) ">true</IncludeWpfAndWinForms>
     <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' ">false</IncludeWpfAndWinForms>
   </PropertyGroup>
 </Project>
