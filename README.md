@@ -21,9 +21,9 @@ This project has adopted the code of conduct defined by the [Contributor Covenan
 Build Status
 ------------
 
-|Windows x64|Windows x86|macOS|Linux x64 Archive|Linux arm Archive|Linux arm64 Archive|Linux Native Installers|RHEL 6 Archive|Linux-musl Archive|
-|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
-|[![][win-x64-build-badge]][win-x64-build]|[![][win-x86-build-badge]][win-x86-build]|[![][osx-build-badge]][osx-build]|[![][linux-build-badge]][linux-build]|[![][linux-arm-build-badge]][linux-arm-build]|[![][linux-arm64-build-badge]][linux-arm64-build]|[![][linuxnative-build-badge]][linuxnative-build]|[![][rhel6-build-badge]][rhel6-build]|[![][linux-musl-build-badge]][linux-musl-build]|
+|Windows x64|Windows x86|macOS|Linux x64 Archive|Linux arm Archive|Linux arm64 Archive|Linux Native Installers|RHEL 6 Archive|Linux-musl Archive|Windows Arm|
+|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
+|[![][win-x64-build-badge]][win-x64-build]|[![][win-x86-build-badge]][win-x86-build]|[![][osx-build-badge]][osx-build]|[![][linux-build-badge]][linux-build]|[![][linux-arm-build-badge]][linux-arm-build]|[![][linux-arm64-build-badge]][linux-arm64-build]|[![][linuxnative-build-badge]][linuxnative-build]|[![][rhel6-build-badge]][rhel6-build]|[![][linux-musl-build-badge]][linux-musl-build]|[![][win-arm-build-badge]][win-arm-build]|
 
 [win-x64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9472/badge
 [win-x64-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9472
@@ -52,6 +52,9 @@ Build Status
 [linux-musl-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9466/badge
 [linux-musl-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=9466
 
+[win-arm-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/10417/badge
+[win-arm-build]: https://devdiv.visualstudio.com/DevDiv/_build?_a=completed&definitionId=10417
+
 Installers and Binaries
 -----------------------
 
@@ -73,6 +76,7 @@ To download the .NET Core runtime **without** the SDK, visit https://github.com/
 | **Linux arm64** | [![][linux-arm64-badge-master]][linux-arm64-version-master]<br>[tar.gz][linux-arm64-targz-master] - [Checksum][linux-arm64-targz-checksum-master] | N/A | [![][linux-arm64-badge-2.1.401]][linux-arm64-version-2.1.401]<br>[tar.gz][linux-arm64-targz-2.1.401] - [Checksum][linux-arm64-targz-checksum-2.1.401] | [![][linux-arm64-badge-2.1.4XX]][linux-arm64-version-2.1.4XX]<br>[tar.gz][linux-arm64-targz-2.1.4XX] - [Checksum][linux-arm64-targz-checksum-2.1.4XX] | [![][linux-arm64-badge-2.2.1XX]][linux-arm64-version-2.2.1XX]<br>[tar.gz][linux-arm64-targz-2.2.1XX] - [Checksum][linux-arm64-targz-checksum-2.2.1XX] |
 | **RHEL 6** | [![][rhel-6-badge-master]][rhel-6-version-master]<br>[tar.gz][rhel-6-targz-master] - [Checksum][rhel-6-targz-checksum-master] | N/A | [![][rhel-6-badge-2.1.401]][rhel-6-version-2.1.401]<br>[tar.gz][rhel-6-targz-2.1.401] - [Checksum][rhel-6-targz-checksum-2.1.401] | [![][rhel-6-badge-2.1.4XX]][rhel-6-version-2.1.4XX]<br>[tar.gz][rhel-6-targz-2.1.4XX] - [Checksum][rhel-6-targz-checksum-2.1.4XX] | [![][rhel-6-badge-2.2.1XX]][rhel-6-version-2.2.1XX]<br>[tar.gz][rhel-6-targz-2.2.1XX] - [Checksum][rhel-6-targz-checksum-2.2.1XX] |
 | **Linux-musl** | [![][linux-musl-badge-master]][linux-musl-version-master]<br>[tar.gz][linux-musl-targz-master] - [Checksum][linux-musl-targz-checksum-master] | N/A | [![][linux-musl-badge-2.1.401]][linux-musl-version-2.1.401]<br>[tar.gz][linux-musl-targz-2.1.401] - [Checksum][linux-musl-targz-checksum-2.1.401] | [![][linux-musl-badge-2.1.4XX]][linux-musl-version-2.1.4XX]<br>[tar.gz][linux-musl-targz-2.1.4XX] - [Checksum][linux-musl-targz-checksum-2.1.4XX] | [![][linux-musl-badge-2.2.1XX]][linux-musl-version-2.2.1XX]<br>[tar.gz][linux-musl-targz-2.2.1XX] - [Checksum][linux-musl-targz-checksum-2.2.1XX] |
+| **Windows arm** | [![][win-arm-badge-master]][win-arm-version-master]<br>[zip][win-arm-zip-master] - [Checksum][win-arm-zip-checksum-master] | N/A | N/A | N/A | [![][win-arm-badge-2.2.1XX]][win-arm-version-2.2.1XX]<br>[zip][win-arm-zip-2.2.1XX] - [Checksum][win-arm-zip-checksum-2.2.1XX] |
 | **Package Feed** | [Feed Link][feed-location-master] | [Feed Link][feed-location-2.1.2XX] | [Feed Link][feed-location-2.1.401] | [Feed Link][feed-location-2.1.4XX] | [Feed Link][feed-location-2.2.1XX] |
 | **Constituent Repo Shas** | **N/A** | **N/A** | [Git SHAs][sdk-shas-2.1.401] | **N/A** | [Git SHAs][sdk-shas-2.2.1XX] |
 
@@ -334,6 +338,16 @@ Reference notes:
 [linux-musl-version-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/latest.version
 [linux-musl-targz-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-musl-x64.tar.gz
 [linux-musl-targz-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-musl-x64.tar.gz.sha
+
+[win-arm-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_arm_x64_Release_version_badge.svg
+[win-arm-version-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/latest.version
+[win-arm-zip-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/dotnet-sdk-latest-win-arm.zip
+[win-arm-zip-checksum-master]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/master/dotnet-sdk-latest-win-arm.zip.sha
+
+[win-arm-badge-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/win_arm_x64_Release_version_badge.svg
+[win-arm-version-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/latest.version
+[win-arm-zip-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-win-arm.zip
+[win-arm-zip-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-win-arm.zip.sha
 
 [sdk-shas-2.1.401]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.1#built-repositories
 

@@ -32,6 +32,11 @@ phases:
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: true
+        Build_Release_arm:
+          _BuildConfig: Release
+          _BuildArchitecture: arm
+          _DOTNET_CLI_UI_LANGUAGE: ''
+          _DropSuffix: ''
 
 - template: /eng/build.yml
   parameters:
