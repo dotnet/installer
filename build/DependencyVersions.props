@@ -5,15 +5,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <MicrosoftAspNetCoreAllPackageVersion>3.0.0-alpha1-10663</MicrosoftAspNetCoreAllPackageVersion>
-    <MicrosoftAspNetCoreAppPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</MicrosoftAspNetCoreAppPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <MicrosoftAspNetCoreMvcPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</MicrosoftAspNetCoreMvcPackageVersion>
-    <DotnetEfPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</DotnetEfPackageVersion>
-    <DotnetDevCertsPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</DotnetDevCertsPackageVersion>
-    <DotnetSqlCachePackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</DotnetSqlCachePackageVersion>
-    <DotnetUserSecretsPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</DotnetUserSecretsPackageVersion>
-    <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</DotnetWatchPackageVersion>
+    <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
+    <DotnetEfPackageVersion>3.0.0-preview.18569.2</DotnetEfPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
+    <MicrosoftAspNetCoreAppPackageVersion>3.0.0-alpha1-10772</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <DotnetDevCertsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetDevCertsPackageVersion>
+    <DotnetSqlCachePackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetSqlCachePackageVersion>
+    <DotnetUserSecretsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetUserSecretsPackageVersion>
+    <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
