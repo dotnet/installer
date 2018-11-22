@@ -9,17 +9,7 @@ param(
     [Parameter(ValueFromRemainingArguments=$true)][String[]]$ExtraParameters
 )
 
-#$env:CONFIGURATION = $Configuration;
 $RepoRoot = "$PSScriptRoot"
-# if(!$env:NUGET_PACKAGES){
-#   $env:NUGET_PACKAGES = "$RepoRoot\.nuget\packages"
-# }
-
-# $InstallArchitecture = $Architecture
-# if($Architecture.StartsWith("arm", [StringComparison]::OrdinalIgnoreCase))
-# {
-#     $InstallArchitecture = "x64"
-# }
 
 $ArchitectureParam="/p:Architecture=$Architecture"
 $ConfigurationParam="-configuration $Configuration"
