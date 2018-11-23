@@ -7,7 +7,10 @@ Param(
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$additionalArgs
 )
 
+# sample command line: .\eng\dockerrun.ps1 -dockerImageName ubuntu.18.04 /p:DisableSourceLink=true --test --pack --publish
+
 Write-Host "Docker image name: $dockerImageName"
+Write-Host "Additional args: $additionalArgs"
 
 . $PSScriptRoot\common\tools.ps1
 
