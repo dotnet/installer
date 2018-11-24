@@ -225,7 +225,7 @@ Reference notes:
 [linux-version-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/latest.version
 [linux-DEB-installer-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb
 [linux-DEB-installer-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
-[linux-RPM-installer-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
+[linux-RPM-installer-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.rpm
 [linux-RPM-installer-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.rpm.sha
 [linux-targz-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-linux-x64.tar.gz
 [linux-targz-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-linux-x64.tar.gz.sha
@@ -234,7 +234,7 @@ Reference notes:
 [linux-version-2.2.1xx]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/latest.version
 [linux-DEB-installer-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.deb
 [linux-DEB-installer-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.deb.sha
-[linux-RPM-installer-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
+[linux-RPM-installer-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.rpm
 [linux-RPM-installer-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.rpm.sha
 [linux-targz-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-x64.tar.gz
 [linux-targz-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-x64.tar.gz.sha
