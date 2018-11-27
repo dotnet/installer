@@ -100,7 +100,7 @@
 
   <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
     <_DownloadAndExtractItem Include="AspNetCoreSharedFxArchiveFile"
-                             Condition="!Exists('$(AspNetCoreSharedFxArchiveFile)') And ( '$(AspNetCoreSharedFxArchiveRid)' == 'linux-arm' OR !$(Architecture.StartsWith('arm')) )">
+                             Condition="!Exists('$(AspNetCoreSharedFxArchiveFile)')">
       <Url>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/$(AspNetCoreSharedFxArchiveFileName)$(CoreSetupBlobAccessTokenParam)</Url>
       <DownloadFileName>$(AspNetCoreSharedFxArchiveFile)</DownloadFileName>
       <ExtractDestination>$(AspNetCoreSharedFxPublishDirectory)</ExtractDestination>
