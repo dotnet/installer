@@ -1,6 +1,6 @@
 # .NET Core SDK
 
-[![.NET Slack Status](https://aspnetcoreslack.herokuapp.com/badge.svg?2)](http://tattoocoder.com/aspnet-slack-sign-up/) [![Join the chat at https://gitter.im/dotnet/cli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotnet/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/dotnet/cli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotnet/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This repo contains the source code for the cross-platform [.NET Core](http://github.com/dotnet/core) SDK. It aggregates the .NET Toolchain, the .NET Core runtime, the templates, the offline packages cache, and the ASP.NET Runtime store. It produces zip, tarballs, and native packages for various supported platforms.
 
@@ -225,7 +225,7 @@ Reference notes:
 [linux-version-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/latest.version
 [linux-DEB-installer-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb
 [linux-DEB-installer-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
-[linux-RPM-installer-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
+[linux-RPM-installer-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.rpm
 [linux-RPM-installer-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.rpm.sha
 [linux-targz-2.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-linux-x64.tar.gz
 [linux-targz-checksum-2.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-linux-x64.tar.gz.sha
@@ -234,7 +234,7 @@ Reference notes:
 [linux-version-2.2.1xx]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/latest.version
 [linux-DEB-installer-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.deb
 [linux-DEB-installer-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.deb.sha
-[linux-RPM-installer-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.4xx/dotnet-sdk-latest-x64.deb.sha
+[linux-RPM-installer-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.rpm
 [linux-RPM-installer-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-x64.rpm.sha
 [linux-targz-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-x64.tar.gz
 [linux-targz-checksum-2.2.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/dotnet-sdk-latest-linux-x64.tar.gz.sha
