@@ -41,7 +41,7 @@ phases:
                   -pack -publish
                   -Configuration $(BuildConfig)
                   -Architecture $(BuildArchitecture)
-                  -p:SignCoreSdk=true -p:DotNetSignType=$(SignType)
+                  /p:SignCoreSdk=true /p:DotNetSignType=$(SignType)
                   $(AdditionalBuildParameters)
         displayName: Build
         env:
