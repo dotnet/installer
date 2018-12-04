@@ -13,6 +13,8 @@
 
     <IsShipping>true</IsShipping>
     <CoreSdkTargetFramework>netcoreapp3.0</CoreSdkTargetFramework>
+
+    <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">
