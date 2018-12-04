@@ -25,10 +25,10 @@ phases:
       AdditionalBuildParameters: $(_AdditionalBuildParameters)
 
     steps:
-    - script: 'eng\setcitestinfo.bat $(BuildArchitecture)'
+    - script: 'eng\setbuildinfo.bat $(BuildArchitecture) $(BuildConfig)'
       condition: eq(variables['_AgentOSName'], 'Windows_NT')
       displayName: Set test info (Windows)
-    - script: 'eng/setcitestinfo.sh $(BuildArchitecture)'
+    - script: 'eng/setbuildinfo.sh $(BuildArchitecture) $(BuildConfig)'
       condition: ne(variables['_AgentOSName'], 'Windows_NT')
       displayName: Set test info (Non-Windows)
     - script: 'echo TestParameter: $(TestParameter)'
@@ -41,6 +41,7 @@ phases:
                   -pack -publish
                   -Configuration $(BuildConfig)
                   -Architecture $(BuildArchitecture)
+                  -p:SignCoreSdk=true -p:DotNetSignType=$(SignType)
                   $(AdditionalBuildParameters)
         displayName: Build
         env:
