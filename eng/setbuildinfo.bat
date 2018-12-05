@@ -23,3 +23,12 @@ if /I "%SYSTEM_TEAMPROJECT%" == "Public" (
     ECHO ##vso[task.setvariable variable=SignType]real
 )
 
+if "%AdditionalBuildParameters%" == "" (
+    REM Make sure the variable is set as empty in Azure pipelines, instead of not being set at all
+    REM (which would cause the literal "$(AdditionalBuildParameters)" to be passed to the script)
+    ECHO Setting AdditionalBuildParameters to empty
+    ECHO ##vso[task.setvariable variable=AdditionalBuildParameters]
+) ELSE (
+    ECHO AdditionalBuildParameters is already set to: %AdditionalBuildParameters%
+)
+
