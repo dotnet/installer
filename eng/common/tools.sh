@@ -15,6 +15,11 @@ useInstalledDotNetCli=${useInstalledDotNetCli:-true}
 repo_root="$scriptroot/../.."
 eng_root="$scriptroot/.."
 artifacts_dir="$repo_root/artifacts"
+if [[ -n "${ARCADE_ARTIFACTS_DIR:-}" ]]; then
+  artifacts_dir="$ARCADE_ARTIFACTS_DIR"
+  export ArtifactsDir="$artifacts_dir"
+fi
+
 toolset_dir="$artifacts_dir/toolset"
 log_dir="$artifacts_dir/log/$configuration"
 temp_dir="$artifacts_dir/tmp/$configuration"
@@ -89,6 +94,10 @@ function InitializeDotNetCli {
     dotnet_root="$DOTNET_INSTALL_DIR"
   else
     dotnet_root="$repo_root/.dotnet"
+    if [[ -n "${ARCADE_DOTNET_DIR:-}" ]]; then
+      dotnet_root="$ARCADE_DOTNET_DIR"
+    fi
+
     export DOTNET_INSTALL_DIR="$dotnet_root"
 
     if [[ ! -d "$DOTNET_INSTALL_DIR/sdk/$dotnet_sdk_version" ]]; then
