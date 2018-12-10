@@ -167,7 +167,14 @@ if [[ $archlower == 'arm'* ]]; then
 fi
 
 if [ "$STAGE0_SOURCE_DIR" == "" ]; then
-    (set -x ; curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --version "3.0.100-preview1-009020" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$INSTALL_ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+    (set -x ; curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --version "3.0.100-preview-009812" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$INSTALL_ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        if [ "$ID" == 'debian' ] || [ "$ID" == 'ubuntu' ]; then
+            # get 2.x runtime for deb-tool package. This may be temporary until we have package targeting 3.0
+            (set -x ; curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --runtime dotnet --version "2.2.0" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$INSTALL_ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+        fi
+    fi
 else
     echo "Copying bootstrap cli from $STAGE0_SOURCE_DIR"
     cp -r $STAGE0_SOURCE_DIR/* "$DOTNET_INSTALL_DIR"
