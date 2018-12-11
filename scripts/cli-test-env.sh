@@ -17,6 +17,8 @@ uname=$(uname)
 if [ "$(uname)" = "Darwin" ]
 then
   RID=osx-x64
+elif [ "$(uname)" = "FreeBSD" ]; then
+  RID=freebsd-x64
 else
   RID=linux-x64
 fi
