@@ -12,3 +12,8 @@ else
     echo "##vso[task.setvariable variable=TestParameter]--test"
     echo "##vso[task.setvariable variable=RunTests]true"
 fi
+
+if [[ "$AdditionalBuildParameters" == '$(_AdditionalBuildParameters)' ]]
+then
+    echo "##vso[task.setvariable variable=AdditionalBuildParameters]"
+fi
