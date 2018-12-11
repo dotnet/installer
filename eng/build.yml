@@ -35,13 +35,14 @@ phases:
       displayName: Show TestParameter
     - script: 'echo RunTests: $(RunTests)'
       displayName: Show RunTests
+    - script: 'echo AdditionalBuildParameters: $(AdditionalBuildParameters)'
+      displayName: Show AdditionalBuildParameters
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: build.cmd
                   $(TestParameter)
                   -pack -publish
                   -Configuration $(BuildConfig)
                   -Architecture $(BuildArchitecture)
-                  -sign /p:SignCoreSdk=true /p:DotNetSignType=$(SignType)
                   $(AdditionalBuildParameters)
         displayName: Build
         env:
