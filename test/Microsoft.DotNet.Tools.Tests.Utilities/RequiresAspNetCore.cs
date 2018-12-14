@@ -9,11 +9,11 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
     {
         public RequiresAspNetCore()
         {
-            var  d = new RepoDirectoriesProvider();
+            var  repoDirectoriesProvider = new RepoDirectoriesProvider();
             
-            if (d.Stage2AspNetCore == null)
+            if (repoDirectoriesProvider.Stage2AspNetCore == null)
             {
-                this.Skip = $"This test requires a AspNetCore but isn't present.";
+                this.Skip = $"This test requires a AspNetCore but it isn't present.";
             }
         }
     }
