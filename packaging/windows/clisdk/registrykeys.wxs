@@ -8,6 +8,11 @@
           <RegistryValue Action="write" Name="$(var.NugetVersion)" Type="integer" Value="1" KeyPath="yes"/>
         </RegistryKey>
       </Component>
+      <Component Id="WpfWinformsTemplatesFlag" Directory="TARGETDIR" Win64="no">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\dotnet\Setup\InstalledVersions\$(var.Platform)\sdk">
+          <RegistryValue Action="write" Name="WpfWinformsTemplatesPresent" Type="integer" Value="1" KeyPath="yes"/>
+        </RegistryKey>
+      </Component>
       <Component Id="SDKInstallLocation_x64" Directory="TARGETDIR" Win64="no">
         <Condition>VersionNT64 AND DOTNETHOME_X64</Condition>
         <RegistryKey Root="HKLM" Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64\sdk">
