@@ -2,7 +2,7 @@ trigger:
 - master
 
 variables:
-  teamName: Roslyn-Project-System
+  _TeamName: Roslyn-Project-System
   ${{ if eq(variables['System.TeamProject'], 'public') }}:
     PB_PublishBlobFeedKey:
     PB_PublishBlobFeedUrl:
@@ -58,6 +58,7 @@ jobs:
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
+          _AdditionalBuildParameters: '/p:DisableSourceLink=true'
 
 - template: /eng/build.yml
   parameters:
@@ -88,7 +89,7 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-            _AdditionalBuildParameters: '-p:DisableSourceLink=true'
+            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
           Build_Fedora_27_Debug_x64:
             _BuildConfig: Debug
             _DockerParameter: '--docker fedora.27'
@@ -131,7 +132,7 @@ jobs:
             _RuntimeIdentifier: '--runtime-id rhel.6-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-            _AdditionalBuildParameters: '-p:DisableSourceLink=true'
+            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
           Build_Arm_Debug:
             _BuildConfig: Debug
             _DockerParameter: ''
@@ -175,7 +176,7 @@ jobs:
             _RuntimeIdentifier: '--runtime-id rhel.6-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-            _AdditionalBuildParameters: '-p:DisableSourceLink=true'
+            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
           Build_Arm_Release:
             _BuildConfig: Release
             _DockerParameter: ''
