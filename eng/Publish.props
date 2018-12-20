@@ -2,10 +2,14 @@
 <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
 <Project>
 
+  <Import Project="$(RepoRoot)\src\redist\targets\Versions.targets" />
+
   <PropertyGroup>
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
+    <PublishToBlobFeedFlatContainer>true</PublishToBlobFeedFlatContainer>
+    <VersionSvgTemplate>$(RepoRoot)/resources/images/version_badge.svg</VersionSvgTemplate>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +20,16 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.deb" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.rpm" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
-
-    <ItemsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
-      <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(Version)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-      <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
-    </ItemsToPushToBlobFeed>
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" />
   </ItemGroup>
+
+  <Target Name="PrepareCoreSdkAssets" BeforeTargets="Publish" DependsOnTargets="SetSdkVersionInfo">
+    <ItemGroup>
+      <ItemsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
+      </ItemsToPushToBlobFeed>
+    </ItemGroup>
+  </Target>
 
 </Project>
