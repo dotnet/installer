@@ -9,7 +9,6 @@
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
     <PublishToBlobFeedFlatContainer>true</PublishToBlobFeedFlatContainer>
-    <VersionSvgTemplate>$(RepoRoot)/resources/images/version_badge.svg</VersionSvgTemplate>
   </PropertyGroup>
 
   <ItemGroup>

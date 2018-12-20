@@ -15,7 +15,7 @@ variables:
     _PublishType: blob
     _SignType: real
 
-phases:
+jobs:
 - template: /eng/build.yml
   parameters:
     agentOs: Windows_NT
@@ -238,11 +238,33 @@ phases:
 #           _BuildConfig: Release
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - job: Copy_SDK_To_Latest
+    dependsOn:
+      - Windows_NT
+      - Linux
+      - Darwin
+    pool:
+      name: Hosted VS2017
+    condition: succeeded()
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'DotNet-Engineering-Services_KeyVault'
+          KeyVaultName: EngKeyVault
+          SecretsFilter: 'dotnetfeed-storage-access-key-1'
+        condition: succeeded()
+
+      - script: eng/CopyToLatest.cmd
+                /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
+                /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: /eng/common/templates/phases/publish-build-assets.yml
     parameters:
       dependsOn:
         - Windows_NT
         - Linux
         - Darwin
+        - Copy_SDK_To_Latest
       queue:
         name: Hosted VS2017
