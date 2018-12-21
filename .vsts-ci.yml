@@ -10,7 +10,7 @@ variables:
     _PublishType: none
     _SignType: test
   ${{ if ne(variables['System.TeamProject'], 'public') }}:
-    PB_PublishBlobFeedUrl: https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json
+    PB_PublishBlobFeedUrl: https://dotnetcli.blob.core.windows.net/dotnet/index.json
     _DotNetPublishToBlobFeed: true
     _PublishType: blob
     _SignType: real
