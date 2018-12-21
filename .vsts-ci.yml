@@ -6,11 +6,13 @@ variables:
   ${{ if eq(variables['System.TeamProject'], 'public') }}:
     PB_PublishBlobFeedKey:
     PB_PublishBlobFeedUrl:
+    PB_PublishChecksumsBlobFeedUrl:
     _DotNetPublishToBlobFeed: false
     _PublishType: none
     _SignType: test
   ${{ if ne(variables['System.TeamProject'], 'public') }}:
     PB_PublishBlobFeedUrl: https://dotnetcli.blob.core.windows.net/dotnet/index.json
+    PB_PublishChecksumsBlobFeedUrl: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
     _DotNetPublishToBlobFeed: true
     _PublishType: blob
     _SignType: real
@@ -253,12 +255,14 @@ jobs:
         inputs:
           azureSubscription: 'DotNet-Engineering-Services_KeyVault'
           KeyVaultName: EngKeyVault
-          SecretsFilter: 'dotnetfeed-storage-access-key-1'
+          SecretsFilter: 'dotnetfeed-storage-access-key-1,dotnetclichecksums-storage-key'
         condition: succeeded()
 
       - script: eng/CopyToLatest.cmd
                 /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
                 /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                /p:DotnetPublishChecksumsBlobFeedUrl=$(PB_PublishChecksumsBlobFeedUrl)
+                /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: /eng/common/templates/phases/publish-build-assets.yml

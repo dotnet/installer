@@ -30,12 +30,14 @@ phases:
       ${{ if ne(variables['System.TeamProject'], 'public') }}:
         _HelixSource: official/dotnet/core-sdk/$(Build.SourceBranch)
         _OfficialBuildIdArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-        _PublishArgs: /p:DotNetPublishBlobFeedKey=$(dotnetcli-storage-key)
-                  /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
-                  /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+        _PublishArgs: /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                  /p:DotnetPublishSdkAssetsBlobFeedUrl=$(PB_PublishBlobFeedUrl)
+                  /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                   /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
                   /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
                   /p:PB_PublishType=$(_PublishType)
+                  /p:DotnetPublishChecksumsBlobFeedUrl=$(PB_PublishChecksumsBlobFeedUrl)
+                  /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
         _SignArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName)
 
     steps:
@@ -57,7 +59,7 @@ phases:
         inputs:
           azureSubscription: 'DotNet-Engineering-Services_KeyVault'
           KeyVaultName: EngKeyVault
-          SecretsFilter: 'dotnetcli-storage-key,microsoft-symbol-server-pat,symweb-symbol-server-pat'
+          SecretsFilter: 'dotnetcli-storage-key,dotnetclichecksums-storage-key,microsoft-symbol-server-pat,symweb-symbol-server-pat'
         condition: succeeded()
       - task: AzureKeyVault@1
         inputs:

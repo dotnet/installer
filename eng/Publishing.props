@@ -4,11 +4,20 @@
 
   <Import Project="$(RepoRoot)\src\redist\targets\Versions.targets" />
 
+  <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets"/>
+
   <PropertyGroup>
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
     <PublishToBlobFeedFlatContainer>true</PublishToBlobFeedFlatContainer>
+    <ChecksumsFeedUrl>$(DotnetPublishChecksumsBlobFeedUrl)</ChecksumsFeedUrl>
+    <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
+    <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
+    <SdkAssetsAzureAccountKey>$(DotNetPublishSdkAssetsBlobFeedKey)</SdkAssetsAzureAccountKey>
+
+    <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
+    <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,16 +28,50 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.deb" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.rpm" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" />
+
+    <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
   </ItemGroup>
 
-  <Target Name="PrepareCoreSdkAssets" BeforeTargets="Publish" DependsOnTargets="SetSdkVersionInfo">
+  <Target Name="PublishSdkAssetsAndChecksums"
+          BeforeTargets="Publish"
+          DependsOnTargets="SetSdkVersionInfo"
+          Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' ">
     <ItemGroup>
-      <ItemsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
+      <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
         <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
-      </ItemsToPushToBlobFeed>
-    </ItemGroup>
-  </Target>
+      </SdkAssetsToPushToBlobFeed>
 
+      <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)" IsShipping="true" >
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <ManifestArtifactData>ShipInstaller=dotnetclichecksums</ManifestArtifactData>
+      </ChecksumsToPushToBlobFeed>
+    </ItemGroup>
+
+    <PushToBlobFeed
+      ExpectedFeedUrl="$(SdkAssetsFeedUrl)"
+      AccountKey="$(SdkAssetsAzureAccountKey)"
+      ItemsToPush="@(SdkAssetsToPushToBlobFeed)"
+      ManifestBuildData="Location=$(SdkAssetsFeedUrl)"
+      ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
+      ManifestBranch="$(BUILD_SOURCEBRANCH)"
+      ManifestBuildId="$(BUILD_BUILDNUMBER)"
+      ManifestCommit="$(BUILD_SOURCEVERSION)"
+      AssetManifestPath="$(AssetManifestFilePath)"
+      PublishFlatContainer="true"/>
+
+    <PushToBlobFeed
+      ExpectedFeedUrl="$(ChecksumsFeedUrl)"
+      AccountKey="$(ChecksumsAccountKey)"
+      ItemsToPush="@(ChecksumsToPushToBlobFeed)"
+      ManifestBuildData="Location=$(ChecksumsFeedUrl)"
+      ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
+      ManifestBranch="$(BUILD_SOURCEBRANCH)"
+      ManifestBuildId="$(BUILD_BUILDNUMBER)"
+      ManifestCommit="$(BUILD_SOURCEVERSION)"
+      AssetManifestPath="$(AssetManifestFilePath)"
+      PublishFlatContainer="true"/>
+  </Target>
 </Project>
