@@ -198,20 +198,21 @@ jobs:
             _RuntimeIdentifier: '--runtime-id linux-musl-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-          Build_Linux_Portable_Deb_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker ubuntu.16.04'
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
-          Build_Linux_Portable_Rpm_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker rhel'
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
+          # disabling these for now. I am missing something and it is not generating deb and rpm
+          # Build_Linux_Portable_Deb_Release_x64:
+          #   _BuildConfig: Release
+          #   _DockerParameter: '--docker ubuntu.16.04'
+          #   _LinuxPortable: '--linux-portable'
+          #   _RuntimeIdentifier: ''
+          #   _BuildArchitecture: 'x64'
+          #   _DropSuffix: ''
+          # Build_Linux_Portable_Rpm_Release_x64:
+          #   _BuildConfig: Release
+          #   _DockerParameter: '--docker rhel'
+          #   _LinuxPortable: '--linux-portable'
+          #   _RuntimeIdentifier: ''
+          #   _BuildArchitecture: 'x64'
+          #   _DropSuffix: ''
         Build_LinuxPortable_Release_x64:
           _BuildConfig: Release
           _DockerParameter: ''
