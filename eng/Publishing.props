@@ -18,11 +18,13 @@
 
     <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
     <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
+
+    <PublishBinaries Condition=" '$(PublishBinaries)' == '' ">true</PublishBinaries>
   </PropertyGroup>
 
   <ItemGroup>
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.tar.gz" />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinaries)' == 'true' " />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.tar.gz" Condition=" '$(PublishBinaries)' == 'true' " />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.pkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.exe" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.deb" />
