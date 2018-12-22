@@ -255,14 +255,15 @@ jobs:
         inputs:
           azureSubscription: 'DotNet-Engineering-Services_KeyVault'
           KeyVaultName: EngKeyVault
-          SecretsFilter: 'dotnetfeed-storage-access-key-1,dotnetclichecksums-storage-key'
+          SecretsFilter: 'dotnetcli-storage-key,dotnetclichecksums-storage-key'
         condition: succeeded()
 
       - script: eng/CopyToLatest.cmd
-                /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
-                /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                /p:DotnetPublishSdkAssetsBlobFeedUrl=$(PB_PublishBlobFeedUrl)
+                /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                 /p:DotnetPublishChecksumsBlobFeedUrl=$(PB_PublishChecksumsBlobFeedUrl)
                 /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
+        displayName: Copy to latest
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: /eng/common/templates/phases/publish-build-assets.yml
