@@ -200,17 +200,16 @@ jobs:
             _RuntimeIdentifier: '--runtime-id linux-musl-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-          # disabling this for now. I am missing something and it is not generating deb
-          # Build_Linux_Portable_Deb_Release_x64:
-          #   _BuildConfig: Release
-          #   _DockerParameter: '--docker ubuntu.16.04'
-          #   _LinuxPortable: '--linux-portable'
-          #   _RuntimeIdentifier: ''
-          #   _BuildArchitecture: 'x64'
-          #   _DropSuffix: ''
-          #   # Do not publish zips and tarballs. The linux-x64 binaries are
-          #   # already published by Build_LinuxPortable_Release_x64
-          #  _AdditionalBuildParameters: '/p:PublishBinaries=false'
+          Build_Linux_Portable_Deb_Release_x64:
+            _BuildConfig: Release
+            _DockerParameter: '--docker ubuntu.16.04'
+            _LinuxPortable: '--linux-portable'
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'x64'
+            _DropSuffix: ''
+            # Do not publish zips and tarballs. The linux-x64 binaries are
+            # already published by Build_LinuxPortable_Release_x64
+            _AdditionalBuildParameters: '/p:PublishBinaries=false'
           Build_Linux_Portable_Rpm_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker rhel'
@@ -271,13 +270,13 @@ jobs:
                 /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
         displayName: Copy to latest
 
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - template: /eng/common/templates/phases/publish-build-assets.yml
-    parameters:
-      dependsOn:
-        - Windows_NT
-        - Linux
-        - Darwin
-        - Copy_SDK_To_Latest
-      queue:
-        name: Hosted VS2017
+# - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+#   - template: /eng/common/templates/phases/publish-build-assets.yml
+#     parameters:
+#       dependsOn:
+#         - Windows_NT
+#         - Linux
+#         - Darwin
+#         - Copy_SDK_To_Latest
+#       queue:
+#         name: Hosted VS2017

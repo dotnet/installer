@@ -4,8 +4,6 @@
 
   <Import Project="$(RepoRoot)\src\redist\targets\Versions.targets" />
 
-  <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets"/>
-
   <PropertyGroup>
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
@@ -21,6 +19,8 @@
 
     <PublishBinaries Condition=" '$(PublishBinaries)' == '' ">true</PublishBinaries>
   </PropertyGroup>
+
+  <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
 
   <ItemGroup>
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinaries)' == 'true' " />
