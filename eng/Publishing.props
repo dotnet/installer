@@ -31,7 +31,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.rpm" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
 
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
