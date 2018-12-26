@@ -15,12 +15,10 @@
   <PropertyGroup>
     <ToolsetVersion>3.0.100-preview-009741</ToolsetVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
     <DotnetEfPackageVersion>3.0.0-preview.18572.1</DotnetEfPackageVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
     <MicrosoftAspNetCoreAppPackageVersion>3.0.0-preview-18579-0056</MicrosoftAspNetCoreAppPackageVersion>
@@ -30,12 +28,10 @@
     <DotnetUserSecretsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetUserSecretsPackageVersion>
     <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <MicrosoftNETCoreAppPackageVersion>3.0.0-preview-27218-01</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta4-20181001-2078020</MicrosoftDotNetCommonItemTemplatesPackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
@@ -43,18 +39,16 @@
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
     <NUnit3TemplatesVersion>1.5.1</NUnit3TemplatesVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
-
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
-    <MicrosoftWindowsDesktopPackageVersion>3.0.0-alpha-27218-3</MicrosoftWindowsDesktopPackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-alpha-27128-4</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
     <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
     <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
-
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
     <BuildTasksFeedToolVersion>2.1.0-prerelease-02430-04</BuildTasksFeedToolVersion>
@@ -62,7 +56,6 @@
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
     <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <RestoreSources>
       $(RestoreSources);
@@ -72,5 +65,4 @@
       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
     </RestoreSources>
   </PropertyGroup>
-
 </Project>
