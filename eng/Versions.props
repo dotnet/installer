@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Arcade features -->
+  <PropertyGroup>
+    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+  </PropertyGroup>
+
+  <!-- This is a fake version to fool arcade. In this repo, we handle the versioning
+  of assets ourselves, since all we do is generate zips/tarballs and native installers. -->
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ToolsetVersion>3.0.100-preview-009741</ToolsetVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
+    <DotnetEfPackageVersion>3.0.0-preview.18572.1</DotnetEfPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
+    <MicrosoftAspNetCoreAppPackageVersion>3.0.0-preview-18579-0056</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <DotnetDevCertsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetDevCertsPackageVersion>
+    <DotnetSqlCachePackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetSqlCachePackageVersion>
+    <DotnetUserSecretsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetUserSecretsPackageVersion>
+    <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview-27218-01</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta4-20181001-2078020</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates22PackageVersion>1.0.2-beta4-20181021-2140732</MicrosoftDotNetTestProjectTemplates22PackageVersion>
+    <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
+    <NUnit3TemplatesVersion>1.5.1</NUnit3TemplatesVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
+    <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
+    <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
+    <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-alpha-27128-4</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
+    <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+  </PropertyGroup>
+  <!-- infrastructure and test only dependencies -->
+  <PropertyGroup>
+    <BuildTasksFeedToolVersion>2.1.0-prerelease-02430-04</BuildTasksFeedToolVersion>
+    <VersionToolsVersion>$(BuildTasksFeedToolVersion)</VersionToolsVersion>
+    <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
+    <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
+    <MicrosoftSourceLinkVersion>1.0.0-beta2-18618-05</MicrosoftSourceLinkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreSources>
+      $(RestoreSources);
+      https://dotnet.myget.org/F/msbuild/api/v3/index.json;
+      https://dotnet.myget.org/F/nuget-build/api/v3/index.json;
+      https://dotnet.myget.org/F/templating/api/v3/index.json;
+      https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
+    </RestoreSources>
+  </PropertyGroup>
+</Project>

@@ -1,69 +1,27 @@
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-<!--
-Projects which don't import dir.props:
-
-build\RestoreDependency.proj
-build\Signing.proj
-build\package\Installer.DEB.proj
-build\sdks\sdks.csproj
-build\templates\templates.csproj
-build\test\RunTest.proj
-build_projects\Microsoft.DotNet.Cli.Build.SelfTest\InvokeWithStage2.proj
-build_projects\update-dependencies\update-dependencies.csproj
-tools\TestAssetsDependencies\TestAssetsDependencies.csproj
-
--->
-
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
   <PropertyGroup>
-    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
-
-    <NuGetPackagesDir>$(NUGET_PACKAGES)</NuGetPackagesDir>
-    <NuGetPackagesDir Condition=" '$(NuGetPackagesDir)' == '' ">$(RepoRoot)/.nuget/packages</NuGetPackagesDir>
-
-    <RelativeCLIBuildBinaries>build_projects/dotnet-cli-build/bin</RelativeCLIBuildBinaries>
-    <RelativeCLIBuildDllName>dotnet-cli-build.dll</RelativeCLIBuildDllName>
-    <CLIBuildDll>$(RepoRoot)/$(RelativeCLIBuildBinaries)/$(RelativeCLIBuildDllName)</CLIBuildDll>
-    <BuildTasksFeedDll>$(RepoRoot)/build_projects/dotnet-cli-build/bin/Microsoft.DotNet.Build.Tasks.Feed.dll</BuildTasksFeedDll>
-
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    <DisableImplicitPackageTargetFallback>true</DisableImplicitPackageTargetFallback>
+    <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
   </PropertyGroup>
 
-  <Import Project="build/TargetFramework.props" />
-  <Import Project="build/InitRepo.props" />
-  <Import Condition=" '$(GeneratePropsFile)' != 'true' " Project="$(GitCommitInfoProps)" />
-  <Import Condition=" '$(GeneratePropsFile)' != 'true' " Project="$(HostInfoProps)" />
-  <Import Condition=" '$(GeneratePropsFile)' != 'true' " Project="$(BuildInfoProps)" />
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
-  <Import Project="build/BranchInfo.props" />
+  <PropertyGroup>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
 
-  <Import Project="build/AzureInfo.props" />
+    <IsShipping>true</IsShipping>
+    <CoreSdkTargetFramework>netcoreapp3.0</CoreSdkTargetFramework>
 
-  <Import Project="build/DependencyVersions.props" />
-  <Import Project="build/Version.props" />
-  <Import Project="build/DerivedHostMachineInfo.props" />
-  <Import Project="build/Branding.props" />
+    <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir>
+  </PropertyGroup>
 
-  <Import Project="build/FileExtensions.props" />
-  <Import Project="build/InputDirectories.props" />
-  <Import Project="build/SetupPreviousStage.props" />
-  <Import Project="build/OutputDirectories.props" />
-
-  <ImportGroup Condition=" '$(BuildingSigningProject)' != 'true' ">
-    <!-- These imports aren't required for signing, and some of them have syntax which isn't supported in MSBuild 14,
-         which is what the signing build uses -->
-    <Import Project="build/BundledTemplates.props" />
-    <Import Project="build/BundledDotnetTools.props" />
-
-    <Import Project="build/BuildDefaults.props" />
-    <Import Project="build/BundledRuntimes.props" />
-    <Import Project="build/BundledToolset.props" />
-    <Import Project="build/CrossGen.props" />
-    <Import Project="build/BackwardsCompatibilityRuntimes.props" />
-
-    <Import Project="build/InstallerInfo.props" />
-    <Import Project="build/GenerateResxSource.targets" />
-  </ImportGroup>
-  
+  <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <DeterministicSourcePaths>false</DeterministicSourcePaths>
+    <!-- Normally set by sourcelink, and needed by the Pack targets -->
+    <RepositoryUrl>https://github.com/dotnet/core-sdk</RepositoryUrl>
+  </PropertyGroup>
 </Project>

@@ -15,9 +15,6 @@ Library/
 # local nuget cache
 .nuget/
 
-# NuGet.Config at the root
-/NuGet.Config
-
 # NuGet v3 restore drops these even though we don't use MSBuild :(
 *.nuget.targets
 *.nuget.props
@@ -96,10 +93,10 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
-# DNX
-project.lock.json
+# Build artifacts
 artifacts/
 bin/
+.dotnet/
 
 *_i.c
 *_p.c
@@ -309,3 +306,6 @@ launchSettings.json
 !TestAssets/TestProjects/TestAppWithLibrary/TestLibrary/TestLibrary.xproj.user
 !TestAssets/TestProjects/TestAppWithLibrary/TestApp/TestApp.xproj.user
 !TestAssets/TestProjects/PJTestAppSimple/PJTestAppSimple.xproj.user
+
+# Local nuget cache when the build is run as CI
+.packages
