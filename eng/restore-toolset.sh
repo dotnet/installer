@@ -12,6 +12,7 @@ function InitializeCustomSDKToolset {
   #InstallDotNetSharedFramework "1.0.5"
   #InstallDotNetSharedFramework "1.1.2"
 
+  InitializeDotNetCli true
   # Install 2.1 framework for dotnet-deb-tool
   InstallDotNetSharedFramework "2.1.0"
 }

@@ -18,11 +18,27 @@ phases:
       _HelixBuildConfig: $(_BuildConfig)
       BuildConfig: $(_BuildConfig)
       BuildArchitecture: $(_BuildArchitecture)
-      _HelixSource: pr/dotnet/core-sdk/$(Build.SourceBranch)
       DockerParameter: $(_DockerParameter)
       LinuxPortable: $(_LinuxPortable)
       RuntimeId: $(_RuntimeIdentifier)
       AdditionalBuildParameters: $(_AdditionalBuildParameters)
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        _HelixSource: pr/dotnet/core-sdk/$(Build.SourceBranch)
+        _OfficialBuildIdArgs: ''
+        _PublishArgs: ''
+        _SignArgs: ''
+      ${{ if ne(variables['System.TeamProject'], 'public') }}:
+        _HelixSource: official/dotnet/core-sdk/$(Build.SourceBranch)
+        _OfficialBuildIdArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+        _PublishArgs: /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                  /p:DotnetPublishSdkAssetsBlobFeedUrl=$(PB_PublishBlobFeedUrl)
+                  /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
+                  /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
+                  /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
+                  /p:PB_PublishType=$(_PublishType)
+                  /p:DotnetPublishChecksumsBlobFeedUrl=$(PB_PublishChecksumsBlobFeedUrl)
+                  /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
+        _SignArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName)
 
     steps:
     - script: 'eng\setbuildinfo.bat $(BuildArchitecture) $(BuildConfig)'
@@ -37,12 +53,30 @@ phases:
       displayName: Show RunTests
     - script: 'echo AdditionalBuildParameters: $(AdditionalBuildParameters)'
       displayName: Show AdditionalBuildParameters
+
+    - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'DotNet-Engineering-Services_KeyVault'
+          KeyVaultName: EngKeyVault
+          SecretsFilter: 'dotnetcli-storage-key,dotnetclichecksums-storage-key,microsoft-symbol-server-pat,symweb-symbol-server-pat'
+        condition: succeeded()
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'HelixProd_KeyVault'
+          KeyVaultName: HelixProdKV
+          SecretsFilter: 'HelixApiAccessToken'
+        condition: always()
+
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: build.cmd
                   $(TestParameter)
-                  -pack -publish
+                  -pack -publish -ci
                   -Configuration $(BuildConfig)
                   -Architecture $(BuildArchitecture)
+                  $(_PublishArgs)
+                  $(_SignArgs)
+                  $(_OfficialBuildIdArgs)
                   $(AdditionalBuildParameters)
         displayName: Build
         env:
@@ -52,13 +86,16 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
                   $(TestParameter)
-                  --pack --publish
+                  --pack --publish --ci
                   --noprettyprint
                   --configuration $(BuildConfig)
                   $(DockerParameter)
                   --architecture $(BuildArchitecture)
                   $(LinuxPortable)
                   $(RuntimeId)
+                  $(_PublishArgs)
+                  $(_SignArgs)
+                  $(_OfficialBuildIdArgs)
                   $(AdditionalBuildParameters)
         displayName: Build
         env:
@@ -67,9 +104,12 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Darwin') }}:
       - script: ./build.sh
                   $(TestParameter)
-                  --pack --publish
+                  --pack --publish --ci
                   --noprettyprint
                   --configuration $(BuildConfig)
+                  $(_PublishArgs)
+                  $(_SignArgs)
+                  $(_OfficialBuildIdArgs)
         displayName: Build
 
     - task: PublishTestResults@1
