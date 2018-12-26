@@ -17,14 +17,14 @@
     <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
     <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
 
-    <PublishBinaries Condition=" '$(PublishBinaries)' == '' ">true</PublishBinaries>
+    <PublishBinariesAndBadge Condition=" '$(PublishBinariesAndBadge)' == '' ">true</PublishBinariesAndBadge>
   </PropertyGroup>
 
   <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
 
   <ItemGroup>
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinaries)' == 'true' " />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.tar.gz" Condition=" '$(PublishBinaries)' == 'true' " />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.tar.gz" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.pkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.exe" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.deb" />
@@ -34,6 +34,8 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" />
 
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
+    <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
+    <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
   </ItemGroup>
 
   <Target Name="PublishSdkAssetsAndChecksums"
