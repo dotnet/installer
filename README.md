@@ -18,45 +18,11 @@ You can consult the [Documents Index for the CLI repo](https://github.com/dotnet
 
 This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
 
-Build Status
-------------
+# Build status
 
-|Windows x64|Windows x86|macOS|Linux x64 Archive|Linux arm Archive|Linux arm64 Archive|Linux Native Installers|RHEL 6 Archive|Linux-musl Archive|Windows Arm Archive|FreeBSD x64 Archive|
-|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
-|[![][win-x64-build-badge]][win-x64-build]|[![][win-x86-build-badge]][win-x86-build]|[![][osx-build-badge]][osx-build]|[![][linux-build-badge]][linux-build]|[![][linux-arm-build-badge]][linux-arm-build]|[![][linux-arm64-build-badge]][linux-arm64-build]|[![][linuxnative-build-badge]][linuxnative-build]|[![][rhel6-build-badge]][rhel6-build]|[![][linux-musl-build-badge]][linux-musl-build]|[![][win-arm-build-badge]][win-arm-build]|[![][freebsd-x64-build-badge]][freebsd-x64-build]|
-
-[win-x64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9472/badge
-[win-x64-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9472
-
-[win-x86-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9464/badge
-[win-x86-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9464
-
-[osx-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9470/badge
-[osx-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9470
-
-[linux-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9469/badge
-[linux-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9469
-
-[linux-arm-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9467/badge
-[linux-arm-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9467
-
-[linux-arm64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9468/badge
-[linux-arm64-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9468
-
-[linuxnative-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9465/badge
-[linuxnative-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9465
-
-[rhel6-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9471/badge
-[rhel6-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9471
-
-[linux-musl-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9466/badge
-[linux-musl-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=9466
-
-[win-arm-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/10417/badge
-[win-arm-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=10417
-
-[freebsd-x64-build-badge]: https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/10516/badge
-[freebsd-x64-build]: https://devdiv.visualstudio.com/DevDiv/_build?definitionId=10516
+|All legs|
+|:------:|
+|[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
 
 
 Installers and Binaries

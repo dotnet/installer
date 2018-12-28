@@ -101,7 +101,7 @@ phases:
         env:
           DropSuffix: $(_DropSuffix)
 
-    - ${{ if eq(parameters.agentOs, 'Darwin') }}:
+    - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
       - script: ./build.sh
                   $(TestParameter)
                   --pack --publish --ci
@@ -110,6 +110,7 @@ phases:
                   $(_PublishArgs)
                   $(_SignArgs)
                   $(_OfficialBuildIdArgs)
+                  $(AdditionalBuildParameters)
         displayName: Build
 
     - task: PublishTestResults@1
