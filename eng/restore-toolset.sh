@@ -13,27 +13,23 @@ function InitializeCustomSDKToolset {
   #InstallDotNetSharedFramework "1.1.2"
 
   InitializeDotNetCli true
-  # Install 2.1 framework for dotnet-deb-tool
+  # Install 2.1 framework for dotnet-deb-tool.
+  # Failures on this call will be ignored, as this is expected to fail on some
+  # OSes.
   InstallDotNetSharedFramework "2.1.0"
 }
 
 # Installs additional shared frameworks for testing purposes
 function InstallDotNetSharedFramework {
   local version=$1
-  local dotnet_root=$DOTNET_INSTALL_DIR 
+  local dotnet_root=$DOTNET_INSTALL_DIR
   local fx_dir="$dotnet_root/shared/Microsoft.NETCore.App/$version"
 
   if [[ ! -d "$fx_dir" ]]; then
     GetDotNetInstallScript "$dotnet_root"
     local install_script=$_GetDotNetInstallScript
-    
-    bash "$install_script" --version $version --install-dir "$dotnet_root" --runtime "dotnet"
-    local lastexitcode=$?
-    
-    if [[ $lastexitcode != 0 ]]; then
-      echo "Failed to install Shared Framework $version to '$dotnet_root' (exit code '$lastexitcode')."
-      ExitWithExitCode $lastexitcode
-    fi
+
+    bash "$install_script" --version $version --install-dir "$dotnet_root" --runtime "dotnet" || true
   fi
 }
 

@@ -110,6 +110,7 @@ phases:
                   $(_PublishArgs)
                   $(_SignArgs)
                   $(_OfficialBuildIdArgs)
+                  $(AdditionalBuildParameters)
         displayName: Build
 
     - task: PublishTestResults@1
