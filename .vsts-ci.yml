@@ -235,14 +235,14 @@ jobs:
         Build_Release:
           _BuildConfig: Release
 
-# - template: /eng/build.yml
-#   parameters:
-#     agentOs: FreeBSD
-#     queue: 
-#       name: Some FreeBSD queue
-#       matrix:
-#         Build_Release:
-#           _BuildConfig: Release
+- template: /eng/build.yml
+  parameters:
+    agentOs: FreeBSD
+    queue: 
+      name: dnceng-freebsd-internal
+      matrix:
+        Build_Release:
+          _BuildConfig: Release
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - job: Copy_SDK_To_Latest
