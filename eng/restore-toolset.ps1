@@ -18,6 +18,8 @@ function InitializeCustomSDKToolset {
 
 function CreateBuildEnvScript()
 {
+  InitializeBuildTool | Out-Null # Make sure DOTNET_INSTALL_DIR is set
+
   Create-Directory $ArtifactsDir
   $scriptPath = Join-Path $ArtifactsDir "core-sdk-build-env.bat"
   $scriptContents = @"
