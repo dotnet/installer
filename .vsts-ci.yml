@@ -238,16 +238,17 @@ jobs:
         Build_Release:
           _BuildConfig: Release
 
-- template: /eng/build.yml
-  parameters:
-    agentOs: FreeBSD
-    queue: 
-      name: dnceng-freebsd-internal
-      timeoutInMinutes: 180
-      matrix:
-        Build_Release:
-          _BuildConfig: Release
-          _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
+# https://github.com/dotnet/core-sdk/issues/248
+# - template: /eng/build.yml
+#   parameters:
+#     agentOs: FreeBSD
+#     queue: 
+#       name: dnceng-freebsd-internal
+#       timeoutInMinutes: 180
+#       matrix:
+#         Build_Release:
+#           _BuildConfig: Release
+#           _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - job: Copy_SDK_To_Latest
