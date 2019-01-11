@@ -7,15 +7,27 @@
 param(
     [string]$Configuration="Debug",
     [string]$Architecture="x64",
+    [switch]$Sign=$false,
+    [bool]$WarnAsError=$true,
     [Parameter(ValueFromRemainingArguments=$true)][String[]]$ExtraParameters
 )
 
 $RepoRoot = "$PSScriptRoot"
 
-$ArchitectureParam="/p:Architecture=$Architecture"
-$ConfigurationParam="-configuration $Configuration"
+$Parameters = "/p:Architecture=$Architecture"
+$Parameters = "$Parameters -configuration $Configuration"
+
+if ($Sign) {
+  $Parameters = "$Parameters -sign /p:SignCoreSdk=true"
+
+  # Workaround https://github.com/dotnet/arcade/issues/1776
+  $WarnAsError = $false
+}
+
+$Parameters = "$Parameters -WarnAsError `$$WarnAsError"
+
 try {
-    $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $ConfigurationParam $ArchitectureParam $ExtraParameters"
+    $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $Parameters $ExtraParameters"
     Write-Host "Invoking expression: $ExpressionToInvoke"
     Invoke-Expression $ExpressionToInvoke
 }
