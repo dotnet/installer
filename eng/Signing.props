@@ -1,0 +1,16 @@
+<Project>
+
+  <ItemGroup>
+    <!-- Do not sign non-shipping packages -->
+    <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!--
+      Signing of shipping artifacts (layout, msi, bundle) are handled separately.
+      It is therefore expected that above removal can yield an empty set.
+    -->
+    <AllowEmptySignList>true</AllowEmptySignList>
+  </PropertyGroup>
+
+</Project>

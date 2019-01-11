@@ -7,15 +7,21 @@
 param(
     [string]$Configuration="Debug",
     [string]$Architecture="x64",
+    [switch]$Sign=$false,
     [Parameter(ValueFromRemainingArguments=$true)][String[]]$ExtraParameters
 )
 
 $RepoRoot = "$PSScriptRoot"
 
-$ArchitectureParam="/p:Architecture=$Architecture"
-$ConfigurationParam="-configuration $Configuration"
+$Parameters = "/p:Architecture=$Architecture"
+$Parameters = "$Parameters -configuration $Configuration"
+
+if ($Sign) {
+  $Parameters = "$Parameters -sign /p:SignCoreSdk=true"
+}
+
 try {
-    $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $ConfigurationParam $ArchitectureParam $ExtraParameters"
+    $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $Parameters $ExtraParameters"
     Write-Host "Invoking expression: $ExpressionToInvoke"
     Invoke-Expression $ExpressionToInvoke
 }

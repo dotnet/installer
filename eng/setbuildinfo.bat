@@ -27,12 +27,12 @@ IF /I "%Architecture:~0,3%"=="ARM" (
     ECHO ##vso[task.setvariable variable=TestParameter]
     ECHO ##vso[task.setvariable variable=RunTests]false
 
-    ECHO ##vso[task.setvariable variable=AdditionalBuildParameters]/p:SignCoreSdk=true /p:DotNetSignType=%SignType%
 
 ) ELSE (
     ECHO NOT ARM
     ECHO ##vso[task.setvariable variable=TestParameter]-test
     ECHO ##vso[task.setvariable variable=RunTests]true
 
-    ECHO ##vso[task.setvariable variable=AdditionalBuildParameters]-sign /p:SignCoreSdk=true /p:DotNetSignType=%SignType%
 )
+
+ECHO ##vso[task.setvariable variable=AdditionalBuildParameters]-sign /p:DotNetSignType=%SignType%
