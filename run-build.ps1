@@ -8,6 +8,7 @@ param(
     [string]$Configuration="Debug",
     [string]$Architecture="x64",
     [switch]$Sign=$false,
+    [bool]$WarnAsError=$true,
     [Parameter(ValueFromRemainingArguments=$true)][String[]]$ExtraParameters
 )
 
@@ -18,7 +19,12 @@ $Parameters = "$Parameters -configuration $Configuration"
 
 if ($Sign) {
   $Parameters = "$Parameters -sign /p:SignCoreSdk=true"
+
+  # Workaround https://github.com/dotnet/arcade/issues/1776
+  $WarnAsError = $false
 }
+
+$Parameters = "$Parameters -WarnAsError `$$WarnAsError"
 
 try {
     $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $Parameters $ExtraParameters"
