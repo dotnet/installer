@@ -6,7 +6,8 @@ variables:
   value: https://dotnetcli.blob.core.windows.net/dotnet/index.json
 - name: _PublishChecksumsBlobFeedUrl
   value: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
-- group: DotNet-DotNetCli-Storage
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - group: DotNet-DotNetCli-Storage
 
 jobs:
 - template: /eng/build.yml
