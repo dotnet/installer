@@ -13,12 +13,6 @@
     <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
     <SdkAssetsAzureAccountKey>$(DotNetPublishSdkAssetsBlobFeedKey)</SdkAssetsAzureAccountKey>
-    <!-- Because we may be building in a container, we should use an asset manifest file path
-         that exists in the container. Disambiguate the manifests via RID -->
-    <AssetManifestFileName>$(OS)-$(PlatformName)</AssetManifestFileName>
-    <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
-    <AssetManifestFileName>$(AssetManifestFileName).xml</AssetManifestFileName>
-    <AssetManifestFilePath>$(ArtifactsLogDir)AssetManifests\$(AssetManifestFileName)</AssetManifestFilePath>
 
     <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
     <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
@@ -27,6 +21,15 @@
   </PropertyGroup>
 
   <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
+  
+  <PropertyGroup>
+      <!-- Because we may be building in a container, we should use an asset manifest file path
+             that exists in the container. Disambiguate the manifests via RID -->
+      <AssetManifestFileName>$(OS)-$(PlatformName)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
+      <AssetManifestFileName>$(AssetManifestFileName).xml</AssetManifestFileName>
+      <AssetManifestFilePath>$(ArtifactsLogDir)AssetManifests\$(AssetManifestFileName)</AssetManifestFilePath>
+  </PropertyGroup>
 
   <ItemGroup>
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
