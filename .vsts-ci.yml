@@ -45,21 +45,18 @@ jobs:
             _BuildArchitecture: x86
             _DOTNET_CLI_UI_LANGUAGE: ''
             _DropSuffix: ''
-            _PublishBuildAssetManifest: true
         # Always run builds
         Build_Release_x64:
           _BuildConfig: Release
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
-          _PublishBuildAssetManifest: true
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
           _AdditionalBuildParameters: '/p:DisableSourceLink=true'
-          _PublishBuildAssetManifest: true
 
 - template: /eng/build.yml
   parameters:
@@ -176,7 +173,6 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'arm'
             _DropSuffix: ''
-            _PublishBuildAssetManifest: true
           Build_Arm64_Release:
             _BuildConfig: Release
             _DockerParameter: ''
@@ -184,7 +180,6 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'arm64'
             _DropSuffix: ''
-            _PublishBuildAssetManifest: true
           Build_Rhel_6_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker rhel.6'
@@ -227,7 +222,6 @@ jobs:
           _RuntimeIdentifier: ''
           _BuildArchitecture: 'x64'
           _DropSuffix: ''
-          _PublishBuildAssetManifest: true
 
 - template: /eng/build.yml
   parameters:
@@ -239,7 +233,6 @@ jobs:
       matrix:
         Build_Release:
           _BuildConfig: Release
-          _PublishBuildAssetManifest: true
 
 # https://github.com/dotnet/core-sdk/issues/248
 # - template: /eng/build.yml

@@ -27,8 +27,9 @@
              that exists in the container. Disambiguate the manifests via RID -->
       <AssetManifestFileName>$(OS)-$(PlatformName)</AssetManifestFileName>
       <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
-      <AssetManifestFileName>$(AssetManifestFileName).xml</AssetManifestFileName>
-      <AssetManifestFilePath>$(ArtifactsLogDir)AssetManifests\$(AssetManifestFileName)</AssetManifestFilePath>
+      <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
+      <AssetManifestFilePath>$(ArtifactsLogDir)AssetManifests\$(AssetManifestFileName).xml</AssetManifestFilePath>
+      <ChecksumsAssetManifestFilePath>$(ChecksumsAssetManifestFileName).xml</CheckSumsAssetManifestFilePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -85,7 +86,7 @@
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(AssetManifestFilePath)"
+      AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
       PublishFlatContainer="true"/>
   </Target>
 </Project>

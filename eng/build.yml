@@ -46,7 +46,6 @@ phases:
                   /p:PB_PublishType=blob
                   /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
                   /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
-                  /p:AssetManifestFilePath=$(Build.SourcesDirectory)/artifacts/log/$(_BuildConfig)/AssetManifest/$(Agent.OS)_$(_BuildArchitecture).xml
                   /p:DotNetSignType=real
                   /p:TeamName=$(_TeamName)
 
