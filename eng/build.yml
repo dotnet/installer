@@ -14,20 +14,14 @@ parameters:
   # Job timeout
   timeoutInMinutes: 180
 
-  # Publish build asset manifests
-  enablePublishBuildAssetManifests: false
-
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
-    ${{ if eq(parameters.enablePublishBuildAssetManifests, true) }}:
-      name: ${{ parameters.agentOs }}
-    ${{ if ne(parameters.enablePublishBuildAssetManifests, true) }}:
-      name: ${{ parameters.agentOs }}_No_AssetManifests
+    name: ${{ parameters.agentOs }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
     enablePublishBuildArtifacts: true
-    enablePublishBuildAssets: ${{ parameters.enablePublishBuildAssetManifests }}
+    enablePublishBuildAssets: true
     enablePublishTestResults: true
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
@@ -102,3 +96,20 @@ phases:
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
+
+    - ${{ if and(eq(parameters.enablePublishBuildAssets, true), eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      - task: CopyFiles@2
+        displayName: Gather Asset Manifests
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)/artifacts/log/$(_BuildConfig)/AssetManifest'
+          TargetFolder: '$(Build.StagingDirectory)/AssetManifests'
+        continueOnError: ${{ parameters.continueOnError }}
+        condition: and(succeeded(), eq(variables['_DotNetPublishToBlobFeed'], 'true'), eq(variables['_PublishBuildAssetManifest'], 'true'))
+      - task: PublishBuildArtifacts@1
+        displayName: Push Asset Manifests
+        inputs:
+          PathtoPublish: '$(Build.StagingDirectory)/AssetManifests'
+          PublishLocation: Container
+          ArtifactName: AssetManifests
+        continueOnError: ${{ parameters.continueOnError }}
+        condition: and(succeeded(), eq(variables['_DotNetPublishToBlobFeed'], 'true'), eq(variables['_PublishBuildAssetManifest'], 'true'))

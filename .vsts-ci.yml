@@ -13,7 +13,6 @@ jobs:
 - template: /eng/build.yml
   parameters:
     agentOs: Windows_NT
-    enablePublishBuildAssetManifests: true
     pool:
       ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
         name: dotnet-external-temp
@@ -46,23 +45,25 @@ jobs:
             _BuildArchitecture: x86
             _DOTNET_CLI_UI_LANGUAGE: ''
             _DropSuffix: ''
+            _PublishBuildAssetManifest: true
         # Always run builds
         Build_Release_x64:
           _BuildConfig: Release
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
+          _PublishBuildAssetManifest: true
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
           _AdditionalBuildParameters: '/p:DisableSourceLink=true'
+          _PublishBuildAssetManifest: true
 
 - template: /eng/build.yml
   parameters:
     agentOs: Linux
-    enablePublishBuildAssetManifests: true
     pool:
       name: Hosted Ubuntu 1604
     timeoutInMinutes: 180
@@ -175,6 +176,7 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'arm'
             _DropSuffix: ''
+            _PublishBuildAssetManifest: true
           Build_Arm64_Release:
             _BuildConfig: Release
             _DockerParameter: ''
@@ -182,6 +184,7 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'arm64'
             _DropSuffix: ''
+            _PublishBuildAssetManifest: true
         Build_LinuxPortable_Release_x64:
           _BuildConfig: Release
           _DockerParameter: ''
@@ -189,56 +192,46 @@ jobs:
           _RuntimeIdentifier: ''
           _BuildArchitecture: 'x64'
           _DropSuffix: ''
-
-- template: /eng/build.yml
-  parameters:
-    agentOs: Linux
-    pool:
-      name: Hosted Ubuntu 1604
-    timeoutInMinutes: 180
-    strategy:
-      matrix:
-        ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-          Build_Rhel_6_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker rhel.6'
-            _LinuxPortable: ''
-            _RuntimeIdentifier: '--runtime-id rhel.6-x64'
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
-            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
-          Build_Linux_musl_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker alpine.3.6'
-            _LinuxPortable: ''
-            _RuntimeIdentifier: '--runtime-id linux-musl-x64'
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
-          Build_Linux_Portable_Deb_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker ubuntu.16.04'
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
-            # Do not publish zips and tarballs. The linux-x64 binaries are
-            # already published by Build_LinuxPortable_Release_x64
-            _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
-          Build_Linux_Portable_Rpm_Release_x64:
-            _BuildConfig: Release
-            _DockerParameter: '--docker rhel'
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'x64'
-            _DropSuffix: ''
-            # Do not publish zips and tarballs. The linux-x64 binaries are
-            # already published by Build_LinuxPortable_Release_x64
-            _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+          _PublishBuildAssetManifest: true
+        Build_Rhel_6_Release_x64:
+          _BuildConfig: Release
+          _DockerParameter: '--docker rhel.6'
+          _LinuxPortable: ''
+          _RuntimeIdentifier: '--runtime-id rhel.6-x64'
+          _BuildArchitecture: 'x64'
+          _DropSuffix: ''
+          _AdditionalBuildParameters: '/p:DisableSourceLink=true'
+        Build_Linux_musl_Release_x64:
+          _BuildConfig: Release
+          _DockerParameter: '--docker alpine.3.6'
+          _LinuxPortable: ''
+          _RuntimeIdentifier: '--runtime-id linux-musl-x64'
+          _BuildArchitecture: 'x64'
+          _DropSuffix: ''
+        Build_Linux_Portable_Deb_Release_x64:
+          _BuildConfig: Release
+          _DockerParameter: '--docker ubuntu.16.04'
+          _LinuxPortable: '--linux-portable'
+          _RuntimeIdentifier: ''
+          _BuildArchitecture: 'x64'
+          _DropSuffix: ''
+          # Do not publish zips and tarballs. The linux-x64 binaries are
+          # already published by Build_LinuxPortable_Release_x64
+          _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+        Build_Linux_Portable_Rpm_Release_x64:
+          _BuildConfig: Release
+          _DockerParameter: '--docker rhel'
+          _LinuxPortable: '--linux-portable'
+          _RuntimeIdentifier: ''
+          _BuildArchitecture: 'x64'
+          _DropSuffix: ''
+          # Do not publish zips and tarballs. The linux-x64 binaries are
+          # already published by Build_LinuxPortable_Release_x64
+          _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
 
 - template: /eng/build.yml
   parameters:
     agentOs: Darwin
-    enablePublishBuildAssetManifests: true
     pool: 
       name: Hosted macOS
     timeoutInMinutes: 180
@@ -246,6 +239,7 @@ jobs:
       matrix:
         Build_Release:
           _BuildConfig: Release
+          _PublishBuildAssetManifest: true
 
 # https://github.com/dotnet/core-sdk/issues/248
 # - template: /eng/build.yml
@@ -264,7 +258,6 @@ jobs:
     dependsOn:
       - Windows_NT
       - Linux
-      - Linux_No_AssetManifests
       - Darwin
     pool:
       name: Hosted VS2017
