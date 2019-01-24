@@ -28,8 +28,9 @@
       <AssetManifestFileName>$(OS)-$(PlatformName)</AssetManifestFileName>
       <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
       <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
-      <AssetManifestFilePath>$(ArtifactsLogDir)AssetManifests\$(AssetManifestFileName).xml</AssetManifestFilePath>
-      <ChecksumsAssetManifestFilePath>$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
+      <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
+      <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
+      <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -74,7 +75,7 @@
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(AssetManifestFilePath)"
+      AssetManifestPath="$(DotNetAssetManifestFilePath)"
       PublishFlatContainer="true" />
 
     <PushToBlobFeed
