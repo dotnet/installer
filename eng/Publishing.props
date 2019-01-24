@@ -31,8 +31,9 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.rpm" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
-
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' ">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </SdkAssetsToPublish>
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
@@ -64,7 +65,7 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(AssetManifestFilePath)"
-      PublishFlatContainer="true"/>
+      PublishFlatContainer="true" />
 
     <PushToBlobFeed
       ExpectedFeedUrl="$(ChecksumsFeedUrl)"

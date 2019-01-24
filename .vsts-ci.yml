@@ -2,34 +2,27 @@ trigger:
 - master
 
 variables:
-  _TeamName: Roslyn-Project-System
-  ${{ if eq(variables['System.TeamProject'], 'public') }}:
-    PB_PublishBlobFeedKey:
-    PB_PublishBlobFeedUrl:
-    PB_PublishChecksumsBlobFeedUrl:
-    _DotNetPublishToBlobFeed: false
-    _PublishType: none
-    _SignType: test
-  ${{ if ne(variables['System.TeamProject'], 'public') }}:
-    PB_PublishBlobFeedUrl: https://dotnetcli.blob.core.windows.net/dotnet/index.json
-    PB_PublishChecksumsBlobFeedUrl: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
-    _DotNetPublishToBlobFeed: true
-    _PublishType: blob
-    _SignType: real
+- name: _PublishBlobFeedUrl
+  value: https://dotnetcli.blob.core.windows.net/dotnet/index.json
+- name: _PublishChecksumsBlobFeedUrl
+  value: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - group: DotNet-DotNetCli-Storage
 
 jobs:
 - template: /eng/build.yml
   parameters:
     agentOs: Windows_NT
-    queue:
-      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    pool:
+      ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
         name: dotnet-external-temp
-      ${{ if ne(variables['System.TeamProject'], 'public') }}:
+      ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         name: dotnet-internal-temp
-      timeoutInMinutes: 180
-      parallel: 99
+    timeoutInMinutes: 180
+    strategy:
       matrix:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        # Public-only builds
+        ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
           Build_Debug_x86:
             _BuildConfig: Debug
             _BuildArchitecture: x86
@@ -45,33 +38,38 @@ jobs:
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
             _DropSuffix: true
-        ${{ if ne(variables['System.TeamProject'], 'public') }}:
+        # Internal-only builds
+        ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
           Build_Release_x86:
             _BuildConfig: Release
             _BuildArchitecture: x86
             _DOTNET_CLI_UI_LANGUAGE: ''
             _DropSuffix: ''
+            _PublishBuildAssetManifest: true
+        # Always run builds
         Build_Release_x64:
           _BuildConfig: Release
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
+          _PublishBuildAssetManifest: true
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
           _AdditionalBuildParameters: '/p:DisableSourceLink=true'
+          _PublishBuildAssetManifest: true
 
 - template: /eng/build.yml
   parameters:
     agentOs: Linux
-    queue:
+    pool:
       name: Hosted Ubuntu 1604
-      timeoutInMinutes: 180
-      parallel: 99
+    timeoutInMinutes: 180
+    strategy:
       matrix:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
           Build_Ubuntu_14_04_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker ubuntu.14.04'
@@ -170,7 +168,23 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'arm'
             _DropSuffix: true
-        ${{ if ne(variables['System.TeamProject'], 'public') }}:
+        ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+          Build_Arm_Release:
+            _BuildConfig: Release
+            _DockerParameter: ''
+            _LinuxPortable: '--linux-portable'
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'arm'
+            _DropSuffix: ''
+            _PublishBuildAssetManifest: true
+          Build_Arm64_Release:
+            _BuildConfig: Release
+            _DockerParameter: ''
+            _LinuxPortable: '--linux-portable'
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'arm64'
+            _DropSuffix: ''
+            _PublishBuildAssetManifest: true
           Build_Rhel_6_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker rhel.6'
@@ -179,20 +193,6 @@ jobs:
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
             _AdditionalBuildParameters: '/p:DisableSourceLink=true'
-          Build_Arm_Release:
-            _BuildConfig: Release
-            _DockerParameter: ''
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'arm'
-            _DropSuffix: ''
-          Build_Arm64_Release:
-            _BuildConfig: Release
-            _DockerParameter: ''
-            _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'arm64'
-            _DropSuffix: ''
           Build_Linux_musl_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker alpine.3.6'
@@ -227,16 +227,19 @@ jobs:
           _RuntimeIdentifier: ''
           _BuildArchitecture: 'x64'
           _DropSuffix: ''
+          _PublishBuildAssetManifest: true
 
 - template: /eng/build.yml
   parameters:
     agentOs: Darwin
-    queue: 
+    pool: 
       name: Hosted macOS
-      timeoutInMinutes: 180
+    timeoutInMinutes: 180
+    strategy:
       matrix:
         Build_Release:
           _BuildConfig: Release
+          _PublishBuildAssetManifest: true
 
 # https://github.com/dotnet/core-sdk/issues/248
 # - template: /eng/build.yml
@@ -259,29 +262,23 @@ jobs:
     pool:
       name: Hosted VS2017
     condition: succeeded()
+    variables:
+      - group: DotNet-DotNetCli-Storage
     steps:
-      - task: AzureKeyVault@1
-        inputs:
-          azureSubscription: 'DotNet-Engineering-Services_KeyVault'
-          KeyVaultName: EngKeyVault
-          SecretsFilter: 'dotnetcli-storage-key,dotnetclichecksums-storage-key'
-        condition: succeeded()
-
       - script: eng/CopyToLatest.cmd
-                /p:DotnetPublishSdkAssetsBlobFeedUrl=$(PB_PublishBlobFeedUrl)
+                /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
                 /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
-                /p:DotnetPublishChecksumsBlobFeedUrl=$(PB_PublishChecksumsBlobFeedUrl)
+                /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
                 /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
         displayName: Copy to latest
 
-# - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-#   - template: /eng/common/templates/phases/publish-build-assets.yml
-#     parameters:
-#       dependsOn:
-#         - Windows_NT
-#         - Linux
-#         - Darwin
-#         - Copy_SDK_To_Latest
-#       queue:
-#         name: Hosted VS2017
-#         timeoutInMinutes: 180
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: /eng/common/templates/job/publish-build-assets.yml
+    parameters:
+      dependsOn:
+        - Windows_NT
+        - Linux
+        - Darwin
+      enablePublishBuildArtifacts: true
+      pool:
+        vmImage: vs2017-win2016
