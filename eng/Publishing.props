@@ -21,6 +21,19 @@
   </PropertyGroup>
 
   <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
+  
+  <PropertyGroup>
+      <!-- Because we may be building in a container, we should use an asset manifest file path
+             that exists in the container. Disambiguate the manifests via RID and architecture -->
+      <AssetManifestFileName Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)-$(PlatformName)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_OS)' == ''">$(OS)-$(PlatformName)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
+      <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
+      <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
+      <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
+      <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
+  </PropertyGroup>
 
   <ItemGroup>
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
@@ -64,7 +77,7 @@
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(AssetManifestFilePath)"
+      AssetManifestPath="$(DotNetAssetManifestFilePath)"
       PublishFlatContainer="true" />
 
     <PushToBlobFeed
@@ -76,7 +89,7 @@
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(AssetManifestFilePath)"
+      AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
       PublishFlatContainer="true"/>
   </Target>
 </Project>
