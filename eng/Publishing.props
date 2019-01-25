@@ -25,8 +25,8 @@
   <PropertyGroup>
       <!-- Because we may be building in a container, we should use an asset manifest file path
              that exists in the container. Disambiguate the manifests via RID and architecture -->
-      <AssetManifestFileName Condition="'$(OSName)' != ''">$(OSName)-$(PlatformName)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(OSName)' == ''">$(OS)-$(PlatformName)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)-$(PlatformName)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_OS)' == ''">$(OS)-$(PlatformName)</AssetManifestFileName>
       <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
       <AssetManifestFileName Condition="'$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
       <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
