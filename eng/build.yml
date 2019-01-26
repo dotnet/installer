@@ -61,6 +61,7 @@ phases:
                   -Configuration $(_BuildConfig)
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
+                  $(SignBuildParameters)
                   $(_AdditionalBuildParameters)
         displayName: Build
         env:

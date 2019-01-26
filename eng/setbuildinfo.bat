@@ -35,4 +35,4 @@ IF /I "%Architecture:~0,3%"=="ARM" (
 
 )
 
-ECHO ##vso[task.setvariable variable=AdditionalBuildParameters]-sign /p:DotNetSignType=%SignType%
+ECHO ##vso[task.setvariable variable=SignBuildParameters]-sign /p:DotNetSignType=%SignType%
