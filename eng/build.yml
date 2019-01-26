@@ -32,11 +32,13 @@ phases:
     variables: 
       - _TeamName: Roslyn-Project-System
       - _BuildArgs: ''
+      - _SignType: test
 
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
         - group: DotNet-HelixApi-Access
         - _DotNetPublishToBlobFeed: true
+        - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
