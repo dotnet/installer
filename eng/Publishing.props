@@ -24,11 +24,12 @@
   
   <PropertyGroup>
       <!-- Because we may be building in a container, we should use an asset manifest file path
-             that exists in the container. Disambiguate the manifests via RID and architecture -->
-      <AssetManifestFileName Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)-$(PlatformName)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(AGENT_OS)' == ''">$(OS)-$(PlatformName)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(Rid)' != ''">$(AssetManifestFileName)-$(Rid)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
+             that exists in the container. Disambiguate the manifests via available properties.
+             AGENT_OS and AGENT_JOBNAME are present on Azure DevOps agents -->
+      <AssetManifestFileName Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_OS)' == ''">$(OS)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' != ''">$(AssetManifestFileName)-$(AGENT_JOBNAME)</AssetManifestFileName>
+      <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' == '' and '$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
       <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
       <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
       <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
