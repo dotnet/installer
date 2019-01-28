@@ -148,5 +148,7 @@ docker run $INTERACTIVE -t --rm --sig-proxy=true \
     -e BUILD_SOURCEBRANCH \
     -e BUILD_BUILDNUMBER \
     -e BUILD_SOURCEVERSION \
+    -e AGENT_JOBNAME \
+    -e AGENT_OS \
     $DOTNET_BUILD_CONTAINER_TAG \
     $BUILD_COMMAND "$@"
