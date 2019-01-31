@@ -33,7 +33,7 @@ You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (z
 To download the .NET Core runtime **without** the SDK, visit https://github.com/dotnet/core-setup#daily-builds.
 
 > **Note:** Be aware that the following installers are the **latest bits**. If you
-> want to install the latest released versions, check out the [preceding section](#looking-for-v1-of-the-net-core-tooling).
+> want to install the latest released versions, check out the [preceding section](#looking-for-v2-of-the-net-core-tooling).
 > In order to be able to restore these pre-release packages, you may need to add a NuGet feed as noted in the table below. Other feeds may also be necessary depending on what kind of project you are working with.
 
 |   Platform   |   Master<br>(3.0.x Runtime)   |   Release/2.2.2XX<br>(2.2.x Runtime)   |   Release/2.2.1XX<br>(2.2.x Runtime)   |   Release/2.1.6XX<br>(2.1.6 Runtime)  |   Release/2.1.5XX<br>(2.1.5 Runtime)   |
