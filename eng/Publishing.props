@@ -60,17 +60,14 @@
     <ItemGroup>
       <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-        <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
       </SdkAssetsToPushToBlobFeed>
 
       <SdkAssetsToPushToBlobFeed Include="@(SdkNonShippingAssetsToPublish)" IsShipping="false" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-        <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
       </SdkAssetsToPushToBlobFeed>
 
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)" IsShipping="true" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-        <ManifestArtifactData>ShipInstaller=dotnetclichecksums</ManifestArtifactData>
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
 
