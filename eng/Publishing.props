@@ -48,6 +48,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' ">
       <ExcludeFromManifest>true</ExcludeFromManifest>
     </SdkAssetsToPublish>
+    <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
@@ -60,12 +61,14 @@
     <ItemGroup>
       <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-        <ManifestArtifactData>ShipInstaller=dotnetcli</ManifestArtifactData>
+      </SdkAssetsToPushToBlobFeed>
+
+      <SdkAssetsToPushToBlobFeed Include="@(SdkNonShippingAssetsToPublish)" IsShipping="false" >
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
       </SdkAssetsToPushToBlobFeed>
 
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)" IsShipping="true" >
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
-        <ManifestArtifactData>ShipInstaller=dotnetclichecksums</ManifestArtifactData>
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
 
