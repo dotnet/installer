@@ -17,8 +17,8 @@
 
   <Target
     Name="GenerateLayout" 
-    Condition=" '$(OS)' == 'Windows_NT' And '$(Architecture)' == 'x86' "
-    AfterTargets="Build"
+    Condition=" '$(OS)' == 'Windows_NT' "
+    BeforeTargets="AfterBuild"
     >
     <Message Importance="High" Text="$(MSBuildProjectName) -&gt; $(OutputPath)" />
 
