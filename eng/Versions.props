@@ -28,6 +28,10 @@
     <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependencies from https://github.com/dotnet/cli -->
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview4.19111.1</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <MicrosoftNETCoreAppPackageVersion>3.0.0-preview4-27414-6</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
   </PropertyGroup>
@@ -42,7 +46,6 @@
     <NUnit3TemplatesVersion>1.6.1</NUnit3TemplatesVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
