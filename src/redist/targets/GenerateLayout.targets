@@ -33,9 +33,12 @@
 
       <DownloadedSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-runtime$(InstallerStartSuffix)-$(MicrosoftNETCoreAppPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedSharedFrameworkInstallerFileName>
       <!--<DownloadedSharedFrameworkInstallerFile Condition=" '$(InstallerExtension)' != '' ">$(PackagesDirectory)/$(DownloadedSharedFrameworkInstallerFileName)</DownloadedSharedFrameworkInstallerFile>-->
-
+      
       <DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-extension-$(MicrosoftWindowsDesktopPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName>
       <!--<DownloadedWinFormsAndWpfSharedFrameworkInstallerFile Condition=" '$(InstallerExtension)' != '' ">$(PackagesDirectory)/$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFile>-->
+
+      <DownloadedTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-targeting-pack$(InstallerStartSuffix)-$(TargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedTargetingPackInstallerFileName>
+      <!--<DownloadedTargetingPackInstallerFile Condition=" '$(InstallerExtension)' != '' ">$(PackagesDirectory)/$(DownloadedTargetingPackInstallerFileName)</DownloadedTargetingPackInstallerFile>-->
 
       <!-- Use the portable "linux-x64" Rid when downloading Linux shared framework compressed file. -->
       <SharedFrameworkRid>$(CoreSetupRid)</SharedFrameworkRid>
@@ -109,7 +112,14 @@
         <DownloadFileName>$(DownloadedHostFxrInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
-    
+
+      <BundledInstallerComponent Include="DownloadedTargetingPackInstallerFile"
+                           Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+        <BaseUrl>$(CoreSetupRootUrl)$(TargetingPackVersion)</BaseUrl>
+        <DownloadFileName>$(DownloadedTargetingPackInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledInstallerComponent>
+      
       <BundledLayoutComponent Include="ToolsetArchive">
         <BaseUrl>$(CoreSetupBlobRootUrl)Toolset/$(MicrosoftDotnetToolsetInternalPackageVersion)</BaseUrl>
         <DownloadFileName>dotnet-toolset-internal-$(MicrosoftDotnetToolsetInternalPackageVersion).zip</DownloadFileName>

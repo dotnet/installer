@@ -127,6 +127,9 @@
       <MsiPackage SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
+      <MsiPackage SourceFile="$(var.TargetingPackMsiSourcePath)">
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
+      </MsiPackage>
       <MsiPackage SourceFile="$(var.CLISDKMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
         <MsiProperty Name="DOTNETHOME_X86" Value="[DOTNETHOME_X86]" />
