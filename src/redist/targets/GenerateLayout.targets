@@ -99,7 +99,7 @@
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedTargetingPackInstallerFile"
-                                 Condition="'$(IsDebianBaseDistro)' != 'true' And '$(IsRPMBasedDistro)' != 'true' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+                                 Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(TargetingPackVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
@@ -122,7 +122,7 @@
       </BundledLayoutComponent>
 
       <BundledInstallerComponent Include="DownloadedAspNetTargetingPackInstallerFile"
-                                 Condition="'$(IsDebianBaseDistro)' != 'true' And '$(IsRPMBasedDistro)' != 'true' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+                                 Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetTargetingPackVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
