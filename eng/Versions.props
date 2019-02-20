@@ -33,6 +33,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <NETStandardLibraryPackageVersion>2.1.0-prerelease.19078.1</NETStandardLibraryPackageVersion>
+    <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
+         which ends up overriding the value set here. -->
+    <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19066.2</MicrosoftDotNetCommonItemTemplatesPackageVersion>
