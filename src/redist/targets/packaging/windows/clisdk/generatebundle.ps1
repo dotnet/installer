@@ -8,7 +8,7 @@ param(
     [Parameter(Mandatory=$true)][string]$HostFxrMSIFile,
     [Parameter(Mandatory=$true)][string]$SharedHostMSIFile,
     [Parameter(Mandatory=$true)][string]$WinFormsAndWpfMSIFile,
-    [Parameter(Mandatory=$true)][string]$TargetingPackMSIFile,
+    [Parameter(Mandatory=$true)][string]$NetCoreAppTargetingPackMSIFile,
     [Parameter(Mandatory=$true)][string]$AspNetTargetingPackMSIFile,
     [Parameter(Mandatory=$true)][string]$DotnetBundleOutput,
     [Parameter(Mandatory=$true)][string]$WixRoot,
@@ -46,7 +46,7 @@ function RunCandleForBundle
         -dHostFXRMsiSourcePath="$HostFxrMSIFile" `
         -dSharedHostMsiSourcePath="$SharedHostMSIFile" `
         -dWinFormsAndWpfMsiSourcePath="$WinFormsAndWpfMSIFile" `
-        -dTargetingPackMsiSourcePath="$TargetingPackMSIFile" `
+        -dNetCoreAppTargetingPackMsiSourcePath="$NetCoreAppTargetingPackMSIFile" `
         -dAspNetTargetingPackMsiSourcePath="$AspNetTargetingPackMSIFile" `
         -dWinFormsAndWpfVersion="$WindowsDesktopVersion" `
         -dAdditionalSharedFXMsiSourcePath="$AdditionalSharedFxMSIFile" `

@@ -127,7 +127,7 @@
       <MsiPackage SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <MsiPackage SourceFile="$(var.TargetingPackMsiSourcePath)">
+      <MsiPackage SourceFile="$(var.NetCoreAppTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage SourceFile="$(var.AspNetTargetingPackMsiSourcePath)">
