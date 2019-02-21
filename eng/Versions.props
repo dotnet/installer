@@ -37,6 +37,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <NETStandardLibraryPackageVersion>2.1.0-prerelease.19121.2</NETStandardLibraryPackageVersion>
+    <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
+         which ends up overriding the value set here. -->
+    <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19115.3</MicrosoftDotNetCommonItemTemplatesPackageVersion>
@@ -48,8 +51,10 @@
   <PropertyGroup>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
+    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
     <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27421-4</MicrosoftWindowsDesktopAppPackageVersion>
+    <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
     <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
     <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
