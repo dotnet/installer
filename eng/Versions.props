@@ -12,7 +12,7 @@
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview3.19121.2</MicrosoftDotnetToolsetInternalPackageVersion>
+    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview3.19123.1</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
@@ -32,11 +32,11 @@
     <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview4.19111.1</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview3-27420-6</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview4-27423-1</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19122.2</NETStandardLibraryPackageVersion>
+    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19123.1</NETStandardLibraryPackageVersion>
     <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
          which ends up overriding the value set here. -->
     <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
@@ -53,7 +53,7 @@
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27421-33</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27422-21</MicrosoftWindowsDesktopAppPackageVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
     <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
@@ -73,8 +73,11 @@
       https://dotnet.myget.org/F/msbuild/api/v3/index.json;
       https://dotnet.myget.org/F/nuget-build/api/v3/index.json;
       https://dotnet.myget.org/F/templating/api/v3/index.json;
-      https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
-      https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json
+      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json;
+      https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json;
     </RestoreSources>
   </PropertyGroup>
 </Project>
