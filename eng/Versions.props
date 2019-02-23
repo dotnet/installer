@@ -12,15 +12,15 @@
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview3.19120.4</MicrosoftDotnetToolsetInternalPackageVersion>
+    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview3.19123.1</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
-    <dotnetefPackageVersion>3.0.0-preview3.19120.3</dotnetefPackageVersion>
+    <dotnetefPackageVersion>3.0.0-preview3.19123.1</dotnetefPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppPackageVersion>3.0.0-preview3-19120-02</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftAspNetCoreAppPackageVersion>3.0.0-preview3-19122-14</MicrosoftAspNetCoreAppPackageVersion>
     <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
     <DotnetDevCertsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetDevCertsPackageVersion>
     <DotnetSqlCachePackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetSqlCachePackageVersion>
@@ -28,7 +28,7 @@
     <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview3-27420-6</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview3-27422-6</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -48,7 +48,9 @@
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
+    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
+    <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview3-27421-1</MicrosoftWindowsDesktopAppPackageVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
     <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
@@ -68,8 +70,11 @@
       https://dotnet.myget.org/F/msbuild/api/v3/index.json;
       https://dotnet.myget.org/F/nuget-build/api/v3/index.json;
       https://dotnet.myget.org/F/templating/api/v3/index.json;
-      https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
-      https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json
+      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json;
+      https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json;
+      https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json;
     </RestoreSources>
   </PropertyGroup>
 </Project>
