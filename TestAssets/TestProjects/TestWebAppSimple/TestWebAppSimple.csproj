@@ -23,7 +23,7 @@
   <Target Name="WriteBundledVersionsFile" BeforeTargets="Restore">
     <WriteLinesToFile
       File="$(MSBuildThisFileDirectory)/.BundledAspNetCoreVersion"
-      Lines="$(MicrosoftAspNetCoreAppPackageVersion)"
+      Lines="$(MicrosoftAspNetCoreAppRuntimeX64PackageVersion)"
       Overwrite="true"/>
   </Target>
   

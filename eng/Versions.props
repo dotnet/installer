@@ -20,12 +20,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppPackageVersion>3.0.0-preview4-19123-01</MicrosoftAspNetCoreAppPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <DotnetDevCertsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetDevCertsPackageVersion>
-    <DotnetSqlCachePackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetSqlCachePackageVersion>
-    <DotnetUserSecretsPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetUserSecretsPackageVersion>
-    <DotnetWatchPackageVersion>$(MicrosoftAspNetCoreAppPackageVersion)</DotnetWatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion>3.0.0-preview4-19123-01</MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview4-19123-01</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview4-19123-01</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <DotnetDevCertsPackageVersion>3.0.0-preview4-19123-01</DotnetDevCertsPackageVersion>
+    <DotnetSqlCachePackageVersion>3.0.0-preview4-19123-01</DotnetSqlCachePackageVersion>
+    <DotnetUserSecretsPackageVersion>3.0.0-preview4-19123-01</DotnetUserSecretsPackageVersion>
+    <DotnetWatchPackageVersion>3.0.0-preview4-19123-01</DotnetWatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
@@ -53,9 +54,9 @@
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
-    <AspNetCoreVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetCoreVersion>
+    <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
+    <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27428-5</MicrosoftWindowsDesktopAppPackageVersion>
-    <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
     <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
     <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
