@@ -1,10 +1,11 @@
 Param(
-  [Parameter(Mandatory=$true)][string] $barToken,
-  [Parameter(Mandatory=$true)][string] $gitHubPat,
-  [Parameter(Mandatory=$true)][string] $azdoPat,
-  [Parameter(Mandatory=$true)][string] $outputFolder,
-  [string] $darcVersion = '1.1.0-beta.19154.2',
-  [switch] $includeToolset
+  [Parameter(Mandatory=$true)][string] $barToken,       # Token generated at https://maestro-prod.westus2.cloudapp.azure.com/Account/Tokens
+  [Parameter(Mandatory=$true)][string] $gitHubPat,      # GitHub personal access token from https://github.com/settings/tokens (no auth scopes needed)
+  [Parameter(Mandatory=$true)][string] $azdoPat,        # Azure Dev Ops tokens from https://dev.azure.com/dnceng/_details/security/tokens (code read scope needed)
+  [Parameter(Mandatory=$true)][string] $outputFolder,   # Where the graphviz.txt file will be created
+  [string] $darcVersion = '1.1.0-beta.19154.2',         # darc's version
+  [switch] $includeToolset                              # Whether the graph should include toolset dependencies or not. i.e. arcade, optimization. For more about
+                                                        # toolset dependencies see https://github.com/dotnet/arcade/blob/master/Documentation/Darc.md#toolset-vs-product-dependencies
 )
 
 $ErrorActionPreference = "Stop"
@@ -29,9 +30,7 @@ try {
   $DarcExe = "$env:USERPROFILE\.dotnet\tools"
   $DarcExe = Resolve-Path "$DarcExe\darc.exe"
   
-  if (!(Test-Path -Path $outputFolder)) {
-      Create-Directory $outputFolder
-  }
+  Create-Directory $outputFolder
   
   $graphVizFilePath = "$outputFolder\graphviz.txt"
   $options = "get-dependency-graph --graphviz '$graphVizFilePath' --github-pat $gitHubPat --azdev-pat $azdoPat --password $barToken"

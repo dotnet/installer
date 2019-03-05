@@ -290,7 +290,7 @@ jobs:
     condition: succeeded()
     variables:
       # Publish-Build-Assets provides: MaestroAccessToken, BotAccount-dotnet-maestro-bot-PAT
-      # DotNet-AllOrgs-Pats provides: dn-bot-devdiv-dnceng-rw-code-pat
+      # DotNet-AllOrgs-Darc-Pats provides: dn-bot-devdiv-dnceng-rw-code-pat
       - group: Publish-Build-Assets
       - group: DotNet-AllOrgs-Darc-Pats
     steps:
