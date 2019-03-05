@@ -290,15 +290,15 @@ jobs:
     condition: succeeded()
     variables:
       # Publish-Build-Assets provides: MaestroAccessToken, BotAccount-dotnet-maestro-bot-PAT
-      # DotNet-AllOrgs-Pats provides: dn-bot-all-orgs-pat
+      # DotNet-AllOrgs-Pats provides: dn-bot-devdiv-dnceng-rw-code-pat
       - group: Publish-Build-Assets
-      - group: DotNet-AllOrgs-Pats
+      - group: DotNet-AllOrgs-Darc-Pats
     steps:
       - task: PowerShell@2
         displayName: Generate GraphViz graph
         inputs:
           filePath: eng/common/generate-graphviz.ps1
-          arguments: -gitHubPat $(BotAccount-dotnet-maestro-bot-PAT) -azdoPat $(dn-bot-all-orgs-pat) -barToken $(MaestroAccessToken) -outputFolder '$(Build.StagingDirectory)/GraphViz/'
+          arguments: -gitHubPat $(BotAccount-dotnet-maestro-bot-PAT) -azdoPat $(dn-bot-devdiv-dnceng-rw-code-pat) -barToken $(MaestroAccessToken) -outputFolder '$(Build.StagingDirectory)/GraphViz/'
         continueOnError: true
       - task: PublishBuildArtifacts@1
         displayName: Publish Graph to Artifacts

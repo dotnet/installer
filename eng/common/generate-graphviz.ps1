@@ -1,8 +1,8 @@
 Param(
-  [string] $barToken,
-  [string] $gitHubPat,
-  [string] $azdoPat,
-  [string] $outputFolder,
+  [Parameter(Mandatory=$true)][string] $barToken,
+  [Parameter(Mandatory=$true)][string] $gitHubPat,
+  [Parameter(Mandatory=$true)][string] $azdoPat,
+  [Parameter(Mandatory=$true)][string] $outputFolder,
   [string] $darcVersion = '1.1.0-beta.19154.2',
   [switch] $includeToolset
 )
@@ -27,13 +27,14 @@ try {
   CheckExitCode "Running darc-init"
 
   $DarcExe = "$env:USERPROFILE\.dotnet\tools"
-  $DarcExe = Resolve-Path $DarcExe
+  $DarcExe = Resolve-Path "$DarcExe\darc.exe"
   
   if (!(Test-Path -Path $outputFolder)) {
       Create-Directory $outputFolder
   }
-    
-  $options = "get-dependency-graph --graphviz '$outputFolder\graphviz.txt' --github-pat $gitHubPat --azdev-pat $azdoPat --password $barToken"
+  
+  $graphVizFilePath = "$outputFolder\graphviz.txt"
+  $options = "get-dependency-graph --graphviz '$graphVizFilePath' --github-pat $gitHubPat --azdev-pat $azdoPat --password $barToken"
   
   if ($includeToolset) {
     Write-Host "Toolsets will be included in the graph..."
@@ -41,10 +42,12 @@ try {
   }
 
   Write-Host "Generating dependency graph..."
-  $darc = Invoke-Expression "& `"$DarcExe\darc.exe`" $options"
-  $graph = Get-Content $outputFolder\graphviz.txt
-  Set-Content $outputFolder\graphviz.txt -Value "Paste the following digraph object in http://www.webgraphviz.com `r`n", $graph
-  Write-Host "'$outputFolder\graphviz.txt' file created!"
+  $darc = Invoke-Expression "& `"$DarcExe`" $options"
+  CheckExitCode "Generating dependency graph"
+  
+  $graph = Get-Content $graphVizFilePath
+  Set-Content $graphVizFilePath -Value "Paste the following digraph object in http://www.webgraphviz.com `r`n", $graph
+  Write-Host "'$graphVizFilePath' file created!"
 }
 catch {
   if (!$includeToolset) {
