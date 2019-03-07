@@ -297,7 +297,7 @@ jobs:
       - task: PowerShell@2
         displayName: Generate GraphViz graph
         inputs:
-          filePath: eng/common/generate-graphviz.ps1
+          filePath: eng/common/generate-graph-files.ps1
           arguments: -gitHubPat $(BotAccount-dotnet-maestro-bot-PAT) -azdoPat $(dn-bot-devdiv-dnceng-rw-code-pat) -barToken $(MaestroAccessToken) -outputFolder '$(Build.StagingDirectory)/GraphViz/'
         continueOnError: true
       - task: PublishBuildArtifacts@1
