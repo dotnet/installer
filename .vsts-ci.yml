@@ -303,7 +303,7 @@ jobs:
       - task: PublishBuildArtifacts@1
         displayName: Publish Graph to Artifacts
         inputs:
-          PathtoPublish: '$(Build.StagingDirectory)/GraphViz'
+          PathtoPublish: '$(Build.StagingDirectory)/GraphFiles'
           PublishLocation: Container
           ArtifactName: GraphViz
         continueOnError: true

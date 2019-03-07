@@ -3,7 +3,7 @@ Param(
   [Parameter(Mandatory=$true)][string] $gitHubPat,      # GitHub personal access token from https://github.com/settings/tokens (no auth scopes needed)
   [Parameter(Mandatory=$true)][string] $azdoPat,        # Azure Dev Ops tokens from https://dev.azure.com/dnceng/_details/security/tokens (code read scope needed)
   [Parameter(Mandatory=$true)][string] $outputFolder,   # Where the graphviz.txt file will be created
-  [string] $darcVersion = '1.1.0-beta.19154.2',         # darc's version
+  [string] $darcVersion = '1.1.0-beta.19156.4',         # darc's version
   [switch] $includeToolset                              # Whether the graph should include toolset dependencies or not. i.e. arcade, optimization. For more about
                                                         # toolset dependencies see https://github.com/dotnet/arcade/blob/master/Documentation/Darc.md#toolset-vs-product-dependencies
 )
@@ -33,7 +33,8 @@ try {
   Create-Directory $outputFolder
   
   $graphVizFilePath = "$outputFolder\graphviz.txt"
-  $options = "get-dependency-graph --graphviz '$graphVizFilePath' --github-pat $gitHubPat --azdev-pat $azdoPat --password $barToken"
+  $graphFilePath = "$outputFolder\graph.txt"
+  $options = "get-dependency-graph --graphviz '$graphVizFilePath' --github-pat $gitHubPat --azdev-pat $azdoPat --password $barToken --output-file $graphFilePath"
   
   if ($includeToolset) {
     Write-Host "Toolsets will be included in the graph..."
@@ -46,7 +47,7 @@ try {
   
   $graph = Get-Content $graphVizFilePath
   Set-Content $graphVizFilePath -Value "Paste the following digraph object in http://www.webgraphviz.com `r`n", $graph
-  Write-Host "'$graphVizFilePath' file created!"
+  Write-Host "'$graphVizFilePath' and '$graphFilePath' created!"
 }
 catch {
   if (!$includeToolset) {
