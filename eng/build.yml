@@ -13,12 +13,6 @@ parameters:
 
   # Job timeout
   timeoutInMinutes: 180
-  
-  graphFileGeneration:
-    # Optional: Enable generating the graph files at the end of the build
-    enabled: false
-    # Optional: Include toolset dependencies in the generated graph files
-    includeToolset: false
 
 phases:
 - template: /eng/common/templates/job/job.yml
