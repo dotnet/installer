@@ -276,35 +276,13 @@ jobs:
       enablePublishBuildArtifacts: true
       pool:
         vmImage: vs2017-win2016
-        
+
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - job: Create_GraphViz
-    displayName: Create GraphViz
-    dependsOn:
-      - Windows_NT
-      - Linux
-      - Darwin
-      - Asset_Registry_Publish
-    pool:
-      name: Hosted VS2017
-    condition: succeeded()
-    variables:
-      # Publish-Build-Assets provides: MaestroAccessToken, BotAccount-dotnet-maestro-bot-PAT
-      # DotNet-AllOrgs-Darc-Pats provides: dn-bot-devdiv-dnceng-rw-code-pat
-      - group: Publish-Build-Assets
-      - group: DotNet-AllOrgs-Darc-Pats
-    steps:
-      - task: PowerShell@2
-        displayName: Generate GraphViz graph
-        inputs:
-          filePath: eng/common/generate-graph-files.ps1
-          arguments: -gitHubPat $(BotAccount-dotnet-maestro-bot-PAT) -azdoPat $(dn-bot-devdiv-dnceng-rw-code-pat) -barToken $(MaestroAccessToken) -outputFolder '$(Build.StagingDirectory)/GraphViz/'
-        continueOnError: true
-      - task: PublishBuildArtifacts@1
-        displayName: Publish Graph to Artifacts
-        inputs:
-          PathtoPublish: '$(Build.StagingDirectory)/GraphFiles'
-          PublishLocation: Container
-          ArtifactName: GraphViz
-        continueOnError: true
-        condition: always()      
+  - template: /eng/common/templates/job/generate-graph-files.yml
+    parameters:
+      continueOnError: true
+      includeToolset: false
+      dependsOn:
+        - Asset_Registry_Publish
+      pool:
+        vmImage: vs2017-win2016
