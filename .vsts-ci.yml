@@ -13,8 +13,6 @@ variables:
 jobs:
 - template: /eng/build.yml
   parameters:
-    graphFileGeneration:
-      enabled: true
     agentOs: Windows_NT
     pool:
       ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
@@ -276,5 +274,15 @@ jobs:
         - Linux
         - Darwin
       enablePublishBuildArtifacts: true
+      pool:
+        vmImage: vs2017-win2016
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: /eng/common/templates/job/generate-graph-files.yml
+    parameters:
+      continueOnError: true
+      includeToolset: false
+      dependsOn:
+        - Asset_Registry_Publish
       pool:
         vmImage: vs2017-win2016
