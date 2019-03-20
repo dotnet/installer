@@ -135,14 +135,14 @@ jobs:
             _BuildConfig: Debug
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
+            _RuntimeIdentifier: '--runtime-id linux-arm'
             _BuildArchitecture: 'arm'
             _DropSuffix: ''
           Build_Arm64_Debug:
             _BuildConfig: Debug
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
+            _RuntimeIdentifier: '--runtime-id linux-arm64'
             _BuildArchitecture: 'arm64'
             _DropSuffix: ''
           Build_Linux_musl_Debug_x64:
@@ -163,7 +163,7 @@ jobs:
             _BuildConfig: Release
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
+            _RuntimeIdentifier: '--runtime-id linux-arm'
             _BuildArchitecture: 'arm'
             _DropSuffix: true
         ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -171,14 +171,14 @@ jobs:
             _BuildConfig: Release
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
+            _RuntimeIdentifier: '--runtime-id linux-arm'
             _BuildArchitecture: 'arm'
             _DropSuffix: ''
           Build_Arm64_Release:
             _BuildConfig: Release
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
-            _RuntimeIdentifier: ''
+            _RuntimeIdentifier: '--runtime-id linux-arm64'
             _BuildArchitecture: 'arm64'
             _DropSuffix: ''
           Build_Rhel_6_Release_x64:
@@ -274,5 +274,15 @@ jobs:
         - Linux
         - Darwin
       enablePublishBuildArtifacts: true
+      pool:
+        vmImage: vs2017-win2016
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: /eng/common/templates/job/generate-graph-files.yml
+    parameters:
+      continueOnError: true
+      includeToolset: false
+      dependsOn:
+        - Asset_Registry_Publish
       pool:
         vmImage: vs2017-win2016

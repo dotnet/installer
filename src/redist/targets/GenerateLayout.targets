@@ -30,6 +30,7 @@
       <DownloadedSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-runtime$(InstallerStartSuffix)-$(MicrosoftNETCoreAppPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedSharedFrameworkInstallerFileName>
       <DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-extension-$(MicrosoftWindowsDesktopPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName>
       <DownloadedNetCoreAppTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-targeting-pack$(InstallerStartSuffix)-$(NetCoreAppTargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedNetCoreAppTargetingPackInstallerFileName>
+      <DownloadedWindowsDesktopTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">windowsdesktop-targeting-pack$(InstallerStartSuffix)-$(WindowsDesktopTargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWindowsDesktopTargetingPackInstallerFileName>
 
       <!-- Use the portable "linux-x64" Rid when downloading Linux shared framework compressed file. -->
       <SharedFrameworkRid>$(CoreSetupRid)</SharedFrameworkRid>
@@ -60,9 +61,12 @@
       <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppPackageVersion)</CoreSetupDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
     </PropertyGroup>
-    <PropertyGroup>
-      
+
+    <PropertyGroup Condition="'$(HostOSName)' == 'win'">
+      <AlternateAppHostRid Condition="'$(Architecture)' == 'x86'">win-x64</AlternateAppHostRid>
+      <AlternateAppHostRid Condition="'$(Architecture)' == 'x64'">win-x86</AlternateAppHostRid>
     </PropertyGroup>
+    
     <ItemGroup>
       <BundledLayoutComponent Include="CombinedSharedHostAndFrameworkArchive">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
@@ -80,6 +84,24 @@
       <BundledLayoutPackage Include="MicrosoftAspNetCoreAppTargetingPackNupkg">
         <PackageName>Microsoft.AspNetCore.App.Ref</PackageName>
         <PackageVersion>$(AspNetTargetingPackVersion)</PackageVersion>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+
+      <BundledLayoutPackage Include="MicrosoftWindowsDesktopAppTargetingPackNupkg">
+        <PackageName>Microsoft.WindowsDesktop.App.Ref</PackageName>
+        <PackageVersion>$(WindowsDesktopTargetingPackVersion)</PackageVersion>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+
+      <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg">
+        <PackageName>runtime.$(SharedFrameworkRid).Microsoft.NETCore.DotNetAppHost</PackageName>
+        <PackageVersion>$(NetCoreAppTargetingPackVersion)</PackageVersion>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+
+      <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg_Altnernate" Condition="'$(AlternateAppHostRid)' != ''">
+        <PackageName>runtime.$(AlternateAppHostRid).Microsoft.NETCore.DotNetAppHost</PackageName>
+        <PackageVersion>$(NetCoreAppTargetingPackVersion)</PackageVersion>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
@@ -117,7 +139,14 @@
         <DownloadFileName>$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
-      
+
+      <BundledInstallerComponent Include="DownloadedWindowsDesktopTargetingPackInstallerFileName"
+                                 Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
+        <BaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</BaseUrl>
+        <DownloadFileName>$(DownloadedWindowsDesktopTargetingPackInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledInstallerComponent>
+
       <BundledLayoutComponent Include="ToolsetArchive">
         <BaseUrl>$(DotnetToolsetBlobRootUrl)Toolset/$(MicrosoftDotnetToolsetInternalPackageVersion)</BaseUrl>
         <DownloadFileName>dotnet-toolset-internal-$(MicrosoftDotnetToolsetInternalPackageVersion).zip</DownloadFileName>
@@ -125,7 +154,7 @@
         <RelativeLayoutPath>sdk/$(SdkVersion)</RelativeLayoutPath>
       </BundledLayoutComponent>
     </ItemGroup>
-    
+
     <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
       <BundledLayoutComponent Include="AspNetCoreSharedFxArchiveFile">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
@@ -140,7 +169,7 @@
         <DownloadFileName>$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' AND '$(DownloadedAspNetCoreSharedFxInstallerFileName)' != '' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
@@ -359,13 +388,13 @@
                             CrossgenLayout;
                             LayoutAppHostTemplate;
                             SignLayout"
-          AfterTargets="Build">
+          BeforeTargets="AfterBuild">
   
   </Target>
   
   <Target Name="GenerateInternalLayout"
           DependsOnTargets="GenerateLayout"
-          AfterTargets="Build">
+          BeforeTargets="AfterBuild">
 
     <RemoveDir Directories="$(SdkInternalLayoutPath)" />
     <MakeDir Directories="$(SdkInternalLayoutPath)" />
