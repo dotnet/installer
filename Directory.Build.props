@@ -16,6 +16,8 @@
     <CoreSdkTargetFramework>netcoreapp3.0</CoreSdkTargetFramework>
 
     <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir>
+
+    <NoWarn>NU5125;NU5105</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">
