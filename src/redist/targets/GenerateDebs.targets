@@ -41,6 +41,12 @@
       <SharedFxDebianPackageFileName>$(SharedFxDebianPackageFileName.ToLower())</SharedFxDebianPackageFileName>
       <SharedFxDebianPackageName>dotnet-runtime-$(SharedFxDebianPackageVersion)</SharedFxDebianPackageName>
       <SharedFxDebianPackageName>$(SharedFxDebianPackageName.ToLower())</SharedFxDebianPackageName>
+
+      <SharedFxTargetingPackDebianPackageFileName>dotnet-targeting-pack-$(SharedFxDebianPackageFileVersion)</SharedFxTargetingPackDebianPackageFileName>
+      <SharedFxTargetingPackDebianPackageFileName>$(SharedFxTargetingPackDebianPackageFileName.ToLower())</SharedFxTargetingPackDebianPackageFileName>
+      <SharedFxTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFxDebianPackageVersion)</SharedFxTargetingPackDebianPackageName>
+      <SharedFxTargetingPackDebianPackageName>$(SharedFxTargetingPackDebianPackageName.ToLower())</SharedFxTargetingPackDebianPackageName>
+      
       <HostFxrDebianPackageFileName>dotnet-hostfxr-$(HostFxrVersion)</HostFxrDebianPackageFileName>
       <HostFxrDebianPackageFileName>$(HostFxrDebianPackageFileName.ToLower())</HostFxrDebianPackageFileName>
       <HostFxrDebianPackageName>dotnet-hostfxr-$(HostFxrMajorMinorVersion)</HostFxrDebianPackageName>
@@ -50,6 +56,11 @@
       <AspNetCoreSharedFxDebianPackageFileName>$(AspNetCoreSharedFxDebianPackageFileName.ToLower())</AspNetCoreSharedFxDebianPackageFileName>
       <AspNetCoreSharedFxDebianPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxDebianPackageName>
       <AspNetCoreSharedFxDebianPackageName>$(AspNetCoreSharedFxDebianPackageName.ToLower())</AspNetCoreSharedFxDebianPackageName>
+
+      <AspNetCoreSharedFxTargetingPackDebianPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
+      <AspNetCoreSharedFxTargetingPackDebianPackageFileName>$(AspNetCoreSharedFxTargetingPackDebianPackageFileName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
+      <AspNetCoreSharedFxTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxTargetingPackDebianPackageName>
+      <AspNetCoreSharedFxTargetingPackDebianPackageName>$(AspNetCoreSharedFxTargetingPackDebianPackageName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageName>
     </PropertyGroup>
 
     <!-- Inputs -->
@@ -103,6 +114,12 @@
       <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_DEBIAN_PACKAGE_NAME%">
         <ReplacementString>$(AspNetCoreSharedFxDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
+      <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
+        <ReplacementString>$(SharedFxTargetingPackDebianPackageName)</ReplacementString>
+      </DebianConfigTokenValues>
+      <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
+        <ReplacementString>$(AspNetCoreSharedFxTargetingPackDebianPackageName)</ReplacementString>
+      </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_DEBIAN_PACKAGE_ADDITIONAL_DEPENDENCY%"
                                Condition="'$(IncludeAdditionalSharedFrameworks)' == 'true'">
         <ReplacementString>
@@ -120,7 +137,7 @@
       <DebianConfigTokenValues Include="%CLI_SDK_BRAND_NAME%">
         <ReplacementString>$(SdkBrandName)</ReplacementString>
       </DebianConfigTokenValues>
-      <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_DEBIAN_PACKAGE_VERSIONS%">
+      <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_DEBIAN_PACKAGE_VERSION%">
         <ReplacementString>$(MicrosoftNETCoreAppPackageVersionWithTilda)</ReplacementString>
       </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_DEBIAN_PACKAGE_VERSION%">
