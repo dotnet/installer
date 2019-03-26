@@ -147,10 +147,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <!--<TestSdkDebTaskEnvironmentVariables Include="PATH=$(DebianInstalledDirectory)$(PathListSeparator)$(PATH)" />
+      <TestSdkDebTaskEnvironmentVariables Include="PATH=$(DebianInstalledDirectory)$(PathListSeparator)$(PATH)" />
       <TestSdkDebTaskEnvironmentVariables Include="TEST_ARTIFACTS=$(TestArtifactsDir)" />
       <TestSdkDebTaskEnvironmentVariables Include="TEST_PACKAGES=$(TestPackagesDir)" />
-      <TestSdkDebTaskEnvironmentVariables Include="PreviousStageProps=$(NextStagePropsPath)" />-->
+      <TestSdkDebTaskEnvironmentVariables Include="PreviousStageProps=$(NextStagePropsPath)" />
 
       <!-- Consumed By Publish -->
       <GeneratedInstallers Include="$(SdkDebInstallerFile)" />
@@ -163,12 +163,11 @@
           DependsOnTargets="GetCurrentRuntimeInformation;
                             GenerateDebsInner"/>
 
-  
-  <!-- Re-enable "TestSdkDeb" when the following issue is resolved: https://github.com/dotnet/cli/issues/9672 -->
   <Target Name="GenerateDebsInner"
           DependsOnTargets="SetupDebProps;
                             TestDebuild;
-                            BuildSdkDeb"
+                            BuildSdkDeb;
+                            TestSdkDeb"
           Condition=" '$(IsDebianBaseDistro)' == 'True' "
           Outputs="@(GeneratedInstallers)"/>
 
@@ -282,6 +281,10 @@
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(HostDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageFileName)" />
       </ItemGroup>
       <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
       <Exec Command="sudo rm -rf /usr/share/dotnet/sdk/NuGetFallbackFolder" />
@@ -291,13 +294,20 @@
   <Target Name="TestSdkDeb"
       Condition=" '$(CLIBUILD_SKIP_TESTS)' != 'true' and '$(IsDebianBaseDistro)' == 'True' and '$(DebuildPresent)'  == 'true' "
       DependsOnTargets="RestoreTests;GetAspNetSharedFxInstallArgs"
-      Inputs="$(DownloadedSharedHostInstallerFile);
+      Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFileName);
+              $(DownloadedAspNetTargetingPackInstallerFileName);
+              $(DownloadedRuntimeDepsInstallerFile);
+              $(DownloadedSharedHostInstallerFile);
               $(DownloadedHostFxrInstallerFile);
               $(DownloadedSharedFrameworkInstallerFile);
-              $(SdkDebInstallerFile);"
+              $(DownloadedAspNetCoreSharedFxInstallerFile);
+              $(SdkDebInstallerFile);
+              $(DebianTestResultsXmlFile);"
       Outputs="$(DebianTestResultsXmlFile)" >
 
       <!-- Install Dependencies and SDK Packages -->
+      <Exec Command="sudo dpkg -i $(DownloadedNetCoreAppTargetingPackInstallerFileName)" />
+      <Exec Command="sudo dpkg -i $(DownloadedAspNetTargetingPackInstallerFileName)" />
       <Exec Command="sudo dpkg -i $(DownloadedRuntimeDepsInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedSharedHostInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedHostFxrInstallerFile)" />
@@ -325,6 +335,8 @@
         <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(HostDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
+        <TestSdkDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
       </ItemGroup>
       <!-- If package installed remove it -->
       <Exec Command="!(dpkg-query -W %(TestSdkDebPackageToRemove.Identity)) || sudo dpkg -r %(TestSdkDebPackageToRemove.Identity)" />
