@@ -234,7 +234,6 @@
   </Target>
 
   <Target Name="TestSdkRpm"
-          DependsOnTargets="RestoreTests"
           Condition="  '$(CLIBUILD_SKIP_TESTS)' != 'true' and '$(IsRPMBasedDistro)' == 'True' and '$(FPMPresent)' == 'True' "
           Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFileName);
                   $(DownloadedAspNetTargetingPackInstallerFileName);
