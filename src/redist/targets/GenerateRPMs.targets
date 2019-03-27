@@ -265,7 +265,7 @@
     <Exec Command="sudo yum -y install $(DownloadedSharedFrameworkInstallerFile)" />
     <!-- Ignore dependencies, which may have an incoherent dependency on dotnet-runtime -->
     <Exec Command="sudo rpm --install --nodeps $(DownloadedAspNetCoreSharedFxInstallerFile)" />
-
+    <Exec Command="sudo yum history sync" />
     <Exec Command="sudo yum -y install $(SdkRPMInstallerFile)" />
 
     <!-- Run Tests -->
