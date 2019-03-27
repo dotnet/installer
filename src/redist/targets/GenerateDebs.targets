@@ -294,8 +294,8 @@
   <Target Name="TestSdkDeb"
       Condition=" '$(CLIBUILD_SKIP_TESTS)' != 'true' and '$(IsDebianBaseDistro)' == 'True' and '$(DebuildPresent)'  == 'true' "
       DependsOnTargets="GetAspNetSharedFxInstallArgs"
-      Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFileName);
-              $(DownloadedAspNetTargetingPackInstallerFileName);
+      Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFile);
+              $(DownloadedAspNetTargetingPackInstallerFile);
               $(DownloadedRuntimeDepsInstallerFile);
               $(DownloadedSharedHostInstallerFile);
               $(DownloadedHostFxrInstallerFile);
@@ -306,8 +306,8 @@
       Outputs="$(DebianTestResultsXmlFile)" >
 
       <!-- Install Dependencies and SDK Packages -->
-      <Exec Command="sudo dpkg -i $(DownloadedNetCoreAppTargetingPackInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadedAspNetTargetingPackInstallerFileName)" />
+      <Exec Command="sudo dpkg -i $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedAspNetTargetingPackInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedRuntimeDepsInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedSharedHostInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedHostFxrInstallerFile)" />

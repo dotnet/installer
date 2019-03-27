@@ -235,8 +235,8 @@
 
   <Target Name="TestSdkRpm"
           Condition="  '$(CLIBUILD_SKIP_TESTS)' != 'true' and '$(IsRPMBasedDistro)' == 'True' and '$(FPMPresent)' == 'True' "
-          Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFileName);
-                  $(DownloadedAspNetTargetingPackInstallerFileName);
+          Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFile);
+                  $(DownloadedAspNetTargetingPackInstallerFile);
                   $(DownloadedRuntimeDepsInstallerFile);
                   $(DownloadedSharedHostInstallerFile);
                   $(DownloadedHostFxrInstallerFile);
@@ -247,8 +247,8 @@
           Outputs="$(RpmTestResultsXmlFile)" >
 
     <!-- Install Dependencies and SDK Packages -->
-    <Exec Command="sudo yum -y install $(DownloadedNetCoreAppTargetingPackInstallerFileName)" />
-    <Exec Command="sudo yum -y install $(DownloadedAspNetTargetingPackInstallerFileName)" />
+    <Exec Command="sudo yum -y install $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
+    <Exec Command="sudo yum -y install $(DownloadedAspNetTargetingPackInstallerFile)" />
     <Exec Command="sudo yum -y install $(DownloadedRuntimeDepsInstallerFile)" />
     <Exec Command="sudo yum -y install $(DownloadedSharedHostInstallerFile)" />
     <Exec Command="sudo yum -y install $(DownloadedHostFxrInstallerFile)" />
