@@ -207,7 +207,17 @@
       <AfterInstallHostScriptTemplateFile>$(ScriptsDir)/$(AfterInstallHostScriptName)</AfterInstallHostScriptTemplateFile>
       <AfterInstallHostScriptDestinationFile>$(RpmLayoutScripts)/$(AfterInstallHostScriptName)</AfterInstallHostScriptDestinationFile>
     </PropertyGroup>
-
+    
+    <PropertyGroup>
+      <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
+      <DownloadedAspNetTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetTargetingPackInstallerFile>
+      <DownloadedRuntimeDepsInstallerFile>$(DownloadsFolder)$(DownloadedRuntimeDepsInstallerFileName)</DownloadedRuntimeDepsInstallerFile>
+      <DownloadedSharedHostInstallerFile>$(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)</DownloadedSharedHostInstallerFile>
+      <DownloadedHostFxrInstallerFile>$(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)</DownloadedHostFxrInstallerFile>
+      <DownloadedSharedFrameworkInstallerFile>$(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)</DownloadedSharedFrameworkInstallerFile>
+      <DownloadedAspNetCoreSharedFxInstallerFile>$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadedAspNetCoreSharedFxInstallerFile>
+    </PropertyGroup>
+    
     <PropertyGroup>
       <EndToEndTestProject>$(RepoRoot)/test/EndToEnd/EndToEnd.csproj</EndToEndTestProject>
     </PropertyGroup>

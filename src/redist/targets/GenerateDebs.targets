@@ -31,34 +31,41 @@
 
     <!-- Package Identities -->
     <PropertyGroup>
-      <RuntimeDepsPackageVersion>$(MicrosoftNETCoreAppMajorMinorVersion)</RuntimeDepsPackageVersion>
-      <RuntimeDepsPackageName>dotnet-runtime-deps-$(RuntimeDepsPackageVersion)</RuntimeDepsPackageName>
       <SdkDebianPackageVersion>$(MajorMinorVersion)</SdkDebianPackageVersion>
       <SdkDebianPackageName>dotnet-sdk-$(SdkDebianPackageVersion)</SdkDebianPackageName>
-      <SharedFxDebianPackageFileVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedFxDebianPackageFileVersion>
-      <SharedFxDebianPackageVersion>$(MicrosoftNETCoreAppMajorMinorVersion)</SharedFxDebianPackageVersion>
-      <SharedFxDebianPackageFileName>dotnet-runtime-$(SharedFxDebianPackageFileVersion)</SharedFxDebianPackageFileName>
-      <SharedFxDebianPackageFileName>$(SharedFxDebianPackageFileName.ToLower())</SharedFxDebianPackageFileName>
-      <SharedFxDebianPackageName>dotnet-runtime-$(SharedFxDebianPackageVersion)</SharedFxDebianPackageName>
-      <SharedFxDebianPackageName>$(SharedFxDebianPackageName.ToLower())</SharedFxDebianPackageName>
-      <SharedFxTargetingPackDebianPackageFileName>dotnet-targeting-pack-$(SharedFxDebianPackageFileVersion)</SharedFxTargetingPackDebianPackageFileName>
-      <SharedFxTargetingPackDebianPackageFileName>$(SharedFxTargetingPackDebianPackageFileName.ToLower())</SharedFxTargetingPackDebianPackageFileName>
-      <SharedFxTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFxDebianPackageVersion)</SharedFxTargetingPackDebianPackageName>
-      <SharedFxTargetingPackDebianPackageName>$(SharedFxTargetingPackDebianPackageName.ToLower())</SharedFxTargetingPackDebianPackageName>
+      <RuntimeDepsPackageVersion>$(MicrosoftNETCoreAppMajorMinorVersion)</RuntimeDepsPackageVersion>
+      <RuntimeDepsPackageName>dotnet-runtime-deps-$(RuntimeDepsPackageVersion)</RuntimeDepsPackageName>
+      <DownloadedRuntimeDepsInstallerFile>$(DownloadsFolder)$(DownloadedRuntimeDepsInstallerFileName)</DownloadedRuntimeDepsInstallerFile>
+      <SharedFrameworkDebianPackageFileVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedFrameworkDebianPackageFileVersion>
+      <SharedFrameworkDebianPackageVersion>$(MicrosoftNETCoreAppMajorMinorVersion)</SharedFrameworkDebianPackageVersion>
+      <SharedFrameworkDebianPackageFileName>dotnet-runtime-$(SharedFrameworkDebianPackageFileVersion)</SharedFrameworkDebianPackageFileName>
+      <SharedFrameworkDebianPackageFileName>$(SharedFrameworkDebianPackageFileName.ToLower())</SharedFrameworkDebianPackageFileName>
+      <SharedFrameworkDebianPackageName>dotnet-runtime-$(SharedFrameworkDebianPackageVersion)</SharedFrameworkDebianPackageName>
+      <SharedFrameworkDebianPackageName>$(SharedFrameworkDebianPackageName.ToLower())</SharedFrameworkDebianPackageName>
+      <DownloadedSharedFrameworkInstallerFile>$(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)</DownloadedSharedFrameworkInstallerFile>
+      <NetCoreAppTargetingPackDebianPackageFileName>dotnet-targeting-pack-$(SharedFrameworkDebianPackageFileVersion)</NetCoreAppTargetingPackDebianPackageFileName>
+      <NetCoreAppTargetingPackDebianPackageFileName>$(NetCoreAppTargetingPackDebianPackageFileName.ToLower())</NetCoreAppTargetingPackDebianPackageFileName>
+      <NetCoreAppTargetingPackDebianPackageName>dotnet-targeting-pack-$(NetCoreAppDebianPackageVersion)</NetCoreAppTargetingPackDebianPackageName>
+      <NetCoreAppTargetingPackDebianPackageName>$(NetCoreAppTargetingPackDebianPackageName.ToLower())</NetCoreAppTargetingPackDebianPackageName>
+      <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
       <HostFxrDebianPackageFileName>dotnet-hostfxr-$(HostFxrVersion)</HostFxrDebianPackageFileName>
       <HostFxrDebianPackageFileName>$(HostFxrDebianPackageFileName.ToLower())</HostFxrDebianPackageFileName>
       <HostFxrDebianPackageName>dotnet-hostfxr-$(HostFxrMajorMinorVersion)</HostFxrDebianPackageName>
       <HostFxrDebianPackageName>$(HostFxrDebianPackageName.ToLower())</HostFxrDebianPackageName>
-      <HostDebianPackageName>dotnet-host</HostDebianPackageName>
+      <DownloadedHostFxrInstallerFile>$(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)</DownloadedHostFxrInstallerFile>
+      <SharedHostPackageName>dotnet-host</SharedHostPackageName>
+      <DownloadedSharedHostInstallerFile>$(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)</DownloadedSharedHostInstallerFile>
       <AspNetCoreSharedFxDebianPackageFileName>aspnetcore-runtime-$(AspNetCoreVersion)</AspNetCoreSharedFxDebianPackageFileName>
       <AspNetCoreSharedFxDebianPackageFileName>$(AspNetCoreSharedFxDebianPackageFileName.ToLower())</AspNetCoreSharedFxDebianPackageFileName>
       <AspNetCoreSharedFxDebianPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxDebianPackageName>
       <AspNetCoreSharedFxDebianPackageName>$(AspNetCoreSharedFxDebianPackageName.ToLower())</AspNetCoreSharedFxDebianPackageName>
+      <DownloadedAspNetCoreSharedFxInstallerFile>$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadedAspNetCoreSharedFxInstallerFile>
       <AspNetCoreSharedFxTargetingPackDebianPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
       <AspNetCoreSharedFxTargetingPackDebianPackageFileName>$(AspNetCoreSharedFxTargetingPackDebianPackageFileName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
       <AspNetCoreSharedFxTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxTargetingPackDebianPackageName>
       <AspNetCoreSharedFxTargetingPackDebianPackageName>$(AspNetCoreSharedFxTargetingPackDebianPackageName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageName>
-    </PropertyGroup>
+      <DownloadedAspNetCoreSharedFxTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetCoreSharedFxTargetingPackInstallerFile>
+</PropertyGroup>
 
     <!-- Inputs -->
     <PropertyGroup>
@@ -106,13 +113,13 @@
 
     <ItemGroup>
       <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_DEBIAN_PACKAGE_NAME%">
-        <ReplacementString>$(SharedFxDebianPackageName)</ReplacementString>
+        <ReplacementString>$(SharedFrameworkDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_DEBIAN_PACKAGE_NAME%">
         <ReplacementString>$(AspNetCoreSharedFxDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
-        <ReplacementString>$(SharedFxTargetingPackDebianPackageName)</ReplacementString>
+        <ReplacementString>$(NetCoreAppTargetingPackDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
         <ReplacementString>$(AspNetCoreSharedFxTargetingPackDebianPackageName)</ReplacementString>
@@ -205,13 +212,13 @@
       Inputs="@(CLISdkFiles)"
       Outputs="$(SdkDebInstallerFile)" >
       <!-- Install Shared Framework Packages -->
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedRuntimeDepsInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)" />
-      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)" />
-      <Exec Command="sudo dpkg $(InstallAspNetCoreSharedFxArgs) -i $(DownloadsFolder)$(DownloadedAspNetCoreSharedFxInstallerFileName)" />
+      <Exec Command="sudo dpkg -i $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedAspNetTargetingPackInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedRuntimeDepsInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedSharedHostInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedHostFxrInstallerFile)" />
+      <Exec Command="sudo dpkg -i $(DownloadedSharedFrameworkInstallerFile)" />
+      <Exec Command="sudo dpkg $(InstallAspNetCoreSharedFxArgs) -i $(DownloadedAspNetCoreSharedFxInstallerFile)" />
 
       <!-- Create layout: Binaries -->
       <Copy
@@ -276,14 +283,14 @@
         <SetupDebPackageToRemove Include="$(SdkDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageFileName)" />
-        <SetupDebPackageToRemove Include="$(SharedFxDebianPackageName)" />
-        <SetupDebPackageToRemove Include="$(SharedFxDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(SharedFrameworkDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedFrameworkDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
-        <SetupDebPackageToRemove Include="$(HostDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedHostPackageName)" />
         <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
-        <SetupDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageName)" />
-        <SetupDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageFileName)" />
       </ItemGroup>
@@ -332,11 +339,11 @@
       <ItemGroup>
         <TestSdkDebPackageToRemove Include="$(SdkDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageName)" />
-        <TestSdkDebPackageToRemove Include="$(SharedFxDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(SharedFrameworkDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
-        <TestSdkDebPackageToRemove Include="$(HostDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(SharedHostPackageName)" />
         <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
-        <TestSdkDebPackageToRemove Include="$(SharedFxTargetingPackDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
       </ItemGroup>
       <!-- If package installed remove it -->
