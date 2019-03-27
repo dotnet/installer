@@ -205,7 +205,8 @@
       Inputs="@(CLISdkFiles)"
       Outputs="$(SdkDebInstallerFile)" >
       <!-- Install Shared Framework Packages -->
-
+      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)" />
+      <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)" />
       <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedRuntimeDepsInstallerFileName)" />
       <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)" />
       <Exec Command="sudo dpkg -i $(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)" />
