@@ -64,7 +64,7 @@
       <AspNetCoreSharedFxTargetingPackDebianPackageFileName>$(AspNetCoreSharedFxTargetingPackDebianPackageFileName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
       <AspNetCoreSharedFxTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxTargetingPackDebianPackageName>
       <AspNetCoreSharedFxTargetingPackDebianPackageName>$(AspNetCoreSharedFxTargetingPackDebianPackageName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageName>
-      <DownloadedAspNetCoreSharedFxTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetCoreSharedFxTargetingPackInstallerFile>
+      <DownloadedAspNetTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetTargetingPackInstallerFile>
 </PropertyGroup>
 
     <!-- Inputs -->
@@ -323,14 +323,6 @@
       <Exec Command="sudo dpkg $(InstallAspNetCoreSharedFxArgs) -i $(DownloadedAspNetCoreSharedFxInstallerFile)" />
 
       <Exec Command="sudo dpkg -i $(SdkDebInstallerFile)" />
-
-      <!-- Run E2E -->
-      <DotNetRestore ProjectPath="$(EndToEndTestProject)"
-                     ToolPath="$(DebianInstalledDirectory)" />
-
-      <DotNetTest ProjectPath="$(EndToEndTestProject)"
-                  EnvironmentVariables="@(TestSdkDebTaskEnvironmentVariables)"
-                  ToolPath="$(DebianInstalledDirectory)" />
 
       <!-- Clean up Packages -->
       <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
