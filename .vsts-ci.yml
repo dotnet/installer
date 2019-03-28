@@ -59,7 +59,6 @@ jobs:
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
-          _AdditionalBuildParameters: '/p:DisableSourceLink=true'
 
 - template: /eng/build.yml
   parameters:
@@ -190,7 +189,6 @@ jobs:
             _RuntimeIdentifier: '--runtime-id rhel.6-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
           Build_Linux_musl_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker alpine.3.6'
