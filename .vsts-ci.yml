@@ -16,9 +16,11 @@ jobs:
     agentOs: Windows_NT
     pool:
       ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-        name: dotnet-external-temp
+        name: NetCorePublic-Int-Pool
+        queue: buildpool.windows.10.amd64.vs2017.open
       ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-        name: dotnet-internal-temp
+         name: NetCoreInternal-Int-Pool
+         queue: buildpool.windows.10.amd64.vs2017
     timeoutInMinutes: 180
     strategy:
       matrix:
@@ -57,7 +59,6 @@ jobs:
           _BuildArchitecture: arm
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
-          _AdditionalBuildParameters: '/p:DisableSourceLink=true'
 
 - template: /eng/build.yml
   parameters:
@@ -110,7 +111,7 @@ jobs:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-          Build_Debian_8_2_Debug_x64:
+          Build_Debian_Jessie_Debug_x64:
             _BuildConfig: Debug
             _DockerParameter: '--docker debian'
             _LinuxPortable: ''
@@ -188,7 +189,6 @@ jobs:
             _RuntimeIdentifier: '--runtime-id rhel.6-x64'
             _BuildArchitecture: 'x64'
             _DropSuffix: ''
-            _AdditionalBuildParameters: '/p:DisableSourceLink=true'
           Build_Linux_musl_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker alpine.3.6'
