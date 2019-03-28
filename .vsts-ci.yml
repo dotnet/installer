@@ -206,6 +206,14 @@ jobs:
             # Do not publish zips and tarballs. The linux-x64 binaries are
             # already published by Build_LinuxPortable_Release_x64
             _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+          Build_Internal_Package_X64:
+            _BuildConfig: Release
+            _DockerParameter: ''
+            _LinuxPortable: ''
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'x64'
+            _DropSuffix: ''
+            _AdditionalBuildParameters: --projects $(Build.SourcesDirectory)/src/Microsoft.Dotnet.Sdk.Internal/Microsoft.Dotnet.Sdk.Internal.csproj
           Build_Linux_Portable_Rpm_Release_x64:
             _BuildConfig: Release
             _DockerParameter: '--docker rhel'
