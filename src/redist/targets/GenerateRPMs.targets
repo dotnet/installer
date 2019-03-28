@@ -192,8 +192,7 @@
       <SharedFxTargetingPackRpmPackageName>$(SharedFxTargetingPackRpmPackageName.ToLower())</SharedFxTargetingPackRpmPackageName>
       <SharedFxTargetingPackRpmPackageFileName>dotnet-targeting-pack-$(SharedFxRpmPackageFileVersion)</SharedFxTargetingPackRpmPackageFileName>
       <SharedFxTargetingPackRpmPackageFileName>$(SharedFxTargetingPackRpmPackageFileName.ToLower())</SharedFxTargetingPackRpmPackageFileName>
-      <HostFxrRpmPackageVersion>$(HostFxrVersion)</HostFxrRpmPackageVersion>
-      <HostFxrRpmPackageName>dotnet-hostfxr-$(HostFxrRpmPackageVersion)</HostFxrRpmPackageName>
+      <HostFxrRpmPackageName>dotnet-hostfxr-$(SharedFxRpmPackageVersion)</HostFxrRpmPackageName>
       <HostFxrRpmPackageName>$(HostFxrRpmPackageName.ToLower())</HostFxrRpmPackageName>
       <HostRpmPackageName>dotnet-host</HostRpmPackageName>
       <AspNetCoreSharedFxRpmPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxRpmPackageName>
