@@ -266,12 +266,12 @@
 
     <!-- Clean up Packages -->
     <Exec Command="sudo rpm -ev --nodeps $(SdkRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxRpmPackageFileName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(SharedFxRpmPackageFileName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxRpmPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(SharedFxRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(HostFxrRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(HostRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageFileName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(SharedFxTargetingPackDebianPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(SharedFxTargetingPackDebianPackageName)" />
   </Target>
 </Project>
