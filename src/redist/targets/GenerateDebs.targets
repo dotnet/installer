@@ -45,7 +45,7 @@
       <DownloadedSharedFrameworkInstallerFile>$(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName)</DownloadedSharedFrameworkInstallerFile>
       <NetCoreAppTargetingPackDebianPackageFileName>dotnet-targeting-pack-$(SharedFrameworkDebianPackageFileVersion)</NetCoreAppTargetingPackDebianPackageFileName>
       <NetCoreAppTargetingPackDebianPackageFileName>$(NetCoreAppTargetingPackDebianPackageFileName.ToLower())</NetCoreAppTargetingPackDebianPackageFileName>
-      <NetCoreAppTargetingPackDebianPackageName>dotnet-targeting-pack-$(NetCoreAppDebianPackageVersion)</NetCoreAppTargetingPackDebianPackageName>
+      <NetCoreAppTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFrameworkDebianPackageVersion)</NetCoreAppTargetingPackDebianPackageName>
       <NetCoreAppTargetingPackDebianPackageName>$(NetCoreAppTargetingPackDebianPackageName.ToLower())</NetCoreAppTargetingPackDebianPackageName>
       <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
       <HostFxrDebianPackageFileName>dotnet-hostfxr-$(HostFxrVersion)</HostFxrDebianPackageFileName>
@@ -71,8 +71,6 @@
     <PropertyGroup>
       <!-- Need to acquire manpage files from CLI repo: https://github.com/dotnet/cli/issues/10266 -->
       <ManpagesDirectory>$(RepoRoot)Documentation/manpages</ManpagesDirectory>
-      
-      <EndToEndTestProject>$(RepoRoot)test/EndToEnd/EndToEnd.Tests.csproj</EndToEndTestProject>
       <CLISdkRoot>$(RedistLayoutPath)sdk/</CLISdkRoot>
     </PropertyGroup>
 
