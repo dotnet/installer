@@ -157,9 +157,6 @@
     <PropertyGroup>
       <SdkRpmPackageVersion>$(MajorMinorVersion)</SdkRpmPackageVersion>
       <SdkRpmPackageName>$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(SdkRpmPackageVersion)</SdkRpmPackageName>
-      
-      <RuntimeDepsPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</RuntimeDepsPackageVersion>
-      <RuntimeDepsPackageFileName>dotnet-runtime-deps-$(RuntimeDepsPackageVersion)</RuntimeDepsPackageFileName>
       <RpmPackageVersion>$(SdkVersion)</RpmPackageVersion>
       <InputRoot>$(RedistLayoutPath)sdk/</InputRoot>
       <SdkRPMInstallerFile>$(ArtifactsShippingPackagesDir)$(DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(InstallerExtension)</SdkRPMInstallerFile>
@@ -194,6 +191,8 @@
       <SharedFxTargetingPackRpmPackageFileName>$(SharedFxTargetingPackRpmPackageFileName.ToLower())</SharedFxTargetingPackRpmPackageFileName>
       <HostFxrRpmPackageName>dotnet-hostfxr-$(SharedFxRpmPackageVersion)</HostFxrRpmPackageName>
       <HostFxrRpmPackageName>$(HostFxrRpmPackageName.ToLower())</HostFxrRpmPackageName>
+      <RuntimeDepsPackageName>dotnet-runtime-deps-$(SharedFxRpmPackageVersion)</RuntimeDepsPackageName>
+      <RuntimeDepsPackageName>$(RuntimeDepsPackageName.ToLower())</RuntimeDepsPackageName>
       <HostRpmPackageName>dotnet-host</HostRpmPackageName>
       <AspNetCoreSharedFxRpmPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxRpmPackageName>
       <AspNetCoreSharedFxRpmPackageName>$(AspNetCoreSharedFxRpmPackageName.ToLower())</AspNetCoreSharedFxRpmPackageName>
