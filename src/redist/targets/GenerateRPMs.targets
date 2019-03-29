@@ -70,16 +70,16 @@
 
     <!-- Replace config json variables -->
     <ItemGroup>
-      <SDKTokenValue Include="%SHARED_HOST_RPM_VERSION%">
+      <SDKTokenValue Include="%SHARED_FRAMEWORK_RPM_PACKAGE_VERSION%">
         <ReplacementString>$(MicrosoftNETCoreAppMajorMinorPatchVersion)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%ASPNETCORE_SHAREDFX_RPM_PACKAGE_VERSION%">
         <ReplacementString>$(AspNetCoreMajorMinorPatchVersion)</ReplacementString>
       </SDKTokenValue>
-      <SDKTokenValue Include="%SHARED_HOST_RPM_NAME%">
+      <SDKTokenValue Include="%SHARED_FRAMEWORK_RPM_PACKAGE_NAME%">
         <ReplacementString>$(SharedFxRpmPackageName)</ReplacementString>
       </SDKTokenValue>
-      <SDKTokenValue Include="%SHARED_HOST_TARGETING_PACK_RPM_NAME%">
+      <SDKTokenValue Include="%SHARED_FRAMEWORK_TARGETING_PACK_RPM_PACKAGE_NAME%">
         <ReplacementString>$(SharedFxTargetingPackRpmPackageName)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%ASPNETCORE_SHAREDFX_RPM_PACKAGE_NAME%">
@@ -193,7 +193,7 @@
       <HostFxrRpmPackageName>$(HostFxrRpmPackageName.ToLower())</HostFxrRpmPackageName>
       <RuntimeDepsPackageName>dotnet-runtime-deps-$(SharedFxRpmPackageVersion)</RuntimeDepsPackageName>
       <RuntimeDepsPackageName>$(RuntimeDepsPackageName.ToLower())</RuntimeDepsPackageName>
-      <HostRpmPackageName>dotnet-host</HostRpmPackageName>
+      <SharedHostRpmPackageName>dotnet-host</SharedHostRpmPackageName>
       <AspNetCoreSharedFxRpmPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxRpmPackageName>
       <AspNetCoreSharedFxRpmPackageName>$(AspNetCoreSharedFxRpmPackageName.ToLower())</AspNetCoreSharedFxRpmPackageName>
       <AspNetCoreSharedFxRpmPackageFileName>aspnetcore-runtime-$(AspNetCoreVersion)</AspNetCoreSharedFxRpmPackageFileName>
@@ -267,7 +267,7 @@
     <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(SharedFxRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(HostFxrRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(HostRpmPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(SharedHostRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxTargetingPackRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(SharedFxTargetingPackRpmPackageName)" />

@@ -53,7 +53,7 @@
       <HostFxrDebianPackageName>dotnet-hostfxr-$(HostFxrMajorMinorVersion)</HostFxrDebianPackageName>
       <HostFxrDebianPackageName>$(HostFxrDebianPackageName.ToLower())</HostFxrDebianPackageName>
       <DownloadedHostFxrInstallerFile>$(DownloadsFolder)$(DownloadedHostFxrInstallerFileName)</DownloadedHostFxrInstallerFile>
-      <SharedHostPackageName>dotnet-host</SharedHostPackageName>
+      <SharedHostDebianPackageName>dotnet-host</SharedHostDebianPackageName>
       <DownloadedSharedHostInstallerFile>$(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)</DownloadedSharedHostInstallerFile>
       <AspNetCoreSharedFxDebianPackageFileName>aspnetcore-runtime-$(AspNetCoreVersion)</AspNetCoreSharedFxDebianPackageFileName>
       <AspNetCoreSharedFxDebianPackageFileName>$(AspNetCoreSharedFxDebianPackageFileName.ToLower())</AspNetCoreSharedFxDebianPackageFileName>
@@ -285,7 +285,7 @@
         <SetupDebPackageToRemove Include="$(SharedFrameworkDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
-        <SetupDebPackageToRemove Include="$(SharedHostPackageName)" />
+        <SetupDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageFileName)" />
@@ -331,7 +331,7 @@
         <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(SharedFrameworkDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
-        <TestSdkDebPackageToRemove Include="$(SharedHostPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
         <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
