@@ -286,11 +286,11 @@
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
-        <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
       </ItemGroup>
       <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
       <Exec Command="sudo rm -rf /usr/share/dotnet/sdk/NuGetFallbackFolder" />
@@ -300,9 +300,9 @@
   <Target Name="TestSdkDeb"
       Condition=" '$(CLIBUILD_SKIP_TESTS)' != 'true' and '$(IsDebianBaseDistro)' == 'True' and '$(DebuildPresent)'  == 'true' "
       DependsOnTargets="GetAspNetSharedFxInstallArgs"
-      Inputs="$(DownloadedNetCoreAppTargetingPackInstallerFile);
+      Inputs="$(DownloadedRuntimeDepsInstallerFile);
+              $(DownloadedNetCoreAppTargetingPackInstallerFile);
               $(DownloadedAspNetTargetingPackInstallerFile);
-              $(DownloadedRuntimeDepsInstallerFile);
               $(DownloadedSharedHostInstallerFile);
               $(DownloadedHostFxrInstallerFile);
               $(DownloadedSharedFrameworkInstallerFile);
@@ -312,9 +312,9 @@
       Outputs="$(DebianTestResultsXmlFile)" >
 
       <!-- Install Dependencies and SDK Packages -->
+      <Exec Command="sudo dpkg -i $(DownloadedRuntimeDepsInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedAspNetTargetingPackInstallerFile)" />
-      <Exec Command="sudo dpkg -i $(DownloadedRuntimeDepsInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedSharedHostInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedHostFxrInstallerFile)" />
       <Exec Command="sudo dpkg -i $(DownloadedSharedFrameworkInstallerFile)" />
@@ -332,9 +332,9 @@
         <TestSdkDebPackageToRemove Include="$(SharedFrameworkDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
-        <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
         <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
       </ItemGroup>
       <!-- If package installed remove it -->
       <Exec Command="!(dpkg-query -W %(TestSdkDebPackageToRemove.Identity)) || sudo dpkg -r %(TestSdkDebPackageToRemove.Identity)" />

@@ -251,9 +251,9 @@
           Outputs="$(RpmTestResultsXmlFile)" >
 
     <!-- Install Dependencies and SDK Packages -->
+    <Exec Command="sudo rpm -iv $(DownloadedRuntimeDepsInstallerFile)" />
     <Exec Command="sudo rpm -iv $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
     <Exec Command="sudo rpm -iv $(DownloadedAspNetTargetingPackInstallerFile)" />
-    <Exec Command="sudo rpm -iv $(DownloadedRuntimeDepsInstallerFile)" />
     <Exec Command="sudo rpm -iv $(DownloadedSharedHostInstallerFile)" />
     <Exec Command="sudo rpm -iv $(DownloadedHostFxrInstallerFile)" />
     <Exec Command="sudo rpm -iv $(DownloadedSharedFrameworkInstallerFile)" />
@@ -268,8 +268,8 @@
     <Exec Command="sudo rpm -ev --nodeps $(SharedFxRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(HostFxrRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(SharedHostRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxTargetingPackRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(SharedFxTargetingPackRpmPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageName)" />
   </Target>
 </Project>
