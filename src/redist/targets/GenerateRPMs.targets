@@ -163,6 +163,7 @@
       <RpmFile>$(SdkRPMInstallerFile)</RpmFile>
       <!-- Need to acquire manpage files from CLI repo: https://github.com/dotnet/cli/issues/10266 -->
       <ManPagesDir>$(RepoRoot)/Documentation/manpages</ManPagesDir>
+      <EndToEndTestProject>$(RepoRoot)/test/EndToEnd/EndToEnd.csproj</EndToEndTestProject>
       <ConfigJsonFile>$(MSBuildThisFileDirectory)packaging/rpm/dotnet-config.json</ConfigJsonFile>
       <RpmIntermediatesDir>$(IntermediateOutputPath)$(SdkRpmPackageName)/$(RpmPackageVersion)</RpmIntermediatesDir>
       <RpmTestResultsXmlFile>$(RpmIntermediatesDir)/rpm-testResults.xml</RpmTestResultsXmlFile>
@@ -262,6 +263,13 @@
 
     <Exec Command="sudo rpm -iv $(SdkRPMInstallerFile)" />
 
+    <!-- Run End-2-end Tests https://github.com/dotnet/core-sdk/issues/1174
+    <DotNetRestore ProjectPath="$(EndToEndTestProject)"
+                   ToolPath="$(RpmInstalledDirectory)" />
+    <DotNetTest ProjectPath="$(EndToEndTestProject)"
+                EnvironmentVariables="@(TestSdkRpmTaskEnvironmentVariables)"
+                ToolPath="$(RpmInstalledDirectory)" />-->
+    
     <!-- Clean up Packages -->
     <Exec Command="sudo rpm -ev --nodeps $(SdkRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxRpmPackageName)" />

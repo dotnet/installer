@@ -71,6 +71,7 @@
     <PropertyGroup>
       <!-- Need to acquire manpage files from CLI repo: https://github.com/dotnet/cli/issues/10266 -->
       <ManpagesDirectory>$(RepoRoot)Documentation/manpages</ManpagesDirectory>
+      <EndToEndTestProject>$(RepoRoot)test/EndToEnd/EndToEnd.Tests.csproj</EndToEndTestProject>
       <CLISdkRoot>$(RedistLayoutPath)sdk/</CLISdkRoot>
     </PropertyGroup>
 
@@ -322,6 +323,13 @@
 
       <Exec Command="sudo dpkg -i $(SdkDebInstallerFile)" />
 
+      <!-- Run End-2-end Tests https://github.com/dotnet/core-sdk/issues/1174
+      <DotNetRestore ProjectPath="$(EndToEndTestProject)"
+                     ToolPath="$(DebianInstalledDirectory)" />
+      <DotNetTest ProjectPath="$(EndToEndTestProject)"
+                  EnvironmentVariables="@(TestSdkDebTaskEnvironmentVariables)"
+                  ToolPath="$(DebianInstalledDirectory)" />-->
+    
       <!-- Clean up Packages -->
       <!-- The following line is needed. So it won't warning dotnet folder is not empty after uninstall -->
       <Exec Command="sudo rm -rf /usr/share/dotnet/sdk/NuGetFallbackFolder" />
