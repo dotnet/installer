@@ -60,10 +60,10 @@
       <AspNetCoreSharedFxDebianPackageName>aspnetcore-runtime-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxDebianPackageName>
       <AspNetCoreSharedFxDebianPackageName>$(AspNetCoreSharedFxDebianPackageName.ToLower())</AspNetCoreSharedFxDebianPackageName>
       <DownloadedAspNetCoreSharedFxInstallerFile>$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadedAspNetCoreSharedFxInstallerFile>
-      <AspNetCoreSharedFxTargetingPackDebianPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
-      <AspNetCoreSharedFxTargetingPackDebianPackageFileName>$(AspNetCoreSharedFxTargetingPackDebianPackageFileName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageFileName>
-      <AspNetCoreSharedFxTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxTargetingPackDebianPackageName>
-      <AspNetCoreSharedFxTargetingPackDebianPackageName>$(AspNetCoreSharedFxTargetingPackDebianPackageName.ToLower())</AspNetCoreSharedFxTargetingPackDebianPackageName>
+      <AspNetTargetingPackDebianPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetTargetingPackDebianPackageFileName>
+      <AspNetTargetingPackDebianPackageFileName>$(AspNetTargetingPackDebianPackageFileName.ToLower())</AspNetTargetingPackDebianPackageFileName>
+      <AspNetTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetTargetingPackDebianPackageName>
+      <AspNetTargetingPackDebianPackageName>$(AspNetTargetingPackDebianPackageName.ToLower())</AspNetTargetingPackDebianPackageName>
       <DownloadedAspNetTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetTargetingPackInstallerFile>
 </PropertyGroup>
 
@@ -116,11 +116,11 @@
       <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_DEBIAN_PACKAGE_NAME%">
         <ReplacementString>$(AspNetCoreSharedFxDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
-      <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
+      <DebianConfigTokenValues Include="%NETCOREAPP_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
         <ReplacementString>$(NetCoreAppTargetingPackDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
-      <DebianConfigTokenValues Include="%ASPNETCORE_SHAREDFX_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
-        <ReplacementString>$(AspNetCoreSharedFxTargetingPackDebianPackageName)</ReplacementString>
+      <DebianConfigTokenValues Include="%ASPNET_TARGETING_PACK_DEBIAN_PACKAGE_NAME%">
+        <ReplacementString>$(AspNetTargetingPackDebianPackageName)</ReplacementString>
       </DebianConfigTokenValues>
       <DebianConfigTokenValues Include="%SHARED_FRAMEWORK_DEBIAN_PACKAGE_ADDITIONAL_DEPENDENCY%"
                                Condition="'$(IncludeAdditionalSharedFrameworks)' == 'true'">
@@ -286,8 +286,8 @@
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(HostFxrDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
-        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
-        <SetupDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageFileName)" />
+        <SetupDebPackageToRemove Include="$(AspNetTargetingPackDebianPackageName)" />
+        <SetupDebPackageToRemove Include="$(AspNetTargetingPackDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
         <SetupDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageFileName)" />
         <SetupDebPackageToRemove Include="$(RuntimeDepsPackageName)" />
@@ -332,7 +332,7 @@
         <TestSdkDebPackageToRemove Include="$(SharedFrameworkDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(HostFxrDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(SharedHostDebianPackageName)" />
-        <TestSdkDebPackageToRemove Include="$(AspNetCoreSharedFxTargetingPackDebianPackageName)" />
+        <TestSdkDebPackageToRemove Include="$(AspNetTargetingPackDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(NetCoreAppTargetingPackDebianPackageName)" />
         <TestSdkDebPackageToRemove Include="$(RuntimeDepsPackageName)"/>
       </ItemGroup>

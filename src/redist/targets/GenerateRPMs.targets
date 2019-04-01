@@ -79,14 +79,14 @@
       <SDKTokenValue Include="%SHARED_FRAMEWORK_RPM_PACKAGE_NAME%">
         <ReplacementString>$(SharedFxRpmPackageName)</ReplacementString>
       </SDKTokenValue>
-      <SDKTokenValue Include="%SHARED_FRAMEWORK_TARGETING_PACK_RPM_PACKAGE_NAME%">
-        <ReplacementString>$(SharedFxTargetingPackRpmPackageName)</ReplacementString>
+      <SDKTokenValue Include="%NETCOREAPP_TARGETING_PACK_RPM_PACKAGE_NAME%">
+        <ReplacementString>$(NetCoreAppTargetingPackRpmPackageName)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%ASPNETCORE_SHAREDFX_RPM_PACKAGE_NAME%">
         <ReplacementString>$(AspNetCoreSharedFxRpmPackageName)</ReplacementString>
       </SDKTokenValue>
-      <SDKTokenValue Include="%ASPNETCORE_SHAREDFX_TARGETING_PACK_RPM_PACKAGE_NAME%">
-        <ReplacementString>$(AspNetCoreSharedFxTargetingPackRpmPackageName)</ReplacementString>
+      <SDKTokenValue Include="%ASPNET_TARGETING_PACK_RPM_PACKAGE_NAME%">
+        <ReplacementString>$(AspNetTargetingPackRpmPackageName)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%SDK_NUGET_VERSION%">
         <ReplacementString>$(SdkVersion)</ReplacementString>
@@ -185,10 +185,10 @@
       <SharedFxRpmPackageName>$(SharedFxRpmPackageName.ToLower())</SharedFxRpmPackageName>
       <SharedFxRpmPackageFileName>dotnet-runtime-$(SharedFxRpmPackageFileVersion)</SharedFxRpmPackageFileName>
       <SharedFxRpmPackageFileName>$(SharedFxRpmPackageFileName.ToLower())</SharedFxRpmPackageFileName>
-      <SharedFxTargetingPackRpmPackageName>dotnet-targeting-pack-$(SharedFxRpmPackageVersion)</SharedFxTargetingPackRpmPackageName>
-      <SharedFxTargetingPackRpmPackageName>$(SharedFxTargetingPackRpmPackageName.ToLower())</SharedFxTargetingPackRpmPackageName>
-      <SharedFxTargetingPackRpmPackageFileName>dotnet-targeting-pack-$(SharedFxRpmPackageFileVersion)</SharedFxTargetingPackRpmPackageFileName>
-      <SharedFxTargetingPackRpmPackageFileName>$(SharedFxTargetingPackRpmPackageFileName.ToLower())</SharedFxTargetingPackRpmPackageFileName>
+      <NetCoreAppTargetingPackRpmPackageName>dotnet-targeting-pack-$(SharedFxRpmPackageVersion)</NetCoreAppTargetingPackRpmPackageName>
+      <NetCoreAppTargetingPackRpmPackageName>$(NetCoreAppTargetingPackRpmPackageName.ToLower())</NetCoreAppTargetingPackRpmPackageName>
+      <NetCoreAppTargetingPackRpmPackageFileName>dotnet-targeting-pack-$(SharedFxRpmPackageFileVersion)</NetCoreAppTargetingPackRpmPackageFileName>
+      <NetCoreAppTargetingPackRpmPackageFileName>$(NetCoreAppTargetingPackRpmPackageFileName.ToLower())</NetCoreAppTargetingPackRpmPackageFileName>
       <HostFxrRpmPackageName>dotnet-hostfxr-$(SharedFxRpmPackageVersion)</HostFxrRpmPackageName>
       <HostFxrRpmPackageName>$(HostFxrRpmPackageName.ToLower())</HostFxrRpmPackageName>
       <RuntimeDepsPackageName>dotnet-runtime-deps-$(SharedFxRpmPackageVersion)</RuntimeDepsPackageName>
@@ -198,13 +198,13 @@
       <AspNetCoreSharedFxRpmPackageName>$(AspNetCoreSharedFxRpmPackageName.ToLower())</AspNetCoreSharedFxRpmPackageName>
       <AspNetCoreSharedFxRpmPackageFileName>aspnetcore-runtime-$(AspNetCoreVersion)</AspNetCoreSharedFxRpmPackageFileName>
       <AspNetCoreSharedFxRpmPackageFileName>$(AspNetCoreSharedFxRpmPackageFileName.ToLower())</AspNetCoreSharedFxRpmPackageFileName>
-      <AspNetCoreSharedFxTargetingPackRpmPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetCoreSharedFxTargetingPackRpmPackageName>
-      <AspNetCoreSharedFxTargetingPackRpmPackageName>$(AspNetCoreSharedFxTargetingPackRpmPackageName.ToLower())</AspNetCoreSharedFxTargetingPackRpmPackageName>
-      <AspNetCoreSharedFxTargetingPackRpmPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetCoreSharedFxTargetingPackRpmPackageFileName>
-      <AspNetCoreSharedFxTargetingPackRpmPackageFileName>$(AspNetCoreSharedFxTargetingPackRpmPackageFileName.ToLower())</AspNetCoreSharedFxTargetingPackRpmPackageFileName>
+      <AspNetTargetingPackRpmPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetTargetingPackRpmPackageName>
+      <AspNetTargetingPackRpmPackageName>$(AspNetTargetingPackRpmPackageName.ToLower())</AspNetTargetingPackRpmPackageName>
+      <AspNetTargetingPackRpmPackageFileName>aspnetcore-targeting-pack-$(AspNetCoreVersion)</AspNetTargetingPackRpmPackageFileName>
+      <AspNetTargetingPackRpmPackageFileName>$(AspNetTargetingPackRpmPackageFileName.ToLower())</AspNetTargetingPackRpmPackageFileName>
       <AfterInstallHostScriptTemplateFile>$(ScriptsDir)/$(AfterInstallHostScriptName)</AfterInstallHostScriptTemplateFile>
       <AfterInstallHostScriptDestinationFile>$(RpmLayoutScripts)/$(AfterInstallHostScriptName)</AfterInstallHostScriptDestinationFile>
-    </PropertyGroup>
+  </PropertyGroup>
     
     <PropertyGroup>
       <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
@@ -268,8 +268,8 @@
     <Exec Command="sudo rpm -ev --nodeps $(SharedFxRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(HostFxrRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(SharedHostRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(AspNetCoreSharedFxTargetingPackRpmPackageName)" />
-    <Exec Command="sudo rpm -ev --nodeps $(SharedFxTargetingPackRpmPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(AspNetTargetingPackRpmPackageName)" />
+    <Exec Command="sudo rpm -ev --nodeps $(NetCoreAppTargetingPackRpmPackageName)" />
     <Exec Command="sudo rpm -ev --nodeps $(RuntimeDepsPackageName)" />
   </Target>
 </Project>
