@@ -30,6 +30,7 @@
       <DownloadedSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-runtime$(InstallerStartSuffix)-$(MicrosoftNETCoreAppPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedSharedFrameworkInstallerFileName>
       <DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-extension-$(MicrosoftWindowsDesktopPackageVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName>
       <DownloadedNetCoreAppTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">dotnet-targeting-pack-$(NetCoreAppTargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedNetCoreAppTargetingPackInstallerFileName>
+      <DownloadedNetStandardTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">netstandard-targeting-pack-$(NetStandardTargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedNetStandardTargetingPackInstallerFileName>
       <DownloadedWindowsDesktopTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">windowsdesktop-targeting-pack-$(WindowsDesktopTargetingPackVersion)-$(SharedFrameworkInstallerFileRid)$(InstallerExtension)</DownloadedWindowsDesktopTargetingPackInstallerFileName>
 
       <!-- Use the portable "linux-x64" Rid when downloading Linux shared framework compressed file. -->
@@ -85,6 +86,12 @@
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
+      <BundledLayoutPackage Include="MicrosoftNetStandardTargetingPackNupkg">
+        <PackageName>NETStandard.Library.Ref</PackageName>
+        <PackageVersion>$(NetStandardTargetingPackVersion)</PackageVersion>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+      
       <BundledLayoutPackage Include="MicrosoftAspNetCoreAppTargetingPackNupkg">
         <PackageName>Microsoft.AspNetCore.App.Ref</PackageName>
         <PackageVersion>$(AspNetTargetingPackVersion)</PackageVersion>
@@ -144,6 +151,13 @@
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
+      <BundledInstallerComponent Include="DownloadedNetStandardTargetingPackInstallerFile"
+                           Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+        <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
+        <DownloadFileName>$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledInstallerComponent>
+      
       <BundledInstallerComponent Include="DownloadedWindowsDesktopTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</BaseUrl>
