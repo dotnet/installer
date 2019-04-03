@@ -46,8 +46,8 @@
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
     <NetStandardPatchSeparatorIndex>$([MSBuild]::Add($(MicrosoftNETCoreAppPackageVersion.IndexOf('.')), 1))</NetStandardPatchSeparatorIndex>
-    <NetStandardPatchSeparatorIndex>$(MicrosoftNETCoreAppPackageVersion.IndexOf('.', $(MicrosoftNETCoreAppPatchSeparatorIndex)))</NetStandardPatchSeparatorIndex>
-    <NetStandardTargetingPackSuffix>$(MicrosoftNETCoreAppPackageVersion.Substring($(MicrosoftNETCoreAppPatchSeparatorIndex)))</NetStandardTargetingPackSuffix>
+    <NetStandardPatchSeparatorIndex>$(MicrosoftNETCoreAppPackageVersion.IndexOf('.', $(NetStandardPatchSeparatorIndex)))</NetStandardPatchSeparatorIndex>
+    <NetStandardTargetingPackSuffix>$(MicrosoftNETCoreAppPackageVersion.Substring($(NetStandardPatchSeparatorIndex)))</NetStandardTargetingPackSuffix>
     <NetStandardTargetingPackMajorMinorVersion>2.1</NetStandardTargetingPackMajorMinorVersion>
     <NetStandardTargetingPackVersion>$(NetStandardTargetingPackMajorMinorVersion).$(NetStandardTargetingPackSuffix)</NetStandardTargetingPackVersion>
     <NetStandardTargetingPackTargetFramework>netstandard2.1</NetStandardTargetingPackTargetFramework>
