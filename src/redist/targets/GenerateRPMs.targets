@@ -193,9 +193,9 @@
       <NetCoreAppTargetingPackRpmPackageName>$(NetCoreAppTargetingPackRpmPackageName.ToLower())</NetCoreAppTargetingPackRpmPackageName>
       <NetCoreAppTargetingPackRpmPackageFileName>dotnet-targeting-pack-$(SharedFxRpmPackageFileVersion)</NetCoreAppTargetingPackRpmPackageFileName>
       <NetCoreAppTargetingPackRpmPackageFileName>$(NetCoreAppTargetingPackRpmPackageFileName.ToLower())</NetCoreAppTargetingPackRpmPackageFileName>
-      <NetStandardTargetingPackRpmPackageName>dotnet-targeting-pack-$(SharedFxRpmPackageVersion)</NetStandardTargetingPackRpmPackageName>
+      <NetStandardTargetingPackRpmPackageName>netstandard-targeting-pack-$(NetStandardTargetingPackMajorMinorVersion)</NetStandardTargetingPackRpmPackageName>
       <NetStandardTargetingPackRpmPackageName>$(NetStandardTargetingPackRpmPackageName.ToLower())</NetStandardTargetingPackRpmPackageName>
-      <NetStandardTargetingPackRpmPackageFileName>dotnet-targeting-pack-$(SharedFxRpmPackageFileVersion)</NetStandardTargetingPackRpmPackageFileName>
+      <NetStandardTargetingPackRpmPackageFileName>netstandard-targeting-pack-$(NetStandardTargetingPackVersion)</NetStandardTargetingPackRpmPackageFileName>
       <NetStandardTargetingPackRpmPackageFileName>$(NetStandardTargetingPackRpmPackageFileName.ToLower())</NetStandardTargetingPackRpmPackageFileName>
       <HostFxrRpmPackageName>dotnet-hostfxr-$(SharedFxRpmPackageVersion)</HostFxrRpmPackageName>
       <HostFxrRpmPackageName>$(HostFxrRpmPackageName.ToLower())</HostFxrRpmPackageName>
@@ -212,9 +212,7 @@
       <AspNetTargetingPackRpmPackageFileName>$(AspNetTargetingPackRpmPackageFileName.ToLower())</AspNetTargetingPackRpmPackageFileName>
       <AfterInstallHostScriptTemplateFile>$(ScriptsDir)/$(AfterInstallHostScriptName)</AfterInstallHostScriptTemplateFile>
       <AfterInstallHostScriptDestinationFile>$(RpmLayoutScripts)/$(AfterInstallHostScriptName)</AfterInstallHostScriptDestinationFile>
-    
-  
-  </PropertyGroup>
+    </PropertyGroup>
 
     <PropertyGroup>
       <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>

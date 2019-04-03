@@ -48,9 +48,9 @@
       <NetCoreAppTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFxDebianPackageVersion)</NetCoreAppTargetingPackDebianPackageName>
       <NetCoreAppTargetingPackDebianPackageName>$(NetCoreAppTargetingPackDebianPackageName.ToLower())</NetCoreAppTargetingPackDebianPackageName>
       <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
-      <NetStandardTargetingPackDebianPackageFileName>dotnet-targeting-pack-$(SharedFxDebianPackageFileVersion)</NetStandardTargetingPackDebianPackageFileName>
+      <NetStandardTargetingPackDebianPackageFileName>netstandard-targeting-pack-$(NetStandardTargetingPackVersion)</NetStandardTargetingPackDebianPackageFileName>
       <NetStandardTargetingPackDebianPackageFileName>$(NetStandardTargetingPackDebianPackageFileName.ToLower())</NetStandardTargetingPackDebianPackageFileName>
-      <NetStandardTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFxDebianPackageVersion)</NetStandardTargetingPackDebianPackageName>
+      <NetStandardTargetingPackDebianPackageName>netstandard-targeting-pack-$(NetStandardTargetingPackMajorMinorVersion)</NetStandardTargetingPackDebianPackageName>
       <NetStandardTargetingPackDebianPackageName>$(NetStandardTargetingPackDebianPackageName.ToLower())</NetStandardTargetingPackDebianPackageName>
       <DownloadedNetStandardTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadedNetStandardTargetingPackInstallerFile>
       <HostFxrDebianPackageFileName>dotnet-hostfxr-$(HostFxrVersion)</HostFxrDebianPackageFileName>
@@ -70,9 +70,7 @@
       <AspNetTargetingPackDebianPackageName>aspnetcore-targeting-pack-$(AspNetCoreMajorMinorVersion)</AspNetTargetingPackDebianPackageName>
       <AspNetTargetingPackDebianPackageName>$(AspNetTargetingPackDebianPackageName.ToLower())</AspNetTargetingPackDebianPackageName>
       <DownloadedAspNetTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadedAspNetTargetingPackInstallerFile>
-
-  
-  </PropertyGroup>
+    </PropertyGroup>
 
     <!-- Inputs -->
     <PropertyGroup>
