@@ -49,7 +49,7 @@
     <NetStandardPatchSeparatorIndex>$(MicrosoftNETCoreAppPackageVersion.IndexOf('.', $(NetStandardPatchSeparatorIndex)))</NetStandardPatchSeparatorIndex>
     <NetStandardTargetingPackSuffix>$(MicrosoftNETCoreAppPackageVersion.Substring($(NetStandardPatchSeparatorIndex)))</NetStandardTargetingPackSuffix>
     <NetStandardTargetingPackMajorMinorVersion>2.1</NetStandardTargetingPackMajorMinorVersion>
-    <NetStandardTargetingPackVersion>$(NetStandardTargetingPackMajorMinorVersion).$(NetStandardTargetingPackSuffix)</NetStandardTargetingPackVersion>
+    <NetStandardTargetingPackVersion>$(NetStandardTargetingPackMajorMinorVersion)$(NetStandardTargetingPackSuffix)</NetStandardTargetingPackVersion>
     <NetStandardTargetingPackTargetFramework>netstandard2.1</NetStandardTargetingPackTargetFramework>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
