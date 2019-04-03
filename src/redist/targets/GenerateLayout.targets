@@ -83,36 +83,42 @@
       <BundledLayoutPackage Include="MicrosoftNetCoreAppTargetingPackNupkg">
         <PackageName>Microsoft.NETCore.App.Ref</PackageName>
         <PackageVersion>$(NetCoreAppTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
       <BundledLayoutPackage Include="MicrosoftNetStandardTargetingPackNupkg">
         <PackageName>NETStandard.Library.Ref</PackageName>
         <PackageVersion>$(NetStandardTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(NetStandardTargetingPackTargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
       
       <BundledLayoutPackage Include="MicrosoftAspNetCoreAppTargetingPackNupkg">
         <PackageName>Microsoft.AspNetCore.App.Ref</PackageName>
         <PackageVersion>$(AspNetTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
       <BundledLayoutPackage Include="MicrosoftWindowsDesktopAppTargetingPackNupkg">
         <PackageName>Microsoft.WindowsDesktop.App.Ref</PackageName>
         <PackageVersion>$(WindowsDesktopTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
       <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg">
         <PackageName>runtime.$(SharedFrameworkRid).Microsoft.NETCore.DotNetAppHost</PackageName>
         <PackageVersion>$(NetCoreAppTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
       <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg_Altnernate" Condition="'$(AlternateAppHostRid)' != ''">
         <PackageName>runtime.$(AlternateAppHostRid).Microsoft.NETCore.DotNetAppHost</PackageName>
         <PackageVersion>$(NetCoreAppTargetingPackVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
@@ -259,7 +265,7 @@
         <Properties>
           PackageToRestore=%(BundledLayoutPackage.PackageName);
           PackageVersionToRestore=%(BundledLayoutPackage.PackageVersion);
-          TargetFramework=$(TargetFramework);
+          TargetFramework=%(BundledLayoutPackage.TargetFramework);
           LayoutPackageDescription=%(BundledLayoutPackage.Identity)
         </Properties>
       </BundledLayoutPackageDownloadProject>
