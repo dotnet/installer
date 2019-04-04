@@ -13,31 +13,28 @@
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview4.19203.5</MicrosoftDotnetToolsetInternalPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!-- Dependencies from https://github.com/aspnet/EntityFrameworkCore -->
-    <dotnetefPackageVersion>3.0.0-preview4.19180.1</dotnetefPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview4.19203.6</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview4-19201-04</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview4-19201-04</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview4-19201-04</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <dotnetdevcertsPackageVersion>3.0.0-preview4-19201-04</dotnetdevcertsPackageVersion>
-    <dotnetsqlcachePackageVersion>3.0.0-preview4-19201-04</dotnetsqlcachePackageVersion>
-    <dotnetusersecretsPackageVersion>3.0.0-preview4-19201-04</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>3.0.0-preview4-19201-04</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview4-19204-02</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview4-19204-02</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview4-19204-02</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <dotnetdevcertsPackageVersion>3.0.0-preview4-19204-02</dotnetdevcertsPackageVersion>
+    <dotnetsqlcachePackageVersion>3.0.0-preview4-19204-02</dotnetsqlcachePackageVersion>
+    <dotnetusersecretsPackageVersion>3.0.0-preview4-19204-02</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>3.0.0-preview4-19204-02</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
     <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview4.19111.1</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview4-27601-05</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview4-27604-01</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19180.1</NETStandardLibraryPackageVersion>
+    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19204.1</NETStandardLibraryPackageVersion>
     <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
          which ends up overriding the value set here. -->
     <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
@@ -56,9 +53,8 @@
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27529-17</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27603-22</MicrosoftWindowsDesktopAppPackageVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
-    <MicrosoftDotnetWpfProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWpfProjectTemplatesPackageVersion>
     <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
