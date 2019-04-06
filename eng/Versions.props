@@ -13,6 +13,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview4.19205.6</MicrosoftDotnetToolsetInternalPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/winforms -->
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-preview4.19205.5</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/wpf -->
     <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview4.19204.4</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -55,7 +62,6 @@
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
     <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27604-23</MicrosoftWindowsDesktopAppPackageVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>$(MicrosoftWindowsDesktopPackageVersion)</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
