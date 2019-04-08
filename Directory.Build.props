@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <PropertyGroup>
-    <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
-  </PropertyGroup>
-
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
+    <Copyright>$(CopyrightNetFoundation)</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 
   <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
@@ -15,6 +16,8 @@
     <CoreSdkTargetFramework>netcoreapp3.0</CoreSdkTargetFramework>
 
     <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir>
+
+    <NoWarn>NU5125;NU5105</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">

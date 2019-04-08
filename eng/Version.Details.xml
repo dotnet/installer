@@ -2,39 +2,71 @@
 <Dependencies>
   <ProductDependencies>
     <!-- Winforms / WPF -->
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="3.0.0-preview3-27511-38">
-      <Uri>https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted</Uri>
-      <Sha>85797dc0b880fd3855d14982c8d5df7a32279021</Sha>
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="3.0.0-preview4-27607-5">
+      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted</Uri>
+      <Sha>b76aadda41b179d0eb08868dc6c97061ffd0103e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App" Version="3.0.0-preview3-27519-08">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>92541e11875f0332c31ca64cd8b755001256f4a4</Sha>
+    <Dependency Name="Microsoft.NETCore.App" Version="3.0.0-preview4-27606-04">
+      <Uri>https://github.com/dotnet/core-setup</Uri>
+      <Sha>08d6d2bb5fd7c59be88a515db93b650eca9be41c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.AspNetCore.App" Version="3.0.0-preview3-19153-02">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.0-preview4-19207-02">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>1f050242559e7b90ff6c4ee7f99d92b3a5af5a62</Sha>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
     </Dependency>
-    <Dependency Name="dotnet-ef" Version="3.0.0-preview3.19153.1">
-      <Uri>https://github.com/aspnet/EntityFrameworkCore</Uri>
-      <Sha>8f9c2cf541820969b9fc4b30a18d5f534c14ba46</Sha>
+    <Dependency Name="Microsoft.AspNetCore.App.Runtime.win-x64" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta5.19066.2">
+    <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
+    </Dependency>
+    <Dependency Name="dotnet-dev-certs" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
+    </Dependency>
+    <Dependency Name="dotnet-sql-cache" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
+    </Dependency>
+    <Dependency Name="dotnet-user-secrets" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
+    </Dependency>
+    <Dependency Name="dotnet-watch" Version="3.0.0-preview4-19207-02">
+      <Uri>https://github.com/aspnet/AspNetCore</Uri>
+      <Sha>b44680762ef34c91f5fe0d411ddd8fe0b4e3d06b</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta5.19115.3">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>ac8f12b90238542dfd2ea596178ae24ea20a0f55</Sha>
+      <Sha>42a212514e375a0821baab69fbac462e39590cfb</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.0.100-preview3.19173.4">
+    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.0.100-preview4.19207.8">
       <Uri>https://github.com/dotnet/toolset</Uri>
-      <Sha>f03be655d911e4f4f23084bfe4efef18f52d4a0f</Sha>
+      <Sha>3b82e05e5fd489611d85b55d18c0200c6372e78d</Sha>
     </Dependency>
-    <Dependency Name="NETStandard.Library" Version="2.1.0-prerelease.19172.1">
+    <Dependency Name="NETStandard.Library" Version="2.1.0-prerelease.19207.1">
       <Uri>https://github.com/dotnet/standard</Uri>
-      <Sha>27346e62d48fc1ed62a341b65b7cb4f28dc021c3</Sha>
+      <Sha>040f41f20972988aa34195e778b4170004ead695</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.0.100-preview4.19207.2">
+      <Uri>https://github.com/dotnet/cli</Uri>
+      <Sha>83b6b1e2419fdf62bbe7e2098a3169b082928675</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-preview4.19205.5">
+      <Uri>https://github.com/dotnet/winforms</Uri>
+      <Sha>a875e24eff58bcc7a1bb124a6f05792639a83536</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.0-preview4.19207.1">
+      <Uri>https://github.com/dotnet/wpf</Uri>
+      <Sha>a1132a2a7fe48b25716f44680cadebc7dd2f7c64</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19157.4">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19206.5">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>951b378f6b173d58c6d93ef33ce7ca83c2ce5ec5</Sha>
+      <Sha>9d8abf998866f10bc19d97e1916ff1c0ada3fd42</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
