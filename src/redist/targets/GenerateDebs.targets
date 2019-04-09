@@ -48,9 +48,9 @@
       <NetCoreAppTargetingPackDebianPackageName>dotnet-targeting-pack-$(SharedFxDebianPackageVersion)</NetCoreAppTargetingPackDebianPackageName>
       <NetCoreAppTargetingPackDebianPackageName>$(NetCoreAppTargetingPackDebianPackageName.ToLower())</NetCoreAppTargetingPackDebianPackageName>
       <DownloadedNetCoreAppTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadedNetCoreAppTargetingPackInstallerFile>
-      <NetStandardTargetingPackDebianPackageFileName>netstandard-targeting-pack-$(NetStandardTargetingPackVersion)</NetStandardTargetingPackDebianPackageFileName>
+      <NetStandardTargetingPackDebianPackageFileName>netstandard-targeting-pack-$(NETStandardLibraryRefPackageVersion)</NetStandardTargetingPackDebianPackageFileName>
       <NetStandardTargetingPackDebianPackageFileName>$(NetStandardTargetingPackDebianPackageFileName.ToLower())</NetStandardTargetingPackDebianPackageFileName>
-      <NetStandardTargetingPackDebianPackageName>netstandard-targeting-pack-$(NetStandardTargetingPackMajorMinorVersion)</NetStandardTargetingPackDebianPackageName>
+      <NetStandardTargetingPackDebianPackageName>netstandard-targeting-pack-$(NETStandardLibraryRefPackageVersion.Split('.')[0]).$(NETStandardLibraryRefPackageVersion.Split('.')[1])</NetStandardTargetingPackDebianPackageName>
       <NetStandardTargetingPackDebianPackageName>$(NetStandardTargetingPackDebianPackageName.ToLower())</NetStandardTargetingPackDebianPackageName>
       <DownloadedNetStandardTargetingPackInstallerFile>$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadedNetStandardTargetingPackInstallerFile>
       <HostFxrDebianPackageFileName>dotnet-hostfxr-$(HostFxrVersion)</HostFxrDebianPackageFileName>

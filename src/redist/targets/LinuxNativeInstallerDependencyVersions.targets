@@ -14,9 +14,9 @@
       <MicrosoftNETCoreAppPackageVersionWithTilda>$(MicrosoftNETCoreAppMajorMinorPatchVersion)</MicrosoftNETCoreAppPackageVersionWithTilda>
       <MicrosoftNETCoreAppPackageVersionWithTilda Condition=" '$(MicrosoftNETCoreAppVersionPreReleaseSeparator)' != -1 ">$(MicrosoftNETCoreAppMajorMinorPatchVersion)~$(MicrosoftNETCoreVersionSuffix)</MicrosoftNETCoreAppPackageVersionWithTilda>
 
-      <NetStandardTargetingPackVersionPreReleaseSeparator>$(NetStandardTargetingPackVersion.IndexOf('-'))</NetStandardTargetingPackVersionPreReleaseSeparator>
-      <NetStandardTargetingPackMajorMinorPatchVersion>$(NetStandardTargetingPackVersion)</NetStandardTargetingPackMajorMinorPatchVersion>
-      <NetStandardTargetingPackMajorMinorPatchVersion Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NetStandardTargetingPackVersion.Substring(0, $(NetStandardTargetingPackVersionPreReleaseSeparator)))</NetStandardTargetingPackMajorMinorPatchVersion>
+      <NetStandardTargetingPackVersionPreReleaseSeparator>$(NETStandardLibraryRefPackageVersion.IndexOf('-'))</NetStandardTargetingPackVersionPreReleaseSeparator>
+      <NetStandardTargetingPackMajorMinorPatchVersion>$(NETStandardLibraryRefPackageVersion)</NetStandardTargetingPackMajorMinorPatchVersion>
+      <NetStandardTargetingPackMajorMinorPatchVersion Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NETStandardLibraryRefPackageVersion.Substring(0, $(NetStandardTargetingPackVersionPreReleaseSeparator)))</NetStandardTargetingPackMajorMinorPatchVersion>
       <NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex>$([MSBuild]::Add($(NetStandardTargetingPackVersionPreReleaseSeparator), 1))</NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex>
       <NetStandardTargetingPackVersionSuffix Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NetStandardTargetingPackVersion.Substring($(NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex)))</NetStandardTargetingPackVersionSuffix>
       <NetStandardTargetingPackPackageVersionWithTilda>$(NetStandardTargetingPackMajorMinorPatchVersion)</NetStandardTargetingPackPackageVersionWithTilda>

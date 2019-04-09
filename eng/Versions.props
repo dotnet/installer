@@ -49,12 +49,7 @@
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
-    <NetStandardPatchSeparatorIndex>$([MSBuild]::Add($(MicrosoftNETCoreAppPackageVersion.IndexOf('.')), 1))</NetStandardPatchSeparatorIndex>
-    <NetStandardPatchSeparatorIndex>$(MicrosoftNETCoreAppPackageVersion.IndexOf('.', $(NetStandardPatchSeparatorIndex)))</NetStandardPatchSeparatorIndex>
-    <NetStandardTargetingPackSuffix>$(MicrosoftNETCoreAppPackageVersion.Substring($(NetStandardPatchSeparatorIndex)))</NetStandardTargetingPackSuffix>
-    <NetStandardTargetingPackMajorMinorVersion>2.1</NetStandardTargetingPackMajorMinorVersion>
-    <NetStandardTargetingPackVersion>$(NetStandardTargetingPackMajorMinorVersion)$(NetStandardTargetingPackSuffix)</NetStandardTargetingPackVersion>
-    <NetStandardTargetingPackTargetFramework>netstandard2.1</NetStandardTargetingPackTargetFramework>
+    <NETStandardLibraryRefPackageVersion>2.1.0-preview5-27607-08</NETStandardLibraryRefPackageVersion>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
