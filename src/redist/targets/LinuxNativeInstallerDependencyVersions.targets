@@ -18,7 +18,7 @@
       <NetStandardTargetingPackMajorMinorPatchVersion>$(NETStandardLibraryRefPackageVersion)</NetStandardTargetingPackMajorMinorPatchVersion>
       <NetStandardTargetingPackMajorMinorPatchVersion Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NETStandardLibraryRefPackageVersion.Substring(0, $(NetStandardTargetingPackVersionPreReleaseSeparator)))</NetStandardTargetingPackMajorMinorPatchVersion>
       <NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex>$([MSBuild]::Add($(NetStandardTargetingPackVersionPreReleaseSeparator), 1))</NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex>
-      <NetStandardTargetingPackVersionSuffix Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NetStandardTargetingPackVersion.Substring($(NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex)))</NetStandardTargetingPackVersionSuffix>
+      <NetStandardTargetingPackVersionSuffix Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NETStandardLibraryRefPackageVersion.Substring($(NetStandardTargetingPackVersionPreReleaseSeparatorStartIndex)))</NetStandardTargetingPackVersionSuffix>
       <NetStandardTargetingPackPackageVersionWithTilda>$(NetStandardTargetingPackMajorMinorPatchVersion)</NetStandardTargetingPackPackageVersionWithTilda>
       <NetStandardTargetingPackPackageVersionWithTilda Condition=" '$(NetStandardTargetingPackVersionPreReleaseSeparator)' != -1 ">$(NetStandardTargetingPackMajorMinorPatchVersion)~$(NetStandardTargetingPackVersionSuffix)</NetStandardTargetingPackPackageVersionWithTilda>
 
