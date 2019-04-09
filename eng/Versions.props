@@ -37,16 +37,6 @@
     <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview5.19208.3</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview5-27607-08</MicrosoftNETCoreAppPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19209.1</NETStandardLibraryPackageVersion>
-    <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
-         which ends up overriding the value set here. -->
-    <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19208.3</MicrosoftDotNetCommonItemTemplatesPackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19155.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
@@ -54,9 +44,17 @@
     <NUnit3TemplatesVersion>1.6.1</NUnit3TemplatesVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview5-27607-08</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
+    <NetStandardPatchSeparatorIndex>$([MSBuild]::Add($(MicrosoftNETCoreAppPackageVersion.IndexOf('.')), 1))</NetStandardPatchSeparatorIndex>
+    <NetStandardPatchSeparatorIndex>$(MicrosoftNETCoreAppPackageVersion.IndexOf('.', $(NetStandardPatchSeparatorIndex)))</NetStandardPatchSeparatorIndex>
+    <NetStandardTargetingPackSuffix>$(MicrosoftNETCoreAppPackageVersion.Substring($(NetStandardPatchSeparatorIndex)))</NetStandardTargetingPackSuffix>
+    <NetStandardTargetingPackMajorMinorVersion>2.1</NetStandardTargetingPackMajorMinorVersion>
+    <NetStandardTargetingPackVersion>$(NetStandardTargetingPackMajorMinorVersion)$(NetStandardTargetingPackSuffix)</NetStandardTargetingPackVersion>
+    <NetStandardTargetingPackTargetFramework>netstandard2.1</NetStandardTargetingPackTargetFramework>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
