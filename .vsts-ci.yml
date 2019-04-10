@@ -1,6 +1,9 @@
 trigger:
-- master
-- release/*
+  batch: true
+  branches:
+    include:
+    - master
+    - release/*
 
 variables:
 - name: _PublishBlobFeedUrl
