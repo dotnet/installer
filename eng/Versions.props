@@ -37,16 +37,6 @@
     <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview5.19210.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview5-27610-01</MicrosoftNETCoreAppPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19210.1</NETStandardLibraryPackageVersion>
-    <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
-         which ends up overriding the value set here. -->
-    <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19209.2</MicrosoftDotNetCommonItemTemplatesPackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19155.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
@@ -54,9 +44,12 @@
     <NUnit3TemplatesVersion>1.6.1</NUnit3TemplatesVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview5-27610-01</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
+    <NETStandardLibraryRefPackageVersion>2.1.0-preview5-27610-01</NETStandardLibraryRefPackageVersion>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
