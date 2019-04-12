@@ -9,7 +9,6 @@
     <PropertyGroup>
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
       <CoreSetupBlobRootUrl>https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
-      <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
       <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
       
       <CoreSetupRid>$(HostRid)</CoreSetupRid>
@@ -63,7 +62,7 @@
     <PropertyGroup>
       <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
       <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
-      <WinFormsAndWpfSharedFxRootUrl>$(DotnetExtensionsBlobRootUrl)Runtime/</WinFormsAndWpfSharedFxRootUrl>
+      <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupRootUrl)</WinFormsAndWpfSharedFxRootUrl>
       <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppPackageVersion)</CoreSetupDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
     </PropertyGroup>
