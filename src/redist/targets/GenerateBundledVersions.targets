@@ -165,7 +165,6 @@ Copyright (c) .NET Foundation. All rights reserved.
     <NETCoreSdkRuntimeIdentifier>$(ProductMonikerRid)</NETCoreSdkRuntimeIdentifier>
     <_NETCoreSdkIsPreview>$(_NETCoreSdkIsPreview)</_NETCoreSdkIsPreview>
 
-    <AddDotnetfeedProjectSource Condition="'%24(AddDotnetfeedProjectSource)' == ''">%24(_NETCoreSdkIsPreview)</AddDotnetfeedProjectSource>
     <RestoreAdditionalProjectSources Condition="'%24(AddDotnetfeedProjectSource)' == 'true'">%24(RestoreAdditionalProjectSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</RestoreAdditionalProjectSources>
     <RestoreAdditionalProjectSources Condition="'%24(AddDotnetfeedProjectSource)' == 'true'">%24(RestoreAdditionalProjectSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json</RestoreAdditionalProjectSources>
     <RestoreAdditionalProjectSources Condition="'%24(AddDotnetfeedProjectSource)' == 'true'">%24(RestoreAdditionalProjectSources)%3Bhttps://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json</RestoreAdditionalProjectSources>
