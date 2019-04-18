@@ -68,7 +68,7 @@
       <InstallRuntimeCommand>powershell -NoLogo -NoProfile -ExecutionPolicy ByPass</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) "$(_DotNetRoot)dotnet-install.ps1"</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) -Version $(RuntimeVersionToInstall)</InstallRuntimeCommand>
-      <InstallRuntimeCommand>$(InstallRuntimeCommand) -InstallDir "$(DotnetToTestPath)"</InstallRuntimeCommand>
+      <InstallRuntimeCommand>$(InstallRuntimeCommand) -InstallDir $(DotnetToTestPath)</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) -Runtime "dotnet"</InstallRuntimeCommand>
     </PropertyGroup>
     <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
