@@ -80,7 +80,6 @@
     </PropertyGroup>
 
     <Exec Command="$(InstallRuntimeCommand)"
-          UseCommandProcessor="false"
           Condition="!Exists($(RuntimeTargetDirectory))"/>
   </Target>
 
