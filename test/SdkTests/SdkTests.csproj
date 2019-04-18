@@ -75,7 +75,7 @@
       <InstallRuntimeCommand>/bin/bash</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) "$(_DotNetRoot)dotnet-install.sh"</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) --version $(RuntimeVersionToInstall)</InstallRuntimeCommand>
-      <InstallRuntimeCommand>$(InstallRuntimeCommand) --install_dir "$(DotnetToTestPath)"</InstallRuntimeCommand>
+      <InstallRuntimeCommand>$(InstallRuntimeCommand) --install-dir "$(DotnetToTestPath)"</InstallRuntimeCommand>
       <InstallRuntimeCommand>$(InstallRuntimeCommand) --runtime "dotnet"</InstallRuntimeCommand>
     </PropertyGroup>
 
