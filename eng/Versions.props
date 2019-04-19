@@ -12,7 +12,7 @@
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview4.19219.9</MicrosoftDotnetToolsetInternalPackageVersion>
+    <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview5.19219.7</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -20,47 +20,45 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview4.19213.3</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview5.19218.4</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview4-19216-03</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview4-19216-03</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview4-19216-03</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <dotnetdevcertsPackageVersion>3.0.0-preview4-19216-03</dotnetdevcertsPackageVersion>
-    <dotnetsqlcachePackageVersion>3.0.0-preview4-19216-03</dotnetsqlcachePackageVersion>
-    <dotnetusersecretsPackageVersion>3.0.0-preview4-19216-03</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>3.0.0-preview4-19216-03</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview5-19218-09</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview5-19218-09</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview5-19218-09</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <dotnetdevcertsPackageVersion>3.0.0-preview5-19218-09</dotnetdevcertsPackageVersion>
+    <dotnetsqlcachePackageVersion>3.0.0-preview5-19218-09</dotnetsqlcachePackageVersion>
+    <dotnetusersecretsPackageVersion>3.0.0-preview5-19218-09</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>3.0.0-preview5-19218-09</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview4.19218.4</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview5.19219.4</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview4-27615-11</MicrosoftNETCoreAppPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NETStandardLibraryPackageVersion>2.1.0-prerelease.19208.5</NETStandardLibraryPackageVersion>
-    <!-- Use a different property name here, as NETStandardLibraryPackageVersion is also set by targets in the NETStandard.Library package,
-         which ends up overriding the value set here. -->
-    <NETSTandardTargetingPackVersion>$(NETStandardLibraryPackageVersion)</NETSTandardTargetingPackVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19208.4</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>1.0.2-beta5.19218.1</MicrosoftDotNetCommonItemTemplatesPackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19155.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
     <NUnit3TemplatesVersion>1.6.1</NUnit3TemplatesVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependencies from https://github.com/dotnet/sdk (to run tests) -->
+    <MicrosoftNETSdkPackageVersion>3.0.100-preview5.19212.8</MicrosoftNETSdkPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview5-27619-10</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
     <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
     <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
+    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppHostPackVersion>
+    <NETStandardLibraryRefPackageVersion>2.1.0-preview5-27619-10</NETStandardLibraryRefPackageVersion>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview4-27613-28</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-preview5-27619-10</MicrosoftWindowsDesktopAppPackageVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
