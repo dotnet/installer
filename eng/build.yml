@@ -20,9 +20,7 @@ phases:
     name: ${{ parameters.agentOs }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
-    enablePublishBuildArtifacts: true
     enablePublishBuildAssets: true
-    enablePublishTestResults: true
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
     pool: ${{ parameters.pool }}
@@ -30,6 +28,7 @@ phases:
       strategy: ${{ parameters.strategy }}
 
     variables: 
+      - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
       - _BuildArgs: ''
       - _SignType: test
@@ -98,6 +97,36 @@ phases:
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
+
+    - task: PublishTestResults@1	
+      displayName: Publish Test Results	
+      inputs:	
+        testRunner: XUnit	
+        testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'	
+        testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
+        platform: '$(BuildPlatform)'	
+        configuration: '$(_BuildConfig)'	
+      condition: not(succeeded())
+
+    - task: CopyFiles@2	
+      displayName: Gather Logs	
+      inputs:	
+        SourceFolder: '$(Build.SourcesDirectory)/artifacts'	
+        Contents: |	
+         log/$(_BuildConfig)/**/*	
+         TestResults/$(_BuildConfig)/**/*	
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'	
+      continueOnError: true	
+      condition: not(succeeded())	
+
+    - task: PublishBuildArtifacts@1	
+      displayName: Publish Logs to VSTS	
+      inputs:	
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'	
+        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
+        publishLocation: Container	
+      continueOnError: true	
+      condition: not(succeeded())
 
     - ${{ if and(eq(parameters.enablePublishBuildAssets, true), eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
       - task: CopyFiles@2
