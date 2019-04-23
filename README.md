@@ -414,6 +414,23 @@ Reference notes:
 [coherent-version-2.1.6XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.6xx/latest.coherent.version
 
 
+Additional NuGet feeds
+----------------------------------------
+
+During the development cycle, typically when working with preview releases and daily builds of the SDK, there could be a needed package that is not published to nuget.org. When this occurs, it is advised to use a nuget.cofig that contains several internal feeds.
+> Example:
+
+```
+<config>
+    <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+    <add key="dotnet-windowsdesktop" value="https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json" />
+    <add key="aspnet-aspnetcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json" />
+    <add key="aspnet-aspnetcore-tooling" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json" />
+    <add key="aspnet-entityframeworkcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json" />
+    <add key="aspnet-extensions" value="https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json" />
+</config>
+```
+
 Questions & Comments
 --------------------
 
