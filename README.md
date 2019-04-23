@@ -32,9 +32,21 @@ You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (z
 
 To download the .NET Core runtime **without** the SDK, visit https://github.com/dotnet/core-setup#daily-builds.
 
-> **Note:** Be aware that the following installers are the **latest bits**. If you
-> want to install the latest released versions, check out the [preceding section](#looking-for-v2-of-the-net-core-tooling).
-> In order to be able to restore these pre-release packages, you may need to add a NuGet feed as noted in the table below. Other feeds may also be necessary depending on what kind of project you are working with.
+**Note:** Be aware that the following installers are the **latest bits**. If you
+want to install the latest released versions, check out the [preceding section](#looking-for-v2-of-the-net-core-tooling).
+In order to be able to restore these pre-release packages, you may need to add a NuGet feed as noted below. Other feeds may also be necessary depending on what kind of project you are working with.
+> Example:
+
+```
+<config>
+    <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+    <add key="dotnet-windowsdesktop" value="https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json" />
+    <add key="aspnet-aspnetcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json" />
+    <add key="aspnet-aspnetcore-tooling" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json" />
+    <add key="aspnet-entityframeworkcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json" />
+    <add key="aspnet-extensions" value="https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json" />
+</config>
+```
 
 |   Platform   |   Master<br>(3.0.x Runtime)   |   Release/3.0.1XX<br>(3.0.x Runtime)  |   Release/2.2.2XX<br>(2.2.x Runtime)   |   Release/2.2.1XX<br>(2.2.x Runtime)   |   Release/2.1.6XX<br>(2.1.6 Runtime)  |   Release/2.1.5XX<br>(2.1.5 Runtime)   |
 |---------|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
@@ -48,21 +60,13 @@ To download the .NET Core runtime **without** the SDK, visit https://github.com/
 | **Linux-musl** | [![][linux-musl-badge-master]][linux-musl-version-master]<br>[tar.gz][linux-musl-targz-master] - [Checksum][linux-musl-targz-checksum-master] | [![][linux-musl-badge-3.0.1xx]][linux-musl-version-3.0.1xx]<br>[tar.gz][linux-musl-targz-3.0.1xx] - [Checksum][linux-musl-targz-checksum-3.0.1xx] | [![][linux-musl-badge-2.2.2XX]][linux-musl-version-2.2.2XX]<br>[tar.gz][linux-musl-targz-2.2.2XX] - [Checksum][linux-musl-targz-checksum-2.2.2XX] |[![][linux-musl-badge-2.2.1XX]][linux-musl-version-2.2.1XX]<br>[tar.gz][linux-musl-targz-2.2.1XX] - [Checksum][linux-musl-targz-checksum-2.2.1XX] |[![][linux-musl-badge-2.1.6XX]][linux-musl-version-2.1.6XX]<br>[tar.gz][linux-musl-targz-2.1.6XX] - [Checksum][linux-musl-targz-checksum-2.1.6XX] | [![][linux-musl-badge-2.1.5XX]][linux-musl-version-2.1.5XX]<br>[tar.gz][linux-musl-targz-2.1.5XX] - [Checksum][linux-musl-targz-checksum-2.1.5XX] | 
 | **Windows arm** | [![][win-arm-badge-master]][win-arm-version-master]<br>[zip][win-arm-zip-master] - [Checksum][win-arm-zip-checksum-master] | [![][win-arm-badge-3.0.1xx]][win-arm-version-3.0.1xx]<br>[zip][win-arm-zip-3.0.1xx] - [Checksum][win-arm-zip-checksum-3.0.1xx] | [![][win-arm-badge-2.2.2XX]][win-arm-version-2.2.2XX]<br>[zip][win-arm-zip-2.2.2XX] - [Checksum][win-arm-zip-checksum-2.2.2XX] | [![][win-arm-badge-2.2.1XX]][win-arm-version-2.2.1XX]<br>[zip][win-arm-zip-2.2.1XX] - [Checksum][win-arm-zip-checksum-2.2.1XX] | **N/A** | **N/A** |
 | **FreeBSD x64** | [![][freebsd-x64-badge-master]][freebsd-x64-version-master]<br>[tar.gz][freebsd-x64-zip-master] - [Checksum][freebsd-x64-zip-checksum-master] | [![][freebsd-x64-badge-3.0.1xx]][freebsd-x64-version-3.0.1xx]<br>[tar.gz][freebsd-x64-zip-3.0.1xx] - [Checksum][freebsd-x64-zip-checksum-3.0.1xx] | **N/A** | **N/A** | **N/A** | **N/A** |
-| **Package Feed** | [Feed Link][feed-location-master] | [Feed Link][feed-location-2.2.2XX] | [Feed Link][feed-location-2.2.1XX] | [Feed Link][feed-location-2.1.6XX] | [Feed Link][feed-location-2.1.5XX] |
 | **Constituent Repo Shas** | **N/A** | [Git SHAs][sdk-shas-2.2.1XX] | **N/A** | **N/A** | **N/A** |
-
-Latest Coherent Build<sup>2</sup>
-
-|   Master   |   Release/3.0.1XX   |   Release/2.2.2XX   |   Release/2.2.1XX   |   Release/2.1.6XX   |   Release/2.1.5XX   |
-|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
-| [![][coherent-version-badge-master]][coherent-version-master] | [![][coherent-version-badge-3.0.1xx]][coherent-version-3.0.1xx] | [![][coherent-version-badge-2.2.2XX]][coherent-version-2.2.2XX] | [![][coherent-version-badge-2.2.1XX]][coherent-version-2.2.1XX] | [![][coherent-version-badge-2.1.6XX]][coherent-version-2.1.6XX] | **N/A** |
 
 Reference notes:
 > **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
 > * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/core-setup#daily-builds)
 > * [ASP.NET Core Shared Framework](https://github.com/aspnet/AspNetCore/blob/master/docs/DailyBuilds.md)
->
-> **2**: A 'coherent' build is defined as a build where the Runtime version matches between the CLI and ASP.NET Core.
+
 
 [win-x64-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_x64_Release_version_badge.svg
 [win-x64-version-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/latest.version
@@ -396,12 +400,6 @@ Reference notes:
 
 [sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
 
-[feed-location-master]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-[feed-location-2.2.2XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-[feed-location-2.2.1XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-[feed-location-2.1.6XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-[feed-location-2.1.5XX]: https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
-
 [coherent-version-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_x64_Release_coherent_badge.svg
 [coherent-version-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/latest.coherent.version
 [coherent-version-badge-3.0.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/win_x64_Release_coherent_badge.svg
@@ -412,24 +410,6 @@ Reference notes:
 [coherent-version-2.2.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.2.1xx/latest.coherent.version
 [coherent-version-badge-2.1.6XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.6xx/win_x64_Release_coherent_badge.svg
 [coherent-version-2.1.6XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.6xx/latest.coherent.version
-
-
-Additional NuGet feeds
-----------------------------------------
-
-During the development cycle, typically when working with preview releases and daily builds of the SDK, there could be a needed package that is not published to nuget.org. When this occurs, it is advised to use a nuget.cofig that contains several internal feeds.
-> Example:
-
-```
-<config>
-    <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
-    <add key="dotnet-windowsdesktop" value="https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json" />
-    <add key="aspnet-aspnetcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json" />
-    <add key="aspnet-aspnetcore-tooling" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json" />
-    <add key="aspnet-entityframeworkcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json" />
-    <add key="aspnet-extensions" value="https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json" />
-</config>
-```
 
 Questions & Comments
 --------------------
