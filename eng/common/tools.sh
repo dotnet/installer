@@ -119,7 +119,9 @@ function InitializeDotNetCli {
     dotnet_root="$DOTNET_INSTALL_DIR"
   else
     dotnet_root="$repo_root/.dotnet"
-
+    if [[ -n "${ARCADE_PARTITION:-}" ]]; then
+      dotnet_root="$repo_root/.dotnet-$ARCADE_PARTITION"
+    fi
     export DOTNET_INSTALL_DIR="$dotnet_root"
 
     if [[ ! -d "$DOTNET_INSTALL_DIR/sdk/$dotnet_sdk_version" ]]; then
@@ -336,6 +338,11 @@ _script_dir=`dirname "$_ResolvePath"`
 eng_root=`cd -P "$_script_dir/.." && pwd`
 repo_root=`cd -P "$_script_dir/../.." && pwd`
 artifacts_dir="$repo_root/artifacts"
+if [[ -n "${ARCADE_PARTITION:-}" ]]; then
+  artifacts_dir="$repo_root/artifacts-$ARCADE_PARTITION"
+  export ArtifactsDir="$artifacts_dir/"
+fi
+
 toolset_dir="$artifacts_dir/toolset"
 tools_dir="$repo_root/.tools"
 log_dir="$artifacts_dir/log/$configuration"

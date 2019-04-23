@@ -128,7 +128,12 @@ function InitializeDotNetCli([bool]$install) {
   if ((-not $globalJsonHasRuntimes) -and ($env:DOTNET_INSTALL_DIR -ne $null) -and (Test-Path(Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetSdkVersion"))) {
     $dotnetRoot = $env:DOTNET_INSTALL_DIR
   } else {
+    
     $dotnetRoot = Join-Path $RepoRoot ".dotnet"
+    if ($env:ARCADE_PARTITION -ne $null)
+    {
+      $dotnetRoot = Join-Path $RepoRoot ".dotnet-$env:ARCADE_PARTITION"
+    }
 
     if (-not (Test-Path(Join-Path $dotnetRoot "sdk\$dotnetSdkVersion"))) {
       if ($install) {
@@ -553,6 +558,10 @@ function GetMSBuildBinaryLogCommandLineArgument($arguments) {
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $EngRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $ArtifactsDir = Join-Path $RepoRoot "artifacts"
+if ($env:ARCADE_PARTITION -ne $null)
+{
+  $ArtifactsDir = Join-Path $RepoRoot "artifacts-$env:ARCADE_PARTITION"
+}
 $ToolsetDir = Join-Path $ArtifactsDir "toolset"
 $ToolsDir = Join-Path $RepoRoot ".tools"
 $LogDir = Join-Path (Join-Path $ArtifactsDir "log") $configuration
