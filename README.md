@@ -38,14 +38,16 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 > Example:
 
 ```
-<config>
+<configuration>
+  <packageSources>
     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
     <add key="dotnet-windowsdesktop" value="https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json" />
     <add key="aspnet-aspnetcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json" />
     <add key="aspnet-aspnetcore-tooling" value="https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json" />
     <add key="aspnet-entityframeworkcore" value="https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json" />
     <add key="aspnet-extensions" value="https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json" />
-</config>
+  </packageSources>
+</configuration>
 ```
 
 |   Platform   |   Master<br>(3.0.x Runtime)   |   Release/3.0.1XX<br>(3.0.x Runtime)  |   Release/2.2.3XX<br>(2.2.x Runtime)   |   Release/2.2.2XX<br>(2.2.x Runtime)   |   Release/2.2.1XX<br>(2.2.x Runtime)   |   Release/2.1.7XX<br>(2.1.7 Runtime)  |   Release/2.1.6XX<br>(2.1.6 Runtime)  |   Release/2.1.5XX<br>(2.1.5 Runtime)   |
