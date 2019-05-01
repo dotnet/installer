@@ -5,7 +5,9 @@ param(
     [Parameter(Mandatory=$true)][string]$SdkBundlePath,
     [Parameter(Mandatory=$true)][string]$NugetVersion,
     [Parameter(Mandatory=$true)][string]$NuspecFile,
-    [Parameter(Mandatory=$true)][string]$NupkgFile
+    [Parameter(Mandatory=$true)][string]$NupkgFile,
+    [Parameter(Mandatory=$false)][string]$Architecture,
+    [Parameter(Mandatory=$false)][string]$ComponentName
 )
 
 $RepoRoot = Convert-Path "$PSScriptRoot\..\..\..\..\..\.."
@@ -28,5 +30,5 @@ if (Test-Path $NupkgFile) {
     Remove-Item -Force $NupkgFile
 }
 
-& $NuGetExe pack $NuspecFile -Version $NugetVersion -OutputDirectory $OutputDirectory -NoDefaultExcludes -NoPackageAnalysis -Properties DOTNET_BUNDLE=$SdkBundlePath
+& $NuGetExe pack $NuspecFile -Version $NugetVersion -OutputDirectory $OutputDirectory -NoDefaultExcludes -NoPackageAnalysis -Properties DOTNET_BUNDLE=$SdkBundlePath`;ARCH=$Architecture`;COMPONENT_NAME=$ComponentName
 Exit $LastExitCode

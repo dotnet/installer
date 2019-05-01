@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
-        <id>VS.Tools.Net.Core.SDK.x86</id>
+        <id>$COMPONENT_NAME$.$ARCH$</id>
         <version>1.0.0</version>
-        <title>VS.Tools.Net.Core.SDK.x86</title>
+        <title>$COMPONENT_NAME$.$ARCH$</title>
         <authors>Microsoft</authors>
         <owners>Microsoft</owners>
         <licenseUrl>https://www.microsoft.com/net/dotnet_library_license.htm</licenseUrl>
-        <projectUrl>https://github.com/dotnet/cli</projectUrl>
+        <projectUrl>https://github.com/dotnet/core-sdk</projectUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <description>.Net Core SDK (x86) as a .nupkg for internal VS build consumption</description>
+        <description>$COMPONENT_NAME$ MSI ($ARCH$) as a .nupkg for internal VS build consumption</description>
         <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     </metadata>
     <files>
-        <file src="$DOTNET_BUNDLE$\**\*" />
-        <file src="Init.cmd" />
+        <file src="$DOTNET_BUNDLE$" />
     </files>
 </package>

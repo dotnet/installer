@@ -48,6 +48,8 @@
       <DownloadedAspNetCoreSharedFxInstallerFileName Condition=" '$(InstallerExtension)' != '' AND '$(HostOSName)' != 'osx' ">aspnetcore-runtime-$(AspNetCoreVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetCoreSharedFxInstallerFileName>
       <!-- Note: we use the "-internal" archives and installers that contain only the aspnetcore shared framework, and shouldn't overlap with Microsoft.NETCore.App. -->
       <DownloadedAspNetCoreSharedFxInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-runtime-internal-$(AspNetCoreVersion)-$(AspNetCoreSharedFxInstallerRid).wixlib</DownloadedAspNetCoreSharedFxInstallerFileName>
+      <!-- aspnetcoremodule_x64_en_v2.msi/aspnetcoremodule_x86_en_v2.msi -->
+      <DownloadedAspNetCoreSharedFxForNugetInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcoremodule_$(Architecture)_en_v2$(InstallerExtension)</DownloadedAspNetCoreSharedFxForNugetInstallerFileName>
       <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">aspnetcore-targeting-pack-$(AspNetTargetingPackVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
       <!-- AspNet targeting pack assets have unexpected asset names for DEB and tar.gz types:
            https://github.com/aspnet/AspNetCore/issues/8835 -->
@@ -159,14 +161,14 @@
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedNetStandardTargetingPackInstallerFile"
-                           Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+                                 Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedNetCoreAppHostPackInstallerFile"
-                     Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+                                 Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppHostPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
@@ -213,9 +215,16 @@
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxInstallerFile"
-                                 Condition="'$(SkipBuildingInstallers)' != 'true' AND '$(DownloadedAspNetCoreSharedFxInstallerFileName)' != '' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
+                                 Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledInstallerComponent>
+
+      <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxForNugetInstallerFile"
+                                 Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
+        <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
+        <DownloadFileName>$(DownloadedAspNetCoreSharedFxForNugetInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
