@@ -57,6 +57,7 @@ jobs:
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
+          _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
