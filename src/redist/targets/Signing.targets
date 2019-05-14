@@ -192,17 +192,19 @@
 
   </Target>
 
-  <Target Name="SignSdkBundle"
-      Condition="'$(SignCoreSdk)' == 'true'"
-      DependsOnTargets="SetSignProps">
-
+  <Target Name="SignSdkBundles"
+        Condition="'$(SignCoreSdk)' == 'true'"
+        DependsOnTargets="SetSignProps"
+        Inputs="@(SdkLocalizedInstallerInstance)"
+        Outputs="%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostBundleEngineName)">
+    
     <!-- Extract engine from bundle -->
-    <Exec Command="$(WixRoot)/insignia.exe -ib $(CombinedFrameworkSdkHostMSIInstallerFile) -o $(CombinedFrameworkSdkHostBundleEngineName)" />
+    <Exec Command="$(WixRoot)/insignia.exe -ib %(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile) -o %(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostBundleEngineName)" />
     
     <!-- Sign engine-->
     <ItemGroup>
-      <EngineFileToSign Include="$(CombinedFrameworkSdkHostBundleEngineName)" />
-      <EngineFileSignInfo Include="$([System.IO.Path]::GetFileName('$(CombinedFrameworkSdkHostBundleEngineName)'))"
+      <EngineFileToSign Include="%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostBundleEngineName)" />
+      <EngineFileSignInfo Include="$([System.IO.Path]::GetFileName('%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostBundleEngineName)'))"
                           CertificateName="$(InternalCertificateId)"/>
     </ItemGroup>
     <Microsoft.DotNet.SignTool.SignToolTask
@@ -220,12 +222,12 @@
         MicroBuildCorePath="$(NuGetPackageRoot)microbuild.core\$(MicroBuildCoreVersion)"/>
     
     <!-- Reattach engine to bundle -->
-    <Exec Command="$(WixRoot)/insignia.exe -ab $(CombinedFrameworkSdkHostBundleEngineName) $(CombinedFrameworkSdkHostMSIInstallerFile) -o $(CombinedFrameworkSdkHostMSIInstallerFile)" />
+    <Exec Command="$(WixRoot)/insignia.exe -ab %(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostBundleEngineName) %(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile) -o %(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile)" />
     
     <!-- Sign bundle -->
     <ItemGroup>
-      <BundleFileToSign Include="$(CombinedFrameworkSdkHostMSIInstallerFile)" />
-      <BundleFileSignInfo Include="$([System.IO.Path]::GetFileName('$(CombinedFrameworkSdkHostMSIInstallerFile)'))"
+      <BundleFileToSign Include="%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile)" />
+      <BundleFileSignInfo Include="$([System.IO.Path]::GetFileName('%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile)'))"
                           CertificateName="$(InternalCertificateId)"/>
     </ItemGroup>
 
