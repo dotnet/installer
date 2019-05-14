@@ -40,7 +40,7 @@
       <LayoutDirectory Condition=" '$(OSName)' != 'ubuntu' AND '$(OSName)' != 'debian' ">$(IntermediateOutputPath)layouts</LayoutDirectory>
       <SdkLayoutOutputDirectory>$(LayoutDirectory)$(ArtifactNameSdk)</SdkLayoutOutputDirectory>
       <MSBuildExtensionsOutputDirectory>$(LayoutDirectory)MSBuildExtensions</MSBuildExtensionsOutputDirectory>-->
-  </PropertyGroup>
+    </PropertyGroup>
   </Target>
 
   <Target Name="MsiTargetsSetupInputOutputs"
