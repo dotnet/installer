@@ -12,6 +12,8 @@
 
     <!-- Generate MSI/Bundle Properties -->
     <PropertyGroup>
+      <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)/$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-engine.exe</CombinedFrameworkSdkHostBundleEngineName>
+
       <SdkGenerateMsiPowershellScript>$(MSBuildThisFileDirectory)packaging/windows/clisdk/generatemsi.ps1</SdkGenerateMsiPowershellScript>
       <SdkStableFileIdForApphostTransform>$(MSBuildThisFileDirectory)packaging/windows/clisdk/stablefileidforapphosttransform.xslt</SdkStableFileIdForApphostTransform>
       <SdkGenerateBundlePowershellScript>$(MSBuildThisFileDirectory)packaging/windows/clisdk/generatebundle.ps1</SdkGenerateBundlePowershellScript>
@@ -19,11 +21,11 @@
 
       <SdkInstallerNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Net.Core.SDK.$(Architecture).nuspec</SdkInstallerNuspecFile>
       <SdkInstallerNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.Net.Core.SDK.$(Architecture).$(FullNugetVersion).nupkg</SdkInstallerNupkgFile>
-      <VSToolsNuspecFile>$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Tools.Net.Core.SDK.$(Architecture).nuspec</VSToolsNuspecFile>
+      <VSToolsNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Tools.Net.Core.SDK.$(Architecture).nuspec</VSToolsNuspecFile>
       <VSToolsNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Tools.Net.Core.SDK.$(Architecture).$(FullNugetVersion).nupkg</VSToolsNupkgFile>
 
       <SdkResolverLayoutPath>$(ArtifactsDir)bin/SdkResolver/$(Configuration)</SdkResolverLayoutPath>
-      <VSToolsResolverNuspecFile>$(MSBuildThisFileDirectory)/packaging/windows/clisdk/VS.Tools.Net.Core.SDK.Resolver.nuspec</VSToolsResolverNuspecFile>
+      <VSToolsResolverNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Tools.Net.Core.SDK.Resolver.nuspec</VSToolsResolverNuspecFile>
       <VSToolsResolverNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Tools.Net.Core.SDK.Resolver.nupkg</VSToolsResolverNupkgFile>
 
       <!--<SdkMSBuildExtensionsNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Redist.Common.Net.Core.SDK.MSBuildExtensions.nuspec</SdkMSBuildExtensionsNuspecFile>
@@ -33,6 +35,7 @@
 
     <PropertyGroup>
       <SdkMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionSdk)$(InstallerExtension)</SdkMSIInstallerFile>
+      <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
       <SdkBundleInstallerOutputGuidString>$(ProductBandCombinedHostHostFxrFrameworkSdkName)</SdkBundleInstallerOutputGuidString>
 
       <!--<SdkDebianIntermediateDirectory>$(IntermediateOutputPath)debian/sdk/</SdkDebianIntermediateDirectory>
@@ -53,7 +56,7 @@
 
     <!-- Consumed By Publish -->
     <ItemGroup>
-      <GeneratedInstallers Include="$(SdkMSIInstallerFile);@(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile)" />
+      <GeneratedInstallers Include="$(SdkMSIInstallerFile);$(CombinedFrameworkSdkHostMSIInstallerFile)" />
     </ItemGroup>
 
     <GenerateMsiVersion CommitCount="$(GitCommitCount)"
@@ -118,16 +121,16 @@
                       -InformationAction Continue" />
   </Target>
 
-  <Target Name="GenerateSdkBundles"
-          DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;GenerateSdkMsi;SetupSdkBundles"
+  <Target Name="GenerateSdkBundle"
+          DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;GenerateSdkMsi"
           Condition=" '$(OS)' == 'Windows_NT'"
           Inputs="$(SdkMSIInstallerFile);
                     $(DownloadedSharedFrameworkInstallerFile);
                     $(DownloadedHostFxrInstallerFile);
                     $(DownloadedSharedHostInstallerFile);
                     $(SdkGenerateBundlePowershellScript)"
-          Outputs="@(SdkLocalizedInstallerInstance->'%(CombinedFrameworkSdkHostMSIInstallerFile)')">
-
+          Outputs="$(CombinedFrameworkSdkHostMSIInstallerFile)">
+    
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateBundlePowershellScript) ^
                       '$(SdkMSIInstallerFile)' ^
                       '$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxInstallerFileName)' ^
@@ -140,7 +143,7 @@
                       '$(DownloadsFolder)$(DownloadedNetCoreAppHostPackInstallerFileName)' ^
                       '$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)' ^
                       '$(DownloadsFolder)$(DownloadedWindowsDesktopTargetingPackInstallerFileName)' ^
-                      '%(SdkLocalizedInstallerInstance.CombinedFrameworkSdkHostMSIInstallerFile)' ^
+                      '$(CombinedFrameworkSdkHostMSIInstallerFile)' ^
                       '$(WixRoot)' ^
                       '$(SdkBrandName)' ^
                       '$(MsiVersion)' ^
@@ -152,124 +155,26 @@
                       '$(MicrosoftNETCoreAppPackageVersion)' ^
                       '$(AspNetCoreVersion)' ^
                       '$(CliProductBandVersion)' ^
-                      '@(SdkLocalizedInstallerInstance->'%(LCID)')' ^
                       -InformationAction Continue " />
   </Target>
 
-  <Target Name="SetupSdkBundles"
-          DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;GenerateSdkMsi"
-          Condition=" '$(OS)' == 'Windows_NT'">
-
-    <ItemGroup>
-      <SdkLocalizedInstallerInstance Include="SDKInstallerLegacyInstallerEnglish">
-        <LCID>1033</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-      
-      <SdkLocalizedInstallerInstance Include="SDKInstallerChinese-TraditionalTaiwan">
-        <LCID>1028</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CHT$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CHT-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerCzech-CzechRepublic">
-        <LCID>1029</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CSY$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CSY-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerGerman-Germany">
-        <LCID>1031</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-DEU$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-DEU-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerEnglish-UnitedStates​">
-        <LCID>1033</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ENU$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ENU-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerFrench-France">
-        <LCID>1036</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-FRA$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-FRA-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerItalian-Italy">
-        <LCID>1040</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ITA$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ITA-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerJapanese-Japan">
-        <LCID>1041</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-JPN$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-JPN-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerKorean-Korea">
-        <LCID>1042</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-KOR$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-KOR-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerPolish-Poland​​​​​​​">
-        <LCID>1045</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-PLK$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-PLK-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerPortuguese-Brazil">
-        <LCID>1046</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-PTB$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-PTB-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerRussian-Russia">
-        <LCID>1049</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-RUS$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-RUS-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerTurkish-Turkey">
-        <LCID>1055</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-TRK$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-TRK-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerChinese-SimplifiedChina">
-        <LCID>2052</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CHS$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-CHS-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-
-      <SdkLocalizedInstallerInstance Include="SDKInstallerSpanish-Spain​​​​​​​​">
-        <LCID>3082</LCID>
-        <CombinedFrameworkSdkHostMSIInstallerFile>$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ESN$(BundleExtension)</CombinedFrameworkSdkHostMSIInstallerFile>
-        <CombinedFrameworkSdkHostBundleEngineName>$(ArtifactsTmpDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)-ESN$-engine$(BundleExtension)</CombinedFrameworkSdkHostBundleEngineName>
-      </SdkLocalizedInstallerInstance>
-    </ItemGroup>
-  </Target>
-  
   <Target Name="GenerateSdkNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundles"
+          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
           Condition=" '$(OS)' == 'Windows_NT'"
-          Inputs="$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(BundleExtension);
+          Inputs="$(CombinedFrameworkSdkHostMSIInstallerFile);
                     $(SdkInstallerNuspecFile);
                     $(SdkGenerateNupkgPowershellScript)"
           Outputs="$(SdkInstallerNupkgFile)">
 
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateNupkgPowershellScript) ^
-                      '$(ArtifactsShippingPackagesDir)$(ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(BundleExtension)' ^
+                      '$(CombinedFrameworkSdkHostMSIInstallerFile)' ^
                       '$(FullNugetVersion)' ^
                       '$(SdkInstallerNuspecFile)' ^
                       '$(SdkInstallerNupkgFile)'" />
   </Target>
 
   <Target Name="GenerateVSToolsNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundles"
+          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
           Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86'"
           Inputs="$(RedistLayoutPath)/**/*;
                   $(VSToolsNuspecFile);
@@ -284,7 +189,7 @@
   </Target>
 
   <Target Name="GenerateVSToolsResolverNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundles"
+          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
           Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86'"
           Inputs="$(SdkResolverLayoutPath)/**/*;
                   $(VSToolsResolverNuspecFile);
@@ -299,7 +204,7 @@
   </Target>
 
   <Target Name="GenerateSdkMSBuildExtensionsNupkg"
-          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundles"
+          DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkBundle"
           Condition=" '$(OS)' == 'Windows_NT' And '$(Architecture)' == 'x64' "
           Inputs="$(MSBuildExtensionsLayoutDirectory)/**/*;
                     $(SdkInstallerNuspecFile);
@@ -326,8 +231,8 @@
                             AcquireWix;
                             GenerateSdkMsi;
                             SignSdkMsi;
-                            GenerateSdkBundles;
-                            SignSdkBundles;
+                            GenerateSdkBundle;
+                            SignSdkBundle;
                             GenerateSdkNupkg;
                             GenerateVSToolsNupkg;
                             GenerateVSToolsResolverNupkg;
