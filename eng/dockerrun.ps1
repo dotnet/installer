@@ -55,7 +55,6 @@ docker run $interactiveFlag -t --rm --sig-proxy=true `
   -e PB_PACKAGEVERSIONPROPSURL `
   -e PB_PUBLISHBLOBFEEDURL `
   -e EXTERNALRESTORESOURCES `
-  -e ARCADE_DOTNET_DIR="/opt/code/artifacts/docker/${dockerImageName}/.dotnet" `
-  -e ARCADE_ARTIFACTS_DIR="/opt/code/artifacts/docker/${dockerImageName}/" `
+  -e ARCADE_PARTITION="${dockerImageName}" `
   $dockerContainerTag `
   /opt/code/run-build.sh @additionalArgs
