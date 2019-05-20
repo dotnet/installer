@@ -26,6 +26,8 @@ phases:
     pool: ${{ parameters.pool }}
     ${{ if ne(parameters.strategy, '') }}:
       strategy: ${{ parameters.strategy }}
+    workspace:
+      clean: all
 
     variables: 
       - _AgentOSName: ${{ parameters.agentOs }}
