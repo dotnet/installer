@@ -45,6 +45,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.rpm" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.cab" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' ">
       <ExcludeFromManifest>true</ExcludeFromManifest>
     </SdkAssetsToPublish>
