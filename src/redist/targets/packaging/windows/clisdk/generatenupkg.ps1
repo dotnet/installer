@@ -33,5 +33,5 @@ if (Test-Path $NupkgFile) {
     Remove-Item -Force $NupkgFile
 }
 
-& $NuGetExe pack $NuspecFile -Version $NugetVersion -OutputDirectory $OutputDirectory -NoDefaultExcludes -NoPackageAnalysis -Properties DOTNET_BUNDLE=$ContentPath`;DOTNET_CAB_FILE=$CabPath`;ARCH=$Architecture
+& $NuGetExe pack $NuspecFile -Version $NugetVersion -OutputDirectory $OutputDirectory -NoDefaultExcludes -NoPackageAnalysis -Properties PAYLOAD_FILES=$ContentPath`;DOTNET_CAB_FILE=$CabPath`;ARCH=$Architecture
 Exit $LastExitCode

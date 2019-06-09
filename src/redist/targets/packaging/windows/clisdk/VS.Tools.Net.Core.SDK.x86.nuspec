@@ -9,11 +9,11 @@
         <licenseUrl>https://www.microsoft.com/net/dotnet_library_license.htm</licenseUrl>
         <projectUrl>https://github.com/dotnet/core-sdk</projectUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <description>.Net Core SDK (x86) as a .nupkg for internal VS build consumption</description>
+        <description>.NET Core SDK (x86) as a .nupkg for internal Visual Studio build consumption</description>
         <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     </metadata>
     <files>
-        <file src="$DOTNET_BUNDLE$\**\*" />
+        <file src="$PAYLOAD_FILES$\**\*" />
         <file src="Init.cmd" />
     </files>
 </package>
