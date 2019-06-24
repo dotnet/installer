@@ -45,6 +45,7 @@
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk (to run tests) -->
     <MicrosoftNETSdkPackageVersion>3.0.100-preview8.19362.4</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftNETCoreAppPackageVersion>3.0.0-preview8-27912-07</MicrosoftNETCoreAppPackageVersion>
@@ -69,6 +70,10 @@
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
     <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
     <MicrosoftSourceLinkVersion>1.0.0-beta2-18618-05</MicrosoftSourceLinkVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
+    <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreSources>
