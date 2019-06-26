@@ -8,7 +8,6 @@
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
-    <PublishToBlobFeedFlatContainer>true</PublishToBlobFeedFlatContainer>
     <ChecksumsFeedUrl>$(DotnetPublishChecksumsBlobFeedUrl)</ChecksumsFeedUrl>
     <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>

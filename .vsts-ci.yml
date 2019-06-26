@@ -10,8 +10,11 @@ variables:
   value: https://dotnetcli.blob.core.windows.net/dotnet/index.json
 - name: _PublishChecksumsBlobFeedUrl
   value: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
+- name: _ArcadePublishBlobFeedUrl
+  value: https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
+  - group: DotNet-Blob-Feed
 
 jobs:
 - template: /eng/build.yml
@@ -57,7 +60,9 @@ jobs:
           _BuildArchitecture: x64
           _DOTNET_CLI_UI_LANGUAGE: ''
           _DropSuffix: ''
-          _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+          _AdditionalBuildParameters: '/p:PublishInternalAsset=true
+            /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+            /p:DotNetPublishBlobFeedUrl=$(_PublishBlobFeedUrl)'
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
