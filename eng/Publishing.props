@@ -60,15 +60,16 @@
           DependsOnTargets="SetSdkVersionInfo"
           Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' ">
     <ItemGroup>
-      <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)" IsShipping="true" >
+      <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
       </SdkAssetsToPushToBlobFeed>
 
-      <SdkAssetsToPushToBlobFeed Include="@(SdkNonShippingAssetsToPublish)" IsShipping="false" >
+      <SdkAssetsToPushToBlobFeed Include="@(SdkNonShippingAssetsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
       </SdkAssetsToPushToBlobFeed>
 
-      <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)" IsShipping="true" >
+      <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
