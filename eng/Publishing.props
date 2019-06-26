@@ -12,7 +12,6 @@
     <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
     <SdkAssetsAzureAccountKey>$(DotNetPublishSdkAssetsBlobFeedKey)</SdkAssetsAzureAccountKey>
-
     <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
     <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
 
