@@ -62,7 +62,7 @@ jobs:
           _DropSuffix: ''
           _AdditionalBuildParameters: '/p:PublishInternalAsset=true
             /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
-            /p:DotNetPublishBlobFeedUrl=$(_PublishBlobFeedUrl)'
+            /p:DotNetPublishBlobFeedUrl=$(_ArcadePublishBlobFeedUrl)'
         Build_Release_arm:
           _BuildConfig: Release
           _BuildArchitecture: arm
