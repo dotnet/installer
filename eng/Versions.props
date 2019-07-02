@@ -24,16 +24,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview6.19307.2</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview6.19307.2</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview6.19307.2</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <dotnetdevcertsPackageVersion>3.0.0-preview6.19307.2</dotnetdevcertsPackageVersion>
-    <dotnetusersecretsPackageVersion>3.0.0-preview6.19307.2</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>3.0.0-preview6.19307.2</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview7.19351.4</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview7.19351.4</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>3.0.0-preview7.19351.4</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <dotnetdevcertsPackageVersion>3.0.0-preview7.19351.4</dotnetdevcertsPackageVersion>
+    <dotnetusersecretsPackageVersion>3.0.0-preview7.19351.4</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>3.0.0-preview7.19351.4</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview6.19304.3</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.0.100-preview7.19351.9</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>2.0.0-preview7.19351.3</MicrosoftDotNetCommonItemTemplatesPackageVersion>
@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk (to run tests) -->
-    <MicrosoftNETSdkPackageVersion>3.0.100-preview6.19303.1</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETSdkPackageVersion>3.0.100-preview7.19351.3</MicrosoftNETSdkPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicrosoftNETCoreAppPackageVersion>3.0.0-preview7-27901-06</MicrosoftNETCoreAppPackageVersion>
@@ -73,6 +73,7 @@
   <PropertyGroup>
     <RestoreSources>
       $(RestoreSources);
+      https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
       https://dotnet.myget.org/F/msbuild/api/v3/index.json;
       https://dotnet.myget.org/F/nuget-build/api/v3/index.json;
       https://dotnet.myget.org/F/templating/api/v3/index.json;
