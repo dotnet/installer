@@ -99,13 +99,13 @@ phases:
         displayName: Build
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
-        - task: NuGetCommand@2
-            displayName: 'Push Visual Studio NuPkgs'
+      - task: NuGetCommand@2
+        displayName: 'Push Visual Studio NuPkgs'
         inputs:
-            command: push
-            packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
-            nuGetFeedType: external
-            publishFeedCredentials: CrossTest
+          command: push
+          packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: CrossTest
 
     - task: PublishTestResults@1	
       displayName: Publish Test Results	
