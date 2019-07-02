@@ -98,7 +98,7 @@ phases:
                   $(_AdditionalBuildParameters)
         displayName: Build
 
-    - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
+    - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - task: NuGetCommand@2
         displayName: 'Push Visual Studio NuPkgs'
         inputs:
