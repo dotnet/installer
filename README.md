@@ -9,7 +9,7 @@ Looking for V2 of the .NET Core tooling?
 
 Download v2.0 of the .NET Core tools (CLI, MSBuild and the new csproj) at https://dot.net/core.
 
-> **Note:** The master branch of the .NET Core SDK repo is based on an forthcoming version of the SDK and is pre-release. For production-level usage, use the
+> **Note:** The master branch of the .NET Core SDK repo is based on a forthcoming version of the SDK and is pre-release. For production-level usage, use the
 > released version of the tools available at https://dot.net/core
 
 Found an issue?
