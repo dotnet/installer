@@ -136,7 +136,7 @@ phases:
             command: push
             packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
             nuGetFeedType: external
-            publishFeedCredentials: CrossTest
+            publishFeedCredentials: 'DevDiv - VS package feed'
       - task: CopyFiles@2
         displayName: Gather Asset Manifests
         inputs:
