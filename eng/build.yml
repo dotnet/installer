@@ -129,14 +129,15 @@ phases:
       condition: not(succeeded())
 
     - ${{ if and(eq(parameters.enablePublishBuildAssets, true), eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-        - task: NuGetCommand@2
-          displayName: 'Push Visual Studio NuPkgs'
-          inputs:
-            command: push
-            packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
-            nuGetFeedType: external
-            publishFeedCredentials: 'DevDiv - VS package feed'
+      - task: NuGetCommand@2
+        displayName: Push Visual Studio NuPkgs
+        inputs:
+          command: push
+          packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: 'DevDiv - VS package feed'
+        continueOnError: ${{ parameters.continueOnError }}
+        condition: and(succeeded(), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')), eq(variables['_AgentOSName'], 'Windows_NT'))
       - task: CopyFiles@2
         displayName: Gather Asset Manifests
         inputs:
