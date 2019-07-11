@@ -100,7 +100,7 @@ phases:
 
     - task: PublishTestResults@1	
       displayName: Publish Test Results	
-      inputs:	
+      inputs:
         testRunner: XUnit	
         testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'	
         testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
@@ -110,7 +110,7 @@ phases:
 
     - task: CopyFiles@2	
       displayName: Gather Logs	
-      inputs:	
+      inputs:
         SourceFolder: '$(Build.SourcesDirectory)/artifacts'	
         Contents: |	
          log/$(_BuildConfig)/**/*	
@@ -121,7 +121,7 @@ phases:
 
     - task: PublishBuildArtifacts@1	
       displayName: Publish Logs to VSTS	
-      inputs:	
+      inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'	
         ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
         publishLocation: Container	
@@ -129,6 +129,14 @@ phases:
       condition: not(succeeded())
 
     - ${{ if and(eq(parameters.enablePublishBuildAssets, true), eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
+        - task: NuGetCommand@2
+          displayName: 'Push Visual Studio NuPkgs'
+          inputs:
+            command: push
+            packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
+            nuGetFeedType: external
+            publishFeedCredentials: 'DevDiv - VS package feed'
       - task: CopyFiles@2
         displayName: Gather Asset Manifests
         inputs:
