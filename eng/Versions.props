@@ -15,14 +15,6 @@
     <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview8.19367.9</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-preview8.19359.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview8.19359.5</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
     <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview8.19367.2</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
     <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview8.19367.2</MicrosoftAspNetCoreAppRefPackageVersion>
@@ -61,7 +53,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- 3.0 Template versions -->
-    <NUnit3Templates30PackageVersion>1.6.1</NUnit3Templates30PackageVersion>
+    <!-- Dependency from https://github.com/dotnet/winforms -->
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-preview8.19359.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+    <!-- Dependency from https://github.com/dotnet/wpf -->
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview8.19359.5</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <NUnit3TemplatesVersion>1.6.1</NUnit3TemplatesVersion>
     <MicrosoftDotNetCommonItemTemplatesPackageVersion>2.0.0-preview8.19365.2</MicrosoftDotNetCommonItemTemplatesPackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19155.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
