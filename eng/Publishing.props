@@ -49,6 +49,7 @@
       <ExcludeFromManifest>true</ExcludeFromManifest>
     </SdkAssetsToPublish>
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+    <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
