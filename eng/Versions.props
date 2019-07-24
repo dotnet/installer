@@ -15,6 +15,14 @@
     <MicrosoftDotnetToolsetInternalPackageVersion>3.0.100-preview8.19371.3</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/winforms -->
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-preview8.19359.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/wpf -->
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview8.19359.5</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
     <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.0.0-preview8.19371.5</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
     <MicrosoftAspNetCoreAppRefPackageVersion>3.0.0-preview8.19371.5</MicrosoftAspNetCoreAppRefPackageVersion>
@@ -53,10 +61,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- 3.0 Template versions -->
-    <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-preview8.19359.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
-    <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-preview8.19359.5</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
+    <MicrosoftDotNetWpfProjectTemplates30PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates30PackageVersion>
     <NUnit3Templates30PackageVersion>1.6.1</NUnit3Templates30PackageVersion>
     <MicrosoftDotNetCommonItemTemplates30PackageVersion>2.0.0-preview8.19365.2</MicrosoftDotNetCommonItemTemplates30PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplates30PackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
