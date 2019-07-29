@@ -37,6 +37,7 @@ phases:
         - group: DotNet-Symbol-Server-PATs
         - group: DotNet-HelixApi-Access
         - _DotNetPublishToBlobFeed: true
+        - _PushToVSFeed: true
         - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
@@ -98,9 +99,19 @@ phases:
                   $(_AdditionalBuildParameters)
         displayName: Build
 
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT')) }}:
+      - task: NuGetCommand@2
+        displayName: Push Visual Studio NuPkgs
+        inputs:
+          command: push
+          packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: 'DevDiv - VS package feed'
+        condition: and(succeeded(), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
+
     - task: PublishTestResults@1	
       displayName: Publish Test Results	
-      inputs:	
+      inputs:
         testRunner: XUnit	
         testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'	
         testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
@@ -110,7 +121,7 @@ phases:
 
     - task: CopyFiles@2	
       displayName: Gather Logs	
-      inputs:	
+      inputs:
         SourceFolder: '$(Build.SourcesDirectory)/artifacts'	
         Contents: |	
          log/$(_BuildConfig)/**/*	
@@ -121,26 +132,9 @@ phases:
 
     - task: PublishBuildArtifacts@1	
       displayName: Publish Logs to VSTS	
-      inputs:	
+      inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'	
         ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
         publishLocation: Container	
       continueOnError: true	
       condition: not(succeeded())
-
-    - ${{ if and(eq(parameters.enablePublishBuildAssets, true), eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-      - task: CopyFiles@2
-        displayName: Gather Asset Manifests
-        inputs:
-          SourceFolder: '$(Build.SourcesDirectory)/artifacts/log/$(_BuildConfig)/AssetManifest'
-          TargetFolder: '$(Build.StagingDirectory)/AssetManifests'
-        continueOnError: ${{ parameters.continueOnError }}
-        condition: and(succeeded(), eq(variables['_DotNetPublishToBlobFeed'], 'true'), eq(variables['_PublishBuildAssetManifest'], 'true'))
-      - task: PublishBuildArtifacts@1
-        displayName: Push Asset Manifests
-        inputs:
-          PathtoPublish: '$(Build.StagingDirectory)/AssetManifests'
-          PublishLocation: Container
-          ArtifactName: AssetManifests
-        continueOnError: ${{ parameters.continueOnError }}
-        condition: and(succeeded(), eq(variables['_DotNetPublishToBlobFeed'], 'true'), eq(variables['_PublishBuildAssetManifest'], 'true'))

@@ -8,7 +8,6 @@
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
-    <PublishToBlobFeedFlatContainer>true</PublishToBlobFeedFlatContainer>
     <ChecksumsFeedUrl>$(DotnetPublishChecksumsBlobFeedUrl)</ChecksumsFeedUrl>
     <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
@@ -50,6 +49,7 @@
       <ExcludeFromManifest>true</ExcludeFromManifest>
     </SdkAssetsToPublish>
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+    <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
