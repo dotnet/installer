@@ -19,5 +19,6 @@ RUN chown root:root /usr/bin/sudo && chmod 4755 /usr/bin/sudo
 # Set user to the one we just created
 USER ${USER_ID}
 
-# Set working directory
-WORKDIR /opt/code
+# Set working directory 
+ARG WORK_DIR
+WORKDIR ${WORK_DIR}

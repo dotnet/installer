@@ -39,7 +39,7 @@ while [[ $# > 0 ]]; do
             echo "Options:"
             echo "  <Dockerfile>    The path to the Dockerfile to use to create the build container"
             echo "  <ImageName>     The name of an existing Dockerfile folder under eng/docker to use as the Dockerfile"
-            echo "  <Command>  The command to run once inside the container (/opt/code is mapped to the repo root; defaults to nothing, which runs the default shell)"
+            echo "  <Command>  The command to run once inside the container (DOCKER_HOST_SHARE_DIR is mapped to repo root; defaults to nothing, which runs the default shell)"
             exit 0
             ;;
         *)
@@ -107,7 +107,7 @@ fi
 
 # Build the docker container (will be fast if it is already built)
 echo "Building Docker Container using Dockerfile: $DOCKERFILE"
-docker build --build-arg USER_ID=$(id -u) -t $DOTNET_BUILD_CONTAINER_TAG $DOCKERFILE
+docker build --build-arg WORK_DIR=$DOCKER_HOST_SHARE_DIR --build-arg USER_ID=$(id -u) -t $DOTNET_BUILD_CONTAINER_TAG $DOCKERFILE
 
 # Run the build in the container
 echo "Launching build in Docker Container"
@@ -118,7 +118,7 @@ echo "Using code from: $DOCKER_HOST_SHARE_DIR"
 # Note: passwords/keys should not be passed in the environment
 docker run $INTERACTIVE -t --rm --sig-proxy=true \
     --name $DOTNET_BUILD_CONTAINER_NAME \
-    -v $DOCKER_HOST_SHARE_DIR:/opt/code \
+    -v $DOCKER_HOST_SHARE_DIR:$DOCKER_HOST_SHARE_DIR \
     -e CHANNEL \
     -e DOTNET_BUILD_SKIP_CROSSGEN \
     -e PUBLISH_TO_AZURE_BLOB \
