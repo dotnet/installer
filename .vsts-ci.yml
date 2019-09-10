@@ -13,7 +13,7 @@ variables:
 - name: _ArcadePublishBlobFeedUrl
   value: https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json
 - name: _DotNetArtifactsCategory
-  value: .NETCoreValidation # temporary variable name, so that we can test this change.
+  value: .NETCore
 - name: _DotNetValidationArtifactsCategory
   value: .NETCoreValidation
 - name: _PublishUsingPipelines
@@ -291,15 +291,15 @@ stages:
         pool:
           vmImage: vs2017-win2016
 
-#  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-#    - template: /eng/common/templates/job/generate-graph-files.yml
-#      parameters:
-#        continueOnError: true
-#        includeToolset: false
-#        dependsOn:
-#          - Asset_Registry_Publish
-#        pool:
-#          vmImage: vs2017-win2016
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - template: /eng/common/templates/job/generate-graph-files.yml
+      parameters:
+        continueOnError: true
+        includeToolset: false
+        dependsOn:
+          - Asset_Registry_Publish
+        pool:
+          vmImage: vs2017-win2016
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: eng\common\templates\post-build\post-build.yml
@@ -310,13 +310,12 @@ stages:
       # This repo doesn't produce any signed packages.
       enableSigningValidation: false
       publishInstallersAndChecksums: true
-      enableSourceLinkValidation: false # Disabling for testing in internal-only branc
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), not(contains(variables['Build.SourceBranch'], 'refs/heads/internal/'))) }}:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
-      # This will run only after all the publishing stages have run and have been validated.
+      # This will run only after all the publishing stages have run.
       # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
       - NetCore_Dev31_Publish
       - NetCore_Dev30_Publish
