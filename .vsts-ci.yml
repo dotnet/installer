@@ -332,8 +332,8 @@ stages:
         - group: DotNet-DotNetCli-Storage
       steps:
         - script: eng/CopyToLatest.cmd
-                  /p:DotnetPublishSdkAssetsBlobFeedUrl=https://dotnetcli.blob.core.windows.net/riarenas/index.json
+                  /p:DotnetPublishSdkAssetsBlobFeedUrl=https://dotnetcli.blob.core.windows.net/dotnet/index.json
                   /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
-                  /p:DotnetPublishChecksumsBlobFeedUrl=https://dotnetclichecksums.blob.core.windows.net/riarenas/index.json
+                  /p:DotnetPublishChecksumsBlobFeedUrl=https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
                   /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
           displayName: Copy to latest
