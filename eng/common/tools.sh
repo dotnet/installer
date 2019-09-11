@@ -135,9 +135,7 @@ function InitializeDotNetCli {
     dotnet_root="$DOTNET_INSTALL_DIR"
   else
     dotnet_root="$repo_root/.dotnet"
-    if [[ -n "${ARCADE_PARTITION:-}" ]]; then
-      dotnet_root="$repo_root/.dotnet-$ARCADE_PARTITION"
-    fi
+
     export DOTNET_INSTALL_DIR="$dotnet_root"
 
     if [[ ! -d "$DOTNET_INSTALL_DIR/sdk/$dotnet_sdk_version" ]]; then
@@ -210,12 +208,19 @@ function GetDotNetInstallScript {
 
     # Use curl if available, otherwise use wget
     if command -v curl > /dev/null; then
-      curl "$install_script_url" -sSL --retry 10 --create-dirs -o "$install_script"
-    else
-      wget -q -O "$install_script" "$install_script_url"
+      curl "$install_script_url" -sSL --retry 10 --create-dirs -o "$install_script" || {
+        local exit_code=$?
+        Write-PipelineTelemetryError -category 'InitializeToolset' "Failed to acquire dotnet install script (exit code '$exit_code')."
+        ExitWithExitCode $exit_code
+      }
+    else 
+      wget -q -O "$install_script" "$install_script_url" || {
+        local exit_code=$?
+        Write-PipelineTelemetryError -category 'InitializeToolset' "Failed to acquire dotnet install script (exit code '$exit_code')."
+        ExitWithExitCode $exit_code
+      }
     fi
   fi
-
   # return value
   _GetDotNetInstallScript="$install_script"
 }
@@ -366,11 +371,6 @@ _script_dir=`dirname "$_ResolvePath"`
 eng_root=`cd -P "$_script_dir/.." && pwd`
 repo_root=`cd -P "$_script_dir/../.." && pwd`
 artifacts_dir="$repo_root/artifacts"
-if [[ -n "${ARCADE_PARTITION:-}" ]]; then
-  artifacts_dir="$repo_root/artifacts-$ARCADE_PARTITION"
-  export ArtifactsDir="$artifacts_dir/"
-fi
-
 toolset_dir="$artifacts_dir/toolset"
 tools_dir="$repo_root/.tools"
 log_dir="$artifacts_dir/log/$configuration"

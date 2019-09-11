@@ -132,12 +132,7 @@ function InitializeDotNetCli([bool]$install) {
   if ((-not $globalJsonHasRuntimes) -and ($env:DOTNET_INSTALL_DIR -ne $null) -and (Test-Path(Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetSdkVersion"))) {
     $dotnetRoot = $env:DOTNET_INSTALL_DIR
   } else {
-    
     $dotnetRoot = Join-Path $RepoRoot ".dotnet"
-    if ($env:ARCADE_PARTITION -ne $null)
-    {
-      $dotnetRoot = Join-Path $RepoRoot ".dotnet-$env:ARCADE_PARTITION"
-    }
 
     if (-not (Test-Path(Join-Path $dotnetRoot "sdk\$dotnetSdkVersion"))) {
       if ($install) {
@@ -168,6 +163,7 @@ function GetDotNetInstallScript([string] $dotnetRoot) {
   $installScript = Join-Path $dotnetRoot "dotnet-install.ps1"
   if (!(Test-Path $installScript)) {
     Create-Directory $dotnetRoot
+    $ProgressPreference = 'SilentlyContinue' # Don't display the console progress UI - it's a huge perf hit
     Invoke-WebRequest "https://dot.net/$dotnetInstallScriptVersion/dotnet-install.ps1" -OutFile $installScript
   }
 
@@ -287,6 +283,7 @@ function InitializeXCopyMSBuild([string]$packageVersion, [bool]$install) {
 
     Create-Directory $packageDir
     Write-Host "Downloading $packageName $packageVersion"
+    $ProgressPreference = 'SilentlyContinue' # Don't display the console progress UI - it's a huge perf hit
     Invoke-WebRequest "https://dotnet.myget.org/F/roslyn-tools/api/v2/package/$packageName/$packageVersion/" -OutFile $packagePath
     Unzip $packagePath $packageDir
   }
@@ -573,10 +570,6 @@ function GetMSBuildBinaryLogCommandLineArgument($arguments) {
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $EngRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $ArtifactsDir = Join-Path $RepoRoot "artifacts"
-if ($env:ARCADE_PARTITION -ne $null)
-{
-  $ArtifactsDir = Join-Path $RepoRoot "artifacts-$env:ARCADE_PARTITION"
-}
 $ToolsetDir = Join-Path $ArtifactsDir "toolset"
 $ToolsDir = Join-Path $RepoRoot ".tools"
 $LogDir = Join-Path (Join-Path $ArtifactsDir "log") $configuration
