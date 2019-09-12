@@ -12,7 +12,7 @@
     <PropertyGroup>
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
       
-      <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</MSRCSuffix>
+      <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</InternalBuild>
       
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</CoreSetupBlobRootUrl>
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
