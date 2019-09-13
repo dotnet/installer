@@ -49,8 +49,15 @@ RUN chmod -R a+rwx /usr/local
 RUN chmod -R a+rwx /home
 RUN chmod -R 755 /usr/lib/sudo
 
+# Set working directory 
+ARG WORK_DIR
+WORKDIR ${WORK_DIR}
+
+# Set up Azure Artifacts credential provider
+RUN curl -O https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh 
+RUN chmod +x ./installcredprovider.sh
+
 # Set user to the one we just created
 USER ${USER_ID}
 
-# Set working directory
-WORKDIR /opt/code
+RUN ./installcredprovider.sh
