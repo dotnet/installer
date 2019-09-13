@@ -9,9 +9,7 @@
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
     <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
     <ChecksumsFeedUrl>$(DotnetPublishChecksumsBlobFeedUrl)</ChecksumsFeedUrl>
-    <ChecksumsAccountKey>$(DotNetPublishChecksumsBlobFeedKey)</ChecksumsAccountKey>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
-    <SdkAssetsAzureAccountKey>$(DotNetPublishSdkAssetsBlobFeedKey)</SdkAssetsAzureAccountKey>
 
     <PublishSdkAssetsAndChecksumsToBlob>false</PublishSdkAssetsAndChecksumsToBlob>
     <PublishSdkAssetsAndChecksumsToBlob Condition=" '$(ChecksumsFeedUrl)' != '' and '$(SdkAssetsFeedUrl)' != '' ">true</PublishSdkAssetsAndChecksumsToBlob>
@@ -33,6 +31,9 @@
       <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
       <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
       <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
+
+      <DotnetTempWorkingDirectory>$(ArtifactsDir)..\DotnetAssetsTmpDir\$([System.Guid]::NewGuid())</DotnetTempWorkingDirectory>
+      <ChecksumTempWorkingDirectory>$(ArtifactsDir)..\ChecksumAssetsTmpDir\$([System.Guid]::NewGuid())</ChecksumTempWorkingDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,9 +46,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.cab" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' ">
-      <ExcludeFromManifest>true</ExcludeFromManifest>
-    </SdkAssetsToPublish>
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
@@ -74,9 +73,10 @@
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
 
-    <PushToBlobFeed
-      ExpectedFeedUrl="$(SdkAssetsFeedUrl)"
-      AccountKey="$(SdkAssetsAzureAccountKey)"
+    <MakeDir Directories="$(DotnetTempWorkingDirectory)"/>
+    <MakeDir Directories="$(ChecksumTempWorkingDirectory)"/>
+
+    <PushToAzureDevOpsArtifacts
       ItemsToPush="@(SdkAssetsToPushToBlobFeed)"
       ManifestBuildData="Location=$(SdkAssetsFeedUrl)"
       ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
@@ -84,11 +84,10 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(DotNetAssetManifestFilePath)"
-      PublishFlatContainer="true" />
+      PublishFlatContainer="true"
+      AssetsTemporaryDirectory="$(DotnetTempWorkingDirectory)" />
 
-    <PushToBlobFeed
-      ExpectedFeedUrl="$(ChecksumsFeedUrl)"
-      AccountKey="$(ChecksumsAccountKey)"
+    <PushToAzureDevOpsArtifacts
       ItemsToPush="@(ChecksumsToPushToBlobFeed)"
       ManifestBuildData="Location=$(ChecksumsFeedUrl)"
       ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
@@ -96,6 +95,23 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
-      PublishFlatContainer="true"/>
+      PublishFlatContainer="true"
+      AssetsTemporaryDirectory="$(ChecksumTempWorkingDirectory)" />
+
+    <Copy
+      SourceFiles="$(DotNetAssetManifestFilePath)"
+      DestinationFolder="$(DotnetTempWorkingDirectory)\$(AssetManifestFileName)" />
+
+    <Copy
+      SourceFiles="$(ChecksumsAssetManifestFilePath)"
+      DestinationFolder="$(ChecksumTempWorkingDirectory)\$(ChecksumsAssetManifestFileName)" />
+
+    <Message
+      Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(DotnetTempWorkingDirectory)/$(AssetManifestFileName)"
+      Importance="high" />
+
+    <Message
+      Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(ChecksumTempWorkingDirectory)/$(ChecksumsAssetManifestFileName)"
+      Importance="high" />
   </Target>
 </Project>

@@ -19,7 +19,7 @@ Write-Host "Additional args: $additionalArgs"
 
 $dockerFile = Resolve-Path (Join-Path $RepoRoot "eng\docker\$dockerImageName")
 
-docker build --build-arg USER_ID=1000 -t "$dockerContainerTag" $dockerFile
+docker build --build-arg WORK_DIR=$RepoRoot --build-arg USER_ID=1000 -t "$dockerContainerTag" $dockerFile
 
 $interactiveFlag = "-i"
 if ($noninteractive)
@@ -31,7 +31,7 @@ if ($noninteractive)
 
 docker run $interactiveFlag -t --rm --sig-proxy=true `
   --name "$dockerContainerName" `
-  -v "${RepoRoot}:/opt/code" `
+  -v "${RepoRoot}:${RepoRoot}" `
   -e DOTNET_CORESDK_IGNORE_TAR_EXIT_CODE=1 `
   -e CHANNEL `
   -e DOTNET_BUILD_SKIP_CROSSGEN `
@@ -57,4 +57,4 @@ docker run $interactiveFlag -t --rm --sig-proxy=true `
   -e EXTERNALRESTORESOURCES `
   -e ARCADE_PARTITION="${dockerImageName}" `
   $dockerContainerTag `
-  /opt/code/run-build.sh @additionalArgs
+  ${RepoRoot}/run-build.sh @additionalArgs
