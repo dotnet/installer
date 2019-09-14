@@ -16,11 +16,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-rc1.19453.3</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0-rc2.19459.11</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.0.0</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
@@ -44,19 +44,22 @@
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-rc2-19460-02</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-rc2-19463-05</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreAppInternalPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreAppInternalPackageVersion>
-    <MicrosoftNETCoreDotNetAppHostPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetAppHostPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-    <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
-    <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
-    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
-    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppHostPackVersion>
-    <NETStandardLibraryRefPackageVersion>2.1.0-rc2-19460-02</NETStandardLibraryRefPackageVersion>
-    <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</WindowsDesktopTargetingPackVersion>
+    <MicrosoftNETCoreDotNetAppHostPackageVersion>3.0.0</MicrosoftNETCoreDotNetAppHostPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>3.0.0</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+    <SharedHostVersion>$(MicrosoftNETCoreDotNetHostResolverPackageVersion)</SharedHostVersion>
+    <HostFxrVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</HostFxrVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>3.0.0</MicrosoftNETCoreAppRefPackageVersion>
+    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppRefPackageVersion)</NetCoreAppTargetingPackVersion>
+    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</NetCoreAppHostPackVersion>
+    <NETStandardLibraryRefPackageVersion>2.1.0</NETStandardLibraryRefPackageVersion>
+    <WindowsDesktopTargetingPackVersion>$(MicrosoftNETCoreAppRefPackageVersion)</WindowsDesktopTargetingPackVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-rc2-19460-02</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>3.0.0</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>3.0.0-rc2-19463-05</MicrosoftWindowsDesktopAppPackageVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
