@@ -14,13 +14,19 @@ parameters:
   # Job timeout
   timeoutInMinutes: 180
 
+  # Publish using pipelines
+  enablePublishUsingPipelines: true
+
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
     name: ${{ parameters.agentOs }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
+    enablePublishBuildArtifacts: true
     enablePublishBuildAssets: true
+    enablePublishTestResults: true
+    enablePublishUsingPipelines: ${{parameters.enablePublishUsingPipelines}}
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
     pool: ${{ parameters.pool }}
@@ -43,20 +49,22 @@ phases:
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
         - group: DotNet-HelixApi-Access
+        - group: DotNet-Blob-Feed
         - _DotNetPublishToBlobFeed: true
         - _PushToVSFeed: true
         - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                  /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                  /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
-                  /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                   /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
                   /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
                   /p:PB_PublishType=blob
                   /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
-                  /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
                   /p:DotNetSignType=real
                   /p:TeamName=$(_TeamName)
+                  /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
 
     steps:
     - checkout: self
