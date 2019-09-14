@@ -13,7 +13,7 @@
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
       
       <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</InternalBuild>
-      <CoreSetupBlobAccessTokenParam>$(DOTNECLIMSRC_READ_SAS_TOKEN)</CoreSetupBlobAccessTokenParam>
+      <CoreSetupBlobAccessTokenParam Condition="'$(InternalBuild)' == 'true'">$(DOTNETCLIMSRC_READ_SAS_TOKEN)</CoreSetupBlobAccessTokenParam>
 
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</CoreSetupBlobRootUrl>
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
