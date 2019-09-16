@@ -85,6 +85,7 @@
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(DotNetAssetManifestFilePath)"
       PublishFlatContainer="true"
+      IsStableBuild="$(IsStableBuild)"
       AssetsTemporaryDirectory="$(DotnetTempWorkingDirectory)" />
 
     <PushToAzureDevOpsArtifacts
@@ -96,6 +97,7 @@
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
       PublishFlatContainer="true"
+      IsStableBuild="$(IsStableBuild)"
       AssetsTemporaryDirectory="$(ChecksumTempWorkingDirectory)" />
 
     <Copy
