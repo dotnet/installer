@@ -291,16 +291,6 @@ stages:
         pool:
           vmImage: vs2017-win2016
 
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-    - template: /eng/common/templates/job/generate-graph-files.yml
-      parameters:
-        continueOnError: true
-        includeToolset: false
-        dependsOn:
-          - Asset_Registry_Publish
-        pool:
-          vmImage: vs2017-win2016
-
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: eng\common\templates\post-build\post-build.yml
     parameters:
