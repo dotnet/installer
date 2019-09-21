@@ -80,7 +80,7 @@
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(HostOSName)' == 'win'">
+    <PropertyGroup Condition="'$(HostOSName)' == 'win' And !$(Architecture.StartsWith('arm'))">
       <AlternateAppHostRid>win-$(AlternateArchitecture)</AlternateAppHostRid>
       <ArmAppHostRid>win-arm</ArmAppHostRid>
       <Arm64AppHostRid>win-arm64</Arm64AppHostRid>
@@ -129,7 +129,7 @@
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
-      <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg_Arm" Condition="'$(ArmAppHostRid)' != ''">
+      <BundledLayoutPackage Include="MicrosoftNetCoreAppHostPackNupkg_Arm" Condition="'$(ArmAppHostRid)' != ''"
         <PackageName>Microsoft.NETCore.App.Host.$(ArmAppHostRid)</PackageName>
         <PackageVersion>$(NetCoreAppHostPackVersion)</PackageVersion>
         <TargetFramework>$(TargetFramework)</TargetFramework>
