@@ -26,6 +26,8 @@
       <SdkPlaceholderInstallerNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.NetCore.SdkPlaceholder.$(Architecture).$(FullNugetVersion).nupkg</SdkPlaceholderInstallerNupkgFile>
       <VSToolsNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Tools.Net.Core.SDK.nuspec</VSToolsNuspecFile>
       <VSToolsNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Tools.Net.Core.SDK.$(Architecture).$(FullNugetVersion).nupkg</VSToolsNupkgFile>
+      <VSTestNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Test.Net.Core.SDK.nuspec</VSTestNuspecFile>
+      <VSTestNupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Test.Net.Core.SDK.$(Architecture).$(FullNugetVersion).nupkg</VSTestNupkgFile>
 
       <SdkResolverLayoutPath>$(ArtifactsDir)bin/SdkResolver/$(Configuration)</SdkResolverLayoutPath>
       <VSToolsResolverNuspecFile>$(MSBuildThisFileDirectory)packaging/windows/clisdk/VS.Tools.Net.Core.SDK.Resolver.nuspec</VSToolsResolverNuspecFile>
@@ -353,6 +355,23 @@
                       '$(Architecture)'" />
   </Target>
 
+  <Target Name="GenerateVSTestNupkg"
+        DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs"
+        Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm')) "
+        Inputs="$(RedistLayoutPath)/**/*;
+                  $(VSTestNuspecFile);
+                  $(GenerateNupkgPowershellScript)"
+        Outputs="$(VSTestNupkgFile)">
+
+    <Exec Command="powershell -NoProfile -NoLogo $(GenerateNupkgPowershellScript) ^
+                      '$(ArtifactsDir)' ^
+                      '$(RedistLayoutPath.TrimEnd('\'))' ^
+                      '$(FullNugetVersion)' ^
+                      '$(VSTestNuspecFile)' ^
+                      '$(VSTestNupkgFile)' ^
+                      '$(Architecture)'" />
+  </Target>
+
   <Target Name="GenerateVSToolsResolverNupkg"
           DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs"
           Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86' "
@@ -405,6 +424,7 @@
                             GenerateTemplatesNupkgs;
                             GenerateSdkPlaceholderNupkg;
                             GenerateVSToolsNupkg;
+                            GenerateVSTestNupkg;
                             GenerateVSToolsResolverNupkg;
                             GenerateSdkMSBuildExtensionsNupkg"
         Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm')) " />
