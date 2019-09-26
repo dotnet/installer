@@ -21,7 +21,6 @@ def platformList = [
   'Linux:x64:Release',
   'Linux_NoSuffix:arm:Release',
   'Linux_NoSuffix:x64:Release',
-  'opensuse.42.3:x64:Debug',
   'OSX10.12:x64:Release',
   'RHEL6:x64:Debug',
   'RHEL7.2:x64:Release',
@@ -95,7 +94,7 @@ ${buildCommand}
         osUsedForMachineAffinity = 'Ubuntu16.04';
         buildCommand = "${baseShellBuildCommand} --runtime-id rhel.6-x64 --docker rhel.6"
     }
-    else if (os == 'ubuntu.18.04' || os == 'fedora.27' || os == 'opensuse.42.3') {
+    else if (os == 'ubuntu.18.04' || os == 'fedora.27') {
         osUsedForMachineAffinity = 'Ubuntu16.04'
         osVersionUsedForMachineAffinity = 'latest-docker'
         buildCommand = "${baseShellBuildCommand} --docker ${os} --linux-portable"
