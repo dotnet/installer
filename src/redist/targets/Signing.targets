@@ -283,4 +283,57 @@
 
   </Target>
 
+  <Target Name="SignNetCoreInstallerBundle"
+    Condition="'$(SignCoreSdk)' == 'true'"
+    DependsOnTargets="SetSignProps">
+
+    <!-- Extract engine from bundle -->
+    <Exec Command="$(WixRoot)/insignia.exe -ib $(NetCoreInstallerBundleFile) -o $(NetCoreInstallerBundleEngineName)" />
+
+    <!-- Sign engine-->
+    <ItemGroup>
+      <EngineFileToSign Include="$(NetCoreInstallerBundleEngineName)" />
+      <EngineFileSignInfo Include="$([System.IO.Path]::GetFileName('$(NetCoreInstallerBundleEngineName)'))"
+                          CertificateName="$(InternalCertificateId)"/>
+    </ItemGroup>
+    <Microsoft.DotNet.SignTool.SignToolTask
+        DryRun="$(_DryRun)"
+        TestSign="$(_TestSign)"
+        CertificatesSignInfo="$(CertificatesSignInfo)"
+        ItemsToSign="@(EngineFileToSign)"
+        StrongNameSignInfo="@(StrongNameSignInfo)"
+        FileSignInfo="@(EngineFileSignInfo)"
+        FileExtensionSignInfo="@(FileExtensionSignInfo)"
+        TempDir="$(ArtifactsTmpDir)"
+        LogDir="$(ArtifactsLogDir)"
+        MSBuildPath="$(_DesktopMSBuildPath)"
+        SNBinaryPath="$(NuGetPackageRoot)sn\$(SNVersion)\sn.exe"
+        MicroBuildCorePath="$(NuGetPackageRoot)microbuild.core\$(MicroBuildCoreVersion)"/>
+
+    <!-- Reattach engine to bundle -->
+    <Exec Command="$(WixRoot)/insignia.exe -ab $(NetCoreInstallerBundleEngineName) $(NetCoreInstallerBundleFile) -o $(NetCoreInstallerBundleFile)" />
+
+    <!-- Sign bundle -->
+    <ItemGroup>
+      <BundleFileToSign Include="$(NetCoreInstallerBundleFile)" />
+      <BundleFileSignInfo Include="$([System.IO.Path]::GetFileName('$(NetCoreInstallerBundleFile)'))"
+                          CertificateName="$(InternalCertificateId)"/>
+    </ItemGroup>
+
+    <Microsoft.DotNet.SignTool.SignToolTask
+        DryRun="$(_DryRun)"
+        TestSign="$(_TestSign)"
+        CertificatesSignInfo="$(CertificatesSignInfo)"
+        ItemsToSign="@(BundleFileToSign)"
+        StrongNameSignInfo="@(StrongNameSignInfo)"
+        FileSignInfo="@(BundleFileSignInfo)"
+        FileExtensionSignInfo="@(FileExtensionSignInfo)"
+        TempDir="$(ArtifactsTmpDir)"
+        LogDir="$(ArtifactsLogDir)"
+        MSBuildPath="$(_DesktopMSBuildPath)"
+        SNBinaryPath="$(NuGetPackageRoot)sn\$(SNVersion)\sn.exe"
+        MicroBuildCorePath="$(NuGetPackageRoot)microbuild.core\$(MicroBuildCoreVersion)"/>
+
+  </Target>
+  
 </Project>

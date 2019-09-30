@@ -5,7 +5,7 @@
       <Output TaskParameter="OSName" PropertyName="HostOSName" />
       <Output TaskParameter="OSPlatform" PropertyName="HostOSPlatform" />
     </GetCurrentRuntimeInformation>
-  
+
     <PropertyGroup>
       <IsLinux Condition = " '$(HostOSName)' != 'win' AND '$(HostOSName)' != 'osx' AND '$(HostOSName)' != 'freebsd' ">True</IsLinux>
       <OSName Condition=" '$(OSName)' == '' AND '$(IsLinux)' != 'True' ">$(HostOSName)</OSName>
@@ -16,7 +16,7 @@
       <Architecture Condition=" '$(Architecture)' == '' ">x64</Architecture>
       <Rid Condition=" '$(Rid)' == '' ">$(OSName)-$(Architecture)</Rid>
     </PropertyGroup>
-    
+
     <PropertyGroup>
       <IsDebianBaseDistro Condition=" '$(HostOSName)' == 'ubuntu' OR '$(HostOSName)' == 'debian' ">true</IsDebianBaseDistro>
       <IsRPMBasedDistro Condition=" $(HostRid.StartsWith('rhel')) AND '$(HostRid)' != 'rhel.6-x64' ">true</IsRPMBasedDistro>
@@ -47,9 +47,10 @@
       <ArtifactNameWithVersionSdk>$(ArtifactNameSdk)-$(SdkVersion)-$(ProductMonikerRid)</ArtifactNameWithVersionSdk>
       <ArtifactNameWithVersionMSBuildExtensions>dotnet-standard-support-vs2015-$(SdkVersion)-$(ProductMonikerRid)</ArtifactNameWithVersionMSBuildExtensions>
       <ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(SdkVersion)-$(ProductMonikerRid)</ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>
-      <!-- Warning: changing the value "ProductBandCombinedHostHostFxrFrameworkSdkName" can only occur on a product-band boundary [CliProductBandVersion], 
+      <!-- Warning: changing the value "ProductBandCombinedHostHostFxrFrameworkSdkName" and "ProductBandDotnetCoreInstallerName" can only occur on a product-band boundary [CliProductBandVersion], 
                Changing "ProductBandCombinedHostHostFxrFrameworkSdkName" mid-product-band will break the upgradablilty of the SDK bundle installer. -->
       <ProductBandCombinedHostHostFxrFrameworkSdkName>Dotnet SDK Bundle Installer $(CliProductBandVersion) $(ProductMonikerRid)</ProductBandCombinedHostHostFxrFrameworkSdkName>
+      <ProductBandNetCoreInstallerName>Dotnet Core Installer $(CliProductBandVersion) $(OSName)</ProductBandNetCoreInstallerName>
       <DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdkWithoutHostMonikerRid>$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(SdkVersion)-</DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdkWithoutHostMonikerRid>
       <DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>$(DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdkWithoutHostMonikerRid)$(HostMonikerRidForFileName)</DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>
     </PropertyGroup>

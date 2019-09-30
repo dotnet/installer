@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="SetupWixProperties" DependsOnTargets="GetCurrentRuntimeInformation">
+    <!-- AcquireWix Properties -->
+    <PropertyGroup>
+      <WixVersion>3.10.4</WixVersion>
+      <WixDownloadUrl>https://dotnetcli.azureedge.net/build/wix/wix.$(WixVersion).zip</WixDownloadUrl>
+      <WixRoot>$(ArtifactsDir)Tools/WixTools/$(WixVersion)</WixRoot>
+      <WixDestinationPath>$(WixRoot)/WixTools.$(WixVersion).zip</WixDestinationPath>
+      <WixDownloadSentinel>$(WixRoot)/WixDownload.$(WixVersion).sentinel</WixDownloadSentinel>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="AcquireWix"
+          DependsOnTargets="SetupWixProperties;GetCoreSdkGitCommitInfo"
+          Inputs="$(WixDownloadSentinel)"
+          Outputs="$(WixDestinationPath)">
+
+    <!-- Setup sentinel to take advantage of incrementality -->
+    <MakeDir Directories="$(WixRoot)" />
+    <WriteLinesToFile
+        File="$(WixDownloadSentinel)"
+        Lines="$(WixVersion)"
+        Overwrite="true"
+        Encoding="Unicode"/>
+
+    <DownloadFile
+        Uri="$(WixDownloadUrl)"
+        DestinationPath="$(WixDestinationPath)"
+        Overwrite="false" />
+
+    <ExtractArchiveToDirectory
+        SourceArchive="$(WixDestinationPath)"
+        DestinationDirectory="$(WixRoot)" />
+  </Target>
+
+  <Target Name="DownloadWixDotNetCoreBootstrapperExtension" DependsOnTargets="AcquireWix">
+    <PropertyGroup>
+      <WixDotNetCoreBootstrapperExtensionPackageName>WixDotNetCoreBootstrapperExtension</WixDotNetCoreBootstrapperExtensionPackageName>
+      <WixDotNetCoreBootstrapperExtensionPackageVersion>1.0.0-preview1-29</WixDotNetCoreBootstrapperExtensionPackageVersion>
+      <WixDotNetCoreBootstrapperExtensionRestorePath>$(IntermediateOutputPath)WixDotNetCoreBootstrapperExtension\</WixDotNetCoreBootstrapperExtensionRestorePath>
+      <WixDotNetCoreBootstrapperExtensionPath>$(WixRoot)\WixDotNetCoreBootstrapperExtension\</WixDotNetCoreBootstrapperExtensionPath>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(WixDotNetCoreBootstrapperExtensionRestorePath)" />
+    <MakeDir Directories="$(WixDotNetCoreBootstrapperExtensionPath)" />
+
+    <ItemGroup>
+      <WixDotNetCoreBootstrapperExtensionPackageDownloadProject Include="$(MSBuildThisFileDirectory)DownloadPackage.csproj">
+        <Properties>
+          PackageToRestore=$(WixDotNetCoreBootstrapperExtensionPackageName);
+          PackageVersionToRestore=$(WixDotNetCoreBootstrapperExtensionPackageVersion);
+          TargetFramework=$(TargetFramework);
+          RestorePackagesPath=$(WixDotNetCoreBootstrapperExtensionRestorePath);
+        </Properties>
+      </WixDotNetCoreBootstrapperExtensionPackageDownloadProject>
+    </ItemGroup>
+
+    <MSBuild
+      BuildInParallel="False"
+      Projects="@(WixDotNetCoreBootstrapperExtensionPackageDownloadProject)">
+    </MSBuild>
+
+    <PropertyGroup>
+      <ExecutableName>WixDotNetCoreBootstrapperExtension.dll</ExecutableName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <AllFilesOfRestoredPackage Include="$(WixDotNetCoreBootstrapperExtensionRestorePath)\**\*.*" />
+      <RestoredPackage
+          Include="@(AllFilesOfRestoredPackage)"
+          Condition="'%(FileName)%(Extension)' == '$(ExecutableName)'"/>
+    </ItemGroup>
+
+    <Error Condition="@(RestoredPackage->Distinct()->Count()) != 1"
+           Text="Failed to determine the $(WixDotNetCoreBootstrapperExtensionPackageName) executable in @(AllFilesOfRestoredPackage)" />
+
+    <Copy
+        SourceFiles="@(RestoredPackage)"
+        DestinationFolder="$(WixDotNetCoreBootstrapperExtensionPath)" />
+
+    <Message Text="Copy from @(RestoredPackage) to $(WixDotNetCoreBootstrapperExtensionPath)."
+             Importance="High" />
+  </Target>
+
+</Project>

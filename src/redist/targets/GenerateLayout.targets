@@ -6,15 +6,11 @@
     <Templates30LayoutPath>$(BaseOutputPath)$(Configuration)\templates-3.0\</Templates30LayoutPath>
     <Templates22LayoutPath>$(BaseOutputPath)$(Configuration)\templates-2.2\</Templates22LayoutPath>
     <Templates21LayoutPath>$(BaseOutputPath)$(Configuration)\templates-2.1\</Templates21LayoutPath>
-    <DownloadsFolder>$(IntermediateOutputPath)downloads\</DownloadsFolder>
   </PropertyGroup>
 
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
     <PropertyGroup>
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
-      <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
-      <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
-      <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
 
       <CoreSetupRid Condition="'$(CoreSetupRid)' == ''">$(HostRid)</CoreSetupRid>
       <CoreSetupRid Condition=" ('$(HostOSName)' == 'win' or '$(HostOSName)' == 'osx' or '$(HostOSName)' == 'freebsd') and '$(DotNetBuildFromSource)' != 'true' ">$(HostMonikerRid)</CoreSetupRid>
@@ -61,8 +57,6 @@
       <AspNetCoreSharedFxInstallerRid Condition="'$(InstallerExtension)' == '.deb' OR '$(InstallerExtension)' == '.rpm'">x64</AspNetCoreSharedFxInstallerRid>
 
       <DownloadedAspNetCoreSharedFxInstallerFileName Condition=" '$(InstallerExtension)' != '' AND '$(HostOSName)' != 'osx' ">aspnetcore-runtime-$(AspNetCoreVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetCoreSharedFxInstallerFileName>
-      <!-- Note: we use the "-internal" archives and installers that contain only the aspnetcore shared framework, and shouldn't overlap with Microsoft.NETCore.App. -->
-      <DownloadedAspNetCoreSharedFxWixLibFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-runtime-internal-$(AspNetCoreVersion)-$(AspNetCoreSharedFxInstallerRid).wixlib</DownloadedAspNetCoreSharedFxWixLibFileName>
       <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">aspnetcore-targeting-pack-$(AspNetTargetingPackVersion)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
       <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-targeting-pack-$(AspNetTargetingPackVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
       <DownloadedAspNetCoreV2ModuleInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcoremodule_$(Architecture)_en_v2_$(AspNetCoreVersion)$(InstallerExtension)</DownloadedAspNetCoreV2ModuleInstallerFileName>
@@ -71,12 +65,7 @@
 
       <!-- Used to detect if ASP.NET Core is built against the same version of Microsoft.NETCore.App. -->
       <AspNetCoreSharedFxBaseRuntimeVersionFileName>aspnetcore_base_runtime.version</AspNetCoreSharedFxBaseRuntimeVersionFileName>
-    </PropertyGroup>
 
-    <PropertyGroup>
-      <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
-      <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
-      <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupRootUrl)</WinFormsAndWpfSharedFxRootUrl>
       <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppPackageVersion)</CoreSetupDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
     </PropertyGroup>
@@ -261,13 +250,6 @@
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
-      <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxWixLibFile"
-                                 Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
-        <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
-        <DownloadFileName>$(DownloadedAspNetCoreSharedFxWixLibFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
-      </BundledInstallerComponent>
-
       <BundledInstallerComponent Include="DownloadedAspNetCoreV2ModuleInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</BaseUrl>
@@ -351,7 +333,7 @@
       <BundledLayoutPackage>
         <LoweredPackageName>$([MSBuild]::ValueOrDefault('%(BundledLayoutPackage.PackageName)', '').ToLower())</LoweredPackageName>
       </BundledLayoutPackage>
-      
+
       <BundledLayoutPackageDownloadFiles Include="$(NuGetPackageRoot)\%(BundledLayoutPackage.LoweredPackageName)\%(BundledLayoutPackage.PackageVersion)\**\*.*">
         <RelativeLayoutPath>%(BundledLayoutPackage.RelativeLayoutPath)</RelativeLayoutPath>
         <LayoutPackageDescription>%(BundledLayoutPackage.Identity)</LayoutPackageDescription>
@@ -416,7 +398,7 @@
   </Target>
 
   <Target Name="LayoutAppHostTemplate" DependsOnTargets="RunResolvePackageDependencies">
-    
+
     <PropertyGroup>
       <NETCoreDotNetAppHostPackageName>Microsoft.NETCore.App.Host.$(SharedFrameworkRid)</NETCoreDotNetAppHostPackageName>
       <AppHostRestorePath>$(IntermediateOutputPath)AppHostRestore\</AppHostRestorePath>
@@ -442,7 +424,7 @@
       BuildInParallel="False"
       Projects="@(AppHostTemplateDownloadPackageProject)">
     </MSBuild>
-    
+
     <PropertyGroup>
       <AppHostExecutableName>AppHost$(ExeExtension)</AppHostExecutableName>
     </PropertyGroup>
@@ -489,7 +471,7 @@
 
     <RemoveDir Directories="$(SdkInternalLayoutPath)" />
     <MakeDir Directories="$(SdkInternalLayoutPath)" />
-    
+
     <!-- Create "SDK Internal" layout to create the MSI to bundle -->
     <ItemGroup>
       <SdkInternalFiles Include="$(RedistLayoutPath)sdk/$(SdkVersion)/**/*.*"/>

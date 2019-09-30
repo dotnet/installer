@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" Language="1033" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+
+    <String Id="OptionsPageInstallX86CheckBoxText">Install 32-bit Runtimes</String>
+
+    <!-- Start page -->
+    <String Id="WelcomePageHeader">Welcome to [WixBundleName] setup</String>
+    <String Id="WelcomePageLicenseAcceptCheckBoxText">I agree to the &lt;a href="https://go.microsoft.com/fwlink/?LinkId=329770"&gt;license terms&lt;/a&gt; and &lt;a href="https://go.microsoft.com/fwlink/?LinkId=786378"&gt;privacy statement&lt;/a&gt;.</String>
+    <String Id="SendTelemetryCheckBoxText">Send telemetry to [WixBundleManufacturer] to help improve setup. &lt;a href="https://review.docs.microsoft.com/en-us/dotnet-internal/core/tools/telemetry"&gt;Learn more&lt;/a&gt; about how we use the data.</String>
+    <String Id="WelcomePageText">Welcome to the [WixBundleName] setup wizard. The wizard will allow you to customize your install to develop, run or host .NET Core applications, services and websites.
+
+.NET Core is a development platform that you can use to build command-line applications, microservices and modern websites. It is open source, cross-platform, and supported by Microsoft. We hope you enjoy it!</String>
+
+    <String Id="FailureNotSupportedCurrentOperatingSystem">This version is not supported on the current operating system.</String>
+    <String Id="WarningNotSupportedVisualStudio">If you plan to use [WixBundleName] with Visual Studio, Visual Studio 2019 16.4 or newer is required. &lt;a href="https://go.microsoft.com/fwlink/?linkid=866799"&gt;Learn More&lt;/a&gt;.</String>
+    <String Id="WarningCoreHostMessage">.NET Core Host process is currently running; you should not continue with the installation as you could experience inconsistence installation results.</String>
+
+    <!-- Ending page -->
+    <String Id="SetupCompletedAdditionalText">Ready to get started? Our step-by-step &lt;a href="https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial/intro"&gt;tutorial&lt;/a&gt; will help you get .NET running on your computer.
+This product collects usage data
+        • &lt;a href="https://aka.ms/dotnet-cli-telemetry"&gt;More information and opt-out&lt;/a&gt;
+Resources
+        • &lt;a href="https://aka.ms/dotnet-docs"&gt;.NET Core Documentation&lt;/a&gt;
+        • &lt;a href="https://aka.ms/dotnet-sdk-docs"&gt;SDK Documentation&lt;/a&gt;
+        • &lt;a href="https://aka.ms/netcore3releasenotes"&gt;Release Notes&lt;/a&gt;
+        • &lt;a href="https://aka.ms/dotnet-tutorials"&gt;More Tutorials&lt;/a&gt;
+        • &lt;a href="https://aka.ms/gettingstarteddotnet"&gt;Getting Started&lt;/a&gt;
+See the &lt;a href="[WixBundleLog]"&gt;log&lt;/a&gt; file for additional information.</String>
+
+    <!-- Runtimes -->
+    <String Id="NetCoreSharedFramework31DisplayName">.NET Core Runtime</String>
+    <String Id="NetCoreSharedFramework31Description">The .NET Core Runtime includes support for running .NET Core console applications.</String>
+    <String Id="AspNetCoreSharedFramework31DisplayName">ASP.NET Core Runtime</String>
+    <String Id="AspNetCoreSharedFramework31Description">The ASP.NET Core Runtime includes support for running ASP.NET web applications.</String>
+    <String Id="WindowsDesktopSharedFramework31DisplayName">Windows Desktop Runtime</String>
+    <String Id="WindowsDesktopSharedFramework31Description">The Windows Desktop Runtime includes support for running Windows Forms and WPF desktop applications.</String>
+
+    <!-- SDK -->
+    <String Id="NetCoreSdkDisplayName">.NET Core SDK</String>
+    <String Id="NetCoreSdkDescription">The software development kit (SDK) includes everything you need to build and run .NET Core applications, using command line tools and any editor, including Visual Studio.</String>
+
+    <!-- IIS -->
+    <String Id="ANCM_V2_DisplayName">ASP.NET Core Module v2</String>
+    <String Id="ANCM_V2_Description">A native IIS module to host ASP.NET Core applications inside the IIS worker process or forward web requests to a backend application running Kestrel.</String>
+    <String Id="ANCM_V2_DisabledDescription">This component requires IIS, including the following features:
+&#8226; IIS-ASPNET45,
+&#8226; IIS-WebServerRole,
+&#8226; IIS-WebServer,
+&#8226; IIS-WebSockets,
+&#8226; IIS-WindowsAuthentication</String>
+
+</WixLocalization>

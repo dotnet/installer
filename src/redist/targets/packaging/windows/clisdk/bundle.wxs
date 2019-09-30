@@ -145,6 +145,9 @@
       <MsiPackage SourceFile="$(var.NetStandardTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
+      <MsiPackage SourceFile="$(var.AspNetSharedFXMsiSourcePath)">
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
+      </MsiPackage>
       <MsiPackage SourceFile="$(var.AspNetTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
@@ -162,11 +165,6 @@
         <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
         <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
       </MsiPackage>
-      <?if $(var.Platform)=x86?>
-        <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x86"/>
-      <?elseif $(var.Platform)=x64?>
-        <PackageGroupRef Id="PG_AspNetCoreSharedFramework_x64"/>
-      <?endif?>
     </Chain>
   </Bundle>
 

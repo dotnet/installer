@@ -3,7 +3,7 @@
 
 param(
     [Parameter(Mandatory=$true)][string]$CLISDKMSIFile,
-    [Parameter(Mandatory=$true)][string]$ASPNETRuntimeWixLibFile,
+    [Parameter(Mandatory=$true)][string]$AspNetCoreSharedFxMSIFile,
     [Parameter(Mandatory=$true)][string]$SharedFxMSIFile,
     [Parameter(Mandatory=$true)][string]$HostFxrMSIFile,
     [Parameter(Mandatory=$true)][string]$SharedHostMSIFile,
@@ -60,6 +60,7 @@ function RunCandleForBundle
         -dArmNetCoreAppHostPackMsiSourcePath="$ArmNetCoreAppHostPackMSIFile" `
         -dArm64NetCoreAppHostPackMsiSourcePath="$Arm64NetCoreAppHostPackMSIFile" `
         -dNetStandardTargetingPackMsiSourcePath="$NetStandardTargetingPackMSIFile" `
+        -dAspNetSharedFXMsiSourcePath="$AspNetCoreSharedFxMSIFile" `
         -dAspNetTargetingPackMsiSourcePath="$AspNetTargetingPackMSIFile" `
         -dWindowsDesktopTargetingPackMsiSourcePath="$WindowsDesktopTargetingPackMSIFile" `
         -dTemplatesMsiSourcePath="$TemplatesMSIFile" `
@@ -98,7 +99,6 @@ function RunLightForBundle
     $lightOutput = .\light.exe -nologo `
         -cultures:en-us `
         bundle.wixobj `
-        $ASPNETRuntimeWixlibFile `
         -ext WixBalExtension.dll `
         -ext WixUtilExtension.dll `
         -ext WixTagExtension.dll `
@@ -121,11 +121,6 @@ function RunLightForBundle
 if(!(Test-Path $CLISDKMSIFile))
 {
     throw "$CLISDKMSIFile not found"
-}
-
-if(!(Test-Path $ASPNETRuntimeWixLibFile))
-{
-    throw "$ASPNETRuntimeWixLibFile not found"
 }
 
 if([string]::IsNullOrEmpty($WixRoot))

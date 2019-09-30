@@ -21,4 +21,12 @@
       </ArtifactsForGeneratingChecksums>
     </ItemGroup>
   </Target>
+
+  <Target Name="GenerateNetCoreInstallerChecksums"
+        DependsOnTargets="InitializeChecksumItemGroup;"
+        Inputs="@(ArtifactsForGeneratingChecksums)"
+        Outputs="%(ArtifactsForGeneratingChecksums.DestinationPath)">
+    <GenerateChecksums Items="@(ArtifactsForGeneratingChecksums)" />
+  </Target>
+
 </Project>

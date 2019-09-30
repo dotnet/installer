@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+   <PropertyGroup>
+    <TargetFramework>$(CoreSdkTargetFramework)</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
+    <GenerateNetCoreInstallerBadge>true</GenerateNetCoreInstallerBadge>
+  </PropertyGroup>
+
+  <Import Project="targets\GenerateNetCoreInstaller.targets" />
+  <Import Project="..\redist\targets\BuildCoreSdkTasks.targets" />
+  <Import Project="..\redist\targets\Badge.targets" />
+  <Import Project="..\redist\targets\Branding.targets" />
+  <Import Project="..\redist\targets\CheckSum.targets" />
+  <Import Project="..\redist\targets\FileExtensions.targets" />
+  <Import Project="..\redist\targets\GetRuntimeInformation.targets" />
+  <Import Project="..\redist\targets\SetBuildDefaults.targets" />
+  <Import Project="..\redist\targets\Versions.targets" />
+  <Import Project="..\redist\targets\WiX.targets" />
+  <Import Project="..\redist\targets\Signing.targets" />
+
+</Project>

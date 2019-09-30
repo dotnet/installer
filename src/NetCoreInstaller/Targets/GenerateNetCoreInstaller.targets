@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="SetupNetCoreInstallerProperties" 
+          DependsOnTargets="GetCurrentRuntimeInformation">
+    <!-- Generate MSI/Bundle Properties -->
+    <PropertyGroup>
+      <NetCoreInstallerIntermediateFolder>$(IntermediateOutputPath)NetCoreInstaller\</NetCoreInstallerIntermediateFolder>
+      <NetCoreInstallerFileNamePrefix>dotnet-netcore-$(SdkVersion)-win</NetCoreInstallerFileNamePrefix>
+      <NetCoreInstallerBundleFile>$(NetCoreInstallerIntermediateFolder)$(NetCoreInstallerFileNamePrefix)$(BundleExtension)</NetCoreInstallerBundleFile>
+      <NetCoreInstallerArchiveFile>$(ArtifactsShippingPackagesDir)$(NetCoreInstallerFileNamePrefix)$(ArchiveExtension)</NetCoreInstallerArchiveFile>
+      <NetCoreInstallerWixPdbFileName>$(NetCoreInstallerFileNamePrefix).wixpdb</NetCoreInstallerWixPdbFileName>
+      <NetCoreInstallerBundleEngineName>$(ArtifactsTmpDir)$(NetCoreInstallerFileNamePrefix)-engine.exe</NetCoreInstallerBundleEngineName>
+      <LocalDownloadedMSIsPath>$(ArtifactsObjDir)redist\$(Configuration)\$(CoreSdkTargetFramework)\downloads\</LocalDownloadedMSIsPath>
+      <GenerateNetCoreInstallerPowershellScript>$(MSBuildThisFileDirectory)packaging/windows/NetCoreInstaller/generatenetcoreinstaller.ps1</GenerateNetCoreInstallerPowershellScript>
+      <NetCoreInstallerArchitecture>x86</NetCoreInstallerArchitecture>
+      <PermanentNetCoreBaseURL>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</PermanentNetCoreBaseURL>
+      <PermanentAspNetCoreBaseURL>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</PermanentAspNetCoreBaseURL>
+      <PermanentWindowsDesktopBaseURL>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)</PermanentWindowsDesktopBaseURL>
+      <PermanentToolsetBaseURL>$(SdkToolsetRootUrl)$(SdkVersion)</PermanentToolsetBaseURL>
+    </PropertyGroup>
+
+    <GenerateGuidFromName Name="$(ProductBandNetCoreInstallerName)">
+      <Output TaskParameter="OutputGuid"
+              PropertyName="NetCoreInstallerUpgradeCode" />
+    </GenerateGuidFromName>
+  </Target>
+
+  <Target Name="CopyNetCoreInstallerBundleToShipping"
+          DependsOnTargets="SetupNetCoreInstallerProperties">
+
+    <Copy SourceFiles="$(NetCoreInstallerBundleFile)" 
+          DestinationFolder="$(ArtifactsShippingPackagesDir)" />
+  </Target>
+
+  <Target Name="GenerateNetCoreInstallerArchive"
+          DependsOnTargets="SetupNetCoreInstallerProperties;
+                            GenerateNetCoreInstallerBundle;
+                            SignNetCoreInstallerBundle;
+                            SetSdkBrandingInfo;
+                            GetCurrentRuntimeInformation;
+                            SetupFileExtensions;
+                            SetSdkVersionInfo;
+                            SetBuildDefaults"
+          Inputs="$(NetCoreInstallerArchiveFile);
+                    $(NetCoreInstallerIntermediateFolder)**/*"
+          Outputs="$(NetCoreInstallerArchiveFile)">
+
+    <ZipFileCreateFromDirectory SourceDirectory="$(NetCoreInstallerIntermediateFolder)"
+                                DestinationArchive="$(NetCoreInstallerArchiveFile)"
+                                ExcludePatterns="$(NetCoreInstallerWixPdbFileName)"
+                                OverwriteDestination="true" />
+  </Target>
+
+  <Target Name="GenerateNetCoreInstallerBundle"
+          DependsOnTargets="SetupNetCoreInstallerProperties;
+                            SetupNetCoreInstallerBundledComponents;
+                            DownloadNetCoreInstallerBundledComponents;
+                            SetSdkBrandingInfo;
+                            SetupWixProperties;
+                            GetCurrentRuntimeInformation;
+                            SetupFileExtensions;
+                            SetSdkVersionInfo;
+                            SetBuildDefaults"
+          Inputs="$(NetCoreInstallerBundleFile);
+                    $(GenerateNetCoreInstallerPowershellScript);
+                    $(NetCoreInstallerIntermediateFolder)**/*"
+          Outputs="$(NetCoreInstallerBundleFile)">
+
+    <Exec Command="powershell -NoProfile -NoLogo $(GenerateNetCoreInstallerPowershellScript) ^
+                      '$(NetCoreInstallerBundleFile)' ^
+                      '$(AspNetCoreSharedFrameworkX64InstallerFileName)' ^
+                      '$(AspNetCoreSharedFrameworkX86InstallerFileName)' ^
+                      '$(AspNetCoreV2ModuleX64InstallerFileName)' ^
+                      '$(AspNetCoreV2ModuleX86InstallerFileName)' ^
+                      '$(AspNetTargetingPackX64InstallerFileName)' ^
+                      '$(AspNetTargetingPackX86InstallerFileName)' ^
+                      '$(HostFxrX64InstallerFileName)' ^
+                      '$(HostFxrX86InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX64InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX64_ArmInstallerFileName)' ^
+                      '$(NetCoreAppHostPackX64_Arm64InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX64_X86InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX86InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX86_ArmInstallerFileName)' ^
+                      '$(NetCoreAppHostPackX86_Arm64InstallerFileName)' ^
+                      '$(NetCoreAppHostPackX86_X64InstallerFileName)' ^
+                      '$(NetCoreAppTargetingPackX64InstallerFileName)' ^
+                      '$(NetCoreAppTargetingPackX86InstallerFileName)' ^
+                      '$(NetCoreTemplatesX64InstallerFileName)' ^
+                      '$(NetCoreTemplatesX86InstallerFileName)' ^
+                      '$(NetStandardTargetingPackX64InstallerFileName)' ^
+                      '$(NetStandardTargetingPackX86InstallerFileName)' ^
+                      '$(SdkToolsetX64InstallerFileName)' ^
+                      '$(SdkToolsetX86InstallerFileName)' ^
+                      '$(SharedFrameworkX64InstallerFileName)' ^
+                      '$(SharedFrameworkX86InstallerFileName)' ^
+                      '$(SharedHostX64InstallerFileName)' ^
+                      '$(SharedHostX86InstallerFileName)' ^
+                      '$(WindowsDesktopTargetingPackX64InstallerFileName)' ^
+                      '$(WindowsDesktopTargetingPackX86InstallerFileName)' ^
+                      '$(WinFormsAndWpfSharedFrameworkX64InstallerFileName)' ^
+                      '$(WinFormsAndWpfSharedFrameworkX86InstallerFileName)' ^
+                      '$(MicrosoftNETCoreAppPackageVersion)' ^
+                      '$(AspNetCoreVersion)' ^
+                      '$(MicrosoftWindowsDesktopPackageVersion)' ^
+                      '$(PermanentToolsetBaseURL)' ^
+                      '$(PermanentNetCoreBaseURL)' ^
+                      '$(PermanentAspNetCoreBaseURL)' ^
+                      '$(PermanentWindowsDesktopBaseURL)' ^
+                      '$(WixRoot)' ^
+                      '$(NetCoreBrandName)' ^
+                      '$(SDKBundleVersion)' ^
+                      '$(NetCoreInstallerUpgradeCode)' ^
+                      '$(DownloadsFolder)' ^
+                      '$(NetCoreInstallerArchitecture)' ^
+                      -InformationAction Continue " />
+  </Target>
+
+  <Target Name="CopyNetCoreInstallerBundledComponents"
+          DependsOnTargets="SetupNetCoreInstallerBundledComponents;
+                            SetupNetCoreInstallerProperties"
+          Condition=" '$(UseLocalNetCoreInstallerMSIs)' == 'true' ">
+
+    <Copy SourceFiles="@(BundledNetCoreInstallerComponent->'%(LocalPath)%(DownloadFileName)')"
+          DestinationFolder="$(DownloadsFolder)" />
+  </Target>
+
+  <Target Name="DownloadNetCoreInstallerBundledComponents"
+          DependsOnTargets="SetupNetCoreInstallerBundledComponents"
+          Condition=" '$(UseLocalNetCoreInstallerMSIs)' != 'true' ">
+    <ItemGroup>
+      <NetCoreComponentToDownload Include="@(BundledNetCoreInstallerComponent)">
+        <ShouldDownload Condition="!Exists('$(DownloadsFolder)%(BundledNetCoreInstallerComponent.DownloadFileName)')">true</ShouldDownload>
+      </NetCoreComponentToDownload>
+    </ItemGroup>
+
+    <DownloadFile Condition=" '@(NetCoreComponentToDownload)' != '' And '%(NetCoreComponentToDownload.ShouldDownload)' == 'true'"
+                  Uri="%(NetCoreComponentToDownload.DownloadMSIBaseUrl)/%(NetCoreComponentToDownload.DownloadFileName)"
+                  DestinationPath="$(DownloadsFolder)%(NetCoreComponentToDownload.DownloadFileName)" />
+  </Target>
+
+  <Target Name="SetupNetCoreInstallerBundledComponents" 
+          DependsOnTargets="GetCurrentRuntimeInformation;
+                            SetupFileExtensions;
+                            SetSdkVersionInfo;
+                            SetBuildDefaults;
+                            SetupNetCoreInstallerProperties">
+    <PropertyGroup>
+      <!-- From dotnet/core-setup -->
+      <SharedHostX64InstallerFileName>dotnet-host-$(SharedHostVersion)-win-x64$(InstallerExtension)</SharedHostX64InstallerFileName>
+      <SharedHostX86InstallerFileName>dotnet-host-$(SharedHostVersion)-win-x86$(InstallerExtension)</SharedHostX86InstallerFileName>
+      <HostFxrX64InstallerFileName>dotnet-hostfxr-$(HostFxrVersion)-win-x64$(InstallerExtension)</HostFxrX64InstallerFileName>
+      <HostFxrX86InstallerFileName>dotnet-hostfxr-$(HostFxrVersion)-win-x86$(InstallerExtension)</HostFxrX86InstallerFileName>
+      <SharedFrameworkX64InstallerFileName>dotnet-runtime-$(MicrosoftNETCoreAppPackageVersion)-win-x64$(InstallerExtension)</SharedFrameworkX64InstallerFileName>
+      <SharedFrameworkX86InstallerFileName>dotnet-runtime-$(MicrosoftNETCoreAppPackageVersion)-win-x86$(InstallerExtension)</SharedFrameworkX86InstallerFileName>
+      <NetCoreAppTargetingPackX64InstallerFileName>dotnet-targeting-pack-$(NetCoreAppTargetingPackVersion)-win-x64$(InstallerExtension)</NetCoreAppTargetingPackX64InstallerFileName>
+      <NetCoreAppTargetingPackX86InstallerFileName>dotnet-targeting-pack-$(NetCoreAppTargetingPackVersion)-win-x86$(InstallerExtension)</NetCoreAppTargetingPackX86InstallerFileName>
+      <NetCoreAppHostPackX64InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x64$(InstallerExtension)</NetCoreAppHostPackX64InstallerFileName>
+      <NetCoreAppHostPackX64_ArmInstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x64_arm$(InstallerExtension)</NetCoreAppHostPackX64_ArmInstallerFileName>
+      <NetCoreAppHostPackX64_Arm64InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x64_arm64$(InstallerExtension)</NetCoreAppHostPackX64_Arm64InstallerFileName>
+      <NetCoreAppHostPackX64_X86InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x64_x86$(InstallerExtension)</NetCoreAppHostPackX64_X86InstallerFileName>
+      <NetCoreAppHostPackX86InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x86$(InstallerExtension)</NetCoreAppHostPackX86InstallerFileName>
+      <NetCoreAppHostPackX86_ArmInstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x86_arm$(InstallerExtension)</NetCoreAppHostPackX86_ArmInstallerFileName>
+      <NetCoreAppHostPackX86_Arm64InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x86_arm64$(InstallerExtension)</NetCoreAppHostPackX86_Arm64InstallerFileName>
+      <NetCoreAppHostPackX86_X64InstallerFileName>dotnet-apphost-pack-$(NetCoreAppHostPackVersion)-win-x86_x64$(InstallerExtension)</NetCoreAppHostPackX86_X64InstallerFileName>
+      <NetStandardTargetingPackX64InstallerFileName>netstandard-targeting-pack-$(NETStandardLibraryRefPackageVersion)-win-x64$(InstallerExtension)</NetStandardTargetingPackX64InstallerFileName>
+      <NetStandardTargetingPackX86InstallerFileName>netstandard-targeting-pack-$(NETStandardLibraryRefPackageVersion)-win-x86$(InstallerExtension)</NetStandardTargetingPackX86InstallerFileName>
+      <WinFormsAndWpfSharedFrameworkX64InstallerFileName>windowsdesktop-runtime-$(MicrosoftWindowsDesktopPackageVersion)-win-x64$(InstallerExtension)</WinFormsAndWpfSharedFrameworkX64InstallerFileName>
+      <WinFormsAndWpfSharedFrameworkX86InstallerFileName>windowsdesktop-runtime-$(MicrosoftWindowsDesktopPackageVersion)-win-x86$(InstallerExtension)</WinFormsAndWpfSharedFrameworkX86InstallerFileName>
+      <WindowsDesktopTargetingPackX64InstallerFileName>windowsdesktop-targeting-pack-$(WindowsDesktopTargetingPackVersion)-win-x64$(InstallerExtension)</WindowsDesktopTargetingPackX64InstallerFileName>
+      <WindowsDesktopTargetingPackX86InstallerFileName>windowsdesktop-targeting-pack-$(WindowsDesktopTargetingPackVersion)-win-x86$(InstallerExtension)</WindowsDesktopTargetingPackX86InstallerFileName>
+      <!-- From aspnet/aspnetcore -->
+      <AspNetCoreSharedFrameworkX64InstallerFileName>aspnetcore-runtime-$(AspNetCoreVersion)-win-x64$(InstallerExtension)</AspNetCoreSharedFrameworkX64InstallerFileName>
+      <AspNetCoreSharedFrameworkX86InstallerFileName>aspnetcore-runtime-$(AspNetCoreVersion)-win-x86$(InstallerExtension)</AspNetCoreSharedFrameworkX86InstallerFileName>
+      <AspNetTargetingPackX64InstallerFileName>aspnetcore-targeting-pack-$(AspNetTargetingPackVersion)-win-x64$(InstallerExtension)</AspNetTargetingPackX64InstallerFileName>
+      <AspNetTargetingPackX86InstallerFileName>aspnetcore-targeting-pack-$(AspNetTargetingPackVersion)-win-x86$(InstallerExtension)</AspNetTargetingPackX86InstallerFileName>
+      <AspNetCoreV2ModuleX64InstallerFileName>aspnetcoremodule_x64_en_v2_$(AspNetCoreVersion)$(InstallerExtension)</AspNetCoreV2ModuleX64InstallerFileName>
+      <AspNetCoreV2ModuleX86InstallerFileName>aspnetcoremodule_x86_en_v2_$(AspNetCoreVersion)$(InstallerExtension)</AspNetCoreV2ModuleX86InstallerFileName>
+      <!-- From dotnet/core-sdk -->
+      <SdkToolsetX64InstallerFileName>dotnet-sdk-internal-$(SdkVersion)-win-x64$(InstallerExtension)</SdkToolsetX64InstallerFileName>
+      <SdkToolsetX86InstallerFileName>dotnet-sdk-internal-$(SdkVersion)-win-x86$(InstallerExtension)</SdkToolsetX86InstallerFileName>
+      <NetCoreTemplatesX64InstallerFileName>dotnet-31templates-$(FullNugetVersion)-win-x64$(InstallerExtension)</NetCoreTemplatesX64InstallerFileName>
+      <NetCoreTemplatesX86InstallerFileName>dotnet-31templates-$(FullNugetVersion)-win-x86$(InstallerExtension)</NetCoreTemplatesX86InstallerFileName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- From dotnet/core-setup -->
+      <BundledNetCoreInstallerComponent Include="DownloadedSharedHostX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(SharedHostVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(SharedHostX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedSharedHostX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(SharedHostVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(SharedHostX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedHostFxrX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(HostFxrVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(HostFxrX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedHostFxrX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(HostFxrVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(HostFxrX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedSharedFrameworkX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(SharedFrameworkX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedSharedFrameworkX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(SharedFrameworkX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppTargetingPackX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppTargetingPackX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppTargetingPackX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppTargetingPackX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX64_ArmInstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX64_ArmInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX64_Arm64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX64_Arm64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX64_X86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX64_X86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX86_ArmInstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX86_ArmInstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX86_Arm64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX86_Arm64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreAppHostPackX86_X64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NetCoreAppHostPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetCoreAppHostPackX86_X64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetStandardTargetingPackX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetStandardTargetingPackX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetStandardTargetingPackX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(NetStandardTargetingPackX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedWinFormsAndWpfSharedFrameworkX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(WinFormsAndWpfSharedFrameworkX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedWinFormsAndWpfSharedFrameworkX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(WinFormsAndWpfSharedFrameworkX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedWindowsDesktopTargetingPackX64InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(WindowsDesktopTargetingPackX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedWindowsDesktopTargetingPackX86InstallerFile">
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(WindowsDesktopTargetingPackX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <!-- From aspnet/aspnetcore -->
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetCoreSharedFrameworkX64InstallerFile">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetCoreSharedFrameworkX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetCoreSharedFrameworkX86InstallerFile">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetCoreSharedFrameworkX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetTargetingPackX64InstallerFileName">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetTargetingPackX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetTargetingPackX86InstallerFileName">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetTargetingPackVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetTargetingPackX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetCoreV2ModuleX64InstallerFileName">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetCoreV2ModuleX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedAspNetCoreV2ModuleX86InstallerFileName">
+        <DownloadMSIBaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
+        <DownloadFileName>$(AspNetCoreV2ModuleX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <!-- From dotnet/core-sdk -->
+      <BundledNetCoreInstallerComponent Include="DownloadedSdkToolsetX64InstallerFile">
+        <DownloadMSIBaseUrl>$(SdkToolsetRootUrl)$(FullNugetVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(ArtifactsShippingPackagesDir)</LocalPath>
+        <DownloadFileName>$(SdkToolsetX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedSdkToolsetX86InstallerFile">
+        <DownloadMSIBaseUrl>$(SdkToolsetRootUrl)$(FullNugetVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(ArtifactsShippingPackagesDir)</LocalPath>
+        <DownloadFileName>$(SdkToolsetX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreTemplatesX64InstallerFile">
+        <DownloadMSIBaseUrl>$(SdkToolsetRootUrl)$(FullNugetVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(ArtifactsShippingPackagesDir)</LocalPath>
+        <DownloadFileName>$(NetCoreTemplatesX64InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+      <BundledNetCoreInstallerComponent Include="DownloadedNetCoreTemplatesX86InstallerFile">
+        <DownloadMSIBaseUrl>$(SdkToolsetRootUrl)$(FullNugetVersion)</DownloadMSIBaseUrl>
+        <LocalPath>$(ArtifactsShippingPackagesDir)</LocalPath>
+        <DownloadFileName>$(NetCoreTemplatesX86InstallerFileName)</DownloadFileName>
+        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
+      </BundledNetCoreInstallerComponent>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateNetCoreInstaller"
+        DependsOnTargets="CopyNetCoreInstallerBundledComponents;
+                          DownloadNetCoreInstallerBundledComponents;
+                          DownloadWixDotNetCoreBootstrapperExtension;
+                          GenerateNetCoreInstallerBundle;
+                          SignNetCoreInstallerBundle;
+                          GenerateNetCoreInstallerArchive;
+                          CopyNetCoreInstallerBundleToShipping;
+                          GenerateNetCoreInstallerChecksums"
+        Condition=" '$(OS)' == 'Windows_NT' "
+        BeforeTargets="AfterBuild">
+  </Target>
+
+</Project>

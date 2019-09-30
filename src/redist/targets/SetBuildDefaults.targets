@@ -44,6 +44,16 @@
 
       <PathListSeparator>:</PathListSeparator>
       <PathListSeparator Condition=" '$(OS)' == 'Windows_NT' ">%3b</PathListSeparator>
+      <DownloadsFolder>$(IntermediateOutputPath)downloads\</DownloadsFolder>
+
+      <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
+      <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
+      <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
+
+      <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
+      <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
+      <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupRootUrl)</WinFormsAndWpfSharedFxRootUrl>
+      <SdkToolsetRootUrl>$(CoreSetupBlobRootUrl)Sdk/</SdkToolsetRootUrl>
     </PropertyGroup>
   </Target>
 </Project>

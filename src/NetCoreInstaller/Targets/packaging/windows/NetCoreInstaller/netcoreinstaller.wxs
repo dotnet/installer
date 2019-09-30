@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:dnc="http://schemas.microsoft.com/wix/DotNetCoreBootstrapperExtension"
+     xmlns:dep="http://schemas.microsoft.com/wix/DependencyExtension">
+    <?include "variables.wxi" ?>
+
+    <Bundle Name="$(var.InstallerName)" Version="$(var.InstallerVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeAndProviderCode)"
+            dep:ProviderKey="$(var.UpgradeAndProviderCode)" AboutUrl="https://dotnet.github.io/" Compressed="yes">
+        <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
+            <dnc:DotNetCoreBootstrapperApplication ShowCopyright="yes" ShowTelemetryCheckBox="yes" ShowLicenseCheckBox="yes"
+                                                   InstallerDataRootFolder="$(var.InstallerDataRootFolder)"
+                                                   InstallLocationVariable="$(var.InstallLocationVariable)" InstrumentationKey="$(var.InstrumentationKey)">
+            </dnc:DotNetCoreBootstrapperApplication>
+
+            <PayloadGroupRef Id="DncBaPayloads"/>
+
+            <Payload SourceFile="LCID\1033\dncmba.wxl" Compressed="yes" Name="dncmba.wxl"/>
+            <?foreach LCID in $(var.LocalizedContentDirs)?>
+            <Payload Id="dncmba-$(var.LCID)" Compressed="yes" Name="$(var.LCID)\dncmba.wxl" SourceFile="LCID\$(var.LCID)\dncmba.wxl" />
+            <?endforeach?>
+        </BootstrapperApplicationRef>
+
+        <bal:Condition Message="#(loc.FailureNotSupportedCurrentOperatingSystem)">
+            ((VersionNT &gt; v6.1) OR (VersionNT = v6.1 AND ServicePackLevel &gt;= 1))
+        </bal:Condition>
+
+        <bal:Condition Message="The installation path for x64 SDK installations: &quot;[DOTNETHOME_X64]&quot; cannot be the same as for x86 SDK installations: &quot;[DOTNETHOME_X86]&quot;">
+            WixBundleInstalled OR ((NOT (DOTNETHOME_X64 ~= DOTNETHOME_X86)) OR DOTNETHOMESIMILARITYCHECKOVERRIDE)
+        </bal:Condition>
+
+        <RelatedBundle Id="$(var.UpgradeAndProviderCode)" Action="Upgrade"/>
+
+
+        <util:RegistrySearch Id="CheckDotnetInstallLocation_x86"
+            Variable="DotnetInstallLocationExists_x86"
+            Result="exists"
+            Root="HKLM"
+            Key="SOFTWARE\dotnet\Setup\InstalledVersions\x86"
+            Value="InstallLocation" />
+        <util:RegistrySearch Id="DotnetInstallLocation_x86"
+                After="CheckDotnetInstallLocation_x86"
+                Condition="DotnetInstallLocationExists_x86"
+                Variable="DOTNETHOME_X86"
+                Result="value"
+                Root="HKLM"
+                Key="SOFTWARE\dotnet\Setup\InstalledVersions\x86"
+                Value="InstallLocation" />
+
+        <util:FileSearch Id="DotnetExeSearch_x86"
+                After="DotnetInstallLocation_x86"
+                Variable="DotnetExeExists_x86"
+                Condition="NOT DotnetInstallLocationExists_x86"
+                Result="exists"
+                Path="[ProgramFilesFolder]dotnet\dotnet.exe"/>
+        <util:DirectorySearch Id="DotnetExeLocation_x86"
+                After="DotnetExeSearch_x86"
+                Condition="DotnetExeExists_x86"
+                Variable="DOTNETHOME_X86"
+                Path="[ProgramFilesFolder]dotnet"/>
+
+        <util:RegistrySearch Id="CheckDotnetInstallLocation_x64"
+                  Variable="DotnetInstallLocationExists_x64"
+                  Result="exists"
+                  Root="HKLM"
+                  Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64"
+                  Value="InstallLocation" />
+        <util:RegistrySearch Id="DotnetInstallLocation_x64"
+                  After="CheckDotnetInstallLocation_x64"
+                  Condition="DotnetInstallLocationExists_x64"
+                  Variable="DOTNETHOME_X64"
+                  Result="value"
+                  Root="HKLM"
+                  Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64"
+                  Value="InstallLocation" />
+
+        <util:FileSearch Id="DotnetExeSearch_x64"
+                  After="DotnetInstallLocation_x64"
+                  Variable="DotnetExeExists_x64"
+                  Condition="NOT DotnetInstallLocationExists_x64"
+                  Result="exists"
+                  Path="[ProgramFiles64Folder]dotnet\dotnet.exe"/>
+        <util:DirectorySearch Id="DotnetExeLocation_x64"
+                  After="DotnetExeSearch_x64"
+                  Condition="DotnetExeExists_x64"
+                  Variable="DOTNETHOME_X64"
+                  Path="[ProgramFiles64Folder]dotnet"/>
+
+        <!--  <util:DirectorySearchRef Id="DotnetExeLocation_x86"/> -->
+
+        <!-- Warn if the NET Core Host is loaded. -->
+        <dnc:BlockedProcess Action="warn" Target="dotnet" Message="#(loc.WarningCoreHostMessage)"/>
+
+        <!-- If VS2019 is present, the minimum version should be 16.4 -->
+        <dnc:IncompatibleProduct Id="VSIncompatible" Message="#(loc.WarningNotSupportedVisualStudio)">(VisualStudioMaxVersion &lt; v16.4.0.0)</dnc:IncompatibleProduct>
+
+        <Variable Name="DOTNETHOME_X64" Type="string" Value="[ProgramFiles64Folder]dotnet" bal:Overridable="yes" />
+        <Variable Name="DOTNETHOME_X86" Type="string" Value="[ProgramFilesFolder]dotnet" bal:Overridable="yes" />
+
+        <dnc:Component Id="Microsoft.Component.NetCore.SDK" Name="#(loc.NetCoreSdkDisplayName)" Description="#(loc.NetCoreSdkDescription)" Bitness="specific" Selected="yes">
+            <dnc:ComponentRef Id="Microsoft.Component.NetCore.Runtime.3.1"/>
+            <dnc:ComponentRef Id="Microsoft.Component.AspNetCore.Runtime.3.1"/>
+            <dnc:ComponentRef Id="Microsoft.Component.WindowsDesktop.Runtime.3.1"/>
+            <dnc:PackageRef Id="Package_NetCoreToolset_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreToolset_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreTargetingPack31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreTargetingPack31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_64_arm" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_64_arm64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_64_x86" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_86_arm" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_86_arm64" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreAppHostPack31_86_x64" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetStandardTargetingPack31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetStandardTargetingPack31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreTemplates31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreTemplates31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_AspNetCoreTargetingPack31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_AspNetCoreTargetingPack31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_WindowsDesktopTargetingPack31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_WindowsDesktopTargetingPack31_86" Chip="x86"/>
+        </dnc:Component>
+
+        <dnc:Component Id="Microsoft.Component.NetCore.Runtime.3.1" Name="#(loc.NetCoreSharedFramework31DisplayName) $(var.NetCoreVersion)" Description="#(loc.NetCoreRuntim31Description)" Bitness="both">
+            <dnc:PackageRef Id="Package_NetCoreSharedHost31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreSharedHost31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreHostFXR31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreHostFXR31_86" Chip="x86"/>
+            <dnc:PackageRef Id="Package_NetCoreSharedFramework31_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_NetCoreSharedFramework31_86" Chip="x86"/>
+
+            <dnc:Component Id="Microsoft.Component.AspNetCore.Runtime.3.1" Name="#(loc.AspNetCoreSharedFramework31DisplayName) $(var.AspNetCoreVersion)" Description="#(loc.AspNetCoreSharedFramework31Description)" Bitness="both">
+                <dnc:PackageRef Id="Package_AspNetCoreSharedFramework31_64" Chip="x64"/>
+                <dnc:PackageRef Id="Package_AspNetCoreSharedFramework31_86" Chip="x86"/>
+            </dnc:Component>
+
+            <dnc:Component Id="Microsoft.Component.WindowsDesktop.Runtime.3.1" Name="#(loc.WindowsDesktopSharedFramework31DisplayName) $(var.WindowsDesktopVersion)" Description="#(loc.WindowsDesktopSharedFramework31Description)" Bitness="both">
+                <dnc:PackageRef Id="Package_WindowsDesktopSharedFramework31_64" Chip="x64"/>
+                <dnc:PackageRef Id="Package_WindowsDesktopSharedFramework31_86" Chip="x86"/>
+            </dnc:Component>
+        </dnc:Component>
+
+        <dnc:Component Id="Microsoft.Component.AspNetCoreModule" Condition="(VersionNT64 AND (IISCoreWebEngineInstalled_x64=1) AND (IISW3SVCInstalled_x64=1)) Or ((IISCoreWebEngineInstalled_x86=1) AND (IISW3SVCInstalled_x86=1))" Name="#(loc.ANCM_V2_DisplayName)" Description="#(loc.ANCM_V2_Description)" DisabledDescription="#(loc.ANCM_V2_DisabledDescription)" Bitness="specific">
+            <dnc:PackageRef Id="Package_AspNetCoreModuleV2_64" Chip="x64"/>
+            <dnc:PackageRef Id="Package_AspNetCoreModuleV2_86" Chip="x86"/>
+        </dnc:Component>
+
+        <Chain ParallelCache="yes">
+            <!-- Prerequisite package - needed to launch the MBA -->
+            <PackageGroupRef Id="NetFx45Web" />
+
+            <!-- The x64 SDK SharedHost must go before the x86 SDK SharedHost; global path concerns. -->
+            <PackageGroupRef Id="PackageGroup_NetCoreSharedHost31_64" />
+            <PackageGroupRef Id="PackageGroup_NetCoreSharedHost31_86" />
+            <PackageGroupRef Id="PackageGroup_NetCoreAppHostPack31" />
+            <PackageGroupRef Id="PackageGroup_NetCoreSharedFramework31" />
+            <PackageGroupRef Id="PackageGroup_AspNetCoreSharedFramework31" />
+            <PackageGroupRef Id="PackageGroup_WindowsDesktopSharedFramework31" />
+            <PackageGroupRef Id="PackageGroup_NetCoreTargetingPack31" />
+            <PackageGroupRef Id="PackageGroup_AspNetCoreTargetingPack31" />
+            <PackageGroupRef Id="PackageGroup_NetStandardTargetingPack31" />
+            <PackageGroupRef Id="PackageGroup_WindowsDesktopTargetingPack31" />
+            <PackageGroupRef Id="PackageGroup_NetCoreToolset" />
+            <PackageGroupRef Id="PackageGroup_NetCoreTemplates31" />
+            <PackageGroupRef Id="PackageGroup_AspNetCoreModuleV2" />
+        </Chain>
+    </Bundle>
+
+    <!-- SDK and Templates-->
+    <Fragment>
+        <PackageGroup Id="PackageGroup_NetCoreToolset">
+            <MsiPackage Id="Package_NetCoreToolset_64" SourceFile="$(var.SourceMSIDirectory)\$(var.SdkToolsetX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SdkToolsetX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentToolsetBaseURL)$(var.SdkToolsetX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+                <MsiProperty Name="DOTNETHOME_X86" Value="[DOTNETHOME_X86]" />
+                <MsiProperty Name="DOTNETHOME_X64" Value="[DOTNETHOME_X64]" />
+                <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreToolset_86" SourceFile="$(var.SourceMSIDirectory)\$(var.SdkToolsetX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SdkToolsetX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentToolsetBaseURL)$(var.SdkToolsetX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+                <MsiProperty Name="DOTNETHOME_X86" Value="[DOTNETHOME_X86]" />
+                <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_NetCoreTemplates31">
+            <MsiPackage Id="Package_NetCoreTemplates31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreTemplatesX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreTemplatesX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentToolsetBaseURL)$(var.NetCoreTemplatesX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+                <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreTemplates31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreTemplatesX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreTemplatesX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentToolsetBaseURL)$(var.NetCoreTemplatesX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+                <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+    <!-- .NET CORE -->
+    <Fragment>
+        <PackageGroup Id="PackageGroup_NetCoreSharedHost31_64">
+            <MsiPackage Id="Package_NetCoreSharedHost31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.SharedHostX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SharedHostX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.SharedHostX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+        </PackageGroup>
+        <PackageGroup Id="PackageGroup_NetCoreSharedHost31_86">
+            <MsiPackage Id="Package_NetCoreSharedHost31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.SharedHostX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SharedHostX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.SharedHostX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_NetCoreSharedFramework31">
+            <MsiPackage Id="Package_NetCoreSharedFramework31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.SharedFrameworkX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SharedFrameworkX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.SharedFrameworkX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreSharedFramework31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.SharedFrameworkX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.SharedFrameworkX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.SharedFrameworkX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreHostFXR31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.HostFxrX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.HostFxrX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.HostFxrX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreHostFXR31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.HostFxrX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.HostFxrX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.HostFxrX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_NetCoreAppHostPack31">
+            <MsiPackage Id="Package_NetCoreAppHostPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_64_arm" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX64_ArmInstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX64_ArmInstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX64_ArmInstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_64_arm64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX64_Arm64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX64_Arm64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX64_Arm64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_64_x86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX64_X86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX64_X86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX64_X86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_86_arm" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX86_ArmInstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX86_ArmInstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX86_ArmInstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_86_arm64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX86_Arm64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX86_Arm64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX86_Arm64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreAppHostPack31_86_x64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppHostPackX86_X64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppHostPackX86_X64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppHostPackX86_X64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_NetCoreTargetingPack31">
+            <MsiPackage Id="Package_NetCoreTargetingPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppTargetingPackX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppTargetingPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppTargetingPackX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetCoreTargetingPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetCoreAppTargetingPackX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetCoreAppTargetingPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetCoreAppTargetingPackX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+    <!-- NET STANDARD -->
+    <Fragment>
+        <PackageGroup Id="PackageGroup_NetStandardTargetingPack31">
+            <MsiPackage Id="Package_NetStandardTargetingPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetStandardTargetingPackX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetStandardTargetingPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetStandardTargetingPackX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_NetStandardTargetingPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetStandardTargetingPackX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.NetStandardTargetingPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetStandardTargetingPackX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+    <!-- ASP.NET CORE -->
+    <Fragment>
+        <PackageGroup Id="PackageGroup_AspNetCoreSharedFramework31">
+            <MsiPackage Id="Package_AspNetCoreSharedFramework31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetCoreSharedFrameworkX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetCoreSharedFrameworkX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetCoreSharedFrameworkX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_AspNetCoreSharedFramework31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetCoreSharedFrameworkX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetCoreSharedFrameworkX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetCoreSharedFrameworkX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_AspNetCoreTargetingPack31">
+            <MsiPackage Id="Package_AspNetCoreTargetingPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetTargetingPackX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetTargetingPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetTargetingPackX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_AspNetCoreTargetingPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetTargetingPackX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetTargetingPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetTargetingPackX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+    <!-- WINDOWS DESKTOP -->
+    <Fragment>
+        <PackageGroup Id="PackageGroup_WindowsDesktopSharedFramework31">
+            <MsiPackage Id="Package_WindowsDesktopSharedFramework31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.WinFormsAndWpfSharedFrameworkX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.WinFormsAndWpfSharedFrameworkX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentWindowsDesktopBaseURL)$(var.WinFormsAndWpfSharedFrameworkX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_WindowsDesktopSharedFramework31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.WinFormsAndWpfSharedFrameworkX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.WinFormsAndWpfSharedFrameworkX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentWindowsDesktopBaseURL)$(var.WinFormsAndWpfSharedFrameworkX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+
+        <PackageGroup Id="PackageGroup_WindowsDesktopTargetingPack31">
+            <MsiPackage Id="Package_WindowsDesktopTargetingPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.WindowsDesktopTargetingPackX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.WindowsDesktopTargetingPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentWindowsDesktopBaseURL)$(var.WindowsDesktopTargetingPackX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
+            </MsiPackage>
+            <MsiPackage Id="Package_WindowsDesktopTargetingPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.WindowsDesktopTargetingPackX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.WindowsDesktopTargetingPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentWindowsDesktopBaseURL)$(var.WindowsDesktopTargetingPackX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no">
+                <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+    <!-- ANCM -->
+    <Fragment>
+        <!-- ANCM prerequisites -->
+        <util:RegistrySearch Id="IISCoreWebEngineInstalledSearch_x86"
+                             Variable="IISCoreWebEngineInstalled_x86"
+                             Root="HKLM"
+                             Key="SOFTWARE\Microsoft\InetStp\Components"
+                             Value="CoreWebEngine"
+                             Result="value" />
+
+        <util:RegistrySearch Id="IISW3SVCInstalledSearch_x86"
+                             Variable="IISW3SVCInstalled_x86"
+                             Root="HKLM"
+                             Key="SOFTWARE\Microsoft\InetStp\Components"
+                             Value="W3SVC"
+                             After="IISCoreWebEngineInstalledSearch_x86"
+                             Result="value" />
+
+        <util:RegistrySearch Id="IISCoreWebEngineInstalledSearch_x64"
+                             Variable="IISCoreWebEngineInstalled_x64"
+                             Root="HKLM"
+                             Key="SOFTWARE\Microsoft\InetStp\Components"
+                             Value="CoreWebEngine"
+                             Result="value"
+                             After="IISW3SVCInstalledSearch_x86"
+                             Win64="yes" />
+
+        <util:RegistrySearch Id="IISW3SVCInstalledSearch_x64"
+                             Variable="IISW3SVCInstalled_x64"
+                             Root="HKLM"
+                             Key="SOFTWARE\Microsoft\InetStp\Components"
+                             Value="W3SVC"
+                             Result="value"
+                             After="IISCoreWebEngineInstalledSearch_x64"
+                             Win64="yes" />
+
+        <PackageGroup Id="PackageGroup_AspNetCoreModuleV2">
+            <MsiPackage Id="Package_AspNetCoreModuleV2_64" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetCoreV2ModuleX64InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetCoreV2ModuleX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetCoreV2ModuleX64InstallerFileName)"
+                        Compressed="no"
+                        Visible="no"
+                        InstallCondition="VersionNT64 AND (IISCoreWebEngineInstalled_x64=1) AND (IISW3SVCInstalled_x64=1)">
+            </MsiPackage>
+
+            <MsiPackage Id="Package_AspNetCoreModuleV2_86" SourceFile="$(var.SourceMSIDirectory)\$(var.AspNetCoreV2ModuleX86InstallerFileName)"
+                        Name="$(var.LocalMSIDirectory)\$(var.AspNetCoreV2ModuleX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentAspNetCoreBaseURL)$(var.AspNetCoreV2ModuleX86InstallerFileName)"
+                        Compressed="no"
+                        Visible="no"
+                        InstallCondition="(IISCoreWebEngineInstalled_x86=1) AND (IISW3SVCInstalled_x86=1)">
+            </MsiPackage>
+        </PackageGroup>
+    </Fragment>
+
+</Wix>
