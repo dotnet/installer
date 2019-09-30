@@ -70,25 +70,28 @@ phases:
         displayName: Set test info (Windows)
       - ${{ if ne(variables['_NetCoreInstaller'], 'true') }}:
         - script: build.cmd
-                  $(TestParameter)
-                  -pack -publish -ci
-                  -Configuration $(_BuildConfig)
-                  -Architecture $(_BuildArchitecture)
-                  $(_BuildArgs)
-                  $(SignBuildParameters)
-                  $(_AdditionalBuildParameters)
+                    $(TestParameter)
+                    -pack -publish -ci
+                    -Configuration $(_BuildConfig)
+                    -Architecture $(_BuildArchitecture)
+                    $(_BuildArgs)
+                    $(SignBuildParameters)
+                    $(_AdditionalBuildParameters)
+          displayName: Build
+          env:
+            DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
+            DropSuffix: $(_DropSuffix)
       - ${{ if eq(variables['_NetCoreInstaller'], 'true') }}:
-        - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-          - script: eng/BuildNetCoreInstallerLocal.cmd
+        - script: eng/BuildNetCoreInstallerLocal.cmd
                     $(TestParameter) -ci
                     -Configuration $(_BuildConfig)
                     $(_BuildArgs)
                     $(SignBuildParameters)
                     $(_AdditionalBuildParameters)
-        displayName: Build
-        env:
-          DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
-          DropSuffix: $(_DropSuffix)
+          displayName: Build
+          env:
+            DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
+            DropSuffix: $(_DropSuffix)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng/setbuildinfo.sh $(_BuildArchitecture) $(_BuildConfig)'
