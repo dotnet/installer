@@ -9,7 +9,7 @@
     <Bundle Name="$(var.InstallerName)" Version="$(var.InstallerVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeAndProviderCode)"
             dep:ProviderKey="$(var.UpgradeAndProviderCode)" AboutUrl="https://dotnet.github.io/" Compressed="yes">
         <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
-            <dnc:DotNetCoreBootstrapperApplication ShowCopyright="yes" ShowTelemetryCheckBox="yes" ShowLicenseCheckBox="yes"
+            <dnc:DotNetCoreBootstrapperApplication ShowTelemetryCheckBox="yes" ShowLicenseCheckBox="yes"
                                                    InstallerDataRootFolder="$(var.InstallerDataRootFolder)"
                                                    InstallLocationVariable="$(var.InstallLocationVariable)" InstrumentationKey="$(var.InstrumentationKey)">
             </dnc:DotNetCoreBootstrapperApplication>
@@ -86,8 +86,6 @@
                   Condition="DotnetExeExists_x64"
                   Variable="DOTNETHOME_X64"
                   Path="[ProgramFiles64Folder]dotnet"/>
-
-        <!--  <util:DirectorySearchRef Id="DotnetExeLocation_x86"/> -->
 
         <!-- Warn if the NET Core Host is loaded. -->
         <dnc:BlockedProcess Action="warn" Target="dotnet" Message="#(loc.WarningCoreHostMessage)"/>
