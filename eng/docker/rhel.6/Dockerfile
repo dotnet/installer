@@ -26,6 +26,7 @@ USER ${USER_ID}
 # Set library path to make CURL and ICU libraries that are in /usr/local/lib visible
 ENV LD_LIBRARY_PATH /usr/local/lib
 
-# Set working directory
-WORKDIR /opt/code
+# Set working directory 
+ARG WORK_DIR
+WORKDIR ${WORK_DIR}
 
