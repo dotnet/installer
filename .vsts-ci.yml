@@ -47,6 +47,11 @@ jobs:
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
             _DropSuffix: true
+          Build_NetCoreInstaller_Release:
+            _BuildConfig: Release
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _DropSuffix: ''
+            _NetCoreInstaller: true
         # Internal-only builds
         ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
           Build_Release_x86:
@@ -269,16 +274,6 @@ jobs:
 #         Build_Release:
 #           _BuildConfig: Release
 #           _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
-
-- ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-  - job: Public_Build_NetCoreInstaller_Release
-    pool:
-      name: NetCorePublic-Pool
-      queue: buildpool.windows.10.amd64.vs2017.open
-    steps:
-      - script: eng/BuildNetCoreInstallerLocal.cmd
-           -ci -Configuration release
-        displayName: Build_NetCoreInstaller_Release
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - job: Copy_SDK_To_Latest

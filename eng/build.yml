@@ -38,6 +38,7 @@ phases:
         - group: DotNet-HelixApi-Access
         - _DotNetPublishToBlobFeed: true
         - _PushToVSFeed: true
+        - _BuildNetCoreInstaller: false
         - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
@@ -57,7 +58,8 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng\setbuildinfo.bat $(_BuildArchitecture) $(_BuildConfig)'
         displayName: Set test info (Windows)
-      - script: build.cmd
+      - ${{ if ne(variables['_NetCoreInstaller'], 'true') }}:
+        - script: build.cmd
                   $(TestParameter)
                   -pack -publish -ci
                   -Configuration $(_BuildConfig)
@@ -65,6 +67,14 @@ phases:
                   $(_BuildArgs)
                   $(SignBuildParameters)
                   $(_AdditionalBuildParameters)
+      - ${{ if eq(variables['_NetCoreInstaller'], 'true') }}:
+        - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+          - script: eng/BuildNetCoreInstallerLocal.cmd
+                    $(TestParameter) -ci
+                    -Configuration $(_BuildConfig)
+                    $(_BuildArgs)
+                    $(SignBuildParameters)
+                    $(_AdditionalBuildParameters)
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
@@ -99,7 +109,7 @@ phases:
                   $(_AdditionalBuildParameters)
         displayName: Build
 
-    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT')) }}:
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT'), ne(variables['_NetCoreInstaller'], 'true')) }}:
       - task: NuGetCommand@2
         displayName: Push Visual Studio NuPkgs
         inputs:

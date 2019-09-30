@@ -11,7 +11,7 @@
         <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
             <dnc:DotNetCoreBootstrapperApplication ShowTelemetryCheckBox="yes" ShowLicenseCheckBox="yes"
                                                    InstallerDataRootFolder="$(var.InstallerDataRootFolder)"
-                                                   InstallLocationVariable="$(var.InstallLocationVariable)" InstrumentationKey="$(var.InstrumentationKey)">
+                                                   InstrumentationKey="$(var.InstrumentationKey)">
             </dnc:DotNetCoreBootstrapperApplication>
 
             <PayloadGroupRef Id="DncBaPayloads"/>
@@ -40,25 +40,25 @@
             Key="SOFTWARE\dotnet\Setup\InstalledVersions\x86"
             Value="InstallLocation" />
         <util:RegistrySearch Id="DotnetInstallLocation_x86"
-                After="CheckDotnetInstallLocation_x86"
-                Condition="DotnetInstallLocationExists_x86"
-                Variable="DOTNETHOME_X86"
-                Result="value"
-                Root="HKLM"
-                Key="SOFTWARE\dotnet\Setup\InstalledVersions\x86"
-                Value="InstallLocation" />
+            After="CheckDotnetInstallLocation_x86"
+            Condition="DotnetInstallLocationExists_x86"
+            Variable="DOTNETHOME_X86"
+            Result="value"
+            Root="HKLM"
+            Key="SOFTWARE\dotnet\Setup\InstalledVersions\x86"
+            Value="InstallLocation" />
 
         <util:FileSearch Id="DotnetExeSearch_x86"
-                After="DotnetInstallLocation_x86"
-                Variable="DotnetExeExists_x86"
-                Condition="NOT DotnetInstallLocationExists_x86"
-                Result="exists"
-                Path="[ProgramFilesFolder]dotnet\dotnet.exe"/>
+            After="DotnetInstallLocation_x86"
+            Variable="DotnetExeExists_x86"
+            Condition="NOT DotnetInstallLocationExists_x86"
+            Result="exists"
+            Path="[ProgramFilesFolder]dotnet\dotnet.exe"/>
         <util:DirectorySearch Id="DotnetExeLocation_x86"
-                After="DotnetExeSearch_x86"
-                Condition="DotnetExeExists_x86"
-                Variable="DOTNETHOME_X86"
-                Path="[ProgramFilesFolder]dotnet"/>
+            After="DotnetExeSearch_x86"
+            Condition="DotnetExeExists_x86"
+            Variable="DOTNETHOME_X86"
+            Path="[ProgramFilesFolder]dotnet"/>
 
         <util:RegistrySearch Id="CheckDotnetInstallLocation_x64"
                   Variable="DotnetInstallLocationExists_x64"
