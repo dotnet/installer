@@ -25,4 +25,5 @@ RUN chmod -R a+rwx /home
 USER ${USER_ID} 
  
 # Set working directory 
-WORKDIR /opt/code
+ARG WORK_DIR 
+WORKDIR ${WORK_DIR}
