@@ -40,6 +40,11 @@ phases:
       - _TeamName: Roslyn-Project-System
       - _BuildArgs: ''
       - _SignType: test
+      - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
+
+      - ${{ if and(eq(variables['System.TeamProject'], 'internal'), contains(variables['Build.SourceBranch'], 'internal')) }}:
+        - group: DotNet-MSRC-Storage
+        - _DOTNETCLIMSRC_READ_SAS_TOKEN: $(dotnetclimsrc-read-sas-token)
 
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
@@ -79,6 +84,7 @@ phases:
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
           DropSuffix: $(_DropSuffix)
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng/setbuildinfo.sh $(_BuildArchitecture) $(_BuildConfig)'
@@ -98,6 +104,7 @@ phases:
         displayName: Build
         env:
           DropSuffix: $(_DropSuffix)
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
       - script: ./build.sh
@@ -108,6 +115,8 @@ phases:
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
+        env:
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT')) }}:
       - task: NuGetCommand@2
