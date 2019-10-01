@@ -23,6 +23,18 @@
     <MicrosoftDotNetWpfProjectTemplatesPackageVersion>3.1.0-preview1.19476.4</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/templating -->
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>3.1.0-preview1.19476.7</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/test-templates -->
+    <MicrosoftDotNetTestProjectTemplates31PackageVersion>1.0.2-beta4.19465.1</MicrosoftDotNetTestProjectTemplates31PackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
+    <NUnit3TemplatesPackageVersion>1.6.3</NUnit3TemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
     <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>3.1.0-preview1.19475.24</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
     <MicrosoftAspNetCoreAppRefPackageVersion>3.1.0-preview1.19475.24</MicrosoftAspNetCoreAppRefPackageVersion>
@@ -66,10 +78,9 @@
     <!-- 3.1 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates31PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates31PackageVersion>
-    <NUnit3Templates31PackageVersion>1.6.3</NUnit3Templates31PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates31PackageVersion>3.1.0-preview1.19475.1</MicrosoftDotNetCommonItemTemplates31PackageVersion>
+    <NUnit3Templates31PackageVersion>$(NUnit3TemplatesPackageVersion)</NUnit3Templates31PackageVersion>
+    <MicrosoftDotNetCommonItemTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates31PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplates31PackageVersion)</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates31PackageVersion>1.0.2-beta4.19465.1</MicrosoftDotNetTestProjectTemplates31PackageVersion>
     <AspNetCorePackageVersionFor31Templates>$(AspNetCoreVersion)</AspNetCorePackageVersionFor31Templates>
     <!-- 3.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
