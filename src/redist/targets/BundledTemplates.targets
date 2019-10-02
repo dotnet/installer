@@ -119,8 +119,8 @@
   <Target Name="LayoutTemplatesForSDK"
           DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
     <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
-      <BundledTemplate Remove="Microsoft.Dotnet.Wpf.ProjectTemplates" />
-      <BundledTemplate Remove="Microsoft.Dotnet.WinForms.ProjectTemplates" />
+      <Bundled30Templates Remove="Microsoft.Dotnet.Wpf.ProjectTemplates" />
+      <Bundled30Templates Remove="Microsoft.Dotnet.WinForms.ProjectTemplates" />
     </ItemGroup>
     <Copy SourceFiles="%(Bundled30Templates.RestoredNupkgPath)"
           DestinationFolder="$(RedistLayoutPath)templates/$(BundledTemplates30InstallPath)"/>
