@@ -345,14 +345,14 @@
         <PackageGroup Id="PackageGroup_NetStandardTargetingPack31">
             <MsiPackage Id="Package_NetStandardTargetingPack31_64" SourceFile="$(var.SourceMSIDirectory)\$(var.NetStandardTargetingPackX64InstallerFileName)"
                         Name="$(var.LocalMSIDirectory)\$(var.NetStandardTargetingPackX64InstallerFileName)"
-                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetStandardTargetingPackX64InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetStandardBaseURL)$(var.NetStandardTargetingPackX64InstallerFileName)"
                         Compressed="no"
                         Visible="no">
                 <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X64]" />
             </MsiPackage>
             <MsiPackage Id="Package_NetStandardTargetingPack31_86" SourceFile="$(var.SourceMSIDirectory)\$(var.NetStandardTargetingPackX86InstallerFileName)"
                         Name="$(var.LocalMSIDirectory)\$(var.NetStandardTargetingPackX86InstallerFileName)"
-                        DownloadUrl="$(var.PermanentNetCoreBaseURL)$(var.NetStandardTargetingPackX86InstallerFileName)"
+                        DownloadUrl="$(var.PermanentNetStandardBaseURL)$(var.NetStandardTargetingPackX86InstallerFileName)"
                         Compressed="no"
                         Visible="no">
                 <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME_X86]" />

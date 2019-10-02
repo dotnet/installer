@@ -178,7 +178,7 @@
       <BundledInstallerComponent Include="DownloadedNetStandardTargetingPackInstallerFile"
                            Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <!-- NetStandard targeting pack currently frozen at 2.1.0 from 3.0.0 branch -->
-        <BaseUrl>$(CoreSetupRootUrl)3.0.0</BaseUrl>
+        <BaseUrl>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>

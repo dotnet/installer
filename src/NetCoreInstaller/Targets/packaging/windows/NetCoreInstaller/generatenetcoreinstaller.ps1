@@ -42,6 +42,7 @@ param(
     [Parameter(Mandatory=$true)][string]$PermanentNetCoreBaseURL,
     [Parameter(Mandatory=$true)][string]$PermanentAspNetCoreBaseURL,
     [Parameter(Mandatory=$true)][string]$PermanentWindowsDesktopBaseURL,
+    [Parameter(Mandatory=$true)][string]$PermanentNetStandardBaseURL,
     [Parameter(Mandatory=$true)][string]$WixRoot,
     [Parameter(Mandatory=$true)][string]$InstallerName,
     [Parameter(Mandatory=$true)][string]$InstallerVersion,
@@ -98,6 +99,7 @@ function RunCandleForNetCoreInstaller
         -dPermanentNetCoreBaseURL="$PermanentNetCoreBaseURL" `
         -dPermanentAspNetCoreBaseURL="$PermanentAspNetCoreBaseURL" `
         -dPermanentWindowsDesktopBaseURL="$PermanentWindowsDesktopBaseURL" `
+        -dPermanentNetStandardBaseURL="$PermanentNetStandardBaseURL" `
         -dWixRoot="$WixRoot" `
         -dInstallerName="$InstallerName" `
         -dInstallerVersion="$InstallerVersion" `

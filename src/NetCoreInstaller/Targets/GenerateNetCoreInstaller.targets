@@ -18,6 +18,7 @@
       <PermanentAspNetCoreBaseURL>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</PermanentAspNetCoreBaseURL>
       <PermanentWindowsDesktopBaseURL>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)</PermanentWindowsDesktopBaseURL>
       <PermanentToolsetBaseURL>$(SdkToolsetRootUrl)$(SdkVersion)</PermanentToolsetBaseURL>
+      <PermanentNetStandardBaseURL>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)</PermanentNetStandardBaseURL>
     </PropertyGroup>
 
     <GenerateGuidFromName Name="$(ProductBandNetCoreInstallerName)">
@@ -108,6 +109,7 @@
                       '$(PermanentNetCoreBaseURL)' ^
                       '$(PermanentAspNetCoreBaseURL)' ^
                       '$(PermanentWindowsDesktopBaseURL)' ^
+                      '$(PermanentNetStandardBaseURL)' ^
                       '$(WixRoot)' ^
                       '$(NetCoreBrandName)' ^
                       '$(SDKBundleVersion)' ^
@@ -283,13 +285,13 @@
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledNetCoreInstallerComponent>
       <BundledNetCoreInstallerComponent Include="DownloadedNetStandardTargetingPackX64InstallerFile">
-        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)</DownloadMSIBaseUrl>
         <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
         <DownloadFileName>$(NetStandardTargetingPackX64InstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledNetCoreInstallerComponent>
       <BundledNetCoreInstallerComponent Include="DownloadedNetStandardTargetingPackX86InstallerFile">
-        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</DownloadMSIBaseUrl>
+        <DownloadMSIBaseUrl>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)</DownloadMSIBaseUrl>
         <LocalPath>$(LocalDownloadedMSIsPath)</LocalPath>
         <DownloadFileName>$(NetStandardTargetingPackX86InstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
