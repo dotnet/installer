@@ -14,11 +14,11 @@
       <LocalDownloadedMSIsPath>$(ArtifactsObjDir)redist\$(Configuration)\$(CoreSdkTargetFramework)\downloads\</LocalDownloadedMSIsPath>
       <GenerateNetCoreInstallerPowershellScript>$(MSBuildThisFileDirectory)packaging/windows/NetCoreInstaller/generatenetcoreinstaller.ps1</GenerateNetCoreInstallerPowershellScript>
       <NetCoreInstallerArchitecture>x86</NetCoreInstallerArchitecture>
-      <PermanentNetCoreBaseURL>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</PermanentNetCoreBaseURL>
-      <PermanentAspNetCoreBaseURL>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)</PermanentAspNetCoreBaseURL>
-      <PermanentWindowsDesktopBaseURL>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)</PermanentWindowsDesktopBaseURL>
-      <PermanentToolsetBaseURL>$(SdkToolsetRootUrl)$(SdkVersion)</PermanentToolsetBaseURL>
-      <PermanentNetStandardBaseURL>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)</PermanentNetStandardBaseURL>
+      <PermanentNetCoreBaseURL>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)/</PermanentNetCoreBaseURL>
+      <PermanentAspNetCoreBaseURL>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/</PermanentAspNetCoreBaseURL>
+      <PermanentWindowsDesktopBaseURL>$(CoreSetupRootUrl)$(MicrosoftWindowsDesktopPackageVersion)/</PermanentWindowsDesktopBaseURL>
+      <PermanentToolsetBaseURL>$(SdkToolsetRootUrl)$(SdkVersion)/</PermanentToolsetBaseURL>
+      <PermanentNetStandardBaseURL>$(CoreSetupRootUrl)$(NETStandardLibraryRefBaseUrlReleaseVersion)/</PermanentNetStandardBaseURL>
     </PropertyGroup>
 
     <GenerateGuidFromName Name="$(ProductBandNetCoreInstallerName)">
