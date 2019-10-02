@@ -19,6 +19,9 @@ RUN chown root:root /usr/bin/sudo && chmod 4755 /usr/bin/sudo
 # Set user to the one we just created
 USER ${USER_ID}
 
-# Set working directory 
+# Set working directory
 ARG WORK_DIR
 WORKDIR ${WORK_DIR}
+
+# Set up Azure Artifacts credential provider
+RUN wget -qO- https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | bash
