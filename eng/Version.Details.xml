@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <!-- Winforms / WPF -->
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="3.0.1-servicing-19502-09">
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="3.0.0" Pinned="true">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.0.1-servicing-19502-09">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.0.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>d34d1570bfdf669ed94b4c939b2f39a1650e2320</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App" Version="3.0.1-servicing-19502-09">
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.0.0" Pinned="true">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.0.1-servicing-19502-09">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.0.1-servicing-19502-23">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>d34d1570bfdf669ed94b4c939b2f39a1650e2320</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetAppHost" Version="3.0.1-servicing-19502-09">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>d34d1570bfdf669ed94b4c939b2f39a1650e2320</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.0.1-servicing-19502-09">
+    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.0.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>d34d1570bfdf669ed94b4c939b2f39a1650e2320</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.1-servicing-19502-09">
+    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.0.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>d34d1570bfdf669ed94b4c939b2f39a1650e2320</Sha>
     </Dependency>
-    <Dependency Name="NETStandard.Library.Ref" Version="2.1.0-servicing-19502-09">
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="NETStandard.Library.Ref" Version="2.1.0" Pinned="true">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
+      <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <!-- Used to pull in the feed for Microsoft.NETCore.Platforms, but not referenced directly -->
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.1-servicing.19501.4" CoherentParentDependency="Microsoft.NetCore.App">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.1-servicing.19501.4" CoherentParentDependency="Microsoft.NETCore.App.Internal">
       <Uri>https://github.com/dotnet/corefx</Uri>
       <Sha>54d63c3e283e0c3937a35ab4e99f391c84ff119e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.0">
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.0" Pinned="true">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
       <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.AspNetCore.App.Runtime.win-x64" Version="3.0.0">
+    <Dependency Name="Microsoft.AspNetCore.App.Runtime.win-x64" Version="3.0.1-servicing.19502.3">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>a3fd9237f6f104081db1ae3e9727d0f88029bda6</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.0.0-rc2.19465.2">
+    <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.0.1-servicing.19502.3">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>a3fd9237f6f104081db1ae3e9727d0f88029bda6</Sha>
     </Dependency>
-    <Dependency Name="dotnet-dev-certs" Version="3.0.0-rc2.19465.2">
+    <Dependency Name="dotnet-dev-certs" Version="3.0.1-servicing.19502.3">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>a3fd9237f6f104081db1ae3e9727d0f88029bda6</Sha>
     </Dependency>
-    <Dependency Name="dotnet-user-secrets" Version="3.0.0-rc2.19465.2">
+    <Dependency Name="dotnet-user-secrets" Version="3.0.1-servicing.19502.3">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>a3fd9237f6f104081db1ae3e9727d0f88029bda6</Sha>
     </Dependency>
-    <Dependency Name="dotnet-watch" Version="3.0.0-rc2.19465.2">
+    <Dependency Name="dotnet-watch" Version="3.0.1-servicing.19502.3">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>a3fd9237f6f104081db1ae3e9727d0f88029bda6</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="3.0.1-servicing.19476.1" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/templating</Uri>
@@ -80,11 +82,11 @@
       <Sha>2bb5a58198c6d96aae157ea3a119867b57cd839d</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-servicing.19480.1" CoherentParentDependency="Microsoft.WindowsDesktop.App">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-servicing.19480.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
       <Sha>af088e57775b7b9f28322511bc5be8ddb356b8a8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.1-servicing.19480.1" CoherentParentDependency="Microsoft.WindowsDesktop.App">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.1-servicing.19480.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/wpf</Uri>
       <Sha>d4121027999cb01b941481c774b42a2193775b93</Sha>
     </Dependency>
