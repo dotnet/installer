@@ -2,9 +2,9 @@
 <Dependencies>
   <ProductDependencies>
     <!-- Winforms / WPF -->
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-alpha1.19507.3">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>f88738a6c69ffcfad8784c4cd7080efb99d474a9</Sha>
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-alpha1.19508.5">
+      <Uri>https://github.com/dotnet/windowsdesktop</Uri>
+      <Sha>6db804ec52c804a0514fc4d19f48f3e36a8f3a14</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App" Version="5.0.0-alpha1.19507.3">
       <Uri>https://github.com/dotnet/core-setup</Uri>
@@ -54,14 +54,14 @@
       <Uri>https://github.com/dotnet/cli</Uri>
       <Sha>d282ff20f28166f0e35c63929cd2124c7ba09f6a</Sha>
     </Dependency>
-    <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-alpha1.19503.1" CoherentParentDependency="Microsoft.WindowsDesktop.App">
+    <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-alpha1.19462.11" CoherentParentDependency="Microsoft.WindowsDesktop.App">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>cf14d40dae262b353c5e2aa6cf0d35507dc279dc</Sha>
+      <Sha>aa251536c8ae637e95faf529480e8020d69aa361</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-alpha1.19504.4" CoherentParentDependency="Microsoft.WindowsDesktop.App">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-alpha1.19462.16" CoherentParentDependency="Microsoft.WindowsDesktop.App">
       <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>2e840efbac4cf916fe35d22d279d42ed02915cc6</Sha>
+      <Sha>11a8ba5060577dbddae4303e53583f8d4a82f172</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
