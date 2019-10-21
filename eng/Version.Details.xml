@@ -93,6 +93,12 @@
       <Uri>https://github.com/dotnet/wpf</Uri>
       <Sha>cde0da6f9dc9837b93d59d5efac1f0dcc95eb5fb</Sha>
     </Dependency>
+    <!-- This is so that WCF packages are included in the final drop for official releases. -->
+    <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
+    <Dependency Name="System.ServiceModel.Primitives" Version="4.7.0-preview1.final">
+      <Uri>https://github.com/dotnet/wcf</Uri>
+      <Sha>7345927a310945032a0a6a26f10f8a7bcfc46fdc</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19474.3">
