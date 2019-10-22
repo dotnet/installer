@@ -27,5 +27,8 @@ USER ${USER_ID}
 ENV LD_LIBRARY_PATH /usr/local/lib
 
 # Set working directory
-WORKDIR /opt/code
+ARG WORK_DIR
+WORKDIR ${WORK_DIR}
 
+# Set up Azure Artifacts credential provider
+RUN wget -qO- https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | bash

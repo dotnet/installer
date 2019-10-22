@@ -18,9 +18,17 @@ RUN echo 'code_executor ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN chmod -R a+rwx /usr/local
 RUN chmod -R a+rwx /home
 
+# Set working directory 
+ARG WORK_DIR
+WORKDIR ${WORK_DIR}
+
+# Set up Azure Artifacts credential provider
+# We download the installer and execute it using ${USER_ID} so that the installer
+# put the NuGet plugins in the correct $HOME/.nuget folder.
+RUN curl -O https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh
+RUN chmod +x ./installcredprovider.sh
+
 # Set user to the one we just created
 USER ${USER_ID}
 
-# Set working directory
-WORKDIR /opt/code
-
+RUN ./installcredprovider.sh

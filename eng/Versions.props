@@ -23,13 +23,25 @@
     <MicrosoftDotNetWpfProjectTemplatesPackageVersion>5.0.0-alpha1.19462.16</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/templating -->
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>3.1.0-preview1.19476.7</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/test-templates -->
+    <MicrosoftDotNetTestProjectTemplates31PackageVersion>1.0.2-beta4.19465.1</MicrosoftDotNetTestProjectTemplates31PackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
+    <NUnit3DotNetNewTemplatePackageVersion>1.6.3</NUnit3DotNetNewTemplatePackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19470.6</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>5.0.0-alpha1.19470.6</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>5.0.0-alpha1.19470.6</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
-    <dotnetdevcertsPackageVersion>5.0.0-alpha1.19470.6</dotnetdevcertsPackageVersion>
-    <dotnetusersecretsPackageVersion>5.0.0-alpha1.19470.6</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>5.0.0-alpha1.19470.6</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19517.10</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>5.0.0-alpha1.19517.10</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>5.0.0-alpha1.19517.10</MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion>
+    <dotnetdevcertsPackageVersion>5.0.0-alpha1.19517.10</dotnetdevcertsPackageVersion>
+    <dotnetusersecretsPackageVersion>5.0.0-alpha1.19517.10</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>5.0.0-alpha1.19517.10</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
@@ -44,30 +56,40 @@
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppPackageVersion>5.0.0-alpha1.19507.3</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppPackageVersion>
     <MicrosoftNETCoreAppInternalPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreAppInternalPackageVersion>
-    <MicrosoftNETCoreDotNetAppHostPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetAppHostPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-    <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
-    <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
-    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppTargetingPackVersion>
-    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreAppPackageVersion)</NetCoreAppHostPackVersion>
-    <NETStandardLibraryRefPackageVersion>2.1.0-alpha1.19507.3</NETStandardLibraryRefPackageVersion>
+    <MicrosoftNETCoreDotNetAppHostPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreDotNetAppHostPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+    <SharedHostVersion>$(MicrosoftNETCoreDotNetHostResolverPackageVersion)</SharedHostVersion>
+    <HostFxrVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</HostFxrVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppRefPackageVersion>
+    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppRefPackageVersion)</NetCoreAppTargetingPackVersion>
+    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</NetCoreAppHostPackVersion>
+    <NETStandardLibraryRefPackageVersion>2.1.0</NETStandardLibraryRefPackageVersion>
     <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
     <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>5.0.0-alpha1.19518.4</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>5.0.0-alpha1.19518.5</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>5.0.0-alpha1.19518.5</MicrosoftWindowsDesktopAppPackageVersion>
     <WindowsDesktopTargetingPackVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</WindowsDesktopTargetingPackVersion>
     <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- 3.1 Template versions -->
+    <MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>
+    <MicrosoftDotNetWpfProjectTemplates31PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates31PackageVersion>
+    <NUnit3Templates31PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates31PackageVersion>
+    <MicrosoftDotNetCommonItemTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates31PackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplates31PackageVersion)</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
+    <AspNetCorePackageVersionFor31Templates>$(AspNetCoreVersion)</AspNetCorePackageVersionFor31Templates>
     <!-- 3.0 Template versions -->
-    <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
-    <MicrosoftDotNetWpfProjectTemplates30PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates30PackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
+    <MicrosoftDotNetWpfProjectTemplates30PackageVersion>3.0.0</MicrosoftDotNetWpfProjectTemplates30PackageVersion>
     <NUnit3Templates30PackageVersion>1.6.3</NUnit3Templates30PackageVersion>
     <MicrosoftDotNetCommonItemTemplates30PackageVersion>2.0.0-preview8.19373.1</MicrosoftDotNetCommonItemTemplates30PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplates30PackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19354.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
-    <AspNetCorePackageVersionFor30Templates>$(AspNetCoreVersion)</AspNetCorePackageVersionFor30Templates>
+    <AspNetCorePackageVersionFor30Templates>3.0.0</AspNetCorePackageVersionFor30Templates>
     <!-- 2.2 Template versions -->
     <NUnit3Templates22PackageVersion>1.6.0</NUnit3Templates22PackageVersion>
     <MicrosoftDotNetCommonItemTemplates22PackageVersion>1.0.2-beta4</MicrosoftDotNetCommonItemTemplates22PackageVersion>
