@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="3.1.0-preview2.19522.1">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>9354e1f42890a9deb5d52ca65b0313c707d89ed5</Sha>
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-alpha1.19518.5">
+      <Uri>https://github.com/dotnet/windowsdesktop</Uri>
+      <Sha>76ac27ec24174b4d0a7ff58e9e6e24f1d6b608d4</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.0-preview2.19522.1">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>9354e1f42890a9deb5d52ca65b0313c707d89ed5</Sha>
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.0-alpha1.19518.5">
+      <Uri>https://github.com/dotnet/windowsdesktop</Uri>
+      <Sha>76ac27ec24174b4d0a7ff58e9e6e24f1d6b608d4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.1.0-preview2.19522.1">
       <Uri>https://github.com/dotnet/core-setup</Uri>
@@ -83,7 +83,7 @@
       <Uri>https://github.com/dotnet/cli</Uri>
       <Sha>c2aef013a10ac60b9349c9a895b06eb7a9ee0172</Sha>
     </Dependency>
-    <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
+    <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-preview1.19517.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
       <Sha>ef0fdeda487deb05f2864f11e97f047ed8620e9c</Sha>
