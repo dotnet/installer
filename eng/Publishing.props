@@ -58,26 +58,62 @@
           BeforeTargets="Publish"
           DependsOnTargets="SetSdkVersionInfo"
           Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' ">
+
+    <!-- If the sdk version is stabilized, then we should double publish the binaries to suffixed file names.
+         To do this, create new copies of the blobs, replacing the SdkVersion string in the file name with the
+         FullNugetVersion, except if the FullNuGetVersion is already in the file name (which would end up
+         publishing the same exact file name twice). -->
+    <ItemGroup Condition="'$(DropSuffix)'== 'true'">
+        <SdkAssetsToCopyWithSuffix Include="@(SdkAssetsToPublish)" Condition="'$([System.String]::Copy(`%(Filename)`).Contains(`$(SdkVersion)`))' == 'true'">
+          <SuffixedPath>$(ArtifactsShippingPackagesDir)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('$(SdkVersion)' ,'$(FullNuGetVersion)'))</SuffixedPath>
+        </SdkAssetsToCopyWithSuffix>
+        <CheckSumsToCopyWithSuffix Include="@(CheckSumsToPublish)" Condition="'$([System.String]::Copy(`%(Filename)`).Contains(`$(SdkVersion)`))' == 'true'">
+          <SuffixedPath>$(ArtifactsShippingPackagesDir)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('$(SdkVersion)' ,'$(FullNuGetVersion)'))</SuffixedPath>
+        </CheckSumsToCopyWithSuffix>
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(SdkAssetsToCopyWithSuffix -> '%(Identity)')"
+      DestinationFiles="@(SdkAssetsToCopyWithSuffix -> '%(SuffixedPath)')">
+      <Output TaskParameter="CopiedFiles" ItemName="SdkAssetsToPublishWithSuffix" />
+    </Copy>
+    <Copy
+      SourceFiles="@(CheckSumsToCopyWithSuffix -> '%(Identity)')"
+      DestinationFiles="@(CheckSumsToCopyWithSuffix -> '%(SuffixedPath)')">
+      <Output TaskParameter="CopiedFiles" ItemName="CheckSumsToPublishWithSuffix" />
+    </Copy>
+
     <ItemGroup>
+      <!-- Always publish blobs to a suffixed directory. -->
       <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)">
-        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
       </SdkAssetsToPushToBlobFeed>
 
       <SdkAssetsToPushToBlobFeed Include="@(SdkNonShippingAssetsToPublish)">
-        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
         <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
       </SdkAssetsToPushToBlobFeed>
 
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)">
-        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(SdkVersion)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('\' ,'/'))</RelativeBlobPath>
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
       </ChecksumsToPushToBlobFeed>
+
+      <SdkAssetsWithSuffixToPushToBlobFeed Include="@(SdkAssetsToPublishWithSuffix)">
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
+        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
+      </SdkAssetsWithSuffixToPushToBlobFeed>
+
+      <ChecksumsWithSuffixToPushToBlobFeed Include="@(CheckSumsToPublishWithSuffix)" Condition="'$(DropSuffix)'== 'true'">
+        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
+        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
+      </ChecksumsWithSuffixToPushToBlobFeed>
     </ItemGroup>
 
     <MakeDir Directories="$(DotnetTempWorkingDirectory)"/>
     <MakeDir Directories="$(ChecksumTempWorkingDirectory)"/>
 
     <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(SdkAssetsToPushToBlobFeed)"
+      ItemsToPush="@(SdkAssetsToPushToBlobFeed);@(SdkAssetsWithSuffixToPushToBlobFeed)"
       ManifestBuildData="Location=$(SdkAssetsFeedUrl)"
       ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
@@ -88,7 +124,7 @@
       AssetsTemporaryDirectory="$(DotnetTempWorkingDirectory)" />
 
     <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(ChecksumsToPushToBlobFeed)"
+      ItemsToPush="@(ChecksumsToPushToBlobFeed);@(ChecksumsWithSuffixToPushToBlobFeed)"
       ManifestBuildData="Location=$(ChecksumsFeedUrl)"
       ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
