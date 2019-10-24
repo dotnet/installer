@@ -397,7 +397,7 @@
       <BundledLayoutPackage>
         <LoweredPackageName>$([MSBuild]::ValueOrDefault('%(BundledLayoutPackage.PackageName)', '').ToLower())</LoweredPackageName>
       </BundledLayoutPackage>
-
+      
       <BundledLayoutPackageDownloadFiles Include="$(NuGetPackageRoot)\%(BundledLayoutPackage.LoweredPackageName)\%(BundledLayoutPackage.PackageVersion)\**\*.*">
         <RelativeLayoutPath>%(BundledLayoutPackage.RelativeLayoutPath)</RelativeLayoutPath>
         <LayoutPackageDescription>%(BundledLayoutPackage.Identity)</LayoutPackageDescription>
@@ -462,7 +462,7 @@
   </Target>
 
   <Target Name="LayoutAppHostTemplate" DependsOnTargets="RunResolvePackageDependencies">
-
+    
     <PropertyGroup>
       <NETCoreDotNetAppHostPackageName>Microsoft.NETCore.App.Host.$(SharedFrameworkRid)</NETCoreDotNetAppHostPackageName>
       <AppHostRestorePath>$(IntermediateOutputPath)AppHostRestore\</AppHostRestorePath>
@@ -488,7 +488,7 @@
       BuildInParallel="False"
       Projects="@(AppHostTemplateDownloadPackageProject)">
     </MSBuild>
-
+    
     <PropertyGroup>
       <AppHostExecutableName>AppHost$(ExeExtension)</AppHostExecutableName>
     </PropertyGroup>
@@ -535,7 +535,7 @@
 
     <RemoveDir Directories="$(SdkInternalLayoutPath)" />
     <MakeDir Directories="$(SdkInternalLayoutPath)" />
-
+    
     <!-- Create "SDK Internal" layout to create the MSI to bundle -->
     <ItemGroup>
       <SdkInternalFiles Include="$(RedistLayoutPath)sdk/$(SdkVersion)/**/*.*"/>
