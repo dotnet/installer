@@ -50,23 +50,30 @@ namespace Microsoft.DotNet.Cli.Build
             {
                 Log.LogMessage(MessageImportance.High, $"Downloading '{Uri}' to '{DestinationPath}'");
 
-                if (!DownloadFile(Uri, DestinationPath))
+                if (!DownloadFromUri(Uri, DestinationPath))
                 {
                     if (!string.IsNullOrWhiteSpace(PrivateUri))
                     {
-                        return DownloadFile(PrivateUri, DestinationPath);
+                        Log.LogMessage(MessageImportance.High, $"Couldn't download file '{Uri}' to '{DestinationPath}'. Trying to download file from '{PrivateUri}' instead.");
+
+                        if (!DownloadFromUri(PrivateUri, DestinationPath))
+                        {
+                            Log.LogError($"Couldn't download file '{PrivateUri}' to '{DestinationPath}' either.");
+                            return false;
+                        }
                     }
-
-                    Log.LogError($"Couldn't download file '{Uri}' to '{DestinationPath}'");
-
-                    return false;
+                    else
+                    {
+                        Log.LogError($"Couldn't download file '{Uri}' to '{DestinationPath}'");
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        private bool DownloadFile(string source, string target)
+        private bool DownloadFromUri(string source, string target)
         {
             try
             {
