@@ -14,42 +14,57 @@ parameters:
   # Job timeout
   timeoutInMinutes: 180
 
+  # Publish using pipelines
+  enablePublishUsingPipelines: true
+
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
     name: ${{ parameters.agentOs }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
+    enablePublishBuildArtifacts: true
     enablePublishBuildAssets: true
+    enablePublishTestResults: true
+    enablePublishUsingPipelines: ${{parameters.enablePublishUsingPipelines}}
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
     pool: ${{ parameters.pool }}
     ${{ if ne(parameters.strategy, '') }}:
       strategy: ${{ parameters.strategy }}
+    workspace:
+      clean: all
 
     variables: 
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
       - _BuildArgs: ''
       - _SignType: test
+      - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
+
+      - ${{ if and(eq(variables['System.TeamProject'], 'internal'), contains(variables['Build.SourceBranch'], 'internal')) }}:
+        - group: DotNet-MSRC-Storage
+        - _DOTNETCLIMSRC_READ_SAS_TOKEN: $(dotnetclimsrc-read-sas-token)
 
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
         - group: DotNet-HelixApi-Access
+        - group: DotNet-Blob-Feed
         - _DotNetPublishToBlobFeed: true
         - _PushToVSFeed: true
         - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                  /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                  /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
-                  /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                   /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
                   /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
                   /p:PB_PublishType=blob
                   /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
-                  /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
                   /p:DotNetSignType=real
                   /p:TeamName=$(_TeamName)
+                  /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
 
     steps:
     - checkout: self
@@ -69,6 +84,7 @@ phases:
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
           DropSuffix: $(_DropSuffix)
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng/setbuildinfo.sh $(_BuildArchitecture) $(_BuildConfig)'
@@ -88,6 +104,7 @@ phases:
         displayName: Build
         env:
           DropSuffix: $(_DropSuffix)
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
       - script: ./build.sh
@@ -98,6 +115,8 @@ phases:
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
+        env:
+          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT')) }}:
       - task: NuGetCommand@2
@@ -117,7 +136,7 @@ phases:
         testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
         platform: '$(BuildPlatform)'	
         configuration: '$(_BuildConfig)'	
-      condition: not(succeeded())
+      condition: ne(variables['TestParameter'], '')
 
     - task: CopyFiles@2	
       displayName: Gather Logs	
@@ -128,7 +147,7 @@ phases:
          TestResults/$(_BuildConfig)/**/*	
         TargetFolder: '$(Build.ArtifactStagingDirectory)'	
       continueOnError: true	
-      condition: not(succeeded())	
+      condition: always()
 
     - task: PublishBuildArtifacts@1	
       displayName: Publish Logs to VSTS	
@@ -137,4 +156,4 @@ phases:
         ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
         publishLocation: Container	
       continueOnError: true	
-      condition: not(succeeded())
+      condition: always()

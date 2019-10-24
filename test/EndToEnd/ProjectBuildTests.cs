@@ -2,16 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.DotNet.TestFramework;
 using Microsoft.DotNet.Tools.Test.Utilities;
 using Xunit;
 
 namespace EndToEnd.Tests
 {
-
     public class ProjectBuildTests : TestBase
     {
-
         [Fact]
         public void ItCanNewRestoreBuildRunCleanMSBuildProject()
         {
@@ -35,12 +34,11 @@ namespace EndToEnd.Tests
                 .Should().Pass();
 
             var runCommand = new RunCommand()
-                .WithWorkingDirectory(projectDirectory);
-
-            runCommand.ExecuteWithCapturedOutput()
-                // Templates are still at 3.0 and will not run on 5.0, revert to commented out assertion when 5.0 templates land
+                .WithWorkingDirectory(projectDirectory)
+                .ExecuteWithCapturedOutput()
+                // Templates are still at 3.1 and will not run on 5.0, revert to commented out assertion when 5.0 templates land
                 //.Should().Pass().And.HaveStdOutContaining("Hello World!");
-                .Should().Fail().And.HaveStdErrContaining("https://aka.ms/dotnet-download");
+                .Should().Fail().And.HaveStdErrContaining("https://aka.ms/dotnet-core-applaunch");
 
             var binDirectory = new DirectoryInfo(projectDirectory).Sub("bin");
             binDirectory.Should().HaveFilesMatching("*.dll", SearchOption.AllDirectories);
@@ -53,7 +51,7 @@ namespace EndToEnd.Tests
             binDirectory.Should().NotHaveFilesMatching("*.dll", SearchOption.AllDirectories);
         }
 
-        [Fact(Skip = "Need support for ASP.NET on .NET Core 3.1")]
+        [Fact]
         public void ItCanRunAnAppUsingTheWebSdk()
         {
             var directory = TestAssets.CreateTestDirectory();
@@ -80,13 +78,11 @@ namespace EndToEnd.Tests
                 .Should().Pass();
 
             var runCommand = new RunCommand()
-                .WithWorkingDirectory(projectDirectory);
-
-            runCommand.ExecuteWithCapturedOutput()
-                // Templates are still at 3.0 and will not run on 5.0, revert to commented out assertion when 5.0 templates land
+                .WithWorkingDirectory(projectDirectory)
+                .ExecuteWithCapturedOutput()
+                // Templates are still at 3.1 and will not run on 5.0, revert to commented out assertion when 5.0 templates land
                 //.Should().Pass().And.HaveStdOutContaining("Hello World!");
-                .Should().Fail().And.HaveStdErrContaining("https://aka.ms/dotnet-download");
-
+                .Should().Fail().And.HaveStdErrContaining("https://aka.ms/dotnet-core-applaunch");
 
         }
 
@@ -110,7 +106,22 @@ namespace EndToEnd.Tests
             TestTemplateBuild(templateName);
         }
 
-        private void TestTemplateBuild(string templateName)
+        [WindowsOnlyTheory]
+        [InlineData("wpf")]
+        public void ItCanBuildDesktopTemplatesSelfContained(string templateName)
+        {
+            TestTemplateBuild(templateName);
+        }
+
+        [Theory]
+        [InlineData("web")]
+        [InlineData("console")]
+        public void ItCanBuildTemplatesSelfContained(string templateName)
+        {
+            TestTemplateBuild(templateName, selfContained: true);
+        }
+
+        private void TestTemplateBuild(string templateName, bool selfContained = false)
         {
             var directory = TestAssets.CreateTestDirectory(identifier: templateName);
             string projectDirectory = directory.FullName;
@@ -121,17 +132,13 @@ namespace EndToEnd.Tests
                 .Execute(newArgs)
                 .Should().Pass();
 
-            //  Work-around for MVC template test until ASP.Net publishes Preview 5 'Microsoft.AspNetCore.Mvc.NewtonsoftJson' to NuGet.org
-            string restoreArgs = string.Equals(templateName, "mvc", StringComparison.OrdinalIgnoreCase) ? "/p:RestoreAdditionalProjectSources=https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json" : "";
-            new RestoreCommand()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute(restoreArgs)
-                .Should().Pass();
-
+            var buildArgs = selfContained ? "" :$"-r {RuntimeEnvironment.GetRuntimeIdentifier()}";
+            var dotnetRoot = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
             new BuildCommand()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute()
-                .Should().Pass();
+                 .WithEnvironmentVariable("PATH", dotnetRoot) // override PATH since razor rely on PATH to find dotnet
+                 .WithWorkingDirectory(projectDirectory)
+                 .Execute(buildArgs)
+                 .Should().Pass();
         }
     }
 }
