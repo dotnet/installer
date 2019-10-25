@@ -12,7 +12,8 @@
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotnetToolsetInternalPackageVersion>5.0.100-alpha1.19521.2</MicrosoftDotnetToolsetInternalPackageVersion>
+    <!-- Dependencies from https://github.com/dotnet/toolset -->
+    <MicrosoftDotnetToolsetInternalPackageVersion>5.0.100-alpha1.19522.14</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -24,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/templating -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>3.1.0-preview1.19476.7</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>5.0.0-alpha1.19428.1</MicrosoftDotNetCommonItemTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
@@ -45,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.100-alpha1.19521.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.100-alpha1.19522.14</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
@@ -56,23 +57,35 @@
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftNETCoreAppPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppPackageVersion>
-    <MicrosoftNETCoreAppInternalPackageVersion>$(MicrosoftNETCoreAppPackageVersion)</MicrosoftNETCoreAppInternalPackageVersion>
-    <MicrosoftNETCoreDotNetAppHostPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreDotNetAppHostPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreDotNetHostResolverPackageVersion>
-    <SharedHostVersion>$(MicrosoftNETCoreDotNetHostResolverPackageVersion)</SharedHostVersion>
-    <HostFxrVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</HostFxrVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha1.19518.5</MicrosoftNETCoreAppRefPackageVersion>
-    <NetCoreAppTargetingPackVersion>$(MicrosoftNETCoreAppRefPackageVersion)</NetCoreAppTargetingPackVersion>
-    <NetCoreAppHostPackVersion>$(MicrosoftNETCoreDotNetAppHostPackageVersion)</NetCoreAppHostPackVersion>
+    <!-- Dependencies from https://github.com/dotnet/corefx -->
+    <MicrosoftNETCorePlatformsPackageVersion>5.0.0-alpha1.19521.4</MicrosoftNETCorePlatformsPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/dotnet/core-setup -->
+    <MicrosoftNETCoreAppInternalPackageVersion>5.0.0-alpha1.19523.1</MicrosoftNETCoreAppInternalPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0-alpha1.19523.1</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppHostwinx64PackageVersion>5.0.0-alpha1.19523.1</MicrosoftNETCoreAppHostwinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>5.0.0-alpha1.19523.1</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>5.0.0-alpha1.19523.1</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <NETStandardLibraryRefPackageVersion>2.1.0</NETStandardLibraryRefPackageVersion>
-    <AspNetCoreVersion>$(MicrosoftAspNetCoreAppRuntimeWinX64PackageVersion)</AspNetCoreVersion>
-    <AspNetTargetingPackVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</AspNetTargetingPackVersion>
-    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>5.0.0-alpha1.19518.5</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
-    <MicrosoftWindowsDesktopAppPackageVersion>5.0.0-alpha1.19518.5</MicrosoftWindowsDesktopAppPackageVersion>
-    <WindowsDesktopTargetingPackVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</WindowsDesktopTargetingPackVersion>
-    <MicrosoftWindowsDesktopPackageVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</MicrosoftWindowsDesktopPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/dotnet/windowsdesktop -->
+    <MicrosoftWindowsDesktopAppPackageVersion>5.0.0-alpha1.19524.2</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>5.0.0-alpha1.19524.2</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppRefPackageVersion>5.0.0-alpha1.19524.2</MicrosoftWindowsDesktopAppRefPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Runtime and Apphost pack versions are the same for all RIDs. We flow the x64    -->
+    <!-- version above and create aliases without the winx64 here for clarity elsewhere. -->
+    <MicrosoftNETCoreAppHostPackageVersion>$(MicrosoftNETCoreAppHostwinx64PackageVersion)</MicrosoftNETCoreAppHostPackageVersion>
+    <MicrosoftNETCoreAppRuntimePackageVersion>$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</MicrosoftNETCoreAppRuntimePackageVersion>
+    <MicrosoftAspNetCoreAppRuntimePackageVersion>$(MicrosoftAspNetCoreAppRuntimewinx64PackageVersion)</MicrosoftAspNetCoreAppRuntimePackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimePackageVersion>$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</MicrosoftWindowsDesktopAppRuntimePackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HostFxrVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</HostFxrVersion>
+    <SharedHostVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedHostVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- 3.1 Template versions -->
@@ -80,8 +93,8 @@
     <MicrosoftDotNetWpfProjectTemplates31PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates31PackageVersion>
     <NUnit3Templates31PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates31PackageVersion>
     <MicrosoftDotNetCommonItemTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates31PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplates31PackageVersion)</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
-    <AspNetCorePackageVersionFor31Templates>$(AspNetCoreVersion)</AspNetCorePackageVersionFor31Templates>
+    <MicrosoftDotNetCommonProjectTemplates31PackageVersion>3.1.0-preview1.19475.1</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
+    <AspNetCorePackageVersionFor31Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor31Templates>
     <!-- 3.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates30PackageVersion>3.0.0</MicrosoftDotNetWpfProjectTemplates30PackageVersion>
@@ -100,7 +113,7 @@
     <NUnit3Templates21PackageVersion>1.5.3</NUnit3Templates21PackageVersion>
     <MicrosoftDotNetCommonItemTemplates21PackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplates21PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates21PackageVersion>$(MicrosoftDotNetCommonItemTemplates21PackageVersion)</MicrosoftDotNetCommonProjectTemplates21PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4-20181009-2100240</MicrosoftDotNetTestProjectTemplates21PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.19511.1</MicrosoftDotNetTestProjectTemplates21PackageVersion>
     <AspNetCorePackageVersionFor21Templates>2.1.12</AspNetCorePackageVersionFor21Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
@@ -114,20 +127,5 @@
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RestoreSources>
-      $(RestoreSources);
-      https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
-      https://dotnet.myget.org/F/msbuild/api/v3/index.json;
-      https://dotnet.myget.org/F/nuget-build/api/v3/index.json;
-      https://dotnet.myget.org/F/templating/api/v3/index.json;
-      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json;
-      https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json;
-      https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json;
-      https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json;
-      https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json;
-      https://dotnetfeed.blob.core.windows.net/dotnet-toolset/index.json;
-    </RestoreSources>
   </PropertyGroup>
 </Project>
