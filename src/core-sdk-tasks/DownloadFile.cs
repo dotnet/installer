@@ -14,6 +14,12 @@ namespace Microsoft.DotNet.Cli.Build
         [Required]
         public string Uri { get; set; }
 
+        /// <summary>
+        /// If this field is set and the task fail to download the file from `Uri` it will try
+        /// to download the file from `PrivateUri`.
+        /// </summary>
+        public string PrivateUri { get; set; }
+
         [Required]
         public string DestinationPath { get; set; }
 
@@ -44,26 +50,47 @@ namespace Microsoft.DotNet.Cli.Build
             {
                 Log.LogMessage(MessageImportance.High, $"Downloading '{Uri}' to '{DestinationPath}'");
 
-                using (var httpClient = new HttpClient())
+                if (!DownloadFromUri(Uri, DestinationPath))
                 {
-                    var getTask = httpClient.GetStreamAsync(Uri);
-
-                    try
+                    if (!string.IsNullOrWhiteSpace(PrivateUri))
                     {
-                        using (var outStream = File.Create(DestinationPath))
+                        Log.LogMessage(MessageImportance.High, $"Couldn't download file '{Uri}' to '{DestinationPath}'. Trying to download file from '{PrivateUri}' instead.");
+
+                        if (!DownloadFromUri(PrivateUri, DestinationPath))
                         {
-                            getTask.Result.CopyTo(outStream);
+                            Log.LogError($"Couldn't download file '{PrivateUri}' to '{DestinationPath}' either.");
+                            return false;
                         }
                     }
-                    catch (Exception)
+                    else
                     {
-                        File.Delete(DestinationPath);
-                        throw;
+                        Log.LogError($"Couldn't download file '{Uri}' to '{DestinationPath}'");
+                        return false;
                     }
                 }
             }
 
             return true;
+        }
+        
+        private bool DownloadFromUri(string source, string target)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                using (var outStream = File.Create(target))
+                {
+                    var getTask = httpClient.GetStreamAsync(source);
+                    getTask.Result.CopyTo(outStream);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                File.Delete(target);
+                return false;
+            }
         }
     }
 }
