@@ -19,17 +19,17 @@
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
     <PropertyGroup>
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
-      
+
       <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</InternalBuild>
       <CoreSetupBlobAccessTokenParam Condition="'$(InternalBuild)' == 'true'">$(DOTNETCLIMSRC_READ_SAS_TOKEN)</CoreSetupBlobAccessTokenParam>
 
-      <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</CoreSetupBlobRootUrl>
+      <PrivateCoreSetupBlobRootUrl Condition="'$(PrivateCoreSetupBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</PrivateCoreSetupBlobRootUrl>
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
 
-      <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
+      <PrivateDotnetExtensionsBlobRootUrl Condition="'$(PrivateDotnetExtensionsBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</PrivateDotnetExtensionsBlobRootUrl>
       <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
-      
-      <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotnetToolsetBlobRootUrl>
+
+      <PrivateDotnetToolsetBlobRootUrl Condition="'$(PrivateDotnetToolsetBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</PrivateDotnetToolsetBlobRootUrl>
       <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
 
       <CoreSetupRid Condition="'$(CoreSetupRid)' == ''">$(HostRid)</CoreSetupRid>
@@ -91,8 +91,14 @@
 
     <PropertyGroup>
       <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
+      <PrivateCoreSetupRootUrl>$(PrivateCoreSetupBlobRootUrl)Runtime/</PrivateCoreSetupRootUrl>
+
       <AspNetCoreSharedFxRootUrl>$(CoreSetupBlobRootUrl)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
+      <PrivateAspNetCoreSharedFxRootUrl>$(PrivateCoreSetupBlobRootUrl)aspnetcore/Runtime/</PrivateAspNetCoreSharedFxRootUrl>
+
       <WinFormsAndWpfSharedFxRootUrl>$(CoreSetupRootUrl)</WinFormsAndWpfSharedFxRootUrl>
+      <PrivateWinFormsAndWpfSharedFxRootUrl>$(PrivateCoreSetupRootUrl)</PrivateWinFormsAndWpfSharedFxRootUrl>
+
       <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</CoreSetupDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
     </PropertyGroup>
@@ -106,6 +112,7 @@
     <ItemGroup>
       <BundledLayoutComponent Include="CombinedSharedHostAndFrameworkArchive">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(CombinedFrameworkHostArchiveFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
@@ -163,6 +170,7 @@
       <BundledInstallerComponent Include="DownloadedRuntimeDepsInstallerFile"
                                  Condition="('$(IsDebianBaseDistro)' == 'true' OR '$(IsRPMBasedDistro)' == 'true') And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedRuntimeDepsInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -170,6 +178,7 @@
       <BundledInstallerComponent Include="DownloadedSharedFrameworkInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedSharedFrameworkInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -177,6 +186,7 @@
       <BundledInstallerComponent Include="DownloadedSharedHostInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(SharedHostVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(SharedHostVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedSharedHostInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -184,6 +194,7 @@
       <BundledInstallerComponent Include="DownloadedHostFxrInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(HostFxrVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(HostFxrVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedHostFxrInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -191,6 +202,7 @@
       <BundledInstallerComponent Include="DownloadedNetCoreAppTargetingPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(NetCoreAppTargetingPackVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(NetCoreAppTargetingPackVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -199,6 +211,7 @@
                            Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <!-- NetStandard targeting pack currently frozen at 2.1.0 from 3.0.0 branch -->
         <BaseUrl>$(CoreSetupRootUrl)3.0.0</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)3.0.0</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -206,6 +219,7 @@
       <BundledInstallerComponent Include="DownloadedNetCoreAppHostPackInstallerFile"
                      Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppHostPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -213,6 +227,7 @@
       <BundledInstallerComponent Include="DownloadedAlternateNetCoreAppHostPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedAlternateNetCoreAppHostPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -220,6 +235,7 @@
       <BundledInstallerComponent Include="DownloadedArmNetCoreAppHostPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedArmNetCoreAppHostPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -227,6 +243,7 @@
       <BundledInstallerComponent Include="DownloadedArm64NetCoreAppHostPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(MicrosoftNETCoreAppPackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedArm64NetCoreAppHostPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -234,12 +251,14 @@
       <BundledInstallerComponent Include="DownloadedWindowsDesktopTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateCoreSetupRootUrl)$(WindowsDesktopTargetingPackVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedWindowsDesktopTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledLayoutComponent Include="ToolsetArchive">
         <BaseUrl>$(DotnetToolsetBlobRootUrl)Toolset/$(MicrosoftDotnetToolsetInternalPackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateDotnetToolsetBlobRootUrl)Toolset/$(MicrosoftDotnetToolsetInternalPackageVersion)</PrivateBaseUrl>
         <DownloadFileName>dotnet-toolset-internal-$(MicrosoftDotnetToolsetInternalPackageVersion).zip</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath>sdk/$(SdkVersion)</RelativeLayoutPath>
@@ -249,6 +268,7 @@
     <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
       <BundledLayoutComponent Include="DownloadedAspNetCoreSharedFxArchiveFile">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxArchiveFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
@@ -259,6 +279,7 @@
       <BundledLayoutComponent Include="DownloadedAspNetTargetingPackArchiveFile"
                               Condition="'$(InstallerExtension)' == '.pkg' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(AspNetTargetingPackArchiveFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
@@ -267,6 +288,7 @@
       <BundledInstallerComponent Include="DownloadedAspNetTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' != '.pkg' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -274,6 +296,7 @@
       <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxInstallerFile"
                                  Condition="'$(InstallerExtension)' != '.pkg' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -281,6 +304,7 @@
       <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxWixLibFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedAspNetCoreSharedFxWixLibFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -288,6 +312,7 @@
       <BundledInstallerComponent Include="DownloadedAspNetCoreV2ModuleInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' == '.msi' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedAspNetCoreV2ModuleInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -295,6 +320,7 @@
       <BundledInstallerComponent Include="AspNetCoreSharedFxBaseRuntimeVersionFile"
                                  Condition="!$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateAspNetCoreSharedFxRootUrl)$(AspNetCoreBlobDirectory)</PrivateBaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -316,6 +342,7 @@
 
       <BundledLayoutComponent Include="WinFormsAndWpfSharedFxArchiveFile">
         <BaseUrl>$(WinFormsAndWpfSharedFxRootUrl)$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateWinFormsAndWpfSharedFxRootUrl)$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(WinFormsAndWpfSharedFxArchiveFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledLayoutComponent>
@@ -323,6 +350,7 @@
       <BundledInstallerComponent Include="DownloadedWinFormsAndWpfSharedFrameworkInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(WinFormsAndWpfSharedFxRootUrl)$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</BaseUrl>
+        <PrivateBaseUrl>$(PrivateWinFormsAndWpfSharedFxRootUrl)$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</PrivateBaseUrl>
         <DownloadFileName>$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</DownloadFileName>
         <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
@@ -344,7 +372,8 @@
     </ItemGroup>
 
     <DownloadFile Condition=" '@(ComponentToDownload)' != '' And '%(ComponentToDownload.ShouldDownload)' == 'true'"
-                  Uri="%(ComponentToDownload.BaseUrl)/%(ComponentToDownload.DownloadFileName)%(ComponentToDownload.AccessToken)"
+                  Uri="%(ComponentToDownload.BaseUrl)/%(ComponentToDownload.DownloadFileName)"
+                  PrivateUri="%(ComponentToDownload.PrivateBaseUrl)/%(ComponentToDownload.DownloadFileName)%(ComponentToDownload.AccessToken)"
                   DestinationPath="%(ComponentToDownload.DownloadDestination)" />
 
     <ItemGroup>
