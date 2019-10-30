@@ -19,18 +19,18 @@
     <WindowsDesktopTargetingPackBlobVersion>3.0.0</WindowsDesktopTargetingPackBlobVersion>
     <NETStandardTargetingPackBlobVersion>3.0.0</NETStandardTargetingPackBlobVersion>
   </PropertyGroup>
- 
+
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
     <PropertyGroup>
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
-      
-      <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</InternalBuild>
-      <MSRCBaseURL Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">https://dotnetclimsrc.blob.core.windows.net/</MSRCBaseURL>
+
+      <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal'">true</InternalBuild>
+      <InternalBaseURL Condition="$(SYSTEM_TEAMPROJECT) == 'internal'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</InternalBaseURL>
 
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
       <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
       <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
-      
+
       <CoreSetupRid Condition="'$(CoreSetupRid)' == ''">$(HostRid)</CoreSetupRid>
       <CoreSetupRid Condition=" ('$(HostOSName)' == 'win' or '$(HostOSName)' == 'osx' or '$(HostOSName)' == 'freebsd') and '$(DotNetBuildFromSource)' != 'true' ">$(HostMonikerRid)</CoreSetupRid>
 
@@ -115,7 +115,7 @@
         <TargetFramework>$(NetStandardTargetingPackTargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
-      
+
       <BundledLayoutPackage Include="MicrosoftAspNetCoreAppTargetingPackNupkg">
         <PackageName>Microsoft.AspNetCore.App.Ref</PackageName>
         <PackageVersion>$(MicrosoftAspNetCoreAppRefPackageVersion)</PackageVersion>
@@ -142,25 +142,25 @@
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedRuntimeDepsInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedSharedFrameworkInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedSharedFrameworkInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedSharedHostInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedSharedHostInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedHostFxrInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedHostFxrInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedNetCoreAppTargetingPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(NETCoreAppTargetingPackBlobVersion)</BaseUrl>
@@ -178,7 +178,7 @@
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppHostPackInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedWindowsDesktopTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackBlobVersion)</BaseUrl>
@@ -207,7 +207,7 @@
         <DownloadFileName>$(AspNetTargetingPackArchiveFileName)</DownloadFileName>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
-      
+
       <BundledInstallerComponent Include="DownloadedAspNetTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' != '.pkg' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl Condition="'$(AspNetTargetingPackIsPinned)' == 'true'">$(AspNetCoreSharedFxRootUrl)$(MicrosoftAspNetCoreAppRefPackageVersion)</BaseUrl>
@@ -227,13 +227,13 @@
         <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFileName)</DownloadFileName>
       </BundledInstallerComponent>
     </ItemGroup>
-    
+
     <PropertyGroup>
       <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(Architecture)' == 'arm'">false</IncludeWpfAndWinForms>
       <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' ">true</IncludeWpfAndWinForms>
       <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' ">false</IncludeWpfAndWinForms>
     </PropertyGroup>
-    
+
     <ItemGroup Condition=" '$(IncludeWpfAndWinForms)' != 'false' ">
       <BundledLayoutPackage Include="MicrosoftWindowsDesktopAppTargetingPackNupkg">
         <PackageName>Microsoft.WindowsDesktop.App.Ref</PackageName>
@@ -268,13 +268,13 @@
         <ShouldDownload Condition="!Exists('%(DownloadDestination)')">true</ShouldDownload>
 
         <!--
-          Replaces the host portion of 'BaseUrl' with 'PrivateBaseUrl'.
+          Replaces the public base url with the private one.
         -->
-        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$(MSRCBaseURL)$([System.String]::new('%(BaseUrl)').Substring($([System.String]::new('%(BaseUrl)').IndexOf('/', 8))))</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(BaseUrl)').Replace('$(CoreSetupBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(BaseUrl)').Replace('$(DotnetExtensionsBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(BaseUrl)').Replace('$(DotnetToolsetBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
       </ComponentToDownload>
     </ItemGroup>
-
-    <Error Condition="$([System.String]::new('%(ComponentToDownload.BaseUrl)').IndexOf('http')) == -1" Text="The BaseURL '%(BaseUrl)' needs to be set with the 'http[s]' prefix." />
 
     <DownloadFile Condition=" '@(ComponentToDownload)' != '' And '%(ComponentToDownload.ShouldDownload)' == 'true'"
                   Uri="%(ComponentToDownload.BaseUrl)/%(ComponentToDownload.DownloadFileName)"
@@ -302,7 +302,7 @@
       <BundledLayoutPackage>
         <LoweredPackageName>$([MSBuild]::ValueOrDefault('%(BundledLayoutPackage.PackageName)', '').ToLower())</LoweredPackageName>
       </BundledLayoutPackage>
-      
+
       <BundledLayoutPackageDownloadFiles Include="$(NuGetPackageRoot)\%(BundledLayoutPackage.LoweredPackageName)\%(BundledLayoutPackage.PackageVersion)\**\*.*">
         <RelativeLayoutPath>%(BundledLayoutPackage.RelativeLayoutPath)</RelativeLayoutPath>
         <LayoutPackageDescription>%(BundledLayoutPackage.Identity)</LayoutPackageDescription>
@@ -342,7 +342,7 @@
           DestinationFiles="@(BundledLayoutPackageDownloadFilesWithDestination->'%(DestinationPath)')"
           SkipUnchangedFiles="true"
           />
-    
+
   </Target>
 
   <Target Name="RetargetTools">
@@ -359,24 +359,24 @@
       ReplacementPatterns="$(ReplacementPattern)"
       ReplacementStrings="$(ReplacementString)" />
   </Target>
-  
+
   <Target Name="GenerateVersionFile" DependsOnTargets="SetupBundledComponents;GetCoreSdkGitCommitInfo">
     <WriteLinesToFile File="$(SdkOutputDirectory).version"
                       Lines="$(GitCommitHash);$(SdkVersion);$(Rid)"
                       Overwrite="true" />
   </Target>
-  
+
   <Target Name="LayoutAppHostTemplate" DependsOnTargets="RunResolvePackageDependencies">
-    
+
     <PropertyGroup>
       <NETCoreAppHostPackageName>Microsoft.NETCore.App.Host.$(SharedFrameworkRid)</NETCoreAppHostPackageName>
       <AppHostRestorePath>$(IntermediateOutputPath)AppHostRestore\</AppHostRestorePath>
       <AppHostTemplatePath>$(SdkOutputDirectory)AppHostTemplate</AppHostTemplatePath>
     </PropertyGroup>
-    
+
     <RemoveDir Directories="$(AppHostRestorePath)" />
     <MakeDir Directories="$(AppHostRestorePath)" />
-      
+
     <ItemGroup>
       <AppHostTemplateDownloadPackageProject Include="$(MSBuildThisFileDirectory)DownloadPackage.csproj">
         <Properties>
@@ -393,7 +393,7 @@
       BuildInParallel="False"
       Projects="@(AppHostTemplateDownloadPackageProject)">
     </MSBuild>
-    
+
     <PropertyGroup>
       <AppHostExecutableName>AppHost$(ExeExtension)</AppHostExecutableName>
     </PropertyGroup>
@@ -414,9 +414,9 @@
 
     <Message Text="Copy from @(NativeRestoredAppHostNETCore) to $(AppHostTemplatePath)."
              Importance="High" />
-  
+
   </Target>
-  
+
   <Target Name="GenerateLayout"
           DependsOnTargets="DownloadBundledComponents;
                             CleanLayoutPath;
@@ -431,16 +431,16 @@
                             LayoutAppHostTemplate;
                             SignLayout"
           BeforeTargets="AfterBuild">
-  
+
   </Target>
-  
+
   <Target Name="GenerateInternalLayout"
           DependsOnTargets="GenerateLayout"
           BeforeTargets="AfterBuild">
 
     <RemoveDir Directories="$(SdkInternalLayoutPath)" />
     <MakeDir Directories="$(SdkInternalLayoutPath)" />
-    
+
     <!-- Create "SDK Internal" layout to create the MSI to bundle -->
     <ItemGroup>
       <SdkInternalFiles Include="$(RedistLayoutPath)sdk/$(SdkVersion)/**/*.*"/>

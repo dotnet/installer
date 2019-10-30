@@ -5,20 +5,20 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using System.Threading;
 
 namespace Microsoft.DotNet.Cli.Build
 {
-    public class DownloadFile : Task
+    public class DownloadFile : Microsoft.Build.Utilities.Task
     {
         [Required]
         public string Uri { get; set; }
 
         /// <summary>
-        /// If this field is set and the task fail to download the file from `Uri` it will try
-        /// to download the file from `PrivateUri`.
+        /// If this field is set and the task fail to download the file from `Uri`, with a NotFound
+        /// status, it will try to download the file from `PrivateUri`.
         /// </summary>
         public string PrivateUri { get; set; }
 
@@ -56,55 +56,54 @@ namespace Microsoft.DotNet.Cli.Build
                 File.Copy(filePath, DestinationPath);
                 return true;
             }
-            else
+
+            Log.LogMessage(MessageImportance.High, $"Downloading '{Uri}' to '{DestinationPath}'");
+
+            Random rng = new Random();
+            for (int retryNumber = 0; retryNumber < MaxRetries; retryNumber++)
             {
-                Log.LogMessage(MessageImportance.High, $"Downloading '{Uri}' to '{DestinationPath}'");
-
-                for (int retryNumber = 0; retryNumber < MaxRetries; retryNumber++)
+                using (var httpClient = new HttpClient())
                 {
-                    using (var httpClient = new HttpClient())
+                    try
                     {
-                        try
+                        var httpResponse = await httpClient.GetAsync(Uri);
+
+                        if (httpResponse.StatusCode == HttpStatusCode.NotFound)
                         {
-                            var httpResponse = await httpClient.GetAsync(Uri);
-
-                            if (httpResponse.StatusCode == HttpStatusCode.NotFound)
+                            if (!string.IsNullOrEmpty(PrivateUri))
                             {
-                                if (!string.IsNullOrEmpty(PrivateUri))
-                                {
-                                    httpResponse = await httpClient.GetAsync(PrivateUri);
-                                }
-
-                                // The Azure Storage REST API returns '400 - Bad Request' in some cases
-                                // where the resource is not found on the storage.
-                                // https://docs.microsoft.com/en-us/rest/api/storageservices/common-rest-api-error-codes
-                                if (httpResponse.StatusCode == HttpStatusCode.NotFound ||
-                                    httpResponse.ReasonPhrase.IndexOf("The requested URI does not represent any resource on the server.", StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    return false;
-                                }
+                                httpResponse = await httpClient.GetAsync(PrivateUri);
                             }
 
-                            using (var outStream = File.Create(DestinationPath))
+                            // The Azure Storage REST API returns '400 - Bad Request' in some cases
+                            // where the resource is not found on the storage.
+                            // https://docs.microsoft.com/en-us/rest/api/storageservices/common-rest-api-error-codes
+                            if (httpResponse.StatusCode == HttpStatusCode.NotFound ||
+                                httpResponse.ReasonPhrase.IndexOf("The requested URI does not represent any resource on the server.", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
-                                await httpResponse.Content.CopyToAsync(outStream);
+                                return false;
                             }
+                        }
 
-                            return true;
-                        }
-                        catch (Exception e)
+                        using (var outStream = File.Create(DestinationPath))
                         {
-                            var secondaryUri = !string.IsNullOrWhiteSpace(PrivateUri) ? $"/'{PrivateUri}'" : string.Empty;
-                            Log.LogMessage($"Problems downloading file from '{Uri}'{secondaryUri}. {e.Message} {e.StackTrace}");
-                            File.Delete(DestinationPath);
+                            await httpResponse.Content.CopyToAsync(outStream);
                         }
+
+                        return true;
                     }
-
-                    Thread.Sleep(new Random().Next(3000, 10000));
+                    catch (Exception e)
+                    {
+                        var secondaryUri = !string.IsNullOrWhiteSpace(PrivateUri) ? $"/'{PrivateUri}'" : string.Empty;
+                        Log.LogMessage($"Problems downloading file from '{Uri}'{secondaryUri}. {e.Message} {e.StackTrace}");
+                        File.Delete(DestinationPath);
+                    }
                 }
 
-                return false;
+                await System.Threading.Tasks.Task.Delay(rng.Next(3000, 10000));
             }
+
+            return false;
         }
     }
 }
