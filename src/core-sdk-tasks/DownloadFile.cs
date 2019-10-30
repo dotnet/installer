@@ -5,9 +5,9 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using System.Threading;
 
 namespace Microsoft.DotNet.Cli.Build
 {
@@ -29,12 +29,12 @@ namespace Microsoft.DotNet.Cli.Build
 
         public bool Overwrite { get; set; }
 
-        public bool Execute()
+        public override bool Execute()
         {
             return ExecuteAsync().GetAwaiter().GetResult();
         }
 
-        private async Task<bool> ExecuteAsync()
+        private async System.Threading.Tasks.Task<bool> ExecuteAsync()
         {
             string destinationDir = Path.GetDirectoryName(DestinationPath);
             if (!Directory.Exists(destinationDir))
@@ -75,7 +75,11 @@ namespace Microsoft.DotNet.Cli.Build
                                     httpResponse = await httpClient.GetAsync(PrivateUri);
                                 }
 
-                                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
+                                // The Azure Storage REST API returns '400 - Bad Request' in some cases
+                                // where the resource is not found on the storage.
+                                // https://docs.microsoft.com/en-us/rest/api/storageservices/common-rest-api-error-codes
+                                if (httpResponse.StatusCode == HttpStatusCode.NotFound ||
+                                    httpResponse.ReasonPhrase.IndexOf("The requested URI does not represent any resource on the server.", StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
                                     return false;
                                 }

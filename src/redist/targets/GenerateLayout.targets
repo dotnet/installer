@@ -25,15 +25,10 @@
       <SdkOutputDirectory>$(RedistLayoutPath)sdk\$(SdkVersion)\</SdkOutputDirectory>
       
       <InternalBuild Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">true</InternalBuild>
-      <CoreSetupBlobAccessTokenParam Condition="'$(InternalBuild)' == 'true'">$(DOTNETCLIMSRC_READ_SAS_TOKEN)</CoreSetupBlobAccessTokenParam>
+      <MSRCBaseURL Condition="$(SYSTEM_TEAMPROJECT) == 'internal' and $(BUILD_SOURCEBRANCH.ToLower().contains('internal'))">https://dotnetclimsrc.blob.core.windows.net/</MSRCBaseURL>
 
-      <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</CoreSetupBlobRootUrl>
       <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
-
-      <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
       <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
-      
-      <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == '' and '$(InternalBuild)' == 'true'">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotnetToolsetBlobRootUrl>
       <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
       
       <CoreSetupRid Condition="'$(CoreSetupRid)' == ''">$(HostRid)</CoreSetupRid>
@@ -104,7 +99,6 @@
       <BundledLayoutComponent Include="CombinedSharedHostAndFrameworkArchive">
         <BaseUrl>$(CoreSetupRootUrl)$(MicrosoftNETCoreAppRuntimePackageVersion)</BaseUrl>
         <DownloadFileName>$(CombinedFrameworkHostCompressedFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
 
@@ -147,62 +141,53 @@
                                  Condition="('$(IsDebianBaseDistro)' == 'true' OR '$(IsRPMBasedDistro)' == 'true') And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedRuntimeDepsInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
       
       <BundledInstallerComponent Include="DownloadedSharedFrameworkInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedSharedFrameworkInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
       
       <BundledInstallerComponent Include="DownloadedSharedHostInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedSharedHostInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
       
       <BundledInstallerComponent Include="DownloadedHostFxrInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedHostFxrInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
       
       <BundledInstallerComponent Include="DownloadedNetCoreAppTargetingPackInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(NETCoreAppTargetingPackBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppTargetingPackInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedNetStandardTargetingPackInstallerFile"
                            Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(NETStandardTargetingPackBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetStandardTargetingPackInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedNetCoreAppHostPackInstallerFile"
                      Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedNetCoreAppHostPackInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
       
       <BundledInstallerComponent Include="DownloadedWindowsDesktopTargetingPackInstallerFile"
                                  Condition="'$(InstallerExtension)' == '.msi' And '$(SkipBuildingInstallers)' != 'true' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(WindowsDesktopTargetingPackBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedWindowsDesktopTargetingPackInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledLayoutComponent Include="ToolsetArchive">
         <BaseUrl>$(DotnetToolsetBlobRootUrl)Toolset/$(MicrosoftDotnetToolsetInternalPackageVersion)</BaseUrl>
         <DownloadFileName>dotnet-toolset-internal-$(MicrosoftDotnetToolsetInternalPackageVersion).zip</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath>sdk/$(SdkVersion)</RelativeLayoutPath>
       </BundledLayoutComponent>
     </ItemGroup>
@@ -211,7 +196,6 @@
       <BundledLayoutComponent Include="DownloadedAspNetCoreSharedFxArchiveFile">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobVersion)</BaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxArchiveFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
 
@@ -221,7 +205,6 @@
                               Condition="'$(InstallerExtension)' == '.pkg' And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreTargetingPackBlobVersion)</BaseUrl>
         <DownloadFileName>$(AspNetTargetingPackArchiveFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
       
@@ -230,21 +213,18 @@
         <BaseUrl Condition="'$(AspNetTargetingPackIsPinned)' == 'true'">$(AspNetCoreSharedFxRootUrl)$(MicrosoftAspNetCoreAppRefPackageVersion)</BaseUrl>
         <BaseUrl Condition="'$(AspNetTargetingPackIsPinned)' != 'true'">$(AspNetCoreSharedFxRootUrl)$(MicrosoftAspNetCoreAppRefPackageVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedAspNetTargetingPackInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="DownloadedAspNetCoreSharedFxInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' AND '$(DownloadedAspNetCoreSharedFxInstallerFileName)' != '' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedAspNetCoreSharedFxInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
 
       <BundledInstallerComponent Include="AspNetCoreSharedFxBaseRuntimeVersionFile"
                                  Condition="!$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobVersion)</BaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
     </ItemGroup>
     
@@ -265,14 +245,12 @@
       <BundledLayoutComponent Include="WinFormsAndWpfSharedFxArchiveFile">
         <BaseUrl>$(WinFormsAndWpfSharedFxRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(WinFormsAndWpfSharedFxArchiveFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledLayoutComponent>
 
       <BundledInstallerComponent Include="DownloadedWinFormsAndWpfSharedFrameworkInstallerFile"
                                  Condition="'$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(WinFormsAndWpfSharedFxRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
         <DownloadFileName>$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</DownloadFileName>
-        <AccessToken>$(CoreSetupBlobAccessTokenParam)</AccessToken>
       </BundledInstallerComponent>
     </ItemGroup>
 
@@ -288,11 +266,19 @@
       </BundledInstallerComponent>
       <ComponentToDownload Include="@(BundledLayoutComponent);@(BundledInstallerComponent)">
         <ShouldDownload Condition="!Exists('%(DownloadDestination)')">true</ShouldDownload>
+
+        <!--
+          Replaces the host portion of 'BaseUrl' with 'PrivateBaseUrl'.
+        -->
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$(MSRCBaseURL)$([System.String]::new('%(BaseUrl)').Substring($([System.String]::new('%(BaseUrl)').IndexOf('/', 8))))</PrivateBaseUrl>
       </ComponentToDownload>
     </ItemGroup>
-  
+
+    <Error Condition="$([System.String]::new('%(ComponentToDownload.BaseUrl)').IndexOf('http')) == -1" Text="The BaseURL '%(BaseUrl)' needs to be set with the 'http[s]' prefix." />
+
     <DownloadFile Condition=" '@(ComponentToDownload)' != '' And '%(ComponentToDownload.ShouldDownload)' == 'true'"
-                  Uri="%(ComponentToDownload.BaseUrl)/%(ComponentToDownload.DownloadFileName)%(ComponentToDownload.AccessToken)"
+                  Uri="%(ComponentToDownload.BaseUrl)/%(ComponentToDownload.DownloadFileName)"
+                  PrivateUri="%(ComponentToDownload.PrivateBaseUrl)/%(ComponentToDownload.DownloadFileName)$(DOTNETCLIMSRC_READ_SAS_TOKEN)"
                   DestinationPath="%(ComponentToDownload.DownloadDestination)" />
 
     <ItemGroup>
