@@ -4,7 +4,21 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:debian-jessie-debpkg-58e4974-20190328133153
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
+
+# Install the deb packaging toolchain we need to build debs
+RUN apt-get update \
+    && apt-get -y install \
+        debhelper \
+        build-essential \
+        devscripts \
+        locales \
+    && rm -rf /var/lib/apt/lists/*
+
+# liblldb is needed so deb package build does not throw missing library info errors
+RUN apt-get update \
+    && apt-get -y install liblldb-3.9 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Misc Dependencies for build
 RUN rm -rf /var/lib/apt/lists/* && \
@@ -13,6 +27,8 @@ RUN rm -rf /var/lib/apt/lists/* && \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+    
+RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8
 
 # Setup User to match Host User, and give superuser permissions
 ARG USER_ID=0
