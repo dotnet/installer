@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -57,21 +58,26 @@ namespace Microsoft.DotNet.Cli.Build
                 return true;
             }
 
-            var downloadStatus = await DownloadWithRetriesAsync(Uri, DestinationPath);
-            if (downloadStatus == false)
+            Uri = $"{Uri}sd";
+            PrivateUri = $"{PrivateUri}ew";
+
+            List<string> errorMessages = new List<string>();
+            bool? downloadStatus = await DownloadWithRetriesAsync(Uri, DestinationPath, errorMessages);
+
+            if (downloadStatus == false && !string.IsNullOrEmpty(PrivateUri))
             {
-                if (!string.IsNullOrEmpty(PrivateUri))
-                {
-                    downloadStatus = await DownloadWithRetriesAsync(PrivateUri, DestinationPath);
-                }
+                downloadStatus = await DownloadWithRetriesAsync(PrivateUri, DestinationPath, errorMessages);
             }
 
             if (downloadStatus != true)
             {
-                throw new FileNotFoundException($"Error while attempting download file from the provided URLs.");
+                foreach (var error in errorMessages)
+                {
+                    Log.LogError(error);
+                }
             }
 
-            return true;
+            return downloadStatus == true;
         }
 
         /// <summary>
@@ -80,7 +86,7 @@ namespace Microsoft.DotNet.Cli.Build
         /// <param name="source">URL to the file to be downloaded.</param>
         /// <param name="target">Local path where to put the downloaded file.</param>
         /// <returns>true: Download Succeeded. false: Download failed with 404. null: Download failed but is retriable.</returns>
-        private async Task<bool?> DownloadWithRetriesAsync(string source, string target)
+        private async Task<bool?> DownloadWithRetriesAsync(string source, string target, List<string> errorMessages)
         {
             Random rng = new Random();
 
@@ -94,26 +100,32 @@ namespace Microsoft.DotNet.Cli.Build
                     {
                         var httpResponse = await httpClient.GetAsync(source);
 
+                        Log.LogMessage(MessageImportance.High, $"{source} -> {httpResponse.StatusCode}");
+
                         // The Azure Storage REST API returns '400 - Bad Request' in some cases
                         // where the resource is not found on the storage.
                         // https://docs.microsoft.com/en-us/rest/api/storageservices/common-rest-api-error-codes
                         if (httpResponse.StatusCode == HttpStatusCode.NotFound ||
-                            httpResponse.ReasonPhrase.IndexOf("The requested URI does not represent any resource on the server.", StringComparison.OrdinalIgnoreCase) >= 0)
+                            httpResponse.ReasonPhrase.IndexOf("The requested URI does not represent any resource on the server.", StringComparison.OrdinalIgnoreCase) == 0)
                         {
-                            Log.LogMessage($"File not found error while attempting download using the following URL(s): '{source}'.");
+                            errorMessages.Add($"Problems downloading file from '{source}'. Does the resource exist on the storage? {httpResponse.StatusCode} : {httpResponse.ReasonPhrase}");
                             return false;
                         }
+
+                        httpResponse.EnsureSuccessStatusCode();
 
                         using (var outStream = File.Create(target))
                         {
                             await httpResponse.Content.CopyToAsync(outStream);
                         }
 
+                        Log.LogMessage(MessageImportance.High, $"returning true {source} -> {httpResponse.StatusCode}");
                         return true;
                     }
                     catch (Exception e)
                     {
-                        Log.LogMessage($"Problems downloading file from '{source}'. {e.Message} {e.StackTrace}");
+                        Log.LogMessage(MessageImportance.High, $"returning error in {source} ");
+                        errorMessages.Add($"Problems downloading file from '{source}'. {e.Message} {e.StackTrace}");
                         File.Delete(target);
                     }
 
@@ -121,7 +133,8 @@ namespace Microsoft.DotNet.Cli.Build
                 }
             }
 
-            Log.LogMessage($"Giving up downloading the file from '{source}' after {MaxRetries} retries.");
+            Log.LogMessage(MessageImportance.High, $"giving up {source} ");
+            errorMessages.Add($"Giving up downloading the file from '{source}' after {MaxRetries} retries.");
             return null;
         }
     }
