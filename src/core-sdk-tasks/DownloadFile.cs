@@ -57,16 +57,21 @@ namespace Microsoft.DotNet.Cli.Build
                 return true;
             }
 
-            var lastStatus = await DownloadWithRetries(Uri, DestinationPath);
-            if (lastStatus == false)
+            var downloadStatus = await DownloadWithRetriesAsync(Uri, DestinationPath);
+            if (downloadStatus == false)
             {
                 if (!string.IsNullOrEmpty(PrivateUri))
                 {
-                    lastStatus = await DownloadWithRetries(PrivateUri, DestinationPath);
+                    downloadStatus = await DownloadWithRetriesAsync(PrivateUri, DestinationPath);
                 }
             }
 
-            return lastStatus == true;
+            if (downloadStatus != true)
+            {
+                throw new FileNotFoundException($"Error while attempting download file from the provided URLs.");
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -75,15 +80,15 @@ namespace Microsoft.DotNet.Cli.Build
         /// <param name="source">URL to the file to be downloaded.</param>
         /// <param name="target">Local path where to put the downloaded file.</param>
         /// <returns>true: Download Succeeded. false: Download failed with 404. null: Download failed but is retriable.</returns>
-        private async Task<bool?> DownloadWithRetries(string source, string target)
+        private async Task<bool?> DownloadWithRetriesAsync(string source, string target)
         {
             Random rng = new Random();
 
             Log.LogMessage(MessageImportance.High, $"Attempting download '{source}' to '{target}'");
 
-            for (int retryNumber = 0; retryNumber < MaxRetries; retryNumber++)
+            using (var httpClient = new HttpClient())
             {
-                using (var httpClient = new HttpClient())
+                for (int retryNumber = 0; retryNumber < MaxRetries; retryNumber++)
                 {
                     try
                     {
@@ -111,9 +116,9 @@ namespace Microsoft.DotNet.Cli.Build
                         Log.LogMessage($"Problems downloading file from '{source}'. {e.Message} {e.StackTrace}");
                         File.Delete(target);
                     }
-                }
 
-                await System.Threading.Tasks.Task.Delay(rng.Next(1000, 10000));
+                    await System.Threading.Tasks.Task.Delay(rng.Next(1000, 10000));
+                }
             }
 
             Log.LogMessage($"Giving up downloading the file from '{source}' after {MaxRetries} retries.");
