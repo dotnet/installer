@@ -58,9 +58,6 @@ namespace Microsoft.DotNet.Cli.Build
                 return true;
             }
 
-            Uri = $"{Uri}sd";
-            PrivateUri = $"{PrivateUri}ew";
-
             List<string> errorMessages = new List<string>();
             bool? downloadStatus = await DownloadWithRetriesAsync(Uri, DestinationPath, errorMessages);
 
