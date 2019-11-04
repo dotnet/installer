@@ -41,29 +41,31 @@
       <Sha>4ac4c0367003fe3973a3648eb0715ddb0e3bbcea</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.0" Pinned="true">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.1">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
+      <Sha>0b713e577716e915082021942065aff1d20a0604</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Runtime.win-x64" Version="3.0.1">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
       <Sha>0b713e577716e915082021942065aff1d20a0604</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.0.1-servicing.19551.9">
+    <!-- Only package from ASP.NET that did not stabilize and is still published, use it to get unsuffixed blob location  -->
+    <!-- Replace with Microsoft.AspNetCore.App.Internal when available: https://github.com/aspnet/AspNetCore/issues/16827 -->
+    <Dependency Name="VS.Redist.Common.AspNetCore.TargetingPack.x64.3.0" Version="3.0.1-servicing.19554.2">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>0f54cd75536340715c02e9913aa5a8d435e76518</Sha>
+      <Sha>0b713e577716e915082021942065aff1d20a0604</Sha>
     </Dependency>
-    <Dependency Name="dotnet-dev-certs" Version="3.0.1-servicing.19551.9">
+    <Dependency Name="dotnet-dev-certs" Version="3.0.0-rc2.19465.2">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>0f54cd75536340715c02e9913aa5a8d435e76518</Sha>
+      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
     </Dependency>
-    <Dependency Name="dotnet-user-secrets" Version="3.0.1-servicing.19551.9">
+    <Dependency Name="dotnet-user-secrets" Version="3.0.0-rc2.19465.2">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>0f54cd75536340715c02e9913aa5a8d435e76518</Sha>
+      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
     </Dependency>
-    <Dependency Name="dotnet-watch" Version="3.0.1-servicing.19551.9">
+    <Dependency Name="dotnet-watch" Version="3.0.0-rc2.19465.2">
       <Uri>https://github.com/aspnet/AspNetCore</Uri>
-      <Sha>0f54cd75536340715c02e9913aa5a8d435e76518</Sha>
+      <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="3.0.1-servicing.19476.1" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/templating</Uri>
