@@ -72,7 +72,7 @@
     <Bundled22Templates Include="Microsoft.DotNet.Test.ProjectTemplates.2.2" PackageVersion="$(MicrosoftDotNetTestProjectTemplates22PackageVersion)" />
     <Bundled22Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor22Templates)" />
     <Bundled22Templates Include="Microsoft.DotNet.Web.ProjectTemplates.2.2" PackageVersion="$(AspNetCorePackageVersionFor22Templates)" />
-    <Bundled22Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates" PackageVersion="$(AspNetCorePackageVersionFor22Templates)" />
+    <Bundled22Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.2.2" PackageVersion="$(AspNetCorePackageVersionFor22Templates)" />
     <Bundled22Templates Include="NUnit3.DotNetNew.Template" PackageVersion="$(NUnit3Templates22PackageVersion)" />
   </ItemGroup>
   <ItemGroup>
@@ -81,7 +81,7 @@
     <Bundled21Templates Include="Microsoft.DotNet.Test.ProjectTemplates.2.1" PackageVersion="$(MicrosoftDotNetTestProjectTemplates21PackageVersion)" />
     <Bundled21Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
     <Bundled21Templates Include="Microsoft.DotNet.Web.ProjectTemplates.2.1" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
-    <Bundled21Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
+    <Bundled21Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.2.1" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
     <Bundled21Templates Include="NUnit3.DotNetNew.Template" PackageVersion="$(NUnit3Templates21PackageVersion)" />
   </ItemGroup>
 
@@ -124,7 +124,7 @@
 
     <PackageDownload Update="Microsoft.DotNet.Common.ItemTemplates"
                      Version="[$(MicrosoftDotNetCommonItemTemplates21PackageVersion)];
-                              [$(MicrosoftDotNetCommonItemTemplates22PackageVersion)]; 
+                              [$(MicrosoftDotNetCommonItemTemplates22PackageVersion)];
                               [$(MicrosoftDotNetCommonItemTemplates30PackageVersion)];
                               [$(MicrosoftDotNetCommonItemTemplates31PackageVersion)];
                               " />
@@ -145,14 +145,15 @@
                      Version="[$(NUnit3Templates21PackageVersion)];
                               [$(NUnit3Templates22PackageVersion)];
                               [$(NUnit3Templates30PackageVersion)];
+                              [$(NUnit3Templates31PackageVersion)];
                               " />
 
-   <PackageDownload Update="Microsoft.Dotnet.Wpf.ProjectTemplates" 
+   <PackageDownload Update="Microsoft.Dotnet.Wpf.ProjectTemplates"
                     Version="[$(MicrosoftDotnetWpfProjectTemplates30PackageVersion)];
                              [$(MicrosoftDotnetWpfProjectTemplates31PackageVersion)];
                              " />
 
-    <PackageDownload Update="Microsoft.Dotnet.Winforms.ProjectTemplates" 
+    <PackageDownload Update="Microsoft.Dotnet.Winforms.ProjectTemplates"
                      Version="[$(MicrosoftDotnetWinFormsProjectTemplates30PackageVersion)];
                               [$(MicrosoftDotnetWinFormsProjectTemplates31PackageVersion)];
                              " />
@@ -160,7 +161,7 @@
 
   <Target Name="LayoutTemplates"
         DependsOnTargets="LayoutTemplatesForSDK;LayoutTemplatesFor31MSI;LayoutTemplatesFor30MSI;LayoutTemplatesFor22MSI;LayoutTemplatesFor21MSI" />
-    
+
   <Target Name="LayoutTemplatesForSDK"
           DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
     <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
