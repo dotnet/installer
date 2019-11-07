@@ -18,13 +18,13 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
 
         public override CommandResult Execute(string args = "")
         {
-            args = $"restore {GetRuntime()} {args} --disable-parallel";
+            args = $"restore {GetRuntime()} {args}";
             return base.Execute(args);
         }
 
         public override CommandResult ExecuteWithCapturedOutput(string args = "")
         {
-            args = $"restore {GetRuntime()} {args} --disable-parallel";
+            args = $"restore {GetRuntime()} {args}";
             return base.ExecuteWithCapturedOutput(args);
         }
 
