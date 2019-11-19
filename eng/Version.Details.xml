@@ -3,31 +3,31 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.0-rtm.19568.1">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.0-rtm.19568.2">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.1.0">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>2b973fe4eaca6e181cf34e946a8878da3feaf07b</Sha>
+      <Sha>93ee64d467eeccd7006e370e78cf6dae31c1f3e2</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -84,13 +84,13 @@
       <Sha>f8b051906d69d8b1bde4e46e4d5b1f0c81b7f983</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-rtm.19564.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-rtm.19568.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>4bcd68c8b29476fc3c5ca1b496214584aadfdc84</Sha>
+      <Sha>24b0195c1f4c4a707ca6c3a3bd4715a65fcd8bfe</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.0-rtm.19568.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.0-rtm.19568.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>8bd2a19f55f6965bf6ee0f264b5987a8d4a486c7</Sha>
+      <Sha>7aac1f7396bfc03177b1fc85b7d4e49b5222b102</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
