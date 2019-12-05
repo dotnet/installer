@@ -8,12 +8,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
+    <Architecture Condition="'$(Architecture)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
+    <Architecture Condition="'$(Architecture)' == ''">x64</Architecture>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
 
     <IsShipping>true</IsShipping>
-    <CoreSdkTargetFramework>netcoreapp3.1</CoreSdkTargetFramework>
+    <CoreSdkTargetFramework>netcoreapp5.0</CoreSdkTargetFramework>
 
     <NoWarn>NU5125;NU5105;NU1701</NoWarn>
   </PropertyGroup>
