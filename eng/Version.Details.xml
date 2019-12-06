@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="3.1.1-servicing.19576.9">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>f3f2dd583fffa254015fc21ff0e45784b333256d</Sha>
-    </Dependency>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.1-servicing.19576.9">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>f3f2dd583fffa254015fc21ff0e45784b333256d</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.1.1-servicing.19576.9">
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>f3f2dd583fffa254015fc21ff0e45784b333256d</Sha>
     </Dependency>
@@ -34,6 +26,16 @@
     <Dependency Name="NETStandard.Library.Ref" Version="2.1.0" Pinned="true">
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
+    </Dependency>
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="3.1.0" Pinned="true">
+      <Uri>https://github.com/dotnet/core-setup</Uri>
+      <Sha>65f04fb6db7a5e198d05dbebd5c4ad21eb018f89</Sha>
+    </Dependency>
+    <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="3.1.0" Pinned="true">
+      <Uri>https://github.com/dotnet/core-setup</Uri>
+      <Sha>65f04fb6db7a5e198d05dbebd5c4ad21eb018f89</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.Platforms" Version="3.1.0" CoherentParentDependency="Microsoft.NetCore.App.Internal">
       <Uri>https://github.com/dotnet/corefx</Uri>
