@@ -43,7 +43,7 @@ phases:
       - _SignType: test
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
 
-      - ${{ if and(eq(variables['System.TeamProject'], 'internal'), contains(variables['Build.SourceBranch'], 'internal')) }}:
+      - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         - group: DotNet-MSRC-Storage
         - _DOTNETCLIMSRC_READ_SAS_TOKEN: $(dotnetclimsrc-read-sas-token)
 
