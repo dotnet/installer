@@ -269,9 +269,10 @@
         <!--
           Replaces the public base url with the private one.
         -->
-        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(BaseUrl)').Replace('$(CoreSetupBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
-        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(PrivateBaseUrl)').Replace('$(DotnetExtensionsBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
-        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(PrivateBaseUrl)').Replace('$(DotnetToolsetBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
+        <PrivateBaseUrl>%(BaseUrl)</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(ComponentToDownload.PrivateBaseUrl)').Replace('$(CoreSetupBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(ComponentToDownload.PrivateBaseUrl)').Replace('$(DotnetExtensionsBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
+        <PrivateBaseUrl Condition="'$(InternalBuild)' == 'true'">$([System.String]::new('%(ComponentToDownload.PrivateBaseUrl)').Replace('$(DotnetToolsetBlobRootUrl)', '$(InternalBaseURL)'))</PrivateBaseUrl>
       </ComponentToDownload>
     </ItemGroup>
 
