@@ -4,6 +4,7 @@ trigger:
     include:
     - master
     - release/*
+    - internal/release/*
 
 variables:
 - name: _PublishBlobFeedUrl
@@ -32,8 +33,7 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2017.open
+          vmImage: vs2017-win2016
         ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
           name: NetCoreInternal-Pool
           queue: buildpool.windows.10.amd64.vs2017
@@ -88,13 +88,6 @@ stages:
       strategy:
         matrix:
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-            Build_Ubuntu_14_04_Release_x64:
-              _BuildConfig: Release
-              _DockerParameter: '--docker ubuntu.14.04'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _DropSuffix: ''
             Build_Ubuntu_16_04_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker ubuntu.16.04'
@@ -105,20 +98,6 @@ stages:
             Build_Ubuntu_18_04_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker ubuntu.18.04'
-              _LinuxPortable: '--linux-portable'
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _DropSuffix: ''
-            Build_Fedora_27_Debug_x64:
-              _BuildConfig: Debug
-              _DockerParameter: '--docker fedora.27'
-              _LinuxPortable: '--linux-portable'
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _DropSuffix: ''
-            Build_Fedora_28_Debug_x64:
-              _BuildConfig: Debug
-              _DockerParameter: '--docker fedora.28'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
@@ -137,7 +116,7 @@ stages:
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               _DropSuffix: ''
-            Build_Debian_Jessie_Debug_x64:
+            Build_Debian_Stretch_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker debian'
               _LinuxPortable: ''
@@ -298,13 +277,8 @@ stages:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
-      # This will run only after all the publishing stages have run.
-      # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
-      - NetCore_Dev31_Publish
-      - NetCore_Dev5_Publish
       - NetCore_Release30_Publish
       - NetCore_Release31_Publish
-      - PVR_Publish
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
