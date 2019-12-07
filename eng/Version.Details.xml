@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.0.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.0.2-servicing-19604-02">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.0.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.0.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.0.2-servicing-19576-08">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>547ae1f5f072d130b32ec3089876711070b2dc4f</Sha>
+    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.0.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>a2c3406f47bed9f53fea5205c07d22be382f19b8</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <Dependency Name="NETStandard.Library.Ref" Version="2.1.0" Pinned="true">
@@ -36,9 +36,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.1-servicing.19576.7" CoherentParentDependency="Microsoft.NETCore.App.Internal">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.1" CoherentParentDependency="Microsoft.NETCore.App.Internal">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>552078bd73ff238b312f8b92ad49f535c3445f25</Sha>
+      <Sha>e14c43ea3f727d1ed8844014aae8b168cc608b22</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.0.1">
@@ -84,19 +84,19 @@
       <Sha>f8ae9c892d145680eac10074d4ed3c924d47708b</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-servicing.19480.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-servicing.19577.10" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>af088e57775b7b9f28322511bc5be8ddb356b8a8</Sha>
+      <Sha>076a69fb42b53fca7cd245ecf7c779496a79f59e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.1-servicing.19572.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>906bf50af904c13a9ff42cbd1a475be0f7a3cc6c</Sha>
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.1-servicing.19601.3" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
+      <Sha>811b594754419ded18b0e6b034bcdfa291438d69</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19605.2">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19605.4">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>194fdce1e0692b4f43afacb1d386fbfe664d95cf</Sha>
+      <Sha>328b7b20dde218a0e90dde9d687e4385b7e6d869</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
