@@ -10,12 +10,13 @@
 
   <PropertyGroup>
     <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
-    <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion)</AspNetCoreBlobVersion>
+    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
     <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
 
     <!-- Change these individually to or $(CoreSetupBlobVersion) or $(AspNetCoreBlobVersion) if corresponding .Ref packages are unpinned. -->
     <NETCoreAppTargetingPackBlobVersion>3.0.0</NETCoreAppTargetingPackBlobVersion>
-    <AspNetCoreTargetingPackBlobVersion>$(AspNetCoreBlobVersion)</AspNetCoreTargetingPackBlobVersion>
+    <!-- 3.0.1 build of aspnetcore -->
+    <AspNetCoreTargetingPackBlobVersion>$(VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion)</AspNetCoreTargetingPackBlobVersion>
     <WindowsDesktopTargetingPackBlobVersion>3.0.0</WindowsDesktopTargetingPackBlobVersion>
     <NETStandardTargetingPackBlobVersion>3.0.0</NETStandardTargetingPackBlobVersion>
   </PropertyGroup>
