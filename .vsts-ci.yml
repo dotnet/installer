@@ -277,8 +277,28 @@ stages:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
+      # This will run only after all the publishing stages have run.
+      # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
+      - NetCore_Dev5_Publish
+      - NetCore_Dev31_Publish
+      - Net_Eng_Latest_Publish
+      - Net_Eng_Validation_Publish
+      - NetCore_3_Tools_Validation_Publish
+      - NetCore_3_Tools_Publish
       - NetCore_Release30_Publish
       - NetCore_Release31_Publish
+      - NetCore_Blazor31_Features_Publish
+      - NetCore_30_Internal_Servicing_Publishing
+      - NetCore_31_Internal_Servicing_Publishing
+      - General_Testing_Publish
+      - NETCore_Tooling_Dev_Publishing
+      - NETCore_Tooling_Release_Publishing
+      - NETCore_SDK_301xx_Publishing
+      - NETCore_SDK_301xx_Internal_Publishing
+      - NETCore_SDK_311xx_Publishing
+      - NETCore_SDK_311xx_Internal_Publishing
+      - NETCore_SDK_312xx_Publishing
+      - NETCore_SDK_312xx_Internal_Publishing
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
