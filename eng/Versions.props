@@ -4,12 +4,21 @@
   <PropertyGroup>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
   </PropertyGroup>
-  <!-- This is a fake version to fool arcade. In this repo, we handle the versioning
-  of assets ourselves, since all we do is generate zips/tarballs and native installers.
-  To actually update the version for this repo, look at src/redist/targets/Versions.targets -->
   <PropertyGroup>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
+    <VersionMajor>5</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <VersionSDKMinor>1</VersionSDKMinor>
+    <VersionPatch>00</VersionPatch>
+
+    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionPatch)</VersionPrefix>
+    <PreReleaseVersionLabel>alpha</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
+
+    <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
+    <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
+    <SDKBundleVersion>$(VersionPrefix).$(_BuildNumberLabels)</SDKBundleVersion>
+
+    <FullNugetVersion>$(VersionPrefix)-$(PreReleaseVersionLabel)$(PreReleaseVersionIteration)-$(_BuildNumberLabels)</FullNugetVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/toolset -->
