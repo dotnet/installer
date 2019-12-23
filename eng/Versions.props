@@ -8,15 +8,14 @@
     <VersionMajor>5</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionPatch>00</VersionPatch>
+    <VersionFeature>00</VersionFeature>
 
-    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionPatch)</VersionPrefix>
+    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <PreReleaseVersionLabel>alpha</PreReleaseVersionLabel>
     <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
 
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
-    <SDKBundleVersion>$(VersionPrefix).$(_BuildNumberLabels)</SDKBundleVersion>
 
     <FullNugetVersion>$(VersionPrefix)-$(PreReleaseVersionLabel)$(PreReleaseVersionIteration)-$(_BuildNumberLabels)</FullNugetVersion>
   </PropertyGroup>
