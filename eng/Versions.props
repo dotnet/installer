@@ -9,14 +9,11 @@
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
     <VersionFeature>00</VersionFeature>
-
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <PreReleaseVersionLabel>alpha</PreReleaseVersionLabel>
     <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
-
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
-
     <FullNugetVersion>$(VersionPrefix)-$(PreReleaseVersionLabel)$(PreReleaseVersionIteration)-$(_BuildNumberLabels)</FullNugetVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -45,12 +42,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.0-alpha.1.19630.2</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>5.0.0-alpha.1.19630.2</MicrosoftAspNetCoreAppRefPackageVersion>
-    <VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>5.0.0-alpha.1.19630.2</VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>
-    <dotnetdevcertsPackageVersion>5.0.0-alpha.1.19630.2</dotnetdevcertsPackageVersion>
-    <dotnetusersecretsPackageVersion>5.0.0-alpha.1.19630.2</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>5.0.0-alpha.1.19630.2</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.0-alpha.1.20052.2</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>5.0.0-alpha.1.20052.2</MicrosoftAspNetCoreAppRefPackageVersion>
+    <VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>5.0.0-alpha.1.20052.2</VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>
+    <dotnetdevcertsPackageVersion>5.0.0-alpha.1.20052.2</dotnetdevcertsPackageVersion>
+    <dotnetusersecretsPackageVersion>5.0.0-alpha.1.20052.2</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>5.0.0-alpha.1.20052.2</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
