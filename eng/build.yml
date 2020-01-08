@@ -84,7 +84,6 @@ phases:
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
-          DropSuffix: $(_DropSuffix)
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
@@ -104,7 +103,6 @@ phases:
                   $(_AdditionalBuildParameters)
         displayName: Build
         env:
-          DropSuffix: $(_DropSuffix)
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
