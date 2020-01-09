@@ -15,6 +15,8 @@
   </PropertyGroup>
 
   <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
+
+  <Import Project="..\src\redist\targets\Versions.targets" />
   
   <PropertyGroup>
       <!-- Because we may be building in a container, we should use an asset manifest file path
@@ -53,6 +55,7 @@
 
   <Target Name="PublishSdkAssetsAndChecksums"
           BeforeTargets="Publish"
+          DependsOnTargets="GenerateFullNuGetVersion"
           Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' ">
 
     <!-- If the sdk version is stabilized, then we should double publish the binaries to suffixed file names.
