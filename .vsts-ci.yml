@@ -236,6 +236,7 @@ stages:
         - group: DotNet-DotNetCli-Storage
       steps:
         - script: eng/CopyToLatest.cmd
+                  /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=https://dotnetcli.blob.core.windows.net/dotnet/index.json
                   /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                   /p:DotnetPublishChecksumsBlobFeedUrl=https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
