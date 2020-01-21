@@ -73,6 +73,14 @@ phases:
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng\setbuildinfo.bat $(_BuildArchitecture) $(_BuildConfig)'
         displayName: Set test info (Windows)
+      - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+        - task: PowerShell@2
+          displayName: Setup Private Feeds Credentials
+          inputs:
+            filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.ps1
+            arguments: -ConfigFile $(Build.SourcesDirectory)/NuGet.config -Password $Env:Token
+          env:
+            Token: $(dn-bot-dnceng-artifact-feeds-rw)
       - script: build.cmd
                   $(TestParameter)
                   -pack -publish -ci
@@ -89,6 +97,14 @@ phases:
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
       - script: 'eng/setbuildinfo.sh $(_BuildArchitecture) $(_BuildConfig)'
         displayName: Set test info (Non-Windows)
+      - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+        - task: Bash@3
+          displayName: Setup Private Feeds Credentials
+          inputs:
+            filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.sh
+            arguments: $(Build.SourcesDirectory)/NuGet.config $Token
+          env:
+            Token: $(dn-bot-dnceng-artifact-feeds-rw)
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
                   $(TestParameter)
