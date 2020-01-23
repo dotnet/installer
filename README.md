@@ -30,7 +30,7 @@ Installers and Binaries
 
 You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (zip, tar.gz). The .NET Core SDK contains both the .NET Core runtime and CLI tools.
 
-To download the .NET Core runtime **without** the SDK, visit https://github.com/dotnet/core-setup#daily-builds.
+To download the .NET Core runtime **without** the SDK, visit https://github.com/dotnet/runtime#daily-builds.
 
 **Note:** Be aware that the following installers are the **latest bits**. If you
 want to install the latest released versions, check out the [preceding section](#looking-for-v2-of-the-net-core-tooling).
@@ -67,7 +67,7 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 
 Reference notes:
 > **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
-> * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/core-setup#daily-builds)
+> * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/runtime#daily-builds)
 > * [ASP.NET Core Shared Framework](https://github.com/aspnet/AspNetCore/blob/master/docs/DailyBuilds.md)
 
 [win-x64-badge-master]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/win_x64_Release_version_badge.svg
