@@ -13,25 +13,25 @@
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>07734273f96acc9662ed8041640b4c3984a30847</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="5.0.0-alpha.1.20112.1">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="5.0.0-alpha.1.20112.1">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.0-alpha.1.20112.1">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="5.0.0-alpha.1.20112.1">
+    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="5.0.0-alpha.1.20112.1">
+    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -39,9 +39,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="5.0.0-alpha.1.20112.1" CoherentParentDependency="Microsoft.NetCore.App.Internal">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="5.0.0-alpha.1.20112.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>673635654c20e5eee329945c58058855bcc24340</Sha>
+      <Sha>c14d0884d3fcdf676cf0c9c44df5d322a212e985</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="5.0.0-preview.1.20111.6">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
@@ -71,21 +71,17 @@
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>5117d3d9d7dfd3583f0c42a639efaf092f957b7b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="5.0.0-alpha.1.20109.1" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="5.0.0-alpha.1.20112.1">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>b6906c18ac94b3bfbfe673bc7b36e03fa818d862</Sha>
+      <Sha>ce0c35f54bceb739374f18e891913ecff84cd31d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="5.0.100-preview.1.20109.3">
-      <Uri>https://github.com/dotnet/toolset</Uri>
-      <Sha>648d9ee5620e0a584e41a916475a6d635663845a</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.100-preview.1.20105.1" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.100-preview.1.20111.3">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>9e18c1c22e2cd5c2d0a1cc3a5dc3459e6f2390a6</Sha>
+      <Sha>5969952bbad327f92157665ebe6fe5ae4d35f425</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.100-preview.1.20109.3" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
-      <Uri>https://github.com/dotnet/toolset</Uri>
-      <Sha>648d9ee5620e0a584e41a916475a6d635663845a</Sha>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.100-preview.1.20111.3">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>5969952bbad327f92157665ebe6fe5ae4d35f425</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-preview.1.20111.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -98,9 +94,9 @@
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
-    <Dependency Name="System.ServiceModel.Primitives" Version="4.7.0">
+    <Dependency Name="System.ServiceModel.Primitives" Version="5.0.0-preview1.20104.1">
       <Uri>https://github.com/dotnet/wcf</Uri>
-      <Sha>eb417fdeb06faeada140a92e26e86c266574476a</Sha>
+      <Sha>d08484b1422ee45195adff528d6c65c7c788d7fa</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
