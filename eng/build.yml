@@ -24,9 +24,10 @@ phases:
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
-    enablePublishBuildArtifacts: true
     enablePublishBuildAssets: true
-    enablePublishTestResults: true
+    # Don't use built-in arcade logic for publishing artifacts and test results, as we manually do this and give better names
+    #enablePublishBuildArtifacts: true
+    #enablePublishTestResults: true
     enablePublishUsingPipelines: ${{parameters.enablePublishUsingPipelines}}
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
