@@ -30,8 +30,6 @@ Installers and Binaries
 
 You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (zip, tar.gz). The .NET Core SDK contains both the .NET Core runtime and CLI tools.
 
-To download the .NET Core runtime **without** the SDK, visit https://github.com/dotnet/runtime#daily-builds.
-
 **Note:** Be aware that the following installers are the **latest bits**. If you
 want to install the latest released versions, check out the [preceding section](#looking-for-v2-of-the-net-core-tooling).
 With development builds, internal NuGet feeds are necessary for some scenarios (for example, to acquire the runtime pack for self-contained apps). You can use the following NuGet.config to configure these feeds.
