@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="5.0.0-preview.2.20125.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="5.0.0-preview.2.20126.1">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>5923bd066fe1fdc6fd3a0f6ef860901a88bd3477</Sha>
+      <Sha>fa3adac7b676a0bd42e2df45e560ec9cc35ca272</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-preview.2.20125.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-preview.2.20126.1">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>5923bd066fe1fdc6fd3a0f6ef860901a88bd3477</Sha>
+      <Sha>fa3adac7b676a0bd42e2df45e560ec9cc35ca272</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.0-preview.2.20125.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.0-preview.2.20126.1">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>5923bd066fe1fdc6fd3a0f6ef860901a88bd3477</Sha>
+      <Sha>fa3adac7b676a0bd42e2df45e560ec9cc35ca272</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="5.0.0-preview.2.20120.8">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -84,13 +84,13 @@
       <Sha>d5e67f56cd252f58ee65ac48a23b105bb66bdfcf</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-preview.2.20123.3" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-preview.2.20125.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>fa6e4b071db16298a2fc5587d9f52c3334c3efbc</Sha>
+      <Sha>9add3012e98d9a3e8abbb6d48baf828abae23ad2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-preview.2.20125.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-preview.2.20126.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>25484266136f7aba3dfc1aa180f0081aa14c839f</Sha>
+      <Sha>2f3347b482a9c6c49f553349655ef18b158b1574</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
