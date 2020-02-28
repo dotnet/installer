@@ -161,3 +161,4 @@
 [linux-musl-targz-2.1.5XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/2.1.5xx/dotnet-sdk-latest-linux-musl-x64.tar.gz
 [linux-musl-targz-checksum-2.1.5XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/2.1.5xx/dotnet-sdk-latest-linux-musl-x64.tar.gz.sha
 
+[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
