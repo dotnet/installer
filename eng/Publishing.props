@@ -14,8 +14,6 @@
     <PublishBinariesAndBadge Condition=" '$(PublishBinariesAndBadge)' == '' ">true</PublishBinariesAndBadge>
   </PropertyGroup>
 
-  <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" Condition=" '$(PublishSdkAssetsAndChecksumsToBlob)' == 'true' " />
-  
   <PropertyGroup>
       <!-- Because we may be building in a container, we should use an asset manifest file path
              that exists in the container. Disambiguate the manifests via available properties.
@@ -111,9 +109,6 @@
       </ChecksumsWithSuffixToPushToBlobFeed>
     </ItemGroup>
 
-    <MakeDir Directories="$(DotnetTempWorkingDirectory)"/>
-    <MakeDir Directories="$(ChecksumTempWorkingDirectory)"/>
-
     <PushToAzureDevOpsArtifacts
       ItemsToPush="@(SdkAssetsToPushToBlobFeed);@(SdkAssetsWithSuffixToPushToBlobFeed)"
       ManifestBuildData="Location=$(SdkAssetsFeedUrl)"
@@ -122,8 +117,7 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(DotNetAssetManifestFilePath)"
-      PublishFlatContainer="true"
-      AssetsTemporaryDirectory="$(DotnetTempWorkingDirectory)" />
+      PublishFlatContainer="true" />
 
     <PushToAzureDevOpsArtifacts
       ItemsToPush="@(ChecksumsToPushToBlobFeed);@(ChecksumsWithSuffixToPushToBlobFeed)"
@@ -133,23 +127,6 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
-      PublishFlatContainer="true"
-      AssetsTemporaryDirectory="$(ChecksumTempWorkingDirectory)" />
-
-    <Copy
-      SourceFiles="$(DotNetAssetManifestFilePath)"
-      DestinationFolder="$(DotnetTempWorkingDirectory)\$(AssetManifestFileName)" />
-
-    <Copy
-      SourceFiles="$(ChecksumsAssetManifestFilePath)"
-      DestinationFolder="$(ChecksumTempWorkingDirectory)\$(ChecksumsAssetManifestFileName)" />
-
-    <Message
-      Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(DotnetTempWorkingDirectory)/$(AssetManifestFileName)"
-      Importance="high" />
-
-    <Message
-      Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(ChecksumTempWorkingDirectory)/$(ChecksumsAssetManifestFileName)"
-      Importance="high" />
+      PublishFlatContainer="true" />
   </Target>
 </Project>
