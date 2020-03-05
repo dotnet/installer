@@ -16,10 +16,6 @@
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Dependencies from https://github.com/dotnet/toolset -->
-    <MicrosoftDotnetToolsetInternalPackageVersion>5.0.100-preview.1.20109.3</MicrosoftDotnetToolsetInternalPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
     <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>5.0.0-preview.2.20155.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
@@ -49,16 +45,14 @@
     <dotnetwatchPackageVersion>5.0.0-preview.2.20155.1</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Dependencies from https://github.com/dotnet/cli -->
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.100-preview.2.20152.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Dependencies from https://github.com/dotnet/sdk (to run tests) -->
+    <!-- Dependencies from https://github.com/dotnet/sdk -->
     <MicrosoftNETSdkPackageVersion>5.0.100-preview.2.20152.2</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.100-preview.2.20152.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
+    <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/corefx -->
