@@ -68,6 +68,10 @@ stages:
             _BuildConfig: Release
             _BuildArchitecture: arm
             _DOTNET_CLI_UI_LANGUAGE: ''
+          Build_Release_arm64:
+            _BuildConfig: Release
+            _BuildArchitecture: arm64
+            _DOTNET_CLI_UI_LANGUAGE: ''
 
   - template: /eng/build.yml
     parameters:
