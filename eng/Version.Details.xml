@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="5.0.0-preview.2.20155.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="5.0.0-preview.3.20156.3">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>523a7a61218e4b210cc579d4d29aee28027008ed</Sha>
+      <Sha>45a76b046c760e8dc3d9cd81a8fa240efabe221e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-preview.2.20155.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.0-preview.3.20156.3">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>523a7a61218e4b210cc579d4d29aee28027008ed</Sha>
+      <Sha>45a76b046c760e8dc3d9cd81a8fa240efabe221e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.0-preview.2.20155.3">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.0-preview.3.20156.3">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>523a7a61218e4b210cc579d4d29aee28027008ed</Sha>
+      <Sha>45a76b046c760e8dc3d9cd81a8fa240efabe221e</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="5.0.0-preview.2.20155.1">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -75,22 +75,22 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>f15388ee6e45a8923fba0f54f55154aee991fb84</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.100-preview.2.20155.1">
+    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.100-preview.2.20155.5">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>e2faebad758a7d38b5965cda755a17e9e9881599</Sha>
+      <Sha>1812ab7e880c51b4c3da836e02c362e694a139a3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.100-preview.2.20155.1">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.100-preview.2.20155.5">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>e2faebad758a7d38b5965cda755a17e9e9881599</Sha>
+      <Sha>1812ab7e880c51b4c3da836e02c362e694a139a3</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-preview.2.20155.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.0-preview.3.20155.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>355d112ab87257a36a3348caf5669e61c6273850</Sha>
+      <Sha>97250206203b7ffeffe6b0ebde69e3fd54b740fe</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-preview.2.20155.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.0-preview.3.20155.8" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>74c2b7c625180071d45c813c7aff2c5f7209e6b4</Sha>
+      <Sha>b4099a0f76c02b5bc8eea6556b3f80fa7a7d47f0</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
@@ -100,9 +100,9 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="5.0.0-beta.20154.1">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="5.0.0-beta.20155.4">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>5d8c586ca1bed15f630ba7d2ed16f591be06eafd</Sha>
+      <Sha>08eea2b992d991297fc23de413bddfb9b3db5082</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
