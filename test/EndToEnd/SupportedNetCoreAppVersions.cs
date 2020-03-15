@@ -10,7 +10,9 @@ namespace EndToEnd
         private static Version _firstNetAppVersion = new Version(5, 0);
 
         public static IEnumerable<string> GetNetAppTargetFrameworks(IEnumerable<string> versions) =>
-            versions.Select(v => (Version.Parse(v) < _firstNetAppVersion) ? $"netcoreapp{v}" :  $"net{v}");
+            versions.Select(v => $"netcoreapp{v}")
+                    // Add netX.X tfms starting with 5.0
+                    .Concat(versions.Where(v => Version.Parse(v) >= _firstNetAppVersion).Select(v => $"net{v}"));
     }
 
     public class SupportedNetCoreAppVersions : IEnumerable<object[]>
