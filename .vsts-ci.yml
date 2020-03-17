@@ -3,8 +3,8 @@ trigger:
   branches:
     include:
     - master
-    - release/*
-    - internal/release/3.*
+    - release/'*'
+    - internal/release/3.'*'
 
 variables:
 - name: _PublishBlobFeedUrl
