@@ -42,6 +42,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.cab" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.version" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
@@ -58,6 +59,12 @@
           TaskParameter="Lines"
           PropertyName="FullNugetVersion"/>
     </ReadLinesFromFile>
+
+  <WriteLinesToFile
+            File="$(ArtifactsShippingPackagesDir)productVersion.version"
+            Lines="$(Version)"
+            Overwrite="true"
+            Encoding="ASCII"/>
 
     <!-- If the sdk version is stabilized, then we should double publish the binaries to suffixed file names.
          To do this, create new copies of the blobs, replacing the SdkVersion string in the file name with the
