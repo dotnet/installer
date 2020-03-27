@@ -43,7 +43,7 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.cab" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
