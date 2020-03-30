@@ -59,9 +59,9 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 | **Linux arm64** | [![][linux-arm64-badge-master]][linux-arm64-version-master]<br>[tar.gz][linux-arm64-targz-master] - [Checksum][linux-arm64-targz-checksum-master] | [![][linux-arm64-badge-5.0.1XX-preview2]][linux-arm64-version-5.0.1XX-preview2]<br>[tar.gz][linux-arm64-targz-5.0.1XX-preview2] - [Checksum][linux-arm64-targz-checksum-5.0.1XX-preview2] | [![][linux-arm64-badge-5.0.1XX-preview1]][linux-arm64-version-5.0.1XX-preview1]<br>[tar.gz][linux-arm64-targz-5.0.1XX-preview1] - [Checksum][linux-arm64-targz-checksum-5.0.1XX-preview1] | [![][linux-arm64-badge-3.1.3XX]][linux-arm64-version-3.1.3XX]<br>[tar.gz][linux-arm64-targz-3.1.3XX] - [Checksum][linux-arm64-targz-checksum-3.1.3XX] | [![][linux-arm64-badge-3.1.2XX]][linux-arm64-version-3.1.2XX]<br>[tar.gz][linux-arm64-targz-3.1.2XX] - [Checksum][linux-arm64-targz-checksum-3.1.2XX] | [![][linux-arm64-badge-3.1.1XX]][linux-arm64-version-3.1.1XX]<br>[tar.gz][linux-arm64-targz-3.1.1XX] - [Checksum][linux-arm64-targz-checksum-3.1.1XX] | [![][linux-arm64-badge-3.0.1XX]][linux-arm64-version-3.0.1XX]<br>[tar.gz][linux-arm64-targz-3.0.1XX] - [Checksum][linux-arm64-targz-checksum-3.0.1XX] |
 | **RHEL 6** | [![][rhel-6-badge-master]][rhel-6-version-master]<br>[tar.gz][rhel-6-targz-master] - [Checksum][rhel-6-targz-checksum-master] | [![][rhel-6-badge-5.0.1XX-preview2]][rhel-6-version-5.0.1XX-preview2]<br>[tar.gz][rhel-6-targz-5.0.1XX-preview2] - [Checksum][rhel-6-targz-checksum-5.0.1XX-preview2] | [![][rhel-6-badge-5.0.1XX-preview1]][rhel-6-version-5.0.1XX-preview1]<br>[tar.gz][rhel-6-targz-5.0.1XX-preview1] - [Checksum][rhel-6-targz-checksum-5.0.1XX-preview1] | [![][rhel-6-badge-3.1.3XX]][rhel-6-version-3.1.3XX]<br>[tar.gz][rhel-6-targz-3.1.3XX] - [Checksum][rhel-6-targz-checksum-3.1.3XX] | [![][rhel-6-badge-3.1.2XX]][rhel-6-version-3.1.2XX]<br>[tar.gz][rhel-6-targz-3.1.2XX] - [Checksum][rhel-6-targz-checksum-3.1.2XX] | [![][rhel-6-badge-3.1.1XX]][rhel-6-version-3.1.1XX]<br>[tar.gz][rhel-6-targz-3.1.1XX] - [Checksum][rhel-6-targz-checksum-3.1.1XX] | [![][rhel-6-badge-3.0.1XX]][rhel-6-version-3.0.1XX]<br>[tar.gz][rhel-6-targz-3.0.1XX] - [Checksum][rhel-6-targz-checksum-3.0.1XX] |
 | **Linux-musl** | [![][linux-musl-badge-master]][linux-musl-version-master]<br>[tar.gz][linux-musl-targz-master] - [Checksum][linux-musl-targz-checksum-master] | [![][linux-musl-badge-5.0.1XX-preview2]][linux-musl-version-5.0.1XX-preview2]<br>[tar.gz][linux-musl-targz-5.0.1XX-preview2] - [Checksum][linux-musl-targz-checksum-5.0.1XX-preview2] | [![][linux-musl-badge-5.0.1XX-preview1]][linux-musl-version-5.0.1XX-preview1]<br>[tar.gz][linux-musl-targz-5.0.1XX-preview1] - [Checksum][linux-musl-targz-checksum-5.0.1XX-preview1] | [![][linux-musl-badge-3.1.3XX]][linux-musl-version-3.1.3XX]<br>[tar.gz][linux-musl-targz-3.1.3XX] - [Checksum][linux-musl-targz-checksum-3.1.3XX] | [![][linux-musl-badge-3.1.2XX]][linux-musl-version-3.1.2XX]<br>[tar.gz][linux-musl-targz-3.1.2XX] - [Checksum][linux-musl-targz-checksum-3.1.2XX] | [![][linux-musl-badge-3.1.1XX]][linux-musl-version-3.1.1XX]<br>[tar.gz][linux-musl-targz-3.1.1XX] - [Checksum][linux-musl-targz-checksum-3.1.1XX] | [![][linux-musl-badge-3.0.1XX]][linux-musl-version-3.0.1XX]<br>[tar.gz][linux-musl-targz-3.0.1XX] - [Checksum][linux-musl-targz-checksum-3.0.1XX] |
-| **Windows arm** | [![][win-arm-badge-master]][win-arm-version-master]<br>[zip][win-arm-zip-master] - [Checksum][win-arm-zip-checksum-master] | **N/A** | **N/A** | [![][win-arm-badge-3.1.3XX]][win-arm-version-3.1.3XX]<br>[zip][win-arm-zip-3.1.3XX] - [Checksum][win-arm-zip-checksum-3.1.3XX] | [![][win-arm-badge-3.1.2XX]][win-arm-version-3.1.2XX]<br>[zip][win-arm-zip-3.1.2XX] - [Checksum][win-arm-zip-checksum-3.1.2XX] | [![][win-arm-badge-3.1.1XX]][win-arm-version-3.1.1XX]<br>[zip][win-arm-zip-3.1.1XX] - [Checksum][win-arm-zip-checksum-3.1.1XX] | [![][win-arm-badge-3.0.1XX]][win-arm-version-3.0.1XX]<br>[zip][win-arm-zip-3.0.1XX] - [Checksum][win-arm-zip-checksum-3.0.1XX] |
-| **Windows arm64** | [![][win-arm64-badge-master]][win-arm64-version-master]<br>[zip][win-arm64-zip-master] | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** |
-| **FreeBSD x64** | [![][freebsd-x64-badge-master]][freebsd-x64-version-master]<br>[tar.gz][freebsd-x64-zip-master] - [Checksum][freebsd-x64-zip-checksum-master]  | **N/A** | **N/A** | [![][freebsd-x64-badge-3.1.3XX]][freebsd-x64-version-3.1.3XX]<br>[tar.gz][freebsd-x64-zip-3.1.3XX] - [Checksum][freebsd-x64-zip-checksum-3.1.3XX]  | [![][freebsd-x64-badge-3.1.2XX]][freebsd-x64-version-3.1.2XX]<br>[tar.gz][freebsd-x64-zip-3.1.2XX] - [Checksum][freebsd-x64-zip-checksum-3.1.2XX]  | [![][freebsd-x64-badge-3.1.1XX]][freebsd-x64-version-3.1.1XX]<br>[tar.gz][freebsd-x64-zip-3.1.1XX] - [Checksum][freebsd-x64-zip-checksum-3.1.1XX]  | [![][freebsd-x64-badge-3.0.1XX]][freebsd-x64-version-3.0.1XX]<br>[tar.gz][freebsd-x64-zip-3.0.1XX] - [Checksum][freebsd-x64-zip-checksum-3.0.1XX]  |
+| **Windows arm** | [![][win-arm-badge-master]][win-arm-version-master]<br>[zip][win-arm-zip-master] - [Checksum][win-arm-zip-checksum-master] | [![][win-arm-badge-5.0.1XX-preview2]][win-arm-version-5.0.1XX-preview2]<br>[zip][win-arm-zip-5.0.1XX-preview2] - [Checksum][win-arm-zip-checksum-5.0.1XX-preview2] | [![][win-arm-badge-5.0.1XX-preview1]][win-arm-version-5.0.1XX-preview1]<br>[zip][win-arm-zip-5.0.1XX-preview1] - [Checksum][win-arm-zip-checksum-5.0.1XX-preview1] | [![][win-arm-badge-3.1.3XX]][win-arm-version-3.1.3XX]<br>[zip][win-arm-zip-3.1.3XX] - [Checksum][win-arm-zip-checksum-3.1.3XX] | [![][win-arm-badge-3.1.2XX]][win-arm-version-3.1.2XX]<br>[zip][win-arm-zip-3.1.2XX] - [Checksum][win-arm-zip-checksum-3.1.2XX] | [![][win-arm-badge-3.1.1XX]][win-arm-version-3.1.1XX]<br>[zip][win-arm-zip-3.1.1XX] - [Checksum][win-arm-zip-checksum-3.1.1XX] | [![][win-arm-badge-3.0.1XX]][win-arm-version-3.0.1XX]<br>[zip][win-arm-zip-3.0.1XX] - [Checksum][win-arm-zip-checksum-3.0.1XX] |
+| **Windows arm64** | [![][win-arm64-badge-master]][win-arm64-version-master]<br>[zip][win-arm64-zip-master] | [![][win-arm64-badge-5.0.1XX-preview2]][win-arm64-version-5.0.1XX-preview2]<br>[zip][win-arm64-zip-5.0.1XX-preview2] | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** |
+| **FreeBSD x64** | [![][freebsd-x64-badge-master]][freebsd-x64-version-master]<br>[tar.gz][freebsd-x64-zip-master] - [Checksum][freebsd-x64-zip-checksum-master]  | [![][freebsd-x64-badge-5.0.1XX-preview2]][freebsd-x64-version-5.0.1XX-preview2]<br>[tar.gz][freebsd-x64-zip-5.0.1XX-preview2] - [Checksum][freebsd-x64-zip-checksum-5.0.1XX-preview2]  | [![][freebsd-x64-badge-5.0.1XX-preview1]][freebsd-x64-version-5.0.1XX-preview1]<br>[tar.gz][freebsd-x64-zip-5.0.1XX-preview1] - [Checksum][freebsd-x64-zip-checksum-5.0.1XX-preview1]  | [![][freebsd-x64-badge-3.1.3XX]][freebsd-x64-version-3.1.3XX]<br>[tar.gz][freebsd-x64-zip-3.1.3XX] - [Checksum][freebsd-x64-zip-checksum-3.1.3XX]  | [![][freebsd-x64-badge-3.1.2XX]][freebsd-x64-version-3.1.2XX]<br>[tar.gz][freebsd-x64-zip-3.1.2XX] - [Checksum][freebsd-x64-zip-checksum-3.1.2XX]  | [![][freebsd-x64-badge-3.1.1XX]][freebsd-x64-version-3.1.1XX]<br>[tar.gz][freebsd-x64-zip-3.1.1XX] - [Checksum][freebsd-x64-zip-checksum-3.1.1XX]  | [![][freebsd-x64-badge-3.0.1XX]][freebsd-x64-version-3.0.1XX]<br>[tar.gz][freebsd-x64-zip-3.0.1XX] - [Checksum][freebsd-x64-zip-checksum-3.0.1XX]  |
 | **Constituent Repo Shas** | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** | [Git SHAs][sdk-shas-2.2.1XX] |
 
 Reference notes:
@@ -426,6 +426,16 @@ Reference notes:
 [win-arm-zip-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-win-arm.zip
 [win-arm-zip-checksum-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-win-arm.zip.sha
 
+[win-arm-badge-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/win_arm_Release_version_badge.svg
+[win-arm-version-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/productCommit-win-arm.txt
+[win-arm-zip-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-win-arm.zip
+[win-arm-zip-checksum-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-win-arm.zip.sha
+
+[win-arm-badge-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/win_arm_Release_version_badge.svg
+[win-arm-version-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/latest.version
+[win-arm-zip-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/dotnet-sdk-latest-win-arm.zip
+[win-arm-zip-checksum-5.0.1XX-preview1]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/dotnet-sdk-latest-win-arm.zip.sha
+
 [win-arm-badge-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/win_arm_Release_version_badge.svg
 [win-arm-version-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/latest.version
 [win-arm-zip-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/dotnet-sdk-latest-win-arm.zip
@@ -451,30 +461,25 @@ Reference notes:
 [win-arm64-zip-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-win-arm64.zip
 [win-arm64-zip-checksum-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-win-arm64.zip.sha
 
-[win-arm64-badge-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/win_arm64_Release_version_badge.svg
-[win-arm64-version-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/latest.version
-[win-arm64-zip-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/dotnet-sdk-latest-win-arm64.zip
-[win-arm64-zip-checksum-3.1.3XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/dotnet-sdk-latest-win-arm64.zip.sha
-
-[win-arm64-badge-3.1.2XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.2xx/win_arm64_Release_version_badge.svg
-[win-arm64-version-3.1.2XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.2xx/latest.version
-[win-arm64-zip-3.1.2XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.2xx/dotnet-sdk-latest-win-arm64.zip
-[win-arm64-zip-checksum-3.1.2XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.2xx/dotnet-sdk-latest-win-arm64.zip.sha
-
-[win-arm64-badge-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/win_arm64_Release_version_badge.svg
-[win-arm64-version-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/latest.version
-[win-arm64-zip-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-win-arm64.zip
-[win-arm64-zip-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-win-arm64.zip.sha
-
-[win-arm64-badge-3.0.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/win_arm64_Release_version_badge.svg
-[win-arm64-version-3.0.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/latest.version
-[win-arm64-zip-3.0.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/dotnet-sdk-latest-win-arm64.zip
-[win-arm64-zip-checksum-3.0.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/dotnet-sdk-latest-win-arm64.zip.sha
+[win-arm64-badge-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/win_arm64_Release_version_badge.svg
+[win-arm64-version-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/productCommit-win-arm64.txt
+[win-arm64-zip-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-win-arm64.zip
+[win-arm64-zip-checksum-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-win-arm64.zip.sha
 
 [freebsd-x64-badge-master]: https://aka.ms/dotnet/net5/dev/Sdk/freebsd_x64_Release_version_badge.svg
 [freebsd-x64-version-master]: https://aka.ms/dotnet/net5/dev/Sdk/productCommit-freebsd-x64.txt
 [freebsd-x64-zip-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-freebsd-x64.tar.gz
 [freebsd-x64-zip-checksum-master]: https://aka.ms/dotnet/net5/dev/Sdk/dotnet-sdk-freebsd-x64.tar.gz.sha
+
+[freebsd-x64-badge-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/freebsd_x64_Release_version_badge.svg
+[freebsd-x64-version-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/productCommit-freebsd-x64.txt
+[freebsd-x64-zip-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-freebsd-x64.tar.gz
+[freebsd-x64-zip-checksum-5.0.1XX-preview2]: https://aka.ms/dotnet/net5/preview2/Sdk/dotnet-sdk-freebsd-x64.tar.gz.sha
+
+[freebsd-x64-badge-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/freebsd_x64_Release_version_badge.svg
+[freebsd-x64-version-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/latest.version
+[freebsd-x64-zip-5.0.1XX-preview1]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/dotnet-sdk-latest-freebsd-x64.tar.gz
+[freebsd-x64-zip-checksum-5.0.1XX-preview1]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/5.0.1xx-preview1/dotnet-sdk-latest-freebsd-x64.tar.gz.sha
 
 [freebsd-x64-badge-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/freebsd_x64_Release_version_badge.svg
 [freebsd-x64-version-3.1.3XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.3xx/latest.version
