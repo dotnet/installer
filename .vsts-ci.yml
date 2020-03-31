@@ -230,7 +230,7 @@ stages:
     dependsOn:
       # This will run only after all the publishing stages have run.
       # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
-      - NetCore_Dev5_Publish
+      - Net5_Preview3_Publish
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
