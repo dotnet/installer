@@ -24,7 +24,6 @@ This project has adopted the code of conduct defined by the [Contributor Covenan
 |:------:|
 |[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
 
-
 Installers and Binaries
 -----------------------
 
