@@ -233,8 +233,8 @@ stages:
         -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
         -TsaBugAreaPath $(_TsaBugAreaPath)
         -TsaIterationPath $(_TsaIterationPath)
-        -TsaRepositoryName "dotnet-sdk"
-        -TsaCodebaseName "dotnet-sdk"
+        -TsaRepositoryName "dotnet-installer"
+        -TsaCodebaseName "dotnet-installer"
         -TsaPublish $True'
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), not(contains(variables['Build.SourceBranch'], 'refs/heads/internal/'))) }}:
