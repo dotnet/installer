@@ -140,7 +140,6 @@
       <InstallRuntimeCommand Condition="'$(Architecture)' != ''">$(InstallRuntimeCommand) --architecture "$(Architecture)"</InstallRuntimeCommand>
     </PropertyGroup>
 
-    <Message Importance="High" Text="Installing runtime with $(InstallRuntimeCommand)" />
     <Exec Command="$(InstallRuntimeCommand)"
           Condition="!Exists($(RuntimeTargetDirectory))"
           IgnoreStandardErrorWarningFormat="true"
