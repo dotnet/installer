@@ -2,24 +2,24 @@
 <Dependencies>
   <ProductDependencies>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.4">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>57d5bbb58f17a8cb3a82c81839c9379b4fcfe0d8</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>3c16cbb071d42984dce5b16a183eedff71a47d23</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.4-servicing.20181.2">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>57d5bbb58f17a8cb3a82c81839c9379b4fcfe0d8</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.4-servicing.20208.2">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>3c16cbb071d42984dce5b16a183eedff71a47d23</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.4">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>57d5bbb58f17a8cb3a82c81839c9379b4fcfe0d8</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>3c16cbb071d42984dce5b16a183eedff71a47d23</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.1.4">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>57d5bbb58f17a8cb3a82c81839c9379b4fcfe0d8</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>3c16cbb071d42984dce5b16a183eedff71a47d23</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.1.4">
-      <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>57d5bbb58f17a8cb3a82c81839c9379b4fcfe0d8</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
+      <Sha>3c16cbb071d42984dce5b16a183eedff71a47d23</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -38,8 +38,8 @@
       <Sha>65f04fb6db7a5e198d05dbebd5c4ad21eb018f89</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.Platforms" Version="3.1.1" CoherentParentDependency="Microsoft.NetCore.App.Internal">
-      <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>282d5b9f83e7a4e7fe0cef268f4f8f85e6162510</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-corefx</Uri>
+      <Sha>d14f55bd2920bb96138518159d573c09351d6ace</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.1.3">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
@@ -86,13 +86,13 @@
       <Sha>b81f8675c7fc934b603e09215490825570145e91</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.20127.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.20202.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
       <Sha>8b60caf6234fd40d51f2593dbaa474e1ffab0bff</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.3-servicing.20128.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>b8c0f1ed4a1cd2cdd8dcbebc5ccff99993d4c3dd</Sha>
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.4-servicing.20203.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
+      <Sha>fc64601384624295820af4e804759711839bebad</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
