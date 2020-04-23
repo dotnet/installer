@@ -56,13 +56,7 @@ phases:
         - _PushToVSFeed: true
         - _SignType: real
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-                  /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
-                  /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
-                  /p:DotNetPublishBlobFeedUrl=$(PB_PublishBlobFeedUrl)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
-                  /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
-                  /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
-                  /p:PB_PublishType=blob
                   /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
                   /p:DotNetSignType=real
                   /p:TeamName=$(_TeamName)

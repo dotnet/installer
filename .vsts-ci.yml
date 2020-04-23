@@ -47,32 +47,35 @@ stages:
               _BuildConfig: Debug
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
+              _AdditionalBuildParameters: ''
             Build_ES_Debug_x64:
               _BuildConfig: Debug
               _BuildArchitecture: x64
               _DOTNET_CLI_UI_LANGUAGE: es
+              _AdditionalBuildParameters: ''
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x86:
               _BuildConfig: Release
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
+              _AdditionalBuildParameters: ''
           # Always run builds
           Build_Release_x64:
             _BuildConfig: Release
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '/p:PublishInternalAsset=true
-              /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
-              /p:DotNetPublishBlobFeedUrl=$(_ArcadePublishBlobFeedUrl)'
+            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
           Build_Release_arm:
             _BuildConfig: Release
             _BuildArchitecture: arm
             _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: ''
           Build_Release_arm64:
             _BuildConfig: Release
             _BuildArchitecture: arm64
             _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: ''
 
   - template: /eng/build.yml
     parameters:
