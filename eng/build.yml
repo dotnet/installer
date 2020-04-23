@@ -24,9 +24,10 @@ phases:
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
-    enablePublishBuildArtifacts: true
     enablePublishBuildAssets: true
-    enablePublishTestResults: true
+    # Don't use built-in arcade logic for publishing artifacts and test results, as we manually do this and give better names
+    #enablePublishBuildArtifacts: true
+    #enablePublishTestResults: true
     enablePublishUsingPipelines: ${{parameters.enablePublishUsingPipelines}}
     enableTelemetry: true
     helixRepo: dotnet/core-sdk
@@ -92,7 +93,6 @@ phases:
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
-          DropSuffix: $(_DropSuffix)
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
@@ -120,7 +120,6 @@ phases:
                   $(_AdditionalBuildParameters)
         displayName: Build
         env:
-          DropSuffix: $(_DropSuffix)
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
