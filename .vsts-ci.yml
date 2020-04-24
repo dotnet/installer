@@ -27,7 +27,7 @@ variables:
   value: '-test'
 - name: _NonWindowsTestArg
   value: '--test'
-${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: _WindowsTestArg
     value: ''
   - name: _NonWindowsTestArg
