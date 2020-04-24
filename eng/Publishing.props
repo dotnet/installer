@@ -42,7 +42,9 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.cab" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <!-- Only publish this file from windows x64 so that we don't end up with duplicates -->
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt"
+        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
