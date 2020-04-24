@@ -30,7 +30,7 @@ phases:
     #enablePublishTestResults: true
     enablePublishUsingPipelines: ${{parameters.enablePublishUsingPipelines}}
     enableTelemetry: true
-    helixRepo: dotnet/core-sdk
+    helixRepo: dotnet/installer
     pool: ${{ parameters.pool }}
     ${{ if ne(parameters.strategy, '') }}:
       strategy: ${{ parameters.strategy }}
@@ -40,8 +40,8 @@ phases:
     variables: 
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
-      - _BuildArgs: ''
       - _SignType: test
+      - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
@@ -58,7 +58,7 @@ phases:
         - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=$(_PublishBlobFeedUrl)
                   /p:DotnetPublishChecksumsBlobFeedUrl=$(_PublishChecksumsBlobFeedUrl)
-                  /p:DotNetSignType=real
+                  /p:DotNetSignType=$(_SignType)
                   /p:TeamName=$(_TeamName)
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
 
@@ -66,8 +66,6 @@ phases:
     - checkout: self
       clean: true
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-      - script: 'eng\setbuildinfo.bat $(_BuildArchitecture) $(_BuildConfig)'
-        displayName: Set test info (Windows)
       - ${{ if ne(variables['System.TeamProject'], 'public') }}:
         - task: PowerShell@2
           displayName: Setup Private Feeds Credentials
@@ -77,12 +75,11 @@ phases:
           env:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
       - script: build.cmd
-                  $(TestParameter)
-                  -pack -publish -ci
+                  $(_TestArg)
+                  -pack -publish -ci -sign
                   -Configuration $(_BuildConfig)
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
-                  $(SignBuildParameters)
                   $(_AdditionalBuildParameters)
         displayName: Build
         env:
@@ -90,8 +87,6 @@ phases:
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
-      - script: 'eng/setbuildinfo.sh $(_BuildArchitecture) $(_BuildConfig)'
-        displayName: Set test info (Non-Windows)
       - ${{ if ne(variables['System.TeamProject'], 'public') }}:
         - task: Bash@3
           displayName: Setup Private Feeds Credentials
@@ -102,7 +97,7 @@ phases:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
-                  $(TestParameter)
+                  $(_TestArg)
                   --pack --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
@@ -118,7 +113,7 @@ phases:
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
       - script: ./build.sh
-                  $(TestParameter)
+                  $(_TestArg)
                   --pack --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
@@ -146,7 +141,7 @@ phases:
         testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
         platform: '$(BuildPlatform)'	
         configuration: '$(_BuildConfig)'	
-      condition: ne(variables['TestParameter'], '')
+      condition: ne(variables['_TestArg'], '')
 
     - task: CopyFiles@2	
       displayName: Gather Logs	

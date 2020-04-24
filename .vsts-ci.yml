@@ -7,16 +7,12 @@ trigger:
     - internal/release/3.*
 
 variables:
+# These two variables are used by CopyToLatest.
+# when CopyToLatest goes away in favor of improvements to dotnet-install, this can be removed.
 - name: _PublishBlobFeedUrl
   value: https://dotnetcli.blob.core.windows.net/dotnet/index.json
 - name: _PublishChecksumsBlobFeedUrl
   value: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
-- name: _ArcadePublishBlobFeedUrl
-  value: https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json
-- name: _DotNetArtifactsCategory
-  value: .NETCore
-- name: _DotNetValidationArtifactsCategory
-  value: .NETCoreValidation
 - name: _PublishUsingPipelines
   value: false
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -25,6 +21,17 @@ variables:
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
+
+# Default to running tests in PRs and public CI, but not in official builds
+- name: _WindowsTestArg
+  value: '-test'
+- name: _NonWindowsTestArg
+  value: '--test'
+${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - name: _WindowsTestArg
+    value: ''
+  - name: _NonWindowsTestArg
+    value: ''
 
 stages:
 - stage: build
@@ -48,11 +55,13 @@ stages:
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
               _AdditionalBuildParameters: ''
+              _TestArg: $(_WindowsTestArg)
             Build_ES_Debug_x64:
               _BuildConfig: Debug
               _BuildArchitecture: x64
               _DOTNET_CLI_UI_LANGUAGE: es
               _AdditionalBuildParameters: ''
+              _TestArg: $(_WindowsTestArg)
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x86:
@@ -60,22 +69,28 @@ stages:
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
               _AdditionalBuildParameters: ''
+              _TestArg: $(_WindowsTestArg)
           # Always run builds
           Build_Release_x64:
             _BuildConfig: Release
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+            _TestArg: $(_WindowsTestArg)
           Build_Release_arm:
             _BuildConfig: Release
             _BuildArchitecture: arm
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: ''
+            # Never run tests on arm64
+            _TestArg: ''
           Build_Release_arm64:
             _BuildConfig: Release
             _BuildArchitecture: arm64
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: ''
+            # Never run tests on arm64
+            _TestArg: ''
 
   - template: /eng/build.yml
     parameters:
@@ -97,54 +112,65 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Ubuntu_18_04_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker ubuntu.18.04'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Fedora_29_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker fedora.29'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_CentOS_7_1_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker centos'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Debian_Stretch_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker debian'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Rhel_7_2_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker rhel'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Arm_Debug:
               _BuildConfig: Debug
               _DockerParameter: ''
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm'
               _BuildArchitecture: 'arm'
+              # Never run tests on arm64
+              _TestArg: ''
             Build_Arm64_Debug:
               _BuildConfig: Debug
               _DockerParameter: ''
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
+              # Never run tests on arm64
+              _TestArg: ''
             Build_Linux_musl_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker alpine.3.6'
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Arm_Release:
               _BuildConfig: Release
@@ -152,12 +178,16 @@ stages:
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm'
               _BuildArchitecture: 'arm'
+              # Never run tests on arm64
+              _TestArg: ''
             Build_Arm64_Release:
               _BuildConfig: Release
               _DockerParameter: ''
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
+              # Never run tests on arm64
+              _TestArg: ''
             Build_Linux_musl_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker alpine.3.6'
@@ -173,6 +203,7 @@ stages:
               # Do not publish zips and tarballs. The linux-x64 binaries are
               # already published by Build_LinuxPortable_Release_x64
               _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker rhel'
@@ -182,12 +213,14 @@ stages:
               # Do not publish zips and tarballs. The linux-x64 binaries are
               # already published by Build_LinuxPortable_Release_x64
               _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+              _TestArg: $(_NonWindowsTestArg)
           Build_LinuxPortable_Release_x64:
             _BuildConfig: Release
             _DockerParameter: ''
             _LinuxPortable: '--linux-portable'
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'x64'
+            _TestArg: $(_NonWindowsTestArg)
 
   - template: /eng/build.yml
     parameters:
@@ -199,6 +232,7 @@ stages:
         matrix:
           Build_Release:
             _BuildConfig: Release
+            _TestArg: $(_NonWindowsTestArg)
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
