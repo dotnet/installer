@@ -3,11 +3,14 @@
   <Target Name="GenerateBundledVersions"
           DependsOnTargets="GenerateBundledVersionsProps;GenerateBundledCliToolsProps" >
 
+    <!-- Only generate the productVersion.txt file during windows x64 so that we do
+         not attempt to overwrite it all the time -->
     <WriteLinesToFile
       File="$(ArtifactsShippingPackagesDir)productVersion.txt"
       Lines="$(PackageVersion)"
       Overwrite="true"
-      Encoding="ASCII"/>
+      Encoding="ASCII"
+      Condition="('$(OS)' == 'Windows_NT') and ('$(Architecture)' == 'x64')" />
 
     <WriteLinesToFile
       File="$(ArtifactsShippingPackagesDir)productCommit-$(Rid).txt"
