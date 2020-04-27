@@ -144,7 +144,7 @@ phases:
           publishFeedCredentials: 'DevDiv - VS package feed'
         condition: and(succeeded(), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
 
-    - task: PublishTestResults@1	
+    - task: PublishTestResults@2	
       displayName: Publish Test Results	
       inputs:
         testRunner: XUnit	
