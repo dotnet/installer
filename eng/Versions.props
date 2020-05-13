@@ -14,6 +14,9 @@
     <PreReleaseVersionIteration>5</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
+    <!-- Update this property when branching. The latest version for a branch
+    will be stored in a blob that's used by dotnet-install's channel parameter. -->
+    <Channel>master</Channel>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
