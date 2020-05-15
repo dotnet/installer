@@ -294,8 +294,19 @@ stages:
       variables:
         - group: DotNet-DotNetCli-Storage
       steps:
+        - powershell: |
+            $prefix = "refs/heads/"
+            $branch = "$(Build.SourceBranch)"
+            $branchName = $branch
+            if ($branchName.StartsWith($prefix))
+            {
+                $branchName = $branchName.Substring($prefix.Length)
+            }
+            Write-Host "For Build.SourceBranch $branch, FullBranchName is $branchName"
+            Write-Host "##vso[task.setvariable variable=FullBranchName;]$branchName"
+          displayName: Find true SourceBranchName
         - script: eng/CopyToLatest.cmd
-                  /p:Channel=$(BUILD.SOURCEBRANCHNAME)
+                  /p:Channel=$(FullBranchName)
                   /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
                   /p:DotnetPublishSdkAssetsBlobFeedUrl=https://dotnetcli.blob.core.windows.net/dotnet/index.json
                   /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
