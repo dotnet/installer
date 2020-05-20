@@ -77,17 +77,17 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>d503e3a0aeafd9cd580d44495aafc116b5f71588</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.301-servicing.20269.9">
+    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.301-servicing.20269.11">
       <Uri>https://github.com/dotnet/toolset</Uri>
-      <Sha>0d1554c27e4bba3d72995583c5da14f8309feff3</Sha>
+      <Sha>8847b418c4f29d63622296a73ad98403c7099387</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="3.1.301-servicing.20265.6" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/sdk</Uri>
       <Sha>d5aeb6dfe133c5504838b1fc377c44424273618a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.300-preview.20230.12" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
-      <Sha>7e0c2e2beaf7f90c8bf86693076a21912784b22e</Sha>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.301-servicing.20269.4" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+      <Uri>https://github.com/dotnet/cli</Uri>
+      <Sha>2749ca429b5190ec99edcdef89f5d931db03f306</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.20213.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
