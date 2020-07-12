@@ -48,6 +48,10 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
+    <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+    <SdkNonShippingAssetsToPublish Condition="'$(PublishBinariesAndBadge)' != 'false'" Include="$(ArtifactsNonShippingPackagesDir)*.tar.gz" />
+    <SdkNonShippingAssetsToPublish Condition="'$(PublishBinariesAndBadge)' != 'false'" Include="$(ArtifactsNonShippingPackagesDir)*.zip" />
+    <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.pkg" />
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productCommit-*.txt.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false'" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
