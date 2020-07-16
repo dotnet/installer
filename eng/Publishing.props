@@ -50,9 +50,11 @@
       <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' != ''">$(AssetManifestFileName)-$(AGENT_JOBNAME)</AssetManifestFileName>
       <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' == '' and '$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
       <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
+      <PackagesManifestFileName>$(AssetManifestFileName)-packages</PackagesManifestFileName>
       <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
       <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
       <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
+      <PackagesManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(PackagesManifestFileName).xml</PackagesManifestFilePath>
 
       <DotnetTempWorkingDirectory>$(ArtifactsDir)..\DotnetAssetsTmpDir\$([System.Guid]::NewGuid())</DotnetTempWorkingDirectory>
       <ChecksumTempWorkingDirectory>$(ArtifactsDir)..\ChecksumAssetsTmpDir\$([System.Guid]::NewGuid())</ChecksumTempWorkingDirectory>
@@ -74,6 +76,7 @@
         Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+    <SdkNonShippingAssetsToPublish Remove="$(ArtifactsNonShippingPackagesDir)Microsoft.Dotnet.Sdk.Internal.*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
     <SdkNonShippingAssetsToPublish Condition="'$(PublishBinariesAndBadge)' != 'false'" Include="$(ArtifactsNonShippingPackagesDir)*.tar.gz" />
@@ -84,6 +87,7 @@
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
+    <SdkNonShippingPackagesToPublish Include="$(ArtifactsNonShippingPackagesDir)Microsoft.Dotnet.Sdk.Internal.*.nupkg" />
   </ItemGroup>
 
   <Target Name="PublishSdkAssetsAndChecksums"
@@ -130,6 +134,10 @@
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
         <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
       </SdkAssetsToPushToBlobFeed>
+      
+      <SdkPackagesToPush Include="@(SdkNonShippingPackagesToPublish)">
+        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
+      </SdkPackagesToPush>
 
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
@@ -165,5 +173,16 @@
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
       PublishFlatContainer="true" />
+    
+    <!-- Push the sdk internal sentinel package -->
+    <PushToAzureDevOpsArtifacts
+      ItemsToPush="@(SdkPackagesToPush)"
+      ManifestBuildData="@(ManifestBuildData)"
+      ManifestRepoUri="$(BUILD_REPOSITORY_URI)"
+      ManifestBranch="$(BUILD_SOURCEBRANCH)"
+      ManifestBuildId="$(BUILD_BUILDNUMBER)"
+      ManifestCommit="$(BUILD_SOURCEVERSION)"
+      AssetManifestPath="$(PackagesManifestFilePath)"
+      PublishFlatContainer="false" />
   </Target>
 </Project>
