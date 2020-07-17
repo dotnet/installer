@@ -56,7 +56,8 @@ jobs:
           - ${{ each job in parameters.jobs }}:
             - ${{ job.job }}
         pool:
-          vmImage: vs2017-win2016
+          name: NetCorePublic-Pool
+          queue: buildpool.windows.10.amd64.vs2017.open
         runAsPublic: ${{ parameters.runAsPublic }}
         publishUsingPipelines: ${{ parameters.enablePublishUsingPipelines }}
         enablePublishBuildArtifacts: ${{ parameters.enablePublishBuildArtifacts }}
@@ -69,4 +70,5 @@ jobs:
         dependsOn:
           - Asset_Registry_Publish
         pool:
-          vmImage: vs2017-win2016
+          name: NetCorePublic-Pool
+          queue: buildpool.windows.10.amd64.vs2017.open
