@@ -87,7 +87,7 @@
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
-    <SdkNonShippingPackagesToPublish Include="$(ArtifactsNonShippingPackagesDir)Microsoft.Dotnet.Sdk.Internal.*.nupkg" />
+    <SdkNonShippingPackagesToPublish Include="$(ArtifactsNonShippingPackagesDir)Microsoft.Dotnet.Sdk.Internal.*.nupkg" Condition="'$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
   </ItemGroup>
 
   <Target Name="PublishSdkAssetsAndChecksums"
@@ -183,6 +183,7 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(PackagesManifestFilePath)"
-      PublishFlatContainer="false" />
+      PublishFlatContainer="false"
+      Condition="'@(SdkPackagesToPush)' != ''" />
   </Target>
 </Project>
