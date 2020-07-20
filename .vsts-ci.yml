@@ -40,12 +40,12 @@ stages:
     parameters:
       agentOs: Windows_NT
       pool:
-        ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+        ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2017.open
-        ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+          queue: buildpool.windows.10.amd64.vs2019.open
+        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2017
+          queue: buildpool.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -256,8 +256,12 @@ stages:
           - Darwin
         publishUsingPipelines: true
         pool:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2017.open
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            name: NetCorePublic-Pool
+            queue: buildpool.windows.10.amd64.vs2019.open
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: NetCoreInternal-Pool
+            queue: buildpool.windows.10.amd64.vs2019
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: eng\common\templates\post-build\post-build.yml
