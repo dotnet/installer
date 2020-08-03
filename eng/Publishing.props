@@ -43,15 +43,18 @@
 
   <PropertyGroup>
       <!-- Because we may be building in a container, we should use an asset manifest file path
-             that exists in the container. Disambiguate the manifests via available properties.
-             AGENT_OS and AGENT_JOBNAME are present on Azure DevOps agents -->
-      <AssetManifestFileName Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(AGENT_OS)' == ''">$(OS)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' != ''">$(AssetManifestFileName)-$(AGENT_JOBNAME)</AssetManifestFileName>
-      <AssetManifestFileName Condition="'$(AGENT_JOBNAME)' == '' and '$(Architecture)' != ''">$(AssetManifestFileName)-$(Architecture)</AssetManifestFileName>
-      <ChecksumsAssetManifestFileName>$(AssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
-      <!-- Property AssetManifestFilePath will be reassigned by the Arcade SDK, so use a different name (DotNetAssetManifestFilePath) -->
-      <DotNetAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(AssetManifestFileName).xml</DotNetAssetManifestFilePath>
+           that exists in the container. Disambiguate the manifests via available properties.
+           AGENT_OS and AGENT_JOBNAME are present on Azure DevOps agents. AssetManifestOS will also
+           be used by arcade to generate the name of the manifest file name for the built in publishing. -->
+      <AssetManifestOS Condition="'$(AGENT_OS)' != ''">$(AGENT_OS)</AssetManifestOS>
+      <AssetManifestOS Condition="'$(AGENT_OS)' == ''">$(OS)</AssetManifestOS>
+      <AssetManifestOS Condition="'$(AGENT_JOBNAME)' != ''">$(AssetManifestOS)-$(AGENT_JOBNAME)</AssetManifestOS>
+      <BaseAssetManifestFileName>$(AssetManifestOS)</BaseAssetManifestFileName>
+      <BaseAssetManifestFileName Condition="'$(AGENT_JOBNAME)' == '' and '$(Architecture)' != ''">$(AssetManifestOS)-$(Architecture)</BaseAssetManifestFileName>
+      <InstallersAssetManifestFileName>$(BaseAssetManifestFileName)-installers</InstallersAssetManifestFileName>
+      <ChecksumsAssetManifestFileName>$(BaseAssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
+      <!-- Property AssetManifestFilePath would be reassigned by the Arcade SDK, so use a different name (InstallersAssetManifestFilePath) -->
+      <InstallersAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(InstallersAssetManifestFileName).xml</InstallersAssetManifestFilePath>
       <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
 
       <DotnetTempWorkingDirectory>$(ArtifactsDir)..\DotnetAssetsTmpDir\$([System.Guid]::NewGuid())</DotnetTempWorkingDirectory>
@@ -153,7 +156,7 @@
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(DotNetAssetManifestFilePath)"
+      AssetManifestPath="$(InstallersAssetManifestFilePath)"
       PublishFlatContainer="true" />
 
     <PushToAzureDevOpsArtifacts
