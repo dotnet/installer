@@ -108,7 +108,7 @@
       <Crossgen2SupportedRids Include="linux-musl-x64;linux-x64;win-x64" />
 
       <AspNetCore31RuntimePackRids Include="@(AspNetCore30RuntimePackRids)" />
-      <AspNetCoreRuntimePackRids Include="@(AspNetCore31RuntimePackRids)" />
+      <AspNetCoreRuntimePackRids Include="@(AspNetCore31RuntimePackRids);win-arm64" />
 
       <WindowsDesktop30RuntimePackRids Include="win-x64;win-x86" />
       <WindowsDesktop31RuntimePackRids Include="@(WindowsDesktop30RuntimePackRids)" />
