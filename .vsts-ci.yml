@@ -301,4 +301,5 @@ stages:
                   /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
                   /p:DotnetPublishChecksumsBlobFeedUrl=https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
                   /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
+                  /p:SourceBranch=$(BUILD.SOURCEBRANCH)
           displayName: Copy to latest
