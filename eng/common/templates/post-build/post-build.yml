@@ -298,7 +298,7 @@ stages:
       shippingFeed: 'https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal/nuget/v3/index.json'
       symbolsFeed: 'https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-symbols/nuget/v3/index.json'
 
-  - template: \eng\common\templates\post-build\channels\generic-internal-channel.yml
+  - template: \eng\common\templates\post-build\channels\generic-public-channel.yml
     parameters:
       artifactsPublishingAdditionalParameters: ${{ parameters.artifactsPublishingAdditionalParameters }}
       dependsOn: ${{ parameters.publishDependsOn }}
@@ -308,9 +308,9 @@ stages:
       channelName: '.NET 5 RC 1'
       akaMSChannelName: 'net5/rc1'
       channelId: ${{ parameters.Net5RC1ChannelId }}
-      transportFeed: 'https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-transport/nuget/v3/index.json'
-      shippingFeed: 'https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal/nuget/v3/index.json'
-      symbolsFeed: 'https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-symbols/nuget/v3/index.json'
+      transportFeed: 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5-transport/nuget/v3/index.json'
+      shippingFeed: 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json'
+      symbolsFeed: 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5-symbols/nuget/v3/index.json'
 
   - template: \eng\common\templates\post-build\channels\generic-public-channel.yml
     parameters:
