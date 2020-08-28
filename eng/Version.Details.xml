@@ -96,6 +96,43 @@
       <Uri>https://github.com/dotnet/wpf</Uri>
       <Sha>de2e9785920c11aca594fc3506b8d8052b9b3260</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.FSharp.Compiler" Version="11.0.0-beta.20427.5" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/fsharp</Uri>
+      <Sha>fe7efc4717eec6e2ed5257e4caa34d0a3f3e9dd2</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="16.7.0-release-20200612-02" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/microsoft/vstest</Uri>
+      <Sha>df62aca07cacc5c018dc8e828f03a0cd79ee52da</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="5.0.0-preview.3.20317.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/mono/linker</Uri>
+      <Sha>b68b74fa3814e49db4b4743014f0adc468e45700</Sha>
+      <RepoName>linker</RepoName>
+    </Dependency>
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="3.8.0-1.20367.11" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/roslyn</Uri>
+      <Sha>fb7b2e716d163b7abebf57db505e01a4a521ddae</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Build" Version="16.7.0-preview-20360-03" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/microsoft/msbuild</Uri>
+      <Sha>188921e2ffecf6c74dd4583cf01b62465fcbee3c</Sha>
+    </Dependency>
+    <Dependency Name="NuGet.Build.Tasks" Version="5.7.0-rtm.6702" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/NuGet/NuGet.Client</Uri>
+      <Sha>cd51d2637fc533e1e188c860e7616107904a3623</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.19208.1" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/cliCommandLineParser</Uri>
+      <Sha>0e89c2116ad28e404ba56c14d1c3f938caa25a01</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
+      <Uri>https://github.com/Microsoft/ApplicationInsights-dotnet</Uri>
+      <Sha>53b80940842204f78708a538628288ff5d741a1d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.Web.Xdt" Version="3.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/aspnet/xdt</Uri>
+      <Sha>c01a538851a8ab1a1fbeb2e6243f391fff7587b4</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="5.0.0-beta.20431.1">
@@ -105,6 +142,18 @@
     <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="5.0.0-beta.20431.1">
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>4be47e467013f8a07a1ed7b6e49e39c8150bde54</Sha>
+    </Dependency>
+    <Dependency Name="Private.SourceBuild.ReferencePackages" Version="1.0.0-beta.20217.1">
+      <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
+      <Sha>639aeb4d76c8b1a6226bf7c4edb34fbdae30e6e1</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.0.0" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
+      <Uri>https://github.com/dotnet/sourcelink</Uri>
+      <Sha>f175b06862f889474b689a57527e489101c774cc</Sha>
+    </Dependency>
+    <Dependency Name="XliffTasks" Version="1.0.0-beta.20206.1" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
+      <Uri>https://github.com/dotnet/xliff-tasks</Uri>
+      <Sha>fdf42c08a386935000f64b1e0fd7d73fa9c961d5</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
