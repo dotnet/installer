@@ -540,6 +540,11 @@ Reference notes:
 
 [sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
 
+Looking for dotnet-install sources?
+-----------------------------------
+
+Sources for dotnet-install.sh and dotnet-install.ps1 are in the [install-scripts repo](https://github.com/dotnet/install-scripts).
+
 Questions & Comments
 --------------------
 
