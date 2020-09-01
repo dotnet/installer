@@ -9,10 +9,10 @@
   To actually update the version for this repo, look at src/redist/targets/Versions.targets -->
   <PropertyGroup>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotnetToolsetInternalPackageVersion>3.1.108-servicing.20431.2</MicrosoftDotnetToolsetInternalPackageVersion>
+    <MicrosoftDotnetToolsetInternalPackageVersion>3.1.402-servicing.20431.1</MicrosoftDotnetToolsetInternalPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -43,17 +43,18 @@
     <dotnetdevcertsPackageVersion>3.1.8-servicing.20421.6</dotnetdevcertsPackageVersion>
     <dotnetusersecretsPackageVersion>3.1.8-servicing.20421.6</dotnetusersecretsPackageVersion>
     <dotnetwatchPackageVersion>3.1.8-servicing.20421.6</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>3.2.1</MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/cli -->
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.1.108-servicing.20431.1</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>3.1.402-servicing.20431.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk (to run tests) -->
-    <MicrosoftNETSdkPackageVersion>3.1.108-servicing.20413.3</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETSdkPackageVersion>3.1.402-servicing.20427.24</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -97,19 +98,13 @@
     <NUnit3Templates30PackageVersion>1.6.5</NUnit3Templates30PackageVersion>
     <MicrosoftDotNetCommonItemTemplates30PackageVersion>2.0.0-preview8.19373.1</MicrosoftDotNetCommonItemTemplates30PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates30PackageVersion>$(MicrosoftDotNetCommonItemTemplates30PackageVersion)</MicrosoftDotNetCommonProjectTemplates30PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.19354.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.20105.2</MicrosoftDotNetTestProjectTemplates30PackageVersion>
     <AspNetCorePackageVersionFor30Templates>3.0.1</AspNetCorePackageVersionFor30Templates>
-    <!-- 2.2 Template versions -->
-    <NUnit3Templates22PackageVersion>1.6.0</NUnit3Templates22PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates22PackageVersion>1.0.2-beta4</MicrosoftDotNetCommonItemTemplates22PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates22PackageVersion>$(MicrosoftDotNetCommonItemTemplates22PackageVersion)</MicrosoftDotNetCommonProjectTemplates22PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates22PackageVersion>1.0.2-beta4.19155.2</MicrosoftDotNetTestProjectTemplates22PackageVersion>
-    <AspNetCorePackageVersionFor22Templates>2.2.8</AspNetCorePackageVersionFor22Templates>
     <!-- 2.1 Template versions -->
     <NUnit3Templates21PackageVersion>1.5.3</NUnit3Templates21PackageVersion>
     <MicrosoftDotNetCommonItemTemplates21PackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplates21PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates21PackageVersion>$(MicrosoftDotNetCommonItemTemplates21PackageVersion)</MicrosoftDotNetCommonProjectTemplates21PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4-20181009-2100240</MicrosoftDotNetTestProjectTemplates21PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.20105.2</MicrosoftDotNetTestProjectTemplates21PackageVersion>
     <AspNetCorePackageVersionFor21Templates>2.1.14</AspNetCorePackageVersionFor21Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
@@ -118,7 +113,6 @@
     <VersionToolsVersion>$(BuildTasksFeedToolVersion)</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
     <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
-    <MicrosoftSourceLinkVersion>1.0.0-beta2-18618-05</MicrosoftSourceLinkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->

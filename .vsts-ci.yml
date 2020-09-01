@@ -282,8 +282,7 @@ stages:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
-      - NetCore_Release30_Publish
-      - NetCore_Release31_Publish
+      - NETCore_SDK_314xx_Publishing
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
