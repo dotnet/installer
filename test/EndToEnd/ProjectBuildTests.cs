@@ -80,9 +80,7 @@ namespace EndToEnd.Tests
             var runCommand = new RunCommand()
                 .WithWorkingDirectory(projectDirectory)
                 .ExecuteWithCapturedOutput()
-                // Templates are still at 5.0 and will not run on 6.0, revert to commented out assertion when 6.0 templates land
-                //.Should().Pass().And.HaveStdOutContaining("Hello World!");
-                .Should().Fail().And.HaveStdErrContaining("https://aka.ms/dotnet-core-applaunch");
+                .Should().Pass().And.HaveStdOutContaining("Hello World!");
         }
 
         [WindowsOnlyFact]
