@@ -129,7 +129,8 @@
       <Uri>https://github.com/Microsoft/ApplicationInsights-dotnet</Uri>
       <Sha>53b80940842204f78708a538628288ff5d741a1d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Web.Xdt" Version="3.1.0" CoherentParentDependency="Microsoft.NET.Sdk">
+    <!-- Temporarily pinning Microsoft.Web.Xdt until strict coherency is enabled by default -->
+    <Dependency Name="Microsoft.Web.Xdt" Version="3.1.0" CoherentParentDependency="Microsoft.NET.Sdk" Pinned="true">
       <Uri>https://github.com/aspnet/xdt</Uri>
       <Sha>c01a538851a8ab1a1fbeb2e6243f391fff7587b4</Sha>
     </Dependency>
