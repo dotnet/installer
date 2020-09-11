@@ -123,7 +123,7 @@ phases:
         env:
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
-    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT')) }}:
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT'), ne(variables['PostBuildSign'], 'true')) }}:
       - task: NuGetCommand@2
         displayName: Push Visual Studio NuPkgs
         inputs:
