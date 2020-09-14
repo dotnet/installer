@@ -8,7 +8,6 @@
   <PropertyGroup>
     <Product>Sdk</Product>
     <BlobStoragePartialRelativePath>$(Product)</BlobStoragePartialRelativePath>
-    <BlobStoragePartialRelativePath Condition="'$(IsNotOrchestratedPublish)' == 'false'">assets/$(Product)</BlobStoragePartialRelativePath>
     <ChecksumsFeedUrl>$(DotnetPublishChecksumsBlobFeedUrl)</ChecksumsFeedUrl>
     <SdkAssetsFeedUrl>$(DotnetPublishSdkAssetsBlobFeedUrl)</SdkAssetsFeedUrl>
 
@@ -56,10 +55,8 @@
       <BaseAssetManifestFileName>$(AssetManifestOS)</BaseAssetManifestFileName>
       <BaseAssetManifestFileName Condition="'$(AGENT_JOBNAME)' == '' and '$(Architecture)' != ''">$(AssetManifestOS)-$(Architecture)</BaseAssetManifestFileName>
       <InstallersAssetManifestFileName>$(BaseAssetManifestFileName)-installers</InstallersAssetManifestFileName>
-      <ChecksumsAssetManifestFileName>$(BaseAssetManifestFileName)-checksums</ChecksumsAssetManifestFileName>
       <!-- Property AssetManifestFilePath would be reassigned by the Arcade SDK, so use a different name (InstallersAssetManifestFilePath) -->
       <InstallersAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(InstallersAssetManifestFileName).xml</InstallersAssetManifestFilePath>
-      <ChecksumsAssetManifestFilePath>$(ArtifactsLogDir)AssetManifest\$(ChecksumsAssetManifestFileName).xml</ChecksumsAssetManifestFilePath>
 
       <DotnetTempWorkingDirectory>$(ArtifactsDir)..\DotnetAssetsTmpDir\$([System.Guid]::NewGuid())</DotnetTempWorkingDirectory>
       <ChecksumTempWorkingDirectory>$(ArtifactsDir)..\ChecksumAssetsTmpDir\$([System.Guid]::NewGuid())</ChecksumTempWorkingDirectory>
@@ -119,26 +116,28 @@
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
 
+    <PropertyGroup>
+      <IsStableBuild>false</IsStableBuild>
+      <IsStableBuild Condition="'$(DotNetFinalVersionKind)' == 'release'">true</IsStableBuild>
+    </PropertyGroup>
+
     <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(SdkAssetsToPushToBlobFeed)"
+      AzureDevOpsCollectionUri="$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)"
+      AzureDevOpsProject="$(SYSTEM_TEAMPROJECT)"
+      AzureDevOpsBuildId="$(BUILD_BUILDID)"
+      ItemsToPush="@(SdkAssetsToPushToBlobFeed);@(ChecksumsToPushToBlobFeed)"
+      ItemsToSign="@(ItemsToSignPostBuild)"
+      StrongNameSignInfo="@(StrongNameSignInfo)"
+      FileSignInfo="@(FileSignInfo)"
+      FileExtensionSignInfo="@(FileExtensionSignInfo)"
       ManifestBuildData="@(ManifestBuildData)"
-      ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
+      ManifestRepoName="$(BUILD_REPOSITORY_NAME)"
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(InstallersAssetManifestFilePath)"
       PublishFlatContainer="true"
-      PublishingVersion="3"/>
-
-    <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(ChecksumsToPushToBlobFeed)"
-      ManifestBuildData="@(ManifestBuildData)"
-      ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
-      ManifestBranch="$(BUILD_SOURCEBRANCH)"
-      ManifestBuildId="$(BUILD_BUILDNUMBER)"
-      ManifestCommit="$(BUILD_SOURCEVERSION)"
-      AssetManifestPath="$(ChecksumsAssetManifestFilePath)"
-      PublishFlatContainer="true" 
-      PublishingVersion="3"/>
+      IsStableBuild="$(IsStableBuild)"
+      PublishingVersion="3" />
   </Target>
 </Project>

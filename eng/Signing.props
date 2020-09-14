@@ -1,16 +1,41 @@
 <Project>
 
   <ItemGroup>
-    <!-- Do not sign non-shipping packages -->
+    <!-- Do not sign non-shipping packages when doing in-build signing -->
     <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(PostBuildSign)' == 'true'">
+    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.zip" />
+    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.exe" />
+    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.msi" />
+    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
+    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+  </ItemGroup>
+
   <PropertyGroup>
+    <ExternalCertificateId Condition="'$(ExternalCertificateId)' == ''">3PartySHA2</ExternalCertificateId>
+    <InternalCertificateId Condition="'$(InternalCertificateId)' == ''">Microsoft400</InternalCertificateId>
+
     <!--
       Signing of shipping artifacts (layout, msi, bundle) are handled separately.
-      It is therefore expected that above removal can yield an empty set.
+      It is therefore expected that <ItemsToSign> could be an empty set.
     -->
     <AllowEmptySignList>true</AllowEmptySignList>
   </PropertyGroup>
+
+  <ItemGroup>
+    <FileSignInfo Include="Newtonsoft.Json.dll" CertificateName="$(ExternalCertificateId)" />
+    <FileSignInfo Include="MessagePack.Annotations.dll" CertificateName="$(ExternalCertificateId)" />
+    <FileSignInfo Include="MessagePack.dll" CertificateName="$(ExternalCertificateId)" />
+    <FileSignInfo Include="Nerdbank.Streams.dll" CertificateName="$(ExternalCertificateId)" />
+    <FileSignInfo Include="StreamJsonRpc.dll" CertificateName="$(ExternalCertificateId)" />
+
+    <!-- Files in the layout that should not be signed -->
+    <FileSignInfo Include="apphost.exe" CertificateName="None" />
+
+    <FileExtensionSignInfo Include=".msi" CertificateName="$(InternalCertificateId)" />
+  </ItemGroup>
 
 </Project>
