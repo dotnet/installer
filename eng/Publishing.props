@@ -161,7 +161,8 @@
       ManifestBuildId="$(BUILD_BUILDNUMBER)"
       ManifestCommit="$(BUILD_SOURCEVERSION)"
       AssetManifestPath="$(InstallersAssetManifestFilePath)"
-      PublishFlatContainer="true" />
+      PublishFlatContainer="true"
+      PublishingVersion="3"/>
 
     <PushToAzureDevOpsArtifacts
       ItemsToPush="@(ChecksumsToPushToBlobFeed);@(ChecksumsWithSuffixToPushToBlobFeed)"
