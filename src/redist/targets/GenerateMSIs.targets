@@ -364,20 +364,15 @@
     </ItemGroup>
     <CreateLightCommandPackageDrop
       LightCommandWorkingDir="$(LightCommandObjDir)"
+      OutputFolder="$(LightCommandPackagesDir)"
       NoLogo="true"
       Cultures="en-us"
-      Out="$(CombinedFrameworkSdkHostMSIInstallerFile)"
+      InstallerFile="$(CombinedFrameworkSdkHostMSIInstallerFile)"
       WixExtensions="WixBalExtension;WixUtilExtension;WixTagExtension"
       WixSrcFiles="@(BundleMsiWixSrcFiles)"
       AdditionalBasePaths="$(MSBuildThisFileDirectory)packaging/windows/clisdk">
-      <Output TaskParameter="LightCommandPackageNameOutput" PropertyName="_LightCommandPackageNameOutput" />
+      <Output TaskParameter="OutputFile" PropertyName="_LightCommandPackageNameOutput" />
     </CreateLightCommandPackageDrop>
-    <MakeDir Directories="$(LightCommandPackagesDir)" />
-
-    <ZipDirectory
-      DestinationFile="$(LightCommandPackagesDir)/LightCommandPackage-$(_LightCommandPackageNameOutput).zip"
-      SourceDirectory="$(LightCommandObjDir)/$(_LightCommandPackageNameOutput)"
-      Overwrite="true" />
   </Target>
 
   <Target Name="GenerateToolsetNupkg"
