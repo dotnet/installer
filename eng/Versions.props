@@ -130,12 +130,8 @@
     <MicrosoftNETTestSdkVersion>16.8.0-release-20200902-05</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>10.0.17763.1-preview</MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>
-    <MicrosoftWindowsSDKNETRef10_0_18362PackageVersion>10.0.18362.2-preview</MicrosoftWindowsSDKNETRef10_0_18362PackageVersion>
-    <MicrosoftWindowsSDKNETRef10_0_19041PackageVersion>10.0.19041.1-preview</MicrosoftWindowsSDKNETRef10_0_19041PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
   </PropertyGroup>
+  <Import Project="$(RepositoryEngineeringDir)ManualVersions.props" />
 </Project>
