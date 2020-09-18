@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-<!-- The following property needs to choice the highest when there is merge conflict.
-      Unlike Versions.props the following property is maintained manually. So there won't be
-      a bot Checking into multiple branches. Instead of keeping what's in branch,
-      whenever there is a merge conflict. Pick the highest.
+<!-- The following properties (unlike those in version.props) are maintained manually.  So
+     when there is a merge conflict, the highest version should generally be chosen, rather
+     than keeping what's in the branch, which is the usual strategy with version.props merge
+     conflicts.
+       
+     Basically: In this file, choose the highest version when resolving merge conflicts.
  -->
   <PropertyGroup>
     <MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>10.0.17763.3-preview</MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>
