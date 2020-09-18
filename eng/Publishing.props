@@ -103,30 +103,6 @@
           PropertyName="FullNugetVersion"/>
     </ReadLinesFromFile>
 
-    <!-- If the sdk version is stabilized, then we should double publish the binaries to suffixed file names.
-         To do this, create new copies of the blobs, replacing the SdkVersion string in the file name with the
-         FullNugetVersion, except if the FullNuGetVersion is already in the file name (which would end up
-         publishing the same exact file name twice). -->
-    <ItemGroup Condition="'$(DotNetFinalVersionKind)'== 'release'">
-        <SdkAssetsToCopyWithSuffix Include="@(SdkAssetsToPublish)" Condition="'$([System.String]::Copy(`%(Filename)`).Contains(`$(Version)`))' == 'true'">
-          <SuffixedPath>$(ArtifactsShippingPackagesDir)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('$(Version)' ,'$(FullNuGetVersion)'))</SuffixedPath>
-        </SdkAssetsToCopyWithSuffix>
-        <CheckSumsToCopyWithSuffix Include="@(CheckSumsToPublish)" Condition="'$([System.String]::Copy(`%(Filename)`).Contains(`$(Version)`))' == 'true'">
-          <SuffixedPath>$(ArtifactsShippingPackagesDir)/$([System.String]::Copy('%(Filename)%(Extension)').Replace('$(Version)' ,'$(FullNuGetVersion)'))</SuffixedPath>
-        </CheckSumsToCopyWithSuffix>
-    </ItemGroup>
-
-    <Copy
-      SourceFiles="@(SdkAssetsToCopyWithSuffix -> '%(Identity)')"
-      DestinationFiles="@(SdkAssetsToCopyWithSuffix -> '%(SuffixedPath)')">
-      <Output TaskParameter="CopiedFiles" ItemName="SdkAssetsToPublishWithSuffix" />
-    </Copy>
-    <Copy
-      SourceFiles="@(CheckSumsToCopyWithSuffix -> '%(Identity)')"
-      DestinationFiles="@(CheckSumsToCopyWithSuffix -> '%(SuffixedPath)')">
-      <Output TaskParameter="CopiedFiles" ItemName="CheckSumsToPublishWithSuffix" />
-    </Copy>
-
     <ItemGroup>
       <!-- Always publish blobs to a suffixed directory. -->
       <SdkAssetsToPushToBlobFeed Include="@(SdkAssetsToPublish)">
@@ -141,20 +117,10 @@
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
       </ChecksumsToPushToBlobFeed>
-
-      <SdkAssetsWithSuffixToPushToBlobFeed Include="@(SdkAssetsToPublishWithSuffix)">
-        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
-        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
-      </SdkAssetsWithSuffixToPushToBlobFeed>
-
-      <ChecksumsWithSuffixToPushToBlobFeed Include="@(CheckSumsToPublishWithSuffix)" Condition="'$(DotNetFinalVersionKind)'== 'release'">
-        <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
-        <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
-      </ChecksumsWithSuffixToPushToBlobFeed>
     </ItemGroup>
 
     <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(SdkAssetsToPushToBlobFeed);@(SdkAssetsWithSuffixToPushToBlobFeed)"
+      ItemsToPush="@(SdkAssetsToPushToBlobFeed)"
       ManifestBuildData="@(ManifestBuildData)"
       ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
@@ -165,7 +131,7 @@
       PublishingVersion="3"/>
 
     <PushToAzureDevOpsArtifacts
-      ItemsToPush="@(ChecksumsToPushToBlobFeed);@(ChecksumsWithSuffixToPushToBlobFeed)"
+      ItemsToPush="@(ChecksumsToPushToBlobFeed)"
       ManifestBuildData="@(ManifestBuildData)"
       ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
       ManifestBranch="$(BUILD_SOURCEBRANCH)"
