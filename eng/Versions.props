@@ -14,6 +14,10 @@
     <PreReleaseVersionIteration>2</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
+    
+    <!-- Enable to remove prerelease label. -->
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
+    <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
