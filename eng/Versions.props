@@ -14,6 +14,9 @@
     <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
+    <!-- Enable to remove prerelease label. -->
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
+    <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
@@ -57,6 +60,7 @@
     <MicrosoftDotNetMSBuildSdkResolverPackageVersion>6.0.100-alpha.1.20471.13</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
+    <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/corefx -->
@@ -105,6 +109,7 @@
     <MicrosoftDotNetCommonProjectTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplates31PackageVersion)</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
     <MicrosoftDotNetTestProjectTemplates31PackageVersion>$(MicrosoftDotNetTestProjectTemplates50PackageVersion)</MicrosoftDotNetTestProjectTemplates31PackageVersion>
     <AspNetCorePackageVersionFor31Templates>3.1.7</AspNetCorePackageVersionFor31Templates>
+    <MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>3.2.1</MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>
     <!-- 3.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates30PackageVersion>3.0.0</MicrosoftDotNetWpfProjectTemplates30PackageVersion>
@@ -118,7 +123,7 @@
     <MicrosoftDotNetCommonItemTemplates21PackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplates21PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates21PackageVersion>$(MicrosoftDotNetCommonItemTemplates21PackageVersion)</MicrosoftDotNetCommonProjectTemplates21PackageVersion>
     <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.20420.1</MicrosoftDotNetTestProjectTemplates21PackageVersion>
-    <AspNetCorePackageVersionFor21Templates>2.1.14</AspNetCorePackageVersionFor21Templates>
+    <AspNetCorePackageVersionFor21Templates>2.1.22</AspNetCorePackageVersionFor21Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
@@ -127,12 +132,10 @@
     <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>10.0.17763.1-preview</MicrosoftWindowsSDKNETRef10_0_17763PackageVersion>
-    <MicrosoftWindowsSDKNETRef10_0_18362PackageVersion>10.0.18362.2-preview</MicrosoftWindowsSDKNETRef10_0_18362PackageVersion>
-    <MicrosoftWindowsSDKNETRef10_0_19041PackageVersion>10.0.19041.1-preview</MicrosoftWindowsSDKNETRef10_0_19041PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
   </PropertyGroup>
+  <Import Project="$(RepositoryEngineeringDir)ManualVersions.props" />
 </Project>
