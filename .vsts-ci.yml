@@ -287,7 +287,7 @@ stages:
     dependsOn:
       # This will run only after all the publishing stages have run.
       # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
-      - NetCore_Dev6_Publish
+      - publish_using_darc
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
