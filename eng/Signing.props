@@ -1,7 +1,7 @@
 <Project>
 
   <ItemGroup>
-    <!-- Do not sign non-shipping packages with doing in-build signing -->
+    <!-- Do not sign non-shipping packages when doing in-build signing -->
     <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" />
   </ItemGroup>
 
