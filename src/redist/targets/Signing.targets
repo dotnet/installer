@@ -83,7 +83,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
       DryRun="$(_DryRun)"
       TestSign="$(_TestSign)"
-      CertificatesSignInfo="$(CertificatesSignInfo)"
+      CertificatesSignInfo="@(CertificatesSignInfo)"
       ItemsToSign="@(LayoutFilesToSign)"
       StrongNameSignInfo="@(StrongNameSignInfo)"
       FileSignInfo="@(FileSignInfo)"
@@ -107,7 +107,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
         DryRun="$(_DryRun)"
         TestSign="$(_TestSign)"
-        CertificatesSignInfo="$(CertificatesSignInfo)"
+        CertificatesSignInfo="@(CertificatesSignInfo)"
         ItemsToSign="@(SdkMsiFilesToSign)"
         StrongNameSignInfo="@(StrongNameSignInfo)"
         FileSignInfo="@(FileSignInfo)"
@@ -137,7 +137,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
         DryRun="$(_DryRun)"
         TestSign="$(_TestSign)"
-        CertificatesSignInfo="$(CertificatesSignInfo)"
+        CertificatesSignInfo="@(CertificatesSignInfo)"
         ItemsToSign="@(TemplatesMsiFilesToSign)"
         StrongNameSignInfo="@(StrongNameSignInfo)"
         FileSignInfo="@(FileSignInfo)"
@@ -164,7 +164,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
         DryRun="$(_DryRun)"
         TestSign="$(_TestSign)"
-        CertificatesSignInfo="$(CertificatesSignInfo)"
+        CertificatesSignInfo="@(CertificatesSignInfo)"
         ItemsToSign="@(EngineFileToSign)"
         StrongNameSignInfo="@(StrongNameSignInfo)"
         FileSignInfo="@(FileSignInfo)"
@@ -186,7 +186,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
         DryRun="$(_DryRun)"
         TestSign="$(_TestSign)"
-        CertificatesSignInfo="$(CertificatesSignInfo)"
+        CertificatesSignInfo="@(CertificatesSignInfo)"
         ItemsToSign="@(BundleFileToSign)"
         StrongNameSignInfo="@(StrongNameSignInfo)"
         FileSignInfo="@(FileSignInfo)"
@@ -210,7 +210,7 @@
     <Microsoft.DotNet.SignTool.SignToolTask
         DryRun="$(_DryRun)"
         TestSign="$(_TestSign)"
-        CertificatesSignInfo="$(CertificatesSignInfo)"
+        CertificatesSignInfo="@(CertificatesSignInfo)"
         ItemsToSign="@(SdkPlaceholderMsiFilesToSign)"
         StrongNameSignInfo="@(StrongNameSignInfo)"
         FileSignInfo="@(FileSignInfo)"
