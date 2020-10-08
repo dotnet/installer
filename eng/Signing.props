@@ -36,6 +36,13 @@
     <FileSignInfo Include="apphost.exe" CertificateName="None" />
 
     <FileExtensionSignInfo Include=".msi" CertificateName="$(InternalCertificateId)" />
+    <!-- .ttf and .js files come in from some older aspnetcore packages (e.g. 2.1).
+          These files in the 5.0 packages are NOT signed. When doing postbuild signing,
+          SignTool will recognize that the files in the installer zips came from the 5.0 packages
+          pulled in from aspnetcore, and aspnetcore said not to sign them. This info is not
+          available for the 2.1 packages, so we need to avoid signing these in this repo. -->
+    <FileExtensionSignInfo Include=".ttf" CertificateName="None" />
+    <FileExtensionSignInfo Include=".js" CertificateName="None" />
   </ItemGroup>
 
 </Project>
