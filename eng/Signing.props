@@ -6,7 +6,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(PostBuildSign)' == 'true'">
-    <ItemsToSignPostBuild' Include="$(ArtifactsShippingPackagesDir)*.zip" />
+    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.zip" />
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.exe" />
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
