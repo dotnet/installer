@@ -10,8 +10,9 @@
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.exe" />
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
-    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.zip" />
+    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
   </ItemGroup>
 
   <PropertyGroup>
