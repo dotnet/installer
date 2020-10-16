@@ -37,6 +37,7 @@
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
     <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.0.2-beta4.20420.1</MicrosoftDotNetTestProjectTemplates50PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.0.2-beta4.20420.1</MicrosoftDotNetTestProjectTemplates60PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
@@ -47,7 +48,7 @@
     <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>6.0.0-alpha.1.20513.8</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
     <MicrosoftAspNetCoreAppRefPackageVersion>6.0.0-alpha.1.20513.8</MicrosoftAspNetCoreAppRefPackageVersion>
     <MicrosoftAspNetCoreAppRefInternalPackageVersion>6.0.0-alpha.1.20513.8</MicrosoftAspNetCoreAppRefInternalPackageVersion>
-    <VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>5.0.0-rtm.20512.5</VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion>
+    <VSRedistCommonAspNetCoreTargetingPackx6460PackageVersion>6.0.0-alpha.1.20513.8</VSRedistCommonAspNetCoreTargetingPackx6460PackageVersion>
     <dotnetdevcertsPackageVersion>6.0.0-alpha.1.20513.8</dotnetdevcertsPackageVersion>
     <dotnetusersecretsPackageVersion>6.0.0-alpha.1.20513.8</dotnetusersecretsPackageVersion>
     <dotnetwatchPackageVersion>6.0.0-alpha.1.20513.8</dotnetwatchPackageVersion>
@@ -91,17 +92,29 @@
     <MicrosoftWindowsDesktopAppRuntimePackageVersion>$(MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion)</MicrosoftWindowsDesktopAppRuntimePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Cross-release dependency versions -->
+    <MicrosoftDotNetCommonItemTemplates50PackageVersion>6.0.0-alpha.1.20514.1</MicrosoftDotNetCommonItemTemplates50PackageVersion>
+    <MicrosoftAspNetCoreAppRuntime50PackageVersion>5.0.0-rc.2.20474.4</MicrosoftAspNetCoreAppRuntime50PackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <HostFxrVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</HostFxrVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedHostVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- 6.0 Template versions -->
+    <MicrosoftDotnetWinFormsProjectTemplates60PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates60PackageVersion>
+    <MicrosoftDotNetWpfProjectTemplates60PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates60PackageVersion>
+    <NUnit3Templates60PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates60PackageVersion>
+    <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
+    <AspNetCorePackageVersionFor60Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor60Templates>
     <!-- 5.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates50PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates50PackageVersion>
     <NUnit3Templates50PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates50PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates50PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonProjectTemplates50PackageVersion>
-    <AspNetCorePackageVersionFor50Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor50Templates>
+    <MicrosoftDotNetCommonItemTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonItemTemplates50PackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonProjectTemplates50PackageVersion>
+    <AspNetCorePackageVersionFor50Templates>$(MicrosoftAspNetCoreAppRuntime50PackageVersion)</AspNetCorePackageVersionFor50Templates>
     <!-- 3.1 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>4.8.1-servicing.19605.5</MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates31PackageVersion>3.1.2-servicing.20066.4</MicrosoftDotNetWpfProjectTemplates31PackageVersion>
