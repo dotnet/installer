@@ -168,20 +168,20 @@ stages:
               _TestArg: ''
             Build_Linux_musl_Debug_arm:
               _BuildConfig: Debug
-              _DockerParameter: '--docker alpine.3.6'
+              _DockerParameter: ''
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-arm'
               _BuildArchitecture: 'arm'
-              _AdditionalBuildParameters: '/p:DISABLE_CROSSGEN=true'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               # Never run tests on arm
               _TestArg: ''
             Build_Linux_musl_Debug_arm64:
               _BuildConfig: Debug
-              _DockerParameter: '--docker alpine.3.6'
+              _DockerParameter: ''
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-arm64'
               _BuildArchitecture: 'arm64'
-              _AdditionalBuildParameters: '/p:DISABLE_CROSSGEN=true'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               # Never run tests on arm64
               _TestArg: ''
             Build_Linux_musl_Debug_x64:
@@ -190,6 +190,7 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               _TestArg: $(_NonWindowsTestArg)
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Arm_Release:
@@ -210,20 +211,20 @@ stages:
               _TestArg: ''
             Build_Linux_musl_Release_arm:
               _BuildConfig: Release
-              _DockerParameter: '--docker alpine.3.6'
+              _DockerParameter: ''
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-arm'
               _BuildArchitecture: 'arm'
-              _AdditionalBuildParameters: '/p:DISABLE_CROSSGEN=true'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               # Never run tests on arm
               _TestArg: ''
             Build_Linux_musl_Release_arm64:
               _BuildConfig: Release
-              _DockerParameter: '--docker alpine.3.6'
+              _DockerParameter: ''
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-arm64'
               _BuildArchitecture: 'arm64'
-              _AdditionalBuildParameters: '/p:DISABLE_CROSSGEN=true'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               # Never run tests on arm64
               _TestArg: ''
             Build_Linux_musl_Release_x64:
@@ -232,6 +233,7 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
+              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
             Build_Linux_Portable_Deb_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker ubuntu.16.04'
