@@ -117,6 +117,8 @@ phases:
                   --pack --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
+                  --architecture $(_BuildArchitecture)
+                  $(_RuntimeIdentifier)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
