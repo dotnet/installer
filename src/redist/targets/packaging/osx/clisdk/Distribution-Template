@@ -12,9 +12,7 @@
     </volume-check>
     <choices-outline>
         <line choice="{NetCoreAppTargetingPackComponentId}.pkg" />
-        {NetStandardTargetingPackDisableBegin}
         <line choice="{NetStandardTargetingPackComponentId}.pkg" />
-        {NetStandardTargetingPackDisableEnd}
         <line choice="{NetCoreAppHostPackComponentId}.pkg" />
         <line choice="{SharedFxComponentId}.pkg" />
         <line choice="{HostFxrComponentId}.pkg" />
@@ -24,11 +22,9 @@
     <choice id="{NetCoreAppTargetingPackComponentId}.pkg" visible="true" title="{NetCoreAppTargetingPackBrandName} ({arch})" description="The .NET Targeting Pack">
         <pkg-ref id="{NetCoreAppTargetingPackComponentId}.pkg" />
     </choice>
-    {NetStandardTargetingPackDisableBegin}
     <choice id="{NetStandardTargetingPackComponentId}.pkg" visible="true" title="{NetStandardTargetingPackBrandName} ({arch})" description="The .NET Standard 2.1 Targeting Pack">
         <pkg-ref id="{NetStandardTargetingPackComponentId}.pkg" />
     </choice>
-    {NetStandardTargetingPackDisableEnd}
     <choice id="{NetCoreAppHostPackComponentId}.pkg" visible="true" title="{NetCoreAppHostPackBrandName} ({arch})" description="The .NET App Host Pack">
         <pkg-ref id="{NetCoreAppHostPackComponentId}.pkg" />
     </choice>
@@ -45,9 +41,7 @@
         <pkg-ref id="{CLISdkComponentId}.pkg"/>
     </choice>
     <pkg-ref id="{NetCoreAppTargetingPackComponentId}.pkg">{NetCoreAppTargetingPackComponentId}.pkg</pkg-ref>
-    {NetStandardTargetingPackDisableBegin}
     <pkg-ref id="{NetStandardTargetingPackComponentId}.pkg">{NetStandardTargetingPackComponentId}.pkg</pkg-ref>
-    {NetStandardTargetingPackDisableEnd}
     <pkg-ref id="{NetCoreAppHostPackComponentId}.pkg">{NetCoreAppHostPackComponentId}.pkg</pkg-ref>
     <pkg-ref id="{SharedFxComponentId}.pkg">{SharedFxComponentId}.pkg</pkg-ref>
     <pkg-ref id="{HostFxrComponentId}.pkg">{HostFxrComponentId}.pkg</pkg-ref>

@@ -103,22 +103,6 @@
           <ReplacementString>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</ReplacementString>
         </ResourcesReplacement>
       </ItemGroup>
-      <ItemGroup Condition="'$(Architecture)' != 'arm64'" >
-        <DistributionTemplateReplacement Include="{NetStandardTargetingPackDisableBegin}">
-          <ReplacementString></ReplacementString>
-        </DistributionTemplateReplacement>
-        <DistributionTemplateReplacement Include="{NetStandardTargetingPackDisableEnd}">
-          <ReplacementString></ReplacementString>
-        </DistributionTemplateReplacement>
-      </ItemGroup>
-      <ItemGroup Condition="'$(Architecture)' == 'arm64'" >
-        <DistributionTemplateReplacement Include="{NetStandardTargetingPackDisableBegin}">
-          <ReplacementString><![CDATA[<!--]]></ReplacementString>
-        </DistributionTemplateReplacement>
-        <DistributionTemplateReplacement Include="{NetStandardTargetingPackDisableEnd}">
-          <ReplacementString><![CDATA[-->]]></ReplacementString>
-        </DistributionTemplateReplacement>
-      </ItemGroup>
       
       <!-- Consumed By Publish -->
       <ItemGroup>
@@ -197,16 +181,16 @@
                                 $(DownloadsFolder)$(DownloadedSharedFrameworkInstallerFileName);
                                 $(DownloadsFolder)$(DownloadedNetCoreAppTargetingPackInstallerFileName);
                                 $(DownloadsFolder)$(DownloadedNetCoreAppHostPackInstallerFileName);
+                                $(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName);
                                 $(DownloadsFolder)$(DownloadedHostFxrInstallerFileName);
                                 $(DownloadsFolder)$(DownloadedSharedHostInstallerFileName)" />
-        <PkgComponentsSourceFiles Condition="'$(Architecture)' != 'arm64'" Include="$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)" />
         <PkgComponentsDestinationFiles Include="$(SdkPkgIntermediatePath);
                                                 $(SharedFrameworkPkgIntermediatePath);
                                                 $(NetCoreAppTargetingPackPkgIntermediatePath);
                                                 $(NetCoreAppHostPackPkgIntermediatePath);
+                                                $(NetStandardTargetingPackPkgIntermediatePath);
                                                 $(HostFxrPkgIntermediatePath);
                                                 $(SharedHostPkgIntermediatePath)" />
-        <PkgComponentsDestinationFiles Condition="'$(Architecture)' != 'arm64'" Include="$(NetStandardTargetingPackPkgIntermediatePath)" />
       </ItemGroup>
 
       <!-- Move ProductArchive pkg components into place with component ids in the filenames -->
