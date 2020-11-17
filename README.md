@@ -67,6 +67,8 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 </configuration>
 ```
 
+Please do not directly edit the table below. Use https://github.com/wli3/sdk-readme-table-generator to help you generate it. And make pull request back to the table generator repo.
+
 | Platform | Master<br>(6.0.x&nbsp;Runtime) | Release/5.0.2XX<br>(5.0 Runtime) | 5.0.100 RTM<br>(5.0 Runtime) | Release/3.1.4XX<br>(3.1.x Runtime) | Release/3.1.1XX<br>(3.1.x Runtime) |
 | :--------- | :----------: | :----------: | :----------: | :----------: | :----------: |
 | **Windows x64** | [![][win-x64-badge-master]][win-x64-version-master]<br>[Installer][win-x64-installer-master] - [Checksum][win-x64-installer-checksum-master]<br>[zip][win-x64-zip-master] - [Checksum][win-x64-zip-checksum-master] | [![][win-x64-badge-5.0.2XX]][win-x64-version-5.0.2XX]<br>[Installer][win-x64-installer-5.0.2XX] - [Checksum][win-x64-installer-checksum-5.0.2XX]<br>[zip][win-x64-zip-5.0.2XX] - [Checksum][win-x64-zip-checksum-5.0.2XX] | [![][win-x64-badge-5.0.1XX-rtm]][win-x64-version-5.0.1XX-rtm]<br>[Installer][win-x64-installer-5.0.1XX-rtm] - [Checksum][win-x64-installer-checksum-5.0.1XX-rtm]<br>[zip][win-x64-zip-5.0.1XX-rtm] - [Checksum][win-x64-zip-checksum-5.0.1XX-rtm] | [![][win-x64-badge-3.1.4XX]][win-x64-version-3.1.4XX]<br>[Installer][win-x64-installer-3.1.4XX] - [Checksum][win-x64-installer-checksum-3.1.4XX]<br>[zip][win-x64-zip-3.1.4XX] - [Checksum][win-x64-zip-checksum-3.1.4XX] | [![][win-x64-badge-3.1.1XX]][win-x64-version-3.1.1XX]<br>[Installer][win-x64-installer-3.1.1XX] - [Checksum][win-x64-installer-checksum-3.1.1XX]<br>[zip][win-x64-zip-3.1.1XX] - [Checksum][win-x64-zip-checksum-3.1.1XX] |
