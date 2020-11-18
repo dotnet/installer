@@ -268,13 +268,21 @@ stages:
     parameters:
       agentOs: Darwin
       pool: 
-        name: Hosted macOS
+        vmImage: 'macOS-10.15'
       timeoutInMinutes: 180
       strategy:
         matrix:
-          Build_Release:
+          Build_Release_x64:
             _BuildConfig: Release
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'x64'
             _TestArg: $(_NonWindowsTestArg)
+          Build_Release_arm64:
+            _BuildConfig: Release
+            _RuntimeIdentifier: '--runtime-id osx-arm64'
+            _BuildArchitecture: 'arm64'
+            # Never run tests on arm64
+            _TestArg: ''
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
@@ -286,6 +294,7 @@ stages:
   #       matrix:
   #         Build_Release:
   #           _BuildConfig: Release
+  #           _BuildArchitecture: 'x64'
   #           _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
 
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:

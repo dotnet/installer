@@ -80,7 +80,8 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 | **Linux-musl-arm** | [![][linux-musl-arm-badge-master]][linux-musl-arm-version-master]<br>[tar.gz][linux-musl-arm-targz-master] - [Checksum][linux-musl-arm-targz-checksum-master] | **N/A** | **N/A** | **N/A** | **N/A** |
 | **Linux-musl-arm64** | [![][linux-musl-arm64-badge-master]][linux-musl-arm64-version-master]<br>[tar.gz][linux-musl-arm64-targz-master] - [Checksum][linux-musl-arm64-targz-checksum-master] | **N/A** | **N/A** | **N/A** | **N/A** |
 | **RHEL 6** | **N/A** | **N/A** | **N/A** | [![][rhel-6-badge-3.1.4XX]][rhel-6-version-3.1.4XX]<br>[tar.gz][rhel-6-targz-3.1.4XX] - [Checksum][rhel-6-targz-checksum-3.1.4XX] | [![][rhel-6-badge-3.1.1XX]][rhel-6-version-3.1.1XX]<br>[tar.gz][rhel-6-targz-3.1.1XX] - [Checksum][rhel-6-targz-checksum-3.1.1XX] |
-| **macOS** | [![][osx-badge-master]][osx-version-master]<br>[Installer][osx-installer-master] - [Checksum][osx-installer-checksum-master]<br>[tar.gz][osx-targz-master] - [Checksum][osx-targz-checksum-master] | [![][osx-badge-5.0.2XX]][osx-version-5.0.2XX]<br>[Installer][osx-installer-5.0.2XX] - [Checksum][osx-installer-checksum-5.0.2XX]<br>[tar.gz][osx-targz-5.0.2XX] - [Checksum][osx-targz-checksum-5.0.2XX] | [![][osx-badge-5.0.1XX-rtm]][osx-version-5.0.1XX-rtm]<br>[Installer][osx-installer-5.0.1XX-rtm] - [Checksum][osx-installer-checksum-5.0.1XX-rtm]<br>[tar.gz][osx-targz-5.0.1XX-rtm] - [Checksum][osx-targz-checksum-5.0.1XX-rtm] | [![][osx-badge-3.1.4XX]][osx-version-3.1.4XX]<br>[Installer][osx-installer-3.1.4XX] - [Checksum][osx-installer-checksum-3.1.4XX]<br>[tar.gz][osx-targz-3.1.4XX] - [Checksum][osx-targz-checksum-3.1.4XX] | [![][osx-badge-3.1.1XX]][osx-version-3.1.1XX]<br>[Installer][osx-installer-3.1.1XX] - [Checksum][osx-installer-checksum-3.1.1XX]<br>[tar.gz][osx-targz-3.1.1XX] - [Checksum][osx-targz-checksum-3.1.1XX] |
+| **macOS x64** | [![][osx-x64-badge-master]][osx-x64-version-master]<br>[Installer][osx-x64-installer-master] - [Checksum][osx-x64-installer-checksum-master]<br>[tar.gz][osx-x64-targz-master] - [Checksum][osx-x64-targz-checksum-master] | [![][osx-x64-badge-5.0.2XX]][osx-x64-version-5.0.2XX]<br>[Installer][osx-x64-installer-5.0.2XX] - [Checksum][osx-x64-installer-checksum-5.0.2XX]<br>[tar.gz][osx-x64-targz-5.0.2XX] - [Checksum][osx-x64-targz-checksum-5.0.2XX] | [![][osx-x64-badge-5.0.1XX-rtm]][osx-x64-version-5.0.1XX-rtm]<br>[Installer][osx-x64-installer-5.0.1XX-rtm] - [Checksum][osx-x64-installer-checksum-5.0.1XX-rtm]<br>[tar.gz][osx-x64-targz-5.0.1XX-rtm] - [Checksum][osx-x64-targz-checksum-5.0.1XX-rtm] | [![][osx-x64-badge-3.1.4XX]][osx-x64-version-3.1.4XX]<br>[Installer][osx-x64-installer-3.1.4XX] - [Checksum][osx-x64-installer-checksum-3.1.4XX]<br>[tar.gz][osx-x64-targz-3.1.4XX] - [Checksum][osx-x64-targz-checksum-3.1.4XX] | [![][osx-x64-badge-3.1.1XX]][osx-x64-version-3.1.1XX]<br>[Installer][osx-x64-installer-3.1.1XX] - [Checksum][osx-x64-installer-checksum-3.1.1XX]<br>[tar.gz][osx-x64-targz-3.1.1XX] - [Checksum][osx-x64-targz-checksum-3.1.1XX] |
+| **macOS arm64** | [![][osx-arm64-badge-master]][osx-arm64-version-master]<br>[Installer][osx-arm64-installer-master] - [Checksum][osx-arm64-installer-checksum-master]<br>[tar.gz][osx-arm64-targz-master] - [Checksum][osx-arm64-targz-checksum-master] | **N/A** | **N/A** | **N/A** | **N/A** |
 
 Reference notes:
 > **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
@@ -159,40 +160,47 @@ Reference notes:
 [win-x86-zip-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-win-x86.zip
 [win-x86-zip-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-win-x86.zip.sha
 
-[osx-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/osx_x64_Release_version_badge.svg
-[osx-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-osx-x64.txt
-[osx-installer-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg
-[osx-installer-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg.sha
-[osx-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.tar.gz
-[osx-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
+[osx-x64-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/osx_x64_Release_version_badge.svg
+[osx-x64-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-osx-x64.txt
+[osx-x64-installer-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg
+[osx-x64-installer-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg.sha
+[osx-x64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.tar.gz
+[osx-x64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
-[osx-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/osx_x64_Release_version_badge.svg
-[osx-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-osx-x64.txt
-[osx-installer-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg
-[osx-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
-[osx-targz-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
-[osx-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
+[osx-x64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/osx_x64_Release_version_badge.svg
+[osx-x64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-osx-x64.txt
+[osx-x64-installer-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg
+[osx-x64-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
+[osx-x64-targz-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
+[osx-x64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
-[osx-badge-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/osx_x64_Release_version_badge.svg
-[osx-version-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/productCommit-osx-x64.txt
-[osx-installer-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg
-[osx-installer-checksum-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
-[osx-targz-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
-[osx-targz-checksum-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
+[osx-x64-badge-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/osx_x64_Release_version_badge.svg
+[osx-x64-version-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/productCommit-osx-x64.txt
+[osx-x64-installer-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg
+[osx-x64-installer-checksum-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
+[osx-x64-targz-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
+[osx-x64-targz-checksum-5.0.1XX-rtm]: https://aka.ms/dotnet/net5/5.0.1xx/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
-[osx-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/osx_x64_Release_version_badge.svg
-[osx-version-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/latest.version
-[osx-installer-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.pkg
-[osx-installer-checksum-3.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.pkg.sha
-[osx-targz-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.tar.gz
-[osx-targz-checksum-3.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.tar.gz.sha
+[osx-x64-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/osx_x64_Release_version_badge.svg
+[osx-x64-version-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/latest.version
+[osx-x64-installer-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.pkg
+[osx-x64-installer-checksum-3.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.pkg.sha
+[osx-x64-targz-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.tar.gz
+[osx-x64-targz-checksum-3.1.4XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/dotnet-sdk-latest-osx-x64.tar.gz.sha
 
-[osx-badge-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/osx_x64_Release_version_badge.svg
-[osx-version-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/latest.version
-[osx-installer-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.pkg
-[osx-installer-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.pkg.sha
-[osx-targz-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.tar.gz
-[osx-targz-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.tar.gz.sha
+[osx-x64-badge-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/osx_x64_Release_version_badge.svg
+[osx-x64-version-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/latest.version
+[osx-x64-installer-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.pkg
+[osx-x64-installer-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.pkg.sha
+[osx-x64-targz-3.1.1XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.tar.gz
+[osx-x64-targz-checksum-3.1.1XX]: https://dotnetclichecksums.blob.core.windows.net/dotnet/Sdk/release/3.1.1xx/dotnet-sdk-latest-osx-x64.tar.gz.sha
+
+[osx-arm64-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/osx_arm64_Release_version_badge.svg
+[osx-arm64-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-osx-arm64.txt
+[osx-arm64-installer-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.pkg
+[osx-arm64-installer-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.pkg.sha
+[osx-arm64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.tar.gz
+[osx-arm64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.pkg.tar.gz.sha
 
 [linux-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/linux_x64_Release_version_badge.svg
 [linux-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-linux-x64.txt
