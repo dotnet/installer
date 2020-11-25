@@ -8,9 +8,9 @@
     <VersionMajor>5</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionFeature>00</VersionFeature>
+    <VersionFeature>01</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
-    <PreReleaseVersionLabel>rtm</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <!-- Enable to remove prerelease label. -->
@@ -19,19 +19,19 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
-    <MicrosoftDotNetBuildTasksInstallersPackageVersion>5.0.0-beta.20510.1</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersPackageVersion>5.0.0-beta.20560.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>5.0.0-rtm.20517.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>5.0.1-servicing.20574.1</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>5.0.0-rtm.20518.1</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>5.0.1-servicing.20574.3</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/templating -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>5.0.0</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>5.0.1</MicrosoftDotNetCommonItemTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
@@ -43,21 +43,21 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.0</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>5.0.1</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
     <MicrosoftAspNetCoreAppRefPackageVersion>5.0.0</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreAppRefInternalPackageVersion>5.0.0-rtm.20517.7</MicrosoftAspNetCoreAppRefInternalPackageVersion>
-    <VSRedistCommonAspNetCoreSharedFrameworkx6450PackageVersion>5.0.0-rtm.20517.7</VSRedistCommonAspNetCoreSharedFrameworkx6450PackageVersion>
-    <dotnetdevcertsPackageVersion>5.0.0-rtm.20517.7</dotnetdevcertsPackageVersion>
-    <dotnetusersecretsPackageVersion>5.0.0-rtm.20517.7</dotnetusersecretsPackageVersion>
-    <dotnetwatchPackageVersion>5.0.0-rtm.20517.7</dotnetwatchPackageVersion>
+    <MicrosoftAspNetCoreAppRefInternalPackageVersion>5.0.0-rtm.20526.5</MicrosoftAspNetCoreAppRefInternalPackageVersion>
+    <VSRedistCommonAspNetCoreSharedFrameworkx6450PackageVersion>5.0.1-servicing.20574.9</VSRedistCommonAspNetCoreSharedFrameworkx6450PackageVersion>
+    <dotnetdevcertsPackageVersion>5.0.1-servicing.20574.9</dotnetdevcertsPackageVersion>
+    <dotnetusersecretsPackageVersion>5.0.1-servicing.20574.9</dotnetusersecretsPackageVersion>
+    <dotnetwatchPackageVersion>5.0.1-servicing.20574.9</dotnetwatchPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftNETSdkPackageVersion>5.0.100-rtm.20518.2</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.100-rtm.20518.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftNETSdkPackageVersion>5.0.101-servicing.20575.4</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>5.0.101-servicing.20575.4</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
@@ -68,18 +68,19 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/core-setup -->
-    <MicrosoftNETCoreAppInternalPackageVersion>5.0.0-rtm.20517.6</MicrosoftNETCoreAppInternalPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.0</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftNETCoreAppHostwinx64PackageVersion>5.0.0</MicrosoftNETCoreAppHostwinx64PackageVersion>
+    <MicrosoftNETCoreAppInternalPackageVersion>5.0.1-servicing.20574.14</MicrosoftNETCoreAppInternalPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>5.0.1</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppHostwinx64PackageVersion>5.0.1</MicrosoftNETCoreAppHostwinx64PackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>5.0.0</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>5.0.0</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>5.0.1</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <NETStandardLibraryRefPackageVersion>2.1.0</NETStandardLibraryRefPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/windowsdesktop -->
-    <MicrosoftWindowsDesktopAppPackageVersion>5.0.0-rtm.20518.1</MicrosoftWindowsDesktopAppPackageVersion>
-    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>5.0.0</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppPackageVersion>5.0.1-servicing.20574.4</MicrosoftWindowsDesktopAppPackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>5.0.1</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
     <MicrosoftWindowsDesktopAppRefPackageVersion>5.0.0</MicrosoftWindowsDesktopAppRefPackageVersion>
+    <VSRedistCommonWindowsDesktopTargetingPackx6450PackageVersion>5.0.0-rtm.20520.1</VSRedistCommonWindowsDesktopTargetingPackx6450PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Runtime and Apphost pack versions are the same for all RIDs. We flow the x64    -->
@@ -105,10 +106,10 @@
     <MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>4.8.1-servicing.19605.5</MicrosoftDotnetWinFormsProjectTemplates31PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates31PackageVersion>3.1.2-servicing.20066.4</MicrosoftDotNetWpfProjectTemplates31PackageVersion>
     <NUnit3Templates31PackageVersion>1.7.2</NUnit3Templates31PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates31PackageVersion>3.1.8</MicrosoftDotNetCommonItemTemplates31PackageVersion>
+    <MicrosoftDotNetCommonItemTemplates31PackageVersion>3.1.10</MicrosoftDotNetCommonItemTemplates31PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates31PackageVersion>$(MicrosoftDotNetCommonItemTemplates31PackageVersion)</MicrosoftDotNetCommonProjectTemplates31PackageVersion>
     <MicrosoftDotNetTestProjectTemplates31PackageVersion>$(MicrosoftDotNetTestProjectTemplates50PackageVersion)</MicrosoftDotNetTestProjectTemplates31PackageVersion>
-    <AspNetCorePackageVersionFor31Templates>3.1.8</AspNetCorePackageVersionFor31Templates>
+    <AspNetCorePackageVersionFor31Templates>3.1.10</AspNetCorePackageVersionFor31Templates>
     <MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>3.2.1</MicrosoftAspNetCoreComponentsWebAssemblyTemplatesPackageVersion>
     <!-- 3.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>4.8.0-rc2.19462.10</MicrosoftDotnetWinFormsProjectTemplates30PackageVersion>
@@ -123,13 +124,13 @@
     <MicrosoftDotNetCommonItemTemplates21PackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplates21PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates21PackageVersion>$(MicrosoftDotNetCommonItemTemplates21PackageVersion)</MicrosoftDotNetCommonProjectTemplates21PackageVersion>
     <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.20420.1</MicrosoftDotNetTestProjectTemplates21PackageVersion>
-    <AspNetCorePackageVersionFor21Templates>2.1.22</AspNetCorePackageVersionFor21Templates>
+    <AspNetCorePackageVersionFor21Templates>2.1.23</AspNetCorePackageVersionFor21Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
-    <MicrosoftNETTestSdkVersion>16.8.0-release-20201009-01</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>16.8.1-release-20201119-07</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
