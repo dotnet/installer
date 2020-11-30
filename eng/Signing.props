@@ -2,17 +2,10 @@
 
   <ItemGroup>
     <!-- Do not sign non-shipping packages when doing in-build signing -->
-    <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(PostBuildSign)' == 'true'">
-    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.zip" />
-    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.exe" />
-    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.msi" />
-    <ItemsToSignPostBuild Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
-    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
-    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.zip" />
-    <ItemsToSignPostBuild Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+    <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" Condition="'$(PostBuildSign)' != 'true'" />
+    <!-- Remove the wixpacks from items to sign post build. These will be added explicitly by the
+         custom publishing target. And should not be picked up by arcade's default publishing logic. -->
+    <ItemsToSignPostBuild Remove="*.wixpack.zip" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -24,6 +17,7 @@
       It is therefore expected that <ItemsToSign> could be an empty set.
     -->
     <AllowEmptySignList>true</AllowEmptySignList>
+    <AllowEmptySignPostBuildList>true</AllowEmptySignPostBuildList>
   </PropertyGroup>
 
   <ItemGroup>
