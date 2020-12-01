@@ -16,6 +16,8 @@ variables:
   value: https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
 - name: _PublishUsingPipelines
   value: false
+- name: PostBuildSign
+  value: true
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
   - group: DotNet-Blob-Feed
