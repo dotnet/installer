@@ -67,7 +67,7 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 </configuration>
 ```
 
-Please do not directly edit the table below. Use https://github.com/wli3/sdk-readme-table-generator to help you generate it. And make pull request back to the table generator repo.
+Please do not directly edit the table below. Use https://github.com/dotnet/installer/tree/master/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table.
 
 | Platform | Master<br>(6.0.x&nbsp;Runtime) | Release/5.0.2XX<br>(5.0 Runtime) | 5.0.100 RTM<br>(5.0 Runtime) | Release/3.1.4XX<br>(3.1.x Runtime) | Release/3.1.1XX<br>(3.1.x Runtime) |
 | :--------- | :----------: | :----------: | :----------: | :----------: | :----------: |

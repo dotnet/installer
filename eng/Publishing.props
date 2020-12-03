@@ -115,6 +115,18 @@
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
       </ChecksumsToPushToBlobFeed>
     </ItemGroup>
+    
+    <ItemGroup Condition="'$(PostBuildSign)' == 'true'">
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.exe" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.msi" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+      <ItemsToSignPostBuild Remove="@(ItemsToSignPostBuild)" />
+      <ItemsToSignPostBuild Include="@(ItemsToSignPostBuildWithPaths->'%(Filename)%(Extension)')" />
+    </ItemGroup>
 
     <PropertyGroup>
       <IsStableBuild>false</IsStableBuild>
