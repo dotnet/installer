@@ -130,6 +130,8 @@ let rows =
       windowsX86Row
       windowsArmRow
       windowsArm64Row
+      osxX64Row
+      osxArm64Row
       linuxDesktopArchRow
       linuxArmRow
       linuxArm64Row
@@ -137,8 +139,6 @@ let rows =
       linuxMuslRowArm
       linuxMuslRowArm64
       rhel6Row
-      osxX64Row
-      osxArm64Row
     ]
 
 let table branches = String.Join(Environment.NewLine, rows |> List.map (fun row -> row branches))
