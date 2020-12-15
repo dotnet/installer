@@ -36,6 +36,7 @@ let ``it can get major and minor version of a branch``() =
            (MajorMinor
                ({ Major = 3
                   Minor = 1
+                  Patch = 199
                   Release = ""}))
            
 [<Fact>]
@@ -49,6 +50,7 @@ let ``it can get major and minor version of a preview branch``() =
            (MajorMinor
                ({ Major = 5
                   Minor = 0
+                  Patch = 199
                   Release = "preview2"}))
 
 [<Fact>]
