@@ -155,14 +155,14 @@ let linuxMuslArmReferenceTemplate branch =
     let format branch = formatTemplate "linux-musl-arm" linuxMuslReferenceTemplate branch
     match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> None
 
 let linuxMuslArm64ReferenceTemplate branch =
     let format branch = formatTemplate "linux-musl-arm64" linuxMuslReferenceTemplate branch
     match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> None
 
 let winArmMuslReferenceTemplate branch =

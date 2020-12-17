@@ -81,8 +81,8 @@ Please do not directly edit the table below. Use https://github.com/dotnet/insta
 | **Linux arm** | [![][linux-arm-badge-master]][linux-arm-version-master]<br>[tar.gz][linux-arm-targz-master] - [Checksum][linux-arm-targz-checksum-master] | [![][linux-arm-badge-5.0.2XX]][linux-arm-version-5.0.2XX]<br>[tar.gz][linux-arm-targz-5.0.2XX] - [Checksum][linux-arm-targz-checksum-5.0.2XX] | [![][linux-arm-badge-5.0.1XX-rtm]][linux-arm-version-5.0.1XX-rtm]<br>[tar.gz][linux-arm-targz-5.0.1XX-rtm] - [Checksum][linux-arm-targz-checksum-5.0.1XX-rtm] | [![][linux-arm-badge-3.1.4XX]][linux-arm-version-3.1.4XX]<br>[tar.gz][linux-arm-targz-3.1.4XX] - [Checksum][linux-arm-targz-checksum-3.1.4XX] | [![][linux-arm-badge-3.1.1XX]][linux-arm-version-3.1.1XX]<br>[tar.gz][linux-arm-targz-3.1.1XX] - [Checksum][linux-arm-targz-checksum-3.1.1XX] |
 | **Linux arm64** | [![][linux-arm64-badge-master]][linux-arm64-version-master]<br>[tar.gz][linux-arm64-targz-master] - [Checksum][linux-arm64-targz-checksum-master] | [![][linux-arm64-badge-5.0.2XX]][linux-arm64-version-5.0.2XX]<br>[tar.gz][linux-arm64-targz-5.0.2XX] - [Checksum][linux-arm64-targz-checksum-5.0.2XX] | [![][linux-arm64-badge-5.0.1XX-rtm]][linux-arm64-version-5.0.1XX-rtm]<br>[tar.gz][linux-arm64-targz-5.0.1XX-rtm] - [Checksum][linux-arm64-targz-checksum-5.0.1XX-rtm] | [![][linux-arm64-badge-3.1.4XX]][linux-arm64-version-3.1.4XX]<br>[tar.gz][linux-arm64-targz-3.1.4XX] - [Checksum][linux-arm64-targz-checksum-3.1.4XX] | [![][linux-arm64-badge-3.1.1XX]][linux-arm64-version-3.1.1XX]<br>[tar.gz][linux-arm64-targz-3.1.1XX] - [Checksum][linux-arm64-targz-checksum-3.1.1XX] |
 | **Linux-musl-x64** | [![][linux-musl-x64-badge-master]][linux-musl-x64-version-master]<br>[tar.gz][linux-musl-x64-targz-master] - [Checksum][linux-musl-x64-targz-checksum-master] | [![][linux-musl-x64-badge-5.0.2XX]][linux-musl-x64-version-5.0.2XX]<br>[tar.gz][linux-musl-x64-targz-5.0.2XX] - [Checksum][linux-musl-x64-targz-checksum-5.0.2XX] | [![][linux-musl-x64-badge-5.0.1XX-rtm]][linux-musl-x64-version-5.0.1XX-rtm]<br>[tar.gz][linux-musl-x64-targz-5.0.1XX-rtm] - [Checksum][linux-musl-x64-targz-checksum-5.0.1XX-rtm] | [![][linux-musl-x64-badge-3.1.4XX]][linux-musl-x64-version-3.1.4XX]<br>[tar.gz][linux-musl-x64-targz-3.1.4XX] - [Checksum][linux-musl-x64-targz-checksum-3.1.4XX] | [![][linux-musl-x64-badge-3.1.1XX]][linux-musl-x64-version-3.1.1XX]<br>[tar.gz][linux-musl-x64-targz-3.1.1XX] - [Checksum][linux-musl-x64-targz-checksum-3.1.1XX] |
-| **Linux-musl-arm** | [![][linux-musl-arm-badge-master]][linux-musl-arm-version-master]<br>[tar.gz][linux-musl-arm-targz-master] - [Checksum][linux-musl-arm-targz-checksum-master] | **N/A** | **N/A** | **N/A** | **N/A** |
-| **Linux-musl-arm64** | [![][linux-musl-arm64-badge-master]][linux-musl-arm64-version-master]<br>[tar.gz][linux-musl-arm64-targz-master] - [Checksum][linux-musl-arm64-targz-checksum-master] | **N/A** | **N/A** | **N/A** | **N/A** |
+| **Linux-musl-arm** | [![][linux-musl-arm-badge-master]][linux-musl-arm-version-master]<br>[tar.gz][linux-musl-arm-targz-master] - [Checksum][linux-musl-arm-targz-checksum-master] | [![][linux-musl-arm-badge-5.0.2XX]][linux-musl-arm-version-5.0.2XX]<br>[tar.gz][linux-musl-arm-targz-5.0.2XX] - [Checksum][linux-musl-arm-targz-checksum-5.0.2XX] | **N/A** | **N/A** | **N/A** |
+| **Linux-musl-arm64** | [![][linux-musl-arm64-badge-master]][linux-musl-arm64-version-master]<br>[tar.gz][linux-musl-arm64-targz-master] - [Checksum][linux-musl-arm64-targz-checksum-master] | [![][linux-musl-arm64-badge-5.0.2XX]][linux-musl-arm64-version-5.0.2XX]<br>[tar.gz][linux-musl-arm64-targz-5.0.2XX] - [Checksum][linux-musl-arm64-targz-checksum-5.0.2XX] | **N/A** | **N/A** | **N/A** |
 | **RHEL 6** | **N/A** | **N/A** | **N/A** | [![][rhel-6-badge-3.1.4XX]][rhel-6-version-3.1.4XX]<br>[tar.gz][rhel-6-targz-3.1.4XX] - [Checksum][rhel-6-targz-checksum-3.1.4XX] | [![][rhel-6-badge-3.1.1XX]][rhel-6-version-3.1.1XX]<br>[tar.gz][rhel-6-targz-3.1.1XX] - [Checksum][rhel-6-targz-checksum-3.1.1XX] |
 
 Reference notes:
@@ -354,10 +354,20 @@ Reference notes:
 [linux-musl-arm-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
 [linux-musl-arm-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
 
+[linux-musl-arm-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_musl_arm_Release_version_badge.svg
+[linux-musl-arm-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-musl-arm.txt
+[linux-musl-arm-targz-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
+[linux-musl-arm-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
+
 [linux-musl-arm64-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/linux_musl_arm64_Release_version_badge.svg
 [linux-musl-arm64-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-linux-musl-arm64.txt
 [linux-musl-arm64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
 [linux-musl-arm64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
+
+[linux-musl-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_musl_arm64_Release_version_badge.svg
+[linux-musl-arm64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-musl-arm64.txt
+[linux-musl-arm64-targz-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
+[linux-musl-arm64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
 
 [win-arm-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/win_arm_Release_version_badge.svg
 [win-arm-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-win-arm.txt

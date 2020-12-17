@@ -79,7 +79,7 @@ let linuxMuslRowArm branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm**" tableTemplateForThisArch branches
 
@@ -88,7 +88,7 @@ let linuxMuslRowArm64 branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm64**" tableTemplateForThisArch branches
 
