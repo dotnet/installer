@@ -48,7 +48,7 @@ function DownloadAndExtract {
                                            -Verbose:$Verbose
 
   if ($DownloadStatus -Eq $False) {
-    Write-Error "Download failed from $Uri"
+    Write-Error "Download failed"
     return $False
   }
 
