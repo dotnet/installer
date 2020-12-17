@@ -79,7 +79,7 @@ let linuxMuslRowArm branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm**" tableTemplateForThisArch branches
 
@@ -88,7 +88,7 @@ let linuxMuslRowArm64 branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | Master -> format branch
-        | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
+        | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm64**" tableTemplateForThisArch branches
 
@@ -130,6 +130,8 @@ let rows =
       windowsX86Row
       windowsArmRow
       windowsArm64Row
+      osxX64Row
+      osxArm64Row
       linuxDesktopArchRow
       linuxArmRow
       linuxArm64Row
@@ -137,8 +139,6 @@ let rows =
       linuxMuslRowArm
       linuxMuslRowArm64
       rhel6Row
-      osxX64Row
-      osxArm64Row
     ]
 
 let table branches = String.Join(Environment.NewLine, rows |> List.map (fun row -> row branches))
