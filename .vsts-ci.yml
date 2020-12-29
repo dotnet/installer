@@ -135,13 +135,6 @@ stages:
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               _DropSuffix: ''
-            Build_Rhel_6_Debug_x64:
-              _BuildConfig: Debug
-              _DockerParameter: '--docker rhel.6'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: '--runtime-id rhel.6-x64'
-              _BuildArchitecture: 'x64'
-              _DropSuffix: ''
             Build_Arm_Debug:
               _BuildConfig: Debug
               _DockerParameter: ''
@@ -191,13 +184,6 @@ stages:
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
-              _DropSuffix: ''
-            Build_Rhel_6_Release_x64:
-              _BuildConfig: Release
-              _DockerParameter: '--docker rhel.6'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: '--runtime-id rhel.6-x64'
-              _BuildArchitecture: 'x64'
               _DropSuffix: ''
             Build_Linux_musl_Release_x64:
               _BuildConfig: Release
