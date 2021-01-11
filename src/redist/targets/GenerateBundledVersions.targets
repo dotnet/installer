@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+      <VersionPatch21>$([MSBuild]::Add($(VersionPatch), 19))</VersionPatch21>
+  </PropertyGroup>
+
   <Target Name="GenerateBundledVersions"
           DependsOnTargets="GenerateBundledVersionsProps;GenerateBundledCliToolsProps" />
 
@@ -7,7 +11,6 @@
     <PropertyGroup>
       <BundledVersionsPropsFileName>Microsoft.NETCoreSdk.BundledVersions.props</BundledVersionsPropsFileName>
     </PropertyGroup>
-
    
     <PropertyGroup>
       <_NETCoreAppPackageVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</_NETCoreAppPackageVersion>
@@ -92,7 +95,7 @@
       <ImplicitPackageVariable Include="Microsoft.NETCore.App"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.0"
-                               LatestVersion="2.1.24" />
+                               LatestVersion="2.1.$(VersionPatch21)" />
       <ImplicitPackageVariable Include="Microsoft.NETCore.App"
                                TargetFrameworkVersion="2.2"
                                DefaultVersion="2.2.0"
@@ -100,11 +103,11 @@
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.1"
-                               LatestVersion="2.1.24"/>
+                               LatestVersion="2.1.$(VersionPatch21)"/>
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.1"
-                               LatestVersion="2.1.24"/>
+                               LatestVersion="2.1.$(VersionPatch21)"/>
 
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
                                TargetFrameworkVersion="2.2"
