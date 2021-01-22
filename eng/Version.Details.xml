@@ -77,17 +77,17 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>9b154f56a0d634c7257b3e5286af6a8d7b0c1f35</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.112-servicing.21071.15">
+    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.112-servicing.21071.25">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-toolset</Uri>
-      <Sha>39d86f6a32bcccd4ff74e84bfcb5c936c1470d15</Sha>
+      <Sha>1ca4fe1cdbf170c999d22e2c5e1cb586f54a8bf7</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="3.1.111-servicing.20561.13" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>14820d6789a0f0590b858c7c47ffd35c244f935a</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="3.1.112-servicing.21071.11" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>bcb77a6887a5600d050bba4be39c0512f4d5a036</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.112-servicing.21071.2" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.112-servicing.21071.9" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
-      <Sha>244736f3f1d0725d03fd7812ea73f828e263fc3a</Sha>
+      <Sha>d4aa2a9233c3fcfab38e9539b44c8143a2bbccd3</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21064.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -110,9 +110,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>d01f08a47a14c3842f5f74e14e6a6a8b7b7a5593</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cli.Utils" Version="3.1.112-servicing.21071.2" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.DotNet.Cli.Utils" Version="3.1.112-servicing.21071.9" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
-      <Sha>244736f3f1d0725d03fd7812ea73f828e263fc3a</Sha>
+      <Sha>d4aa2a9233c3fcfab38e9539b44c8143a2bbccd3</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
