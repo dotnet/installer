@@ -99,12 +99,12 @@ Reference notes:
 [win-x64-zip-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-x64.zip
 [win-x64-zip-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-x64.zip.sha
 
-[win-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/win_x64_Release_version_badge.svg
-[win-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-win-x64.txt
-[win-x64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x64.exe
-[win-x64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x64.exe.sha
-[win-x64-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x64.zip
-[win-x64-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x64.zip.sha
+[win-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/win_x64_Release_version_badge.svg
+[win-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-win-x64.txt
+[win-x64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x64.exe
+[win-x64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x64.exe.sha
+[win-x64-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x64.zip
+[win-x64-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x64.zip.sha
 
 [win-x64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/win_x64_Release_version_badge.svg
 [win-x64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-win-x64.txt
@@ -141,12 +141,12 @@ Reference notes:
 [win-x86-zip-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-x86.zip
 [win-x86-zip-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-x86.zip.sha
 
-[win-x86-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/win_x86_Release_version_badge.svg
-[win-x86-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-win-x86.txt
-[win-x86-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x86.exe
-[win-x86-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x86.exe.sha
-[win-x86-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x86.zip
-[win-x86-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-x86.zip.sha
+[win-x86-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/win_x86_Release_version_badge.svg
+[win-x86-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-win-x86.txt
+[win-x86-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x86.exe
+[win-x86-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x86.exe.sha
+[win-x86-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x86.zip
+[win-x86-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-x86.zip.sha
 
 [win-x86-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/win_x86_Release_version_badge.svg
 [win-x86-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-win-x86.txt
@@ -183,12 +183,12 @@ Reference notes:
 [osx-x64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.tar.gz
 [osx-x64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
-[osx-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/osx_x64_Release_version_badge.svg
-[osx-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-osx-x64.txt
-[osx-x64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg
-[osx-x64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
-[osx-x64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
-[osx-x64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
+[osx-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/osx_x64_Release_version_badge.svg
+[osx-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-osx-x64.txt
+[osx-x64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg
+[osx-x64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg.sha
+[osx-x64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-x64.tar.gz
+[osx-x64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
 [osx-x64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/osx_x64_Release_version_badge.svg
 [osx-x64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-osx-x64.txt
@@ -225,12 +225,12 @@ Reference notes:
 [osx-arm64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.tar.gz
 [osx-arm64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-osx-arm64.pkg.tar.gz.sha
 
-[osx-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/osx_arm64_Release_version_badge.svg
-[osx-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-osx-arm64.txt
-[osx-arm64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg
-[osx-arm64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg.sha
-[osx-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-arm64.tar.gz
-[osx-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg.tar.gz.sha
+[osx-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/osx_arm64_Release_version_badge.svg
+[osx-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-osx-arm64.txt
+[osx-arm64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg
+[osx-arm64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg.sha
+[osx-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-arm64.tar.gz
+[osx-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-osx-arm64.pkg.tar.gz.sha
 
 [linux-badge-master]: https://aka.ms/dotnet/net6/dev/Sdk/linux_x64_Release_version_badge.svg
 [linux-version-master]: https://aka.ms/dotnet/net6/dev/Sdk/productCommit-linux-x64.txt
@@ -241,14 +241,14 @@ Reference notes:
 [linux-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-x64.tar.gz
 [linux-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-x64.tar.gz.sha
 
-[linux-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_x64_Release_version_badge.svg
-[linux-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-x64.txt
-[linux-DEB-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-x64.deb
-[linux-DEB-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-x64.deb.sha
-[linux-RPM-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-x64.rpm
-[linux-RPM-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-x64.rpm.sha
-[linux-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-x64.tar.gz
-[linux-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-x64.tar.gz.sha
+[linux-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_x64_Release_version_badge.svg
+[linux-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-x64.txt
+[linux-DEB-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-x64.deb
+[linux-DEB-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-x64.deb.sha
+[linux-RPM-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-x64.rpm
+[linux-RPM-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-x64.rpm.sha
+[linux-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-x64.tar.gz
+[linux-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-x64.tar.gz.sha
 
 [linux-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_x64_Release_version_badge.svg
 [linux-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-x64.txt
@@ -291,10 +291,10 @@ Reference notes:
 [linux-arm-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-arm.tar.gz
 [linux-arm-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-arm.tar.gz.sha
 
-[linux-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_arm_Release_version_badge.svg
-[linux-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-arm.txt
-[linux-arm-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-arm.tar.gz
-[linux-arm-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-arm.tar.gz.sha
+[linux-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_arm_Release_version_badge.svg
+[linux-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-arm.txt
+[linux-arm-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-arm.tar.gz
+[linux-arm-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-arm.tar.gz.sha
 
 [linux-arm-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_arm_Release_version_badge.svg
 [linux-arm-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-arm.txt
@@ -321,10 +321,10 @@ Reference notes:
 [linux-arm64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-arm64.tar.gz
 [linux-arm64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-arm64.tar.gz.sha
 
-[linux-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_arm64_Release_version_badge.svg
-[linux-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-arm64.txt
-[linux-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-arm64.tar.gz
-[linux-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-arm64.tar.gz.sha
+[linux-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_arm64_Release_version_badge.svg
+[linux-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-arm64.txt
+[linux-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-arm64.tar.gz
+[linux-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-arm64.tar.gz.sha
 
 [linux-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_arm64_Release_version_badge.svg
 [linux-arm64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-arm64.txt
@@ -351,10 +351,10 @@ Reference notes:
 [rhel-6-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-rhel.6-x64.tar.gz
 [rhel-6-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-rhel.6-x64.tar.gz.sha
 
-[rhel-6-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/rhel.6_x64_Release_version_badge.svg
-[rhel-6-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-rhel.6-x64.txt
-[rhel-6-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-rhel.6-x64.tar.gz
-[rhel-6-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-rhel.6-x64.tar.gz.sha
+[rhel-6-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/rhel.6_x64_Release_version_badge.svg
+[rhel-6-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-rhel.6-x64.txt
+[rhel-6-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-rhel.6-x64.tar.gz
+[rhel-6-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-rhel.6-x64.tar.gz.sha
 
 [rhel-6-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/rhel.6_x64_Release_version_badge.svg
 [rhel-6-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-rhel.6-x64.txt
@@ -381,10 +381,10 @@ Reference notes:
 [linux-musl-x64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-x64.tar.gz
 [linux-musl-x64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-x64.tar.gz.sha
 
-[linux-musl-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_musl_x64_Release_version_badge.svg
-[linux-musl-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-musl-x64.txt
-[linux-musl-x64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-x64.tar.gz
-[linux-musl-x64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-x64.tar.gz.sha
+[linux-musl-x64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_musl_x64_Release_version_badge.svg
+[linux-musl-x64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-musl-x64.txt
+[linux-musl-x64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-x64.tar.gz
+[linux-musl-x64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-x64.tar.gz.sha
 
 [linux-musl-x64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_musl_x64_Release_version_badge.svg
 [linux-musl-x64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-musl-x64.txt
@@ -411,10 +411,10 @@ Reference notes:
 [linux-musl-arm-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
 [linux-musl-arm-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
 
-[linux-musl-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_musl_arm_Release_version_badge.svg
-[linux-musl-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-musl-arm.txt
-[linux-musl-arm-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
-[linux-musl-arm-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
+[linux-musl-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_musl_arm_Release_version_badge.svg
+[linux-musl-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-musl-arm.txt
+[linux-musl-arm-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
+[linux-musl-arm-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
 
 [linux-musl-arm-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_musl_arm_Release_version_badge.svg
 [linux-musl-arm-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-musl-arm.txt
@@ -426,10 +426,10 @@ Reference notes:
 [linux-musl-arm64-targz-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
 [linux-musl-arm64-targz-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
 
-[linux-musl-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/linux_musl_arm64_Release_version_badge.svg
-[linux-musl-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-linux-musl-arm64.txt
-[linux-musl-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
-[linux-musl-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
+[linux-musl-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/linux_musl_arm64_Release_version_badge.svg
+[linux-musl-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-linux-musl-arm64.txt
+[linux-musl-arm64-targz-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
+[linux-musl-arm64-targz-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
 
 [linux-musl-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/linux_musl_arm64_Release_version_badge.svg
 [linux-musl-arm64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-linux-musl-arm64.txt
@@ -441,10 +441,10 @@ Reference notes:
 [win-arm-zip-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-arm.zip
 [win-arm-zip-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-arm.zip.sha
 
-[win-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/win_arm_Release_version_badge.svg
-[win-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-win-arm.txt
-[win-arm-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm.zip
-[win-arm-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm.zip.sha
+[win-arm-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/win_arm_Release_version_badge.svg
+[win-arm-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-win-arm.txt
+[win-arm-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm.zip
+[win-arm-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm.zip.sha
 
 [win-arm-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/win_arm_Release_version_badge.svg
 [win-arm-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-win-arm.txt
@@ -473,12 +473,12 @@ Reference notes:
 [win-arm64-zip-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-arm64.zip
 [win-arm64-zip-checksum-master]: https://aka.ms/dotnet/net6/dev/Sdk/dotnet-sdk-win-arm64.zip.sha
 
-[win-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/win_arm64_Release_version_badge.svg
-[win-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/productCommit-win-arm64.txt
-[win-arm64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm64.exe
-[win-arm64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm64.exe.sha
-[win-arm64-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm64.zip
-[win-arm64-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/6.0.1xx-preview1/daily/Sdk/dotnet-sdk-win-arm64.zip.sha
+[win-arm64-badge-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/win_arm64_Release_version_badge.svg
+[win-arm64-version-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/productCommit-win-arm64.txt
+[win-arm64-installer-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm64.exe
+[win-arm64-installer-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm64.exe.sha
+[win-arm64-zip-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm64.zip
+[win-arm64-zip-checksum-6.0.1XX-preview1]: https://aka.ms/dotnet/net6/preview1/daily/Sdk/dotnet-sdk-win-arm64.zip.sha
 
 [win-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/win_arm64_Release_version_badge.svg
 [win-arm64-version-5.0.2XX]: https://aka.ms/dotnet/net5/5.0.2xx/daily/Sdk/productCommit-win-arm64.txt
