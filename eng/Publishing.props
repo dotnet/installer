@@ -76,7 +76,7 @@
     <!-- Only publish this file from windows x64 so that we don't end up with duplicates -->
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt"
         Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt" 
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt"
         Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
