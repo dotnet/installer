@@ -76,7 +76,7 @@
     <!-- Only publish this file from windows x64 so that we don't end up with duplicates -->
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt"
         Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)installer-productVersion.txt"
+    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt"
         Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
@@ -88,7 +88,7 @@
     <CheckSumsToPublish Include="$(ArtifactsShippingPackagesDir)*.sha" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productCommit-*.txt.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false'" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
-    <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)installer-productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
+    <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt.sha" Condition=" '$(OS)' != 'Windows_NT' or '$(Architecture)' != 'x64'" />
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.zip.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
     <CheckSumsToPublish Remove="$(ArtifactsShippingPackagesDir)*.tar.gz.sha" Condition=" '$(PublishBinariesAndBadge)' == 'false' "/>
   </ItemGroup>
