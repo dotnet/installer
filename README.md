@@ -10,6 +10,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/graphs/contributors/)
 [![Commit Activity](https://img.shields.io/github/commit-activity/m/badges/shields)]()
 
+
 This repo contains the source code for the cross-platform [.NET Core](http://github.com/dotnet/core) SDK. It aggregates the .NET Toolchain, the .NET Core runtime, the templates, and the .NET Core Windows Desktop runtime. It produces zip, tarballs, and native packages for various supported platforms.
 
 Looking for released versions of the .NET Core tooling?
