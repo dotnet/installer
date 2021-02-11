@@ -1,4 +1,5 @@
 <Project>
+<<<<<<< HEAD
   <Target Name="GenerateFullNuGetVersion">
     <PropertyGroup>
       <FullNugetVersion>$(VersionPrefix)-$(PreReleaseVersionLabel)</FullNugetVersion>
@@ -6,6 +7,26 @@
       <FullNugetVersion Condition=" '$(VersionSuffixDateStamp)' != '' And '$(VersionSuffixBuildOfTheDay)' != '' ">$(FullNugetVersion).$(VersionSuffixDateStamp).$(VersionSuffixBuildOfTheDay)</FullNugetVersion>
     </PropertyGroup>
   </Target>
+=======
+  <PropertyGroup>
+    <VersionMajor>3</VersionMajor>
+    <VersionMinor>1</VersionMinor>
+    <VersionSDKMinor>4</VersionSDKMinor>
+    <VersionPatch>06</VersionPatch>
+    <ReleaseSuffix Condition=" '$(ReleaseSuffix)' == '' ">servicing</ReleaseSuffix>
+    <!--
+        When DropSuffix is set to 'true', this branch will produce stable outputs for 'Shipping' packages
+    -->
+    <DropSuffix>true</DropSuffix>
+  </PropertyGroup>
+  
+  <Target Name="GetCoreSdkGitCommitInfo">
+    <Exec Command="git rev-list --count HEAD"
+          ConsoleToMSBuild="true"
+          Condition=" '$(GitCommitCount)' == '' ">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
+    </Exec>
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
 
   <Target Name="GetCommitHash">
     <Exec Command="git rev-parse HEAD"

@@ -149,7 +149,11 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+<<<<<<< HEAD
               _TestArg: $(_NonWindowsTestArg)
+=======
+              _DropSuffix: ''
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
             Build_Arm_Debug:
               _BuildConfig: Debug
               _DockerParameter: ''
@@ -188,8 +192,12 @@ stages:
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
+<<<<<<< HEAD
               # Never run tests on arm64
               _TestArg: ''
+=======
+              _DropSuffix: ''
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
             Build_Linux_musl_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker alpine.3.6'
@@ -285,9 +293,13 @@ stages:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
+<<<<<<< HEAD
       # This will run only after all the publishing stages have run.
       # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
       - publish_using_darc
+=======
+      - NETCore_SDK_314xx_Publishing
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
     jobs:
     - job: Copy_SDK_To_Latest
       pool:

@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+      <VersionPatch21>$([MSBuild]::Add($(VersionPatch), 19))</VersionPatch21>
+  </PropertyGroup>
+
   <Target Name="GenerateBundledVersions"
           DependsOnTargets="GenerateBundledVersionsProps;GenerateBundledCliToolsProps" >
 
@@ -26,7 +30,11 @@
     <PropertyGroup>
       <BundledVersionsPropsFileName>Microsoft.NETCoreSdk.BundledVersions.props</BundledVersionsPropsFileName>
     </PropertyGroup>
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
     <PropertyGroup>
       <_NETCoreAppPackageVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</_NETCoreAppPackageVersion>
       <_NETStandardLibraryPackageVersion>$(NETStandardLibraryRefPackageVersion)</_NETStandardLibraryPackageVersion>
@@ -149,7 +157,11 @@
       <ImplicitPackageVariable Include="Microsoft.NETCore.App"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.0"
+<<<<<<< HEAD
                                LatestVersion="2.1.$(VersionFeature21)" />
+=======
+                               LatestVersion="2.1.$(VersionPatch21)" />
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
       <ImplicitPackageVariable Include="Microsoft.NETCore.App"
                                TargetFrameworkVersion="2.2"
                                DefaultVersion="2.2.0"
@@ -157,11 +169,19 @@
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.1"
+<<<<<<< HEAD
                                LatestVersion="2.1.$(VersionFeature21)"/>
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
                                TargetFrameworkVersion="2.1"
                                DefaultVersion="2.1.1"
                                LatestVersion="2.1.$(VersionFeature21)"/>
+=======
+                               LatestVersion="2.1.$(VersionPatch21)"/>
+      <ImplicitPackageVariable Include="Microsoft.AspNetCore.All"
+                               TargetFrameworkVersion="2.1"
+                               DefaultVersion="2.1.1"
+                               LatestVersion="2.1.$(VersionPatch21)"/>
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
 
       <ImplicitPackageVariable Include="Microsoft.AspNetCore.App"
                                TargetFrameworkVersion="2.2"

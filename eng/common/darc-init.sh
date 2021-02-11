@@ -68,7 +68,11 @@ function InstallDarcCli {
     fi
   fi
 
+<<<<<<< HEAD
   local arcadeServicesSource="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json"
+=======
+  local arcadeServicesSource="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json"
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
 
   echo "Installing Darc CLI version $darcVersion..."
   echo "You may need to restart your command shell if this is the first dotnet tool you have installed."

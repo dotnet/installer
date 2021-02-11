@@ -74,4 +74,8 @@ namespace Microsoft.DotNet.TestFramework
             IsPortable = Framework != null;
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064

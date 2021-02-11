@@ -718,6 +718,7 @@ function IsWindowsPlatform() {
   return [environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
 }
 
+<<<<<<< HEAD
 function Get-Darc($version) {
   $darcPath  = "$TempDir\darc\$(New-Guid)"
   if ($version -ne $null) {
@@ -728,6 +729,8 @@ function Get-Darc($version) {
   return "$darcPath\darc.exe"
 }
 
+=======
+>>>>>>> f42e6b201add67500de10f5c768cd748a9d48064
 . $PSScriptRoot\pipeline-logging-functions.ps1
 
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
