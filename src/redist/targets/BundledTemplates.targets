@@ -128,9 +128,7 @@
     <PackageDownload Include="@(Bundled50Templates)" Exclude="@(PackageDownload)" />
 
     <PackageDownload Update="Microsoft.DotNet.Common.ItemTemplates"
-                     Version="[$(MicrosoftDotNetCommonItemTemplates21PackageVersion)];
-                              [$(MicrosoftDotNetCommonItemTemplates30PackageVersion)];
-                              [$(MicrosoftDotNetCommonItemTemplates31PackageVersion)];
+                     Version="[$(MicrosoftDotNetCommonItemTemplates30PackageVersion)];
                               [$(MicrosoftDotNetCommonItemTemplates50PackageVersion)];
                               " />
 
@@ -139,9 +137,7 @@
                               " />
 
     <PackageDownload Update="Microsoft.DotNet.Web.ItemTemplates"
-                     Version="[$(AspNetCorePackageVersionFor21Templates)];
-                              [$(AspNetCorePackageVersionFor30Templates)];
-                              [$(AspNetCorePackageVersionFor31Templates)];
+                     Version="[$(AspNetCorePackageVersionFor30Templates)];
                               [$(AspNetCorePackageVersionFor50Templates)];
                               " />
 
