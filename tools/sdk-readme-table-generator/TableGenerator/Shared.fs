@@ -6,11 +6,13 @@ open System
 type Branch =
     { GitBranchName: string
       DisplayName: string
-      AkaMsChannel: string option }
+      AkaMsChannel: string option 
+      UseLegacyAkaMS: bool }
 
 type ReferenceTemplate =
     { AkaMSTemplate: string
-      LegacyTemplate: string }
+      LegacyTemplate: string 
+      AkaMSLegacyTemplate: string}
 
 let branchNameShorten (branch: Branch): string =
     branch.GitBranchName.Substring(branch.GitBranchName.IndexOf('/') + 1).Replace("xx", "XX")
