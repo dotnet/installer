@@ -7,7 +7,7 @@ type Branch =
     { GitBranchName: string
       DisplayName: string
       AkaMsChannel: string option 
-      UseLegacyAkaMsChannel: bool }
+      UseLegacyAkaMsTemplate: bool }
 
 type ReferenceTemplate =
     { AkaMSTemplate: string

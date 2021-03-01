@@ -163,7 +163,7 @@ let winMuslReferenceTemplate: ReferenceTemplate = {
 
 let formatTemplate (platform: String) (template: ReferenceTemplate) (branch: Branch): Option<string> =
     if branch.AkaMsChannel <> None then
-        if branch.UseLegacyAkaMsChannel then
+        if branch.UseLegacyAkaMsTemplate then
             Some (String.Format(template.AkaMSLegacyTemplate, 
                                 platform,                       // 0 - win-x64
                                 (branchNameShorten branch),     // 1 - 5.0.1xx-preview2
