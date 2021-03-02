@@ -6,8 +6,7 @@ open System
 type Branch =
     { GitBranchName: string
       DisplayName: string
-      AkaMsChannel: string option 
-      UseLegacyAkaMsTemplate: bool }
+      AkaMsChannel: string option }
 
 type ReferenceTemplate =
     { AkaMSTemplate: string
