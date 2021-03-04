@@ -15,10 +15,13 @@
     <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
 
     <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
-    <NETCoreAppTargetingPackBlobVersion>3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
-    <AspNetCoreTargetingPackBlobVersion>$(MicrosoftAspNetCoreAppRefInternalPackageVersion)</AspNetCoreTargetingPackBlobVersion>
+    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
+    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21153.1</NETCoreAppTargetingPackBlobVersion>
+    <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.10-servicing.20520.4</AspNetCoreTargetingPackBlobVersion>
+    <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">$(MicrosoftAspNetCoreAppRefInternalPackageVersion)</AspNetCoreTargetingPackBlobVersion>
     <WindowsDesktopTargetingPackBlobVersion>3.1.0-rtm.19565.2</WindowsDesktopTargetingPackBlobVersion>
-    <NETStandardTargetingPackBlobVersion>3.0.0</NETStandardTargetingPackBlobVersion>
+    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.0.0</NETStandardTargetingPackBlobVersion>
+    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21153.1</NETStandardTargetingPackBlobVersion>
   </PropertyGroup>
 
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
@@ -81,7 +84,7 @@
       <!-- Note: we use the "-internal" archives and installers that contain only the aspnetcore shared framework, and shouldn't overlap with Microsoft.NETCore.App. -->
       <DownloadedAspNetCoreSharedFxWixLibFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-runtime-internal-$(MicrosoftAspNetCoreAppRuntimePackageVersion)-$(AspNetCoreSharedFxInstallerRid).wixlib</DownloadedAspNetCoreSharedFxWixLibFileName>
       <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' != '' ">aspnetcore-targeting-pack-$(MicrosoftAspNetCoreAppRefPackageVersion)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
-      <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-targeting-pack-$(MicrosoftAspNetCoreAppRefInternalPackageVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
+      <DownloadedAspNetTargetingPackInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcore-targeting-pack-$(AspNetCoreTargetingPackBlobVersion)-$(AspNetCoreSharedFxInstallerRid)$(InstallerExtension)</DownloadedAspNetTargetingPackInstallerFileName>
       <DownloadedAspNetCoreV2ModuleInstallerFileName Condition=" '$(InstallerExtension)' == '.msi' ">aspnetcoremodule_$(Architecture)_en_v2_$(MicrosoftAspNetCoreAppRuntimePackageVersion)$(InstallerExtension)</DownloadedAspNetCoreV2ModuleInstallerFileName>
       <AspNetTargetingPackArchiveFileName>aspnetcore-targeting-pack-$(MicrosoftAspNetCoreAppRefPackageVersion)$(ArchiveExtension)</AspNetTargetingPackArchiveFileName>
       <AspNetCoreSharedFxArchiveFileName>aspnetcore-runtime-internal-$(MicrosoftAspNetCoreAppRuntimePackageVersion)-$(AspNetCoreSharedFxArchiveRid)$(ArchiveExtension)</AspNetCoreSharedFxArchiveFileName>
@@ -285,7 +288,7 @@
 
     <PropertyGroup>
       <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(Architecture)' == 'arm'">false</IncludeWpfAndWinForms>
-      <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' ">true</IncludeWpfAndWinForms>
+      <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' AND '$(OS)' == 'Windows_NT' AND '$(Architecture)' != 'arm64'">true</IncludeWpfAndWinForms>
       <IncludeWpfAndWinForms Condition=" '$(IncludeWpfAndWinForms)' == '' ">false</IncludeWpfAndWinForms>
     </PropertyGroup>
 
