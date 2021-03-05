@@ -37,12 +37,15 @@ phases:
     workspace:
       clean: all
 
-    variables: 
+    variables:
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
       - _SignType: test
       - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
+
+      - ${{ if pgoInstrument }}:
+        - _PgoInstrument: '/p:PgoInstrument=true'
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         - group: DotNet-MSRC-Storage
@@ -61,6 +64,7 @@ phases:
                   /p:DotNetSignType=$(_SignType)
                   /p:TeamName=$(_TeamName)
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
+                  $(_PgoInstrument)
 
     steps:
     - checkout: self
@@ -135,32 +139,32 @@ phases:
           publishFeedCredentials: 'DevDiv - VS package feed'
         condition: and(succeeded(), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
 
-    - task: PublishTestResults@2	
-      displayName: Publish Test Results	
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
       inputs:
-        testRunner: XUnit	
-        testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'	
-        testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
-        platform: '$(BuildPlatform)'	
-        configuration: '$(_BuildConfig)'	
+        testRunner: XUnit
+        testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'
+        testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'
+        platform: '$(BuildPlatform)'
+        configuration: '$(_BuildConfig)'
       condition: ne(variables['_TestArg'], '')
 
-    - task: CopyFiles@2	
-      displayName: Gather Logs	
+    - task: CopyFiles@2
+      displayName: Gather Logs
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)/artifacts'	
-        Contents: |	
-         log/$(_BuildConfig)/**/*	
-         TestResults/$(_BuildConfig)/**/*	
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'	
-      continueOnError: true	
+        SourceFolder: '$(Build.SourcesDirectory)/artifacts'
+        Contents: |
+         log/$(_BuildConfig)/**/*
+         TestResults/$(_BuildConfig)/**/*
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      continueOnError: true
       condition: always()
 
-    - task: PublishBuildArtifacts@1	
-      displayName: Publish Logs to VSTS	
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Logs to VSTS
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'	
-        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
-        publishLocation: Container	
-      continueOnError: true	
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
+        publishLocation: Container
+      continueOnError: true
       condition: always()
