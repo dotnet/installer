@@ -20,7 +20,7 @@ parameters:
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
-    name: ${{ parameters.agentOs }}
+    name: ${{ parameters.agentOs }}${{ parameters.pgoInstrument }}
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
