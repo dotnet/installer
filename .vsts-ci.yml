@@ -116,7 +116,7 @@ stages:
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             _TestArg: $(_WindowsTestArg)
-            _pgoInstrument: true
+      pgoInstrument: true
 
   - template: /eng/build.yml
     parameters:
