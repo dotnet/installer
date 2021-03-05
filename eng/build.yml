@@ -38,14 +38,14 @@ phases:
       clean: all
 
     variables:
+      - ${{ if parameters.pgoInstrument }}:
+        - _PgoInstrument: '/p:PgoInstrument=true'
+
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
       - _SignType: test
-      - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
+      - _BuildArgs: '/p:DotNetSignType=$(_SignType) $(_PgoInstrument)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
-
-      - ${{ if parameters.pgoInstrument }}:
-        - _PgoInstrument: '/p:PgoInstrument=true'
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         - group: DotNet-MSRC-Storage
