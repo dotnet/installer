@@ -44,7 +44,7 @@ phases:
       - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
 
-      - ${{ if pgoInstrument }}:
+      - ${{ if parameters.pgoInstrument }}:
         - _PgoInstrument: '/p:PgoInstrument=true'
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
