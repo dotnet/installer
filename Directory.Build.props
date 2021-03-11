@@ -12,6 +12,7 @@
     <Architecture Condition="'$(Architecture)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
     <Architecture Condition="'$(Architecture)' == ''">x64</Architecture>
     <PgoSuffix Condition="'$(PgoInstrument)' == 'true'">.PGO</PgoSuffix>
+    <PgoTerm Condition="'$(PgoInstrument)' == 'true'">-pgo</PgoTerm>
   </PropertyGroup>
 
   <PropertyGroup>
