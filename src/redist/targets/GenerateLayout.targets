@@ -16,12 +16,12 @@
 
     <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
     <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
-    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21153.1</NETCoreAppTargetingPackBlobVersion>
+    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21165.2</NETCoreAppTargetingPackBlobVersion>
     <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.10-servicing.20520.4</AspNetCoreTargetingPackBlobVersion>
     <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">$(MicrosoftAspNetCoreAppRefInternalPackageVersion)</AspNetCoreTargetingPackBlobVersion>
     <WindowsDesktopTargetingPackBlobVersion>3.1.0-rtm.19565.2</WindowsDesktopTargetingPackBlobVersion>
     <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.0.0</NETStandardTargetingPackBlobVersion>
-    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21153.1</NETStandardTargetingPackBlobVersion>
+    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21165.2</NETStandardTargetingPackBlobVersion>
   </PropertyGroup>
 
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
