@@ -34,7 +34,7 @@
 
       <!-- only the runtime OSX .pkgs have a `-internal` suffix -->
       <InstallerStartSuffix Condition="$([MSBuild]::IsOSPlatform('OSX'))">-internal</InstallerStartSuffix>
-      <InstallerStartSuffix Condition="'$(PgoInstrument)' == 'true'">-pgo</InstallerStartSuffix>
+      <InstallerStartSuffix>$(InstallerStartSuffix)$(PgoTerm)</InstallerStartSuffix>
 
       <!-- Downloaded Installers + Archives -->
 
