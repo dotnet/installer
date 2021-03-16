@@ -38,6 +38,8 @@ phases:
       clean: all
 
     variables:
+      - ${{ if not(parameters.pgoInstrument) }}:
+        - _PgoInstrument: ''
       - ${{ if parameters.pgoInstrument }}:
         - _PgoInstrument: '/p:PgoInstrument=true'
 
