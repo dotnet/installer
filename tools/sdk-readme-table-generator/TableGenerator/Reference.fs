@@ -165,7 +165,7 @@ let formatTemplate (platform: String) (template: ReferenceTemplate) (branch: Bra
     if branch.AkaMsChannel <> None then
         let useLegacyAkaMsTemplate = 
             match getMajorMinor branch with
-            | Master -> false
+            | Main -> false
             | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major = 5 && patch < 300 -> true
             | _ -> false
         if useLegacyAkaMsTemplate then
@@ -198,7 +198,7 @@ let osxX64ReferenceTemplate = formatTemplate "osx-x64" osxReferenceTemplate
 let osxArm64ReferenceTemplate branch =
     let format branch = formatTemplate "osx-arm64" osxReferenceTemplate branch
     match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
         | _ -> None
 
@@ -215,14 +215,14 @@ let linuxMuslx64ReferenceTemplate = formatTemplate "linux-musl-x64" linuxMuslRef
 let linuxMuslArmReferenceTemplate branch =
     let format branch = formatTemplate "linux-musl-arm" linuxMuslReferenceTemplate branch
     match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> None
 
 let linuxMuslArm64ReferenceTemplate branch =
     let format branch = formatTemplate "linux-musl-arm64" linuxMuslReferenceTemplate branch
     match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> None
 

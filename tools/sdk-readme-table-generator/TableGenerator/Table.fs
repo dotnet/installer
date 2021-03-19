@@ -41,7 +41,7 @@ let osxArm64Row branches =
     let format branch = String.Format(osxDesktopArchTableTemplate, "osx-arm64", branchNameShorten branch)
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor } when major >= 6 -> format branch
         | _ -> notAvailable
     formRow "**macOS arm64**" tableTemplateForThisArch branches
@@ -64,7 +64,7 @@ let rhel6Row branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | NoVersion -> notAvailable
-        | Master -> notAvailable
+        | Main -> notAvailable
         | MajorMinor { Major = major; Minor = minor } when major >= 5 -> notAvailable
         | _ -> String.Format(linuxArmTableTemplate, "rhel-6", branchNameShorten branch)
     formRow "**RHEL 6**" tableTemplateForThisArch branches
@@ -78,7 +78,7 @@ let linuxMuslRowArm branches =
     let format branch = String.Format(linuxArmTableTemplate, "linux-musl-arm", branchNameShorten branch)
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm**" tableTemplateForThisArch branches
@@ -87,7 +87,7 @@ let linuxMuslRowArm64 branches =
     let format branch = String.Format(linuxArmTableTemplate, "linux-musl-arm64", branchNameShorten branch)
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
-        | Master -> format branch
+        | Main -> format branch
         | MajorMinor { Major = major; Minor = _minor; Patch = patch } when major >= 6 || (major >= 5 && patch >= 299) -> format branch
         | _ -> notAvailable
     formRow "**Linux-musl-arm64**" tableTemplateForThisArch branches
@@ -99,7 +99,7 @@ let windowsArmRow branches =
     let tableTemplateForThisArch branch =
         match getMajorMinor branch with
         | NoVersion -> notAvailable
-        | Master -> notAvailable
+        | Main -> notAvailable
         | MajorMinor { Major = major; Minor = minor } when  ( major >= 5) -> notAvailable
         | _ -> String.Format(tableTemplate, branchNameShorten branch)
     formRow "**Windows arm**" tableTemplateForThisArch branches
