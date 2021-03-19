@@ -20,10 +20,10 @@ parameters:
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
-  - ${{ parameters.pgoInstrument }}:
-    name: ${{ parameters.agentOs }} PGO
-  - ${{ not(parameters.pgoInstrument) }}:
-    name: ${{ parameters.agentOs }}
+    ${{ parameters.pgoInstrument }}:
+      name: ${{ parameters.agentOs }} PGO
+    ${{ not(parameters.pgoInstrument) }}:
+      name: ${{ parameters.agentOs }}
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
