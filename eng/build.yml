@@ -21,7 +21,7 @@ phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
-      name: 'PGO ${{ parameters.agentOs }}'
+      name: PGO_${{ parameters.agentOs }}
     ${{ if not(parameters.pgoInstrument) }}:
       name: ${{ parameters.agentOs }}
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
