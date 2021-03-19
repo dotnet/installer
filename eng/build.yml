@@ -17,9 +17,6 @@ parameters:
   # Publish using pipelines
   enablePublishUsingPipelines: true
 
-  # Use PGO instrumentation bits to gather PGO data
-  pgoInstrument: false
-
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
