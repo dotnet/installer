@@ -41,10 +41,14 @@ phases:
       clean: all
 
     variables:
-      - ${{ if not(parameters.pgoInstrument) }}:
-        - _PgoInstrument: ''
+      - _PgoInstrument: ''
+      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
+        - _PackArg: '-pack'
+      - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
+        - _PackArg: '--pack'
       - ${{ if parameters.pgoInstrument }}:
         - _PgoInstrument: '/p:PgoInstrument=true'
+        - _PackArg: ''
 
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
@@ -84,8 +88,8 @@ phases:
           env:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
       - script: build.cmd
-                  $(_TestArg)
-                  -pack -publish -ci -sign
+                  $(_TestArg) $(_PackArg)
+                  -publish -ci -sign
                   -Configuration $(_BuildConfig)
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
@@ -106,8 +110,8 @@ phases:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
-                  $(_TestArg)
-                  --pack --publish --ci
+                  $(_TestArg) $(_PackArg)
+                  --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
                   $(_DockerParameter)

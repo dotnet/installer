@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
   <PropertyGroup>
     <MicrosoftDotNetBuildTasksInstallersTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(NuGetPackageRoot)microsoft.dotnet.build.tasks.installers\$(MicrosoftDotNetBuildTasksInstallersPackageVersion)\tools\netcoreapp3.1\Microsoft.DotNet.Build.Tasks.Installers.dll</MicrosoftDotNetBuildTasksInstallersTaskAssembly>
     <MicrosoftDotNetBuildTasksInstallersTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(NuGetPackageRoot)microsoft.dotnet.build.tasks.installers\$(MicrosoftDotNetBuildTasksInstallersPackageVersion)\tools\net472\Microsoft.DotNet.Build.Tasks.Installers.dll</MicrosoftDotNetBuildTasksInstallersTaskAssembly>
   </PropertyGroup>
 
   <UsingTask TaskName="CreateLightCommandPackageDrop" AssemblyFile="$(MicrosoftDotNetBuildTasksInstallersTaskAssembly)" />
-
+  
   <Target Name="SetupWixProperties" DependsOnTargets="GetCurrentRuntimeInformation">
     <!-- AcquireWix Properties -->
     <PropertyGroup>
@@ -83,8 +83,8 @@
       <CombinedBuildNumberAndRevision>$(_PatchNumber)</CombinedBuildNumberAndRevision>
       <!-- Fallback to commit count when patch number is not set. This happens only during CI. -->
       <CombinedBuildNumberAndRevision Condition=" '$(CombinedBuildNumberAndRevision)' == '' ">$(GitCommitCount)</CombinedBuildNumberAndRevision>
-
-      <!-- This number comes from arcade and combines the date based build number id and the revision (incremental number per day) -->
+      
+      <!-- This number comes from arcade and combines the date based build number id and the revision (incremental number per day) -->    
       <SDKBundleVersion>$(FileVersion)</SDKBundleVersion>
       <!-- Fallback to commit count when patch number is not set. This happens only during CI. -->
       <SDKBundleVersion Condition=" '$(SDKBundleVersion)' == '' ">$(VersionPrefix).$(CombinedBuildNumberAndRevision)</SDKBundleVersion>
@@ -149,7 +149,7 @@
 
   <Target Name="GenerateSdkMsi"
           DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;SetSdkBrandingInfo"
-          Condition="'$(OS)' == 'Windows_NT' AND '$(PgoInstrument)' != 'true'"
+          Condition=" '$(OS)' == 'Windows_NT' "
           Inputs="$(SdkInternalLayoutPath)**/*;
                     $(SdkGenerateMsiPowershellScript)"
           Outputs="$(SdkMSIInstallerFile)">
@@ -280,7 +280,7 @@
     <PropertyGroup>
       <ManifestsGenerateMsiPowershellScript>$(MSBuildThisFileDirectory)packaging/windows/clisdk/generatemanifestsmsi.ps1</ManifestsGenerateMsiPowershellScript>
     </PropertyGroup>
-
+    
     <Exec Command="powershell -NoProfile -NoLogo $(ManifestsGenerateMsiPowershellScript) ^
                       '$(ManifestsLayoutPath)' ^
                       '$(ManifestsMSIInstallerFile)' ^
@@ -313,7 +313,7 @@
 
   <Target Name="GenerateSdkBundle"
           DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;GenerateSdkMsi;SignSdkMsi;GenerateTemplatesMsis;GenerateManifestsMsi;SignTemplatesMsis"
-          Condition="'$(OS)' == 'Windows_NT' AND '$(PgoInstrument)' != 'true'"
+          Condition=" '$(OS)' == 'Windows_NT' "
           Inputs="$(SdkMSIInstallerFile);
                     $(DownloadedSharedFrameworkInstallerFile);
                     $(DownloadedHostFxrInstallerFile);
@@ -329,7 +329,7 @@
     <PropertyGroup>
       <LatestTemplateMsiInstallerFile>@(LatestTemplateInstallerComponent->'%(MSIInstallerFile)')</LatestTemplateMsiInstallerFile>
     </PropertyGroup>
-
+    
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateBundlePowershellScript) ^
                       '$(SdkMSIInstallerFile)' ^
                       '$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxWixLibFileName)' ^
@@ -380,7 +380,7 @@
 
   <Target Name="GenerateToolsetNupkg"
           DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs;GenerateSdkMsi;SignSdkMsi"
-          Condition="'$(OS)' == 'Windows_NT' and '$(PgoInstrument)' != 'true'"
+          Condition=" '$(OS)' == 'Windows_NT' "
           Inputs="$(SdkMSIInstallerFile);
                     $(ToolsetInstallerNuspecFile);
                     $(GenerateNupkgPowershellScript)"
@@ -493,7 +493,7 @@
                       '$(FullNugetVersion)' ^
                       '$(SdkMSBuildExtensionsNuspecFile)' ^
                       '$(SdkMSBuildExtensionsNupkgFile)'" />
-
+      
       <GenerateMSBuildExtensionsSWR MSBuildExtensionsLayoutDirectory="$(MSBuildExtensionsLayoutDirectory)"
                                     OutputFile="$(SdkMSBuildExtensionsSwrFile)"/>
 
