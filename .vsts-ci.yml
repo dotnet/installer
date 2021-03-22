@@ -118,7 +118,6 @@ stages:
             _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             # Never run tests on PGO bits
             _TestArg: ''
-            PostBuildSign: false
       pgoInstrument: true
 
   - template: /eng/build.yml
