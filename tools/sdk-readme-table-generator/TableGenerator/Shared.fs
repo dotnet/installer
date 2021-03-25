@@ -22,13 +22,13 @@ type BranchMajorMinorVersion =
       Patch: int
       Release: string}
 
-type BranchMajorMinorVersionOrMain =
+type BranchMajorMinorVersionOrmain =
     | Main
     | MajorMinor of BranchMajorMinorVersion
     | NoVersion
 
-let getMajorMinor (branch: Branch): BranchMajorMinorVersionOrMain =
-    match branch.GitBranchName = "Main" with
+let getMajorMinor (branch: Branch): BranchMajorMinorVersionOrmain =
+    match branch.GitBranchName = "main" with
     | true -> Main
     | _ ->
         match branch.GitBranchName.IndexOf('/') with
