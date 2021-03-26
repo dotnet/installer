@@ -42,6 +42,9 @@ while [[ $# > 0 ]]; do
         --linux-portable)
             args+=("/p:Rid=linux-x64 /p:OSName=\"linux\" /p:IslinuxPortable=\"true\"")
             ;;
+        --pgoInstrument)
+            args+=("/p:PgoInstrument=true")
+            ;;
         --help)
             echo "Usage: $0 [--configuration <CONFIGURATION>] [--architecture <ARCHITECTURE>] [--docker <IMAGENAME>] [--help]"
             echo ""
