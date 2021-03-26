@@ -13,14 +13,22 @@
 
     <PropertyGroup>
       <RestoredToolRoot>$([System.IO.Path]::GetFullPath('$(NuGetPackageRoot)/$(PackageToRestore)/$(PackageVersionToRestore)'))</RestoredToolRoot>
+      <!--
+        The tool folder structure looks like so: /$packageid/$packageVersion/tools/$tfm/$rid/tool.dll
+        For better aesthetics, we don't want "tools/$tfm/rid" to appear in the destination.
+      -->
+      <TfmDir>$([System.IO.Directory]::GetDirectories('$(RestoredToolRoot)/tools/'))</TfmDir>
+      <RidDir>$([System.IO.Directory]::GetDirectories('$(TfmDir)'))</RidDir>
     </PropertyGroup>
     <ItemGroup>
-      <BundledToolFiles Include="$(RestoredToolRoot)\**\*.*" />
-      <BundledToolFiles Remove="$(RestoredToolRoot)\*.*" />
+      <!--  -->
+      <BundledToolFiles Include="$(RidDir)\**\*" />
     </ItemGroup>
 
+    <Error Text="No tool files found in directory $(RestoredToolRoot)" Condition="@(BundledToolFiles->Count()) == 0" />
+
     <Copy SourceFiles="@(BundledToolFiles)"
-          DestinationFiles="@(BundledToolFiles->'$(LayoutFolder)$(PackageToRestore)\$(PackageVersionToRestore)\%(RecursiveDir)%(Filename)%(Extension)')"
+          DestinationFiles="@(BundledToolFiles->'$(LayoutFolder)$(PackageToRestore)\%(RecursiveDir)%(Filename)%(Extension)')"
           SkipUnchangedFiles="true" />
   </Target>
 </Project>
