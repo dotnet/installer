@@ -167,7 +167,7 @@
 
   <Target Name="GenerateTemplatesMsis"
           DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;SetSdkBrandingInfo;SetupTemplatesMsis"
-          Condition="$(ProductMonikerRid.StartsWith('win')) And !$(Architecture.StartsWith('arm'))"
+          Condition="$(ProductMonikerRid.StartsWith('win')) And '$(Architecture)' != 'arm'"
           Inputs="@(TemplatesMsiComponent->'%(LayoutPath)');
                     $(TemplatesGenerateMsiPowershellScript)"
           Outputs="@(TemplatesMsiComponent->'%(MSIInstallerFile)')">
@@ -200,6 +200,8 @@
         <UpgradeCode>$(Templates31InstallerUpgradeCode)</UpgradeCode>
         <DependencyKeyName>NetCore_Templates_3.1</DependencyKeyName>
       </TemplatesMsiComponent>
+    </ItemGroup>
+    <ItemGroup Condition="!$(Architecture.StartsWith('arm'))">
       <TemplatesMsiComponent Include="NetCore30TemplatesMsi">
         <LayoutPath>$(Templates30LayoutPath.TrimEnd('\'))</LayoutPath>
         <MSIInstallerFile>$(Templates30MSIInstallerFile)</MSIInstallerFile>
@@ -410,7 +412,7 @@
                             GenerateVSToolsNupkg;
                             GenerateVSToolsResolverNupkg;
                             GenerateSdkMSBuildExtensionsNupkg"
-        Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm')) " />
+        Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' != 'arm' " />
 
 
 </Project>
