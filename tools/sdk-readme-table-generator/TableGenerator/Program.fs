@@ -9,18 +9,15 @@ let inputBranches =
         [ { GitBranchName = "main"
             DisplayName = "main<br>(6.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("6.0/daily") }
-          { GitBranchName = "release/6.0.1xx-preview2"
-            DisplayName = "Release/6.0.1XX-preview2<br>(6.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("6.0.1XX-preview2/daily") }
+          { GitBranchName = "release/6.0.1xx-preview3"
+            DisplayName = "Release/6.0.1XX-preview3<br>(6.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("6.0.1XX-preview3/daily") }
           { GitBranchName = "release/5.0.3xx"
             DisplayName = "Release/5.0.3XX<br>(5.0 Runtime)"
             AkaMsChannel = Some("5.0.3xx/daily") }
           { GitBranchName = "release/5.0.2xx"
             DisplayName = "Release/5.0.2XX<br>(5.0 Runtime)"
             AkaMsChannel = Some("5.0.2xx/daily") }
-          { GitBranchName = "release/5.0.1xx-rtm"
-            DisplayName = "5.0.100 RTM<br>(5.0 Runtime)"
-            AkaMsChannel = Some("net5/5.0.1xx/daily") }
           { GitBranchName = "release/3.1.4xx"
             DisplayName = "Release/3.1.4XX<br>(3.1.x Runtime)"
             AkaMsChannel = None }
@@ -37,7 +34,7 @@ let referentNotes = """Reference notes:
 .NET Core SDK 2.x downloads can be found here: [.NET Core SDK 2.x Installers and Binaries](Downloads2.x.md)"""
 
 let sdksha2 =
-    "[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/main/build-info/dotnet/product/cli/release/2.2#built-repositories"
+    "[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories"
 
 let wholeTable branches =
     String.Join

@@ -562,4 +562,4 @@ Reference notes:
 [win-arm64-zip-5.0.1XX-rc2]: https://aka.ms/dotnet/net5/rc2/Sdk/dotnet-sdk-win-arm64.zip
 [win-arm64-zip-checksum-5.0.1XX-rc2]: https://aka.ms/dotnet/net5/rc2/Sdk/dotnet-sdk-win-arm64.zip.sha
 
-[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/main/build-info/dotnet/product/cli/release/2.2#built-repositories"""
+[sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories"""
