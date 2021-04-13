@@ -40,12 +40,17 @@
     <Dependency Name="Microsoft.NETCore.Platforms" Version="3.1.6" CoherentParentDependency="Microsoft.NetCore.App.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-corefx</Uri>
       <Sha>6e37696a5420057596d61119614574db9037c652</Sha>
+<<<<<<< HEAD
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.1.10">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref.Internal" Version="3.1.10-servicing.21166.8">
+=======
+    </Dependency>
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.1.10">
+>>>>>>> 07ddd844dccc1dadbec69b4c9628ec7689b5468d
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
     </Dependency>
@@ -53,6 +58,7 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
     </Dependency>
+<<<<<<< HEAD
     <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.1.14-servicing.21166.8">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
@@ -60,6 +66,15 @@
     <Dependency Name="Microsoft.AspNetCore.Components.WebAssembly.Templates" Version="3.2.1">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>331b52b370cd4e7fe2919d4d4cda27412e2ab1cc</Sha>
+=======
+    <Dependency Name="Microsoft.AspNetCore.App.Ref.Internal" Version="3.1.10-servicing.21166.8">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
+      <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="3.1.14-servicing.21166.8">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
+      <Sha>440dadc05b2bed38e6a726c2492db90e77d43c62</Sha>
+>>>>>>> 07ddd844dccc1dadbec69b4c9628ec7689b5468d
     </Dependency>
     <Dependency Name="dotnet-dev-certs" Version="3.1.14-servicing.21166.8">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
@@ -81,6 +96,7 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>f8760d033ff55c8e24944bf18f8e007bea4deb50</Sha>
     </Dependency>
+<<<<<<< HEAD
     <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.408-servicing.21166.9">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-toolset</Uri>
       <Sha>01a47f81d0b109dc9ffcb8ac1040d8d4cdfbd40f</Sha>
@@ -92,6 +108,19 @@
     <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.408-servicing.21166.4" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
       <Sha>954f14bb2f051d480a67a871f189d7ac22044f19</Sha>
+=======
+    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.1.114-servicing.21166.14">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-toolset</Uri>
+      <Sha>3c0bb6e7e1a5526407ab9ba284bed18f9b841251</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk" Version="3.1.114-servicing.21161.11" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>5565e6b21b7a11560fb88e73dce4c097fac6260d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="3.1.114-servicing.21166.6" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
+      <Sha>b637fb8974fdc0ddc880dfd16cf681c7eb7febb6</Sha>
+>>>>>>> 07ddd844dccc1dadbec69b4c9628ec7689b5468d
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21162.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -104,15 +133,22 @@
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
-    <Dependency Name="System.ServiceModel.Primitives" Version="4.7.0-rtm.20181.2">
+    <Dependency Name="System.ServiceModel.Primitives" Version="4.8.0-preview2.20277.5">
       <Uri>https://github.com/dotnet/wcf</Uri>
-      <Sha>a0c3917deaeb4761a5cf28115c74593031354417</Sha>
+      <Sha>c9c5545237965f324efc8579c69b9f2f9fdb8375</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.21158.9">
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>ab42d248928f65dd174a2383f3256e68d9379bb7</Sha>
+<<<<<<< HEAD
+=======
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Cli.Utils" Version="3.1.114-servicing.21166.6" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-cli</Uri>
+      <Sha>b637fb8974fdc0ddc880dfd16cf681c7eb7febb6</Sha>
+>>>>>>> 07ddd844dccc1dadbec69b4c9628ec7689b5468d
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

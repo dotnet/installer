@@ -8,6 +8,24 @@
     <DownloadsFolder>$(IntermediateOutputPath)downloads\</DownloadsFolder>
   </PropertyGroup>
 
+<<<<<<< HEAD
+=======
+  <PropertyGroup>
+    <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
+    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
+    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
+
+    <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
+    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
+    <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21165.2</NETCoreAppTargetingPackBlobVersion>
+    <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.10-servicing.20520.4</AspNetCoreTargetingPackBlobVersion>
+    <AspNetCoreTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">$(MicrosoftAspNetCoreAppRefInternalPackageVersion)</AspNetCoreTargetingPackBlobVersion>
+    <WindowsDesktopTargetingPackBlobVersion>3.1.0-rtm.19565.2</WindowsDesktopTargetingPackBlobVersion>
+    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.0.0</NETStandardTargetingPackBlobVersion>
+    <NETStandardTargetingPackBlobVersion Condition="'$(Rid)' == 'win-arm64'">3.1.14-servicing.21165.2</NETStandardTargetingPackBlobVersion>
+  </PropertyGroup>
+
+>>>>>>> 07ddd844dccc1dadbec69b4c9628ec7689b5468d
   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
     <PropertyGroup>
       <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->

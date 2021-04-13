@@ -160,6 +160,26 @@
             Skip="true"
             Issue=""
             Reason="Needs .NET Core 2.1.15 on Mac OS"/>
+
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_publishes_with_a_publish_profile"
+            Skip="true"
+            Issue=""
+            Reason="Test fails to restore from blob feed on Linux"/>
+
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_should_publish_framework_dependent_for_2x"
+            Skip="true"
+            Issue=""
+            Reason="Test fails to restore from blob feed on Linux"/>
+
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_publishes_as_framework_dependent_by_default"
+            Skip="true"
+            Issue=""
+            Reason="Test fails to restore from blob feed on Linux"/>
+
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_should_publish_self_contained_for_2x"
+            Skip="true"
+            Issue=""
+            Reason="Test fails to restore from blob feed on Linux"/>
     
   </SkippedTests>
 </Tests>
