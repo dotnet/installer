@@ -146,7 +146,7 @@ phases:
           packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: 'DevDiv - VS package feed'
-        condition: and(succeeded(), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
+        condition: and(succeeded(), ne(variables['PostBuildSign'], true), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
 
     - task: PublishTestResults@2
       displayName: Publish Test Results
