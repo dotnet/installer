@@ -39,24 +39,22 @@
       <_NETStandardLibraryPackageVersion>$(NETStandardLibraryRefPackageVersion)</_NETStandardLibraryPackageVersion>
       <_NETCorePlatformsPackageVersion>$(MicrosoftNETCorePlatformsPackageVersion)</_NETCorePlatformsPackageVersion>
 
-      <_NET50RuntimePackVersion>5.0.4</_NET50RuntimePackVersion>
+      <_NET50RuntimePackVersion>5.0.5</_NET50RuntimePackVersion>
       <_NET50TargetingPackVersion>5.0.0</_NET50TargetingPackVersion>
       <_WindowsDesktop50RuntimePackVersion>5.0.5</_WindowsDesktop50RuntimePackVersion>
       <_WindowsDesktop50TargetingPackVersion>5.0.0</_WindowsDesktop50TargetingPackVersion>
-      <_AspNet50RuntimePackVersion>5.0.4</_AspNet50RuntimePackVersion>
+      <_AspNet50RuntimePackVersion>5.0.5</_AspNet50RuntimePackVersion>
       <_AspNet50TargetingPackVersion>5.0.0</_AspNet50TargetingPackVersion>
 
-      <_NETCoreApp31RuntimePackVersion>3.1.13</_NETCoreApp31RuntimePackVersion>
-      <_NETCoreApp31TargetingPackVersion>3.1.0</_NETCoreApp31TargetingPackVersion>
       <_WindowsDesktop31RuntimePackVersion>3.1.12</_WindowsDesktop31RuntimePackVersion>
       <_WindowsDesktop31TargetingPackVersion>3.1.0</_WindowsDesktop31TargetingPackVersion>
-      <_AspNet31RuntimePackVersion>3.1.13</_AspNet31RuntimePackVersion>
+      <_AspNet31RuntimePackVersion>3.1.14</_AspNet31RuntimePackVersion>
       <_AspNet31TargetingPackVersion>3.1.10</_AspNet31TargetingPackVersion>
 
       <_NETCoreApp30RuntimePackVersion>3.0.3</_NETCoreApp30RuntimePackVersion>
       <_NETCoreApp30TargetingPackVersion>3.0.0</_NETCoreApp30TargetingPackVersion>
-      
-      <_NETCoreApp31RuntimePackVersion>3.1.13</_NETCoreApp31RuntimePackVersion>
+
+      <_NETCoreApp31RuntimePackVersion>3.1.14</_NETCoreApp31RuntimePackVersion>
       <_NETCoreApp31TargetingPackVersion>3.1.0</_NETCoreApp31TargetingPackVersion>
 
       <_WindowsDesktop30RuntimePackVersion>3.0.3</_WindowsDesktop30RuntimePackVersion>
@@ -67,8 +65,8 @@
 
       <_AspNet30RuntimePackVersion>3.0.3</_AspNet30RuntimePackVersion>
       <_AspNet30TargetingPackVersion>3.0.1</_AspNet30TargetingPackVersion>
-      
-      <_AspNet31RuntimePackVersion>3.1.13</_AspNet31RuntimePackVersion>
+
+      <_AspNet31RuntimePackVersion>3.1.14</_AspNet31RuntimePackVersion>
       <_AspNet31TargetingPackVersion>3.1.10</_AspNet31TargetingPackVersion>
 
       <!-- Use only major and minor in target framework version -->
@@ -105,6 +103,17 @@
 
       <Net50RuntimePackRids Include="
           @(Net50AppHostRids);
+          browser-wasm;
+          " />
+
+      <Net60AppHostRids Include="
+          @(Net50AppHostRids);
+          osx-arm64;
+          "/>
+
+      <Net60RuntimePackRids Include="
+          @(Net50RuntimePackRids);
+          osx-arm64;
           ios-arm64;
           ios-arm;
           iossimulator-arm64;
@@ -119,11 +128,10 @@
           android-arm;
           android-x64;
           android-x86;
-          browser-wasm;
           " />
 
-      <NetCoreAppHostRids Include="@(Net50AppHostRids);osx-arm64" />
-      <NetCoreRuntimePackRids Include="@(Net50RuntimePackRids);osx-arm64" />
+      <NetCoreAppHostRids Include="@(Net60AppHostRids)" />
+      <NetCoreRuntimePackRids Include="@(Net60RuntimePackRids)" />
 
       <AspNetCore30RuntimePackRids Include="
         win-x64;
@@ -268,6 +276,16 @@ Copyright (c) .NET Foundation. All rights reserved.
                         Crossgen2PackVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)"
                         Crossgen2RuntimeIdentifiers="@(Crossgen2SupportedRids, '%3B')"
                         />
+
+    <KnownRuntimePack Include="Microsoft.NETCore.App"
+                      TargetFramework="net6.0"
+                      RuntimeFrameworkName="Microsoft.NETCore.App"
+                      LatestRuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)"
+                      RuntimePackNamePatterns="Microsoft.NETCore.App.Runtime.Mono.**RID**"
+                      RuntimePackRuntimeIdentifiers="@(NetCoreRuntimePackRids, '%3B')"
+                      RuntimePackLabels="Mono"
+                      IsTrimmable="true"
+                      />
 
     <KnownFrameworkReference Include="Microsoft.WindowsDesktop.App"
                               TargetFramework="net6.0"
