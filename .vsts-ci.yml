@@ -270,7 +270,7 @@ stages:
       enableSigningValidation: false
       publishInstallersAndChecksums: true
 
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), not(contains(variables['Build.SourceBranch'], 'refs/heads/internal/'))) }}:
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/3.1')) }}:
   - stage: copy_to_latest
     displayName: Copy to latest
     dependsOn:
