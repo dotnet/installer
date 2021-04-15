@@ -118,6 +118,12 @@ stages:
             _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             # Never run tests on PGO bits
             _TestArg: ''
+          Build_Release_x86:
+            _BuildConfig: Release
+            _BuildArchitecture: x86
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: ''
+            _TestArg: ''
       pgoInstrument: true
 
   - template: /eng/build.yml
@@ -289,6 +295,29 @@ stages:
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'x64'
             _TestArg: $(_NonWindowsTestArg)
+
+  - template: /eng/build.yml
+    parameters:
+      agentOs: Linux
+      pool:
+        ${{ if eq(variables['System.TeamProject'], 'public') }}:
+          name: NetCorePublic-Pool
+          queue: BuildPool.Ubuntu.1604.Amd64.Open
+        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+          name: NetCoreInternal-Pool
+          queue: BuildPool.Ubuntu.1604.Amd64
+      timeoutInMinutes: 180
+      strategy:
+        matrix:
+          # Always run builds
+          Build_LinuxPortable_Release_x64:
+            _BuildConfig: Release
+            _DockerParameter: ''
+            _LinuxPortable: '--linux-portable'
+            _RuntimeIdentifier: ''
+            _BuildArchitecture: 'x64'
+            _TestArg: ''
+      pgoInstrument: true
 
   - template: /eng/build.yml
     parameters:
