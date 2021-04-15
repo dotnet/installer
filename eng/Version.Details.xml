@@ -3,23 +3,23 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.15">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>c6043a8033fc69004e56ac6343175563970cd068</Sha>
+      <Sha>dc339bd0fb2ec082e3afdc0a5ade2066a86d1681</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.15-servicing.21213.15">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.15-servicing.21214.3">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>c6043a8033fc69004e56ac6343175563970cd068</Sha>
+      <Sha>dc339bd0fb2ec082e3afdc0a5ade2066a86d1681</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.15">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>c6043a8033fc69004e56ac6343175563970cd068</Sha>
+      <Sha>dc339bd0fb2ec082e3afdc0a5ade2066a86d1681</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.1.15">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>c6043a8033fc69004e56ac6343175563970cd068</Sha>
+      <Sha>dc339bd0fb2ec082e3afdc0a5ade2066a86d1681</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.1.15">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>c6043a8033fc69004e56ac6343175563970cd068</Sha>
+      <Sha>dc339bd0fb2ec082e3afdc0a5ade2066a86d1681</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -90,13 +90,13 @@
       <Sha>982a884a513e2e0e274d59d84d5f5ab7095a089e</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21162.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21213.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-winforms</Uri>
-      <Sha>e313f5d3b2181348f7a2291440631fe9b07277b0</Sha>
+      <Sha>4159e19925152f3e6ef6b123d6c0b78f20044a72</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.15-servicing.21213.3" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.15-servicing.21213.14" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
-      <Sha>ff20cfcd086c9c2c81d773a63b436afdd19636d1</Sha>
+      <Sha>6e87e91ecfec2db2490cf78cc5f45517d0abb942</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
