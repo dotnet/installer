@@ -154,7 +154,7 @@ namespace EndToEnd.Tests
         [InlineData("mvc")]
         public void ItCanBuildTemplates(string templateName, string language = "")
         {
-            TestTemplateBuild(templateName, language: language);
+            TestTemplateCreateAndBuild(templateName, language: language);
         }
 
         [Theory]
@@ -187,14 +187,14 @@ namespace EndToEnd.Tests
         [InlineData("winforms", Skip = "https://github.com/dotnet/wpf/issues/2363")]
         public void ItCanBuildDesktopTemplates(string templateName)
         {
-            TestTemplateBuild(templateName);
+            TestTemplateCreateAndBuild(templateName);
         }
 
         [WindowsOnlyTheory]
         [InlineData("wpf", Skip = "https://github.com/dotnet/wpf/issues/2363")]
         public void ItCanBuildDesktopTemplatesSelfContained(string templateName)
         {
-            TestTemplateBuild(templateName);
+            TestTemplateCreateAndBuild(templateName);
         }
 
         [Theory]
@@ -202,7 +202,7 @@ namespace EndToEnd.Tests
         [InlineData("console")]
         public void ItCanBuildTemplatesSelfContained(string templateName)
         {
-            TestTemplateBuild(templateName, selfContained: true);
+            TestTemplateCreateAndBuild(templateName, selfContained: true);
         }
 
         /// <summary>
@@ -246,11 +246,10 @@ namespace EndToEnd.Tests
         [InlineData("webapi", "F#")]
         [InlineData("webapp")]
         [InlineData("razorclasslib")]
-        [InlineData("grpc")]
         public void ItCanCreateAndBuildTemplatesWithDefaultFramework(string templateName, string language = "")
         {
             string framework = DetectExpectedDefaultFramework();
-            TestTemplateBuild(templateName, selfContained: true, language: language, framework: framework);
+            TestTemplateCreateAndBuild(templateName, selfContained: true, language: language, framework: framework);
         }
 
         /// <summary>
@@ -265,20 +264,7 @@ namespace EndToEnd.Tests
         public void ItCanCreateTemplateWithDefaultFramework(string templateName)
         {
             string framework = DetectExpectedDefaultFramework();
-            DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: templateName);
-            string projectDirectory = directory.FullName;
-
-            string newArgs = $"{templateName} --debug:ephemeral-hive --no-restore";
-            new NewCommandShim()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute(newArgs)
-                .Should().Pass();
-
-            //check if MSBuild TargetFramework property is set to expected framework
-            string projectFile = Directory.GetFiles(projectDirectory, "*.csproj").Single();
-            XDocument projectXml = XDocument.Load(projectFile);
-            XNamespace ns = projectXml.Root.Name.Namespace;
-            Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
+            TestTemplateCreateAndBuild(templateName, build: false, framework: framework);
         }
 
         /// <summary>
@@ -311,7 +297,28 @@ namespace EndToEnd.Tests
         public void ItCanCreateAndBuildTemplatesWithDefaultFramework_Windows(string templateName, string language = "")
         {
             string framework = DetectExpectedDefaultFramework();
-            TestTemplateBuild(templateName, selfContained: true, language: language, framework: $"{framework}-windows");
+            TestTemplateCreateAndBuild(templateName, selfContained: true, language: language, framework: $"{framework}-windows");
+        }
+
+        /// <summary>
+        /// [project is not built on linux-musl]
+        /// The test checks if the template creates the template for correct framework by default.
+        /// For .NET 6 the templates should create the projects targeting net6.0.
+        /// </summary>
+        [Theory]
+        [InlineData("grpc")]
+        public void ItCanCreateAndBuildTemplatesWithDefaultFramework_DisableBuildOnLinuxMusl(string templateName)
+        {
+            string framework = DetectExpectedDefaultFramework();
+
+            if (RuntimeInformation.RuntimeIdentifier.StartsWith("alpine")) //linux musl
+            {
+                TestTemplateCreateAndBuild(templateName, build: false, framework: framework);
+            }
+            else
+            {
+                TestTemplateCreateAndBuild(templateName, selfContained: true, framework: framework);
+            }
         }
 
         private static string DetectExpectedDefaultFramework()
@@ -328,7 +335,7 @@ namespace EndToEnd.Tests
             throw new System.Exception("Unsupported version of SDK");
         }
 
-        private static void TestTemplateBuild(string templateName, bool selfContained = false, string language = "", string framework = "")
+        private static void TestTemplateCreateAndBuild(string templateName, bool build = true, bool selfContained = false, string language = "", string framework = "")
         {
             DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
             string projectDirectory = directory.FullName;
@@ -344,17 +351,29 @@ namespace EndToEnd.Tests
                 .Execute(newArgs)
                 .Should().Pass();
 
-            string buildArgs = selfContained ? "" : $"-r {RuntimeInformation.RuntimeIdentifier}";
-            if (!string.IsNullOrWhiteSpace(framework))
+            if (build)
             {
-                buildArgs += $" --framework {framework}";
+                string buildArgs = selfContained ? "" : $"-r {RuntimeInformation.RuntimeIdentifier}";
+                if (!string.IsNullOrWhiteSpace(framework))
+                {
+                    buildArgs += $" --framework {framework}";
+                }
+                string dotnetRoot = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
+                new BuildCommand()
+                     .WithEnvironmentVariable("PATH", dotnetRoot) // override PATH since razor rely on PATH to find dotnet
+                     .WithWorkingDirectory(projectDirectory)
+                     .Execute(buildArgs)
+                     .Should().Pass();
             }
-            string dotnetRoot = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
-            new BuildCommand()
-                 .WithEnvironmentVariable("PATH", dotnetRoot) // override PATH since razor rely on PATH to find dotnet
-                 .WithWorkingDirectory(projectDirectory)
-                 .Execute(buildArgs)
-                 .Should().Pass();
+
+            if (!build && !string.IsNullOrWhiteSpace(framework))
+            {
+                //check if MSBuild TargetFramework property for csproj is set to expected framework
+                string projectFile = Directory.GetFiles(projectDirectory, "*.csproj").Single();
+                XDocument projectXml = XDocument.Load(projectFile);
+                XNamespace ns = projectXml.Root.Name.Namespace;
+                Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
+            }
         }
     }
 }
