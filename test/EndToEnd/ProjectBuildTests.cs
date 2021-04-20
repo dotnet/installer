@@ -351,6 +351,22 @@ namespace EndToEnd.Tests
                 .Execute(newArgs)
                 .Should().Pass();
 
+            if (!string.IsNullOrWhiteSpace(framework))
+            {
+                //check if MSBuild TargetFramework property for *proj is set to expected framework
+                string expectedExtension = language switch
+                {
+                    "C#" => "*.csproj",
+                    "F#" => "*.fsproj",
+                    "VB" => "*.vbproj",
+                    _ => "*.csproj"
+                };
+                string projectFile = Directory.GetFiles(projectDirectory, expectedExtension).Single();
+                XDocument projectXml = XDocument.Load(projectFile);
+                XNamespace ns = projectXml.Root.Name.Namespace;
+                Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
+            }
+
             if (build)
             {
                 string buildArgs = selfContained ? "" : $"-r {RuntimeInformation.RuntimeIdentifier}";
@@ -364,15 +380,6 @@ namespace EndToEnd.Tests
                      .WithWorkingDirectory(projectDirectory)
                      .Execute(buildArgs)
                      .Should().Pass();
-            }
-
-            if (!build && !string.IsNullOrWhiteSpace(framework))
-            {
-                //check if MSBuild TargetFramework property for csproj is set to expected framework
-                string projectFile = Directory.GetFiles(projectDirectory, "*.csproj").Single();
-                XDocument projectXml = XDocument.Load(projectFile);
-                XNamespace ns = projectXml.Root.Name.Namespace;
-                Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
             }
         }
     }
