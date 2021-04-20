@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -324,15 +325,14 @@ namespace EndToEnd.Tests
         private static string DetectExpectedDefaultFramework()
         {
             string dotnetFolder = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
-            string[] sdkFolders = Directory.GetDirectories(Path.Combine(dotnetFolder, "sdk"));
-            sdkFolders.Length.Should().Be(1, "Only one SDK folder is expected in the layout");
-            string expectedSdkVersion = Path.GetFileName(sdkFolders.Single());
+            string[] runtimeFolders = Directory.GetDirectories(Path.Combine(dotnetFolder, "shared", "Microsoft.NETCore.App"));
 
-            if (expectedSdkVersion.StartsWith("6."))
+            int latestMajorVersion = runtimeFolders.Select(folder => int.Parse(Path.GetFileName(folder).Split('.').First())).Max();
+            if (latestMajorVersion == 6)
             {
                 return "net6.0";
             }
-            throw new System.Exception("Unsupported version of SDK");
+            throw new Exception("Unsupported version of SDK");
         }
 
         private static void TestTemplateCreateAndBuild(string templateName, bool build = true, bool selfContained = false, string language = "", string framework = "")
