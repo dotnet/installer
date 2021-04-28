@@ -1,0 +1,103 @@
+From d6aa940075f63d41603cbb2f3524958356d9abcf Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 4 Sep 2020 02:23:15 -0500
+Subject: [PATCH 4/4] ExcludeFromSourceBuild not working again
+
+---
+ Microsoft.DotNet.Cli.sln           |  7 ------
+ src/SdkResolver/SdkResolver.csproj | 39 ------------------------------
+ src/redist/redist.csproj           |  4 ++--
+ 3 files changed, 2 insertion(+), 48 deletions(-)
+ delete mode 100644 src/SdkResolver/SdkResolver.csproj
+
+diff --git a/Microsoft.DotNet.Cli.sln b/Microsoft.DotNet.Cli.sln
+index 22d771abd..3ab6577a8 100644
+--- a/Microsoft.DotNet.Cli.sln
++++ b/Microsoft.DotNet.Cli.sln
+@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core-sdk-tasks", "src\core-
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Tools.Tests.Utilities", "test\Microsoft.DotNet.Tools.Tests.Utilities\Microsoft.DotNet.Tools.Tests.Utilities.csproj", "{78E15EC1-7732-41E3-8591-934E9F583254}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SdkResolver", "src\SdkResolver\SdkResolver.csproj", "{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Dotnet.Sdk.Internal", "src\Microsoft.Dotnet.Sdk.Internal\Microsoft.Dotnet.Sdk.Internal.csproj", "{73F07908-981B-41BB-B9BD-F3420274A6F7}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SdkTests", "test\SdkTests\SdkTests.csproj", "{CB1EE94E-CB83-4071-9DD0-9929AE2B7282}"
+@@ -45,10 +43,6 @@ Global
+ 		{78E15EC1-7732-41E3-8591-934E9F583254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{78E15EC1-7732-41E3-8591-934E9F583254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{78E15EC1-7732-41E3-8591-934E9F583254}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{73F07908-981B-41BB-B9BD-F3420274A6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{73F07908-981B-41BB-B9BD-F3420274A6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{73F07908-981B-41BB-B9BD-F3420274A6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -70,7 +64,6 @@ Global
+ 		{1BFF54F9-4E35-49DB-893C-AF2047722FC6} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
+ 		{53AF2D01-B69F-4CD0-86A7-8FD95967D23C} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
+ 		{78E15EC1-7732-41E3-8591-934E9F583254} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
+-		{7EE15292-2CAD-44FA-8A1F-BAC4688A49E0} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
+ 		{CB1EE94E-CB83-4071-9DD0-9929AE2B7282} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
+ 		{658EF9BE-452C-4D31-AA24-B9E2235799A8} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
+ 	EndGlobalSection
+--- a/src/SdkResolver/SdkResolver.csproj
++++ /dev/null
+@@ -1,39 +0,0 @@
+-﻿<Project Sdk="Microsoft.NET.Sdk">
+-
+-  <PropertyGroup>
+-    <TargetFramework>$(CoreSdkTargetFramework)</TargetFramework>
+-    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+-    <GenerateDependencyFile>false</GenerateDependencyFile>
+-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+-    <GenerateRuntimeCofigurationFiles>false</GenerateRuntimeCofigurationFiles>
+-    <AssemblyName>UNUSED</AssemblyName>
+-    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+-  </PropertyGroup>
+-
+-  <ItemGroup>
+-    <PackageReference Include="Microsoft.DotNet.MSBuildSdkResolver" Version="$(MicrosoftDotNetMSBuildSdkResolverPackageVersion)" ExcludeAssets="all" GeneratePathProperty="true"/>
+-    <PackageReference Include="runtime.win-x86.Microsoft.NETCore.DotNetHostResolver" Version="$(MicrosoftNETCoreDotNetHostResolverPackageVersion)" ExcludeAssets="all" GeneratePathProperty="true" />
+-    <PackageReference Include="runtime.win-x64.Microsoft.NETCore.DotNetHostResolver" Version="$(MicrosoftNETCoreDotNetHostResolverPackageVersion)" ExcludeAssets="all" GeneratePathProperty="true" />
+-  </ItemGroup>
+-
+-  <Target
+-    Name="GenerateLayout" 
+-    Condition=" '$(OS)' == 'Windows_NT' "
+-    BeforeTargets="AfterBuild"
+-    >
+-    <Message Importance="High" Text="$(MSBuildProjectName) -&gt; $(OutputPath)" />
+-
+-    <RemoveDir Directories="$(OutputPath)" />
+-    <MakeDir Directories="$(OutputPath)" />
+-
+-    <ItemGroup>
+-      <_SdkResolverSrc Include="$(Pkgruntime_win-x86_Microsoft_NETCore_DotNetHostResolver)\runtimes\win-x86\native\hostfxr.dll" Arch="x86\" />
+-      <_SdkResolverSrc Include="$(Pkgruntime_win-x64_Microsoft_NETCore_DotNetHostResolver)\runtimes\win-x64\native\hostfxr.dll" Arch="x64\" />
+-      <_SdkResolverSrc Include="$(PkgMicrosoft_DotNet_MSBuildSdkResolver)\lib\net472\**\*.dll" Arch="" />
+-      <_SdkResolverDst Include="@(_SdkResolverSrc->'$(OutputPath)%(Arch)%(RecursiveDir)%(Filename)%(Extension)')" />
+-    </ItemGroup>
+-
+-    <Copy SourceFiles="@(_SdkResolverSrc)" DestinationFiles="@(_SdkResolverDst)" />
+-  </Target>
+-
+-</Project>
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index 35c3d4ad9..15601e98f 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -12,7 +12,7 @@
+                         RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)"
+                         />
+ 
+-    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+-    <ProjectReference Include="..\VSTemplateLocator\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="..\VSTemplateLocator\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+ 
+-- 
+2.18.0
+
