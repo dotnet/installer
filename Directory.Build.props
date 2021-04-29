@@ -12,6 +12,10 @@
     <Architecture Condition="'$(Architecture)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
     <Architecture Condition="'$(Architecture)' == ''">x64</Architecture>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(PgoInstrument)' == 'true'">
+    <SkipBuildingInstallers>true</SkipBuildingInstallers>
+    <PgoTerm>-pgo</PgoTerm>
+  </PropertyGroup>
 
   <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
@@ -19,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
 
     <IsShipping>true</IsShipping>
-    <CoreSdkTargetFramework>netcoreapp5.0</CoreSdkTargetFramework>
+    <CoreSdkTargetFramework>net6.0</CoreSdkTargetFramework>
 
     <NoWarn>NU5125;NU5105;NU1701</NoWarn>
   </PropertyGroup>

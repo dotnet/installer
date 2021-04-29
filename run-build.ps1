@@ -8,6 +8,7 @@ param(
     [string]$Configuration="Debug",
     [string]$Architecture="x64",
     [switch]$Sign=$false,
+    [switch]$PgoInstrument,
     [bool]$WarnAsError=$true,
     [Parameter(ValueFromRemainingArguments=$true)][String[]]$ExtraParameters
 )
@@ -16,6 +17,10 @@ $RepoRoot = "$PSScriptRoot"
 
 $Parameters = "/p:Architecture=$Architecture"
 $Parameters = "$Parameters -configuration $Configuration"
+
+if ($PgoInstrument) {
+  $Parameters = "$Parameters /p:PgoInstrument=true"
+}
 
 if ($Sign) {
   $Parameters = "$Parameters -sign /p:SignCoreSdk=true"

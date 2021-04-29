@@ -11,7 +11,7 @@
 
     <MakeDir Directories="$(ArtifactsTmpDir)" Condition="!Exists('$(ArtifactsTmpDir)')" />
 
-    <!-- Logic copied from https://github.com/dotnet/arcade/blob/master/src/Microsoft.DotNet.Arcade.Sdk/tools/Sign.proj -->
+    <!-- Logic copied from https://github.com/dotnet/arcade/blob/main/src/Microsoft.DotNet.Arcade.Sdk/tools/Sign.proj -->
     <Error Text="The value of DotNetSignType is invalid: '$(DotNetSignType)'"
        Condition="'$(DotNetSignType)' != 'real' and '$(DotNetSignType)' != 'test' and '$(DotNetSignType)' != ''" />
 
@@ -124,16 +124,10 @@
 
   <Target Name="SignTemplatesMsis"
       Condition="'$(SignCoreSdk)' == 'true' and '$(PostBuildSign)' != 'true'"
-      DependsOnTargets="SetSignProps">
+      DependsOnTargets="SetSignProps;SetupTemplatesMsis">
 
     <ItemGroup>
-      <TemplatesMsiFilesToSign Include="$(Templates50MSIInstallerFile)" />
-    </ItemGroup>
-
-    <ItemGroup Condition="!$(Architecture.StartsWith('arm'))">
-      <TemplatesMsiFilesToSign Include="$(Templates31MSIInstallerFile)" />
-      <TemplatesMsiFilesToSign Include="$(Templates30MSIInstallerFile)" />
-      <TemplatesMsiFilesToSign Include="$(Templates21MSIInstallerFile)" />
+      <TemplatesMsiFilesToSign Include="@(TemplatesMsiComponent->'%(MSIInstallerFile)')" />
     </ItemGroup>
 
     <Microsoft.DotNet.SignTool.SignToolTask

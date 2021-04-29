@@ -75,9 +75,9 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <!-- Only publish this file from windows x64 so that we don't end up with duplicates -->
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt"
-        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
+        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt"
-        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64'" />
+        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
@@ -117,6 +117,18 @@
       <ChecksumsToPushToBlobFeed Include="@(CheckSumsToPublish)">
         <RelativeBlobPath>$(BlobStoragePartialRelativePath)/$(FullNugetVersion)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
       </ChecksumsToPushToBlobFeed>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(PostBuildSign)' == 'true'">
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.exe" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.msi" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+      <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
+      <ItemsToSignPostBuild Remove="@(ItemsToSignPostBuild)" />
+      <ItemsToSignPostBuild Include="@(ItemsToSignPostBuildWithPaths->'%(Filename)%(Extension)')" />
     </ItemGroup>
 
     <PropertyGroup>
