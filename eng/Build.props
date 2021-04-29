@@ -1,14 +1,7 @@
 <Project>
   <ItemGroup>
-    <ProjectToBuild Include="$(RepoRoot)src\redist\redist.csproj;
-                    $(RepoRoot)src\core-sdk-tasks\core-sdk-tasks.csproj;
-                    $(RepoRoot)src\SdkResolver\SdkResolver.csproj;
-                    $(RepoRoot)src\Microsoft.Dotnet.Sdk.Internal\Microsoft.Dotnet.Sdk.Internal.csproj;
-                    $(RepoRoot)test\EndToEnd\EndToEnd.Tests.csproj;
-                    $(RepoRoot)test\Microsoft.DotNet.Tools.Tests.Utilities\Microsoft.DotNet.Tools.Tests.Utilities.csproj;
-                    $(RepoRoot)test\SdkTests\SdkTests.csproj;
-                    $(RepoRoot)test\core-sdk-tasks.Tests\core-sdk-tasks.Tests.csproj" />
-    <ProjectToBuild Condition="('$(OS)' == 'Windows_NT') And (Platform == 'x64' Or Platform == 'x86' Or Platform == 'arm64')"
-                    Include="$(RepoRoot)src\finalizer_shim\finalizer_shim.csproj" />
+    <ProjectsToBuild Include="$(RepoRoot)Microsoft.DotNet.Cli.sln"/>
+    <ProjectsToBuild Condition="('$(OS)' != 'Windows_NT')" 
+                     Remove="$(RepoRoot)src\finalizer_shim\finalizer_shim.csproj" />
   </ItemGroup>
 </Project>
