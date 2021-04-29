@@ -1,7 +1,8 @@
 <Project>
   <ItemGroup>
-    <ProjectsToBuild Include="$(RepoRoot)Microsoft.DotNet.Cli.sln"/>
-    <ProjectsToBuild Condition="('$(OS)' != 'Windows_NT')" 
-                     Remove="$(RepoRoot)src\finalizer_shim\finalizer_shim.csproj" />
+    <ProjectToBuild Condition="'$(OS)' == 'Windows_NT'" 
+                    Include="$(RepoRoot)Microsoft.DotNet.Cli.sln" />
+    <ProjectToBuild Condition="'$(OS)' != 'Windows_NT'"
+                    Include="$(RepoRoot)NonWindows.Microsoft.DotNet.Cli.sln" />
   </ItemGroup>
 </Project>
