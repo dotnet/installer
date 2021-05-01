@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <Target Name="Build">
-    <MSBuild Projects="$(RepoRoot)Native.sln" Properties="Platform=$(Platform)" Targets="Restore" />
-    <MSBuild Projects="$(RepoRoot)Native.sln" Properties="Platform=$(Platform)" />
+    <MSBuild Projects="$(RepoRoot)Native.sln" Properties="Platform=$(Platform)" Targets="Restore;Build" />
   </Target>
+
+  <Target Name="Test" />
+  <Target Name="Pack" />
+  <Target Name="Rebuild" />
+  <Target Name="IntegrationTest" />
+  <Target Name="PerformanceTest" />
 </Project>
