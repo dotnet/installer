@@ -21,6 +21,8 @@ add_executable(Finalizer
   native.rc
 )
 
+target_link_libraries(Finalizer advapi32.lib)
+target_link_libraries(Finalizer wcautil.lib)
 target_link_libraries(Finalizer dutil.lib)
 target_link_libraries(Finalizer version.lib)
 target_link_libraries(Finalizer msi.lib)
