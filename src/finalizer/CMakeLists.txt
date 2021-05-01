@@ -21,10 +21,16 @@ add_executable(Finalizer
   native.rc
 )
 
+# These are normally part of a .vcxproj in Visual Studio, but 
+# appears to be missing when CMAKE generates a .vcxproj
+# for arm64.
+target_link_libraries(Finalizer shell32.lib)
 target_link_libraries(Finalizer advapi32.lib)
-target_link_libraries(Finalizer wcautil.lib)
-target_link_libraries(Finalizer dutil.lib)
 target_link_libraries(Finalizer version.lib)
 target_link_libraries(Finalizer msi.lib)
+
+# Add WiX libraries
+target_link_libraries(Finalizer wcautil.lib)
+target_link_libraries(Finalizer dutil.lib)
 
 install(TARGETS Finalizer)
