@@ -4,9 +4,8 @@
   we can build the finalizer.
   -->
   <PropertyGroup>
-    <Platform Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">x64</Platform>
+    <Platform Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(Architecture)</Platform>
     <TargetFramework>$(CoreSdkTargetFramework)</TargetFramework>
-    <Platforms>x86;x64;arm64</Platforms>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>

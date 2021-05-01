@@ -1,0 +1,11 @@
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. -->
+<Project>
+  <PropertyGroup>
+    <Platform Condition="'$(Platform)'=='' Or $(Platform)=='AnyCPU'">$(Architecture)</Platform>
+  </PropertyGroup>
+
+  <Target Name="Build">
+    <MSBuild Projects="$(RepoRoot)Native.sln" Properties="Platform=$(Platform)" Targets="Restore" />
+    <MSBuild Projects="$(RepoRoot)Native.sln" Properties="Platform=$(Platform)" />
+  </Target>
+</Project>

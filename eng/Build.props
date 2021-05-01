@@ -2,6 +2,6 @@
   <ItemGroup>
     <ProjectToBuild Include="$(RepoRoot)Microsoft.DotNet.Cli.sln" />
     <ProjectToBuild Condition="'$(OS)' == 'Windows_NT'" 
-                    Include="$(RepoRoot)Native.sln" />
+                    Include="$(RepoRoot)eng\native.proj" />
   </ItemGroup>
 </Project>
