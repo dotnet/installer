@@ -17,6 +17,8 @@ include_directories(../../artifacts/WixSdk/inc)
 include_directories(../../artifacts/obj)
 link_directories(../../artifacts/WixSdk/lib/${Platform})
 
+add_compile_options(/MT)
+
 add_executable(Finalizer 
   finalizer.cpp
   native.rc
