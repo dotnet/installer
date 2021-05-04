@@ -1,0 +1,25 @@
+From 13b15d6ef5ac2bf593825bd1c1b85020585e1751 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Thu, 8 Apr 2021 20:59:02 +0000
+Subject: [PATCH] Exclude internal tarball from source-build
+
+---
+ src/redist/targets/GenerateArchives.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateArchives.targets b/src/redist/targets/GenerateArchives.targets
+index e59e5d4..8a66679 100644
+--- a/src/redist/targets/GenerateArchives.targets
++++ b/src/redist/targets/GenerateArchives.targets
+@@ -28,7 +28,7 @@
+         IgnoreExitCode="$(IgnoreTarExitCode)"/>
+ 
+     <TarGzFileCreateFromDirectory
+-        Condition=" '$(OSName)' != 'win' "
++        Condition=" '$(OSName)' != 'win' and '$(DotNetBuildFromSource)' != 'true'"
+         SourceDirectory="$(SdkInternalLayoutPath)"
+         DestinationArchive="$(ArtifactsNonShippingPackagesDir)$(ArtifactNameWithVersionSdk).tar.gz"
+         OverwriteDestination="true"
+-- 
+1.8.3.1
+

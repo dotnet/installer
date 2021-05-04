@@ -4,14 +4,14 @@
       <PkgIntermediateDirectory>$(IntermediateOutputPath)pkgs/$(Version)</PkgIntermediateDirectory>
 
       <!-- Properties for pkg build -->
-      <SharedHostComponentId>com.microsoft.dotnet.sharedhost.$(SharedHostVersion).component.osx.x64</SharedHostComponentId>
-      <HostFxrComponentId>com.microsoft.dotnet.hostfxr.$(HostFxrVersion).component.osx.x64</HostFxrComponentId>
-      <SharedFrameworkComponentId>com.microsoft.dotnet.sharedframework.$(SharedFrameworkNugetName).$(MicrosoftNETCoreAppPackageVersion).component.osx.x64</SharedFrameworkComponentId>
-      <NetCoreAppTargetingPackComponentId>com.microsoft.dotnet.pack.targeting.$(MicrosoftNETCoreAppRefPackageVersion).component.osx.x64</NetCoreAppTargetingPackComponentId>
-      <NetCoreAppHostPackComponentId>com.microsoft.dotnet.pack.apphost.$(MicrosoftNETCoreAppHostPackageVersion).component.osx.x64</NetCoreAppHostPackComponentId>
-      <NetStandardTargetingPackComponentId>com.microsoft.standard.pack.targeting.$(NETStandardLibraryRefPackageVersion).component.osx.x64</NetStandardTargetingPackComponentId>
-      <SdkComponentId>com.microsoft.dotnet.dev.$(Version).component.osx.x64</SdkComponentId>
-      <SdkProductArchiveId>com.microsoft.dotnet.dev.$(Version).osx.x64</SdkProductArchiveId>
+      <SharedHostComponentId>com.microsoft.dotnet.sharedhost.$(SharedHostVersion).component.osx.$(Architecture)</SharedHostComponentId>
+      <HostFxrComponentId>com.microsoft.dotnet.hostfxr.$(HostFxrVersion).component.osx.$(Architecture)</HostFxrComponentId>
+      <SharedFrameworkComponentId>com.microsoft.dotnet.sharedframework.$(SharedFrameworkNugetName).$(MicrosoftNETCoreAppPackageVersion).component.osx.$(Architecture)</SharedFrameworkComponentId>
+      <NetCoreAppTargetingPackComponentId>com.microsoft.dotnet.pack.targeting.$(MicrosoftNETCoreAppRefPackageVersion).component.osx.$(Architecture)</NetCoreAppTargetingPackComponentId>
+      <NetCoreAppHostPackComponentId>com.microsoft.dotnet.pack.apphost.$(MicrosoftNETCoreAppHostPackageVersion).component.osx.$(Architecture)</NetCoreAppHostPackComponentId>
+      <NetStandardTargetingPackComponentId>com.microsoft.standard.pack.targeting.$(NETStandardLibraryRefPackageVersion).component.osx.$(Architecture)</NetStandardTargetingPackComponentId>
+      <SdkComponentId>com.microsoft.dotnet.dev.$(Version).component.osx.$(Architecture)</SdkComponentId>
+      <SdkProductArchiveId>com.microsoft.dotnet.dev.$(Version).osx.$(Architecture)</SdkProductArchiveId>
 
       <PkgInstallDirectory>/usr/local/share/dotnet</PkgInstallDirectory>
 
@@ -85,6 +85,17 @@
         <DistributionTemplateReplacement Include="{HostFxrBrandName}">
           <ReplacementString>$(HostFxrBrandName)</ReplacementString>
         </DistributionTemplateReplacement>
+        <DistributionTemplateReplacement Include="{arch}">
+          <ReplacementString>$(Architecture)</ReplacementString>
+        </DistributionTemplateReplacement>
+        <DistributionTemplateReplacement Include="{hostArchitectures}">
+          <ReplacementString>$(Architecture)</ReplacementString>
+          <ReplacementString Condition="'$(Architecture)' == 'x64'" >x86_64</ReplacementString>
+        </DistributionTemplateReplacement>
+        <DistributionTemplateReplacement Include="{minOsVersion}">
+          <ReplacementString>10.13</ReplacementString>
+          <ReplacementString Condition="'$(Architecture)' == 'arm64'" >11.0</ReplacementString>
+        </DistributionTemplateReplacement>
 
         <PostInstallScriptReplacement Include="%SDK_VERSION%">
           <ReplacementString>$(Version)</ReplacementString>
@@ -133,6 +144,10 @@
       <ItemGroup>
         <TemplateFiles Include="$(RedistLayoutPath)templates/**/*" />
       </ItemGroup>
+
+      <ItemGroup>
+        <ManifestFiles Include="$(RedistLayoutPath)sdk-manifests/**/*" />
+      </ItemGroup>
       
       <!-- Copy ASP.NET runtime and targeting pack to internal layout, as we don't currently chain that in with a pkg dependency -->
       <ExtractArchiveToDirectory SourceArchive="$(DownloadsFolder)$(AspNetCoreSharedFxArchiveFileName)"
@@ -142,6 +157,9 @@
 
       <Copy SourceFiles="@(TemplateFiles)"
             DestinationFiles="@(TemplateFiles->'$(SdkInternalLayoutPath)/templates/%(RecursiveDir)%(Filename)%(Extension)')" />
+
+      <Copy SourceFiles="@(ManifestFiles)"
+            DestinationFiles="@(ManifestFiles->'$(SdkInternalLayoutPath)/sdk-manifests/%(RecursiveDir)%(Filename)%(Extension)')" />
 
       <ReplaceFileContents
         InputFiles="$(SdkPkgScriptTemplateFile)"
