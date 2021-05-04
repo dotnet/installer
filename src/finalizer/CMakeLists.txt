@@ -14,6 +14,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:
 # that copies the "lib" and "inc" folders to a stable location.
 
 include_directories(../../artifacts/WixSdk/inc)
+include_directories(../../artifacts/obj)
 link_directories(../../artifacts/WixSdk/lib/${Platform})
 
 add_executable(Finalizer 
