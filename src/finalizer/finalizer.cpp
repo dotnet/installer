@@ -46,7 +46,7 @@ extern "C" HRESULT RemoveDependent(LPWSTR sczDependent, BOOL* pbRestartRequired)
 	LPWSTR sczProviderKey = NULL;
 	LPWSTR sczDependentsKey = NULL;
 	LPWSTR sczProductId = NULL;
-	LPWSTR sczDisplayName = NULL;
+	LPWSTR sczProductName = NULL;
 	DWORD cSubKeys = 0;
 	DWORD dwExitCode = 0;
 	WIU_RESTART restart = WIU_RESTART_NONE;
@@ -140,27 +140,30 @@ extern "C" HRESULT RemoveDependent(LPWSTR sczDependent, BOOL* pbRestartRequired)
 					// Let's make sure the product is actually installed. The provider key for an MSI typically
 					// stores the ProductCode, DisplayName, and Version, but by calling into MsiGetProductInfo,
 					// we're doing an implicit detect and getting a property back.
-					hr = WiuGetProductInfo(sczProductId, L"DisplayName", &sczDisplayName);
+					hr = WiuGetProductInfo(sczProductId, L"ProductName", &sczProductName);
 					if (SUCCEEDED(hr))
 					{
 						// The provider key *should* have the ProductName and ProductVersion properties, but since
 						// we know it's installed, we just query the installer service. 
 						MsiSetInternalUI(INSTALLUILEVEL_NONE, NULL);
 						hr = WiuConfigureProductEx(sczProductId, INSTALLLEVEL_DEFAULT, INSTALLSTATE_ABSENT, L"MSIFASTINSTALL=7 IGNOREDEPENDENCIES=ALL REBOOT=ReallySuppress", &restart);
-						LogStringLine(REPORT_STANDARD, "  Uninstall of \"%ls\" exited with 0x%.8x", sczDisplayName, hr);
-						ExitOnFailure(hr, "Failed to uninstall MSI package, ProductCode:%ls", sczProductId);
+						LogStringLine(REPORT_STANDARD, "  Uninstall of \"%ls\" (%ls%) exited with 0x%.8x", sczProductName, sczProductId, hr);
 						
 						// Flag any reboot since we need to return that to the bundle.
 						if (WIU_RESTART_INITIATED == restart || WIU_RESTART_REQUIRED == restart)
 						{
+							LogStringLine(REPORT_STANDARD, "  Reboot requested, deferring.");
 							*pbRestartRequired = TRUE;
 						}
+						
+						// Reset potential failures so we can continue to remove as many dependents as possible.
+						hr = S_OK;
 					}
 					else if (HRESULT_FROM_WIN32(ERROR_UNKNOWN_PRODUCT) == hr || HRESULT_FROM_WIN32(ERROR_UNKNOWN_PROPERTY) == hr)
 					{
                         // Possibly a corrupted provider key that wasn't cleaned up. We'll just ignore it.
+						LogStringLine(REPORT_STANDARD, "  Product is not installed, ProductCode:%ls, result: 0x%.8x", sczProductId, hr);
 						hr = S_OK;
-						LogStringLine(REPORT_STANDARD, "  Product is not installed, ProductCode:%ls", sczProductId);
 					}
 				}
 			}
@@ -171,7 +174,7 @@ extern "C" HRESULT RemoveDependent(LPWSTR sczDependent, BOOL* pbRestartRequired)
 	}
 
 LExit:
-	ReleaseStr(sczDisplayName);
+	ReleaseStr(sczProductName);
 	ReleaseStr(sczProductId);
 	ReleaseStr(sczProviderKey);
 	ReleaseStr(sczDependentsKey);
