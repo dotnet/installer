@@ -46,10 +46,10 @@ stages:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2017.open
+          queue: buildpool.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2017
+          queue: buildpool.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -103,10 +103,10 @@ stages:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2017.open
+          queue: buildpool.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2017
+          queue: buildpool.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -338,6 +338,12 @@ stages:
             _BuildArchitecture: 'arm64'
             # Never run tests on arm64
             _TestArg: ''
+
+  - template: /eng/common/templates/job/source-build.yml
+    parameters:
+      platform:
+        name: 'Managed'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
