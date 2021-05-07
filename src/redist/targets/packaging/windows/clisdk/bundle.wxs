@@ -7,7 +7,7 @@
 
   <Bundle Name="$(var.ProductName)" Manufacturer="$(var.Manufacturer)"
           Version="$(var.SDKBundleVersion)" UpgradeCode="$(var.UpgradeCode)"
-          AboutUrl="https://dotnet.github.io/"
+          AboutUrl="https://aka.ms/netcorehelp/"
           Compressed="yes">
 
     <bal:Condition Message="The installation path for x64 SDK installations: &quot;[DOTNETHOME_X64]&quot; cannot be the same as for x86 SDK installations: &quot;[DOTNETHOME_X86]&quot;">
@@ -161,17 +161,21 @@
       <MsiPackage SourceFile="$(var.NetStandardTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
+      <?endif?>
       <MsiPackage SourceFile="$(var.WinFormsAndWpfMsiSourcePath)">
           <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage SourceFile="$(var.WindowsDesktopTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
-      <?endif?>
       <MsiPackage SourceFile="$(var.AspNetTargetingPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage SourceFile="$(var.TemplatesMsiSourcePath)">
+        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
+        <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
+      </MsiPackage>
+      <MsiPackage SourceFile="$(var.ManifestsMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
         <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
       </MsiPackage>
@@ -190,20 +194,26 @@
       <?elseif $(var.Platform)=arm64?>
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_arm64"/>
       <?endif?>
+
+      <!-- 
+        The finalizer is not an actual installation package. We "detect" the EXE
+        based on the action the bundle is performing to ensure that it runs the uninstall
+        command only when the bundle is being removed. The package is always installable because the bundle
+        will remove (execute the uninstall command) the package if it is not installable when then bundle is 
+        being installed.
+      -->
+      <ExePackage SourceFile="$(var.FinalizerExeSourcePath)"
+                  DetectCondition="WixBundleAction >= 3"
+                  Id="Finalizer"
+                  InstallCondition="WixBundleAction >= 4"
+                  UninstallCommand="&quot;[WixBundleLog_Finalizer]&quot; $(var.SdkDependent)"
+                  Vital="no" />
     </Chain>
   </Bundle>
 
   <Fragment>
     <PayloadGroup Id="DotnetCoreBAPayloads">
-      <!-- This theme is dupped with a slight change: It uses a modified version of FirstTimeWelcomeMessageArm64
-      for SuccessInstallHeader to account for ARM64's lack of support for WPF/WinForms. Once they converge, remove
-      this and remove FirstTimeWelcomeMessageArm64 from the wxl files. -->
-      <?if $(var.Platform)=arm64?>
-      <Payload Name="thm.xml" Compressed="yes" SourceFile="bundleArm64.thm" />
-      <?else?>
       <Payload Name="thm.xml" Compressed="yes" SourceFile="bundle.thm" />
-      <?endif?>
-
       <!-- Default/Neutral localized content is US English -->
       <Payload Name="thm.wxl" Compressed="yes" SourceFile="LCID\1033\bundle.wxl" />
       <Payload Name="bg.png" Compressed="yes" SourceFile="..\..\osx\clisdk\resources\dotnetbackground.png" />

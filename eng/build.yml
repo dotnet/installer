@@ -20,7 +20,10 @@ parameters:
 phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
-    name: ${{ parameters.agentOs }}
+    ${{ if parameters.pgoInstrument }}:
+      name: PGO_${{ parameters.agentOs }}
+    ${{ if not(parameters.pgoInstrument) }}:
+      name: ${{ parameters.agentOs }}
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
@@ -37,11 +40,20 @@ phases:
     workspace:
       clean: all
 
-    variables: 
+    variables:
+      - _PgoInstrument: ''
+      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
+        - _PackArg: '-pack'
+      - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
+        - _PackArg: '--pack'
+      - ${{ if parameters.pgoInstrument }}:
+        - _PgoInstrument: '/p:PgoInstrument=true'
+        - _PackArg: ''
+
       - _AgentOSName: ${{ parameters.agentOs }}
       - _TeamName: Roslyn-Project-System
       - _SignType: test
-      - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
+      - _BuildArgs: '/p:DotNetSignType=$(_SignType) $(_PgoInstrument)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
@@ -61,6 +73,7 @@ phases:
                   /p:DotNetSignType=$(_SignType)
                   /p:TeamName=$(_TeamName)
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
+                  $(_PgoInstrument)
 
     steps:
     - checkout: self
@@ -75,8 +88,8 @@ phases:
           env:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
       - script: build.cmd
-                  $(_TestArg)
-                  -pack -publish -ci -sign
+                  $(_TestArg) $(_PackArg)
+                  -publish -ci -sign
                   -Configuration $(_BuildConfig)
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
@@ -97,8 +110,8 @@ phases:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
-                  $(_TestArg)
-                  --pack --publish --ci
+                  $(_TestArg) $(_PackArg)
+                  --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
                   $(_DockerParameter)
@@ -117,6 +130,8 @@ phases:
                   --pack --publish --ci
                   --noprettyprint
                   --configuration $(_BuildConfig)
+                  --architecture $(_BuildArchitecture)
+                  $(_RuntimeIdentifier)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
         displayName: Build
@@ -131,34 +146,34 @@ phases:
           packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: 'DevDiv - VS package feed'
-        condition: and(succeeded(), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
+        condition: and(succeeded(), ne(variables['PostBuildSign'], true), eq(variables['_PushToVSFeed'], 'true'), eq(variables['_DotNetPublishToBlobFeed'], 'true'), or(eq(variables['_BuildArchitecture'], 'x64'), eq(variables['_BuildArchitecture'], 'x86')))
 
-    - task: PublishTestResults@2	
-      displayName: Publish Test Results	
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
       inputs:
-        testRunner: XUnit	
-        testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'	
-        testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'	
-        platform: '$(BuildPlatform)'	
-        configuration: '$(_BuildConfig)'	
+        testRunner: XUnit
+        testResultsFiles: 'artifacts/TestResults/$(_BuildConfig)/*.xml'
+        testRunTitle: '$(_AgentOSName)_$(Agent.JobName)'
+        platform: '$(BuildPlatform)'
+        configuration: '$(_BuildConfig)'
       condition: ne(variables['_TestArg'], '')
 
-    - task: CopyFiles@2	
-      displayName: Gather Logs	
+    - task: CopyFiles@2
+      displayName: Gather Logs
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)/artifacts'	
-        Contents: |	
-         log/$(_BuildConfig)/**/*	
-         TestResults/$(_BuildConfig)/**/*	
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'	
-      continueOnError: true	
+        SourceFolder: '$(Build.SourcesDirectory)/artifacts'
+        Contents: |
+         log/$(_BuildConfig)/**/*
+         TestResults/$(_BuildConfig)/**/*
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      continueOnError: true
       condition: always()
 
-    - task: PublishBuildArtifacts@1	
-      displayName: Publish Logs to VSTS	
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Logs to VSTS
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'	
-        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'	
-        publishLocation: Container	
-      continueOnError: true	
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
+        publishLocation: Container
+      continueOnError: true
       condition: always()
