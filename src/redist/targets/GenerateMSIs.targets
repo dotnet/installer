@@ -41,7 +41,6 @@
       <SdkDependencyKeyName>Dotnet_CLI</SdkDependencyKeyName>
       <Templates31MSIInstallerFile>$(ArtifactsShippingPackagesDir)dotnet-31templates-$(FullNugetVersion)-$(ProductMonikerRid)$(InstallerExtension)</Templates31MSIInstallerFile>
       <Templates30MSIInstallerFile>$(ArtifactsShippingPackagesDir)dotnet-30templates-$(FullNugetVersion)-$(ProductMonikerRid)$(InstallerExtension)</Templates30MSIInstallerFile>
-      <Templates22MSIInstallerFile>$(ArtifactsShippingPackagesDir)dotnet-22templates-$(FullNugetVersion)-$(ProductMonikerRid)$(InstallerExtension)</Templates22MSIInstallerFile>
       <Templates21MSIInstallerFile>$(ArtifactsShippingPackagesDir)dotnet-21templates-$(FullNugetVersion)-$(ProductMonikerRid)$(InstallerExtension)</Templates21MSIInstallerFile>
       <SdkPlaceholderMSIInstallerFile>$(ArtifactsShippingPackagesDir)dotnet-sdkplaceholder-$(FullNugetVersion)-$(ProductMonikerRid)$(InstallerExtension)</SdkPlaceholderMSIInstallerFile>
       <SdkPlaceholderDependencyKeyName>NetCore_SdkPlaceholder</SdkPlaceholderDependencyKeyName>
@@ -60,7 +59,7 @@
           DependsOnTargets="GenerateLayout;SetupWixProperties;GetCoreSdkGitCommitInfo">
     <!-- Consumed By Publish -->
     <ItemGroup>
-      <GeneratedInstallers Include="$(SdkMSIInstallerFile);$(Templates31MSIInstallerFile);$(Templates30MSIInstallerFile);$(Templates22MSIInstallerFile);$(Templates21MSIInstallerFile);$(CombinedFrameworkSdkHostMSIInstallerFile);$(SdkPlaceholderMSIInstallerFile)" />
+      <GeneratedInstallers Include="$(SdkMSIInstallerFile);$(Templates31MSIInstallerFile);$(Templates30MSIInstallerFile);$(Templates21MSIInstallerFile);$(CombinedFrameworkSdkHostMSIInstallerFile);$(SdkPlaceholderMSIInstallerFile)" />
     </ItemGroup>
 
     <GenerateMsiVersion CommitCount="$(GitCommitCount)"
@@ -83,11 +82,6 @@
     <GenerateGuidFromName Name="$(Templates30MSIInstallerFile)">
       <Output TaskParameter="OutputGuid"
           PropertyName="Templates30InstallerUpgradeCode" />
-    </GenerateGuidFromName>
-
-    <GenerateGuidFromName Name="$(Templates22MSIInstallerFile)">
-      <Output TaskParameter="OutputGuid"
-          PropertyName="Templates22InstallerUpgradeCode" />
     </GenerateGuidFromName>
 
     <GenerateGuidFromName Name="$(Templates21MSIInstallerFile)">
@@ -173,7 +167,7 @@
 
   <Target Name="GenerateTemplatesMsis"
           DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;SetSdkBrandingInfo;SetupTemplatesMsis"
-          Condition="$(ProductMonikerRid.StartsWith('win')) And !$(Architecture.StartsWith('arm'))"
+          Condition="$(ProductMonikerRid.StartsWith('win')) And '$(Architecture)' != 'arm'"
           Inputs="@(TemplatesMsiComponent->'%(LayoutPath)');
                     $(TemplatesGenerateMsiPowershellScript)"
           Outputs="@(TemplatesMsiComponent->'%(MSIInstallerFile)')">
@@ -206,6 +200,8 @@
         <UpgradeCode>$(Templates31InstallerUpgradeCode)</UpgradeCode>
         <DependencyKeyName>NetCore_Templates_3.1</DependencyKeyName>
       </TemplatesMsiComponent>
+    </ItemGroup>
+    <ItemGroup Condition="!$(Architecture.StartsWith('arm'))">
       <TemplatesMsiComponent Include="NetCore30TemplatesMsi">
         <LayoutPath>$(Templates30LayoutPath.TrimEnd('\'))</LayoutPath>
         <MSIInstallerFile>$(Templates30MSIInstallerFile)</MSIInstallerFile>
@@ -213,14 +209,6 @@
         <MsiVersion>$(BundledTemplates30MsiVersion)</MsiVersion>
         <UpgradeCode>$(Templates30InstallerUpgradeCode)</UpgradeCode>
         <DependencyKeyName>NetCore_Templates_3.0</DependencyKeyName>
-      </TemplatesMsiComponent>
-      <TemplatesMsiComponent Include="NetCore22TemplatesMsi">
-        <LayoutPath>$(Templates22LayoutPath.TrimEnd('\'))</LayoutPath>
-        <MSIInstallerFile>$(Templates22MSIInstallerFile)</MSIInstallerFile>
-        <BrandName>$(BundledTemplates22BrandName)</BrandName>
-        <MsiVersion>$(BundledTemplates22MsiVersion)</MsiVersion>
-        <UpgradeCode>$(Templates22InstallerUpgradeCode)</UpgradeCode>
-        <DependencyKeyName>NetCore_Templates_2.2</DependencyKeyName>
       </TemplatesMsiComponent>
       <TemplatesMsiComponent Include="NetCore21TemplatesMsi">
         <LayoutPath>$(Templates21LayoutPath.TrimEnd('\'))</LayoutPath>
@@ -345,11 +333,6 @@
         <NupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.NetCore.Templates.$(BundledTemplates30MajorMinorVersion).$(FullNugetVersion).nupkg</NupkgFile>
         <MajorMinorVersion>$(BundledTemplates30MajorMinorVersion)</MajorMinorVersion>
       </TemplatesNupkgComponent>
-      <TemplatesNupkgComponent Include="NetCore22TemplatesNupkg">
-        <MSIInstallerFile>$(Templates22MSIInstallerFile)</MSIInstallerFile>
-        <NupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.NetCore.Templates.$(BundledTemplates22MajorMinorVersion).$(FullNugetVersion).nupkg</NupkgFile>
-        <MajorMinorVersion>$(BundledTemplates22MajorMinorVersion)</MajorMinorVersion>
-      </TemplatesNupkgComponent>
       <TemplatesNupkgComponent Include="NetCore21TemplatesNupkg">
         <MSIInstallerFile>$(Templates21MSIInstallerFile)</MSIInstallerFile>
         <NupkgFile>$(ArtifactsNonShippingPackagesDir)VS.Redist.Common.NetCore.Templates.$(BundledTemplates21MajorMinorVersion).$(FullNugetVersion).nupkg</NupkgFile>
@@ -429,7 +412,7 @@
                             GenerateVSToolsNupkg;
                             GenerateVSToolsResolverNupkg;
                             GenerateSdkMSBuildExtensionsNupkg"
-        Condition=" '$(OS)' == 'Windows_NT' and !$(Architecture.StartsWith('arm')) " />
+        Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' != 'arm' " />
 
 
 </Project>

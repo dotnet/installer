@@ -1,7 +1,11 @@
 <Project>
 
   <PropertyGroup>
+<<<<<<< HEAD
       <VersionPatch21>$([MSBuild]::Add($(VersionPatch), 13))</VersionPatch21>
+=======
+      <VersionPatch21>$([MSBuild]::Add($(VersionPatch), 19))</VersionPatch21>
+>>>>>>> 217439b5aead2be6e430246162c7abb69875bf3e
   </PropertyGroup>
 
   <Target Name="GenerateBundledVersions"
@@ -63,7 +67,7 @@
         linux-arm64;
         " />
 
-      <AspNetCoreRuntimePackRids Include="@(AspNetCore30RuntimePackRids)" />
+      <AspNetCoreRuntimePackRids Include="@(AspNetCore30RuntimePackRids);win-arm64" />
 
       <WindowsDesktop30RuntimePackRids Include="win-x64;win-x86" />
       <WindowsDesktopRuntimePackRids Include="@(WindowsDesktop30RuntimePackRids)" />
