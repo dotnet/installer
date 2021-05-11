@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.DotNet.TestFramework;
