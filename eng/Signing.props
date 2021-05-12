@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <ExternalCertificateId Condition="'$(ExternalCertificateId)' == ''">3PartySHA2</ExternalCertificateId>
-    <InternalCertificateId Condition="'$(InternalCertificateId)' == ''">Microsoft400</InternalCertificateId>
+    <InternalCertificateId Condition="'$(InternalCertificateId)' == ''">MicrosoftDotNet500</InternalCertificateId>
 
     <!--
       Signing of shipping artifacts (layout, msi, bundle) are handled separately.
@@ -18,6 +18,8 @@
     -->
     <AllowEmptySignList>true</AllowEmptySignList>
     <AllowEmptySignPostBuildList>true</AllowEmptySignPostBuildList>
+
+    <UseDotNetCertificate>true</UseDotNetCertificate>
   </PropertyGroup>
 
   <ItemGroup>
