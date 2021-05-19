@@ -96,6 +96,16 @@ stages:
             _AdditionalBuildParameters: ''
             # Never run tests on arm64
             _TestArg: ''
+          Build_Release_workloads:
+            _BuildConfig: Release
+            # Architecture doesn't matter as for workloads we generate multiple installer sets
+            _BuildArchitecture: x64
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            # This is a very specific build process and MUST be built using .NET Framework MSBuild
+            # because of build task dependencies for Visual Studio.
+            _AdditionalBuildParameters: '-project src\workloads\workloads.csproj -msbuildEngine vs'
+            # Never run tests for workloads
+            _TestArg: ''
 
   - template: /eng/build.yml
     parameters:
