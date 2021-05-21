@@ -11,6 +11,7 @@ if ($msbuildEngine -eq 'vs')
     if (-not $env:DOTNET_INSTALL_DIR -eq $null)
     {
         $localSdkRoot = Join-Path $env:DOTNET_INSTALL_DIR "sdk"
+        Write-Host "dotnet_install_dir: $localSdkRoot"
         $env:MSBuildSdksPath = $localSdkRoot
     }
 }
