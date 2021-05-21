@@ -32,6 +32,7 @@ if ($Sign) {
 $Parameters = "$Parameters -WarnAsError `$$WarnAsError"
 
 try {
+    Set-PSDebug 2
     $ExpressionToInvoke = "$RepoRoot\eng\common\build.ps1 -restore -build $Parameters $ExtraParameters"
     Write-Host "Invoking expression: $ExpressionToInvoke"
     Invoke-Expression $ExpressionToInvoke
