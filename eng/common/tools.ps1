@@ -505,6 +505,7 @@ function InitializeBuildTool() {
     }
   }
 
+  Write-Host "chcosta: dotnet_install_dir: $($env:DOTNET_INSTALL_DIR)"
   if (-not $msbuildEngine) {
     $msbuildEngine = GetDefaultMSBuildEngine
   }
