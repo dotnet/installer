@@ -84,6 +84,7 @@ function Exec-Process([string]$command, [string]$commandArgs) {
   $startInfo.UseShellExecute = $false
   $startInfo.WorkingDirectory = Get-Location
 
+  $startInfo.EnvironmentVariables["DOTNET_INSTALL_DIR"] = $env:DOTNET_INSTALL_DIR
   $process = New-Object System.Diagnostics.Process
   $process.StartInfo = $startInfo
   $process.Start() | Out-Null
