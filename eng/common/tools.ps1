@@ -711,9 +711,10 @@ function MSBuild-Core() {
     $cmdArgs += ' /p:TreatWarningsAsErrors=false'
   }
 
-  foreach ($arg in $args) {
-    if ($arg -ne $null -and $arg.Trim() -ne "") {
-      $cmdArgs += " `"$arg`""
+  foreach ($_arg in $args) {
+    $_stringArg = "$_arg"
+    if ($_stringArg -ne $null -and $_stringArg.Trim() -ne "") {
+      $cmdArgs += " `"$_stringArg`""
     }
   }
 
