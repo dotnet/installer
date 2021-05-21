@@ -15,7 +15,6 @@ try {
   if ($ci) {
     $nodeReuse = $false
   }
-  Write-Host "chcosta msbuild dotnet_install_dir: $($env:DOTNET_INSTALL_DIR)"
   MSBuild @extraArgs
 } 
 catch {

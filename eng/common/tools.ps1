@@ -505,7 +505,6 @@ function InitializeBuildTool() {
     }
   }
 
-  Write-Host "chcosta: dotnet_install_dir: $($env:DOTNET_INSTALL_DIR)"
   if (-not $msbuildEngine) {
     $msbuildEngine = GetDefaultMSBuildEngine
   }
@@ -719,7 +718,8 @@ function MSBuild-Core() {
   }
 
   $env:ARCADE_BUILD_TOOL_COMMAND = "$($buildTool.Path) $cmdArgs"
-
+  Write-Host "chcosta msbuild dotnet_install_dir: $($env:DOTNET_INSTALL_DIR)"
+  Write-Host" chcosta msbuild dotnetroot: $dotnetRoot"
   $exitCode = Exec-Process $buildTool.Path $cmdArgs
 
   if ($exitCode -ne 0) {
