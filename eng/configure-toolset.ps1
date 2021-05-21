@@ -1,6 +1,13 @@
 # SdkTests do not currently work with globally installed CLI as they use dotnet-install.ps1 to install more runtimes
 
-$script:useInstalledDotNetCli = $false
+$script:useInstalledDotNetCli = $true
 
 # Add CMake to the path.
 $env:PATH = "$PSScriptRoot\..\.tools\bin;$env:PATH"
+
+if ($msbuildEngine -eq 'vs')
+{
+    Write-Host "msbuildengine is vs"
+    $localSdkRoot = Join-Path $env:DOTNET_INSTALL_DIR "sdk"
+    $env:MSBuildSdksPath = $localSdkRoot
+}
