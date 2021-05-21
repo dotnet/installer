@@ -43,10 +43,14 @@ phases:
       - _SignType: test
       - _BuildArgs: '/p:DotNetSignType=$(_SignType)'
       - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
+      - _InternalRuntimeDownloadArgs: ''
 
       - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         - group: DotNet-MSRC-Storage
         - _DOTNETCLIMSRC_READ_SAS_TOKEN: $(dotnetclimsrc-read-sas-token)
+        - name: _InternalRuntimeDownloadArgs
+          value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
+            /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
 
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
@@ -81,6 +85,7 @@ phases:
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
@@ -107,6 +112,7 @@ phases:
                   $(_RuntimeIdentifier)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
         env:
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
@@ -119,6 +125,7 @@ phases:
                   --configuration $(_BuildConfig)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
         env:
           DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
