@@ -723,10 +723,12 @@ function MSBuild-Core() {
   $env:ARCADE_BUILD_TOOL_COMMAND = "$($buildTool.Path) $cmdArgs"
   
   Write-Host "chcosta msbuild dotnet_install_dir: $($env:DOTNET_INSTALL_DIR)"
-  Get-ChildItem -Path $env:DOTNET_INSTALL_DIR
+  $t1 = Get-ChildItem -Path $env:DOTNET_INSTALL_DIR
   $_chcostasdk = Join-Path $env:DOTNET_INSTALL_DIR "sdk"
-  Get-ChildItem -Path $_chcostasdk
+  $t2 = Get-ChildItem -Path $_chcostasdk
   
+  Write-Host $t1
+  Write-Host $t2
   $exitCode = Exec-Process $buildTool.Path $cmdArgs
 
   if ($exitCode -ne 0) {
