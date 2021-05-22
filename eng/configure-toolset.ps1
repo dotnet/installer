@@ -7,5 +7,6 @@ $env:PATH = "$PSScriptRoot\..\.tools\bin;$env:PATH"
 
 if ($msbuildEngine -eq 'vs')
 {
-    $env:MSBuildSdksPath = $(Get-ChildItem -Path (Join-Path $RepoRoot ".dotnet\sdk\") -Recurse -Directory -Filter Sdks | Select-Object -First 1 FullName).FullName
+    $globalJson = Get-Content -Raw global.json | ConvertFrom-Json
+    $env:MSBuildSdksPath = [IO.Path]::Combine($RepoRoot, ".dotnet\sdk", $globalJson.tools.dotnet, "sdks")
 }
