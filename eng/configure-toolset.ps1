@@ -8,7 +8,6 @@ $env:PATH = "$PSScriptRoot\..\.tools\bin;$env:PATH"
 if ($msbuildEngine -eq 'vs')
 {
     Write-Host "msbuildengine is vs"
-    Write-Host "_DotNetInstallDir: $_DotNetInstallDir"
     $localSdkRoot = Join-Path $RepoRoot ".dotnet\sdk"
     Write-Host "dotnet_install_dir: $localSdkRoot"
     $env:MSBuildSdksPath = $localSdkRoot
