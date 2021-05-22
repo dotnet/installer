@@ -109,7 +109,7 @@
       <Output TaskParameter="Msis" ItemName="Msis" />
     </GenerateVisualStudioWorkload>
 
-    <!-- Build all the SWIX projects. -->
+    <!-- Build all the SWIX projects. This requires full framework MSBuild-->
     <MSBuild Projects="@(SwixProjects)" Properties="SwixBuildTargets=$(SwixBuildTargets);ManifestOutputPath=$(VisualStudioManifestOutputPath)" />
 
     <!-- Gather .wixobj files for post-build signing. We'll have to batch since we generated multiple MSIs in the previous step. -->
