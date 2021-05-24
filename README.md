@@ -31,6 +31,8 @@ The repository contains native code project required for the Windows installer. 
 - Install CMAKE 3.2.0.1 or later
 - Install MSVC Build tools for x86/x64/arm64, v14.28-16.9
 
+Optional workloads depend on .NET Framework MSBuild due to external task dependencies that do not support .NET Core. This means that Arcade defaults to using ```vs``` as the build engine. When building non-workload related projects from the CLI on Windows, you will need to explicitly set the ```msbuildEngine``` parameter to ```dotnet```.  For example, to build the default installers in Windows, run ```build -msbuildEngine dotnet``` instead of just ```build```.
+
 # Build status
 
 |All legs|
