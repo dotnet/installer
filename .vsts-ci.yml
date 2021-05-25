@@ -103,7 +103,7 @@ stages:
             _DOTNET_CLI_UI_LANGUAGE: ''
             # This is a very specific build process and MUST be built using .NET Framework MSBuild
             # because of build task dependencies for Visual Studio.
-            _AdditionalBuildParameters: '-project src\workloads\workloads.csproj -msbuildEngine vs'
+            _AdditionalBuildParameters: '-project src\workloads\workloads.csproj -msbuildEngine vs /p:OptionalWorkloads=true'
             # Never run tests for workloads
             _TestArg: ''
 
