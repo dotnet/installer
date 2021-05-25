@@ -411,7 +411,7 @@ stages:
     jobs:
     - job: Copy_SDK_To_Latest
       pool:
-        name: Hosted VS2017
+        image: windows-2019
       condition: succeeded()
       variables:
         - group: DotNet-DotNetCli-Storage
