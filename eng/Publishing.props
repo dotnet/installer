@@ -75,13 +75,17 @@
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.svg" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <!-- Only publish this file from windows x64 so that we don't end up with duplicates -->
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productVersion.txt"
-        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true'" />
+        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true' and '$(OptionalWorkloads)' != 'true'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)sdk-productVersion.txt"
-        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true'" />
+        Condition=" '$(PublishBinariesAndBadge)' == 'true' and '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x64' and '$(PgoInstrument)' != 'true' and '$(OptionalWorkloads)' != 'true'" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)productCommit-*.txt" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.swr" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+    <!-- Include MSIs and .vsman files for Visual Studio -->
+    <SdkNonShippingAssetsToPublish Include="$(VisualStudioSetupInsertionPath)*.msi;
+        $(VisualStudioSetupInsertionPath)*.vsman" 
+        Condition="'$(OS)' == 'Windows_NT' and '$(OptionalWorkloads)' == 'true'"/>
     <SdkNonShippingAssetsToPublish Condition="'$(PublishBinariesAndBadge)' != 'false'" Include="$(ArtifactsNonShippingPackagesDir)*.tar.gz" />
     <SdkNonShippingAssetsToPublish Condition="'$(PublishBinariesAndBadge)' != 'false'" Include="$(ArtifactsNonShippingPackagesDir)*.zip" />
     <SdkNonShippingAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.pkg" />
@@ -125,6 +129,7 @@
       <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.msi" />
       <ItemsToSignPostBuildWithPaths Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
       <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
+      <ItemsToSignPostBuildWithPaths Include="$(VisualStudioSetupInsertionPath)*.msi" />
       <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
       <ItemsToSignPostBuildWithPaths Include="$(ArtifactsNonShippingPackagesDir)*.nupkg" />
       <ItemsToSignPostBuild Remove="@(ItemsToSignPostBuild)" />
