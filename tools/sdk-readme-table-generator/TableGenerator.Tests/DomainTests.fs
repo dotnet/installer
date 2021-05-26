@@ -18,7 +18,7 @@ let ``it can Shorten main branch Name``() =
     branchNameShorten branch |> should equal "main"
 
 [<Fact>]
-let ``it can Shorten releae branch Name``() =
+let ``it can Shorten release branch Name``() =
     let branch =
         { GitBranchName = "release/3.1.1xx"
           DisplayName = "Release/3.1.1XX<br>(3.1.x Runtime)"
