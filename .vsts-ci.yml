@@ -59,13 +59,13 @@ stages:
               _BuildConfig: Debug
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
-              _AdditionalBuildParameters: '-msbuildEngine dotnet'
+              _AdditionalBuildParameters: ''
               _TestArg: $(_WindowsTestArg)
             Build_ES_Debug_x64:
               _BuildConfig: Debug
               _BuildArchitecture: x64
               _DOTNET_CLI_UI_LANGUAGE: es
-              _AdditionalBuildParameters: '-msbuildEngine dotnet'
+              _AdditionalBuildParameters: ''
               _TestArg: $(_WindowsTestArg)
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -73,38 +73,28 @@ stages:
               _BuildConfig: Release
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
-              _AdditionalBuildParameters: '-msbuildEngine dotnet'
+              _AdditionalBuildParameters: ''
               _TestArg: $(_WindowsTestArg)
           # Always run builds
           Build_Release_x64:
             _BuildConfig: Release
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '-msbuildEngine dotnet /p:PublishInternalAsset=true'
+            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             _TestArg: $(_WindowsTestArg)
           Build_Release_arm:
             _BuildConfig: Release
             _BuildArchitecture: arm
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '-msbuildEngine dotnet'
+            _AdditionalBuildParameters: ''
             # Never run tests on arm64
             _TestArg: ''
           Build_Release_arm64:
             _BuildConfig: Release
             _BuildArchitecture: arm64
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '-msbuildEngine dotnet'
+            _AdditionalBuildParameters: ''
             # Never run tests on arm64
-            _TestArg: ''
-          Build_Release_workloads:
-            _BuildConfig: Release
-            # Architecture doesn't matter as for workloads we generate multiple installer sets
-            _BuildArchitecture: x64
-            _DOTNET_CLI_UI_LANGUAGE: ''
-            # This is a very specific build process and MUST be built using .NET Framework MSBuild
-            # because of build task dependencies for Visual Studio.
-            _AdditionalBuildParameters: '-project src\workloads\workloads.csproj -msbuildEngine vs /p:OptionalWorkloads=true'
-            # Never run tests for workloads
             _TestArg: ''
 
   - template: /eng/build.yml
@@ -125,14 +115,14 @@ stages:
             _BuildConfig: Release
             _BuildArchitecture: x64
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '-msbuildEngine dotnet /p:PublishInternalAsset=true'
+            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             # Never run tests on PGO bits
             _TestArg: ''
           Build_Release_x86:
             _BuildConfig: Release
             _BuildArchitecture: x86
             _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '-msbuildEngine dotnet'
+            _AdditionalBuildParameters: ''
             _TestArg: ''
       pgoInstrument: true
 
