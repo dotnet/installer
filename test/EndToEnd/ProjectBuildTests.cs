@@ -338,33 +338,7 @@ namespace EndToEnd.Tests
         {
             DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
             string projectDirectory = directory.FullName;
-
-            string newArgs = $"{templateName} --debug:ephemeral-hive --no-restore";
-            if (!string.IsNullOrWhiteSpace(language))
-            {
-                newArgs += $" --language {language}";
-            }
-
-            new NewCommandShim()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute(newArgs)
-                .Should().Pass();
-
-            if (!string.IsNullOrWhiteSpace(framework))
-            {
-                //check if MSBuild TargetFramework property for *proj is set to expected framework
-                string expectedExtension = language switch
-                {
-                    "C#" => "*.csproj",
-                    "F#" => "*.fsproj",
-                    "VB" => "*.vbproj",
-                    _ => "*.csproj"
-                };
-                string projectFile = Directory.GetFiles(projectDirectory, expectedExtension).Single();
-                XDocument projectXml = XDocument.Load(projectFile);
-                XNamespace ns = projectXml.Root.Name.Namespace;
-                Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
-            }
+            TestTemplateCreate(templateName, projectDirectory, language, framework);
 
             if (build)
             {

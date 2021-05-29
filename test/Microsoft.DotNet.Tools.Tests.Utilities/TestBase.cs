@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.TestFramework;
+using Xunit;
 
 namespace Microsoft.DotNet.Tools.Test.Utilities
 {
@@ -100,6 +103,43 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
                 string.Equals("on", val, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static string TestTemplateCreate(string templateName, string projectDirectory, string language = "", string framework = "")
+        {
+            if (!Directory.Exists(projectDirectory))
+            {
+                Directory.CreateDirectory(projectDirectory);
+            }
+
+            string newArgs = $"{templateName} --debug:ephemeral-hive --no-restore";
+            if (!string.IsNullOrWhiteSpace(language))
+            {
+                newArgs += $" --language {language}";
+            }
+
+            new NewCommandShim()
+                .WithWorkingDirectory(projectDirectory)
+                .Execute(newArgs)
+                .Should().Pass();
+
+            //check if MSBuild TargetFramework property for *proj is set to expected framework
+            string expectedExtension = language switch
+            {
+                "C#" => "*.csproj",
+                "F#" => "*.fsproj",
+                "VB" => "*.vbproj",
+                _ => "*.csproj"
+            };
+            string projectFile = Directory.GetFiles(projectDirectory, expectedExtension).Single();
+
+            if (!string.IsNullOrWhiteSpace(framework))
+            {
+                XDocument projectXml = XDocument.Load(projectFile);
+                XNamespace ns = projectXml.Root.Name.Namespace;
+                Assert.Equal(framework, projectXml.Root.Element(ns + "PropertyGroup").Element(ns + "TargetFramework").Value);
+            }
+
+            return projectFile;
+        }
         protected CommandResult TestExecutable(string outputDir,
             string executableName,
             string expectedOutput)
