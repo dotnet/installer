@@ -217,7 +217,8 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
-              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
+              # Pass in HostOSName when running on alpine
+              _AdditionalBuildParameters: '/p:OSName="linux-musl" /p:HostOSName="linux-musl"'
               _TestArg: $(_NonWindowsTestArg)
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Arm_Release:
@@ -261,7 +262,8 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
-              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
+              # Pass in HostOSName when running on alpine
+              _AdditionalBuildParameters: '/p:OSName="linux-musl" /p:HostOSName="linux-musl"'
             Build_Linux_Portable_Deb_Release_x64:
               _BuildConfig: Release
               _DockerParameter: '--docker ubuntu.16.04'
