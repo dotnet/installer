@@ -5,13 +5,13 @@
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>ec2af60c1eb8b2665745750f6445b3ff133178fb</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.8-servicing.21314.2" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.WindowsDesktop.App" Version="5.0.8-servicing.21315.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-windowsdesktop</Uri>
-      <Sha>20b0d818a64fb5b99194c1213a155e842aca729c</Sha>
+      <Sha>ad8c40cdf2145736fb5bc34e4b7ac7bd45764fa7</Sha>
     </Dependency>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="5.0.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-windowsdesktop</Uri>
-      <Sha>20b0d818a64fb5b99194c1213a155e842aca729c</Sha>
+      <Sha>ad8c40cdf2145736fb5bc34e4b7ac7bd45764fa7</Sha>
     </Dependency>
     <Dependency Name="VS.Redist.Common.WindowsDesktop.TargetingPack.x64.5.0" Version="5.0.0-rtm.20520.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
@@ -25,21 +25,21 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>cf258a14b70ad9069470a108f13765e0e5988f51</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="5.0.7-servicing.21255.8" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="5.0.8-servicing.21314.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>556582d964cc21b82a88d7154e915076f6f9008e</Sha>
+      <Sha>bff097881d0f3ed9243023da2bfc4e858e08b753</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.7" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>556582d964cc21b82a88d7154e915076f6f9008e</Sha>
+      <Sha>bff097881d0f3ed9243023da2bfc4e858e08b753</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="5.0.7" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="5.0.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>556582d964cc21b82a88d7154e915076f6f9008e</Sha>
+      <Sha>bff097881d0f3ed9243023da2bfc4e858e08b753</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="5.0.7" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="5.0.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>556582d964cc21b82a88d7154e915076f6f9008e</Sha>
+      <Sha>bff097881d0f3ed9243023da2bfc4e858e08b753</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -91,22 +91,22 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>0b9d7e76776557d0ea6e425ddc6deafb021118e8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.205-servicing.21314.12">
+    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.205-servicing.21315.4">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>0119e8d6ad4a41eced1ba299c8ba6c0cc3b4f9ba</Sha>
+      <Sha>b928224ee14af57e9141a1141f2cd70476e064bb</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.205-servicing.21314.12">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="5.0.205-servicing.21315.4">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>0119e8d6ad4a41eced1ba299c8ba6c0cc3b4f9ba</Sha>
+      <Sha>b928224ee14af57e9141a1141f2cd70476e064bb</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.8-servicing.21310.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="5.0.8-servicing.21314.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-winforms</Uri>
-      <Sha>d192832f92728a8dadcfc36620b84cbbdf366b6d</Sha>
+      <Sha>354867d2bf2e635a8b3cc1645359db5044f7c3e0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.8-servicing.21311.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>3169517d9310f7cfdf871ff49b5a6ed2e6e243c8</Sha>
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="5.0.8-servicing.21314.11" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
+      <Sha>5a745dbe37080607acd30eaf0e5833cf4538b393</Sha>
     </Dependency>
     <Dependency Name="Microsoft.FSharp.Compiler" Version="11.3.2-beta.21102.9" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
