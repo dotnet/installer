@@ -35,7 +35,7 @@ namespace EndToEnd.Tests
                  .WithWorkingDirectory(Path.GetDirectoryName(env.projectFile))
                  .ExecuteWithCapturedOutput(publishArgs)
                  .Should().Fail()
-                 .And.HaveStdOutContaining("Error NETSDK1147:");
+                 .And.HaveStdOutMatching("error NETSDK1147:.*install microsoft-net-sdk-blazorwebassembly-aot");
         }
 
         [Fact]
