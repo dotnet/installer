@@ -35,8 +35,7 @@ namespace EndToEnd.Tests
                  .WithWorkingDirectory(Path.GetDirectoryName(env.projectFile))
                  .ExecuteWithCapturedOutput(publishArgs)
                  .Should().Fail()
-                 .And.HaveStdOutContaining("workload packs were not installed")
-                 .And.HaveStdOutContaining("Microsoft.NETcore.App.Runtime.AOT.Cross.browser-wasm");
+                 .And.HaveStdOutContaining("Error NETSDK1147:");
         }
 
         [Fact]
