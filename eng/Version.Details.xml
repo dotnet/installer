@@ -108,7 +108,12 @@
       <Uri>https://github.com/dotnet/fsharp</Uri>
       <Sha>13a21d4b08baa0e6b831cc2a7af872aeef8c22a5</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.0.0-preview-20210623-08" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="5.0.2-beta.21321.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/fsharp</Uri>
+      <Sha>f8d54670c81ec6e29d312867207a38d0dc3aa192</Sha>
+      <SourceBuild RepoName="fsharp" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.0.0-preview-20210518-01" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/microsoft/vstest</Uri>
       <Sha>45f100641b3b14310f67941ee499c5e8f34c8cae</Sha>
     </Dependency>
@@ -128,9 +133,9 @@
       <Sha>2c37803a9286d4fdc3d57813e1fdbfe2cfdbf668</Sha>
       <SourceBuild RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.1.66" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.1.107" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>e84a10e4b0e6bccce7421af020728d9bbc3e64e0</Sha>
+      <Sha>7950d9b3c0b7fb9dc1c55700dc00e86e1ebd82f2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
       <Uri>https://github.com/Microsoft/ApplicationInsights-dotnet</Uri>
@@ -143,14 +148,14 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="6.0.0-beta.21319.2">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="6.0.0-beta.21323.1">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>a3377cccde8639089f99107e2ba5df2c8cbe6394</Sha>
+      <Sha>1685a12f35cfb396f9352d63736eb675673b0e20</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="6.0.0-beta.21319.2">
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="6.0.0-beta.21323.1">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>a3377cccde8639089f99107e2ba5df2c8cbe6394</Sha>
+      <Sha>1685a12f35cfb396f9352d63736eb675673b0e20</Sha>
     </Dependency>
     <Dependency Name="Private.SourceBuild.ReferencePackages" Version="1.0.0-beta.20217.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
@@ -166,9 +171,9 @@
       <Sha>4b584dbc392bb1aad49c2eb1ab84d8b489b6dccc</Sha>
       <SourceBuild RepoName="sourcelink" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="XliffTasks" Version="1.0.0-beta.21318.1" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
+    <Dependency Name="XliffTasks" Version="1.0.0-beta.21320.1" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
       <Uri>https://github.com/dotnet/xliff-tasks</Uri>
-      <Sha>134daa7f10735efb489cc7c816967da831b22926</Sha>
+      <Sha>5836ac11931b8e663c5cf81027dc834cbf41ecdd</Sha>
       <SourceBuild RepoName="xliff-tasks" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
