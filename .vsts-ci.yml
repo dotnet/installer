@@ -335,11 +335,9 @@ stages:
             # Never run tests on arm64
             _TestArg: ''
 
-  - template: /eng/common/templates/job/source-build.yml
-    parameters:
-      platform:
-        name: 'Managed'
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
+  - template: /eng/common/templates/jobs/source-build.yml
+
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-tarball-creation.yml
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
@@ -361,6 +359,8 @@ stages:
           - Windows_NT
           - Linux
           - Darwin
+          - Source_Build_Managed
+          - Source_Build_Tarball_Creation
         publishUsingPipelines: true
         pool:
           vmImage: vs2017-win2016
