@@ -151,10 +151,14 @@
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
     <MicrosoftNETTestSdkVersion>17.0.0-preview-20210518-01</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
-  <!-- dependencies for source-build tarball tasks -->
+  <!-- dependencies for source-build tarball -->
   <PropertyGroup>
+    <!-- These two MicrosoftBuild versions are required to build tarball tasks
+         These tasks will eventually move to Arcade and then these can be
+         removed.  See https://github.com/dotnet/source-build/issues/2295 -->
     <MicrosoftBuildFrameworkVersion>15.7.179</MicrosoftBuildFrameworkVersion>
     <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
+    <PrivateSourceBuiltArtifactsPackageVersion>0.1.0-6.0.100-bootstrap.3</PrivateSourceBuiltArtifactsPackageVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>

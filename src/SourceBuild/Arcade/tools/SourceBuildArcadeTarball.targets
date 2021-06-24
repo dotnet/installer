@@ -3,8 +3,8 @@
 
   <Import Project="./BuildTasks.props" />
   <Import Project="../tools/SourceBuild/SourceBuildArcadeTools.targets"  Sdk="Microsoft.DotNet.Arcade.Sdk" />
-  <UsingTask TaskName="Microsoft.Linker.SourceBuild.Tarball_ReadSourceBuildIntermediateNupkgDependencies" AssemblyFile="$(SourceBuildTasksAssembly)" />
-  <UsingTask TaskName="Microsoft.Linker.SourceBuild.Tarball_WriteSourceRepoProperties" AssemblyFile="$(SourceBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_ReadSourceBuildIntermediateNupkgDependencies" AssemblyFile="$(SourceBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_WriteSourceRepoProperties" AssemblyFile="$(SourceBuildTasksAssembly)" />
 
   <Target Name="CreateSourceTarball"
     DependsOnTargets="
@@ -12,22 +12,24 @@
       SetupSelfGithubInfo;
       CloneRepoAndDependentsRecursive;
       CopyTarballContent;
-      "/>
+      ">
+      <Message Text="Tarball successfully created: $(TarballRootDir)" Importance="High" />
+    </Target>
 
   <PropertyGroup>
     <TarballDir>$(RepoRoot)artifacts/tarball/</TarballDir>
-    <TarballSourceDir>$(TarballDir)src/</TarballSourceDir>
-    <TarballGitInfoDir>$(TarballDir)git-info/</TarballGitInfoDir>
+    <TarballRootDir>$([MSBuild]::EnsureTrailingSlash('$(TarballDir)'))</TarballRootDir>
+    <TarballSourceDir>$(TarballRootDir)src/</TarballSourceDir>
+    <TarballGitInfoDir>$(TarballRootDir)git-info/</TarballGitInfoDir>
     <CloneVerbosity>quiet</CloneVerbosity> <!-- Support quiet and full -->
   </PropertyGroup>
 
   <Target Name="CreateTarballDir" >
-    <RemoveDir Directories='$(TarballDir)' Condition=" EXISTS('$(TarballDir)') " />
+    <RemoveDir Directories='$(TarballRootDir)' Condition=" EXISTS('$(TarballRootDir)') " />
     <Error Text="Tarball directory not specified.  Pass /p:TarballDir=[new dir name] to specify a tarball directory." Condition=" '$(TarballDir)' == '' " />
-    <Error Text="Tarball directory already exists: $(TarballDir)" Condition=" '$(TarballDir)' != '' AND EXISTS('$(TarballDir)') " />
-    <Error Text="Tarball directory requires trailing slash: $(TarballDir)" Condition=" !HasTrailingSlash('$(TarballDir)') " />
+    <Error Text="Tarball directory already exists: $(TarballRootDir)" Condition=" '$(TarballRootDir)' != '' AND EXISTS('$(TarballRootDir)') " />
 
-    <MakeDir Directories="$(TarballDir)" Condition=" '$(TarballDir)' != '' " />
+    <MakeDir Directories="$(TarballRootDir)" Condition=" '$(TarballRootDir)' != '' " />
     <MakeDir Directories="$(TarballSourceDir)" Condition=" '$(TarballSourceDir)' != '' " />
     <MakeDir Directories="$(TarballGitInfoDir)" Condition=" '$(TarballGitInfoDir)' != '' " />
   </Target>
@@ -35,7 +37,7 @@
   <Target Name="SetupSelfGithubInfo" Condition=" '$(IsRootRepo)' != 'true' ">
 
     <Exec
-      Command="cd $(RepoRoot);git remote get-url origin"
+      Command="cd $(RepoRoot);git config --get remote.origin.url"
       ConsoleToMSBuild="true"
       WorkingDirectory="$(RepoRoot)">
       <Output TaskParameter="ConsoleOutput" ItemName="RootRepoUri" />
@@ -86,7 +88,7 @@
       <SourceDir>$(SourceBuildRepoName).$(RepoSha)/</SourceDir>
       <TarballRepoSourceDir>$(TarballSourceDir)$(SourceDir)</TarballRepoSourceDir>
       <TarballRepoSourceEngDir>$(TarballSourceDir)$(SourceDir)eng/</TarballRepoSourceEngDir>
-      <VersionDetailsFileName>$(TarballRepoSourceEngDir)Version.Details.xml</VersionDetailsFileName>
+      <TarballVersionDetailsFile>$(TarballRepoSourceEngDir)Version.Details.xml</TarballVersionDetailsFile>
       <CloneParam Condition=" '$(CloneVerbosity)' == 'quiet' ">-q</CloneParam>
     </PropertyGroup>
 
@@ -112,7 +114,7 @@
       DestinationFiles="$(TarballRepoSourceDir)/eng/Version.Details.xml" />
 
     <Tarball_ReadSourceBuildIntermediateNupkgDependencies
-      VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(VersionDetailsFileName)))"
+      VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(TarballVersionDetailsFile)))"
       SourceBuildIntermediateNupkgPrefix="$(SourceBuildIntermediateNupkgPrefix)"
       SourceBuildIntermediateNupkgRid="$(SourceBuildIntermediateNupkgRid)">
       <Output TaskParameter="Dependencies" ItemName="SourceBuildRepos" />
@@ -129,7 +131,7 @@
       SourceBuildMetadataDir="$(TarballGitInfoDir)"
       Dependencies="@(SourceBuildRepos)" />
 
-    <Message Text="--> Dependencies for $(VersionDetailsFileName):" Importance="High" />
+    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
     <Message Text="-->     [@(SourceBuildRepos)]" Importance="High" />
     <MSBuild Projects="$(MSBuildProjectFile)" 
       Condition=" '@(SourceBuildRepos)' != '' "
@@ -146,13 +148,32 @@
 
     <Copy
       SourceFiles="@(TarballContent)"
-      DestinationFiles="@(TarballContent->'$(TarballDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+      DestinationFiles="@(TarballContent->'$(TarballRootDir)%(RecursiveDir)%(Filename)%(Extension)')" />
 
     <Copy
       SourceFiles="@(EngCommonContent)"
-      DestinationFiles="@(EngCommonContent->'$(TarballDir)eng/common/%(RecursiveDir)%(Filename)%(Extension)')" />
+      DestinationFiles="@(EngCommonContent->'$(TarballRootDir)eng/common/%(RecursiveDir)%(Filename)%(Extension)')" />
 
-    <MakeDir Directories="$(TarballDir)packages/prebuilt" />
+    <PropertyGroup>
+      <ExternalTarballsDir>$(TarballRootDir)packages/archive/</ExternalTarballsDir>
+      <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
+      <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
+      <ArchiveArtifactsTextFileName>archiveArtifacts.txt</ArchiveArtifactsTextFileName>
+      <ArchiveArtifactsTextFile>$(ExternalTarballsDir)$(ArchiveArtifactsTextFileName)</ArchiveArtifactsTextFile>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(ExternalTarballsDir)" />
+
+    <ItemGroup>
+      <ArtifactUrls Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      File="$(ArchiveArtifactsTextFile)"
+      Lines="@(ArtifactUrls)"
+      Overwrite="true" />
+
+    <MakeDir Directories="$(TarballRootDir)packages/prebuilt" />
   </Target>
 
 </Project>

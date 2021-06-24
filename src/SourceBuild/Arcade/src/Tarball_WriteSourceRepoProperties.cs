@@ -15,13 +15,35 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace Microsoft.Linker.SourceBuild
+namespace Microsoft.DotNet.SourceBuild.Tasks
 {
+    /// <summary>
+    /// Writes a props file to the given directory for each dependency specified
+    /// plus adds or updates an existing props file with all dependencies.  The 
+    /// intention is for the props file to be included by a source-build build
+    /// to get metadata about each dependent repo.
+    /// </summary>
     public class Tarball_WriteSourceRepoProperties : Task
     {
+        /// <summary>
+        /// The directory to write the props files to.
+        /// </summary>
         [Required]
         public string SourceBuildMetadataDir { get; set; }
 
+        /// <summary>
+        /// Dependencies to include in the props files.
+        /// 
+        /// %(Identity): NuGet package ID.
+        /// %(Name): The Name of the dependency from Version.Details.xml.
+        /// %(ExactVersion): NuGet package version. This can be used to look up the restored package
+        ///   contents in a package cache.
+        /// %(Version): NuGet package version, wrapped in "[version]" syntax for exact match.
+        /// %(Uri): The URI for the repo.
+        /// %(Sha): The commit Sha for the dependency.
+        /// %(SourceBuildRepoName): The repo name to use in source-build.
+        /// </summary>
+        /// <value></value>
         [Required]
         public ITaskItem[] Dependencies { get; set; }
 
@@ -177,12 +199,6 @@ namespace Microsoft.Linker.SourceBuild
         {
             internal string OfficialBuildId { get; set; }
             internal string PreReleaseVersionLabel { get; set; }
-        }
-
-        private class SubmoduleInfo
-        {
-            internal string Name { get; set; }
-            internal string Path { get; set; }
         }
     }
 }

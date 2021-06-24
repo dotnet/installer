@@ -2,10 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- SDK/Runtime Version Information -->
   <PropertyGroup>
-    <MajorVersion>5</MajorVersion>
+    <MajorVersion>6</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <RuntimePatchVersion>5</RuntimePatchVersion>
-    <SdkPatchVersion>202</SdkPatchVersion>
+    <RuntimePatchVersion>0-preview.6</RuntimePatchVersion>
+    <SdkPatchVersion>100-preview.6</SdkPatchVersion>
     <RuntimeProductVersion>$(MajorVersion).$(MinorVersion).$(RuntimePatchVersion)</RuntimeProductVersion>
     <AspNetCoreProductVersion>$(MajorVersion).$(MinorVersion).$(RuntimePatchVersion)</AspNetCoreProductVersion>
     <SdkProductVersion>$(MajorVersion).$(MinorVersion).$(SdkPatchVersion)</SdkProductVersion>
@@ -20,9 +20,6 @@
     <HumanizerCorePackageVersion>2.2.0</HumanizerCorePackageVersion>
   </PropertyGroup>
   <!-- Production Dependencies -->
-  <PropertyGroup>
-    <PrivateSourceBuildReferencePackagesPackageVersion>1.0.0-beta.20623.1</PrivateSourceBuildReferencePackagesPackageVersion>
-  </PropertyGroup>
   <PropertyGroup>
     <PrivateSourceBuiltArtifactsPackageVersion>0.1.0-6.0.100-bootstrap.3</PrivateSourceBuiltArtifactsPackageVersion>
   </PropertyGroup>

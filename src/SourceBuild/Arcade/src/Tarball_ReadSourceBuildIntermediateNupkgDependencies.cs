@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Microsoft.Linker.SourceBuild
+namespace Microsoft.DotNet.SourceBuild.Tasks
 {
     /// <summary>
     /// Reads entries in a Version.Details.xml file to find intermediate nupkg dependencies. For
