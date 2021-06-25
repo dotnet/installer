@@ -106,7 +106,7 @@
 
     <!-- Perform a local clone of the root repo, it's faster and doesn't require the RepoSha to be a tree. -->
     <Exec
-      Command="git clone ./.git $(TarballSourceDir)$(SourceDir)"
+      Command="git clone ./.git $(TarballRepoSourceDir)"
       WorkingDirectory="$(RepoRoot)"
       Condition="$(IsRootRepo) == 'true'" />
 
