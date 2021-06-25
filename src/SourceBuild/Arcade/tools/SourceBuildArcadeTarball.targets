@@ -29,7 +29,7 @@
     <Error Text="TarballFilePath not specified." Condition=" '$(TarballFilePath)' == '' " />
 
     <MakeDir Directories="$(TarballFileDir)" Condition=" '$(TarballFileDir)' != '' " />
-    <Exec Command="tar --numeric-owner -zcf $(TarballFilePath) $(TarballDir)" />
+    <Exec Command="tar --numeric-owner -zcf $(TarballFilePath) -C $(TarballDir) ." />
 
     <Message Text="Tarball '$(TarballFilePath)' was successfully created from '$(TarballDir)'" Importance="High" />
   </Target>
