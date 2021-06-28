@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FluentAssertions;
@@ -13,14 +14,20 @@ using Xunit;
 namespace EndToEnd.Tests
 {
 
-    [ConditionalClass(typeof(WorkloadTests), nameof(IsRunningOnWindowsX86))]
     public class WorkloadTests : TestBase
     {
-        public static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Runtime.OSArchitecture == Architecture.X86;
+        public static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X86;
+        private static string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
 
         [Fact]
         public void ItCannotPublishBlazorWasm_AOTWithoutWorkloadInstalled()
         {
+            if (IsRunningOnWindowsX86)
+            {
+                // unsupported
+                return;
+            }
+
             DirectoryInfo directory = TestAssets.CreateTestDirectory();
             WorkloadTestEnvironment env = PrepareTestEnvironment(directory.FullName);
 
@@ -54,6 +61,12 @@ namespace EndToEnd.Tests
 
         private static void TestBlazorWasmWithWithWorkload(string extraBuildArgs="", [CallerMemberName] string callerName = "")
         {
+            if (IsRunningOnWindowsX86)
+            {
+                // unsupported
+                return;
+            }
+
             DirectoryInfo testDirectory = TestAssets.CreateTestDirectory(callingMethod: callerName);
             WorkloadTestEnvironment env = PrepareTestEnvironment(testDirectory.FullName);
 
@@ -70,13 +83,17 @@ namespace EndToEnd.Tests
                  .Should().Pass();
         }
 
-        private static WorkloadTestEnvironment PrepareTestEnvironment(string baseDirectory)
+        private static WorkloadTestEnvironment PrepareTestEnvironment(string testProjectName = "", [CallerMemberName] string callingMethod = "")
         {
             string origDotnetPath = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
 
             string packsDir = Path.Combine(origDotnetPath, "packs", "Microsoft.NET.Runtime.WebAssembly.Sdk");
             Directory.Exists(packsDir)
-                .Should().BeFalse($"{packsDir} should not exist. Shared 'dotnet' installation in artifacts, should not have any packs installed");
+                .Should().BeFalse($"{packsDir} should not exist. Shared 'dotnet' installation in artifacts, should not have Microsoft.NET.Runtime.WebAssembly.Sdk pack installed");
+
+            string baseDirectory = Path.Combine(_tmpDirForDotNet, callingMethod);
+            if (Directory.Exists(baseDirectory))
+                Directory.Delete(baseDirectory, recursive: true);
 
             string dotnetDirectory = Path.Combine(baseDirectory, "dotnet");
             DirectoryCopy(origDotnetPath, dotnetDirectory);
