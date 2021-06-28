@@ -18,10 +18,10 @@ namespace EndToEnd.Tests
     {
         private static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X86;
 
-        private static const string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
+        private static string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
         private static string _nuget6ConfigContents;
 
-        public static WorkloadTests()
+        static WorkloadTests()
         {
 #if NET451
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
