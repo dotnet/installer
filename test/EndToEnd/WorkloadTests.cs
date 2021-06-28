@@ -16,7 +16,7 @@ namespace EndToEnd.Tests
 
     public class WorkloadTests : TestBase
     {
-        private static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X86;
+        private static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture == Architecture.X86;
 
         private static string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
         private static string _nuget6ConfigContents;
@@ -35,6 +35,7 @@ namespace EndToEnd.Tests
         [Fact]
         public void ItCannotPublishBlazorWasm_AOTWithoutWorkloadInstalled()
         {
+            Console.WriteLine ($"arch: {RuntimeInformation.OSArchitecture}, processArch: {RuntimeInformation.ProcessArchitecture}");
             if (IsRunningOnWindowsX86)
             {
                 // unsupported
@@ -117,6 +118,8 @@ namespace EndToEnd.Tests
             string projectDirectory = Path.Combine(baseDirectory, "project");
             Directory.CreateDirectory(projectDirectory);
             File.WriteAllText(Path.Combine(projectDirectory, "nuget.config"), _nuget6ConfigContents);
+
+            Directory.CreateDirectory(Path.Combine(projectDirectory, ".nuget"));
 
             string projectFile = TestTemplateCreate("blazorwasm", projectDirectory);
 
