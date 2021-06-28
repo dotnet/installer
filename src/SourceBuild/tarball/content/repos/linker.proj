@@ -5,7 +5,7 @@
     <!-- Package version is pinned to what CoreFX expects because CoreFX doesn't take an override property. -->
     <ILLinkTasksPackageId>Microsoft.NET.ILLink.Tasks</ILLinkTasksPackageId>
 
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(StandardArpowBuildArgs)</BuildCommand>
+    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
 

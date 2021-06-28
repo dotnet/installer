@@ -138,18 +138,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <StandardArpowBuildArgs> $(FlagParameterPrefix)ci</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) $(FlagParameterPrefix)configuration $(Configuration)</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) $(FlagParameterPrefix)restore</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) $(FlagParameterPrefix)build</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) $(FlagParameterPrefix)pack</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) $(FlagParameterPrefix)publish</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) -bl</StandardArpowBuildArgs>
+    <StandardSourceBuildArgs> $(FlagParameterPrefix)ci</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)configuration $(Configuration)</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)restore</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)build</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)pack</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)publish</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) -bl</StandardSourceBuildArgs>
 
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) /p:ArcadeBuildFromSource=true</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) /p:CopyWipIntoInnerSourceBuildRepo=true</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) /p:DotNetBuildOffline=true</StandardArpowBuildArgs>
-    <StandardArpowBuildArgs>$(StandardArpowBuildArgs) /p:DotNetPackageVersionPropsPath="$(PackageVersionPropsPath)"</StandardArpowBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) /p:ArcadeBuildFromSource=true</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) /p:CopyWipIntoInnerSourceBuildRepo=true</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) /p:DotNetBuildOffline=true</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs>$(StandardSourceBuildArgs) /p:DotNetPackageVersionPropsPath="$(PackageVersionPropsPath)"</StandardSourceBuildArgs>
+
+    <StandardSourceBuildCommand>$(ProjectDirectory)\build$(ShellExtension)</StandardSourceBuildCommand>
   </PropertyGroup>
 
   <ItemGroup>

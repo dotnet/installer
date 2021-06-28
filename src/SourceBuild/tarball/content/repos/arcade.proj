@@ -3,7 +3,7 @@
 
   <PropertyGroup>
 
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(StandardArpowBuildArgs)</BuildCommand>
+    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
 
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>

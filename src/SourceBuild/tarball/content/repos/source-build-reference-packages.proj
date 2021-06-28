@@ -3,7 +3,7 @@
 
   <PropertyGroup>
 
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(StandardArpowBuildArgs)</BuildCommand>
+    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
 
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
