@@ -14,7 +14,7 @@ namespace EndToEnd.Tests
 {
     public class WorkloadTests : TestBase
     {
-        [PlatformSpecificFact(~TestPlatforms.OSX)] // https://github.com/dotnet/runtime/issues/54612
+        [Fact]
         public void ItCannotPublishBlazorWasm_AOTWithoutWorkloadInstalled()
         {
             DirectoryInfo directory = TestAssets.CreateTestDirectory();
@@ -37,16 +37,13 @@ namespace EndToEnd.Tests
                  .And.HaveStdOutMatching("error NETSDK1147:.*install microsoft-net-sdk-blazorwebassembly-aot");
         }
 
-        [PlatformSpecificFact(~TestPlatforms.OSX)] // https://github.com/dotnet/runtime/issues/54612
-
+        [Fact]
         public void ItCanPublishBlazorWasmWithWorkloads_NoAOT() => TestBlazorWasmWithWithWorkload();
 
-        [PlatformSpecificFact(~TestPlatforms.OSX)] // https://github.com/dotnet/runtime/issues/54612
-
+        [Fact]
         public void ItCanPublishBlazorWasmWithWorkloads_WithAOT() => TestBlazorWasmWithWithWorkload("/p:RunAOTCompilation=true");
 
-        [PlatformSpecificTheory(~TestPlatforms.OSX) // https://github.com/dotnet/runtime/issues/54612
-]
+        [Theory]
         [InlineData("")]
         [InlineData("/p:RunAOTCompilation=true")]
         public void ItCanPublishBlazorWasmWithWorkloads_Invariant(string args) => TestBlazorWasmWithWithWorkload($"/p:InvariantGlobalization=true {args}");
