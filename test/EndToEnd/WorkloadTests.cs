@@ -12,8 +12,12 @@ using Xunit;
 
 namespace EndToEnd.Tests
 {
+
+    [ConditionalClass(typeof(WorkloadTests), nameof(IsRunningOnWindowsX86))]
     public class WorkloadTests : TestBase
     {
+        public static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Runtime.OSArchitecture == Architecture.X86;
+
         [Fact]
         public void ItCannotPublishBlazorWasm_AOTWithoutWorkloadInstalled()
         {
