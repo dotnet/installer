@@ -16,8 +16,21 @@ namespace EndToEnd.Tests
 
     public class WorkloadTests : TestBase
     {
-        public static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X86;
-        private static string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
+        private static bool IsRunningOnWindowsX86 => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X86;
+
+        private static const string _tmpDirForDotNet = Path.Combine(Path.GetTempPath(), "WorkloadTests");
+        private static string _nuget6ConfigContents;
+
+        public static WorkloadTests()
+        {
+#if NET451
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+#else
+            string baseDirectory = AppContext.BaseDirectory;
+#endif
+
+            _nuget6ConfigContents = File.ReadAllText(Path.Combine(baseDirectory, "nuget6.config"));
+        }
 
         [Fact]
         public void ItCannotPublishBlazorWasm_AOTWithoutWorkloadInstalled()
@@ -102,6 +115,9 @@ namespace EndToEnd.Tests
             dotnetUnderTest += RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";
 
             string projectDirectory = Path.Combine(baseDirectory, "project");
+            Directory.CreateDirectory(projectDirectory);
+            File.WriteAllText(Path.Combine(projectDirectory, "nuget.config"), _nuget6ConfigContents);
+
             string projectFile = TestTemplateCreate("blazorwasm", projectDirectory);
 
             // Use a controlled, clean PATH. This can help catch issues, for example, `emcc` should use
