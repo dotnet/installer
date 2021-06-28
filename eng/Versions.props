@@ -10,6 +10,8 @@
     <VersionSDKMinor>1</VersionSDKMinor>
     <VersionFeature>00</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
+    <!-- DO NOT CHANGE - The feature band version is critical for the finalizer and must never include the SDK patch level -->
+    <FeatureBandVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</FeatureBandVersion>
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
     <PreReleaseVersionIteration>7</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
