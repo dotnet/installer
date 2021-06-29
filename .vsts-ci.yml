@@ -337,7 +337,7 @@ stages:
 
   - template: /eng/common/templates/jobs/source-build.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-tarball-creation.yml
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
@@ -360,7 +360,7 @@ stages:
           - Linux
           - Darwin
           - Source_Build_Managed
-          - Source_Build_Tarball_Creation
+          - Source_Build_Create_Tarball
         publishUsingPipelines: true
         pool:
           vmImage: vs2017-win2016
