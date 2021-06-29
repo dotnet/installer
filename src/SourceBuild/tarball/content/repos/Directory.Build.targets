@@ -585,13 +585,18 @@
 
     <!-- Allow overriding of Arcade targets for SourceBuild to enable quicker 
          dev turnaround for Preview 6 -->
+    <PropertyGroup>
+      <ArcadeSDKToolPackagePath></ArcadeSDKToolPackagePath>
+      <ArcadeSDKToolPackagePath Condition=" '%(_ToolPackage.Id)' == 'Microsoft.DotNet.Arcade.Sdk' ">$(ToolPackageExtractDir)%(_ToolPackage.Id)/</ArcadeSDKToolPackagePath>
+    </PropertyGroup>
     <ItemGroup>
       <OverrideArcadeFiles Include="$(ProjectDir)ArcadeOverrides/**/*" />
     </ItemGroup>
 
     <Copy
+      Condition=" '$(ArcadeSDKToolPackagePath))' != '' "
       SourceFiles="@(OverrideArcadeFiles)"
-      DestinationFiles="$(ToolPackageExtractDir)%(_ToolPackage.Id)/tools/SourceBuild/%(RecursiveDir)%(Filename)%(Extension)" />
+      DestinationFiles="$(ArcadeSDKToolPackagePath)tools/SourceBuild/%(RecursiveDir)%(Filename)%(Extension)" />
       
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
