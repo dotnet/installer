@@ -105,9 +105,10 @@ namespace EndToEnd.Tests
             Directory.Exists(packsDir)
                 .Should().BeFalse($"{packsDir} should not exist. Shared 'dotnet' installation in artifacts, should not have Microsoft.NET.Runtime.WebAssembly.Sdk pack installed");
 
-            string baseDirectory = Path.Combine(_tmpDirForDotNet, callingMethod);
-            if (Directory.Exists(baseDirectory))
-                Directory.Delete(baseDirectory, recursive: true);
+            string baseDirectory = Path.Combine(_tmpDirForDotNet, callingMethod, $"_{Path.GetRandomFileName()}");
+            // doign this on windows causes access violation for dotnet.exe!
+            //if (Directory.Exists(baseDirectory))
+                //Directory.Delete(baseDirectory, recursive: true);
 
             string dotnetDirectory = Path.Combine(baseDirectory, "dotnet");
             DirectoryCopy(origDotnetPath, dotnetDirectory);
