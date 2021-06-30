@@ -12,6 +12,16 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
+    <Dependency Name="Microsoft.Web.Xdt" Version="5.0.0-preview.21302.1">
+      <Uri>https://github.com/dotnet/xdt</Uri>
+      <Sha>6a46e7c886cdf499ba3433f665ab417be814135e</Sha>
+      <SourceBuild RepoName="xdt" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="System.CommandLine" Version="0.1.230801">
+      <Uri>https://github.com/dotnet/command-line-api</Uri>
+      <Sha>5e855e911de7c56fe28400c4500e888fe2a3da8e</Sha>
+      <SourceBuild RepoName="command-line-api" ManagedOnly="true" />
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="6.0.0-beta.21319.2">
