@@ -31,10 +31,6 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 return CR;
             }
-            else if (source.Contains(LF))
-            {
-                return LF;
-            }
             else
             {
                 throw new ArgumentException("Unsupported new line characters", nameof(source));
