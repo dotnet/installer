@@ -500,6 +500,19 @@
 
   </Target>
 
+  <!-- Copy restored packages from inner build to ensure they're included in the 
+       main build prebuilt check -->
+  <Target Name="CopyInnerBuildRestoredPackages"
+          AfterTargets="Package">
+    <ItemGroup>
+      <_InnerPackageCacheFiles Include="$(ProjectDirectory)artifacts/source-build/self/package-cache/**/*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_InnerPackageCacheFiles)"
+          DestinationFiles="$(PackagesDir)%(RecursiveDir)%(Filename)%(Extension)"
+          Condition=" '@(_InnerPackageCacheFiles)' != '' " />
+  </Target>
+
   <Target Name="CopyPackage"
           AfterTargets="Package"
           Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
