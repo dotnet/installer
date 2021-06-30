@@ -12,6 +12,11 @@
       <Sha>6a46e7c886cdf499ba3433f665ab417be814135e</Sha>
       <SourceBuild RepoName="xdt" ManagedOnly="true" />
     </Dependency>
+    <Dependency Name="System.CommandLine" Version="0.1.230801">
+      <Uri>https://github.com/dotnet/command-line-api</Uri>
+      <Sha>5e855e911de7c56fe28400c4500e888fe2a3da8e</Sha>
+      <SourceBuild RepoName="command-line-api" ManagedOnly="true" />
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="6.0.0-beta.21319.2">
@@ -23,6 +28,11 @@
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
       <Sha>def2e2c6dc5064319250e2868a041a3dc07f9579</Sha>
       <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build" Version="0.1.0-alpha.1.21318.1">
+      <Uri>https://github.com/dotnet/source-build</Uri>
+      <Sha>3fb25b8db3bec654e37e71a5b2b7fde14444bc2f</Sha>
+      <SourceBuild RepoName="source-build" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-21309-01" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
       <Uri>https://github.com/dotnet/sourcelink</Uri>
