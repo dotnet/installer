@@ -148,6 +148,8 @@ namespace EndToEnd.Tests
         [InlineData("classlib", "C#")]
         [InlineData("classlib", "VB")]
         [InlineData("classlib", "F#")]
+        [InlineData("app")]
+        [InlineData("app", "C#")]
 
         [InlineData("mstest")]
         [InlineData("nunit")]
@@ -156,6 +158,37 @@ namespace EndToEnd.Tests
         public void ItCanBuildTemplates(string templateName, string language = "")
         {
             TestTemplateCreateAndBuild(templateName, language: language);
+        }
+
+        /// <summary>
+        /// The test checks if dotnet new shows curated list correctly after the SDK installation and template insertion.
+        /// </summary>
+        [Fact]
+        public void DotnetNewShowsCuratedListCorrectly()
+        {
+            string expectedOutput =
+@"[\-\s]+
+[\w \.]+webapp,razor\s+\[C#\][\w\ \/]+
+[\w \.]+blazorwasm\s+\[C#\][\w\ \/]+
+[\w \.]+classlib\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.]+console\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.]+app\s+\[C#\][\w\ \/]+
+";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                expectedOutput +=
+@"[\w \.]+winforms\s+\[C#\],VB[\w\ \/]+
+[\w \.]+\wpf\s+\[C#\],VB[\w\ \/]+
+";
+            }
+            //list should end with new line
+            expectedOutput += Environment.NewLine;
+
+            new NewCommandShim()
+             .Execute()
+             .Should().Pass()
+             .And.HaveStdOutMatching(expectedOutput);
         }
 
         [Theory]
@@ -215,6 +248,8 @@ namespace EndToEnd.Tests
         [InlineData("console", "C#")]
         [InlineData("console", "VB")]
         [InlineData("console", "F#")]
+        [InlineData("app")]
+        [InlineData("app", "C#")]
         [InlineData("classlib")]
         [InlineData("classlib", "C#")]
         [InlineData("classlib", "VB")]
