@@ -21,7 +21,7 @@ Download released versions of the .NET Core tools (CLI, MSBuild and the new cspr
 
 Found an issue?
 ---------------
-You can consult the [Documents Index for the CLI repo](https://github.com/dotnet/cli/blob/main/Documentation/README.md) to find out current issues, see workarounds, and to see how to file new issues.
+You can consult the [Documents Index for the SDK repo](https://github.com/dotnet/sdk/blob/main/documentation/README.md) to find out current issues, see workarounds, and to see how to file new issues.
 
 This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
 

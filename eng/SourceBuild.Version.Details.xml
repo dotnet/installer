@@ -22,6 +22,11 @@
       <Sha>5e855e911de7c56fe28400c4500e888fe2a3da8e</Sha>
       <SourceBuild RepoName="command-line-api" ManagedOnly="true" />
     </Dependency>
+    <Dependency Name="Microsoft.DiaSymReader" Version="1.4.0-beta2-21315-01">
+      <Uri>https://github.com/dotnet/symreader</Uri>
+      <Sha>1968a003d845d119a9d38ac4daaeea22897f7daf</Sha>
+      <SourceBuild RepoName="symreader" ManagedOnly="true" />
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="6.0.0-beta.21319.2">
@@ -43,6 +48,11 @@
       <Uri>https://github.com/dotnet/sourcelink</Uri>
       <Sha>4b584dbc392bb1aad49c2eb1ab84d8b489b6dccc</Sha>
       <SourceBuild RepoName="sourcelink" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="XliffTasks" Version="1.0.0-beta.21325.1" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
+      <Uri>https://github.com/dotnet/xliff-tasks</Uri>
+      <Sha>71c811561ad4dcf46825a5077fbcc668ab74754f</Sha>
+      <SourceBuild RepoName="xliff-tasks" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
