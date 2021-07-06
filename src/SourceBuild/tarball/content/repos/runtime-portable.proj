@@ -1,19 +1,11 @@
 <Project>
-
-  <PropertyGroup>
-    <SourceDirectory>runtime</SourceDirectory>
-    <PortableBuild>true</PortableBuild>
-    <UseSystemLibunwind>false</UseSystemLibunwind>
-  </PropertyGroup>
-
   <Import Project="runtime.common.props"/>
 
   <!-- Repository References -->
   <ItemGroup>
       <RepositoryReference Include="arcade" />
       <RepositoryReference Include="linker" />
-      <RepositoryReference Include="newtonsoft-json" />
-      <RepositoryReference Include="newtonsoft-json901" />
+      <RepositoryReference Include="source-build" />
       <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
@@ -45,12 +37,4 @@
   </Target>
 
   <Import Project="runtime.common.targets" />
-
-  <Target Name="GatherBuiltPackages" BeforeTargets="CopyPackage">
-    <ItemGroup>
-      <_BuiltPackages Include="$(ShippingPackagesOutput)/*linux*nupkg" Exclude="$(ShippingPackagesOutput)/*.symbols.nupkg" />
-      <_BuiltPackages Include="$(NonShippingPackagesOutput)/*linux*nupkg" Exclude="$(NonShippingPackagesOutput)/*.symbols.nupkg" />
-    </ItemGroup>
-  </Target>
-
 </Project>
