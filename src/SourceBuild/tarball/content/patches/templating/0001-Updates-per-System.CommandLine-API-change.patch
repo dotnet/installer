@@ -1,0 +1,36 @@
+From 67ca0b1e4eb3935a9c64b1421495c5b16a1f2633 Mon Sep 17 00:00:00 2001
+From: MichaelSimons <msimons@microsoft.com>
+Date: Tue, 6 Jul 2021 19:46:24 +0000
+Subject: [PATCH] Updates per System.CommandLine API change
+
+See https://github.com/dotnet/templating/issues/3379 for additional details.
+---
+ .../Commands/Export/ExportCommand.cs                   | 10 +++-------
+ 1 files changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/src/Microsoft.TemplateEngine.TemplateLocalizer/Commands/Export/ExportCommand.cs b/src/Microsoft.TemplateEngine.TemplateLocalizer/Commands/Export/ExportCommand.cs
+index 5466ddcb..6b6e9a6b 100644
+--- a/src/Microsoft.TemplateEngine.TemplateLocalizer/Commands/Export/ExportCommand.cs
++++ b/src/Microsoft.TemplateEngine.TemplateLocalizer/Commands/Export/ExportCommand.cs
+@@ -33,15 +33,11 @@ public override Command CreateCommand()
+                 Name = "--recursive",
+                 Description = LocalizableStrings.command_export_help_recursive_description,
+             });
+-            exportCommand.AddOption(new Option("-l")
++            exportCommand.AddOption(new Option<string>("-l")
+             {
++                Arity = ArgumentArity.OneOrMore,
+                 Name = "--language",
+-                Description = LocalizableStrings.command_export_help_language_description,
+-                Argument = new Argument()
+-                {
+-                    Arity = ArgumentArity.OneOrMore,
+-                    ArgumentType = typeof(string),
+-                },
++                Description = LocalizableStrings.command_export_help_language_description
+             });
+             exportCommand.AddOption(new Option("-d")
+             {
+-- 
+2.26.2
+
