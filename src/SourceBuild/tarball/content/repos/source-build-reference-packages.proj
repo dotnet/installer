@@ -17,5 +17,17 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
   </ItemGroup>
 
+  <!-- Remove reference packages that were restored from the previously source-built
+       archive.  These packages were used when building tasks, but now will be rebuilt
+       from the SBRP repo. -->
+  <Target Name="CleanReferencePackageFolder"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <ReferencePackagesToDelete Include="$(ReferencePackagesDir)**/*" />
+    </ItemGroup>
+
+    <Delete Files="@(ReferencePackagesToDelete)" />
+  </Target>
+
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
