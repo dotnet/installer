@@ -202,13 +202,11 @@
         will remove (execute the uninstall command) the package if it is not installable when then bundle is 
         being installed.
       -->
-      <!-- The dependent value associated with this SDK when creating reference counts for optional workloads. -->
-      <?define SdkDependent = "Microsoft.NET.SDK,$(var.FeatureBandVersion),$(var.Platform)"?>
       <ExePackage SourceFile="$(var.FinalizerExeSourcePath)"
                   DetectCondition="WixBundleAction >= 3"
                   Id="Finalizer"
                   InstallCondition="WixBundleAction >= 4"
-                  UninstallCommand="&quot;[WixBundleLog_Finalizer]&quot; $(var.SdkDependent) $(var.FeatureBandVersion) $(var.Platform)"
+                  UninstallCommand="&quot;[WixBundleLog_Finalizer]&quot; $(var.NugetVersion) $(var.Platform)"
                   Vital="no" />
     </Chain>
   </Bundle>

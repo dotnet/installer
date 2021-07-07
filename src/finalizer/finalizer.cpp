@@ -10,10 +10,9 @@ extern "C" HRESULT Initialize(int argc, wchar_t* argv[])
     // We're not going to do any clever parsing. This is intended to be called from
     // the standalone bundle only and there will only be a fixed set of parameters:
     // 1. The path of the log file, created by the bundle.
-    // 2. The dependent we're trying to clean up.
-    // 3. The SDK feature band version (patch levels stripped off), e.g., 6.0.100
-    // 4. Target platform to search under the registry key to locate installed SDKs.
-    if (5 != argc)
+    // 2. The full SDK version, e.g. 6.0.105 or 6.0.398-preview19
+    // 3. Target platform to search under the registry key to locate installed SDKs.
+    if (4 != argc)
     {
         return HRESULT_FROM_WIN32(ERROR_INVALID_COMMAND_LINE);
     }
@@ -191,6 +190,7 @@ extern "C" HRESULT ParseSdkVersion(LPWSTR sczSdkVersion, INT * piMajor, INT * pi
     HRESULT hr = S_OK;
     UINT cVersionParts = 0;
     LPWSTR* rgsczVersionParts = NULL;
+    int iPatch = 0;
 
     hr = StrSplitAllocArray(&rgsczVersionParts, &cVersionParts, sczSdkVersion, L".");
     ExitOnFailure(hr, "Failed to split version.");
@@ -202,10 +202,6 @@ extern "C" HRESULT ParseSdkVersion(LPWSTR sczSdkVersion, INT * piMajor, INT * pi
     {
         ExitOnFailure(E_INVALIDARG, "Invalid SDK version: %ls %li", sczSdkVersion, cVersionParts);
     }
-
-    int iMajor = 0;
-    int iMinor = 0;
-    int iPatch = 0;
 
     hr = StrStringToInt32(rgsczVersionParts[0], 0, piMajor);
     ExitOnFailure(hr, "Invalid major version.");
@@ -296,13 +292,29 @@ int wmain(int argc, wchar_t* argv[])
     HRESULT hr = S_OK;
     DWORD dwExitCode = 0;
     LPWSTR sczDependent = NULL;
+    LPWSTR sczFeatureBandVersion = NULL;
     BOOL bRestartRequired = FALSE;
     BOOL bSdkFeatureBandInstalled = FALSE;
+    int iMajor = 0;
+    int iMinor = 0;
+    int iFeatureBand = 0;
 
     hr = ::Initialize(argc, argv);
     ExitOnFailure(hr, "Failed to initialize.");
 
-    hr = ::DetectSdk(argv[3], argv[4], &bSdkFeatureBandInstalled);
+    // Convert the full SDK version to a feature band version
+    hr = ParseSdkVersion(argv[2], &iMajor, &iMinor, &iFeatureBand);
+    ExitOnFailure(hr, "Failed to parse version, %ls.", argv[2]);
+
+    hr = StrAllocConcatFormatted(&sczFeatureBandVersion, L"%li.%li.%li", iMajor, iMinor, iFeatureBand);
+    ExitOnFailure(hr, "Failed to create feature band version.");
+
+    // Create the dependent value, e.g., Microsoft.NET.Sdk,6.0.300,arm64
+    hr = StrAllocConcatFormatted(&sczDependent, L"Microsoft.NET.Sdk,%ls,%ls", sczFeatureBandVersion, argv[3]);
+    ExitOnFailure(hr, "Failed to create dependent.");
+    LogStringLine(REPORT_STANDARD, "Setting target dependent to %ls.", sczDependent);
+
+    hr = ::DetectSdk(sczFeatureBandVersion, argv[3], &bSdkFeatureBandInstalled);
     ExitOnFailure(hr, "Failed to detect installed SDKs.");
 
     if (bSdkFeatureBandInstalled)
@@ -310,9 +322,8 @@ int wmain(int argc, wchar_t* argv[])
         goto LExit;
     }
 
-    LogStringLine(REPORT_STANDARD, "SDK with feature band %ls could not be found.", argv[3]);
+    LogStringLine(REPORT_STANDARD, "SDK with feature band %ls could not be found.", sczFeatureBandVersion);
 
-    sczDependent = argv[2];
     hr = ::RemoveDependent(sczDependent, &bRestartRequired);
     ExitOnFailure(hr, "Failed to remove dependent \"%ls\".", sczDependent);
 
@@ -322,6 +333,8 @@ int wmain(int argc, wchar_t* argv[])
     }
 
 LExit:
+    ReleaseStr(sczDependent);
+    ReleaseStr(sczFeatureBandVersion);
     LogUninitialize(TRUE);
     RegUninitialize();
     WiuUninitialize();

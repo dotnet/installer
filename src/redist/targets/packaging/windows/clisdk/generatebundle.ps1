@@ -31,8 +31,7 @@ param(
     [Parameter(Mandatory=$true)][string]$Architecture,
     [Parameter(Mandatory=$true)][string]$DotNetRuntimeVersion,
     [Parameter(Mandatory=$true)][string]$AspNetCoreVersion,
-    [Parameter(Mandatory=$true)][string]$SDKProductBandVersion,
-    [Parameter(Mandatory=$true)][string]$FeatureBandVersion
+    [Parameter(Mandatory=$true)][string]$SDKProductBandVersion
 )
 
 function RunCandleForBundle
@@ -75,7 +74,6 @@ function RunCandleForBundle
         -dDotNetRuntimeVersion="$DotNetRuntimeVersion" `
         -dAspNetCoreVersion="$AspNetCoreVersion" `
         -dLocalizedContentDirs="$LocalizedContentDirs" `
-        -dFeatureBandVersion="$FeatureBandVersion" `
         -arch "$Architecture" `
         -ext WixBalExtension.dll `
         -ext WixUtilExtension.dll `
