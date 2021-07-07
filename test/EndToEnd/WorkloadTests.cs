@@ -139,7 +139,7 @@ namespace EndToEnd.Tests
                 //    to that.
                 var pythonDir = Environment.GetEnvironmentVariable("PATH")
                                     ?.Split(':', StringSplitOptions.RemoveEmptyEntries)
-                                    .Where(dir => File.Exists(Path.Combine(dir, "python3")));
+                                    .FirstOrDefault(dir => File.Exists(Path.Combine(dir, "python3")));
                 if (pythonDir != null)
                     pathValue += $":{pythonDir}";
             }
