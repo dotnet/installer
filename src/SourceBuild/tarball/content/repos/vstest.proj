@@ -2,17 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
-
-    <BuildCommandArgs>-DotNetBuildFromSource</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -r $(OverrideTargetRid)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -v $(OutputPackageVersion)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
-
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)\eng\common\build$(ShellExtension) $(StandardSourceBuildArgs)</BuildCommand>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
@@ -20,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
     <RepositoryReference Include="diagnostics" />
-    <RepositoryReference Include="runtime" />
-    <RepositoryReference Include="newtonsoft-json" />
+    <!-- TODO:  Enable with https://github.com/dotnet/source-build/issues/2275
+    <RepositoryReference Include="runtime" /> -->
+    <RepositoryReference Include="source-build" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

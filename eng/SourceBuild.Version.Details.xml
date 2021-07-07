@@ -27,6 +27,11 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.0.0-preview-20210629-04" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/microsoft/vstest</Uri>
+      <Sha>e078bbadaf65628c313e97041973db52a84491ef</Sha>
+      <SourceBuild RepoName="vstest" ManagedOnly="true" />
+    </Dependency>
     <Dependency Name="Microsoft.Web.Xdt" Version="5.0.0-preview.21302.1">
       <Uri>https://github.com/dotnet/xdt</Uri>
       <Sha>6a46e7c886cdf499ba3433f665ab417be814135e</Sha>
