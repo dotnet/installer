@@ -131,24 +131,24 @@ namespace EndToEnd.Tests
             // Restricting PATH would catch that case.
             string pathValue = $"{dotnetDirectory}{Path.DirectorySeparatorChar}{Environment.GetEnvironmentVariable("PATH")}";
 
-            //if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            //{
-                //// On linux, we don't have a workload pack for Python. And it is expected
-                ////  that emcc will use system python.
-                ////  - But since we are using very restricted PATHs, we need to add python
-                ////    to that.
-                //var pythonDir = Environment.GetEnvironmentVariable("PATH")
-                                    //?.Split(':', StringSplitOptions.RemoveEmptyEntries)
-                                    //.Where(dir => File.Exists(Path.Combine(dir, "python")));
-                //if (pythonDir != null)
-                    //pathValue += $":{pythonDir}";
-            //}
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // On linux, we don't have a workload pack for Python. And it is expected
+                //  that emcc will use system python.
+                //  - But since we are using very restricted PATHs, we need to add python
+                //    to that.
+                var pythonDir = Environment.GetEnvironmentVariable("PATH")
+                                    ?.Split(':', StringSplitOptions.RemoveEmptyEntries)
+                                    .Where(dir => File.Exists(Path.Combine(dir, "python3")));
+                if (pythonDir != null)
+                    pathValue += $":{pythonDir}";
+            }
 
-            //if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            //{
-                //// WasmApp.targets needs /bin/sh
-                //pathValue += ":/bin";
-            //}
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // WasmApp.targets needs /bin/sh
+                pathValue += ":/bin";
+            }
 
             return new WorkloadTestEnvironment(dotnetUnderTest, projectFile, pathValue);
         }
