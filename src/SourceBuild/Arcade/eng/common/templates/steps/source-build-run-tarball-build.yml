@@ -20,7 +20,7 @@ steps:
     set -x
 
     ./build.sh \
-    /p:BuildWithOnlineSources=true
+    --online
   workingDirectory: ${{ parameters.sourceFolder }}
   displayName: Build Tarball
   condition: and(${{ parameters.condition }}, succeeded())
