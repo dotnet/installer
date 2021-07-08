@@ -15,10 +15,7 @@
     <BuildTasksTarget Include="Restore;Build;InstallResolver" />
   </ItemGroup>
 
-  <!-- TODO: Don't setup these sources now.  Need a switch for building to check prebuilts. 
-       Currently, tarball build allows online restore sources.  
-       See https://github.com/dotnet/source-build/issues/2255 -->
-  <PropertyGroup Condition="'$(OfflineBuild)' == 'true' AND 'false' == 'true' ">
+  <PropertyGroup Condition=" '$(BuildWithOnlineSources)' != 'true' ">
     <BuildTasksOfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</BuildTasksOfflineSources>
   </PropertyGroup>
 

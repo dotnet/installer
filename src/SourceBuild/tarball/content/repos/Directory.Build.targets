@@ -165,13 +165,11 @@
       <NuGetConfigFiles Include="$(NuGetConfigFile)" />
     </ItemGroup>
 
-    <!-- TODO: Don't remove these sources now.  Need a switch for building to check prebuilts. 
-      Currently, tarball build allows online restore sources.  
-      See https://github.com/dotnet/source-build/issues/2255 -->
-    <!-- RemoveInternetSourcesFromNuGetConfig
+    <RemoveInternetSourcesFromNuGetConfig
       NuGetConfigFile="%(NuGetConfigFiles.Identity)"
       OfflineBuild="$(OfflineBuild)"
-      KeepFeedPrefixes="@(KeepFeedPrefixes)" /-->
+      KeepFeedPrefixes="@(KeepFeedPrefixes)" /
+      Condition=" '$(BuildWithOnlineSources)' != 'true' ">
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="prebuilt"
