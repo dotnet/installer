@@ -39,7 +39,6 @@
   </Target>
 
   <Target Name="UnpackTarballs"
-          Condition="'$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)UnpackTarballs.complete" >
 
@@ -112,7 +111,6 @@
   </Target>
 
   <Target Name="BuildTextOnlyPackages"
-          Condition="'$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)BuildTextOnlyPackages.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing text-only packages." />
@@ -133,7 +131,6 @@
 
   <Target Name="ExtractToolPackage"
           DependsOnTargets="UnpackTarballs;BuildXPlatTasks"
-          Condition="'$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)ExtractToolPackage.complete">
     <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
@@ -163,7 +160,7 @@
   </Target>
 
   <Target Name="PoisonPrebuiltPackages"
-          Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'"
+          Condition="'$(EnablePoison)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete">
     <ItemGroup>

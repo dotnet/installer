@@ -123,8 +123,7 @@
     <SourceBuiltAspNetCoreRuntime>$(LocalBlobStorageRoot)aspnetcore/Runtime/</SourceBuiltAspNetCoreRuntime>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
-    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' == 'true'">$(IntermediatePath)GennedPackageVersions.props</GennedPackageVersionPropsPath>
-    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' != 'true'">$(IntermediatePath)PackageVersions.props</GennedPackageVersionPropsPath>
+    <GennedPackageVersionPropsPath>$(IntermediatePath)GennedPackageVersions.props</GennedPackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
@@ -159,9 +158,9 @@
       See corresponding change in build-source-tarball.sh to copy reference-packages & external-tarballs
       from source-build bin dir to tarball packages/reference dir & packages/archive.
     -->
-    <ExternalTarballsDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</ExternalTarballsDir>
-    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
-    <TextOnlyPackageBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/text-only/</TextOnlyPackageBaseDir>
+    <ExternalTarballsDir>$(ProjectDir)packages/archive/</ExternalTarballsDir>
+    <ReferencePackagesBaseDir>$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
+    <TextOnlyPackageBaseDir>$(ProjectDir)packages/text-only/</TextOnlyPackageBaseDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
@@ -170,8 +169,7 @@
     <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
     <OfflineBaselineDataFile>$(BaselineDataFile)offline.xml</OfflineBaselineDataFile>
     <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>
-    <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(OfflineBaselineDataFile)</BaselineDataFile>
-    <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(OnlineBaselineDataFile)</BaselineDataFile>
+    <BaselineDataFile>$(OfflineBaselineDataFile)</BaselineDataFile>
     <!--Exclude tests that are failing for test enabled projects like - corefx -->
     <TestExclusionsDir>$(ProjectDir)test/exclusions/</TestExclusionsDir>
   </PropertyGroup>
