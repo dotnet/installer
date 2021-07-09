@@ -490,7 +490,9 @@
       <!-- don't copy some packages that we specifically want to override for now due to bad reference package generation                                                  -->
       <!-- relevant issues: https://github.com/dotnet/runtime/issues/44646, https://github.com/dotnet/runtime/issues/45183, https://github.com/dotnet/runtime/issues/45417 -->
       <!-- these should be fixed for 6.0 proper                                                                                                                            -->
-      <SourceBuiltNupkgFiles Condition="$([System.String]::Copy(%(_BuiltIntermediatePackages.Identity)).Contains('source-build-reference-packages'))" Remove="$(PrebuiltPackagesPath)/*.nupkg" />
+      <PrebuiltPackagesToUse Include="$(PrebuiltPackagesPath)/*.nupkg" />
+      <SourceBuiltNupkgFilesToSkip Include="@(PrebuiltPackagesToUse -> $$(SourceBuiltPackagesPath)extractArtifacts/artifacts/%(Filename)%(Extension)" />
+      <SourceBuiltNupkgFiles Condition="'@(_BuiltIntermediatePackages)' != '' and $([System.String]::Copy(%(_BuiltIntermediatePackages.Identity)).Contains('source-build-reference-packages'))" Remove="@(SourceBuiltNupkgFilesToSkip)" />
     </ItemGroup>
 
     <Copy
