@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -36,7 +37,9 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
-            XDocument d = XDocument.Load(NuGetConfigFile);
+            string xml = File.ReadAllText(NuGetConfigFile);
+            string newLineChars = FileUtilities.DetectNewLineChars(xml);
+            XDocument d = XDocument.Parse(xml);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
             XElement disabledPackageSourcesElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "disabledPackageSources");
 
@@ -72,9 +75,9 @@ namespace Microsoft.DotNet.Build.Tasks
             // Remove disabledPackageSources element so if any internal packages remain, they are used in source-build
             disabledPackageSourcesElement?.ReplaceNodes(new XElement("clear"));
 
-            using (FileStream fs = new FileStream(NuGetConfigFile, FileMode.Create, FileAccess.ReadWrite))
+            using (var w = XmlWriter.Create(NuGetConfigFile, new XmlWriterSettings { NewLineChars = newLineChars, Indent = true }))
             {
-                d.Save(fs);
+                d.Save(w);
             }
 
             return true;
