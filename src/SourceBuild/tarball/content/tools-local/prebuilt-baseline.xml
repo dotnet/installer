@@ -7,7 +7,7 @@
     <Dir>src/command-line-api.5e855e911de7c56fe28400c4500e888fe2a3da8e/</Dir>
     <Dir>src/diagnostics.6f48c2ae749c29b687af0353e6c2a9590d7e3d22/</Dir>
     <Dir>src/fsharp./</Dir>
-    <Dir>src/installer.b016eda8f4ab430525cbecf8c0fadf3d09514cdd/</Dir>
+    <Dir>src/installer.c6ec4363003b18d8e587620baa36205b80ee3074/</Dir>
     <Dir>src/known-good-tests./</Dir>
     <Dir>src/known-good./</Dir>
     <Dir>src/linker.f2588193553431636b9853b0f87209fa395a72c5/</Dir>
@@ -88,6 +88,7 @@
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net20" Version="1.0.0" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net40" Version="1.0.0" />
+    <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-preview.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0" />
     <Usage Id="Microsoft.TestPlatform.ObjectModel" Version="16.7.1" />
     <Usage Id="Microsoft.TestPlatform.TestHost" Version="16.7.1" />
@@ -117,6 +118,8 @@
     <Usage Id="NuGet.Protocol" Version="5.8.1+b257acfcdd76b32d4cddd549c177d99e800f4d83" />
     <Usage Id="NuGet.Versioning" Version="5.6.0-preview.2.6489+5433d816f748d4ad78b75fc320397d8117f57771" />
     <Usage Id="NuGet.Versioning" Version="5.8.1+b257acfcdd76b32d4cddd549c177d99e800f4d83" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="5.0.0-preview.4.20202.18" Rid="linux-x64" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="5.0.0-preview.4.20202.18" Rid="linux-x64" />
     <Usage Id="runtime.native.System" Version="4.0.0" />
     <Usage Id="runtime.native.System" Version="4.3.0" />
     <Usage Id="runtime.native.System.IO.Compression" Version="4.3.0" />
@@ -132,11 +135,14 @@
     <Usage Id="System.Drawing.Common" Version="4.7.0" />
     <Usage Id="System.Formats.Asn1" Version="5.0.0" />
     <Usage Id="System.IO.Pipelines" Version="5.0.1" />
+    <Usage Id="System.Memory" Version="4.5.0" IsDirectDependency="true" />
     <Usage Id="System.Reflection.Metadata" Version="5.0.0" />
     <Usage Id="System.Resources.Extensions" Version="4.6.0" />
+    <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.3.21164.3" />
+    <Usage Id="System.Security.Cryptography.Cng" Version="4.4.0" IsDirectDependency="true" />
     <Usage Id="System.Security.Cryptography.Cng" Version="5.0.0" />
     <Usage Id="System.Security.Cryptography.Pkcs" Version="5.0.0" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.4.0" />
@@ -145,6 +151,7 @@
     <Usage Id="System.Text.Encodings.Web" Version="6.0.0-preview.3.21164.3" />
     <Usage Id="System.Text.Json" Version="4.7.2" IsDirectDependency="true" />
     <Usage Id="System.Text.Json" Version="6.0.0-preview.3.21164.3" />
+    <Usage Id="System.Threading.Tasks.Dataflow" Version="4.5.24" IsDirectDependency="true" />
     <Usage Id="System.ValueTuple" Version="4.3.0" />
     <Usage Id="System.Windows.Extensions" Version="4.7.0" />
     <Usage Id="WiX" Version="3.11.2" />
