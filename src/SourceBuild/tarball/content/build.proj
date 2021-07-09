@@ -84,11 +84,8 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" >
     <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
-                            PrebuiltBaselineFile="$(OnlineBaselineDataFile)"
-                            OutputFilePath="$(OnlinePrebuiltBurndownDataFile)" />
-    <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
-                            PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
-                            OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
+                            PrebuiltBaselineFile="$(BaselineDataFile)"
+                            OutputFilePath="$(PrebuiltBurndownDataFile)" />
 
     <WriteLinesToFile File="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" Overwrite="true" />
   </Target>
