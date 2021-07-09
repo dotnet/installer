@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
+    <Dependency Name="Microsoft.Build" Version="17.0.0-preview-21330-06" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/msbuild</Uri>
+      <Sha>cdc5faeda066a83b084c96b8a455ad0a5e8713ab</Sha>
+      <SourceBuild RepoName="msbuild" ManagedOnly="true" />
+    </Dependency>
     <Dependency Name="Microsoft.Diagnostics.NETCore.Client" Version="5.0.0-preview.21325.1">
       <Uri>https://github.com/dotnet/diagnostics</Uri>
       <Sha>6f48c2ae749c29b687af0353e6c2a9590d7e3d22</Sha>
