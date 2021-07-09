@@ -491,7 +491,7 @@
       <!-- relevant issues: https://github.com/dotnet/runtime/issues/44646, https://github.com/dotnet/runtime/issues/45183, https://github.com/dotnet/runtime/issues/45417 -->
       <!-- these should be fixed for 6.0 proper                                                                                                                            -->
       <PrebuiltPackagesToUse Include="$(PrebuiltPackagesPath)/*.nupkg" />
-      <SourceBuiltNupkgFilesToSkip Include="@(PrebuiltPackagesToUse -> $$(SourceBuiltPackagesPath)extractArtifacts/artifacts/%(Filename)%(Extension)" />
+      <SourceBuiltNupkgFilesToSkip Include="@(PrebuiltPackagesToUse -> '$(SourceBuiltPackagesPath)extractArtifacts/artifacts/%(Filename)%(Extension)')" />
       <SourceBuiltNupkgFiles Condition="'@(_BuiltIntermediatePackages)' != '' and $([System.String]::Copy(%(_BuiltIntermediatePackages.Identity)).Contains('source-build-reference-packages'))" Remove="@(SourceBuiltNupkgFilesToSkip)" />
     </ItemGroup>
 
