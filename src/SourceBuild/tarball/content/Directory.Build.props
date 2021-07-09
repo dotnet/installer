@@ -92,7 +92,6 @@
 
   <PropertyGroup>
     <BaseOutputPath>$(ArtifactsDir)</BaseOutputPath>
-    <ClonedSubmoduleDirectory Condition="'$(ClonedSubmoduleDirectory)' == ''">$(BaseOutputPath)src/</ClonedSubmoduleDirectory>
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
@@ -148,8 +147,7 @@
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
-    <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
-    <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
+    <PrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData.csv</PrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
     <TextOnlyPackageBaseDir>$(IntermediatePath)text-only-packages/</TextOnlyPackageBaseDir>
     <ExternalTarballsDir>$(IntermediatePath)external-tarballs/</ExternalTarballsDir>
@@ -166,10 +164,7 @@
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ArchiveArtifactsTextFileName>archiveArtifacts.txt</ArchiveArtifactsTextFileName>
     <ArchiveArtifactsTextFile>$(ExternalTarballsDir)$(ArchiveArtifactsTextFileName)</ArchiveArtifactsTextFile>
-    <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
-    <OfflineBaselineDataFile>$(BaselineDataFile)offline.xml</OfflineBaselineDataFile>
-    <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>
-    <BaselineDataFile>$(OfflineBaselineDataFile)</BaselineDataFile>
+    <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline.xml</BaselineDataFile>
     <!--Exclude tests that are failing for test enabled projects like - corefx -->
     <TestExclusionsDir>$(ProjectDir)test/exclusions/</TestExclusionsDir>
   </PropertyGroup>
