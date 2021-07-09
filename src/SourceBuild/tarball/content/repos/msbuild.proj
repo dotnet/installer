@@ -42,14 +42,13 @@
     but the NuGet resolver seems flaky so we're using our resolver instead. We only have access to
     the nupkg ahead of time when building a tarball, so only enable this workaround then.
   -->
-  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
+  <ItemGroup>
     <CentralPackageVersionsSdkOverride Include="Microsoft.Build.CentralPackageVersions" Group="CENTRAL_PACKAGE_VERSIONS" />
     <UseSourceBuiltSdkOverride Include="@(CentralPackageVersionsSdkOverride)" />
   </ItemGroup>
 
   <Target Name="ExtractCentralPackageVersionsSdkPackage"
           BeforeTargets="SetSourceBuiltSdkOverrides"
-          Condition="'$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)ExtractCentralPackageVersionsSdkPackage.complete">
     <ItemGroup>
