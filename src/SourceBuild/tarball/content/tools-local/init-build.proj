@@ -64,7 +64,7 @@
          https://github.com/dotnet/runtime/issues/45417.   this should be fixed for the 6.0 release.                           -->
     <ItemGroup>
       <PrebuiltPackagesToUse Include="$(PrebuiltPackagesPath)/*.nupkg" />
-      <ReferencePackagesToOverride Include="@(PrebuiltPackagesToUse -> $(ReferencePackagesDir)/%(Filename)%(Extension)" />
+      <ReferencePackagesToOverride Include="@(PrebuiltPackagesToUse -> '$(ReferencePackagesDir)/%(Filename)%(Extension)')" />
     </ItemGroup>
 
     <Message Text="Overriding @(ReferencePackagesToOverride) with @(PrebuiltPackagesToUse)" Importance="High" />
