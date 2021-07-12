@@ -13,14 +13,14 @@ index 4f9f6a30..528ed1a4 100644
 --- a/src/SettingsMigrator/SettingsMigrator.csproj
 +++ b/src/SettingsMigrator/SettingsMigrator.csproj
 @@ -15,7 +15,7 @@
+     <PlatformTarget>AnyCPU</PlatformTarget>
      <Prefer32Bit>true</Prefer32Bit>
    </PropertyGroup>
-   <PropertyGroup>
--    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
-+    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' != 'true' ">win7-x86</RuntimeIdentifier>
+-  <PropertyGroup>
++  <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
    </PropertyGroup>
    <ItemGroup>
-     <EmbeddedResource Include="Resources\Resources.resx" />
 -- 
 2.26.2
 
