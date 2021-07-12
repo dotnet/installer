@@ -2,7 +2,8 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)\eng\common\build$(ShellExtension) $(StandardSourceBuildArgs)</BuildCommand>
+    <BuildCommandArgs>$(StandardSourceBuildArgs) /p:SemanticVersioningV1=true</BuildCommandArgs>
+    <BuildCommand>$(ProjectDirectory)\eng\common\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
