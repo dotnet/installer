@@ -4,7 +4,7 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM microsoft/dotnet-buildtools-prereqs:fedora-29-2f0798a-20181105183801
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-29-2f0798a-20181105183801
 
 RUN dnf install -y nss
 
