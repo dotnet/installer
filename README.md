@@ -60,6 +60,8 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 
 **For .NET 6 Optional workloads**
 
+We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
+
 ```
 <configuration>
   <packageSources>
