@@ -86,14 +86,14 @@
       <Sha>72cef496e34fdcc1b9b765fbed04f8e5d754e90a</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-preview.7.21366.17">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-preview.7.21366.19">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>ea5c74c9901d650b8f9d01a4148eed7c15db4553</Sha>
+      <Sha>8fc46fbcc509bc99f8c02cb53cb1e491db689c0e</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-preview.7.21366.17">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-preview.7.21366.19">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>ea5c74c9901d650b8f9d01a4148eed7c15db4553</Sha>
+      <Sha>8fc46fbcc509bc99f8c02cb53cb1e491db689c0e</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.0-preview.7.21365.3" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -133,9 +133,9 @@
       <Sha>169888020e4fb15aca99f3f112bfe626fc1fb980</Sha>
       <SourceBuild RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.2.129" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>d2e800b88d6b941732272c3a8cf7115836e98e22</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.2.136" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
+      <Sha>a5d5e3236e86f6c3c09097b723ce2b52852a1752</Sha>
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
       <Uri>https://github.com/Microsoft/ApplicationInsights-dotnet</Uri>
