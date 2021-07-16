@@ -86,14 +86,14 @@
       <Sha>72cef496e34fdcc1b9b765fbed04f8e5d754e90a</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-preview.1.21366.13">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-preview.1.21366.16">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3725fe0fc043fef3fa697a4a0096d4b8d69aa90e</Sha>
+      <Sha>fbba897a71b47bab80bf2818bc2d279f3a57613c</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-preview.1.21366.13">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-preview.1.21366.16">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3725fe0fc043fef3fa697a4a0096d4b8d69aa90e</Sha>
+      <Sha>fbba897a71b47bab80bf2818bc2d279f3a57613c</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.0-rc.1.21365.9" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -133,9 +133,9 @@
       <Sha>dfd2be739200c5a4b0503e5a1339b9aba74e2a1d</Sha>
       <SourceBuild RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.2.129" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>d2e800b88d6b941732272c3a8cf7115836e98e22</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.0.0-preview.2.136" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
+      <Sha>a5d5e3236e86f6c3c09097b723ce2b52852a1752</Sha>
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
       <Uri>https://github.com/Microsoft/ApplicationInsights-dotnet</Uri>
