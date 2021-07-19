@@ -469,7 +469,7 @@
       <_BuiltIntermediatePackages Condition="'$(PackagesOutput)' != ''" Include="$(PackagesOutput)/Microsoft.SourceBuild.Intermediate.*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
       <_BuiltIntermediatePackages Condition="'@(PackagesOutputList)' != ''" Include="%(PackagesOutputList.Identity)/Microsoft.SourceBuild.Intermediate.*.nupkg" Exclude="%(PackagesOutputList.Identity)/*.symbols.nupkg"/>
     </ItemGroup>
-    
+
 
     <PropertyGroup Condition="'@(_BuiltIntermediatePackages)' != ''">
         <_DestinationPath>$(SourceBuiltPackagesPath)</_DestinationPath>
@@ -503,7 +503,7 @@
 
   </Target>
 
-  <!-- Copy restored packages from inner build to ensure they're included in the 
+  <!-- Copy restored packages from inner build to ensure they're included in the
        main build prebuilt check -->
   <Target Name="CopyInnerBuildRestoredPackages"
           AfterTargets="Package">
@@ -592,14 +592,14 @@
     <Exec Command="chmod 755 git-clone-to-dir.sh"
       Condition=" '%(_ToolPackage.Id)' == 'Microsoft.DotNet.Arcade.Sdk' "
       WorkingDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)/tools/SourceBuild/" />
-    
-    <ReplaceTextInFile 
+
+    <ReplaceTextInFile
       Condition=" '%(_ToolPackage.Id)' == 'Microsoft.DotNet.Arcade.Sdk' "
       InputFile="$(ToolPackageExtractDir)%(_ToolPackage.Id)/tools/SourceBuild/SourceBuildArcadeTools.targets"
       OldText="%3CReadSourceBuildIntermediateNupkgDependencies"
       NewText="%3CReadSourceBuildIntermediateNupkgDependencies Condition=&quot;'%24%28DotNetBuildOffline%29' != 'true'&quot;" />
 
-    <!-- Allow overriding of Arcade targets for SourceBuild to enable quicker 
+    <!-- Allow overriding of Arcade targets for SourceBuild to enable quicker
          dev turnaround for Preview 6 -->
     <PropertyGroup>
       <ArcadeSDKToolPackagePath></ArcadeSDKToolPackagePath>
@@ -613,7 +613,7 @@
       Condition=" '$(ArcadeSDKToolPackagePath))' != '' "
       SourceFiles="@(OverrideArcadeFiles)"
       DestinationFiles="$(ArcadeSDKToolPackagePath)tools/SourceBuild/%(RecursiveDir)%(Filename)%(Extension)" />
-      
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
@@ -728,6 +728,25 @@
       IgnoredProjectAssetsJsonFiles="@(IgnoredProjectAssetsJsonFiles)"
       DataFile="$(PackageReportDataFile)"
       ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
+
+    <!-- Copy all restored packages to resulting prebuilt folder -->
+    <ItemGroup>
+      <UsedPrebuiltPackageFiles Include="@(AllRestoredPackageFiles)" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(UsedPrebuiltPackageFiles)"
+      DestinationFolder="$(ResultingPrebuiltPackagesDir)" />
+
+    <!-- Remove packages that are known to be built -->
+    <ItemGroup>
+      <BuiltPackageFiles Include="@(TarballPrebuiltPackageFile)" />
+      <BuiltPackageFiles Include="@(SourceBuiltPackageFiles)" />
+      <BuiltPackageFiles Include="@(ReferencePackageFiles)" />
+      <BuiltPackageFiles>
+        <LCFilename>$([System.String]::Copy(%(Filename)).ToLower())</LCFilename>
+      </BuiltPackageFiles>
+    </ItemGroup>
+    <Delete Files="@(BuiltPackageFiles->'$(ResultingPrebuiltPackagesDir)%(LCFilename)%(Extension)')" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete" Overwrite="true" />
   </Target>
