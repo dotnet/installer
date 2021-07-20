@@ -18,7 +18,7 @@ index 9e646ebab5b..880eb77593a 100644
    </Target>
  
 -  <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" />
-+  <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" Condition="'$(DotNetBuildFromSource)' != 'true'" />
++  <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472' and '$(DotNetBuildFromSource)' != 'true'" />
    <Import Project="CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
  </Project>
 diff --git a/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj b/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj
