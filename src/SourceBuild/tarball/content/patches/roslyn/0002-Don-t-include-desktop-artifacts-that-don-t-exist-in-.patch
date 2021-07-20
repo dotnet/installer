@@ -1,0 +1,37 @@
+From 463a0e435a26ec9c9daf514f0e1f66df68dbfae6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 20 Jul 2021 14:20:14 -0500
+Subject: [PATCH 2/2] Don't include desktop artifacts that don't exist in
+ source-build.
+
+---
+ .../Microsoft.Net.Compilers.Toolset.Package.csproj              | 2 +-
+ .../Microsoft.Net.Compilers.Package.csproj                      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+index 9e646ebab5b..880eb77593a 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+@@ -57,6 +57,6 @@
+     </ItemGroup>
+   </Target>
+ 
+-  <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" />
++  <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   <Import Project="CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+ </Project>
+diff --git a/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj b/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj
+index 05f74e26ce6..e494702440b 100644
+--- a/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj
+@@ -39,5 +39,5 @@
+     </ItemGroup>
+   </Target>
+ 
+-  <Import Project="..\Microsoft.Net.Compilers.Toolset\DesktopCompilerArtifacts.targets"/>
++  <Import Project="..\Microsoft.Net.Compilers.Toolset\DesktopCompilerArtifacts.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+ </Project>
+-- 
+2.18.0
+
