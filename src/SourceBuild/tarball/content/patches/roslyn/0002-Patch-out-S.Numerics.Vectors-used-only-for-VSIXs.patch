@@ -1,0 +1,44 @@
+From ca01550eb9163b25ac21185284c65690bfc7b4fd Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 20 Jul 2021 13:34:27 -0500
+Subject: [PATCH 2/2] Patch out S.Numerics.Vectors (used only for VSIXs).
+
+---
+ src/Compilers/Extension/Roslyn.Compilers.Extension.csproj   | 1 -
+ .../DesktopCompilerArtifacts.targets                        | 6 ------
+ 2 files changed, 7 deletions(-)
+
+diff --git a/src/Compilers/Extension/Roslyn.Compilers.Extension.csproj b/src/Compilers/Extension/Roslyn.Compilers.Extension.csproj
+index 3644afb8c2f..8cde9f4d215 100644
+--- a/src/Compilers/Extension/Roslyn.Compilers.Extension.csproj
++++ b/src/Compilers/Extension/Roslyn.Compilers.Extension.csproj
+@@ -32,7 +32,6 @@
+     <NuGetPackageToIncludeInVsix Include="System.Buffers" />
+     <NuGetPackageToIncludeInVsix Include="System.Collections.Immutable" />
+     <NuGetPackageToIncludeInVsix Include="System.Memory" />
+-    <NuGetPackageToIncludeInVsix Include="System.Numerics.Vectors" />
+     <NuGetPackageToIncludeInVsix Include="System.Reflection.Metadata" />
+     <NuGetPackageToIncludeInVsix Include="System.Text.Encoding.CodePages" />
+     <NuGetPackageToIncludeInVsix Include="System.Runtime.CompilerServices.Unsafe" />
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets b/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
+index 0d5edd7862c..79bafe5ed23 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
+@@ -58,14 +58,8 @@
+       <_NoOptimizationData Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Threading.Tasks.Extensions.dll"/>
+       <_NoOptimizationData Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Buffers.dll"/>
+       <_NoOptimizationData Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Memory.dll"/>
+-      <_NoOptimizationData Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Numerics.Vectors.dll"/>      
+       <_NoOptimizationData Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Text.Encoding.CodePages.dll"/>
+       
+-      <!--
+-        System.Numerics.Vector requires JIT, since its size is dynamic and based on the underlying CPU support.
+-      -->
+-      <_NoNGen Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.Numerics.Vectors.dll"/>
+-      
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csi\$(Configuration)\net472\System.*.dll" Exclude="@(_NoOptimizationData)" NgenArchitecture="all" NgenApplication="VBCSCompiler.exe" OverwriteNgenOptimizationData="true"/>
+       
+       <!-- Note: do not use Update attribute (see https://github.com/microsoft/msbuild/issues/1124) -->
+-- 
+2.18.0
+
