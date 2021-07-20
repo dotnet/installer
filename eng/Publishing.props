@@ -87,7 +87,8 @@
   </ItemGroup>
 
   <Target Name="PublishSdkAssetsAndChecksums"
-          BeforeTargets="Publish">
+          BeforeTargets="Publish"
+          Condition="$(DotNetPublishUsingPipelines)">
 
     <ReadLinesFromFile File="$(ArtifactsTmpDir)FullNugetVersion.version">
       <Output
