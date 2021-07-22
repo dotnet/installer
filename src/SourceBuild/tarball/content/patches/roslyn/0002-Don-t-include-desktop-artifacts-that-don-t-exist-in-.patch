@@ -4,6 +4,15 @@ Date: Tue, 20 Jul 2021 14:20:14 -0500
 Subject: [PATCH 2/2] Don't include desktop artifacts that don't exist in
  source-build.
 
+This fixes a bad intersection of a couple of things going on in the source-build Roslyn build.
+- Roslyn.Extensions project that builds before this normally will restore a net46 version of System.Numerics.Vectors, but it sets it to CopyLocal and is building for net472, so this net46 DLL is output to the net472 folder.
+- We don't build Roslyn.Extensions for net472 for other reasons, so we are missing this DLL but not the output from that project (we just get the .NET Core folders).
+- DesktopCompilerArtifacts tries to specifically call out the System.Numerics.Vectors (and some other) DLLs because they are treated differently (NGEN is not supported for them).
+- So the missing DLL, instead of just being ignored because of a wildcard, comes up as error trying to build these packages.
+- We want full-framework Roslyn artifacts downstream but we don't ever run the fullfx Roslyn compiler, so we need these packages but not the CopyLocal fullfx DLLs.
+
+So we keep the net472 build for these but remove the specifically-called out artifacts that we don't need.
+
 ---
  .../Microsoft.Net.Compilers.Toolset.Package.csproj          | 4 ++--
  .../Microsoft.Net.Compilers.Package.csproj                  | 6 +++---
