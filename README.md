@@ -31,6 +31,11 @@ The repository contains native code project required for the Windows installer. 
 - Install CMAKE 3.2.0.1 or later
 - Install MSVC Build tools for x86/x64/arm64, v14.28-16.9
 
+- `build` for basic build
+- `build -pack` to build the installer
+- To build in VS, run a command line build first, then run `artifacts\core-sdk-build-env.bat` from a VS command prompt and then `devenv Microsoft.DotNet.Cli.sln`
+- To test different languages of the installer, run `artifacts\packages\Debug\Shipping>dotnet-sdk-3.1.412-win-x64.exe /lang 1046` using the LCID of the language you want to test
+
 # Build status
 
 |All legs|
@@ -57,6 +62,18 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 </configuration>
 ```
 **Note:** that you may need to add the dotnet5 feed for a short period of time while .NET transitions to .NET 6
+
+**For .NET 6 Optional workloads**
+
+We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
+
+```
+<configuration>
+  <packageSources>
+    <add key="maui" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json" />
+  </packageSources>
+</configuration>
+```
 
 **For .NET 5 builds**
 
