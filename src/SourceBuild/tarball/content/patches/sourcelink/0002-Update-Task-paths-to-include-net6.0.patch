@@ -3,6 +3,8 @@ From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 22 Jul 2021 15:00:30 +0000
 Subject: [PATCH] Update Task paths to include net6.0
 
+When building from source, only the current TFM is built.  Update
+tool paths to look in net6.0 path when building from source.
 ---
  .../build/Microsoft.Build.Tasks.Git.props                        | 1 +
  .../build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets     | 1 +

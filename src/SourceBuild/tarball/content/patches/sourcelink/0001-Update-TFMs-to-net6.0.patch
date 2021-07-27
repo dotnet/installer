@@ -3,6 +3,8 @@ From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 20 Jul 2021 21:01:43 +0000
 Subject: [PATCH] Update TFMs to net6.0
 
+When building from source, only the current TFM is built.  Update
+TargetFrameworks to only have net6.0.
 ---
  eng/Versions.props                                               | 1 +
  src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj   | 1 +
