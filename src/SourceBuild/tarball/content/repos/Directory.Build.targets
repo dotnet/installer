@@ -106,7 +106,7 @@
 
   <Target Name="AddCommonNoWarns"
           BeforeTargets="Build"
-          Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') "
+          Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') OR EXISTS('$(ProjectDirectory)src/Directory.Build.props') "
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)AddCommonNoWarns.complete" >
 
@@ -125,8 +125,11 @@
   </PropertyGroup>
 </Project>]]>
       </NewText>
+
+      <DirectoryBuildPropsFile Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') ">$(ProjectDirectory)Directory.Build.props</DirectoryBuildPropsFile>
+      <DirectoryBuildPropsFile Condition=" '$(DirectoryBuildPropsFile)' == '' AND EXISTS('$(ProjectDirectory)src/Directory.Build.props') ">$(ProjectDirectory)src/Directory.Build.props</DirectoryBuildPropsFile>
     </PropertyGroup>
-    <ReplaceTextInFile InputFile="$(ProjectDirectory)Directory.Build.props"
+    <ReplaceTextInFile InputFile="$(DirectoryBuildPropsFile)"
       OldText="$(OldText)"
       NewText="$(NewText)" />
   </Target>
