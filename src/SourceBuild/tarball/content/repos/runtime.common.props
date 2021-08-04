@@ -6,38 +6,15 @@
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
-  <!-- TODO:  Some of these props are declared elsewhere.  Most shouldn't be needed here.
-  <!- Portable / TargetRid Overrides->
-  <PropertyGroup>
-    <!- OSX installer build always uses the portable RID, so override it ->
-    
-    TODO: Conditionally set and pass appropriate args to build command.
-    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT' OR '$(TargetOS)' == 'FreeBSD'">true</OverridePortableBuild>
-
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
-
-    TODO:  Move to portable project
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux' and ('$(PortableBuild)' == 'true' or '$(BuildingPortableRuntime)' == 'true')">linux-$(Platform)</OverrideTargetRid>
-
-    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == '' AND '$(OS)' == 'Windows_NT'">false</UseSystemLibunwind>
-    TODO:  Log follow up issue to move this to the runtime repo
-    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == '' AND '$(TargetOS)' == 'OSX'">false</UseSystemLibunwind>
-    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == ''">$(UseSystemLibraries)</UseSystemLibunwind>
-  </PropertyGroup> -->
-
   <!-- Build arguments -->
   <PropertyGroup>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
-    <!-- StandardSourceBuildArgs include -bl which overrides the output of the inner binlog.  Change to -nobl -->
+    <!-- StandardSourceBuildArgs includes -bl which overrides the output of the inner binlog.  Change to -nobl -->
     <BuildCommandArgs>$(StandardSourceBuildArgs.Replace('-bl', '-nobl'))</BuildCommandArgs>
 
-    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
