@@ -33,6 +33,9 @@
   <PropertyGroup>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
+    <!-- StandardSourceBuildArgs include -bl which overrides the output of the inner binlog.  Change to -nobl -->
+    <BuildCommandArgs>$(StandardSourceBuildArgs.Replace('-bl', '-nobl'))</BuildCommandArgs>
+
     <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
