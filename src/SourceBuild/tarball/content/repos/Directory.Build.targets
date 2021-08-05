@@ -564,6 +564,56 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
   </Target>
 
+  <Target Name="DirSizeBeforeBuild"
+          BeforeTargets="Build"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Exec Command="echo 'DirSize Before Building $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
+    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+  </Target>
+  <Target Name="DirSizeAfterBuild"
+          AfterTargets="Build"
+          BeforeTargets="CleanupRepo"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Exec Command="echo 'DirSize After Building $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
+    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+  </Target>
+  <Target Name="DirSizeAfterClean"
+          AfterTargets="CleanupRepo"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Exec Command="echo 'DirSize After CleanupRepo $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
+    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+  </Target>
+
+  <Target Name="CleanupRepo" 
+          AfterTargets="RemoveBuiltPackagesFromCache"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+
+    <!-- Make a copy of the build logs & project.assets.json files-->
+    <PropertyGroup>
+      <BuildLogsDir>$(ProjectDirectory)artifacts/buildLogs</BuildLogsDir>
+      <BuildObjDir>$(ProjectDirectory)artifacts/buildObj</BuildObjDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <LogFilesToCopy Include="$(ProjectDirectory)artifacts/**/*.log" />
+      <LogFilesToCopy Include="$(ProjectDirectory)artifacts/**/*.binlog" />
+      <ObjFilesToCopy Include="$(ProjectDirectory)artifacts/**/project.assets.json" />
+    </ItemGroup>
+    <MakeDir Directories="$(BuildLogsDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
+    <MakeDir Directories="$(BuildObjDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
+    <Copy SourceFiles="@(LogFilesToCopy)" DestinationFolder="$(BuildLogsDir)/%(RecursiveDir)" Condition="Exists('$(BuildLogsDir)') AND '@(LogFilesToCopy)' != '' " />
+    <Copy SourceFiles="@(ObjFilesToCopy)" DestinationFolder="$(BuildObjDir)/%(RecursiveDir)" Condition="Exists('$(BuildObjDir)') AND '@(ObjFilesToCopy)' != '' " />
+
+    <!-- Cleanup everything else -->
+    <ItemGroup>
+      <DirsToDelete Include="$([System.IO.Directory]::GetDirectories(&quot;$(ProjectDirectory)artifacts/&quot;))" Condition="Exists('$(ProjectDirectory)artifacts')" />
+      <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
+      <DirsToDelete Remove="$(BuildLogsDir)" />
+      <DirsToDelete Remove="$(BuildObjDir)" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(DirsToDelete)" />
+  </Target>
+
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
