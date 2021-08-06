@@ -35,6 +35,7 @@ jobs:
   - checkout: none
 
   - download: ${{ parameters.tarballResourceId }}
+    artifact: BlobArtifacts
     patterns: '**/dotnet-sdk-source*.tar.gz'
     displayName: Download Tarball
 
