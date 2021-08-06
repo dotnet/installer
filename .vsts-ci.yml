@@ -31,6 +31,15 @@ variables:
   - name: _NonWindowsTestArg
     value: ''
 
+- name: _InternalRuntimeDownloadArgs
+  value: ''
+
+- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+  - group: DotNet-MSRC-Storage
+  - name: _InternalRuntimeDownloadArgs
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
+      /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
+
 stages:
 - stage: build
   jobs:

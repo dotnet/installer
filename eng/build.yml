@@ -54,11 +54,6 @@ phases:
       - _TeamName: Roslyn-Project-System
       - _SignType: test
       - _BuildArgs: '/p:DotNetSignType=$(_SignType) $(_PgoInstrument)'
-      - _DOTNETCLIMSRC_READ_SAS_TOKEN: ''
-
-      - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-        - group: DotNet-MSRC-Storage
-        - _DOTNETCLIMSRC_READ_SAS_TOKEN: $(dotnetclimsrc-read-sas-token)
 
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-Symbol-Server-PATs
@@ -92,10 +87,10 @@ phases:
                   -Architecture $(_BuildArchitecture)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
         env:
           DOTNET_CLI_UI_LANGUAGE: $(_DOTNET_CLI_UI_LANGUAGE)
-          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
       - ${{ if ne(variables['System.TeamProject'], 'public') }}:
@@ -118,9 +113,8 @@ phases:
                   $(_RuntimeIdentifier)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
-        env:
-          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if or(eq(parameters.agentOs, 'Darwin'), eq(parameters.agentOs, 'FreeBSD')) }}:
       - script: ./build.sh
@@ -132,9 +126,8 @@ phases:
                   $(_RuntimeIdentifier)
                   $(_BuildArgs)
                   $(_AdditionalBuildParameters)
+                  $(_InternalRuntimeDownloadArgs)
         displayName: Build
-        env:
-          DOTNETCLIMSRC_READ_SAS_TOKEN: $(_DOTNETCLIMSRC_READ_SAS_TOKEN)
 
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT'), ne(variables['PostBuildSign'], 'true')) }}:
       - task: NuGetCommand@2
