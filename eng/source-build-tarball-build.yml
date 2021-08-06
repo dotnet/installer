@@ -9,32 +9,6 @@ resources:
 stages:
 - stage: build
   jobs:
-  - job: build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-20.04
-    container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-32-20210222183556-031e7d2
-    workspace:
-      clean: all
-
-    variables:
-      _TarballDir: $(Build.StagingDirectory)/tarball
-    steps:
-    - checkout: none
-
-    - download: installer-build-resource
-      patterns: 'BlobArtifacts/dotnet-sdk-source*.tar.gz'
-
-    - script: |
-        set -x
-
-        mkdir -p "$(_TarballDir)"
-        tarballFilePath="$(PIPELINE.WORKSPACE)/installer-build-resource/BlobArtifacts/dotnet-sdk-source*.tar.gz"
-        eval tar -ozxf "$tarballFilePath" -C "$(_TarballDir)"
-
-        df -h
-      displayName: Extract Tarball
-
-    - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-run-tarball-build.yml
-      parameters:
-        sourceFolder: $(_TarballDir)
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+    parameters:
+      tarballResourceId: installer-build-resource
