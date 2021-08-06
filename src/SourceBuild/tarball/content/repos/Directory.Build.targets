@@ -564,24 +564,24 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="DirSizeBeforeBuild"
+  <Target Name="DisplayDirSizeBeforeBuild"
           BeforeTargets="Build"
           Condition=" '$(CleanWhileBuilding)' == 'true' ">
-    <Exec Command="echo 'DirSize Before Building $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
-    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+    <Message Text="DirSize Before Building $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
   </Target>
-  <Target Name="DirSizeAfterBuild"
+  <Target Name="DisplayDirSizeAfterBuild"
           AfterTargets="Build"
           BeforeTargets="CleanupRepo"
           Condition=" '$(CleanWhileBuilding)' == 'true' ">
-    <Exec Command="echo 'DirSize After Building $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
-    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+    <Message Text="DirSize After Building $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
   </Target>
-  <Target Name="DirSizeAfterClean"
+  <Target Name="DisplayDirSizeAfterClean"
           AfterTargets="CleanupRepo"
           Condition=" '$(CleanWhileBuilding)' == 'true' ">
-    <Exec Command="echo 'DirSize After CleanupRepo $(RepositoryName)' >> $(LoggingDir)DirSize.log" />
-    <Exec Command="df --block-size=1M $(ProjectDir) >> $(LoggingDir)DirSize.log" />
+    <Message Text="DirSize After CleanupRepo $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
   </Target>
 
   <Target Name="CleanupRepo" 
@@ -606,7 +606,6 @@
     <!-- Cleanup everything else -->
     <ItemGroup>
       <DirsToDelete Include="$([System.IO.Directory]::GetDirectories(&quot;$(ProjectDirectory)artifacts/&quot;))" Condition="Exists('$(ProjectDirectory)artifacts')" />
-      <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
       <DirsToDelete Remove="$(BuildLogsDir)" />
       <DirsToDelete Remove="$(BuildObjDir)" />
     </ItemGroup>
