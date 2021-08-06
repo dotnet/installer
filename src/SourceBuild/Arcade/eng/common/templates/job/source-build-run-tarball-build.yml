@@ -54,7 +54,7 @@ jobs:
   - script: |
       set -x
 
-      docker run --rm -v $(_TarballDir):/workingDirectory -w /workingDirectory $(_Container) ./prep.sh
+      docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./prep.sh
     displayName: Prep Tarball
 
   - script: |
@@ -62,14 +62,14 @@ jobs:
       df -h
 
       networkArgs=
-      buildArgs=
+      customBuildArgs=
       if [ '$(_runOnline)' = 'true' ]; then
-        buildArgs='--online'
+        customBuildArgs='--online'
       else
         networkArgs='--network none'
       fi
 
-      docker run --rm -v $(_TarballDir):/workingDirectory -w /workingDirectory ${networkArgs} $(_Container) ./build.sh ${buildArgs}
+      docker run --rm -v $(_TarballDir):/tarball -w /tarball ${networkArgs} $(_Container) ./build.sh ${customBuildArgs} -- /p:CleanWhileBuilding=true
     displayName: Build Tarball
 
   - task: CopyFiles@2
