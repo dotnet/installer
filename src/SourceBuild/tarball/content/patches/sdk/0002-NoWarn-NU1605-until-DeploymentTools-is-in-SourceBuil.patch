@@ -5,7 +5,7 @@ Subject: [PATCH] NoWarn NU1605 until DeploymentTools is in SourceBuild
 
 src/Cli/dotnet/dotnet.csproj : error NU1605: Detected package downgrade: Newtonsoft.Json from 12.0.3 to 12.0.2. Reference the package directly from the project to select a different version.
 
-Error stems from Microsoft.Deployment.DotNet.Releases not being source built and referencing a newer version.  Temporary fix until the DeploymentTools repo is added to source-build.
+Error stems from Microsoft.Deployment.DotNet.Releases not being source built and referencing a newer version.  Temporary fix until the DeploymentTools repo is added to source-build (https://github.com/dotnet/source-build/issues/2365).
 ---
  src/Cli/dotnet/dotnet.csproj | 1 +
  1 file changed, 1 insertion(+)
