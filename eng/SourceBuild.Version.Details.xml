@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
+    <Dependency Name="VS.Redist.Common.AspNetCore.SharedFramework.x64.6.0" Version="6.0.0-preview.6.21355.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/aspnetcore</Uri>
+      <Sha>71dd6b0c87d7619668a40876d084d93db57eab41</Sha>
+      <SourceBuild RepoName="aspnetcore" ManagedOnly="true" />
+    </Dependency>
     <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.21310.2">
       <Uri>https://github.com/dotnet/clicommandlineparser</Uri>
       <Sha>3198bf5660cad3dab85f5475bf1fda9688146e3f</Sha>
@@ -21,9 +26,9 @@
       <Sha>3af67cd8ffd73b2dc443e1e24dc0cf28f7e1c608</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-preview.6.21321.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-preview.6.21409.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/mono/linker</Uri>
-      <Sha>f2588193553431636b9853b0f87209fa395a72c5</Sha>
+      <Sha>cb8d86607bcebd8cb3b0a1efe1472839ecdde1ca</Sha>
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
@@ -41,6 +46,11 @@
       <Uri>https://github.com/dotnet/roslyn-analyzers</Uri>
       <Sha>77c6f0725c26442023c8eee2b143b899cb3f4eb7</Sha>
       <SourceBuild RepoName="roslyn-analyzers" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="VS.Redist.Common.NetCore.SharedFramework.x64.6.0" Version="6.0.0-preview.7.21356.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>566b53a66b0afa573f0dae33d07c8de9685aa5c8</Sha>
+      <SourceBuild RepoName="runtime" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.DiaSymReader" Version="1.4.0-beta2-21315-01">
       <Uri>https://github.com/dotnet/symreader</Uri>
