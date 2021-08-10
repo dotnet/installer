@@ -7,6 +7,7 @@ trigger:
     - release/*
     - internal/release/3.*
     - internal/release/5.*
+    - internal/release/6.*
 
 variables:
 - name: _PublishUsingPipelines
@@ -30,6 +31,15 @@ variables:
     value: ''
   - name: _NonWindowsTestArg
     value: ''
+
+- name: _InternalRuntimeDownloadArgs
+  value: ''
+
+- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+  - group: DotNet-MSRC-Storage
+  - name: _InternalRuntimeDownloadArgs
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetclimsrc.blob.core.windows.net/dotnet
+      /p:DotNetRuntimeSourceFeedKey=$(dotnetclimsrc-read-sas-token-base64)
 
 stages:
 - stage: build
@@ -343,6 +353,11 @@ stages:
   - template: /eng/common/templates/jobs/source-build.yml
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
+
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+    parameters:
+      dependsOn: Source_Build_Create_Tarball
+      condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml

@@ -106,7 +106,7 @@
 
   <Target Name="AddCommonNoWarns"
           BeforeTargets="Build"
-          Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') "
+          Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') OR EXISTS('$(ProjectDirectory)src/Directory.Build.props') "
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)AddCommonNoWarns.complete" >
 
@@ -121,12 +121,15 @@
       <OldText><![CDATA[</Project>]]></OldText>
       <NewText>
         <![CDATA[  <PropertyGroup>
-    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <NoWarn>%24(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
 </Project>]]>
       </NewText>
+
+      <DirectoryBuildPropsFile Condition=" EXISTS('$(ProjectDirectory)Directory.Build.props') ">$(ProjectDirectory)Directory.Build.props</DirectoryBuildPropsFile>
+      <DirectoryBuildPropsFile Condition=" '$(DirectoryBuildPropsFile)' == '' AND EXISTS('$(ProjectDirectory)src/Directory.Build.props') ">$(ProjectDirectory)src/Directory.Build.props</DirectoryBuildPropsFile>
     </PropertyGroup>
-    <ReplaceTextInFile InputFile="$(ProjectDirectory)Directory.Build.props"
+    <ReplaceTextInFile InputFile="$(DirectoryBuildPropsFile)"
       OldText="$(OldText)"
       NewText="$(NewText)" />
   </Target>
@@ -196,6 +199,15 @@
       NuGetConfigFile="%(NuGetConfigFiles.Identity)"
       BuildWithOnlineSources="$(BuildWithOnlineSources)"
       KeepFeedPrefixes="@(KeepFeedPrefixes)" />
+
+    <!-- Temporarily add dotnet6 feed to all NuGet.Configs 
+         until all repos build so that preview packages
+         referenced in TemporaryBootstrapPackageVersions.props
+         can be found. -->
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="dotnet6-temporary"
+                            SourcePath="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json"
+                            Condition=" '$(BuildWithOnlineSources)' == 'true' " />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="prebuilt"
@@ -326,7 +338,7 @@
     <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                            AdditionalAssetDirs="@(_AdditionalAssetDirs)"
-                           OutputPath="$(GennedPackageVersionPropsPath)" />
+                           OutputPath="$(CurrentSourceBuiltPackageVersionPropsPath)" />
 
     <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            IncludeCreationTimeProperty="true"
@@ -562,6 +574,55 @@
     <Delete Files="@(_FilesToDelete)" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
+  </Target>
+
+  <Target Name="DisplayDirSizeBeforeBuild"
+          BeforeTargets="Build"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Message Text="DirSize Before Building $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
+  </Target>
+  <Target Name="DisplayDirSizeAfterBuild"
+          AfterTargets="Build"
+          BeforeTargets="CleanupRepo"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Message Text="DirSize After Building $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
+  </Target>
+  <Target Name="DisplayDirSizeAfterClean"
+          AfterTargets="CleanupRepo"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+    <Message Text="DirSize After CleanupRepo $(RepositoryName)" Importance="High" />
+    <Exec Command="df --block-size=1M $(ProjectDir)" />
+  </Target>
+
+  <Target Name="CleanupRepo" 
+          AfterTargets="RemoveBuiltPackagesFromCache"
+          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+
+    <!-- Make a copy of the build logs & project.assets.json files-->
+    <PropertyGroup>
+      <BuildLogsDir>$(ProjectDirectory)artifacts/buildLogs</BuildLogsDir>
+      <BuildObjDir>$(ProjectDirectory)artifacts/buildObj</BuildObjDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <LogFilesToCopy Include="$(ProjectDirectory)artifacts/**/*.log" />
+      <LogFilesToCopy Include="$(ProjectDirectory)artifacts/**/*.binlog" />
+      <ObjFilesToCopy Include="$(ProjectDirectory)artifacts/**/project.assets.json" />
+    </ItemGroup>
+    <MakeDir Directories="$(BuildLogsDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
+    <MakeDir Directories="$(BuildObjDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
+    <Copy SourceFiles="@(LogFilesToCopy)" DestinationFolder="$(BuildLogsDir)/%(RecursiveDir)" Condition="Exists('$(BuildLogsDir)') AND '@(LogFilesToCopy)' != '' " />
+    <Copy SourceFiles="@(ObjFilesToCopy)" DestinationFolder="$(BuildObjDir)/%(RecursiveDir)" Condition="Exists('$(BuildObjDir)') AND '@(ObjFilesToCopy)' != '' " />
+
+    <!-- Cleanup everything else -->
+    <ItemGroup>
+      <DirsToDelete Include="$([System.IO.Directory]::GetDirectories(&quot;$(ProjectDirectory)artifacts/&quot;))" Condition="Exists('$(ProjectDirectory)artifacts')" />
+      <DirsToDelete Remove="$(BuildLogsDir)" />
+      <DirsToDelete Remove="$(BuildObjDir)" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(DirsToDelete)" />
   </Target>
 
   <Target Name="ExtractToolPackage"

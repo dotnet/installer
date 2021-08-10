@@ -20,7 +20,7 @@
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
 
     <!-- new supported portable/nonportable options.  These control whether to build portable runtime
          or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
@@ -122,7 +122,7 @@
     <SourceBuiltAspNetCoreRuntime>$(LocalBlobStorageRoot)aspnetcore/Runtime/</SourceBuiltAspNetCoreRuntime>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
-    <GennedPackageVersionPropsPath>$(IntermediatePath)GennedPackageVersions.props</GennedPackageVersionPropsPath>
+    <CurrentSourceBuiltPackageVersionPropsPath>$(IntermediatePath)CurrentSourceBuiltPackageVersions.props</CurrentSourceBuiltPackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
@@ -162,6 +162,7 @@
     <TextOnlyPackageBaseDir>$(ProjectDir)packages/text-only/</TextOnlyPackageBaseDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
+    <SourceBuiltPrebuiltsTarballName>Private.SourceBuilt.Prebuilts</SourceBuiltPrebuiltsTarballName>
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ArchiveArtifactsTextFileName>archiveArtifacts.txt</ArchiveArtifactsTextFileName>
     <ArchiveArtifactsTextFile>$(ExternalTarballsDir)$(ArchiveArtifactsTextFileName)</ArchiveArtifactsTextFile>
