@@ -61,7 +61,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             {
                 string repoName = GetDefaultRepoNameFromUrl(dependency.Uri);
                 string safeRepoName = repoName.Replace("-", "").Replace(".", "");
-                string propsPath = Path.Combine(SourceBuildMetadataDir, $"{repoName}.props");
+                string propsPath = Path.Combine(SourceBuildMetadataDir, $"{repoName.Replace(".", "-")}.props");
                 DerivedVersion derivedVersion = GetVersionInfo(dependency.Version, "0");
                 var repoProps = new Dictionary<string, string>
                 {
