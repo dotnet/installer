@@ -2,7 +2,15 @@
   <Import Project="runtime.common.props"/>
 
   <PropertyGroup>
-    <SourceBuildNonPortable>true</SourceBuildNonPortable>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
+
+    <BuildCommandArgs>$(StandardSourceBuildArgs)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:TargetRid=$(OverrideTargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildNonPortable=true</BuildCommandArgs>
+    <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
   </PropertyGroup>
 
   <!-- Repository References -->
@@ -12,7 +20,7 @@
       <RepositoryReference Include="linker" />
       <RepositoryReference Include="source-build" />
       <RepositoryReference Include="roslyn" />
-      <RepositoryReference Include="runtime-portable" Condition="'$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
+      <RepositoryReference Include="runtime-portable" />
   </ItemGroup>
 
   <Import Project="runtime.common.targets" />
