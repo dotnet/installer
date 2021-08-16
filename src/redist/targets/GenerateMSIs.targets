@@ -184,7 +184,7 @@
     <CreateLightCommandPackageDrop
       LightCommandWorkingDir="$(LightCommandObjDir)"
       OutputFolder="$(LightCommandPackagesDir)"
-      AdditionalBasePaths="."
+      AdditionalBasePaths="$(MSBuildThisFileDirectory)packaging\windows\clisdk"
       NoLogo="true"
       Cultures="en-us"
       InstallerFile="$(SdkMSIInstallerFile)"
