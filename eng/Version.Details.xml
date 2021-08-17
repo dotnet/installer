@@ -3,23 +3,23 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="3.1.19">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>99ed3ce6cba19f46c50dbef34c3ef54df2f09bf4</Sha>
+      <Sha>aae002469c4fe298a532e11faa01378048840aa9</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.19-servicing.21403.19">
+    <Dependency Name="Microsoft.NETCore.App.Internal" Version="3.1.19-servicing.21416.14">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>99ed3ce6cba19f46c50dbef34c3ef54df2f09bf4</Sha>
+      <Sha>aae002469c4fe298a532e11faa01378048840aa9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="3.1.19">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>99ed3ce6cba19f46c50dbef34c3ef54df2f09bf4</Sha>
+      <Sha>aae002469c4fe298a532e11faa01378048840aa9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="3.1.19">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>99ed3ce6cba19f46c50dbef34c3ef54df2f09bf4</Sha>
+      <Sha>aae002469c4fe298a532e11faa01378048840aa9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="3.1.19">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</Uri>
-      <Sha>99ed3ce6cba19f46c50dbef34c3ef54df2f09bf4</Sha>
+      <Sha>aae002469c4fe298a532e11faa01378048840aa9</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -37,9 +37,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>65f04fb6db7a5e198d05dbebd5c4ad21eb018f89</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.1.7" CoherentParentDependency="Microsoft.NetCore.App.Internal">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.1.8" CoherentParentDependency="Microsoft.NetCore.App.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-corefx</Uri>
-      <Sha>658544bf73653f734bca9675602fa57440f8b718</Sha>
+      <Sha>7711b939317ae5cb3ffa4f19a39119876aafd30e</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="3.1.10">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
@@ -90,13 +90,13 @@
       <Sha>8779089deae128873d77f7da7c9f48962aa7095e</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via core setup -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21359.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.21403.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>6ce5c2a10a3b6e12df5f5370de0324a74e6f71b4</Sha>
+      <Sha>27a6bbd48178344af6e0da56819451132aa88d9c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.19-servicing.21403.12" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.19-servicing.21416.8" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
-      <Sha>9d1ab62c3bc19fe1523f6e4ad0f50d715a903837</Sha>
+      <Sha>93f30ab19cae65df472e76dbc804ef3a75c3681a</Sha>
     </Dependency>
     <!-- This is so that WCF packages are included in the final drop for official releases. -->
     <!-- Replace with better solution, see https://github.com/dotnet/arcade/issues/4162 -->
