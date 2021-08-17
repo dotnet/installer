@@ -28,7 +28,7 @@ This project has adopted the code of conduct defined by the [Contributor Covenan
 # Building 
 
 The repository contains native code project required for the Windows installer. If you intend to build it locally on Windows, you will need to ensure that you have the following items installed.
-- Install CMAKE 3.2.0.1 or later
+- Install CMAKE 3.21.0 is required if you're building VS 17.0. Make sure to add CMAKE to your PATH (the installer will prompt you).
 - Install MSVC Build tools for x86/x64/arm64, v14.28-16.9
 
 - `build` for basic build
