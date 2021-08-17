@@ -13,14 +13,16 @@
   <ItemGroup>
     <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
     <EnvironmentVariables Include="NUGET_PFX_PATH=$(NuGetKeyFilePath)" />
-<!--    <RepositoryReference Include="common" /> -->
-<!--    <RepositoryReference Include="newtonsoft-json" /> -->
+    <RepositoryReference Include="source-build" />
     <RepositoryReference Include="msbuild" />
-<!--    <RepositoryReference Include="aspnet-xdt" /> -->
+    <RepositoryReference Include="xdt" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
+  <!-- TODO:  The build should be utilizing the repo's special SB build.sh as a shared entrypoint for CI, tarbal, and dev builds.
+  As many properties as possible should be pushed into the repo's source-build.props.  With this RepoBuild target, no 
+  intermediates are getting created. -->
   <Target Name="RepoBuild">
     <PropertyGroup>
       <BuildCommandBase>$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj</BuildCommandBase>
