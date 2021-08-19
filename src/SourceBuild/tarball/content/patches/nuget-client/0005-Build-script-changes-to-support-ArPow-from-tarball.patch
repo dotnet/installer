@@ -1,0 +1,60 @@
+From 9442449a1472526eb4c82787828639fe289feb73 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 19 Aug 2021 10:59:36 -0500
+Subject: [PATCH 1/2] Build script changes to support ArPow from tarball.
+
+---
+ eng/source-build/build.sh          | 6 +++++-
+ eng/source-build/source-build.proj | 6 ++++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/eng/source-build/build.sh b/eng/source-build/build.sh
+index 3bb69b2b0..d7a910608 100755
+--- a/eng/source-build/build.sh
++++ b/eng/source-build/build.sh
+@@ -40,7 +40,11 @@ function GetNuGetPackageCachePath {
+   fi
+ }
+ 
+-export DOTNET=${DOTNET:-dotnet}
++if [[ "$DOTNET" == "" && "$DOTNET_PATH" != "" ]]; then
++  export DOTNET="$DOTNET_PATH/dotnet"
++else
++  export DOTNET=${DOTNET:-dotnet}
++fi
+ 
+ ReadGlobalVersion Microsoft.DotNet.Arcade.Sdk
+ export ARCADE_VERSION=$_ReadGlobalVersion
+diff --git a/eng/source-build/source-build.proj b/eng/source-build/source-build.proj
+index 6f90f9793..91ea2d032 100644
+--- a/eng/source-build/source-build.proj
++++ b/eng/source-build/source-build.proj
+@@ -4,6 +4,8 @@
+ 
+   <PropertyGroup>
+     <ProjectRoot>$(MSBuildThisFileDirectory)../../</ProjectRoot>
++    <ArcadeDir Condition="'$(SOURCE_BUILT_SDK_DIR_ARCADE)' != ''">$(SOURCE_BUILT_SDK_DIR_ARCADE)/tools/</ArcadeDir>
++    <ArcadeDir Condition="'$(ArcadeDir)' == ''">$(NuGetPackageRoot)/microsoft.dotnet.arcade.sdk/$(ARCADE_VERSION)/tools/</ArcadeDir>
+   </PropertyGroup>
+ 
+   <Target Name="Build" DependsOnTargets="SourceBuildPostBuild">
+@@ -18,14 +20,14 @@
+   <Target Name="SourceBuildPostBuild" DependsOnTargets="SourceBuildInnerBuild">
+     <Message Text="Running source-build PostBuild target" Importance="High" />
+ 
+-    <MSbuild Projects="$(NuGetPackageRoot)/microsoft.dotnet.arcade.sdk/$(ARCADE_VERSION)/tools/Build.proj"
++    <MSbuild Projects="$(ArcadeDir)/Build.proj"
+              Properties="_NETCORE_ENGINEERING_TELEMETRY=AfterSourceBuild;ArcadeBuildFromSource=true;Restore=true;Build=false;Pack=false;Publish=false;Rebuild=false;Test=false;IntegrationTest=false;PerformanceTest=false;PreventPrebuiltBuild=false;BaseInnerSourceBuildCommand=echo skipping internal build with args: "
+              Targets="Execute"
+             />
+ 
+     <Message Text="Finished restoring Arcade" Importance="High" />
+ 
+-    <MSbuild Projects="$(NuGetPackageRoot)/microsoft.dotnet.arcade.sdk/$(ARCADE_VERSION)/tools/SourceBuild/AfterSourceBuild.proj"
++    <MSbuild Projects="$(ArcadeDir)/SourceBuild/AfterSourceBuild.proj"
+              Properties="_NETCORE_ENGINEERING_TELEMETRY=AfterSourceBuild;ArcadeBuildFromSource=true;CurrentRepoSourceBuildArtifactsPackagesDir=$(ProjectRoot)artifacts/nupkgs/"
+             />
+ 
+-- 
+2.18.0
+

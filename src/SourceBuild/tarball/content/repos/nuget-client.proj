@@ -2,8 +2,6 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
-    <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
@@ -13,6 +11,7 @@
   <ItemGroup>
     <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
     <EnvironmentVariables Include="NUGET_PFX_PATH=$(NuGetKeyFilePath)" />
+    <EnvironmentVariables Include="Configuration=$(Configuration)" />
     <RepositoryReference Include="source-build" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="xdt" />
@@ -20,59 +19,10 @@
 
   <PropertyGroup>
     <BuildCommandArgs>$(StandardSourceBuildArgs)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:TreatWarningsAsErrors=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
-    <!-- UsingToolMicrosoftNetCompilers=false introduces a prebuilt so we'll have to turn back on after our bootstrap SDK has native integer support -->
-    <!-- issue: https://github.com/dotnet/source-build/issues/1719 -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:UsingToolMicrosoftNetCompilers=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepoRoot=$(ProjectDirectory)</BuildCommandArgs>
 
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)eng/source-build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
   </PropertyGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-
-  <!-- TODO:  The build should be utilizing the repo's special SB build.sh as a shared entrypoint for CI, tarbal, and dev builds.
-  As many properties as possible should be pushed into the repo's source-build.props.  With this RepoBuild target, no 
-  intermediates are getting created. -->
-  <Target Name="RepoBuildDisabled">
-    <PropertyGroup>
-      <BuildCommandBase>$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:VisualStudioVerion=15.0</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:TreatWarningsAsErrors=false</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandBase>
-    </PropertyGroup>
-
-    <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)"
-          IgnoreStandardErrorWarningFormat="true" />
-
-    <Exec Command="$(BuildCommandBase) /t:BuildXPLAT /bl:build.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)"
-          IgnoreStandardErrorWarningFormat="true" />
-
-    <PropertyGroup>
-      <PackCommand>$(BuildCommandBase) /t:PackXPlat</PackCommand>
-      <PackCommand>$(PackCommand) /p:PackageOutputPath=$(PackagesOutput)</PackCommand>
-      <PackCommand>$(PackCommand) /p:NoPackageAnalysis=true</PackCommand>
-      <PackCommand>$(PackCommand) /flp:v=detailed</PackCommand>
-      <PackCommand>$(PackCommand) /v:$(LogVerbosity)</PackCommand>
-      <PackCommand>$(PackCommand) /bl:pack.binlog</PackCommand>
-      <PackCommand>$(PackCommand) $(RedirectRepoOutputToLog)</PackCommand>
-    </PropertyGroup>
-
-    <Exec Command="$(PackCommand)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)"
-          IgnoreStandardErrorWarningFormat="true" />
-  </Target>
 
 </Project>
