@@ -1,18 +1,18 @@
-From 9442449a1472526eb4c82787828639fe289feb73 Mon Sep 17 00:00:00 2001
+From d9d1d4b6fc7c78d4419a82c58cb052113434aa09 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 19 Aug 2021 10:59:36 -0500
 Subject: [PATCH 1/2] Build script changes to support ArPow from tarball.
 
 ---
- eng/source-build/build.sh          | 6 +++++-
+ eng/source-build/build.sh          | 8 ++++++--
  eng/source-build/source-build.proj | 6 ++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/eng/source-build/build.sh b/eng/source-build/build.sh
-index 3bb69b2b0..d7a910608 100755
+index 3bb69b2b0..863650597 100755
 --- a/eng/source-build/build.sh
 +++ b/eng/source-build/build.sh
-@@ -40,7 +40,11 @@ function GetNuGetPackageCachePath {
+@@ -40,8 +40,12 @@ function GetNuGetPackageCachePath {
    fi
  }
  
@@ -25,6 +25,8 @@ index 3bb69b2b0..d7a910608 100755
  
  ReadGlobalVersion Microsoft.DotNet.Arcade.Sdk
  export ARCADE_VERSION=$_ReadGlobalVersion
+-"$DOTNET" msbuild "$scriptroot/source-build.proj" /p:DotNetBuildFromSource=true /p:ArcadeBuildFromSource=true "/p:RepoRoot=$scriptroot/../../" "/bl:$scriptroot/../../artifacts/source-build/self/log/source-build.binlog"
++"$DOTNET" msbuild "$scriptroot/source-build.proj" /p:DotNetBuildFromSource=true /p:ArcadeBuildFromSource=true "/p:RepoRoot=$scriptroot/../../" "/bl:$scriptroot/../../artifacts/source-build/self/log/source-build.binlog" "$@"
 diff --git a/eng/source-build/source-build.proj b/eng/source-build/source-build.proj
 index 6f90f9793..91ea2d032 100644
 --- a/eng/source-build/source-build.proj
