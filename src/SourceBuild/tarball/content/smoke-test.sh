@@ -155,7 +155,7 @@ while :; do
     shift
 done
 
-prodConBlobFeedUrl="${prodConBlobFeedUrl-$(cat "$SCRIPT_ROOT/ProdConFeed.txt")}"
+prodConBlobFeedUrl="${prodConBlobFeedUrl-}"
 
 function doCommand() {
     lang=$1
