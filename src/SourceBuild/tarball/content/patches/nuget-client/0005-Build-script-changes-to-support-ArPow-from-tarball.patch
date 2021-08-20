@@ -1,18 +1,44 @@
-From d9d1d4b6fc7c78d4419a82c58cb052113434aa09 Mon Sep 17 00:00:00 2001
+From 9e35a4d319f3288a50bdaf5b32661764761aa0e9 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 19 Aug 2021 10:59:36 -0500
-Subject: [PATCH 1/2] Build script changes to support ArPow from tarball.
+Subject: [PATCH 4/5] Build script changes to support ArPow from tarball.
 
 ---
- eng/source-build/build.sh          | 8 ++++++--
- eng/source-build/source-build.proj | 6 ++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ eng/source-build/build.sh          | 27 +++++++++++++++++++++++++--
+ eng/source-build/source-build.proj |  6 ++++--
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
 diff --git a/eng/source-build/build.sh b/eng/source-build/build.sh
-index 3bb69b2b0..863650597 100755
+index 3bb69b2b0..aaff8ef0f 100755
 --- a/eng/source-build/build.sh
 +++ b/eng/source-build/build.sh
-@@ -40,8 +40,12 @@ function GetNuGetPackageCachePath {
+@@ -13,6 +13,25 @@ while [[ -h $source ]]; do
+   [[ $source != /* ]] && source="$scriptroot/$source"
+ done
+ 
++
++while [[ $# > 0 ]]; do
++    lowerI="$(echo $1 | awk '{print tolower($0)}')"
++    case $lowerI in
++        --configuration|-c)
++            confiuration=$2
++            shift
++            ;;
++        -*)
++            # just eat this so we don't try to pass it along to MSBuild
++            export DOTNET_CORESDK_NOPRETTYPRINT=1
++            ;;
++        *)
++            args="$args $1"
++            ;;
++    esac
++    shift
++done
++
+ function ReadGlobalVersion {
+   local key=$1
+   local global_json_file="$scriptroot/global.json"
+@@ -40,8 +59,12 @@ function GetNuGetPackageCachePath {
    fi
  }
  
@@ -26,7 +52,7 @@ index 3bb69b2b0..863650597 100755
  ReadGlobalVersion Microsoft.DotNet.Arcade.Sdk
  export ARCADE_VERSION=$_ReadGlobalVersion
 -"$DOTNET" msbuild "$scriptroot/source-build.proj" /p:DotNetBuildFromSource=true /p:ArcadeBuildFromSource=true "/p:RepoRoot=$scriptroot/../../" "/bl:$scriptroot/../../artifacts/source-build/self/log/source-build.binlog"
-+"$DOTNET" msbuild "$scriptroot/source-build.proj" /p:DotNetBuildFromSource=true /p:ArcadeBuildFromSource=true "/p:RepoRoot=$scriptroot/../../" "/bl:$scriptroot/../../artifacts/source-build/self/log/source-build.binlog" "$@"
++"$DOTNET" msbuild "$scriptroot/source-build.proj" /p:Configuration=$configuration /p:DotNetBuildFromSource=true /p:ArcadeBuildFromSource=true "/p:RepoRoot=$scriptroot/../../" "/bl:$scriptroot/../../artifacts/source-build/self/log/source-build.binlog" $args
 diff --git a/eng/source-build/source-build.proj b/eng/source-build/source-build.proj
 index 6f90f9793..91ea2d032 100644
 --- a/eng/source-build/source-build.proj
