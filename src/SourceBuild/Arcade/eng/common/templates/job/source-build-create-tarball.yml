@@ -30,7 +30,7 @@ jobs:
       fi
 
       ./build.sh \
-        --ci \
+        --nodeReuse false \
         --configuration $(_BuildConfig) \
         --publish \
         -bl \

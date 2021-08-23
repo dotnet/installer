@@ -136,7 +136,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <StandardSourceBuildArgs> $(FlagParameterPrefix)ci</StandardSourceBuildArgs>
+    <StandardSourceBuildArgs> $(FlagParameterPrefix)nodeReuse false</StandardSourceBuildArgs>
     <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)configuration $(Configuration)</StandardSourceBuildArgs>
     <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)restore</StandardSourceBuildArgs>
     <StandardSourceBuildArgs>$(StandardSourceBuildArgs) $(FlagParameterPrefix)build</StandardSourceBuildArgs>
