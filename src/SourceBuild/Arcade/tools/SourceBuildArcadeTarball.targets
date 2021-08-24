@@ -146,6 +146,11 @@
       Command="git submodule update --init --recursive"
       WorkingDirectory="$(TarballRepoSourceDir)" />
 
+    <!-- Remove the git objects folder to free up tarball space -->
+    <Exec
+      Command="rm -rf objects"
+      WorkingDirectory="$(TarballRepoSourceDir).git" />
+
     <Message Text="--> Done Cloning Repo $(SourceBuildRepoName)" Importance="High" />
 
     <!-- Override to use a temporary SourceBuild specific Version.Details.xml file in installer for Preview 6
