@@ -133,7 +133,7 @@
 
     <!-- Fetching a sha requires git 2.5.0 or newer -->
     <Exec
-      Command="git fetch origin $(RepoSha)"
+      Command="git fetch --depth 1 origin $(RepoSha)"
       WorkingDirectory="$(TarballRepoSourceDir)"
       Condition="$(IsRootRepo) != 'true'" />
 
