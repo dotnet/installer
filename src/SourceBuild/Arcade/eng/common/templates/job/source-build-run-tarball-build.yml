@@ -77,11 +77,9 @@ jobs:
     displayName: Build Tarball
 
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-    - publish:
+    - publish: '$(_TarballDir)/artifacts/$(_BuildArch)/$(_BuildConfig)/'
+      artifact: $(Agent.JobName)_Artifacts_Attempt$(System.JobAttempt)
       displayName: Publish Source Build Artifacts
-      inputs:
-        targetPath: '$(_TarballDir)/artifacts/$(_BuildArch)/$(_BuildConfig)/'
-        artifactName: $(Agent.JobName)_Artifacts_Attempt$(System.JobAttempt)
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-publish-logs.yml
     parameters:
