@@ -60,6 +60,14 @@
       <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitSha" />
     </Exec>
 
+    <!-- Get commit count for installer repo only -->
+    <Exec
+      Command="cd $(RepoRoot);git rev-list --count HEAD"
+      ConsoleToMSBuild="true"
+      WorkingDirectory="$(RepoRoot)">
+      <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitCount" />
+    </Exec>
+
     <!-- This is hardcoding version for the root repo (installer), since there
          isn't a Version.Details.xml file to read it from.
          See https://github.com/dotnet/source-build/issues/2250 -->
@@ -70,6 +78,7 @@
         <ExactVersion>1.0.0</ExactVersion>
         <Sha>@(RootRepoCommitSha)</Sha>
         <Uri>@(RootRepoUri)</Uri>
+        <GitCommitCount>@(RootRepoCommitCount)</GitCommitCount>
         <SourceBuildRepoName>$(GitHubRepositoryName)</SourceBuildRepoName>
         <IsRootRepo>true</IsRootRepo>
       </SourceBuildRepos>
