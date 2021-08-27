@@ -97,7 +97,17 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CopySourceBuildRepoRoot" Condition=" '$(CopySrcInsteadOfClone)' == 'true' ">
+  <!--
+    PrepareInnerSourceBuildRepoRoot either clones the source to the inner repo
+    or copies the source to the inner repo depending on CopySrcInsteadOfClone.
+    Repos take a dependency on PrepareInnerSourceBuildRepoRoot, so this target
+    exists to wait until either the source is cloned or copied.
+  -->
+  <Target Name="PrepareInnerSourceBuildRepoRoot"
+          DependsOnTargets="CopyInnerSourceBuildRepoRoot;CloneInnerSourceBuildRepoRoot">
+  </Target>
+
+  <Target Name="CopyInnerSourceBuildRepoRoot" Condition=" '$(CopySrcInsteadOfClone)' == 'true' ">
     <ItemGroup>
       <SourceBuildFilesToCopy Include="$(RepoRoot)/**/*" />
       <SourceBuildFilesToCopy Include="$(RepoRoot)/**/.*" />
@@ -115,7 +125,7 @@
     access to the git data, this also makes it easy to see what changes the source-build infra has
     made, for diagnosis or exploratory purposes.
   -->
-  <Target Name="PrepareInnerSourceBuildRepoRoot" Condition=" '$(CopySrcInsteadOfClone)' != 'true' ">
+  <Target Name="CloneInnerSourceBuildRepoRoot" Condition=" '$(CopySrcInsteadOfClone)' != 'true' ">
     <PropertyGroup>
       <!--
         By default, copy WIP. WIP copy helps with local machine dev work. Don't copy WIP if this is
@@ -164,7 +174,7 @@
   </Target>
 
   <Target Name="RunInnerSourceBuildCommand"
-          DependsOnTargets="PrepareInnerSourceBuildRepoRoot;CopySourceBuildRepoRoot">
+          DependsOnTargets="PrepareInnerSourceBuildRepoRoot">
     <PropertyGroup>
       <!-- Prevent any projects from building in the outside build: they would use prebuilts. -->
       <PreventPrebuiltBuild>true</PreventPrebuiltBuild>
