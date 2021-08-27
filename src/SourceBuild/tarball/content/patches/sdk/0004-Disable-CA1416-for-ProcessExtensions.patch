@@ -19,7 +19,7 @@ Eliminates errors like:
  1 file changed, 2 insertions(+)
 
 diff --git a/src/Cli/Microsoft.DotNet.Cli.Utils/Extensions/ProcessExtensions.cs b/src/Cli/Microsoft.DotNet.Cli.Utils/Extensions/ProcessExtensions.cs
-index a9e9880c7..82519dc63 100644
+index 167d4deab..692578b6f 100644
 --- a/src/Cli/Microsoft.DotNet.Cli.Utils/Extensions/ProcessExtensions.cs
 +++ b/src/Cli/Microsoft.DotNet.Cli.Utils/Extensions/ProcessExtensions.cs
 @@ -12,6 +12,7 @@ namespace Microsoft.DotNet.Cli.Utils
@@ -30,9 +30,9 @@ index a9e9880c7..82519dc63 100644
          /// <summary>
          /// Returns the parent process of this process by querying the Win32_Process class.
          /// </summary>
-@@ -37,5 +38,6 @@ public static int GetParentProcessId(this Process process)
- 
-             return enumerator.MoveNext() ? Convert.ToInt32(enumerator.Current.GetPropertyValue("ParentProcessId")) : -1;
+@@ -51,5 +52,6 @@ public static string GetCommandLine(this Process process)
+
+             return enumerator.MoveNext() ? Convert.ToString(enumerator.Current.GetPropertyValue("CommandLine")) : null;
          }
 +#pragma warning restore CA1416
      }
