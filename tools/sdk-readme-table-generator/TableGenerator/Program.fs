@@ -6,7 +6,10 @@ open TableGenerator.Reference
 open TableGenerator.Table
 
 let inputBranches =
-        [ { GitBranchName = "release/6.0.1xx"
+        [ { GitBranchName = "main"
+            DisplayName = "main<br>(7.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("7.0.1xx/daily") }
+          { GitBranchName = "release/6.0.1xx"
             DisplayName = "Release/6.0.1XX<br>(6.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("6.0.1xx/daily") }
           { GitBranchName = "release/6.0.1xx-rc1"
