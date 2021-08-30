@@ -13,25 +13,25 @@
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>24428da2e74e73053105750ae4d58936810cc122</Sha>
     </Dependency>
-    <Dependency Name="VS.Redist.Common.NetCore.SharedFramework.x64.6.0" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="VS.Redist.Common.NetCore.SharedFramework.x64.6.0" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Host.win-x64" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.DotNetHostResolver" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
     <!-- Change blob version in GenerateLayout.targets if this is unpinned to service targeting pack -->
     <!-- No new netstandard.library planned for 3.1 timeframe at this time. -->
@@ -39,9 +39,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="6.0.0-rc.1.21430.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>38e07e093e59fc48314dd763bcd0af1b4378dee6</Sha>
+      <Sha>3f01d85ad81c01f9aea1ae5e23e77e17f0fd786d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.0-rc.1.21430.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
@@ -86,14 +86,14 @@
       <Sha>83add798e206ac512ffff64dc5d942db80f81924</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-rc.1.21430.18">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-rc.1.21430.20">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>f307af04b44538b54082e8652111e23d54fd4594</Sha>
+      <Sha>b62aae0ddc35053423ed6e34be83b06884c31dfd</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-rc.1.21430.18">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-rc.1.21430.20">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>f307af04b44538b54082e8652111e23d54fd4594</Sha>
+      <Sha>b62aae0ddc35053423ed6e34be83b06884c31dfd</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.0-rc.1.21426.8" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
