@@ -111,8 +111,8 @@
     <ItemGroup>
       <SourceBuildFilesToCopy Include="$(RepoRoot)/**/*" />
       <SourceBuildFilesToCopy Include="$(RepoRoot)/**/.*" />
-      <SourceBuildFilesToCopy Include="$(RepoRoot)/artifacts/**/*" />
-      <SourceBuildFilesToCopy Include="$(RepoRoot)/artifacts/**/.*" />
+      <SourceBuildFilesToCopy Remove="$(RepoRoot)/artifacts/**/*" />
+      <SourceBuildFilesToCopy Remove="$(RepoRoot)/artifacts/**/.*" />
     </ItemGroup>
 
     <Copy
