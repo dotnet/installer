@@ -5,7 +5,8 @@ jobs:
   container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
   displayName: Source-Build Create Tarball
   pool:
-    vmImage: ubuntu-20.04
+    name: NetCoreInternal-Pool
+    queue: buildpool.ubuntu.1604.amd64
   variables:
     _BuildConfig: Release
   workspace:

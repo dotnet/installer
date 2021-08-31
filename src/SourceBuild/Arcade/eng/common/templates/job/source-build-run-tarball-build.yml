@@ -16,7 +16,8 @@ jobs:
   displayName: Source-Build Build Tarball
   dependsOn: ${{ parameters.dependsOn }}
   pool:
-    vmImage: ubuntu-20.04
+    name: NetCoreInternal-Pool
+    queue: buildpool.ubuntu.1604.amd64
   strategy:
     matrix:
       Fedora33-Online:
