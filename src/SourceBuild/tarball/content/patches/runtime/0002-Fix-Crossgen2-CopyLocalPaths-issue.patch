@@ -20,7 +20,7 @@ index b039715be97..c9cbb579397 100644
 -      <ReferenceCopyLocalPaths TargetPath="tools/" />
 +      <ReferenceCopyLocalPaths Include="@(RuntimeFiles)" Exclude="@(CrossgenFile);@(OptimizationDataFile)">
 +        <TargetPath>tools/%(RuntimeFiles.Filename)%(RuntimeFiles.Extension)</TargetPath>
-+      <ReferenceCopyLocalPaths/>
++      </ReferenceCopyLocalPaths>
 +      <ReferenceCopyLocalPaths DestinationSubDirectory="tools/" />
      </ItemGroup>
    </Target>
@@ -30,7 +30,7 @@ index b039715be97..c9cbb579397 100644
 -      <ReferenceCopyLocalPaths Include="@(LibrariesRuntimeFiles)" TargetPath="tools/" />
 +      <ReferenceCopyLocalPaths Include="@(LibrariesRuntimeFiles)" DestinationSubDirectory="tools/">
 +        <TargetPath>tools/%(LibrariesRuntimeFiles.Filename)%(LibrariesRuntimeFiles.Extension)</TargetPath>
-+      <ReferenceCopyLocalPaths/>
++      </ReferenceCopyLocalPaths>
      </ItemGroup>
    </Target>
  
