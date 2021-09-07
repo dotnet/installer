@@ -27,6 +27,13 @@ namespace EndToEnd.Tests
                 .Execute(newArgs)
                 .Should().Pass();
 
+            string projectPath = Path.Combine(projectDirectory, directory.Name + ".csproj");
+            var project = XDocument.Load(projectPath);
+            var ns = project.Root.Name.Namespace;
+            project.Root.Element(ns + "PropertyGroup")
+                .Element(ns + "TargetFramework").Value = "net" + MinorVersion;
+            project.Save(projectPath);
+
             new RestoreCommand()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute()
@@ -71,6 +78,8 @@ namespace EndToEnd.Tests
             var ns = project.Root.Name.Namespace;
 
             project.Root.Attribute("Sdk").Value = "Microsoft.NET.Sdk.Web";
+            project.Root.Element(ns + "PropertyGroup")
+                .Element(ns + "TargetFramework").Value = "net" + MinorVersion;
 
             project.Save(projectPath);
 
