@@ -15,6 +15,8 @@ namespace EndToEnd.Tests
 {
     public class ProjectBuildTests : TestBase
     {
+        private static readonly string currentTfm = "net7.0";
+
         [Fact]
         public void ItCanNewRestoreBuildRunCleanMSBuildProject()
         {
@@ -31,7 +33,7 @@ namespace EndToEnd.Tests
             var project = XDocument.Load(projectPath);
             var ns = project.Root.Name.Namespace;
             project.Root.Element(ns + "PropertyGroup")
-                .Element(ns + "TargetFramework").Value = "net" + MinorVersion;
+                .Element(ns + "TargetFramework").Value = currentTfm;
             project.Save(projectPath);
 
             new RestoreCommand()
@@ -79,7 +81,7 @@ namespace EndToEnd.Tests
 
             project.Root.Attribute("Sdk").Value = "Microsoft.NET.Sdk.Web";
             project.Root.Element(ns + "PropertyGroup")
-                .Element(ns + "TargetFramework").Value = "net" + MinorVersion;
+                .Element(ns + "TargetFramework").Value = currentTfm;
 
             project.Save(projectPath);
 
