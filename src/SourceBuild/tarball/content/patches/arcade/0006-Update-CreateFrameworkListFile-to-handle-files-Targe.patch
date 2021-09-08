@@ -16,7 +16,7 @@ index 68a1af12..0cdb51ac 100644
                  }
  
 -                string path = Path.Combine(f.TargetPath, f.Filename).Replace('\\', '/');
-+                string path = Path.GetExtension(f.TargetPath) == Path.GetExtension(f.FileName) ? f.TargetPath.Replace('\\', '/') : Path.Combine(f.TargetPath, f.Filename).Replace('\\', '/');
++                string path = Path.GetExtension(f.TargetPath) == Path.GetExtension(f.Filename) ? f.TargetPath.Replace('\\', '/') : Path.Combine(f.TargetPath, f.Filename).Replace('\\', '/');
  
                  if (path.StartsWith("runtimes/"))
                  {
