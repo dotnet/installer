@@ -38,6 +38,31 @@ LExit:
     return hr;
 }
 
+extern "C" HRESULT DeleteWorkloadRecords(LPWSTR sczSdkFeatureBandVersion, LPWSTR sczArchitecture)
+{
+    HRESULT hr = S_OK;
+    LPWSTR sczWorkloadRecordsRegistryKeyName = NULL;
+    HKEY hkWorkloadRecordsKey = NULL;
+
+    // MSI based workload records are tied to the underlying SDK host architecture and feature band. Since the feature band is being removed, we 
+    // can remove the records too.
+    hr = StrAllocConcatFormatted(&sczWorkloadRecordsRegistryKeyName, L"SOFTWARE\\Microsoft\\dotnet\\InstalledWorkloads\\Standalone\\%ls", sczArchitecture);
+    ExitOnFailure(hr, "Failed to allocate string for workload records registry path.");
+
+    hr = RegOpen(HKEY_LOCAL_MACHINE, sczWorkloadRecordsRegistryKeyName, KEY_READ | KEY_WRITE, &hkWorkloadRecordsKey);
+    ExitOnFailure(hr, "Failed to open workload records key.");
+    
+    hr = RegDelete(hkWorkloadRecordsKey, sczSdkFeatureBandVersion, REG_KEY_DEFAULT, TRUE);
+    ExitOnFailure(hr, "Failed to delete workload records key.");
+    
+    LogStringLine(REPORT_STANDARD, "Deleted workload records for %ls under %ls.", sczSdkFeatureBandVersion, sczArchitecture);
+
+LExit:
+    ReleaseStr(sczWorkloadRecordsRegistryKeyName);
+    ReleaseRegKey(hkWorkloadRecordsKey);
+    return hr;
+}
+
 extern "C" HRESULT RemoveDependent(LPWSTR sczDependent, BOOL * pbRestartRequired)
 {
     HRESULT hr = S_OK;
@@ -326,6 +351,9 @@ int wmain(int argc, wchar_t* argv[])
 
     hr = ::RemoveDependent(sczDependent, &bRestartRequired);
     ExitOnFailure(hr, "Failed to remove dependent \"%ls\".", sczDependent);
+
+    hr = ::DeleteWorkloadRecords(sczFeatureBandVersion, argv[3]);
+    ExitOnFailure(hr, "Failed to remove workload records.");
 
     if (bRestartRequired)
     {
