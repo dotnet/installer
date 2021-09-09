@@ -154,9 +154,6 @@ function InitializeDotNetCli([bool]$install, [bool]$createSdkLocationFile) {
     return $global:_DotNetInstallDir
   }
 
-  # In case of network error, try to log the current IP for reference
-  Try-LogClientIpAddress
-
   # Don't resolve runtime, shared framework, or SDK from other locations to ensure build determinism
   $env:DOTNET_MULTILEVEL_LOOKUP=0
 
