@@ -13,7 +13,8 @@
   <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_WriteSourceRepoProperties" AssemblyFile="$(SourceBuildTasksAssembly)" />
 
   <PropertyGroup>
-    <TarballDir>$(RepoRoot)artifacts/tarball/</TarballDir>
+    <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
+    <TarballDir>$(ArtifactsDir)tarball/</TarballDir>
     <TarballRootDir>$([MSBuild]::EnsureTrailingSlash('$(TarballDir)'))</TarballRootDir>
     <TarballSourceDir>$(TarballRootDir)src/</TarballSourceDir>
     <TarballGitInfoDir>$(TarballRootDir)git-info/</TarballGitInfoDir>
@@ -28,6 +29,7 @@
       SetupSelfGithubInfo;
       CloneRepoAndDependentsRecursive;
       CleanClonedSource;
+      RestoreTextOnlyPackages;
       CopyTarballContent;
       ">
 
@@ -227,6 +229,39 @@
     <Delete Files="@(TarballSrcBinaryToRemove)" />
   </Target>
 
+  <Target Name="RestoreTextOnlyPackages">
+    <PropertyGroup>
+      <TextOnlyPackageRestoreDir>$(ArtifactsDir)text-only-packages/</TextOnlyPackageRestoreDir>
+      <TextOnlyPackageTarballDir>$(TarballRootDir)packages/text-only/</TextOnlyPackageTarballDir>
+    </PropertyGroup>
+
+    <Message Text="Restoring text only packages..." Importance="High" />
+
+    <MSBuild Projects="../Arcade/tools/TextOnlyPackages.csproj"
+             Properties="TargetPackagesPath=$(TextOnlyPackageRestoreDir)"
+             Targets="Restore" />
+
+    <ItemGroup>
+      <TextOnlyPackageContent
+        Include="
+          $(TextOnlyPackageRestoreDir)microsoft.dotnet.common.itemtemplates*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.dotnet.common.projecttemplates*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.dotnet.web.itemtemplates*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.dotnet.web.projecttemplates*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.dotnet.web.spa.projecttemplates*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.net.workload.emscripten.manifest-*/**/*;
+          $(TextOnlyPackageRestoreDir)microsoft.net.workload.mono.toolchain.manifest-*/**/*;
+        "
+        Exclude="
+          $(TextOnlyPackageRestoreDir)**/.nupkg.metadata;
+          $(TextOnlyPackageRestoreDir)**/.signiature.p7s;
+          $(TextOnlyPackageRestoreDir)**/*.nupkg;
+          $(TextOnlyPackageRestoreDir)**/*.nupkg.sha512;
+        "
+      />
+    </ItemGroup>
+  </Target>
+
   <Target Name="CopyTarballContent">
     <ItemGroup>
       <TarballContent Include="$(RepoRoot)src/SourceBuild/tarball/content/**/*" />
@@ -244,6 +279,10 @@
     <Copy
       SourceFiles="@(EngCommonContent)"
       DestinationFiles="@(EngCommonContent->'$(TarballRootDir)eng/common/%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <Copy
+      SourceFiles="@(TextOnlyPackageContent)"
+      DestinationFiles="@(TextOnlyPackageContent->'$(TextOnlyPackageTarballDir)%(RecursiveDir)%(Filename)%(Extension)')" />
 
     <PropertyGroup>
       <ExternalTarballsDir>$(TarballRootDir)packages/archive/</ExternalTarballsDir>
