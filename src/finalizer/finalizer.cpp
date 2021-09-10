@@ -50,10 +50,22 @@ extern "C" HRESULT DeleteWorkloadRecords(LPWSTR sczSdkFeatureBandVersion, LPWSTR
     ExitOnFailure(hr, "Failed to allocate string for workload records registry path.");
 
     hr = RegOpen(HKEY_LOCAL_MACHINE, sczWorkloadRecordsRegistryKeyName, KEY_READ | KEY_WRITE, &hkWorkloadRecordsKey);
+    if (E_FILENOTFOUND == hr)
+    {
+        LogStringLine(REPORT_STANDARD, "Workload record key not found: %ls", sczWorkloadRecordsRegistryKeyName);
+        hr = S_OK;
+        goto LExit;
+    }
     ExitOnFailure(hr, "Failed to open workload records key.");
     
     hr = RegDelete(hkWorkloadRecordsKey, sczSdkFeatureBandVersion, REG_KEY_DEFAULT, TRUE);
-    ExitOnFailure(hr, "Failed to delete workload records key.");
+    if (E_FILENOTFOUND == hr)
+    {
+        LogStringLine(REPORT_STANDARD, "No records found for SDK %ls.", sczSdkFeatureBandVersion);
+        hr = S_OK;
+        goto LExit;
+    }
+    ExitOnFailure(hr, "Failed to delete workload records for %ls.", sczSdkFeatureBandVersion);
     
     LogStringLine(REPORT_STANDARD, "Deleted workload records for %ls under %ls.", sczSdkFeatureBandVersion, sczArchitecture);
 
