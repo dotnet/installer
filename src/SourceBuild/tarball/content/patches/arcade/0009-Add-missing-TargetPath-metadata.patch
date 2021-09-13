@@ -17,7 +17,7 @@ index 511214ae..9dd3b4ec 100644
        <FilesToPackage Include="@(_FilteredFilesToPackage)" />
 +      <FilesToPackage Update="@(FilesToPackage->HasMetadata('DestinationSubDirectory'))"
 +                      Condition="'%(FilesToPackage.TargetPath)' == ''">
-+        <TargetPath>%(DestinationSubDirectory)/%(FileName).%(Extension)</TargetPath>
++        <TargetPath>%(FilesToPackage.DestinationSubDirectory)/%(FileName).%(Extension)</TargetPath>
 +      </FilesToPackage>
      </ItemGroup>
    </Target>
