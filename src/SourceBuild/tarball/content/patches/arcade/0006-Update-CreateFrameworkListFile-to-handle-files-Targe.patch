@@ -1,0 +1,25 @@
+From 84bf418a8128dc9f3d693919558b803a88f81159 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Tue, 7 Sep 2021 21:30:13 +0000
+Subject: [PATCH] Update CreateFrameworkListFile to handle files TargetPaths
+
+---
+ .../src/CreateFrameworkListFile.cs                              | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.SharedFramework.Sdk/src/CreateFrameworkListFile.cs b/src/Microsoft.DotNet.SharedFramework.Sdk/src/CreateFrameworkListFile.cs
+index 68a1af12..0cdb51ac 100644
+--- a/src/Microsoft.DotNet.SharedFramework.Sdk/src/CreateFrameworkListFile.cs
++++ b/src/Microsoft.DotNet.SharedFramework.Sdk/src/CreateFrameworkListFile.cs
+@@ -116,7 +116,7 @@ public override bool Execute()
+                     type = "PgoData";
+                 }
+ 
+-                string path = Path.Combine(f.TargetPath, f.Filename).Replace('\\', '/');
++                string path = Path.GetExtension(f.TargetPath) == Path.GetExtension(f.Filename) ? f.TargetPath.Replace('\\', '/') : Path.Combine(f.TargetPath, f.Filename).Replace('\\', '/');
+ 
+                 if (path.StartsWith("runtimes/"))
+                 {
+-- 
+2.29.2
+

@@ -1,0 +1,27 @@
+From 3a0fc23a8a161581e3d52759f3d679de0dce1edd Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Mon, 13 Sep 2021 14:00:35 +0000
+Subject: [PATCH] Add missing TargetPath metadata
+
+---
+ .../targets/sharedfx.targets                                  | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.SharedFramework.Sdk/targets/sharedfx.targets b/src/Microsoft.DotNet.SharedFramework.Sdk/targets/sharedfx.targets
+index 511214ae..9dd3b4ec 100644
+--- a/src/Microsoft.DotNet.SharedFramework.Sdk/targets/sharedfx.targets
++++ b/src/Microsoft.DotNet.SharedFramework.Sdk/targets/sharedfx.targets
+@@ -168,6 +168,10 @@
+     <ItemGroup>
+       <FilesToPackage Remove="@(FilesToPackage)" />
+       <FilesToPackage Include="@(_FilteredFilesToPackage)" />
++      <FilesToPackage Update="@(FilesToPackage->HasMetadata('DestinationSubDirectory'))"
++                      Condition="'%(FilesToPackage.TargetPath)' == ''">
++        <TargetPath>%(DestinationSubDirectory)/%(FileName).%(Extension)</TargetPath>
++      </FilesToPackage>
+     </ItemGroup>
+   </Target>
+ 
+-- 
+2.29.2
+
