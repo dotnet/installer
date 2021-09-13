@@ -17,8 +17,8 @@ index 511214ae..724e0593 100644
  
 +  <Target Name="AddMissingTargetPathMetadata" DependsOnTargets="GetFilesToPackage">
 +    <ItemGroup>
-+      <FilesToPackage Update="@(%(FilesToPackage.TargetPath)->HasMetadata('DestinationSubDirectory'))"
-+                      Condition="'%(TargetPath)' == ''">
++      <FilesToPackage Update="@(FilesToPackage->HasMetadata('DestinationSubDirectory'))"
++                      Condition="'%(FilesToPackage.TargetPath)' == ''">
 +        <TargetPath>%(DestinationSubDirectory)/%(FileName).%(Extension)</TargetPath>
 +      </FilesToPackage>
 +    </ItemGroup>
