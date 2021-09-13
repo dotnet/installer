@@ -134,6 +134,13 @@
       <TextOnlyPackageNuspecFile Include="$(TextOnlyPackageBaseDir)/**/*.nuspec" />
     </ItemGroup>
 
+    <Message Importance="High" Text="Found text only package nuspec file: %(TextOnlyPackageNuspecFile.Identity)" />
+
+    <ReplaceTextInFile
+      InputFile="@(TextOnlyPackageNuspecFile)"
+      OldText="&lt;/package&gt;"
+      NewText="&lt;files&gt;&lt;file src=&quot;.\**\*&quot;/&gt;&lt;/files&gt;&lt;/package&gt;" />
+
     <NugetPack
       Nuspecs="%(TextOnlyPackageNuspecFile.Identity)"
       OutputDirectory="$(SourceBuiltPackagesPath)"
