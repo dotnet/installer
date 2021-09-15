@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euox pipefail
+set -euo pipefail
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
@@ -299,8 +299,8 @@ function runAllTests() {
         # doCommand VB xunit new restore test
         # doCommand VB mstest new restore test
 
-        doCommand F# console new restore build run multi-rid-publish
-        doCommand F# classlib new restore build multi-rid-publish
+        # doCommand F# console new restore build run multi-rid-publish
+        # doCommand F# classlib new restore build multi-rid-publish
         # doCommand F# xunit new restore test
         # doCommand F# mstest new restore test
     fi
@@ -324,12 +324,12 @@ function runWebTests() {
     doCommand C# mvc "$@" new restore build run multi-rid-publish
     doCommand C# webapi "$@" new restore build multi-rid-publish
     doCommand C# razor "$@" new restore build run multi-rid-publish
-    doCommand C# blazorwasm "$@" new restore build run publish
+    # doCommand C# blazorwasm "$@" new restore build run publish
     doCommand C# blazorserver "$@" new restore build run publish
 
-    doCommand F# web "$@" new restore build run multi-rid-publish
-    doCommand F# mvc "$@" new restore build run multi-rid-publish
-    doCommand F# webapi "$@" new restore build run multi-rid-publish
+    # doCommand F# web "$@" new restore build run multi-rid-publish
+    # doCommand F# mvc "$@" new restore build run multi-rid-publish
+    # doCommand F# webapi "$@" new restore build run multi-rid-publish
 }
 
 function runXmlDocTests() {
@@ -603,6 +603,8 @@ function runXmlDocTests() {
         System.Text.Encoding.Extensions.xml
         System.Text.Encodings.Web.xml
         System.Text.Json.xml
+        System.Text.Json.SourceGeneration.xml
+        System.Text.Json.SourceGeneration.resources.xml
         System.Text.RegularExpressions.xml
         System.Threading.Channels.xml
         System.Threading.Overlapped.xml
