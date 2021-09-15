@@ -64,6 +64,7 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 **Note:** that you may need to add the dotnet5 feed for a short period of time while .NET transitions to .NET 6
 
 **For .NET 6 Optional workloads**
+_The below feed is needed for releases before RC1_
 
 We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
 

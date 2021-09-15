@@ -26,8 +26,8 @@
 
   <PropertyGroup>
       <VersionFeature21>30</VersionFeature21>
-      <VersionFeature31>18</VersionFeature31>
-      <VersionFeature50>9</VersionFeature50>
+      <VersionFeature31>19</VersionFeature31>
+      <VersionFeature50>10</VersionFeature50>
   </PropertyGroup>
 
   <Target Name="GenerateBundledVersionsProps" DependsOnTargets="SetupBundledComponents">
@@ -113,6 +113,7 @@
       <Net60AppHostRids Include="
           @(Net50AppHostRids);
           osx-arm64;
+          freebsd-x64;
           "/>
 
       <Net60RuntimePackRids Include="
@@ -120,6 +121,7 @@
           osx-arm64;
           maccatalyst-x64;
           maccatalyst-arm64;
+          freebsd-x64;
           " />
 
       <!-- In .NET 6 the browser-wasm runtime pack started using the Mono naming pattern -->
