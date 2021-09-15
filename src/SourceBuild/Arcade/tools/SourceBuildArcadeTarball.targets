@@ -3,6 +3,12 @@
 
   <Import Project="./BuildTasks.props" />
   <Import Project="../tools/SourceBuild/SourceBuildArcadeTools.targets"  Sdk="Microsoft.DotNet.Arcade.Sdk" />
+  <Import Project="$(RepoRoot)/src/redist/targets/Versions.targets" />
+  <Import Project="$(RepoRoot)/src/redist/targets/SetBuildDefaults.targets" />
+  <Import Project="$(RepoRoot)/src/redist/targets/FileExtensions.targets" />
+  <Import Project="$(RepoRoot)/src/redist/targets/GetRuntimeInformation.targets" />
+  <Import Project="$(RepoRoot)/src/redist/targets/GenerateLayout.targets" />
+
   <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_ReadSourceBuildIntermediateNupkgDependencies" AssemblyFile="$(SourceBuildTasksAssembly)" />
   <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_WriteSourceRepoProperties" AssemblyFile="$(SourceBuildTasksAssembly)" />
 
@@ -16,9 +22,12 @@
 
   <Target Name="CreateSourceTarball"
     DependsOnTargets="
+      GenerateFullNuGetVersion;
+      GenerateVersionFile;
       CreateTarballDir;
       SetupSelfGithubInfo;
       CloneRepoAndDependentsRecursive;
+      CleanClonedSource;
       CopyTarballContent;
       ">
 
@@ -194,6 +203,28 @@
       Targets="CloneRepoAndDependentsRecursive"
       Properties="SourceBuildRepoName=%(SourceBuildRepos.SourceBuildRepoName);RepoSha=%(SourceBuildRepos.Sha);RepoUri=%(SourceBuildRepos.Uri)" />
 
+  </Target>
+
+  <Target Name="CleanClonedSource">
+    <ItemGroup>
+      <TarballSrcBinaryExtension Include="
+        .dll;
+        .Dll;
+        .exe;
+        .pdb;
+        .mdb;
+        .zip;
+        .nupkg" />
+
+      <TarballSrcBinaryToRemove Include="$(TarballSourceDir)**\*%(TarballSrcBinaryExtension.Identity)" />
+
+      <!-- Runtime coreclr and installer parts have empty placeholder PDB files. Keep them. -->
+      <TarballSrcBinaryToRemove Remove="
+        $(TarballSourceDir)runtime*\src\coreclr\.nuget\**\*%(TarballSrcBinaryExtension.Identity);
+        $(TarballSourceDir)runtime*\src\installer\pkg\**\*%(TarballSrcBinaryExtension.Identity)" />
+    </ItemGroup>
+
+    <Delete Files="@(TarballSrcBinaryToRemove)" />
   </Target>
 
   <Target Name="CopyTarballContent">
