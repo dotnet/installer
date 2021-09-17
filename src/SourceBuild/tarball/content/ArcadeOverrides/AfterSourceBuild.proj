@@ -87,15 +87,15 @@
 
     <Copy
       SourceFiles="$(SourceBuildIntermediateProjFile)"
-      DestinationFiles="$(SourceBuildIntermediateProjTargetFile)" />
+      DestinationFiles="$(SourceBuildIntermediateProjTargetFile)"
+      Condition="!Exists('$(SourceBuildIntermediateProjTargetFile)')" />
 
     <!-- Run a restore so the SDK doesn't complain. Nothing should actually get restored. -->
     <MSBuild
       Projects="$(SourceBuildIntermediateProjTargetFile)"
       Targets="Restore"
-      Properties="
-        SourceBuildArcadeTargetsFile=$(MSBuildThisFileDirectory)SourceBuildArcade.targets;
-        " />
+      Properties="SourceBuildArcadeTargetsFile=$(MSBuildThisFileDirectory)SourceBuildArcade.targets;"
+      Condition="!Exists('$(SourceBuildIntermediateProjTargetFile)')" />
   </Target>
 
   <Target Name="GetLicenseFileForIntermediateNupkgPack"
