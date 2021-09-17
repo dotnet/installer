@@ -20,7 +20,7 @@ namespace EndToEnd
 
             generateTask
                 .Execute()
-                .Should().BeTrue();
+                .Should().BeFalse();
 
             generateTask.DefaultRuntimeFrameworkVersion.Should().Be(defaultRuntimeFrameworkVersion);
         }
