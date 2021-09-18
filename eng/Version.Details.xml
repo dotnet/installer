@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="6.0.0-rc.2.21467.4" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="6.0.0-rc.2.21467.12" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>7091fd4407a4f6edb7ae9fce94e622a86b14854c</Sha>
+      <Sha>24d533bf90a93a9787eae4b15641274e414a8af3</Sha>
     </Dependency>
-    <Dependency Name="VS.Redist.Common.WindowsDesktop.SharedFramework.x64.6.0" Version="6.0.0-rc.2.21467.4" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="VS.Redist.Common.WindowsDesktop.SharedFramework.x64.6.0" Version="6.0.0-rc.2.21467.12" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>7091fd4407a4f6edb7ae9fce94e622a86b14854c</Sha>
+      <Sha>24d533bf90a93a9787eae4b15641274e414a8af3</Sha>
     </Dependency>
-    <Dependency Name="VS.Redist.Common.WindowsDesktop.TargetingPack.x64.6.0" Version="6.0.0-rc.2.21467.4" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="VS.Redist.Common.WindowsDesktop.TargetingPack.x64.6.0" Version="6.0.0-rc.2.21467.12" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>7091fd4407a4f6edb7ae9fce94e622a86b14854c</Sha>
+      <Sha>24d533bf90a93a9787eae4b15641274e414a8af3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="6.0.0-rc.2.21467.4" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.WindowsDesktop.App.Runtime.win-x64" Version="6.0.0-rc.2.21467.12" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
-      <Sha>7091fd4407a4f6edb7ae9fce94e622a86b14854c</Sha>
+      <Sha>24d533bf90a93a9787eae4b15641274e414a8af3</Sha>
     </Dependency>
     <Dependency Name="VS.Redist.Common.NetCore.SharedFramework.x64.6.0" Version="6.0.0-rc.2.21467.18" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -89,32 +89,32 @@
       <Sha>baf4b38e4f1dbc637efdb41624acbe05b2ff9f35</Sha>
       <SourceBuild RepoName="test-templates" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.100-rc.2.21467.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.100-rc.2.21467.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>2418ecbd84ef2a3180bd36f36a5e0d7c71f9a217</Sha>
+      <Sha>b1dcc0f1acb6713532e6e669c19653513adbc498</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.100-rc.2.21467.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.100-rc.2.21467.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>2418ecbd84ef2a3180bd36f36a5e0d7c71f9a217</Sha>
+      <Sha>b1dcc0f1acb6713532e6e669c19653513adbc498</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-rc.2.21467.64">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.100-rc.2.21468.4">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>905710e04661a9903903e557d07813dde20d16a6</Sha>
+      <Sha>dfd2a5a6c4ef738040e4edc4e33315d8e1425792</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-rc.2.21467.64">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.100-rc.2.21468.4">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>905710e04661a9903903e557d07813dde20d16a6</Sha>
+      <Sha>dfd2a5a6c4ef738040e4edc4e33315d8e1425792</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.0-rc.2.21467.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.0-rc.2.21467.11" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
-      <Sha>762d0749a628d3abcfd5b97a2af430836873da80</Sha>
+      <Sha>bf35f0bd3003f9a96fb7afdabdbea85d06b32f61</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="6.0.0-rc.2.21467.12" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="6.0.0-rc.2.21467.18" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/wpf</Uri>
-      <Sha>0910d3d6ad63423249f5907814b6a76a4e4aee83</Sha>
+      <Sha>bbd9d82945e9ae887d7110063240224170715e49</Sha>
     </Dependency>
     <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.0-beta.21457.3" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
