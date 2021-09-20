@@ -9,11 +9,6 @@
     <MicrosoftDotNetSourceBuildTasksBuildDir>$(NuGetPackageRoot)microsoft.dotnet.sourcebuild.tasks\$(MicrosoftDotNetSourceBuildTasksVersion)\build\</MicrosoftDotNetSourceBuildTasksBuildDir>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <SourceBuildIntermediateProjFile>$(MSBuildThisFileDirectory)SourceBuildIntermediate.proj</SourceBuildIntermediateProjFile>
-    <SourceBuildIntermediateProjTargetFile>$(ArtifactsObjDir)ArcadeGeneratedProjects\SourceBuildIntermediate\SourceBuildIntermediate.proj</SourceBuildIntermediateProjTargetFile>
-  </PropertyGroup>
-
   <Import Project="$(MicrosoftDotNetSourceBuildTasksBuildDir)Microsoft.DotNet.SourceBuild.Tasks.props" />
 
   <Target Name="AfterSourceBuild"
@@ -84,17 +79,23 @@
     Copies the intermediate nupkg project to 'artifacts/' so the repo's global.json is in an
     ancestor dir. This helps ensure the same version of Arcade is used throughout the build.
   -->
-  <Target Name="CopyIntermediateNupkgProjToProjectDirectory" Condition="!Exists('$(SourceBuildIntermediateProjTargetFile)')" >
+  <Target Name="CopyIntermediateNupkgProjToProjectDirectory">
+    <PropertyGroup>
+      <SourceBuildIntermediateProjFile>$(MSBuildThisFileDirectory)SourceBuildIntermediate.proj</SourceBuildIntermediateProjFile>
+      <SourceBuildIntermediateProjTargetFile>$(ArtifactsObjDir)ArcadeGeneratedProjects\SourceBuildIntermediate\SourceBuildIntermediate.proj</SourceBuildIntermediateProjTargetFile>
+    </PropertyGroup>
 
     <Copy
       SourceFiles="$(SourceBuildIntermediateProjFile)"
-      DestinationFiles="$(SourceBuildIntermediateProjTargetFile)" />
+      DestinationFiles="$(SourceBuildIntermediateProjTargetFile)"
+      Condition="!Exists('$(SourceBuildIntermediateProjTargetFile)')" />
 
     <!-- Run a restore so the SDK doesn't complain. Nothing should actually get restored. -->
     <MSBuild
       Projects="$(SourceBuildIntermediateProjTargetFile)"
       Targets="Restore"
-      Properties="SourceBuildArcadeTargetsFile=$(MSBuildThisFileDirectory)SourceBuildArcade.targets;" />
+      Properties="SourceBuildArcadeTargetsFile=$(MSBuildThisFileDirectory)SourceBuildArcade.targets;"
+      Condition="!Exists('$(SourceBuildIntermediateProjTargetFile)')" />
   </Target>
 
   <Target Name="GetLicenseFileForIntermediateNupkgPack"
