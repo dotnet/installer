@@ -75,7 +75,7 @@ stages:
               _BuildArchitecture: x64
               _DOTNET_CLI_UI_LANGUAGE: es
               _AdditionalBuildParameters: ''
-              _TestArg: $(_WindowsTestArg)
+              _TestArg: ''
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x86:
