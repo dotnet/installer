@@ -627,6 +627,7 @@ function runXmlDocTests() {
     # Added temporarily due to https://github.com/dotnet/source-build/issues/2404
     aspnetcoreappIgnoreList=(
         Microsoft.AspNetCore.App.Analyzers.xml
+        Microsoft.AspNetCore.App.CodeFixes.xml
         Microsoft.Extensions.Logging.Generators.resources.xml
         Microsoft.Extensions.Logging.Generators.xml
     )
