@@ -16,7 +16,6 @@ variables:
   value: true
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
-  - group: DotNet-Blob-Feed
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
