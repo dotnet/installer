@@ -13,7 +13,8 @@
   <UsingTask TaskName="Microsoft.DotNet.SourceBuild.Tasks.Tarball_WriteSourceRepoProperties" AssemblyFile="$(SourceBuildTasksAssembly)" />
 
   <PropertyGroup>
-    <TarballDir>$(RepoRoot)artifacts/tarball/</TarballDir>
+    <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
+    <TarballDir>$(ArtifactsDir)tarball/</TarballDir>
     <TarballRootDir>$([MSBuild]::EnsureTrailingSlash('$(TarballDir)'))</TarballRootDir>
     <TarballSourceDir>$(TarballRootDir)src/</TarballSourceDir>
     <TarballGitInfoDir>$(TarballRootDir)git-info/</TarballGitInfoDir>
@@ -27,6 +28,9 @@
       CreateTarballDir;
       SetupSelfGithubInfo;
       CloneRepoAndDependentsRecursive;
+      CleanClonedSource;
+      RestoreTextOnlyPackages;
+      CopyTextOnlyPackages;
       CopyTarballContent;
       ">
 
@@ -68,6 +72,14 @@
       <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitSha" />
     </Exec>
 
+    <!-- Get commit count for installer repo only -->
+    <Exec
+      Command="cd $(RepoRoot);git rev-list --count HEAD"
+      ConsoleToMSBuild="true"
+      WorkingDirectory="$(RepoRoot)">
+      <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitCount" />
+    </Exec>
+
     <!-- This is hardcoding version for the root repo (installer), since there
          isn't a Version.Details.xml file to read it from.
          See https://github.com/dotnet/source-build/issues/2250 -->
@@ -78,6 +90,7 @@
         <ExactVersion>1.0.0</ExactVersion>
         <Sha>@(RootRepoCommitSha)</Sha>
         <Uri>@(RootRepoUri)</Uri>
+        <GitCommitCount>@(RootRepoCommitCount)</GitCommitCount>
         <SourceBuildRepoName>$(GitHubRepositoryName)</SourceBuildRepoName>
         <IsRootRepo>true</IsRootRepo>
       </SourceBuildRepos>
@@ -141,7 +154,7 @@
 
     <!-- Fetching a sha requires git 2.5.0 or newer -->
     <Exec
-      Command="git fetch origin $(RepoSha)"
+      Command="git fetch --depth 1 origin $(RepoSha)"
       WorkingDirectory="$(TarballRepoSourceDir)"
       Condition="$(IsRootRepo) != 'true'" />
 
@@ -153,6 +166,12 @@
     <Exec
       Command="git submodule update --init --recursive"
       WorkingDirectory="$(TarballRepoSourceDir)" />
+
+    <!-- Remove the git objects folder to free up tarball space -->
+    <Exec
+      Command="rm -rf objects"
+      WorkingDirectory="$(TarballRepoSourceDir).git" 
+      Condition="$(PreserveTarballGitFolders) != 'true'" />
 
     <Message Text="--> Done Cloning Repo $(SourceBuildRepoName)" Importance="High" />
 
@@ -188,6 +207,41 @@
       Targets="CloneRepoAndDependentsRecursive"
       Properties="SourceBuildRepoName=%(SourceBuildRepos.SourceBuildRepoName);RepoSha=%(SourceBuildRepos.Sha);RepoUri=%(SourceBuildRepos.Uri)" />
 
+  </Target>
+
+  <Target Name="CleanClonedSource">
+    <ItemGroup>
+      <TarballSrcBinaryExtension Include="
+        .dll;
+        .Dll;
+        .exe;
+        .pdb;
+        .mdb;
+        .zip;
+        .nupkg" />
+
+      <TarballSrcBinaryToRemove Include="$(TarballSourceDir)**\*%(TarballSrcBinaryExtension.Identity)" />
+
+      <!-- Runtime coreclr and installer parts have empty placeholder PDB files. Keep them. -->
+      <TarballSrcBinaryToRemove Remove="
+        $(TarballSourceDir)runtime*\src\coreclr\.nuget\**\*%(TarballSrcBinaryExtension.Identity);
+        $(TarballSourceDir)runtime*\src\installer\pkg\**\*%(TarballSrcBinaryExtension.Identity)" />
+    </ItemGroup>
+
+    <Delete Files="@(TarballSrcBinaryToRemove)" />
+  </Target>
+
+  <Target Name="RestoreTextOnlyPackages">
+    <PropertyGroup>
+      <TextOnlyPackageRestoreDir>$(ArtifactsDir)text-only-packages/</TextOnlyPackageRestoreDir>
+      <TextOnlyPackageTarballDir>$(TarballRootDir)packages/text-only/</TextOnlyPackageTarballDir>
+    </PropertyGroup>
+
+    <Message Text="Restoring text only packages..." Importance="High" />
+
+    <MSBuild Projects="../Arcade/tools/TextOnlyPackages.csproj"
+             Properties="TargetPackagesPath=$(TextOnlyPackageRestoreDir)"
+             Targets="Restore" />
   </Target>
 
   <Target Name="CopyTarballContent">
@@ -230,6 +284,44 @@
       Overwrite="true" />
 
     <MakeDir Directories="$(TarballRootDir)packages/prebuilt" />
+  </Target>
+
+  <!--
+    Read directories in which text-only packages have been downloaded and copy content to tarball.
+  -->
+  <Target Name="CopyTextOnlyPackages" DependsOnTargets="RestoreTextOnlyPackages" >
+
+    <ReadLinesFromFile File="$(TextOnlyPackageRestoreDir)/TextOnlyPackageDirectories.txt" Condition="Exists('$(TextOnlyPackageRestoreDir)/TextOnlyPackageDirectories.txt')">
+      <Output TaskParameter="Lines" ItemName="TextOnlyPackageDirectories" />
+    </ReadLinesFromFile>
+
+    <MSBuild Projects="$(MSBuildProjectFile)"
+      Targets="CopySingleTextOnlyDirectory"
+      Properties="TextOnlyDirectory=%(TextOnlyPackageDirectories.Identity);TextOnlyPackageTarballDir=$(TextOnlyPackageTarballDir)" />
+
+  </Target>
+
+  <Target Name="CopySingleTextOnlyDirectory">
+
+    <PropertyGroup>
+      <DirectoryName>$([System.IO.Path]::GetFileName('$(TextOnlyDirectory)'))</DirectoryName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <TextOnlyPackageContent 
+        Include="$(TextOnlyDirectory)/**/*"
+        Exclude="
+          $(TextOnlyDirectory)/**/.nupkg.metadata;
+          $(TextOnlyDirectory)/**/.signature.p7s;
+          $(TextOnlyDirectory)/**/*.nupkg;
+          $(TextOnlyDirectory)/**/*.nupkg.sha512;
+        " />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(TextOnlyPackageContent)"
+      DestinationFiles="@(TextOnlyPackageContent->'$(TextOnlyPackageTarballDir)$(DirectoryName)/%(RecursiveDir)%(Filename)%(Extension)')" />
+
   </Target>
 
 </Project>
