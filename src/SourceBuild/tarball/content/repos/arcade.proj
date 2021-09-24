@@ -36,11 +36,7 @@
     <RepositoryReference Include="sourcelink" />
   </ItemGroup>
 
-  <!-- TODO: Temporarily skip this target for now until source-build NuGet packaging is built 
-       and packaged into source-built artifacts for 6.0.
-       See https://github.com/dotnet/source-build/issues/2285 -->
   <Target Name="UsePreviouslySourceBuiltNuGet"
-          Condition=" 'true' == 'false' "
           BeforeTargets="RepoBuild">
     <ItemGroup>
       <PreviouslySourceBuiltNuGetPackageFile Include="$(PrebuiltSourceBuiltPackagesPath)NuGet.Packaging.*.nupkg" />
