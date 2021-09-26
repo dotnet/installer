@@ -24,16 +24,34 @@ jobs:
       demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
   strategy:
     matrix:
+      CentOS7-Online:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
+      CentOS8-Online:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-20210714125410-9b5bbc2
+      Debian11-Online:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs@debian-11-gcc11-amd64-20211001171325-f42d766
       Fedora33-Online:
         _runOnline: true
         _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
-
       # TODO: Don't run offline in Pr validation until prebuilts are stabilized/removed, otherwise dependency flow continuously breaks PR validation.
       # https://github.com/dotnet/source-build/issues/2490
       ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
         Fedora33-Offline:
           _runOnline: false
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
+      Ubuntu1604-Online:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-16.04-20210924170333-538077f
+      Ubuntu1604-Online:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-16.04-20210924170333-538077f
+      # This is a helix image. Does that matter?
+      Ubuntu2104-Offline:
+        _runOnline: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-21.04-helix-amd64-20210922170909-34a2d72
   timeoutInMinutes: 210
   variables:
     _TarballDir: $(Build.StagingDirectory)/tarball
