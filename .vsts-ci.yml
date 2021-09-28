@@ -163,7 +163,7 @@ stages:
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               _TestArg: $(_NonWindowsTestArg)
-            Build_CentOS_7_1_Debug_x64:
+            Build_CentOS_7_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker centos'
               _LinuxPortable: ''
@@ -173,13 +173,6 @@ stages:
             Build_Debian_Stretch_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker debian'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _TestArg: $(_NonWindowsTestArg)
-            Build_Rhel_7_2_Release_x64:
-              _BuildConfig: Release
-              _DockerParameter: '--docker rhel'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
@@ -284,7 +277,7 @@ stages:
               _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker rhel'
+              _DockerParameter: '--docker centos'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
