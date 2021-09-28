@@ -56,7 +56,7 @@ stages:
           name: NetCore1ESPool-Svc-Public
           demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
+          name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
