@@ -117,4 +117,7 @@ if [ "$buildBootstrap" == "true" ]; then
 
     # Run restore on project to initiate download of bootstrap packages
     $DOTNET_SDK_PATH/dotnet restore $workingDir/buildBootstrapPreviouslySB.csproj /bl /p:ArchiveDir="$SCRIPT_ROOT/packages/archive/"
+
+    # Remove working directory
+    rm -rf $workingDir
 fi
