@@ -16,7 +16,6 @@ variables:
   value: true
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
-  - group: DotNet-Blob-Feed
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
@@ -54,11 +53,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2019.open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2019
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -111,11 +110,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2019.open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2019
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -140,11 +139,11 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64.Open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -312,11 +311,11 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64.Open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
