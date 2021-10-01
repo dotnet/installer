@@ -43,13 +43,13 @@
     <MakeDir Directories="$(UnpackedTarPath)" />
     <Exec Command="tar -xzf %(PrevSBArchive.Identity) -C $(UnpackedTarPath)" />
 
-    <!-- Rename existing archive with backup file name -->
-    <Message Text="  Renaming existing tarball to %(PrevSBArchive.Identity).bak" Importance="High" />
-    <Move SourceFiles="%(PrevSBArchive.Identity)" DestinationFiles="%(PrevSBArchive.Identity).bak" />
+    <!-- Delete existing archive -->
+    <Message Text="  Deleting existing tarball: %(PrevSBArchive.Identity)" Importance="High" />
+    <Delete Files="%(PrevSBArchive.Identity)" />
 
     <!-- Copy files specified in package references above from restored package dir to unpacked archive dir -->
     <Message Text="  Replacing restored files in $(UnpackedTarPath)" Importance="High" />
-    <Copy 
+    <Copy
         SourceFiles="$(RestorePackagesPath)$([System.String]::copy('%(PackageReference.Identity)').ToLower()).%(PackageReference.Version).nupkg"
         DestinationFiles="$(UnpackedTarPath)%(PackageReference.Identity).%(PackageReference.Version).nupkg" />
 
