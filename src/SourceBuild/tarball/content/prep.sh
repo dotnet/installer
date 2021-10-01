@@ -106,6 +106,8 @@ if [ "$buildBootstrap" == "true" ]; then
 
     # Copy bootstrap project to working dir
     cp $SCRIPT_ROOT/scripts/bootstrap/buildBootstrapPreviouslySB.csproj $workingDir
+
+    # Copy NuGet.config from the installer repo to have the right feeds
     cp $SCRIPT_ROOT/src/installer.*/NuGet.config $workingDir
 
     # Get PackageVersions.props from existing prev-sb archive
