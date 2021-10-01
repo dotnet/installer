@@ -154,10 +154,9 @@
       <Sha>53b80940842204f78708a538628288ff5d741a1d</Sha>
     </Dependency>
     <!-- Temporarily pinning Microsoft.Web.Xdt until strict coherency is enabled by default -->
-    <Dependency Name="Microsoft.Web.Xdt" Version="5.0.0-preview.21431.1" CoherentParentDependency="Microsoft.NET.Sdk" Pinned="true">
-      <Uri>https://github.com/dotnet/xdt</Uri>
-      <Sha>698fdad58fa64a55f16cd9562c90224cc498ed02</Sha>
-      <SourceBuildTarball RepoName="xdt" ManagedOnly="true" />
+    <Dependency Name="Microsoft.Web.Xdt" Version="3.1.0" CoherentParentDependency="Microsoft.NET.Sdk" Pinned="true">
+      <Uri>https://github.com/aspnet/xdt</Uri>
+      <Sha>c01a538851a8ab1a1fbeb2e6243f391fff7587b4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-6.0.100" Version="6.0.0-rc.1.21416.1">
       <Uri>https://github.com/dotnet/emsdk</Uri>
@@ -167,26 +166,6 @@
       <Uri>https://github.com/dotnet/source-build</Uri>
       <Sha>521935ddd14437c9fd63eababa674a511e280ee9</Sha>
       <SourceBuild RepoName="source-build" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.21310.2">
-      <Uri>https://github.com/dotnet/clicommandlineparser</Uri>
-      <Sha>3198bf5660cad3dab85f5475bf1fda9688146e3f</Sha>
-      <SourceBuildTarball RepoName="clicommandlineparser" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.Deployment.DotNet.Releases" Version="1.0.247101">
-      <Uri>https://github.com/dotnet/deployment-tools</Uri>
-      <Sha>7431bf2f3c204cbbc326c8d55ce4ac5cad7661d6</Sha>
-      <SourceBuildTarball RepoName="deployment-tools" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.diagnostics" Version="5.0.0-preview.21477.1">
-      <Uri>https://github.com/dotnet/diagnostics</Uri>
-      <Sha>f758ec93e1098e5bcbc4550f8a36c6cd1ce04918</Sha>
-      <SourceBuildTarball RepoName="diagnostics" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.symreader" Version="1.4.0-beta2-21475-02">
-      <Uri>https://github.com/dotnet/symreader</Uri>
-      <Sha>7b9791daa3a3477eb22ec805946c9fff8b42d8ca</Sha>
-      <SourceBuildTarball RepoName="symreader" ManagedOnly="true" />
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
@@ -204,10 +183,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>3ea0d860c6973f2cbadc9e895c7ec2cbdaec4ad5</Sha>
     </Dependency>
-    <Dependency Name="Private.SourceBuild.ReferencePackages" Version="6.0.0-alpha.1.21480.1">
+    <Dependency Name="Private.SourceBuild.ReferencePackages" Version="1.0.0-beta.20217.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>f5558f1481f841e318e301d9cb7dd6f0fe4dd64e</Sha>
-      <SourceBuildTarball RepoName="source-build-reference-packages" ManagedOnly="true" />
+      <Sha>639aeb4d76c8b1a6226bf7c4edb34fbdae30e6e1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-21470-02" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
       <Uri>https://github.com/dotnet/sourcelink</Uri>
