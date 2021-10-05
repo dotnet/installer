@@ -36,6 +36,26 @@ The repository contains native code project required for the Windows installer. 
 - To build in VS, run a command line build first, then run `artifacts\core-sdk-build-env.bat` from a VS command prompt and then `devenv Microsoft.DotNet.Cli.sln`
 - To test different languages of the installer, run `artifacts\packages\Debug\Shipping>dotnet-sdk-3.1.412-win-x64.exe /lang 1046` using the LCID of the language you want to test
 
+# Building (source-build)
+
+This repo also contains code to help you build the entire .NET product end-to-end from sources (often referred to as source-build), even in disconnected/offline mode. This is currently only tested on Linux.
+
+1. `./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/path/to/place/complete/dotnet/sources`
+
+   This fetches the complete set of source code used to build the .NET SDK. It creates a tarball of the complete .NET source code at `artifacts/packages/<Release|Debug>/Shipping/`. It also places the extracted sources at `/path/to/place/complete/dotnet/sources`. Due to a few known issues, that source directory should be outside (and not somewhere under) this repository.
+
+2. `cd /path/to/complete/dotnet/sources`
+
+3. `./prep.sh --bootstrap`
+
+    This downloads a .NET SDK and a number of .NET packages and other prebuilts needed to build .NET from source.
+
+    Eventually, we want to make it possible to bootstrap .NET 6 in which case this step can be skipped.
+
+4. `./build.sh`
+
+    This builds the entire .NET SDK. The resulting SDK is placed at `artifacts/$ARCH/Release/dotnet-sdk-$VERSION-$ARCH.tar.gz`.
+
 # Build status
 
 |All legs|
