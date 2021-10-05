@@ -53,11 +53,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2019.open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2019
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -104,11 +104,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: buildpool.windows.10.amd64.vs2019.open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: buildpool.windows.10.amd64.vs2019
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -133,11 +133,11 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64.Open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -298,11 +298,11 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCorePublic-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64.Open
+          name: NetCore1ESPool-Svc-Public
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCoreInternal-Pool
-          queue: BuildPool.Ubuntu.1604.Amd64
+          name: NetCore1ESPool-Svc-Internal
+          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -340,10 +340,11 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-    parameters:
-      dependsOn: Source_Build_Create_Tarball
-      condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
+  # disable tarball build ci until 7.0 stabilizes
+  # - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+  #   parameters:
+  #     dependsOn: Source_Build_Create_Tarball
+  #     condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
