@@ -3,6 +3,9 @@ From: Davis Goodin <dagood@microsoft.com>
 Date: Fri, 8 Oct 2021 16:15:42 -0700
 Subject: [PATCH] Disable Workloads WiX dependency in source-build
 
+This removes the prebuilt WiX dependency: https://github.com/dotnet/arcade/issues/8014
+
+The patch is temporary, pending upstream fix and dependency flow.
 ---
  .../src/{FileRow.cs => FileRow.wix.cs}        |  0
  ...ifestMsi.cs => GenerateManifestMsi.wix.cs} |  0
