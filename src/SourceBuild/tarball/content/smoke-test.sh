@@ -32,6 +32,9 @@ case $cpuName in
   i686)
     buildArch=x86
     ;;
+  s390x)
+    buildArch=s390x
+    ;;
   *)
     echo "Unknown CPU $cpuName detected, treating it as x64"
     buildArch=x64
@@ -164,8 +167,11 @@ function doCommand() {
     echo "starting language $lang, type $proj" | tee -a smoke-test.log
 
     dotnetCmd=${dotnetDir}/dotnet
-    mkdir "${lang}_${proj}"
-    cd "${lang}_${proj}"
+
+    # rename '#'' to 'Sharp' to workaround https://github.com/dotnet/aspnetcore/issues/36900
+    projectDir="${lang//"#"/"Sharp"}_${proj}"
+    mkdir "${projectDir}"
+    cd "${projectDir}"
 
     newArgs="new $proj -lang $lang"
 
@@ -199,7 +205,7 @@ function doCommand() {
             binlogHttpsPart="https"
         fi
 
-        binlogPrefix="$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_"
+        binlogPrefix="$testingDir/${projectDir}_${binlogOnlinePart}_${binlogHttpsPart}_"
         binlog="${binlogPrefix}$1.binlog"
         echo "    running $1" | tee -a "$logFile"
 
@@ -269,7 +275,7 @@ function doCommand() {
     cd ..
 
     if [ "$keepProjects" == "false" ]; then
-       rm -rf "${lang}_${proj}"
+       rm -rf "${projectDir}"
     fi
 
     echo "finished language $lang, type $proj" | tee -a smoke-test.log
@@ -626,6 +632,7 @@ function runXmlDocTests() {
     # Added temporarily due to https://github.com/dotnet/source-build/issues/2404
     aspnetcoreappIgnoreList=(
         Microsoft.AspNetCore.App.Analyzers.xml
+        Microsoft.AspNetCore.App.CodeFixes.xml
         Microsoft.Extensions.Logging.Generators.resources.xml
         Microsoft.Extensions.Logging.Generators.xml
     )

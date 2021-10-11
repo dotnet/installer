@@ -15,6 +15,8 @@ namespace EndToEnd.Tests
 {
     public class ProjectBuildTests : TestBase
     {
+        private static readonly string currentTfm = "net7.0";
+
         [Fact]
         public void ItCanNewRestoreBuildRunCleanMSBuildProject()
         {
@@ -26,6 +28,13 @@ namespace EndToEnd.Tests
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(newArgs)
                 .Should().Pass();
+
+            string projectPath = Path.Combine(projectDirectory, directory.Name + ".csproj");
+            var project = XDocument.Load(projectPath);
+            var ns = project.Root.Name.Namespace;
+            project.Root.Element(ns + "PropertyGroup")
+                .Element(ns + "TargetFramework").Value = currentTfm;
+            project.Save(projectPath);
 
             new RestoreCommand()
                 .WithWorkingDirectory(projectDirectory)
@@ -71,6 +80,8 @@ namespace EndToEnd.Tests
             var ns = project.Root.Name.Namespace;
 
             project.Root.Attribute("Sdk").Value = "Microsoft.NET.Sdk.Web";
+            project.Root.Element(ns + "PropertyGroup")
+                .Element(ns + "TargetFramework").Value = currentTfm;
 
             project.Save(projectPath);
 
@@ -102,7 +113,7 @@ namespace EndToEnd.Tests
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(publishArgs)
                 .Should().Pass();
-            
+
             var selfContainedPublishDir = new DirectoryInfo(projectDirectory)
                 .Sub("bin").Sub("Debug").GetDirectories().FirstOrDefault()
                 .Sub("win-arm64").Sub("publish");
@@ -110,7 +121,7 @@ namespace EndToEnd.Tests
             selfContainedPublishDir.Should().HaveFilesMatching("System.Windows.Forms.dll", SearchOption.TopDirectoryOnly);
             selfContainedPublishDir.Should().HaveFilesMatching($"{directory.Name}.dll", SearchOption.TopDirectoryOnly);
         }
-        
+
         [WindowsOnlyFact]
         public void ItCanPublishArm64Wpf()
         {
@@ -165,7 +176,7 @@ namespace EndToEnd.Tests
         public void DotnetNewShowsCuratedListCorrectly()
         {
             string locale = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
-            if (!string.IsNullOrWhiteSpace(locale) 
+            if (!string.IsNullOrWhiteSpace(locale)
                 && !locale.StartsWith("en", StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"[{nameof(DotnetNewShowsCuratedListCorrectly)}] CurrentUICulture: {locale}");
@@ -247,7 +258,7 @@ namespace EndToEnd.Tests
 
         /// <summary>
         /// The test checks if the template creates the template for correct framework by default.
-        /// For .NET 6 the templates should create the projects targeting net6.0 
+        /// For .NET 6 the templates should create the projects targeting net6.0
         /// </summary>
         [Theory]
         [InlineData("console")]
