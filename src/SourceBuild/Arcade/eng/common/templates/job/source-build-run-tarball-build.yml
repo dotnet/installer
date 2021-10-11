@@ -25,34 +25,43 @@ jobs:
   strategy:
     matrix:
       CentOS7-Online:
-        _runOnline: true
+        _Bootstrap: false
         _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
+        _RunOnline: true
       ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
         # TODO: Don't run offline for CentOS7 in Pr validation until prebuilts are stabilized/removed, otherwise dependency flow continuously breaks PR validation.
         # https://github.com/dotnet/source-build/issues/2490
         CentOS7-Offline:
-          _runOnline: false
+          _Bootstrap: false
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
-        CentOS8-Offline:
-          _runOnline: false
+          _RunOnline: false
+        # TODO: switch all distros run in CI to be offline once pre-builts are eliminated.
+        CentOS8-Online:
+          _Bootstrap: false
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-20210714125410-9b5bbc2
+          _RunOnline: true
         # TODO: Should not be re-using gcc image for other purposes
-        Debian11-Offline:
-          _runOnline: false
+        Debian11-Online:
+          _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs@debian-11-gcc11-amd64-20211001171325-f42d766
-        Fedora33-Offline:
-          _runOnline: false
+          _RunOnline: true
+        Fedora33-Online:
+          _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
-        Fedora34-Offline:
-          _runOnline: false
+          _RunOnline: true
+        Fedora34-Online:
+          _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-34-20210924174119-cd1cb75
-        Ubuntu1604-Offline:
-          _runOnline: false
+          _RunOnline: true
+        Ubuntu1604-Online:
+          _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-16.04-20210924170333-538077f
+          _RunOnline: true
         # TODO: Should not be re-using helix image for other purposes
-        Ubuntu2104-Offline:
-          _runOnline: true
+        Ubuntu2104-Online:
+          _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-21.04-helix-amd64-20210922170909-34a2d72
+          _RunOnline: true
   timeoutInMinutes: 210
   variables:
     _TarballDir: $(Build.StagingDirectory)/tarball
@@ -86,7 +95,12 @@ jobs:
   - script: |
       set -x
 
-      docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./prep.sh
+      customPrepArgs=
+      if [ '$(_Bootstrap)' = 'true' ]; then
+        customPrepArgs='--bootstrap'
+      fi
+
+      docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./prep.sh  ${customPrepArgs}
     displayName: Prep Tarball
 
   - script: |
@@ -95,7 +109,7 @@ jobs:
 
       networkArgs=
       customBuildArgs=
-      if [ '$(_runOnline)' = 'true' ]; then
+      if [ '$(_RunOnline)' = 'true' ]; then
         customBuildArgs='--online'
       else
         networkArgs='--network none'
