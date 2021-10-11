@@ -73,7 +73,7 @@ function CheckInstallX64() {
     var result = IsX64Machine() ;
     if (!result)
     {
-        my.result.message = "This package may only be installed on an x64 machine.";
+        my.result.message = "This package may only be installed on an Intel-based Mac.";
         my.result.type = 'Fatal';
     }
 
