@@ -11,11 +11,15 @@
           Compressed="yes">
 
     <bal:Condition Message="The installation path for x64 SDK installations: &quot;[DOTNETHOME_X64]&quot; cannot be the same as for x86 SDK installations: &quot;[DOTNETHOME_X86]&quot;">
-        WixBundleInstalled OR ((NOT (DOTNETHOME_X64 ~= DOTNETHOME_X86)) OR DOTNETHOMESIMILARITYCHECKOVERRIDE)
+        WixBundleInstalled OR (NOT DOTNETHOME_X64 ~= DOTNETHOME_X86) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
     </bal:Condition>
 
     <bal:Condition Message="The installation path for ARM64 SDK installations: &quot;[DOTNETHOME_ARM64]&quot; cannot be the same as for x86 SDK installations: &quot;[DOTNETHOME_X86]&quot;">
-        WixBundleInstalled OR ((NOT (DOTNETHOME_ARM64 ~= DOTNETHOME_X86)) OR DOTNETHOMESIMILARITYCHECKOVERRIDE)
+        WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X86) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
+    </bal:Condition>
+
+    <bal:Condition Message="This product is not supported on Arm64.">
+        WixBundleInstalled OR (NOT NativeMachine = $(var.NativeMachine_arm64)) OR DOTNETALLOWINSTALLONARM64
     </bal:Condition>
 
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.Foundation">
@@ -131,6 +135,7 @@
     <Variable Name="ASPNETCOREVERSION" Type="string" Value="$(var.AspNetCoreVersion)" bal:Overridable="no" />
     <Variable Name="WINFORMSANDWPFVERSION" Type="string" Value="$(var.WinFormsAndWpfVersion)" bal:Overridable="no" />
     <Variable Name="DOTNETHOMESIMILARITYCHECKOVERRIDE" Type="string" Value="" bal:Overridable="yes" />
+    <Variable Name="DOTNETALLOWINSTALLONARM64" Type="string" Value="" bal:Overridable="yes" />
       
       <Chain DisableSystemRestore="yes" ParallelCache="yes">
       <MsiPackage SourceFile="$(var.SharedFXMsiSourcePath)">
@@ -177,9 +182,6 @@
       </MsiPackage>
       <MsiPackage SourceFile="$(var.CLISDKMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
-        <MsiProperty Name="DOTNETHOME_X86" Value="[DOTNETHOME_X86]" />
-        <MsiProperty Name="DOTNETHOME_X64" Value="[DOTNETHOME_X64]" />
-        <MsiProperty Name="DOTNETHOME_ARM64" Value="[DOTNETHOME_ARM64]" />
         <MsiProperty Name="EXEFULLPATH" Value="[WixBundleOriginalSource]" />
         <MsiProperty Name="ALLOWMSIINSTALL" Value="True" />
       </MsiPackage>
