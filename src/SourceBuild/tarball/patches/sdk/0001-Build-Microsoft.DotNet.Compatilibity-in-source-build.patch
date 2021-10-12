@@ -1,0 +1,44 @@
+From 8f01e43ae6b927f84fdb480b377c67652cdc42b0 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Tue, 12 Oct 2021 08:35:37 -0500
+Subject: [PATCH] Build Microsoft.DotNet.Compatilibity in source-build
+
+See https://github.com/dotnet/source-build/issues/2498 for details.
+Backported to SDK with https://github.com/dotnet/sdk/pull/21978.
+---
+ source-build.slnf | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/source-build.slnf b/source-build.slnf
+index f0f7b20149..15db481ddd 100644
+--- a/source-build.slnf
++++ b/source-build.slnf
+@@ -4,8 +4,8 @@
+     "projects": [
+       "src\\BlazorWasmSdk\\Tasks\\Microsoft.NET.Sdk.BlazorWebAssembly.Tasks.csproj",
+       "src\\BlazorWasmSdk\\Tool\\Microsoft.NET.Sdk.BlazorWebAssembly.Tool.csproj",
+-      "src\\BuiltInTools\\DotNetDeltaApplier\\Microsoft.Extensions.DotNetDeltaApplier.csproj",
+       "src\\BuiltInTools\\BrowserRefresh\\Microsoft.AspNetCore.Watch.BrowserRefresh.csproj",
++      "src\\BuiltInTools\\DotNetDeltaApplier\\Microsoft.Extensions.DotNetDeltaApplier.csproj",
+       "src\\BuiltInTools\\DotNetWatchTasks\\DotNetWatchTasks.csproj",
+       "src\\BuiltInTools\\dotnet-watch\\dotnet-watch.csproj",
+       "src\\Cli\\Microsoft.DotNet.Cli.Sln.Internal\\Microsoft.DotNet.Cli.Sln.Internal.csproj",
+@@ -14,6 +14,8 @@
+       "src\\Cli\\Microsoft.DotNet.InternalAbstractions\\Microsoft.DotNet.InternalAbstractions.csproj",
+       "src\\Cli\\dotnet\\dotnet.csproj",
+       "src\\Compatibility\\Microsoft.DotNet.ApiCompatibility\\Microsoft.DotNet.ApiCompatibility.csproj",
++      "src\\Compatibility\\Microsoft.DotNet.Compatibility\\Microsoft.DotNet.Compatibility.csproj",
++      "src\\Compatibility\\Microsoft.DotNet.PackageValidation\\Microsoft.DotNet.PackageValidation.csproj",
+       "src\\Layout\\redist\\redist.csproj",
+       "src\\Layout\\tool_fsharp\\tool_fsc.csproj",
+       "src\\Layout\\tool_msbuild\\tool_msbuild.csproj",
+@@ -38,4 +40,4 @@
+       "src\\WebSdk\\Worker\\Tasks\\Microsoft.NET.Sdk.Worker.Tasks.csproj"
+     ]
+   }
+-}
++}
+\ No newline at end of file
+-- 
+2.30.1.windows.1
+
