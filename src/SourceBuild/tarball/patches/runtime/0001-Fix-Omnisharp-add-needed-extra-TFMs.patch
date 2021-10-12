@@ -1,7 +1,7 @@
-From 93de82c03ff71f897599db2824b959d020b877bd Mon Sep 17 00:00:00 2001
+From 827f1e036db2082b56b003f870f5ff8dabc9b1ed Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Thu, 30 Sep 2021 16:08:28 -0500
-Subject: [PATCH 1/2] Fix Omnisharp: Add needed extra TFMs.
+Date: Tue, 12 Oct 2021 14:04:27 -0500
+Subject: [PATCH] Fix Omnisharp: Add needed extra TFMs.
 
 Omnisharp requires the net46 TFMs of this files explictly and we don't build them by default.  This patch adds net46 to the relevant projects.  The original issue for this was https://github.com/OmniSharp/omnisharp-vscode/issues/4610 and the long-term fix of switching to net>4 TFM is tracked in https://github.com/OmniSharp/omnisharp-vscode/issues/4360.
 
@@ -12,18 +12,18 @@ Omnisharp requires the net46 TFMs of this files explictly and we don't build the
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/libraries/Directory.Build.props b/src/libraries/Directory.Build.props
-index 4d39fad397e..649c669517e 100644
+index a03b334346a..30418e38a2a 100644
 --- a/src/libraries/Directory.Build.props
 +++ b/src/libraries/Directory.Build.props
-@@ -27,7 +27,7 @@
- 
-   <PropertyGroup>
+@@ -20,7 +20,7 @@
+     <ShouldUnsetParentConfigurationAndPlatform>false</ShouldUnsetParentConfigurationAndPlatform>
+     <GeneratePlatformNotSupportedAssemblyHeaderFile>$(RepositoryEngineeringDir)LicenseHeader.txt</GeneratePlatformNotSupportedAssemblyHeaderFile>
      <!-- Build all .NET Framework configurations when net48 is passed in. This is for convenience. -->
 -    <AdditionalBuildTargetFrameworks Condition="'$(BuildTargetFramework)' == 'net48'">net461;net462;net47;net471;net472</AdditionalBuildTargetFrameworks>
 +    <AdditionalBuildTargetFrameworks Condition="'$(BuildTargetFramework)' == 'net48'">net46;net461;net462;net47;net471;net472</AdditionalBuildTargetFrameworks>
    </PropertyGroup>
  
-   <!-- Define test projects and companions -->
+   <Import Sdk="Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk" Project="Sdk.props" Condition="'$(UseTargetFrameworkSDK)' != 'false'" />
 diff --git a/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj b/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj
 index 99037ae459c..848be41690c 100644
 --- a/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj
@@ -44,7 +44,7 @@ index 99037ae459c..848be41690c 100644
 \ No newline at end of file
 +</Project>
 diff --git a/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj b/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
-index adacc9b977e..38d4c145352 100644
+index a0a79e45adf..29c9b123ce5 100644
 --- a/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
 +++ b/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
 @@ -1,7 +1,7 @@
@@ -55,7 +55,7 @@ index adacc9b977e..38d4c145352 100644
 +    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;net46;net461</TargetFrameworks>
      <DefineConstants>$(DefineConstants);RESOURCES_EXTENSIONS</DefineConstants>
      <Nullable>enable</Nullable>
-   </PropertyGroup>
+     <IsPackable>true</IsPackable>
 -- 
-2.17.1
+2.18.0
 
