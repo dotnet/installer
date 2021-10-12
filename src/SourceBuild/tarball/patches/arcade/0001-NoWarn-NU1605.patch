@@ -1,0 +1,29 @@
+From 4d2c2370dc85e658508fd0943e47b0d6559f42d5 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Mon, 9 Aug 2021 14:03:33 +0000
+Subject: [PATCH] NoWarn NU1605
+
+Incoherant build workaround
+
+  /repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/src/Microsoft.DotNet.PackageTesting/Microsoft.DotNet.PackageTesting.csproj : error NU1605: Detected package downgrade: System.Runtime.CompilerServices.Unsafe from 6.0.0-rtm.21511.12 to 6.0.0-rc.2.21480.5. Reference the package directly from the project to select a different version.  [/repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/Arcade.sln]
+  /repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/src/Microsoft.DotNet.PackageTesting/Microsoft.DotNet.PackageTesting.csproj : error NU1605:  Microsoft.DotNet.PackageTesting -> Microsoft.CodeAnalysis.CSharp 4.0.0-6.21511.11 -> Microsoft.CodeAnalysis.Common 4.0.0-6.21511.11 -> System.Collections.Immutable 6.0.0-rtm.21511.12 -> System.Runtime.CompilerServices.Unsafe (>= 6.0.0-rtm.21511.12)  [/repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/Arcade.sln]
+  /repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/src/Microsoft.DotNet.PackageTesting/Microsoft.DotNet.PackageTesting.csproj : error NU1605:  Microsoft.DotNet.PackageTesting -> Microsoft.CodeAnalysis.CSharp 4.0.0-6.21511.11 -> Microsoft.CodeAnalysis.Common 4.0.0-6.21511.11 -> System.Runtime.CompilerServices.Unsafe (>= 6.0.0-rc.2.21470.23) [/repos/tarball1/src/arcade.e58cb829bf6d9c340b4a0c100956e2995d792aa2/artifacts/source-build/self/src/Arcade.sln]
+
+---
+ src/Cli/dotnet/dotnet.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Cli/dotnet/dotnet.csproj b/src/Cli/dotnet/dotnet.csproj
+index 4ff965a4d..f9609824b 100644
+--- a/src/Cli/dotnet/dotnet.csproj
++++ b/src/Cli/dotnet/dotnet.csproj
+@@ -12,6 +12,7 @@
+     <PackageId>Microsoft.DotNet.Cli</PackageId>
+     <UseAppHost>false</UseAppHost>
+     <IsPackable>true</IsPackable>
++    <NoWarn>$(NoWarn);NU1605</NoWarn>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Remove="commands\dotnet-new\**" />
+-- 
+2.29.2
