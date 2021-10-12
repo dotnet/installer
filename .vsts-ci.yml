@@ -104,17 +104,10 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-<<<<<<< HEAD
           name: NetCore1ESPool-Public
           demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Internal
-=======
-          name: NetCore1ESPool-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
->>>>>>> main
           demands: ImageOverride -equals build.windows.10.amd64.vs2019
       timeoutInMinutes: 180
       strategy:
@@ -140,17 +133,10 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-<<<<<<< HEAD
           name: NetCore1ESPool-Public
           demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Internal
-=======
-          name: NetCore1ESPool-Svc-Public
-          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
->>>>>>> main
           demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
@@ -312,17 +298,10 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-<<<<<<< HEAD
           name: NetCore1ESPool-Public
           demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Internal
-=======
-          name: NetCore1ESPool-Svc-Public
-          demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
->>>>>>> main
           demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
       timeoutInMinutes: 180
       strategy:
