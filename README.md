@@ -72,6 +72,16 @@ want to install the latest released versions, check out the [preceding section](
 With development builds, internal NuGet feeds are necessary for some scenarios (for example, to acquire the runtime pack for self-contained apps). You can use the following NuGet.config to configure these feeds. See the following document [Configuring NuGet behavior](https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior) for more information on where to modify your NuGet.config to apply the changes.
 > Example:
 
+**For .NET 7 builds**
+
+```
+<configuration>
+  <packageSources>
+    <add key="dotnet7" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json" />
+  </packageSources>
+</configuration>
+```
+
 **For .NET 6 builds**
 
 ```
@@ -81,10 +91,9 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
   </packageSources>
 </configuration>
 ```
-**Note:** that you may need to add the dotnet5 feed for a short period of time while .NET transitions to .NET 6
 
 **For .NET 6 Optional workloads**
-_The below feed is needed for releases before RC1_
+_The below feed is needed for 6.0 releases before RC1_
 
 We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
 
