@@ -40,10 +40,9 @@ jobs:
           _Bootstrap: false
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-20210714125410-9b5bbc2
           _RunOnline: true
-        # TODO: Should not be re-using gcc image for other purposes
-        Debian11-Online:
+        Debian9-Online:
           _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs@debian-11-gcc11-amd64-20211001171325-f42d766
+          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs@debian-stretch-20211001171226-047508b
           _RunOnline: true
         Fedora33-Online:
           _Bootstrap: true
@@ -53,14 +52,9 @@ jobs:
           _Bootstrap: true
           _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-34-20210924174119-cd1cb75
           _RunOnline: true
-        Ubuntu1604-Online:
+        Ubuntu1804-Online:
           _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-16.04-20210924170333-538077f
-          _RunOnline: true
-        # TODO: Should not be re-using helix image for other purposes
-        Ubuntu2104-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-21.04-helix-amd64-20210922170909-34a2d72
+          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20210924170306-047508b
           _RunOnline: true
   timeoutInMinutes: 210
   variables:
