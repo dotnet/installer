@@ -8,7 +8,7 @@ For more information, see
 
 ## Local development workflow
 
-These are the steps used by some members of the .NET source-build team to build
+These are the steps used by some members of the .NET source-build team to create
 a tarball and build it on a local machine as part of the development cycle:
 
 1. Check out this repository and open a command line in the directory.
