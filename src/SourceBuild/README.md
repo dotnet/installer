@@ -33,3 +33,45 @@ specifically:
 
 * Prebuilt report. For example:  
   `./src/runtime.733a3089ec6945422caf06035c18ff700c9d51be/artifacts/source-build/self/prebuilt-report`
+
+## Creating a patch file
+
+To create a repo patch file, first commit your changes to the repo as normal,
+then run this command inside the repo to generate a patch file inside the repo:
+
+```sh
+git format-patch --zero-commit --no-signature -1
+```
+
+Then, move the patch file into this repo, at
+`src/SourceBuild/tarball/patches/<repo>`.
+
+> If you define `PATCH_DIR` to point at the `patches` directory, you can use
+> `-o` to place the patch file directly in the right directory:
+>
+> ```sh
+> git format-patch --zero-commit --no-signature -1 -o "$PATCH_DIR/<repo>"
+> ```
+
+After generating the patch file, the numeric prefix on the filename may need to
+be changed. By convention, new patches should be one number above the largest
+number that already exists in the patch file directory. If there's a gap in the
+number sequence, do not fix it (generally speaking), to avoid unnecessary diffs
+and potential merge conflicts.
+
+To apply a patch, or multiple patches, use `git am` while inside the target
+repo. For example, to apply *all* `sdk` patches onto a fresh clone of the `sdk`
+repository that has already been checked out to the correct commit, use:
+
+```sh
+git am "$PATCH_DIR/sdk/*"
+```
+
+This creates a Git commit with the patch contents, so you can easily amend a
+patch or create a new commit on top that you can be sure will apply cleanly.
+
+There is a method to create a series of patches based on a range of Git commits,
+but this is not usually useful for 6.0 main development. It is used in servicing
+to "freshen up" the sequence of patches (resolve conflicts) all at once.
+
+Note: Tarballs have already applied patches to the source code.
