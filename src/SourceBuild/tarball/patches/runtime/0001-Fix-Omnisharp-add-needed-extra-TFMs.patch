@@ -6,10 +6,12 @@ Subject: [PATCH] Fix Omnisharp: Add needed extra TFMs.
 Omnisharp requires the net46 TFMs of this files explictly and we don't build them by default.  This patch adds net46 to the relevant projects.  The original issue for this was https://github.com/OmniSharp/omnisharp-vscode/issues/4610 and the long-term fix of switching to net>4 TFM is tracked in https://github.com/OmniSharp/omnisharp-vscode/issues/4360.
 
 ---
- src/libraries/Directory.Build.props                           | 2 +-
- .../ref/System.Resources.Extensions.csproj                    | 4 ++--
- .../src/System.Resources.Extensions.csproj                    | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ src/libraries/Directory.Build.props                         | 2 +-
+ .../ref/System.Resources.Extensions.csproj                  | 4 ++--
+ .../src/System.Resources.Extensions.csproj                  | 2 +-
+ .../ref/System.Runtime.CompilerServices.Unsafe.csproj       | 4 ++--
+ .../src/System.Runtime.CompilerServices.Unsafe.ilproj       | 6 +++++-
+ 5 files changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/src/libraries/Directory.Build.props b/src/libraries/Directory.Build.props
 index a03b334346a..30418e38a2a 100644
@@ -56,6 +58,49 @@ index a0a79e45adf..29c9b123ce5 100644
      <DefineConstants>$(DefineConstants);RESOURCES_EXTENSIONS</DefineConstants>
      <Nullable>enable</Nullable>
      <IsPackable>true</IsPackable>
+diff --git a/src/libraries/System.Runtime.CompilerServices.Unsafe/ref/System.Runtime.CompilerServices.Unsafe.csproj b/src/libraries/System.Runtime.CompilerServices.Unsafe/ref/System.Runtime.CompilerServices.Unsafe.csproj
+index 766ea9a8ae7..5324c85404b 100644
+--- a/src/libraries/System.Runtime.CompilerServices.Unsafe/ref/System.Runtime.CompilerServices.Unsafe.csproj
++++ b/src/libraries/System.Runtime.CompilerServices.Unsafe/ref/System.Runtime.CompilerServices.Unsafe.csproj
+@@ -3,7 +3,7 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <CLSCompliant>false</CLSCompliant>
+     <Nullable>enable</Nullable>
+-    <TargetFrameworks>$(NetCoreAppCurrent);netcoreapp3.1;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent);netcoreapp3.1;netstandard2.1;netstandard2.0;net46;net461</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.CompilerServices.Unsafe.cs" />
+@@ -14,4 +14,4 @@
+   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+     <Reference Include="System.Runtime" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/libraries/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj b/src/libraries/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
+index a9e3de0c454..75467734292 100644
+--- a/src/libraries/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
++++ b/src/libraries/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk.IL">
+   <PropertyGroup>
+-    <TargetFrameworks>$(NetCoreAppCurrent);netcoreapp3.1;netstandard2.0;net461</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent);netcoreapp3.1;netstandard2.0;net46;net461</TargetFrameworks>
+     <!-- Make sure that the DebuggableAttribute is set properly. -->
+     <DebugOptimization>IMPL</DebugOptimization>
+     <DebugOptimization Condition="'$(Configuration)' == 'Release'">OPT</DebugOptimization>
+@@ -20,6 +20,10 @@ System.Runtime.CompilerServices.Unsafe</PackageDescription>
+   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <CoreAssembly>netstandard</CoreAssembly>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
++    <CoreAssembly>mscorlib</CoreAssembly>
++    <ExtraMacros>#define $(TargetFramework)</ExtraMacros>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+     <CoreAssembly>mscorlib</CoreAssembly>
+     <ExtraMacros>#define $(TargetFramework)</ExtraMacros>
 -- 
 2.18.0
 
