@@ -4,6 +4,11 @@ Date: Fri, 8 Oct 2021 19:55:43 -0500
 Subject: [PATCH 1/2] Remove RefOnly dependency versions
 
 This allows for source-build to replace these versions with source-built versions.
+
+Note: Removing unnecessary MSBuild PackageReferences rather than updating the version of these unnecessary references.
+
+See https://github.com/dotnet/source-build/issues/2421 for details.
+Backported to runtime with https://github.com/dotnet/runtime/pull/60315.
 ---
  eng/Versions.props                                 | 14 ++++----------
  ...crosoft.DotNet.CoreSetup.Packaging.Tests.csproj |  2 +-

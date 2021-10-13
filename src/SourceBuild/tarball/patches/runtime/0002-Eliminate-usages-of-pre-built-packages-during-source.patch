@@ -10,6 +10,9 @@ Subject: [PATCH 2/2] Eliminate usages of pre-built packages during
 * Don't restore Microsoft.DiaSymReader.Native
 * Don't build source generators that target older Roslyn versions
 * Don't build ILStripTask since it uses a Mono.Cecil "sources" NuGet package that isn't part of source-build
+
+See https://github.com/dotnet/source-build/issues/2421 for details.
+Backported to runtime with https://github.com/dotnet/runtime/pull/60315.
 ---
  Directory.Build.props                                       | 4 ++++
  eng/Subsets.props                                           | 2 +-
