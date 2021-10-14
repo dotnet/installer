@@ -69,12 +69,6 @@ stages:
               _DOTNET_CLI_UI_LANGUAGE: ''
               _AdditionalBuildParameters: ''
               _TestArg: $(_WindowsTestArg)
-            Build_ES_Debug_x64:
-              _BuildConfig: Debug
-              _BuildArchitecture: x64
-              _DOTNET_CLI_UI_LANGUAGE: es
-              _AdditionalBuildParameters: ''
-              _TestArg: ''
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x86:
@@ -169,7 +163,7 @@ stages:
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               _TestArg: $(_NonWindowsTestArg)
-            Build_CentOS_7_1_Debug_x64:
+            Build_CentOS_7_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker centos'
               _LinuxPortable: ''
@@ -179,13 +173,6 @@ stages:
             Build_Debian_Stretch_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker debian'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _TestArg: $(_NonWindowsTestArg)
-            Build_Rhel_7_2_Release_x64:
-              _BuildConfig: Release
-              _DockerParameter: '--docker rhel'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
@@ -290,7 +277,7 @@ stages:
               _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker rhel'
+              _DockerParameter: '--docker centos'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
@@ -353,10 +340,11 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-    parameters:
-      dependsOn: Source_Build_Create_Tarball
-      condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
+  # disable tarball build ci until 7.0 stabilizes
+  # - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+  #   parameters:
+  #     dependsOn: Source_Build_Create_Tarball
+  #     condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml

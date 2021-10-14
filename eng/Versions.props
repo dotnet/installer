@@ -5,12 +5,13 @@
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionMajor>6</VersionMajor>
+    <VersionMajor>7</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
     <VersionFeature>00</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
-    <PreReleaseVersionLabel>rtm</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>alpha</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <!-- Enable to remove prerelease label. -->
@@ -19,24 +20,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
-    <MicrosoftDotNetBuildTasksInstallersPackageVersion>6.0.0-beta.21513.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.21512.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>6.0.0-rtm.21513.19</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>6.0.0-rc.2.21459.12</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>6.0.0-rtm.21513.21</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>7.0.0-alpha.1.21460.1</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/templating -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>6.0.100-rtm.21514.4</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>7.0.100-alpha.1.21463.5</MicrosoftDotNetCommonItemTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
-    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.0.2-beta4.21473.2</MicrosoftDotNetTestProjectTemplates50PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.0.2-beta4.21473.2</MicrosoftDotNetTestProjectTemplates60PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.0.2-beta4.21511.2</MicrosoftDotNetTestProjectTemplates50PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.0.2-beta4.21511.2</MicrosoftDotNetTestProjectTemplates60PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
@@ -44,44 +45,44 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>6.0.0-rtm.21514.6</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>6.0.0-rtm.21514.6</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreAppRefInternalPackageVersion>6.0.0-rtm.21514.6</MicrosoftAspNetCoreAppRefInternalPackageVersion>
-    <VSRedistCommonAspNetCoreSharedFrameworkx6460PackageVersion>6.0.0-rtm.21514.6</VSRedistCommonAspNetCoreSharedFrameworkx6460PackageVersion>
-    <dotnetdevcertsPackageVersion>6.0.0-rtm.21514.6</dotnetdevcertsPackageVersion>
-    <dotnetusersecretsPackageVersion>6.0.0-rtm.21514.6</dotnetusersecretsPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>7.0.0-alpha.1.21470.28</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>7.0.0-alpha.1.21470.28</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreAppRefInternalPackageVersion>7.0.0-alpha.1.21470.28</MicrosoftAspNetCoreAppRefInternalPackageVersion>
+    <VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>7.0.0-alpha.1.21470.28</VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>
+    <dotnetdevcertsPackageVersion>7.0.0-alpha.1.21470.28</dotnetdevcertsPackageVersion>
+    <dotnetusersecretsPackageVersion>7.0.0-alpha.1.21470.28</dotnetusersecretsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftNETSdkPackageVersion>6.0.100-rtm.21514.26</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>6.0.100-rtm.21514.26</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftNETSdkPackageVersion>7.0.100-alpha.1.21480.10</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>7.0.100-alpha.1.21480.10</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/corefx -->
-    <MicrosoftNETCorePlatformsPackageVersion>6.0.0-rtm.21513.26</MicrosoftNETCorePlatformsPackageVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>7.0.0-alpha.1.21480.1</MicrosoftNETCorePlatformsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/core-setup -->
-    <VSRedistCommonNetCoreSharedFrameworkx6460PackageVersion>6.0.0-rtm.21513.26</VSRedistCommonNetCoreSharedFrameworkx6460PackageVersion>
-    <VSRedistCommonNetCoreTargetingPackx6460PackageVersion>6.0.0-rtm.21513.26</VSRedistCommonNetCoreTargetingPackx6460PackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>6.0.0-rtm.21513.26</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftNETCoreAppHostwinx64PackageVersion>6.0.0-rtm.21513.26</MicrosoftNETCoreAppHostwinx64PackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>6.0.0-rtm.21513.26</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreDotNetHostResolverPackageVersion>6.0.0-rtm.21513.26</MicrosoftNETCoreDotNetHostResolverPackageVersion>
+    <VSRedistCommonNetCoreSharedFrameworkx6470PackageVersion>7.0.0-alpha.1.21480.1</VSRedistCommonNetCoreSharedFrameworkx6470PackageVersion>
+    <VSRedistCommonNetCoreTargetingPackx6470PackageVersion>7.0.0-alpha.1.21480.1</VSRedistCommonNetCoreTargetingPackx6470PackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>7.0.0-alpha.1.21480.1</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppHostwinx64PackageVersion>7.0.0-alpha.1.21480.1</MicrosoftNETCoreAppHostwinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>7.0.0-alpha.1.21480.1</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreDotNetHostResolverPackageVersion>7.0.0-alpha.1.21480.1</MicrosoftNETCoreDotNetHostResolverPackageVersion>
     <NETStandardLibraryRefPackageVersion>2.1.0</NETStandardLibraryRefPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/windowsdesktop -->
-    <VSRedistCommonWindowsDesktopSharedFrameworkx6460PackageVersion>6.0.0-rtm.21513.28</VSRedistCommonWindowsDesktopSharedFrameworkx6460PackageVersion>
-    <VSRedistCommonWindowsDesktopTargetingPackx6460PackageVersion>6.0.0-rtm.21513.28</VSRedistCommonWindowsDesktopTargetingPackx6460PackageVersion>
-    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>6.0.0-rtm.21513.28</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
-    <MicrosoftWindowsDesktopAppRefPackageVersion>6.0.0-rtm.21513.28</MicrosoftWindowsDesktopAppRefPackageVersion>
+    <VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>7.0.0-alpha.1.21474.1</VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>
+    <VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>7.0.0-alpha.1.21474.1</VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>7.0.0-alpha.1.21474.1</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppRefPackageVersion>7.0.0-alpha.1.21474.1</MicrosoftWindowsDesktopAppRefPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Runtime and Apphost pack versions are the same for all RIDs. We flow the x64    -->
@@ -98,7 +99,9 @@
   <PropertyGroup>
     <!-- Cross-release dependency versions -->
     <MicrosoftDotNetCommonItemTemplates50PackageVersion>5.0.3</MicrosoftDotNetCommonItemTemplates50PackageVersion>
+    <MicrosoftDotNetCommonItemTemplates60PackageVersion>6.0.100-rc.2.21423.5</MicrosoftDotNetCommonItemTemplates60PackageVersion>
     <MicrosoftAspNetCoreAppRuntime50PackageVersion>5.0.0-rc.2.20474.4</MicrosoftAspNetCoreAppRuntime50PackageVersion>
+    <MicrosoftAspNetCoreAppRuntime60PackageVersion>6.0.0-rc.2.21420.26</MicrosoftAspNetCoreAppRuntime60PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <HostFxrVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</HostFxrVersion>
@@ -112,9 +115,9 @@
     <MicrosoftDotnetWinFormsProjectTemplates60PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates60PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates60PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates60PackageVersion>
     <NUnit3Templates60PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates60PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates60PackageVersion>6.0.100-rtm.21514.4</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
-    <AspNetCorePackageVersionFor60Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor60Templates>
+    <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
+    <AspNetCorePackageVersionFor60Templates>$(MicrosoftAspNetCoreAppRuntime60PackageVersion)</AspNetCorePackageVersionFor60Templates>
     <!-- 5.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates50PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates50PackageVersion>
@@ -143,14 +146,14 @@
     <NUnit3Templates21PackageVersion>1.5.3</NUnit3Templates21PackageVersion>
     <MicrosoftDotNetCommonItemTemplates21PackageVersion>1.0.2-beta3</MicrosoftDotNetCommonItemTemplates21PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates21PackageVersion>$(MicrosoftDotNetCommonItemTemplates21PackageVersion)</MicrosoftDotNetCommonProjectTemplates21PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.21473.2</MicrosoftDotNetTestProjectTemplates21PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates21PackageVersion>1.0.2-beta4.21511.2</MicrosoftDotNetTestProjectTemplates21PackageVersion>
     <AspNetCorePackageVersionFor21Templates>2.1.30</AspNetCorePackageVersionFor21Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
-    <MicrosoftNETTestSdkVersion>17.0.0-release-20210923-02</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>17.0.0-release-20210908-02</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
   <!-- dependencies for source-build tarball -->
   <PropertyGroup>
@@ -159,19 +162,19 @@
          removed.  See https://github.com/dotnet/source-build/issues/2295 -->
     <MicrosoftBuildFrameworkVersion>15.7.179</MicrosoftBuildFrameworkVersion>
     <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
-    <PrivateSourceBuiltArtifactsPackageVersion>0.1.0-6.0.100-bootstrap.23</PrivateSourceBuiltArtifactsPackageVersion>
-    <PrivateSourceBuiltPrebuiltsPackageVersion>0.1.0-6.0.100-30</PrivateSourceBuiltPrebuiltsPackageVersion>
+    <PrivateSourceBuiltArtifactsPackageVersion>0.1.0-6.0.100-bootstrap.11</PrivateSourceBuiltArtifactsPackageVersion>
+    <PrivateSourceBuiltPrebuiltsPackageVersion>0.1.0-6.0.100-19</PrivateSourceBuiltPrebuiltsPackageVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>
-    <MauiWorkloadManifestVersion>6.0.101-preview.9.1805</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>31.0.101-preview.9.16</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>15.0.101-preview.9.31</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>15.0.101-preview.9.31</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>12.0.101-preview.9.31</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>15.0.101-preview.9.31</XamarinTvOSWorkloadManifestVersion>
+    <MauiWorkloadManifestVersion>6.0.100-rc.1.1351</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>30.0.100-rc.1.137</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>15.0.100-rc.1.496</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>15.0.100-rc.1.496</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>12.0.100-rc.1.496</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>15.0.100-rc.1.496</XamarinTvOSWorkloadManifestVersion>
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
-    <MicrosoftNETWorkloadEmscriptenManifest60100Version>6.0.0-rtm.21512.1</MicrosoftNETWorkloadEmscriptenManifest60100Version>
+    <MicrosoftNETWorkloadEmscriptenManifest60100Version>6.0.0-rc.1.21416.1</MicrosoftNETWorkloadEmscriptenManifest60100Version>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenManifest60100Version)</EmscriptenWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup>
