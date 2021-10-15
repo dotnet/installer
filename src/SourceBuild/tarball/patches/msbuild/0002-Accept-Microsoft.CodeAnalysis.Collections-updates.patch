@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 12 Oct 2021 16:01:00 -0500
+Subject: [PATCH] Accept Microsoft.CodeAnalysis.Collections updates
+
+In source-build, Microsoft.CodeAnalysis.Collections must be updated to consume
+the source-built version. https://github.com/dotnet/msbuild/issues/6960
+---
+ eng/Packages.props | 2 +-
+ eng/Versions.props | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/eng/Packages.props b/eng/Packages.props
+index eb0144f9b..0f478634f 100644
+--- a/eng/Packages.props
++++ b/eng/Packages.props
+@@ -9,7 +9,7 @@
+     <PackageReference Update="LargeAddressAware" Version="1.0.5" />
+     <PackageReference Update="Microsoft.Build.NuGetSdkResolver" Version="$(NuGetBuildTasksVersion)" />
+     <PackageReference Update="Microsoft.CodeAnalysis.Build.Tasks" Version="$(MicrosoftNetCompilersToolsetVersion)" />
+-    <PackageReference Update="Microsoft.CodeAnalysis.Collections" Version="4.0.0-4.21379.20" />
++    <PackageReference Update="Microsoft.CodeAnalysis.Collections" Version="$(MicrosoftCodeAnalysisCollectionsPackageVersion)" />
+     <PackageReference Update="Microsoft.CodeQuality.Analyzers" Version="3.3.0" PrivateAssets="all" />
+     <PackageReference Update="Microsoft.DotNet.GenAPI" Version="2.1.0-prerelease-02404-02" />
+     <PackageReference Update="Microsoft.DotNet.XUnitExtensions" Version="$(MicrosoftDotNetXUnitExtensionsVersion)" />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 7c66217f4..a356b7df0 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -26,6 +26,7 @@
+   <!-- Production Dependencies -->
+   <PropertyGroup>
+     <SystemResourcesExtensionsPackageVersion>4.6.0</SystemResourcesExtensionsPackageVersion>
++    <MicrosoftCodeAnalysisCollectionsPackageVersion>4.0.0-4.21379.20</MicrosoftCodeAnalysisCollectionsPackageVersion>
+   </PropertyGroup>
+   <!-- Toolset Dependencies -->
+   <PropertyGroup>

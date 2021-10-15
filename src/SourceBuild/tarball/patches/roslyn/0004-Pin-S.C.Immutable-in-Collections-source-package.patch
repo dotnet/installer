@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 13 Oct 2021 18:33:29 -0500
+Subject: [PATCH] Pin S.C.Immutable in Collections source package
+
+See comment in patch. https://github.com/dotnet/roslyn/issues/57129
+---
+ .../Microsoft.CodeAnalysis.Collections.Package.csproj       | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/Dependencies/Collections/Microsoft.CodeAnalysis.Collections.Package.csproj b/src/Dependencies/Collections/Microsoft.CodeAnalysis.Collections.Package.csproj
+index 22cab2f5f03..1091d523ccf 100644
+--- a/src/Dependencies/Collections/Microsoft.CodeAnalysis.Collections.Package.csproj
++++ b/src/Dependencies/Collections/Microsoft.CodeAnalysis.Collections.Package.csproj
+@@ -18,6 +18,12 @@
+     </PackageDescription>
+     <!-- Remove once https://github.com/NuGet/Home/issues/8583 is fixed -->
+     <NoWarn>$(NoWarn);NU5128</NoWarn>
++    <!--
++      Pin System.Collections.Immutable. If this is updated to a 6.0.0 version by source-build,
++      dotnet/sdk hits a version conflict that cannot be resolved by ResolveAssemblyReference,
++      causing a build failure. See https://github.com/dotnet/roslyn/issues/57129
++    -->
++    <SystemCollectionsImmutableVersion>5.0.0</SystemCollectionsImmutableVersion>
+   </PropertyGroup>
+   <ItemGroup>
+     <!-- ⚠ Consuming projects outside dotnet/roslyn will be required to manually reproduce the APIs for any linked files added here -->
