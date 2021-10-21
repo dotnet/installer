@@ -98,8 +98,7 @@ stages:
             _BuildArchitecture: arm64
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: ''
-            # Never run tests on arm64
-            _TestArg: ''
+            _TestArg: $(_WindowsTestArg)
 
   - template: /eng/build.yml
     parameters:
@@ -335,8 +334,7 @@ stages:
             _BuildConfig: Release
             _RuntimeIdentifier: '--runtime-id osx-arm64'
             _BuildArchitecture: 'arm64'
-            # Never run tests on arm64
-            _TestArg: ''
+            _TestArg: $(_NonWindowsTestArg)
 
   - template: /eng/common/templates/jobs/source-build.yml
 
