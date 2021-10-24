@@ -1,24 +1,61 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 157de59d479f2ed179b9b777eaf2b769871e3bf6 Mon Sep 17 00:00:00 2001
 From: Matt Mitchell <mmitche@microsoft.com>
 Date: Sat, 23 Oct 2021 16:41:24 -0700
 Subject: [PATCH] Remove uneeded source build patches and re-patch
 
 ---
- build/packages.targets                                      | 3 ++-
- .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj    | 4 ++--
- .../NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj  | 2 +-
- .../NuGet.Commands/SignCommand/CertificateProvider.cs       | 4 ++--
- src/NuGet.Core/NuGet.Common/NuGet.Common.csproj             | 1 -
- .../NuGet.Configuration/NuGet.Configuration.csproj          | 3 +--
- .../NuGet.PackageManagement/NuGet.PackageManagement.csproj  | 2 +-
- .../NuGet.Packaging/Signing/Authoring/SignPackageRequest.cs | 2 ++
- src/NuGet.Core/NuGet.Packaging/Signing/Cms/NativeUtility.cs | 2 ++
- .../HttpSource/HttpRequestMessageExtensions.cs              | 6 +++---
- .../NuGet.Protocol/HttpSource/HttpRetryHandler.cs           | 2 +-
- .../HttpSource/HttpSourceAuthenticationHandler.cs           | 2 +-
- src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj     | 1 -
- 13 files changed, 18 insertions(+), 16 deletions(-)
+ build/common.project.props                       | 16 ++++++----------
+ build/packages.targets                           |  3 ++-
+ .../NuGet.Build.Tasks.Pack.csproj                |  4 ++--
+ .../NuGet.CommandLine.XPlat.csproj               |  2 +-
+ .../SignCommand/CertificateProvider.cs           |  4 ++--
+ src/NuGet.Core/NuGet.Common/NuGet.Common.csproj  |  1 -
+ .../NuGet.Configuration.csproj                   |  3 +--
+ .../NuGet.Frameworks/NuGet.Frameworks.csproj     |  3 +--
+ .../NuGet.PackageManagement.csproj               |  2 +-
+ .../Signing/Authoring/SignPackageRequest.cs      |  2 ++
+ .../NuGet.Packaging/Signing/Cms/NativeUtility.cs |  2 ++
+ .../HttpSource/HttpRequestMessageExtensions.cs   |  6 +++---
+ .../HttpSource/HttpRetryHandler.cs               |  2 +-
+ .../HttpSourceAuthenticationHandler.cs           |  2 +-
+ .../NuGet.Versioning/NuGet.Versioning.csproj     |  1 -
+ 15 files changed, 25 insertions(+), 28 deletions(-)
 
+diff --git a/build/common.project.props b/build/common.project.props
+index 79a935391..65e482b83 100644
+--- a/build/common.project.props
++++ b/build/common.project.props
+@@ -10,24 +10,20 @@
+ 
+   <!-- Common -->
+   <PropertyGroup>
+-    <IsBuildOnlyXPLATProjects>$(DotNetBuildFromSource)</IsBuildOnlyXPLATProjects>
+     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+     <NETFXTargetFrameworkVersion>v4.7.2</NETFXTargetFrameworkVersion>
+     <NETFXTargetFramework>net472</NETFXTargetFramework>
+-    <NETCoreTargetFramework>netcoreapp2.1</NETCoreTargetFramework>
+-    <NETCoreTargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</NETCoreTargetFramework>
++    <NETCoreTargetFramework>net6.0</NETCoreTargetFramework>
+     <NETCoreTestTargetFramework>netcoreapp5.0</NETCoreTestTargetFramework>
+-    <NetStandardVersion>netstandard2.0</NetStandardVersion>
+-    <NetStandardVersion Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</NetStandardVersion>
++    <IsBuildOnlyXPLATProjects>$(DotNetBuildFromSource)</IsBuildOnlyXPLATProjects>
++    <NetStandardVersion>netstandard2.0;net6.0</NetStandardVersion>
+     <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFramework)</TargetFrameworksExe>
+     <TargetFrameworksExe Condition="'$(IsBuildOnlyXPLATProjects)' == 'true' OR '$(IsXPlat)' == 'true'">$(NETCoreTargetFramework)</TargetFrameworksExe>
+-    <TargetFrameworksExeForSigning>$(TargetFrameworksExe);netcoreapp5.0</TargetFrameworksExeForSigning>
+-    <TargetFrameworksExeForSigning Condition=" '$(IsXPlat)' == 'true' ">$(NETCoreTargetFramework);netcoreapp5.0</TargetFrameworksExeForSigning>
+-    <TargetFrameworksExeForSigning Condition="'$(DotNetBuildFromSource)' == 'true'">$(TargetFrameworksExe);net6.0</TargetFrameworksExeForSigning>
++    <TargetFrameworksExeForSigning>$(TargetFrameworksExe);net6.0</TargetFrameworksExeForSigning>
++    <TargetFrameworksExeForSigning Condition=" '$(IsXPlat)' == 'true' ">$(NETCoreTargetFramework);net6.0</TargetFrameworksExeForSigning>
+     <TargetFrameworksLibrary>$(NETFXTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
+     <TargetFrameworksLibrary Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">$(NetStandardVersion)</TargetFrameworksLibrary>
+-    <TargetFrameworksLibraryForSigning>$(TargetFrameworksLibrary);netcoreapp5.0</TargetFrameworksLibraryForSigning>
+-    <TargetFrameworksLibraryForSigning Condition="'$(DotNetBuildFromSource)' == 'true'">$(TargetFrameworksLibrary);net6.0</TargetFrameworksLibraryForSigning>
++    <TargetFrameworksLibraryForSigning>$(TargetFrameworksLibrary);net6.0</TargetFrameworksLibraryForSigning>
+     <TargetFrameworksLibraryForCrossVerificationTests>$(NETFXTargetFramework);netcoreapp5.0</TargetFrameworksLibraryForCrossVerificationTests>
+     <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
+     <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
 diff --git a/build/packages.targets b/build/packages.targets
 index c11557248..0e7dd7861 100644
 --- a/build/packages.targets
@@ -130,6 +167,20 @@ index bbc5ba480..18b597c74 100644
      <PackageReference Include="System.Security.Cryptography.ProtectedData" />
    </ItemGroup>
  
+diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+index b78b1f2ea..a89b516c6 100644
+--- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
++++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+@@ -4,8 +4,7 @@
+ 
+   <PropertyGroup>
+     <Description>NuGet's understanding of target frameworks.</Description>
+-    <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">$(TargetFrameworksLibrary);netstandard2.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' != 'true'">$(TargetFrameworksLibrary);net40</TargetFrameworks>
++    <TargetFrameworks>$(TargetFrameworksLibrary);netstandard2.0</TargetFrameworks>
+     <TargetFramework />
+     <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
+     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.PackageManagement/NuGet.PackageManagement.csproj b/src/NuGet.Core/NuGet.PackageManagement/NuGet.PackageManagement.csproj
 index dfbfcaa8d..a6bb51d6b 100644
 --- a/src/NuGet.Core/NuGet.PackageManagement/NuGet.PackageManagement.csproj
@@ -240,3 +291,6 @@ index 180293944..8498664b9 100644
      <TargetFramework />
      <Description>NuGet's implementation of Semantic Versioning.</Description>
      <PackageTags>semver;semantic versioning</PackageTags>
+-- 
+2.31.1
+
