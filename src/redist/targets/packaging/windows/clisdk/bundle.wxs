@@ -18,9 +18,11 @@
         WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X86) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
     </bal:Condition>
 
+    <?if $(var.Platform)=x64?>
     <bal:Condition Message="This product is not supported on Arm64.">
         WixBundleInstalled OR (NOT NativeMachine = $(var.NativeMachine_arm64)) OR DOTNETALLOWINSTALLONARM64
     </bal:Condition>
+    <?endif?>
 
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.Foundation">
       <bal:WixStandardBootstrapperApplication
