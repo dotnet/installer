@@ -23,7 +23,7 @@
         WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X64) OR (NOT NativeMachine=&quot;$(var.NativeMachine_arm64)&quot;) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
     </bal:Condition>
 
-    <?if $(var.Platform)!=arm64?>
+    <?if $(var.Platform)=x64?>
     <bal:Condition Message="This product is not supported on Arm64.">
         WixBundleInstalled OR (NOT NativeMachine = $(var.NativeMachine_arm64)) OR DOTNETALLOWINSTALLONARM64
     </bal:Condition>
