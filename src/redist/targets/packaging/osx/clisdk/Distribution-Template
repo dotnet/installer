@@ -10,35 +10,62 @@
             <os-version min="10.13" />
         </allowed-os-versions>
     </volume-check>
-    <installation-check script="CheckInstallX64()" />
     <choices-outline>
-        <line choice="{NetCoreAppTargetingPackComponentId}.pkg" />
-        <line choice="{NetStandardTargetingPackComponentId}.pkg" />
-        <line choice="{NetCoreAppHostPackComponentId}.pkg" />
-        <line choice="{SharedFxComponentId}.pkg" />
-        <line choice="{HostFxrComponentId}.pkg" />
-        <line choice="{SharedHostComponentId}.pkg" />
-        <line choice="{CLISdkComponentId}.pkg"/>
+        <line choice="{NetCoreAppTargetingPackComponentId}.pkg.x64" />
+        <line choice="{NetStandardTargetingPackComponentId}.pkg.x64" />
+        <line choice="{NetCoreAppHostPackComponentId}.pkg.x64" />
+        <line choice="{SharedFxComponentId}.pkg.x64" />
+        <line choice="{HostFxrComponentId}.pkg.x64" />
+        <line choice="{SharedHostComponentId}.pkg.x64" />
+        <line choice="{CLISdkComponentId}.pkg.x64"/>
+        <line choice="{NetCoreAppTargetingPackComponentId}.pkg.arm64" />
+        <line choice="{NetStandardTargetingPackComponentId}.pkg.arm64" />
+        <line choice="{NetCoreAppHostPackComponentId}.pkg.arm64" />
+        <line choice="{SharedFxComponentId}.pkg.arm64" />
+        <line choice="{HostFxrComponentId}.pkg.arm64" />
+        <line choice="{SharedHostComponentId}.pkg.arm64" />
+        <line choice="{CLISdkComponentId}.pkg.arm64"/>
     </choices-outline>
-    <choice id="{NetCoreAppTargetingPackComponentId}.pkg" visible="true" title="{NetCoreAppTargetingPackBrandName} (x64)" description="The .NET Targeting Pack">
+    <choice id="{NetCoreAppTargetingPackComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{NetCoreAppTargetingPackBrandName} (x64)" description="The .NET Targeting Pack">
         <pkg-ref id="{NetCoreAppTargetingPackComponentId}.pkg" />
     </choice>
-    <choice id="{NetStandardTargetingPackComponentId}.pkg" visible="true" title="{NetStandardTargetingPackBrandName} (x64)" description="The .NET Standard 2.1 Targeting Pack">
+    <choice id="{NetStandardTargetingPackComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{NetStandardTargetingPackBrandName} (x64)" description="The .NET Standard 2.1 Targeting Pack">
         <pkg-ref id="{NetStandardTargetingPackComponentId}.pkg" />
     </choice>
-    <choice id="{NetCoreAppHostPackComponentId}.pkg" visible="true" title="{NetCoreAppHostPackBrandName} (x64)" description="The .NET App Host Pack">
+    <choice id="{NetCoreAppHostPackComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{NetCoreAppHostPackBrandName} (x64)" description="The .NET App Host Pack">
         <pkg-ref id="{NetCoreAppHostPackComponentId}.pkg" />
     </choice>
-    <choice id="{SharedFxComponentId}.pkg" visible="true" title="{SharedFxBrandName} (x64)" description="The .NET Shared Framework">
+    <choice id="{SharedFxComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{SharedFxBrandName} (x64)" description="The .NET Shared Framework">
         <pkg-ref id="{SharedFxComponentId}.pkg" />
     </choice>
-    <choice id="{HostFxrComponentId}.pkg" visible="true" title="{HostFxrBrandName} (x64)" description="The .NET Host FX Resolver">
+    <choice id="{HostFxrComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{HostFxrBrandName} (x64)" description="The .NET Host FX Resolver">
         <pkg-ref id="{HostFxrComponentId}.pkg" />
     </choice>
-    <choice id="{SharedHostComponentId}.pkg" visible="true" title="{SharedHostBrandName} (x64)" description="The .NET Shared Host.">
+    <choice id="{SharedHostComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{SharedHostBrandName} (x64)" description="The .NET Shared Host.">
         <pkg-ref id="{SharedHostComponentId}.pkg" />
     </choice>
-    <choice id="{CLISdkComponentId}.pkg" visible="true" title="{CLISdkBrandName} (x64)" description="The .NET SDK">
+    <choice id="{CLISdkComponentId}.pkg.x64" visible="true" selected="IsX64Machine()" title="{CLISdkBrandName} (x64)" description="The .NET SDK">
+        <pkg-ref id="{CLISdkComponentId}.pkg"/>
+    </choice>
+    <choice id="{NetCoreAppTargetingPackComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{NetCoreAppTargetingPackBrandName} (x64)" description="The .NET Targeting Pack">
+        <pkg-ref id="{NetCoreAppTargetingPackComponentId}.pkg" />
+    </choice>
+    <choice id="{NetStandardTargetingPackComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{NetStandardTargetingPackBrandName} (x64)" description="The .NET Standard 2.1 Targeting Pack">
+        <pkg-ref id="{NetStandardTargetingPackComponentId}.pkg" />
+    </choice>
+    <choice id="{NetCoreAppHostPackComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{NetCoreAppHostPackBrandName} (x64)" description="The .NET App Host Pack">
+        <pkg-ref id="{NetCoreAppHostPackComponentId}.pkg" />
+    </choice>
+    <choice id="{SharedFxComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{SharedFxBrandName} (x64)" description="The .NET Shared Framework">
+        <pkg-ref id="{SharedFxComponentId}.pkg" />
+    </choice>
+    <choice id="{HostFxrComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{HostFxrBrandName} (x64)" description="The .NET Host FX Resolver">
+        <pkg-ref id="{HostFxrComponentId}.pkg" />
+    </choice>
+    <choice id="{SharedHostComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{SharedHostBrandName} (x64)" description="The .NET Shared Host.">
+        <pkg-ref id="{SharedHostComponentId}.pkg" />
+    </choice>
+    <choice id="{CLISdkComponentId}.pkg.arm64" visible="true" selected="!IsX64Machine()" customLocation="{x64EmulationPkgInstallDirectory}" title="{CLISdkBrandName} (x64)" description="The .NET SDK">
         <pkg-ref id="{CLISdkComponentId}.pkg"/>
     </choice>
     <pkg-ref id="{NetCoreAppTargetingPackComponentId}.pkg">{NetCoreAppTargetingPackComponentId}.pkg</pkg-ref>
@@ -48,7 +75,7 @@
     <pkg-ref id="{HostFxrComponentId}.pkg">{HostFxrComponentId}.pkg</pkg-ref>
     <pkg-ref id="{SharedHostComponentId}.pkg">{SharedHostComponentId}.pkg</pkg-ref>
     <pkg-ref id="{CLISdkComponentId}.pkg">{CLISdkComponentId}.pkg</pkg-ref>
-        <script>
+    <script>
 <![CDATA[
 function IsX64Machine() {
     var machine = system.sysctl("hw.machine");
@@ -67,16 +94,6 @@ function IsX64Machine() {
     // We may be running under translation (Rosetta) that makes it seem like system is x64, if so assume machine is not actually x64
     result = result && (translated != "1");
     system.log("IsX64Machine: " + result);
-    return result;
-}
-function CheckInstallX64() {
-    var result = IsX64Machine() ;
-    if (!result)
-    {
-        my.result.message = "This package may only be installed on an Intel-based Mac.";
-        my.result.type = 'Fatal';
-    }
-
     return result;
 }
 ]]>
