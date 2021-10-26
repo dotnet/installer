@@ -14,6 +14,7 @@
       <SdkProductArchiveId>com.microsoft.dotnet.dev.$(Version).osx.x64</SdkProductArchiveId>
 
       <PkgInstallDirectory>/usr/local/share/dotnet</PkgInstallDirectory>
+      <x64EmulationPkgInstallDirectory>/usr/local/share/dotnet/x64</x64EmulationPkgInstallDirectory>
 
       <SdkPkgSourcesRootDirectory>$(MSBuildThisFileDirectory)packaging/osx/clisdk</SdkPkgSourcesRootDirectory>
       <SdkPkgScriptsDirectory>$(SdkPkgSourcesRootDirectory)/scripts</SdkPkgScriptsDirectory>
@@ -84,6 +85,9 @@
         </DistributionTemplateReplacement>
         <DistributionTemplateReplacement Include="{HostFxrBrandName}">
           <ReplacementString>$(HostFxrBrandName)</ReplacementString>
+        </DistributionTemplateReplacement>
+        <DistributionTemplateReplacement Include="{x64EmulationPkgInstallDirectory}">
+          <ReplacementString>$(x64EmulationPkgInstallDirectory)</ReplacementString>
         </DistributionTemplateReplacement>
 
         <PostInstallScriptReplacement Include="%SDK_VERSION%">
