@@ -18,9 +18,8 @@
         WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X86) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
     </bal:Condition>
     
-    <!-- Permit same path on non-ARM64 machines since past SDKs always wrote this value -->
     <bal:Condition Message="The installation path for ARM64 SDK installations: &quot;[DOTNETHOME_ARM64]&quot; cannot be the same as for x64 SDK installations: &quot;[DOTNETHOME_X64]&quot;.">
-        WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X64) OR (NOT NativeMachine=&quot;$(var.NativeMachine_arm64)&quot;) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
+        WixBundleInstalled OR (NOT DOTNETHOME_ARM64 ~= DOTNETHOME_X64) OR DOTNETHOMESIMILARITYCHECKOVERRIDE
     </bal:Condition>
 
     <?if $(var.Platform)=x64?>
@@ -74,9 +73,17 @@
               Root="HKLM"
               Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64"
               Value="InstallLocation" />
-    <util:RegistrySearch Id="DotnetInstallLocation_x64"
+    <!-- Can we trust the InstallLocation key?  Past SDKs wrote an invalid value for this, check for the host of the same architecture to be sure -->
+    <util:RegistrySearch Id="CheckDotnetHostFxRVersionExists_x64"
               After="CheckDotnetInstallLocation_x64"
-              Condition="DotnetInstallLocationExists_x64"
+              Variable="DotnetHostFxRVersionExists_x64"
+              Result="exists"
+              Root="HKLM"
+              Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64\hostfxr"
+              Value="Version" />
+    <util:RegistrySearch Id="DotnetInstallLocation_x64"
+              After="CheckDotnetHostFxRVersionExists_x64"
+              Condition="DotnetInstallLocationExists_x64 AND DotnetHostFxRVersionExists_x64"
               Variable="DOTNETHOME_X64"
               Result="value"
               Root="HKLM"
@@ -116,9 +123,17 @@
               Root="HKLM"
               Key="SOFTWARE\dotnet\Setup\InstalledVersions\arm64"
               Value="InstallLocation" />
-    <util:RegistrySearch Id="DotnetInstallLocation_arm64"
+    <!-- Can we trust the InstallLocation key?  Past SDKs wrote an invalid value for this, check for the host of the same architecture to be sure -->
+    <util:RegistrySearch Id="CheckDotnetHostFxRVersionExists_arm64"
               After="CheckDotnetInstallLocation_arm64"
-              Condition="DotnetInstallLocationExists_arm64"
+              Variable="DotnetHostFxRVersionExists_arm64"
+              Result="exists"
+              Root="HKLM"
+              Key="SOFTWARE\dotnet\Setup\InstalledVersions\arm64\hostfxr"
+              Value="Version" />
+    <util:RegistrySearch Id="DotnetInstallLocation_arm64"
+              After="CheckDotnetHostFxRVersionExists_arm64"
+              Condition="DotnetInstallLocationExists_arm64 AND DotnetHostFxRVersionExists_arm64"
               Variable="DOTNETHOME_ARM64"
               Result="value"
               Root="HKLM"
