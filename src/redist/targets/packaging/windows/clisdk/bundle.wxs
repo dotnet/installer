@@ -83,10 +83,11 @@
               Key="SOFTWARE\dotnet\Setup\InstalledVersions\x64"
               Value="InstallLocation" />
 
+    <!-- Check default location when on x64 OS-->
     <util:FileSearch Id="DotnetExeSearch_x64"
               After="DotnetInstallLocation_x64"
               Variable="DotnetExeExists_x64"
-              Condition="NOT DotnetInstallLocationExists_x64"
+              Condition="NOT DotnetInstallLocationExists_x64 AND (NOT NativeMachine OR NativeMachine=&quot;$(var.NativeMachine_x64)&quot;)"
               Result="exists"
               Path="[ProgramFiles64Folder]dotnet\dotnet.exe"/>
     <util:DirectorySearch Id="DotnetExeLocation_x64"
@@ -94,6 +95,19 @@
               Condition="DotnetExeExists_x64"
               Variable="DOTNETHOME_X64"
               Path="[ProgramFiles64Folder]dotnet"/>
+
+    <!-- Check alternate location on non-x64 OS -->
+    <util:FileSearch Id="DotnetExeSearch_alt_x64"
+              After="DotnetInstallLocation_x64"
+              Variable="DotnetExeExists_alt_x64"
+              Condition="NOT DotnetInstallLocationExists_x64 AND NOT NativeMachine=&quot;$(var.NativeMachine_x64)&quot;"
+              Result="exists"
+              Path="[ProgramFiles64Folder]dotnet\x64\dotnet.exe"/>
+    <util:DirectorySearch Id="DotnetExeLocation_alt_x64"
+              After="DotnetExeSearch_alt_x64"
+              Condition="DotnetExeExists_alt_x64"
+              Variable="DOTNETHOME_X64"
+              Path="[ProgramFiles64Folder]dotnet\x64"/>
     <?endif?>
     <?if $(var.Platform)=arm64?>
     <util:RegistrySearch Id="CheckDotnetInstallLocation_arm64"
@@ -132,9 +146,9 @@
         Example:
             dotnet-sdk-3.0.100-alpha1-009719-win-x64.exe /install DOTNETHOME_X64="D:\dotnet\x64" DOTNETHOME_X86="D:\dotnet\x86" /log "installation.log" /quiet /norestart
     -->
-    <Variable Name="DOTNETHOME_X86" Type="string" Value="[ProgramFilesFolder]dotnet" bal:Overridable="yes" />
-    <Variable Name="DOTNETHOME_X64" Type="string" Value="[ProgramFiles64Folder]dotnet" bal:Overridable="yes" />
-    <Variable Name="DOTNETHOME_ARM64" Type="string" Value="[ProgramFiles64Folder]dotnet" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME_X86" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME_X64" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME_ARM64" bal:Overridable="yes" />
     <Variable Name="DOTNETHOME" Type="string" Value="[DOTNETHOME_$(var.PlatformToken)]" bal:Overridable="no" />
     <Variable Name="BUNDLEMONIKER" Type="string" Value="$(var.ProductMoniker)" bal:Overridable="no" />
     <Variable Name="DOTNETSDKVERSION" Type="string" Value="$(var.NugetVersion)" bal:Overridable="no" />
