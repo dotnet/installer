@@ -12,9 +12,6 @@ let inputBranches =
           { GitBranchName = "release/6.0.1xx"
             DisplayName = "Release/6.0.1XX<br>(6.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("6.0.1xx/daily") }
-          { GitBranchName = "release/6.0.1xx-rc2"
-            DisplayName = "Release/6.0.1XX-rc2<br>(6.0 Runtime)"
-            AkaMsChannel = Some("6.0.1XX-rc2/daily") }
           { GitBranchName = "release/5.0.4xx"
             DisplayName = "Release/5.0.4XX<br>(5.0 Runtime)"
             AkaMsChannel = Some("5.0.4xx/daily") }
@@ -23,9 +20,6 @@ let inputBranches =
             AkaMsChannel = Some("5.0.2xx/daily") }
           { GitBranchName = "release/3.1.4xx"
             DisplayName = "Release/3.1.4XX<br>(3.1.x Runtime)"
-            AkaMsChannel = None }
-          { GitBranchName = "release/3.1.1xx"
-            DisplayName = "Release/3.1.1XX<br>(3.1.x Runtime)"
             AkaMsChannel = None }]
 
 
