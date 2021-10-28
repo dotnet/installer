@@ -37,6 +37,9 @@
       <!-- Don't include .NET Core targets in the Full Framework MSBuild layout-->
       <VSMSBuildExtensionsContent Remove="$(MSBuildExtensionsNuPkgPath)\msbuildExtensions-ver\SolutionFile\**" />
 
+      <!-- Don't include the config file in 5.0.2xx that is sometimes built and sometimes not-->
+      <VSMSBuildExtensionsContent Remove="$(MSBuildExtensionsNuPkgPath)\msbuildExtensions\Microsoft\Microsoft.NET.Build.Extensions\tools\net472\Microsoft.NET.Build.Extensions.Tasks.dll.config" />
+
       <VSMSBuildExtensionsContent Include="$(NETStandardLibraryNETFrameworkNuPkgPath)\build\**\*.*"
                                   Exclude="$(NETStandardLibraryNETFrameworkNuPkgPath)\build\**\*.props;$(NETStandardLibraryNETFrameworkNuPkgPath)\build\**\*.targets"
                                   DeploymentSubpath="msbuildExtensions/Microsoft/Microsoft.NET.Build.Extensions/" />
