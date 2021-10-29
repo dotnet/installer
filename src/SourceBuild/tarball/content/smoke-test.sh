@@ -616,7 +616,8 @@ function runOmniSharpTests() {
     tar xf "../omnisharp-linux-x64.tar.gz"
     popd
 
-    for project in blazorserver blazorwasm classlib console mstest mvc nunit web webapp webapi worker xunit ; do
+    # 'blazorwasm' requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
+    for project in blazorserver classlib console mstest mvc nunit web webapp webapi worker xunit ; do
 
         mkdir hello-$project
         pushd hello-$project
