@@ -246,6 +246,20 @@
     </ItemGroup>
 
     <Delete Files="@(TarballSrcBinaryToRemove)" />
+
+    <!-- We have some not-strictly-required files that are under non-open source licenses.
+         See https://github.com/dotnet/source-build/issues/2359.
+         Remove them. -->
+    <ItemGroup>
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\humanizer\samples\**\*.js" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*nuget-client.*\**\EndToEnd\**\jquery-validation-unobtrusive\*.js" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*nuget-client.*\**\EndToEnd\**\jquery-validation-unobtrusive\.bower.json" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*aspnetcore.*\**\samples\**\jquery-validation-unobtrusive\.bower.json" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*aspnetcore.*\**\samples\**\jquery-validation-unobtrusive\*.js" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Deleting files with questionable licenses: @(TarballSrcNonOpenSourceFiles, ' ')" />
+    <Delete Files="@(TarballSrcNonOpenSourceFiles)" />
   </Target>
 
   <Target Name="RestoreTextOnlyPackages">
@@ -292,7 +306,9 @@
 
     <ItemGroup>
       <ArtifactUrls Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz" />
-      <ArtifactUrls Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltPrebuiltsTarballName).$(PrivateSourceBuiltPrebuiltsPackageVersion).tar.gz" />
+      <ArtifactUrls
+        Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltPrebuiltsTarballName).$(PrivateSourceBuiltPrebuiltsPackageVersion).tar.gz"
+        Condition="'$(PrivateSourceBuiltPrebuiltsPackageVersion)' != ''" />
     </ItemGroup>
 
     <WriteLinesToFile
@@ -335,6 +351,59 @@
         " />
     </ItemGroup>
 
+    <ItemGroup>
+      <!-- ttf, woff, woff2, eot are permissible font related content -->
+      <AllowedTextOnlyExtensions Include="
+        .-;
+        .bowerrc;
+        .config;
+        .cs;
+        .cshtml;
+        .csproj;
+        .css;
+        .db;
+        .editorconfig;
+        .env;
+        .env.development;
+        .eot;
+        .fs;
+        .fsproj;
+        .gitignore;
+        .gitkeep;
+        .html;
+        .ico;
+        .js;
+        .json;
+        .map;
+        .md;
+        .nuspec;
+        .otf;
+        .png;
+        .props;
+        .proto;
+        .razor;
+        .sln;
+        .svg;
+        .targets;
+        .ts;
+        .ttf;
+        .tsx;
+        .txt;
+        .vb;
+        .vbproj;
+        .woff;
+        .woff2;
+        browserslist;
+        browserslistrc;
+        LICENSE;" />
+
+      <UnsupportedTextOnlyPackageContent Include="@(TextOnlyPackageContent)" />
+      <UnsupportedTextOnlyPackageContent Remove="$(TextOnlyDirectory)/**/*$([System.String]::Copy('%(AllowedTextOnlyExtensions.Identity)').ToLowerInvariant())" />
+      <UnsupportedTextOnlyPackageContent Remove="$(TextOnlyDirectory)/**/*$([System.String]::Copy('%(AllowedTextOnlyExtensions.Identity)').ToUpperInvariant())" />
+    </ItemGroup>
+
+    <Error Text="Unsupported content found in text-only packages: @(UnsupportedTextOnlyPackageContent)" Condition=" '@(UnsupportedTextOnlyPackageContent)' != '' " />
+
     <Copy
       SourceFiles="@(TextOnlyPackageContent)"
       DestinationFiles="@(TextOnlyPackageContent->'$(TextOnlyPackageTarballDir)$(DirectoryName)/%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -342,3 +411,4 @@
   </Target>
 
 </Project>
+

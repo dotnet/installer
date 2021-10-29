@@ -27,10 +27,13 @@ jobs:
       Fedora33-Online:
         _runOnline: true
         _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
-      # Disable until prebuilts are eliminated
-      # Fedora33-Offline:
-      #   _runOnline: false
-      #   _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
+
+      # TODO: Don't run offline in Pr validation until prebuilts are stabilized/removed, otherwise dependency flow continuously breaks PR validation.
+      # https://github.com/dotnet/source-build/issues/2490
+      ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
+        Fedora33-Offline:
+          _runOnline: false
+          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
   timeoutInMinutes: 210
   variables:
     _TarballDir: $(Build.StagingDirectory)/tarball

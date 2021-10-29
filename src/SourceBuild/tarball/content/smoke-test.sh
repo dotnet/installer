@@ -169,8 +169,8 @@ function doCommand() {
 
     dotnetCmd=${dotnetDir}/dotnet
 
-    # rename '#'' to 'Sharp' to workaround https://github.com/dotnet/aspnetcore/issues/36900
-    projectDir="${lang//"#"/"Sharp"}_${proj}"
+    # rename '#'' to 'Sharp' to workaround https://github.com/dotnet/roslyn/issues/51692
+    projectDir="${lang//#/Sharp}_${proj}"
     mkdir "${projectDir}"
     cd "${projectDir}"
 
@@ -247,21 +247,39 @@ function doCommand() {
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
         elif [ "$1" == "multi-rid-publish" ]; then
-            runPublishScenarios() {
-                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
-                "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
-                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
-            }
+            if [ "$lang" == "F#" ]; then
+              # F# tries to use a truncated version number unless we pass it this flag.  see https://github.com/dotnet/source-build/issues/2554
+              runPublishScenarios() {
+                  "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" /p:_NETCoreSdkIsPreview=true
+                  "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" /p:_NETCoreSdkIsPreview=true
+                  "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" /p:_NETCoreSdkIsPreview=true
+              }
+            else
+              runPublishScenarios() {
+                  "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
+                  "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
+                  "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
+              }
+            fi
             if [ "$projectOutput" == "true" ]; then
                 runPublishScenarios | tee -a "$logFile"
             else
                 runPublishScenarios >> "$logFile" 2>&1
             fi
         else
-            if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
+            if [ "$lang" == "F#" ]; then
+              # F# tries to use a truncated version number unless we pass it this flag.  see https://github.com/dotnet/source-build/issues/2554
+              if [ "$projectOutput" == "true" ]; then
+                  "${dotnetCmd}" $1 /bl:"$binlog" /p:_NETCoreSdkIsPreview=true | tee -a "$logFile"
+              else
+                  "${dotnetCmd}" $1 /bl:"$binlog" /p:_NETCoreSdkIsPreview=true >> "$logFile" 2>&1
+              fi
             else
-                "${dotnetCmd}" $1 /bl:"$binlog" >> "$logFile" 2>&1
+              if [ "$projectOutput" == "true" ]; then
+                  "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
+              else
+                  "${dotnetCmd}" $1 /bl:"$binlog" >> "$logFile" 2>&1
+              fi
             fi
         fi
         if [ $? -eq 0 ]; then
@@ -297,18 +315,19 @@ function runAllTests() {
     if [ "$excludeNonWebTests" == "false" ]; then
         doCommand C# console new restore build run multi-rid-publish
         doCommand C# classlib new restore build multi-rid-publish
-        # doCommand C# xunit new restore test
-        # doCommand C# mstest new restore test
+        doCommand C# xunit new restore test
+        doCommand C# mstest new restore test
 
         doCommand VB console new restore build run multi-rid-publish
         doCommand VB classlib new restore build multi-rid-publish
-        # doCommand VB xunit new restore test
-        # doCommand VB mstest new restore test
+        doCommand VB xunit new restore test
+        doCommand VB mstest new restore test
 
-        # doCommand F# console new restore build run multi-rid-publish
-        # doCommand F# classlib new restore build multi-rid-publish
-        # doCommand F# xunit new restore test
-        # doCommand F# mstest new restore test
+        # "run" was removed from the list below.  see https://github.com/dotnet/source-build/issues/2554
+        doCommand F# console new restore build multi-rid-publish
+        doCommand F# classlib new restore build multi-rid-publish
+        doCommand F# xunit new restore test
+        doCommand F# mstest new restore test
     fi
 
     if [ "$excludeWebTests" == "false" ]; then
@@ -330,12 +349,16 @@ function runWebTests() {
     doCommand C# mvc "$@" new restore build run multi-rid-publish
     doCommand C# webapi "$@" new restore build multi-rid-publish
     doCommand C# razor "$@" new restore build run multi-rid-publish
+    # Requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
     # doCommand C# blazorwasm "$@" new restore build run publish
     doCommand C# blazorserver "$@" new restore build run publish
 
-    # doCommand F# web "$@" new restore build run multi-rid-publish
+    # "run" was removed from the list below.  see https://github.com/dotnet/source-build/issues/2554
+    doCommand F# web "$@" new restore build multi-rid-publish
+    # Requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
     # doCommand F# mvc "$@" new restore build run multi-rid-publish
-    # doCommand F# webapi "$@" new restore build run multi-rid-publish
+    # "run" was also removed from this set, same issue: https://github.com/dotnet/source-build/issues/2554
+    doCommand F# webapi "$@" new restore build multi-rid-publish
 }
 
 function runXmlDocTests() {
@@ -518,10 +541,12 @@ function runXmlDocTests() {
         System.Xml.Serialization.xml
         System.Xml.xml
         System.Xml.XmlDocument.xml
+        WindowsBase.xml
     )
 
     aspnetcoreappIgnoreList=(
         Microsoft.AspNetCore.App.Analyzers.xml
+        Microsoft.AspNetCore.App.CodeFixes.xml
         Microsoft.Extensions.Logging.Generators.resources.xml
         Microsoft.Extensions.Logging.Generators.xml
     )
