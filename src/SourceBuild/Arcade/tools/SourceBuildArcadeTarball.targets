@@ -88,9 +88,7 @@
         <Name>$(GitHubRepositoryName)</Name>
         <Version>1.0.0</Version>
         <ExactVersion>1.0.0</ExactVersion>
-        <!-- Pin source-build to a specific commit to provide stabilization -->
-        <!-- <Sha>@(RootRepoCommitSha)</Sha> -->
-        <Sha>2f7c1a94d6c9f8f9173ebadf2ec2ba512b2b4576</Sha>
+        <Sha>@(RootRepoCommitSha)</Sha>
         <Uri>@(RootRepoUri)</Uri>
         <GitCommitCount>@(RootRepoCommitCount)</GitCommitCount>
         <SourceBuildRepoName>$(GitHubRepositoryName)</SourceBuildRepoName>
@@ -248,6 +246,20 @@
     </ItemGroup>
 
     <Delete Files="@(TarballSrcBinaryToRemove)" />
+
+    <!-- We have some not-strictly-required files that are under non-open source licenses.
+         See https://github.com/dotnet/source-build/issues/2359.
+         Remove them. -->
+    <ItemGroup>
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\humanizer\samples\**\*.js" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*nuget-client.*\**\EndToEnd\**\jquery-validation-unobtrusive\*.js" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*nuget-client.*\**\EndToEnd\**\jquery-validation-unobtrusive\.bower.json" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*aspnetcore.*\**\samples\**\jquery-validation-unobtrusive\.bower.json" />
+      <TarballSrcNonOpenSourceFiles Include="$(TarballSourceDir)**\*aspnetcore.*\**\samples\**\jquery-validation-unobtrusive\*.js" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Deleting files with questionable licenses: @(TarballSrcNonOpenSourceFiles, ' ')" />
+    <Delete Files="@(TarballSrcNonOpenSourceFiles)" />
   </Target>
 
   <Target Name="RestoreTextOnlyPackages">
@@ -294,7 +306,9 @@
 
     <ItemGroup>
       <ArtifactUrls Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz" />
-      <ArtifactUrls Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltPrebuiltsTarballName).$(PrivateSourceBuiltPrebuiltsPackageVersion).tar.gz" />
+      <ArtifactUrls
+        Include="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltPrebuiltsTarballName).$(PrivateSourceBuiltPrebuiltsPackageVersion).tar.gz"
+        Condition="'$(PrivateSourceBuiltPrebuiltsPackageVersion)' != ''" />
     </ItemGroup>
 
     <WriteLinesToFile
