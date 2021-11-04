@@ -49,6 +49,14 @@ dockerbuild()
     BUILD_COMMAND=$DIR/run-build.sh $DIR/eng/dockerrun.sh --non-interactive "$@"
 }
 
+if [[ "`pkgutil --files com.apple.pkg.RosettaUpdateAuto`" == "" ]]
+then
+echo 'rosetta not installed'
+softwareupdate --install-rosetta --agree-to-license
+else
+echo 'rosetta installed'
+fi
+
 # Check if we need to build in docker
 if [ ! -z "$BUILD_IN_DOCKER" ]; then
     dockerbuild $args
