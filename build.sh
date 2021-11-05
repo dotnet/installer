@@ -53,5 +53,7 @@ dockerbuild()
 if [ ! -z "$BUILD_IN_DOCKER" ]; then
     dockerbuild $args
 else
-    $DIR/run-build.sh $args
+    # Run under sudo so we can set ulimit
+    # See https://github.com/dotnet/core-eng/issues/14808
+    sudo $DIR/run-build.sh $args
 fi
