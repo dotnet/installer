@@ -169,7 +169,7 @@ function doCommand() {
 
     dotnetCmd=${dotnetDir}/dotnet
 
-    # rename '#'' to 'Sharp' to workaround https://github.com/dotnet/aspnetcore/issues/36900
+    # rename '#'' to 'Sharp' to workaround https://github.com/dotnet/roslyn/issues/51692
     projectDir="${lang//#/Sharp}_${proj}"
     mkdir "${projectDir}"
     cd "${projectDir}"
@@ -247,21 +247,39 @@ function doCommand() {
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
         elif [ "$1" == "multi-rid-publish" ]; then
-            runPublishScenarios() {
-                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
-                "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
-                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
-            }
+            if [ "$lang" == "F#" ]; then
+              # F# tries to use a truncated version number unless we pass it this flag.  see https://github.com/dotnet/source-build/issues/2554
+              runPublishScenarios() {
+                  "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" /p:_NETCoreSdkIsPreview=true
+                  "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" /p:_NETCoreSdkIsPreview=true
+                  "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" /p:_NETCoreSdkIsPreview=true
+              }
+            else
+              runPublishScenarios() {
+                  "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
+                  "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
+                  "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
+              }
+            fi
             if [ "$projectOutput" == "true" ]; then
                 runPublishScenarios | tee -a "$logFile"
             else
                 runPublishScenarios >> "$logFile" 2>&1
             fi
         else
-            if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
+            if [ "$lang" == "F#" ]; then
+              # F# tries to use a truncated version number unless we pass it this flag.  see https://github.com/dotnet/source-build/issues/2554
+              if [ "$projectOutput" == "true" ]; then
+                  "${dotnetCmd}" $1 /bl:"$binlog" /p:_NETCoreSdkIsPreview=true | tee -a "$logFile"
+              else
+                  "${dotnetCmd}" $1 /bl:"$binlog" /p:_NETCoreSdkIsPreview=true >> "$logFile" 2>&1
+              fi
             else
-                "${dotnetCmd}" $1 /bl:"$binlog" >> "$logFile" 2>&1
+              if [ "$projectOutput" == "true" ]; then
+                  "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
+              else
+                  "${dotnetCmd}" $1 /bl:"$binlog" >> "$logFile" 2>&1
+              fi
             fi
         fi
         if [ $? -eq 0 ]; then
@@ -305,7 +323,8 @@ function runAllTests() {
         doCommand VB xunit new restore test
         doCommand VB mstest new restore test
 
-        doCommand F# console new restore build run multi-rid-publish
+        # "run" was removed from the list below.  see https://github.com/dotnet/source-build/issues/2554
+        doCommand F# console new restore build multi-rid-publish
         doCommand F# classlib new restore build multi-rid-publish
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
@@ -330,12 +349,16 @@ function runWebTests() {
     doCommand C# mvc "$@" new restore build run multi-rid-publish
     doCommand C# webapi "$@" new restore build multi-rid-publish
     doCommand C# razor "$@" new restore build run multi-rid-publish
-    doCommand C# blazorwasm "$@" new restore build run publish
+    # Requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
+    # doCommand C# blazorwasm "$@" new restore build run publish
     doCommand C# blazorserver "$@" new restore build run publish
 
-    doCommand F# web "$@" new restore build run multi-rid-publish
-    doCommand F# mvc "$@" new restore build run multi-rid-publish
-    doCommand F# webapi "$@" new restore build run multi-rid-publish
+    # "run" was removed from the list below.  see https://github.com/dotnet/source-build/issues/2554
+    doCommand F# web "$@" new restore build multi-rid-publish
+    # Requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
+    # doCommand F# mvc "$@" new restore build run multi-rid-publish
+    # "run" was also removed from this set, same issue: https://github.com/dotnet/source-build/issues/2554
+    doCommand F# webapi "$@" new restore build multi-rid-publish
 }
 
 function runXmlDocTests() {
@@ -518,6 +541,7 @@ function runXmlDocTests() {
         System.Xml.Serialization.xml
         System.Xml.xml
         System.Xml.XmlDocument.xml
+        WindowsBase.xml
     )
 
     aspnetcoreappIgnoreList=(
@@ -576,6 +600,56 @@ function runXmlDocTests() {
     else
         echo "All expected xml docs are present"
     fi
+}
+
+function runOmniSharpTests() {
+    dotnetCmd=${dotnetDir}/dotnet
+
+    rm -rf workdir
+    mkdir workdir
+    pushd workdir
+
+    curl -sSLO "https://github.com/OmniSharp/omnisharp-roslyn/releases/latest/download/omnisharp-linux-x64.tar.gz"
+
+    mkdir omnisharp
+    pushd omnisharp
+    tar xf "../omnisharp-linux-x64.tar.gz"
+    popd
+
+    # 'blazorwasm' requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
+    for project in blazorserver classlib console mstest mvc nunit web webapp webapi worker xunit ; do
+
+        mkdir hello-$project
+        pushd hello-$project
+
+        "${dotnetCmd}" new $project
+        popd
+
+        ./omnisharp/run -s "$(readlink -f hello-$project)" > omnisharp.log &
+
+        sleep 5
+
+        pkill -P $$
+
+        # Omnisharp spawns off a number of processes. They all include the
+        # current directory as a process argument, so use that to identify and
+        # kill them.
+        pgrep -f "$(pwd)"
+
+        kill "$(pgrep -f "$(pwd)")"
+
+        cat omnisharp.log
+
+        if grep ERROR omnisharp.log; then
+            echo "test failed"
+            exit 1
+        else
+            echo "OK"
+        fi
+
+    done
+
+    popd
 }
 
 function resetCaches() {
@@ -660,10 +734,7 @@ echo SDK under test is:
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/$buildArch/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
-# OSX also requires DOTNET_ROOT to be on the PATH
-if [ "$(uname)" == 'Darwin' ]; then
-    export PATH="$dotnetDir:$PATH"
-fi
+export PATH="$dotnetDir:$PATH"
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
@@ -703,5 +774,7 @@ if [ "$excludeOnlineTests" == "false" ]; then
 fi
 
 runXmlDocTests
+
+runOmniSharpTests
 
 echo "ALL TESTS PASSED!"
