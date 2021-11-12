@@ -2,13 +2,19 @@ trigger: none
 pr: none
 resources:
   pipelines:
-  - pipeline: installer-build-resource
+  - pipeline: dotnet-installer-official-ci-resource
     source: dotnet-installer-official-ci
-    trigger: true # Run pipeline when any run of dotnet-installer-official-ci completes
+    trigger: true
+  - pipeline: installer-resource
+    source: installer
+    trigger: true
 
 stages:
 - stage: build
   jobs:
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
     parameters:
-      tarballResourceId: installer-build-resource
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        tarballResourceId: installer-resource
+      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+        tarballResourceId: dotnet-installer-official-ci-resource
