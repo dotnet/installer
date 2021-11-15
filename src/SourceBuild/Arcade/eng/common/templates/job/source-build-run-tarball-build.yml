@@ -60,7 +60,7 @@ jobs:
       tarballDir: ${{ parameters.tarballDir }}
       tarballResourceId: ${{ parameters.tarballResourceId }}
 
-${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - job: Rebuild_Tarball
     displayName: Rebuild Tarball With Previous
     dependsOn: Build_Tarball
@@ -97,7 +97,7 @@ ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
 
     - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-build-tarball.yml
       parameters:
-        additionalBuildArgs: --with-sdk ${{ parameters.tarballDir }}/.dotnet
+        additionalBuildArgs: --with-sdk /tarball/.dotnet
         buildArch: $(_BuildArch)
         container: $(_Container)
         prepScript: |
