@@ -10,116 +10,91 @@ parameters:
   # The resource id of the tarball to download and build
   tarballResourceId: current
 
+  # The following parameters aren't expected to be passed in rather they are used for encapsulation
+  # -----------------------------------------------------------------------------------------------
+  centOS7Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
+  centOS8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-20210714125410-9b5bbc2
+  debian9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20211001171226-047508b
+  fedora33Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
+  fedora34Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-34-20210924174119-cd1cb75
+  ubuntu1804Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20210924170306-047508b
+  poolInternal:
+    name: NetCore1ESPool-Svc-Internal
+    demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
+  poolPublic:
+    name: NetCore1ESPool-Svc-Public
+    demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
+
 jobs:
-- job: Source_Build_Run_Tarball_Build
+- job: Build_Tarball
   condition: ${{ parameters.condition }}
-  displayName: Source-Build Build Tarball
+  displayName: Build Tarball
   dependsOn: ${{ parameters.dependsOn }}
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
-      name: NetCore1ESPool-Svc-Public
-      demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
+      ${{ parameters.poolPublic }}
     ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-      name: NetCore1ESPool-Svc-Internal
-      demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
+      ${{ parameters.poolInternal }}
   strategy:
     matrix:
-      #TODO: Turn bootstrapping off once previous-SB has been updated to centos-7 based artifacts
       CentOS7-Online:
-        _Bootstrap: true
-        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
+        _BootstrapPrep: true
+        _BuildArch: x64
+        _Container: ${{ parameters.centOS7Container }}
         _RunOnline: true
       CentOS7-Offline:
-        _Bootstrap: true
-        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-20210714125435-9b5bbc2
+        _BootstrapPrep: true
+        _BuildArch: x64
+        _Container: ${{ parameters.centOS7Container }}
         _RunOnline: false
-      ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
+      ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
         CentOS8-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-20210714125410-9b5bbc2
+          _BootstrapPrep: true
+          _BuildArch: x64
+          _Container: ${{ parameters.centOS8Container }}
           _RunOnline: false
         Debian9-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20211001171226-047508b
+          _BootstrapPrep: true
+          _BuildArch: x64
+          _Container: ${{ parameters.debian9Container }}
           _RunOnline: false
         Fedora33-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
+          _BootstrapPrep: false
+          _BuildArch: x64
+          _Container: ${{ parameters.fedora33Container }}
           _RunOnline: false
         Fedora34-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-34-20210924174119-cd1cb75
+          _BootstrapPrep: true
+          _BuildArch: x64
+          _Container: ${{ parameters.ubuntu1804Container }}
           _RunOnline: false
         Ubuntu1804-Online:
-          _Bootstrap: true
-          _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20210924170306-047508b
+          _BootstrapPrep: true
+          _BuildArch: x64
+          _Container: ${{ parameters.fedora33Container }}
           _RunOnline: false
   timeoutInMinutes: 240
   variables:
     _TarballDir: $(Build.StagingDirectory)/tarball
-    _BuildConfig: Release
-    _BuildArch: x64
   workspace:
     clean: all
 
   steps:
   - checkout: none
 
-  - download: ${{ parameters.tarballResourceId }}
-    artifact: BlobArtifacts
-    patterns: '**/dotnet-sdk-source*.tar.gz'
-    displayName: Download Tarball
-
-  - script: |
-      set -x
-
-      resourceIdPathSegment=
-      if [ '${{ parameters.tarballResourceId }}' != 'current' ]; then
-        resourceIdPathSegment='${{ parameters.tarballResourceId }}/'
-      fi
-
-      mkdir -p "$(_TarballDir)"
-      tarballFilePath="$(PIPELINE.WORKSPACE)/${resourceIdPathSegment}BlobArtifacts/dotnet-sdk-source*.tar.gz"
-      eval tar -ozxf "$tarballFilePath" -C "$(_TarballDir)"
-      eval rm -f "$tarballFilePath"
-    displayName: Extract Tarball
-
-  - script: |
-      set -x
-
-      customPrepArgs=
-      if [ '$(_Bootstrap)' = 'true' ]; then
-        customPrepArgs='--bootstrap'
-      fi
-
-      docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./prep.sh  ${customPrepArgs}
-    displayName: Prep Tarball
-
-  - script: |
-      set -x
-      df -h
-
-      networkArgs=
-      customBuildArgs=
-      if [ '$(_RunOnline)' = 'true' ]; then
-        customBuildArgs='--online'
-      else
-        networkArgs='--network none'
-      fi
-
-      docker run --rm -v $(_TarballDir):/tarball -w /tarball ${networkArgs} $(_Container) ./build.sh ${customBuildArgs} -- /p:CleanWhileBuilding=true
-    displayName: Build Tarball
-
-  - publish: '$(_TarballDir)/artifacts/$(_BuildArch)/$(_BuildConfig)/'
-    artifact: $(Agent.JobName)_Artifacts_Attempt$(System.JobAttempt)
-    displayName: Publish Source Build Artifacts
-
-  - script: |
-      set -x
-
-      docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./build.sh --run-smoke-test
-    displayName: Run Tests
-
-  - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-publish-logs.yml
+  - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-build-tarball.yml
     parameters:
-      sourceFolder: $(_TarballDir)
+      buildArch: $(_BuildArch)
+      container: $(_Container)
+      prepScript: |
+        set -x
+
+        customPrepArgs=
+        if [ '$(_Bootstrap)' = 'true' ]; then
+          customPrepArgs='--bootstrap'
+        fi
+
+        docker run --rm -v $(_TarballDir):/tarball -w /tarball $(_Container) ./prep.sh  ${customPrepArgs}
+      runOnline: $(_RunOnline)
+      tarballDir: $(_TarballDir)
+      tarballResourceId: ${{ parameters.tarballResourceId }}
