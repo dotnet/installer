@@ -84,14 +84,17 @@
     <PropertyGroup>
       <VersionTag>$([System.String]::concat('%3C','$(PackageName)','Version','%3E').Replace('.',''))</VersionTag>
       <PackageVersionTag>$([System.String]::concat('%3C','$(PackageName)','PackageVersion','%3E').Replace('.',''))</PackageVersionTag>
+      <FilePath>$(DestinationPath)PackageVersions.props</FilePath>
     </PropertyGroup>
-    <Exec
-      Command="sed -i 's/$(VersionTag)$(PackageVersion)/$(VersionTag)$(NewVersion)/g' 'PackageVersions.props'"
-      WorkingDirectory="$(DestinationPath)"
+    <WriteLinesToFile
+      File="$(FilePath)"
+      Lines="$([System.IO.File]::ReadAllText($(FilePath)).Replace('$(VersionTag)$(PackageVersion)','$(VersionTag)$(NewVersion)'))"
+      Overwrite="true"
       Condition=" '$(PackageVersion)' != '$(NewVersion)' " />
-    <Exec
-      Command="sed -i 's/$(PackageVersionTag)$(PackageVersion)/$(PackageVersionTag)$(NewVersion)/g' 'PackageVersions.props'"
-      WorkingDirectory="$(DestinationPath)"
+    <WriteLinesToFile
+      File="$(FilePath)"
+      Lines="$([System.IO.File]::ReadAllText($(FilePath)).Replace('$(PackageVersionTag)$(PackageVersion)','$(PackageVersionTag)$(NewVersion)'))"
+      Overwrite="true"
       Condition=" '$(PackageVersion)' != '$(NewVersion)' " />
   </Target>
 </Project>
