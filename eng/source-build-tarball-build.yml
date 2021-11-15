@@ -1,10 +1,17 @@
 trigger: none
 pr: none
-resources:
-  pipelines:
-  - pipeline: installer-build-resource
-    source: installer
-    trigger: true
+${{ if eq(variables['System.TeamProject'], 'public') }}:
+  resources:
+    pipelines:
+    - pipeline: installer-build-resource
+      source: installer
+      trigger: true
+${{ if ne(variables['System.TeamProject'], 'public') }}:
+  resources:
+    pipelines:
+    - pipeline: installer-build-resource
+      source: dotnet-installer-official-ci
+      trigger: true
 
 stages:
 - stage: build
