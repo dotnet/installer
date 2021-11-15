@@ -88,12 +88,7 @@
     </PropertyGroup>
     <WriteLinesToFile
       File="$(FilePath)"
-      Lines="$([System.IO.File]::ReadAllText($(FilePath)).Replace('$(VersionTag)$(PackageVersion)','$(VersionTag)$(NewVersion)'))"
-      Overwrite="true"
-      Condition=" '$(PackageVersion)' != '$(NewVersion)' " />
-    <WriteLinesToFile
-      File="$(FilePath)"
-      Lines="$([System.IO.File]::ReadAllText($(FilePath)).Replace('$(PackageVersionTag)$(PackageVersion)','$(PackageVersionTag)$(NewVersion)'))"
+      Lines="$([System.IO.File]::ReadAllText($(FilePath)).Replace('$(VersionTag)$(PackageVersion)','$(VersionTag)$(NewVersion)').Replace('$(PackageVersionTag)$(PackageVersion)','$(PackageVersionTag)$(NewVersion)'))"
       Overwrite="true"
       Condition=" '$(PackageVersion)' != '$(NewVersion)' " />
   </Target>
