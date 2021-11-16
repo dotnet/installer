@@ -66,12 +66,12 @@ jobs:
         Fedora34-Online:
           _BootstrapPrep: true
           _BuildArch: x64
-          _Container: ${{ parameters.ubuntu1804Container }}
+          _Container: ${{ parameters.fedora34Container }}
           _RunOnline: false
         Ubuntu1804-Online:
           _BootstrapPrep: true
           _BuildArch: x64
-          _Container: ${{ parameters.fedora33Container }}
+          _Container: ${{ parameters.ubuntu1804Container }}
           _RunOnline: false
   timeoutInMinutes: 240
   variables:
