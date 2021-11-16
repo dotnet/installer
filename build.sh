@@ -55,5 +55,5 @@ if [ ! -z "$BUILD_IN_DOCKER" ]; then
 else
     # Run under sudo so we can set ulimit
     # See https://github.com/dotnet/core-eng/issues/14808
-    sudo $DIR/run-build.sh $args
+    sudo -E $DIR/run-build.sh $args
 fi

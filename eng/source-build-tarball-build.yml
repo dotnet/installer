@@ -3,11 +3,8 @@ pr: none
 resources:
   pipelines:
   - pipeline: installer-build-resource
-    ${{ if eq(variables['System.TeamProject'], 'public') }}:
-      source: installer
-    ${{ if ne(variables['System.TeamProject'], 'public') }}:
-      source: dotnet-installer-official-ci
-    trigger: true # Run pipeline when any run of installer CI completes
+    source: dotnet-installer-official-ci
+    trigger: true # Run pipeline when any run of dotnet-installer-official-ci completes
 
 stages:
 - stage: build
