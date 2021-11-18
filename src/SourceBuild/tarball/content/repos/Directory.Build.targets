@@ -166,6 +166,10 @@
                        OldText="ExitWithExitCode 0"
                        NewText="ExitWithExitCode $exit_code" />
 
+    <ReplaceTextInFile InputFile="$(EngCommonToolsShFile)"
+                       OldText="if command -v curl > /dev/null; then"
+                       NewText="if command -v donotexecuteme > /dev/null; then" />
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" Overwrite="true" />
   </Target>
 
