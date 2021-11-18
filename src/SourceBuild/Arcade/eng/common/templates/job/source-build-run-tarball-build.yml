@@ -17,8 +17,6 @@ parameters:
   centOS8Container: msimons/sandbox:centos-8-source-build-20211117173005-b913314
   debian9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20211001171226-047508b
   fedora33Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2
-# TODO:  remove msimons image dependency - testing purposes only
-  fedora34Container: msimons/sandbox:fedora-34-20211117172259-cd1cb75
   ubuntu1804Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20210924170306-047508b
   poolInternal:
     name: NetCore1ESPool-Svc-Internal
@@ -56,20 +54,10 @@ jobs:
           _BuildArch: x64
           _Container: ${{ parameters.centOS8Container }}
           _RunOnline: false
-        Debian9-Offline:
-          _BootstrapPrep: true
-          _BuildArch: x64
-          _Container: ${{ parameters.debian9Container }}
-          _RunOnline: false
         Fedora33-Offline:
           _BootstrapPrep: false
           _BuildArch: x64
           _Container: ${{ parameters.fedora33Container }}
-          _RunOnline: false
-        Fedora34-Offline:
-          _BootstrapPrep: true
-          _BuildArch: x64
-          _Container: ${{ parameters.fedora34Container }}
           _RunOnline: false
         Ubuntu1804-Offline:
           _BootstrapPrep: true
