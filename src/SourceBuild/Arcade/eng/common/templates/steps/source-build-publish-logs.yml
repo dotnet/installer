@@ -10,8 +10,8 @@ steps:
   inputs:
     SourceFolder: '${{ parameters.sourceFolder }}'
     Contents: |
-      **/*.log
-      **/*.binlog
+      **/!.pki/**/*.log
+      **/!.pki/**/*.binlog
       artifacts/prebuilt-report/*
     TargetFolder: '$(Build.StagingDirectory)/BuildLogs'
     CleanTargetFolder: true
