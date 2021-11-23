@@ -7,6 +7,8 @@ Addresses:
 NuGet.Build.Tasks.csproj : error NU1605: Detected package downgrade: System.Threading.Tasks.Dataflow from 6.0.0 to 4.9.0. Reference the package directly from the project to select a different version.  [src/nuget-client.a998efecd431ec8a41536b5ac0152c16f1e2e646/build/restorehelper.targets]
 NuGet.Build.Tasks.csproj : error NU1605:  NuGet.Build.Tasks -> Microsoft.Build.Tasks.Core 17.1.0-preview-21572-15 -> System.Threading.Tasks.Dataflow (>= 6.0.0)  [src/nuget-client.a998efecd431ec8a41536b5ac0152c16f1e2e646/build/restorehelper.targets]
 NuGet.Build.Tasks.csproj : error NU1605:  NuGet.Build.Tasks -> System.Threading.Tasks.Dataflow (>= 4.9.0) [src/nuget-client.a998efecd431ec8a41536b5ac0152c16f1e2e646/build/restorehelper.targets]
+
+Backport issue: https://github.com/dotnet/source-build/issues/2311
 ---
  build/packages.targets | 2 +-
  1 file changed, 1 insertions(+), 1 deletions(-)
