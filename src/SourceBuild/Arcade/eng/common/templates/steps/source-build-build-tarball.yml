@@ -64,7 +64,7 @@ steps:
       set -x
 
       docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball ${{ parameters.container }} ./build.sh --run-smoke-test ${{ parameters.additionalBuildArgs }}
-      ls -la /tarball/testing-smoke/home/.pki
+      ls -la ${{ parameters.tarballDir }}/testing-smoke/home/.pki
     displayName: Run Tests
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-publish-logs.yml
