@@ -49,7 +49,6 @@ configuration="Release"
 excludeNonWebTests=false
 excludeWebTests=false
 excludeWebNoHttpsTests=false
-# Re-enable once https://github.com/dotnet/sdk/issues/22734 is fixed.
 excludeWebHttpsTests=true
 excludeLocalTests=false
 excludeOnlineTests=false
