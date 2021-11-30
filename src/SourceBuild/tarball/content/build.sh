@@ -157,7 +157,7 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES=$restoredPackagesDir/
 
 if [ "$alternateTarget" == "true" ]; then
-  "$CLI_ROOT/dotnet" $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll "$SCRIPT_ROOT/build.proj" /bl:source-build-test.binlog /clp:v=m ${MSBUILD_ARGUMENTS[@]} "$@"
+  "$CLI_ROOT/dotnet" $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll "$SCRIPT_ROOT/build.proj" /bl:testing-smoke/logs/source-build-test.binlog /fileLoggerParameters:LogFile=testing-smoke/logs/source-build-test.log /clp:v=m ${MSBUILD_ARGUMENTS[@]} "$@"
 else
   LogDateStamp=$(date +"%m%d%H%M%S")
   $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:$SCRIPT_ROOT/artifacts/log/Debug/BuildXPlatTasks_$LogDateStamp.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:PrepareOfflineLocalTools ${MSBUILD_ARGUMENTS[@]} "$@"
