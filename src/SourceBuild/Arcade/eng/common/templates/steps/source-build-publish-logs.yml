@@ -10,10 +10,12 @@ steps:
   inputs:
     SourceFolder: '${{ parameters.sourceFolder }}'
     Contents: |
-      !testing-smoke/home/**
-      **/*.log
-      **/*.binlog
+      artifacts/**/*.binlog
+      artifacts/**/*.log
       artifacts/prebuilt-report/*
+      src/**/*.binlog
+      src/**/*.log
+      testing-smoke/logs/*
     TargetFolder: '$(Build.StagingDirectory)/BuildLogs'
     CleanTargetFolder: true
   continueOnError: true
