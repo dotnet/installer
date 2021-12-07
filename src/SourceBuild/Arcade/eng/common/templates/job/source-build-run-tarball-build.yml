@@ -19,10 +19,10 @@ parameters:
   ubuntu1804Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20210924170306-047508b
   poolInternal:
     name: NetCore1ESPool-Svc-Internal
-    demands: ImageOverride -equals Build.Ubuntu.1604.Amd64
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
   poolPublic:
     name: NetCore1ESPool-Svc-Public
-    demands: ImageOverride -equals Build.Ubuntu.1604.Amd64.Open
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
   tarballDir: $(Build.StagingDirectory)/tarball
 
 jobs:
