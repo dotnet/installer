@@ -704,6 +704,7 @@ if [ -e "$testingDir"  ]; then
 fi
 
 mkdir -p "$testingDir"
+mkdir -p "$logsDir"
 cd "$testingDir"
 
 # Create blank Directory.Build files to avoid traversing to source-build infra.
