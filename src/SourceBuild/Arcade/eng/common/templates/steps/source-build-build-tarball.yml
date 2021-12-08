@@ -69,7 +69,7 @@ steps:
   - task: CopyFiles@2
     displayName: Prepare BuildLogs staging directory
     inputs:
-      SourceFolder: '${{ parameters.sourceFolder }}'
+      SourceFolder: '${{ parameters.tarballDir }}'
       Contents: |
         artifacts/**/*.binlog
         artifacts/**/*.log
