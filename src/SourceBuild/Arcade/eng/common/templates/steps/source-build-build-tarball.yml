@@ -66,9 +66,37 @@ steps:
       docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball ${{ parameters.container }} ./build.sh --run-smoke-test ${{ parameters.additionalBuildArgs }}
     displayName: Run Tests
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-publish-logs.yml
-    parameters:
-      sourceFolder: ${{ parameters.tarballDir }}
+  - task: CopyFiles@2
+    displayName: Prepare BuildLogs staging directory
+    inputs:
+      SourceFolder: '${{ parameters.sourceFolder }}'
+      Contents: |
+        artifacts/**/*.binlog
+        artifacts/**/*.log
+        artifacts/prebuilt-report/*
+        src/**/*.binlog
+        src/**/*.log
+      TargetFolder: '$(Build.StagingDirectory)/BuildLogs'
+      CleanTargetFolder: true
+    continueOnError: true
+    condition: succeededOrFailed()
+
+    # Smoke tests set the HOME dir to a testing-smoke subdir which cause permissions issue with CopyFiles@2 on some distros.
+    # Manually copy the specific logs directory to workaround this.
+    - script: |
+        set -x
+
+        mkdir -p $(Build.StagingDirectory)/BuildLogs/testing-smoke
+        cp -rf testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
+      displayName: Gather Smoke Test Logs
+      continueOnError: true
+      condition: succeededOrFailed()
+
+  - publish: '$(Build.StagingDirectory)/BuildLogs'
+    artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+    displayName: Publish BuildLogs
+    continueOnError: true
+    condition: succeededOrFailed()
 
   - publish: '${{ parameters.tarballDir }}/artifacts/${{ parameters.buildArch}}/Release/'
     artifact: $(Agent.JobName)_Artifacts
