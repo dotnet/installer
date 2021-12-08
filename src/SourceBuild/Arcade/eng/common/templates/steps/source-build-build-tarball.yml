@@ -87,7 +87,7 @@ steps:
       set -x
 
       mkdir -p $(Build.StagingDirectory)/BuildLogs/testing-smoke
-      cp -rf testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
+      cp -rf ${{ parameters.tarballDir }}/testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
     displayName: Gather Smoke Test Logs
     continueOnError: true
     condition: succeededOrFailed()
