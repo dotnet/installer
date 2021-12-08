@@ -81,16 +81,16 @@ steps:
     continueOnError: true
     condition: succeededOrFailed()
 
-    # Smoke tests set the HOME dir to a testing-smoke subdir which cause permissions issue with CopyFiles@2 on some distros.
-    # Manually copy the specific logs directory to workaround this.
-    - script: |
-        set -x
+  # Smoke tests set the HOME dir to a testing-smoke subdir which cause permissions issue with CopyFiles@2 on some distros.
+  # Manually copy the specific logs directory to workaround this.
+  - script: |
+      set -x
 
-        mkdir -p $(Build.StagingDirectory)/BuildLogs/testing-smoke
-        cp -rf testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
-      displayName: Gather Smoke Test Logs
-      continueOnError: true
-      condition: succeededOrFailed()
+      mkdir -p $(Build.StagingDirectory)/BuildLogs/testing-smoke
+      cp -rf testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
+    displayName: Gather Smoke Test Logs
+    continueOnError: true
+    condition: succeededOrFailed()
 
   - publish: '$(Build.StagingDirectory)/BuildLogs'
     artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
