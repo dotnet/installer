@@ -58,9 +58,10 @@ This repo also contains code to help you build the entire .NET product end-to-en
 
 # Build status
 
-|All legs|
-|:------:|
-|[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
+Visibility|All legs|
+|:------|:------|
+|Public|[![Status](https://dev.azure.com/dnceng/public/_apis/build/status/176)](https://dev.azure.com/dnceng/public/_build?definitionId=176)|
+|Microsoft Internal|[![Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
 
 Installers and Binaries
 -----------------------
