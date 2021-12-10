@@ -66,29 +66,20 @@ steps:
       docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball ${{ parameters.container }} ./build.sh --run-smoke-test ${{ parameters.additionalBuildArgs }}
     displayName: Run Tests
 
-  - task: CopyFiles@2
-    displayName: Prepare BuildLogs staging directory
-    inputs:
-      SourceFolder: '${{ parameters.tarballDir }}'
-      Contents: |
-        artifacts/**/*.binlog
-        artifacts/**/*.log
-        artifacts/prebuilt-report/*
-        src/**/*.binlog
-        src/**/*.log
-      TargetFolder: '$(Build.StagingDirectory)/BuildLogs'
-      CleanTargetFolder: true
-    continueOnError: true
-    condition: succeededOrFailed()
-
-  # Smoke tests set the HOME dir to a testing-smoke subdir which cause permissions issue with CopyFiles@2 on some distros.
-  # Manually copy the specific logs directory to workaround this.
+  # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
   - script: |
       set -x
 
-      mkdir -p $(Build.StagingDirectory)/BuildLogs/testing-smoke
-      cp -rf ${{ parameters.tarballDir }}/testing-smoke/logs $(Build.StagingDirectory)/BuildLogs/testing-smoke
-    displayName: Gather Smoke Test Logs
+      targetFolder=$(Build.StagingDirectory)/BuildLogs/
+      mkdir -p ${targetFolder} 
+
+      find ${{ parameters.tarballDir }}/artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find ${{ parameters.tarballDir }}/artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find ${{ parameters.tarballDir }}/artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
+      find ${{ parameters.tarballDir }}/src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find ${{ parameters.tarballDir }}/src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find ${{ parameters.tarballDir }}/testing-smoke/logs -exec cp {} --parents -t ${targetFolder} \;
+    displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
 
