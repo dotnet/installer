@@ -70,15 +70,16 @@ steps:
   - script: |
       set -x
 
-      targetFolder=$(Build.StagingDirectory)/BuildLogs/
-      mkdir -p ${targetFolder} 
+      targetFolder=BuildLogs/
+      mkdir -p ${targetFolder}
 
-      find ${{ parameters.tarballDir }}/artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find ${{ parameters.tarballDir }}/artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find ${{ parameters.tarballDir }}/artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
-      find ${{ parameters.tarballDir }}/src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find ${{ parameters.tarballDir }}/src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find ${{ parameters.tarballDir }}/testing-smoke/logs -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
+      find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find testing-smoke/logs -exec cp {} --parents -t ${targetFolder} \;
+    workingDirectory: $(Build.StagingDirectory)
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
