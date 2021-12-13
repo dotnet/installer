@@ -70,6 +70,7 @@ steps:
   - script: |
       set -x
 
+      cd "$(Build.StagingDirectory)"
       targetFolder=BuildLogs/
       mkdir -p ${targetFolder}
 
@@ -79,7 +80,6 @@ steps:
       find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
       find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
       find testing-smoke/logs -exec cp {} --parents -t ${targetFolder} \;
-    workingDirectory: $(Build.StagingDirectory)
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
