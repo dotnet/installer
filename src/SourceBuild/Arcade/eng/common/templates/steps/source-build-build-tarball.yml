@@ -70,10 +70,10 @@ steps:
   - script: |
       set -x
 
-      cd "$(Build.StagingDirectory)"
-      targetFolder=BuildLogs/
+      targetFolder=$(Build.StagingDirectory)/BuildLogs/
       mkdir -p ${targetFolder}
 
+      cd "${{ parameters.tarballDir }}"
       find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
       find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
       find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
