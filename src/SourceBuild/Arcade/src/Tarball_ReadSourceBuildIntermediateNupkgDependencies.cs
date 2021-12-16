@@ -165,9 +165,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 string repo = repoParts[1];
 
                 // The internal Nuget.Client repo has suffix which needs to be accounted for.
-                if (uri.EndsWith("-Trusted", StringComparison.OrdinalIgnoreCase))
+                const string trustedSuffix = "-Trusted";
+                if (uri.EndsWith(trustedSuffix, StringComparison.OrdinalIgnoreCase))
                 {
-                    repo = repo.Substring(0, repo.Length - 8);
+                    repo = repo.Substring(0, repo.Length - trustedSuffix.Length);
                 }
 
                 uri = $"https://github.com/{org}/{repo}";
