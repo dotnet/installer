@@ -25,9 +25,6 @@ CUSTOM_BUILD_ARGS=
 # Set nuget package cache under the repo
 [ -z $NUGET_PACKAGES ] && export NUGET_PACKAGES="$REPOROOT/.nuget/packages"
 
-# Set max number of files open, helps avoid errors during NuGet restore
-ulimit -n 16384
-
 args=( )
 
 while [[ $# > 0 ]]; do

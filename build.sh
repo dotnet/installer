@@ -53,5 +53,5 @@ dockerbuild()
 if [ ! -z "$BUILD_IN_DOCKER" ]; then
     dockerbuild $args
 else
-    sudo $DIR/run-build.sh $args
+    $DIR/run-build.sh $args
 fi
