@@ -23,5 +23,10 @@
       <RepositoryReference Include="runtime-portable" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- StabilizePackageVersion must be set in order to produce all lib package that do not get built by default in servicing builds. -->
+    <EnvironmentVariables Include="StabilizePackageVersion=true" />
+  </ItemGroup>
+
   <Import Project="runtime.common.targets" />
 </Project>
