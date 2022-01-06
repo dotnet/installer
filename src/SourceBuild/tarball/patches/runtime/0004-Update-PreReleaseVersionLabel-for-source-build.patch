@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MichaelSimons <msimons@microsoft.com>
+Date: Thu, 6 Jan 2022 14:46:13 +0000
+Subject: [PATCH] Update PreReleaseVersionLabel for source-build
+
+---
+ eng/Versions.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index f6623b53..c2b31781 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -8,6 +8,7 @@
+     <PatchVersion>1</PatchVersion>
+     <SdkBandVersion>6.0.100</SdkBandVersion>
+     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
++    <PreReleaseVersionLabel Condition="'$(DotnetBuildFromSource)' == 'true'">rtm</PreReleaseVersionLabel>
+     <PreReleaseVersionIteration></PreReleaseVersionIteration>
+     <!-- Set assembly version to align with major and minor version,
+          as for the patches and revisions should be manually updated per assembly if it is serviced. -->
