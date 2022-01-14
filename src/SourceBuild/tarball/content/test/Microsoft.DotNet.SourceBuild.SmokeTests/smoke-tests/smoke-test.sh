@@ -7,7 +7,8 @@ VERSION_PREFIX=6.0
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=6.0.0-preview.6.21355.2
-__ROOT_REPO=$(sed 's/\r$//' "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt") # remove CR if mounted repo on Windows drive
+ARTIFACTS_DIR="$SCRIPT_ROOT/../../../../../../artifacts/"
+__ROOT_REPO=$(sed 's/\r$//' "${ARTIFACTS_DIR}obj/rootrepo.txt") # remove CR if mounted repo on Windows drive
 executingUserHome=${HOME:-}
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -701,11 +702,7 @@ fi
 
 # Clean up and create directory
 if [ -e "$testingDir"  ]; then
-    read -p "testing-smoke directory exists, remove it? [Y]es / [n]o" -n 1 -r
-    echo
-    if [[ $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Yy]$ ]]; then
-        rm -rf "$testingDir"
-    fi
+    rm -rf "$testingDir"
 fi
 
 mkdir -p "$testingDir"
@@ -717,7 +714,7 @@ echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/$buildArch/$configuration/"
+    OUTPUT_DIR="$ARTIFACTS_DIR$buildArch/$configuration/"
     DOTNET_TARBALL="$(ls "${OUTPUT_DIR}${TARBALL_PREFIX}${VERSION_PREFIX}"*)"
 
     mkdir -p "$cliDir"
@@ -734,7 +731,7 @@ echo SDK under test is:
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
-SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/$buildArch/$configuration/blob-feed/packages/"
+SOURCE_BUILT_PKGS_PATH="${ARTIFACTS_DIR}obj/$buildArch/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 export PATH="$dotnetDir:$PATH"
 
