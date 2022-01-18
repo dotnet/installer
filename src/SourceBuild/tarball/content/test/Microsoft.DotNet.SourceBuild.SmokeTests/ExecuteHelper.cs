@@ -8,14 +8,14 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public static class ExecuteHelper
+internal static class ExecuteHelper
 {
     public static (Process Process, string StdOut, string StdErr) ExecuteProcess(
         string fileName, string args, ITestOutputHelper outputHelper)
     {
         outputHelper.WriteLine($"Executing: {fileName} {args}");
 
-        Process process = new Process
+        Process process = new()
         {
             EnableRaisingEvents = true,
             StartInfo =
@@ -27,10 +27,10 @@ public static class ExecuteHelper
             }
         };
 
-        StringBuilder stdOutput = new StringBuilder();
+        StringBuilder stdOutput = new();
         process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => stdOutput.AppendLine(e.Data));
 
-        StringBuilder stdError = new StringBuilder();
+        StringBuilder stdError = new();
         process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => stdError.AppendLine(e.Data));
 
         process.Start();

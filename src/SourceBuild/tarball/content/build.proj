@@ -92,12 +92,16 @@
 
   <Target Name="RunSmokeTest">
     <ItemGroup>
-      <FinalCliTarball Include="$(SourceBuiltTarBallPath)**/*$(TarBallExtension)" />
+      <SdkTarballItem Include="$(SourceBuiltTarBallPath)**/dotnet-sdk*$(TarBallExtension)" />
     </ItemGroup>
+
+    <PropertyGroup>
+      <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
+    </PropertyGroup>
 
     <Exec Command="$(DotnetToolCommand) test ./test/Microsoft.DotNet.SourceBuild.SmokeTests --logger:trx"
           EnvironmentVariables="
-            DOTNET_TARBALL_PATH=%(FinalCliTarball.Identity);
+            DOTNET_TARBALL_PATH=$(SdkTarballPath);
             TARGET_RID=$(TargetRid);
             " />
   </Target>

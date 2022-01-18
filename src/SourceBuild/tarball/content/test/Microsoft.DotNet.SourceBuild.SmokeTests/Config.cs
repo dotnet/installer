@@ -3,13 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.IO;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public static class Config
+internal static class Config
 {
     public static string DotNetDirectory { get; } = Environment.GetEnvironmentVariable("DOTNET_DIR") ?? "./.dotnet";
     public static string DotNetTarballPath { get; } = Environment.GetEnvironmentVariable(DotNetTarballPathEnv) ?? string.Empty;

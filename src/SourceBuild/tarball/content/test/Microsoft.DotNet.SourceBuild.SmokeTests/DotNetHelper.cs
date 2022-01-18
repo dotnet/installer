@@ -6,16 +6,12 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class DotNetHelper
+internal class DotNetHelper
 {
     public string DotNetPath { get; }
+    public string DotNetInstallDirectory { get; }
 
     public DotNetHelper(ITestOutputHelper outputHelper)
-    {
-        DotNetPath = SetupDotNet(outputHelper);
-    }
-
-    private string SetupDotNet(ITestOutputHelper outputHelper)
     {
         if (!Directory.Exists(Config.DotNetDirectory))
         {
@@ -28,7 +24,8 @@ public class DotNetHelper
             ExecuteHelper.ExecuteProcess("tar", $"xzf {Config.DotNetTarballPath} -C {Config.DotNetDirectory}", outputHelper);
         }
 
-        return Path.Combine(Directory.GetCurrentDirectory(), Config.DotNetDirectory, "dotnet");
+        DotNetInstallDirectory = Path.Combine(Directory.GetCurrentDirectory(), Config.DotNetDirectory);
+        DotNetPath = Path.Combine(DotNetInstallDirectory, "dotnet");
     }
 
     public void ExecuteDotNetCmd(string args, ITestOutputHelper outputHelper)
