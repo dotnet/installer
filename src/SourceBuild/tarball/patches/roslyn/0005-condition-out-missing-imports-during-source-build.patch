@@ -1,0 +1,88 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 19 Jan 2022 15:58:24 -0800
+Subject: [PATCH] condition out missing imports during source build
+
+During source-build, the Microsoft.NET.Sdk.WindowsDesktop SDK in these files is
+overriden to tools-local/EmptySdk, which has stubbed out targets for Build,
+Restore, Pack, etc. This prevents these projects from being built during
+source-build and also prevents them from loading the WindowsDesktop SDK, which
+is non-free software. Even though these projects won't be built, we still need
+to condition out some targets and imports that won't be around during
+source-build or due to overriding the WindowsDesktop SDK.
+
+---
+ ...rosoft.CodeAnalysis.CSharp.EditorFeatures.UnitTests.csproj | 2 +-
+ src/Interactive/HostProcess/InteractiveHost32.csproj          | 4 ++--
+ src/Interactive/HostProcess/InteractiveHost64.csproj          | 2 +-
+ .../Core/Def/Microsoft.VisualStudio.LanguageServices.csproj   | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/EditorFeatures/CSharpTest/Microsoft.CodeAnalysis.CSharp.EditorFeatures.UnitTests.csproj b/src/EditorFeatures/CSharpTest/Microsoft.CodeAnalysis.CSharp.EditorFeatures.UnitTests.csproj
+index 57f6b2f582f..d41f6b07d3a 100644
+--- a/src/EditorFeatures/CSharpTest/Microsoft.CodeAnalysis.CSharp.EditorFeatures.UnitTests.csproj
++++ b/src/EditorFeatures/CSharpTest/Microsoft.CodeAnalysis.CSharp.EditorFeatures.UnitTests.csproj
+@@ -68,5 +68,5 @@
+     <EmbeddedResource Include="Debugging\Resources\*.*" LogicalName="Debugging/%(FileName)%(Extension)" />
+   </ItemGroup>
+   <Import Project="..\..\Analyzers\CSharp\Tests\CSharpAnalyzers.UnitTests.projitems" Label="Shared" />
+-  <Import Project="$(RepositoryEngineeringDir)targets\ILAsm.targets" />
++  <Import Project="$(RepositoryEngineeringDir)targets\ILAsm.targets" Condition="'$(DotNetBuildFromSource)' != 'true'"/>
+ </Project>
+diff --git a/src/Interactive/HostProcess/InteractiveHost32.csproj b/src/Interactive/HostProcess/InteractiveHost32.csproj
+index 7b0f0fa7f69..a9d27a745ec 100644
+--- a/src/Interactive/HostProcess/InteractiveHost32.csproj
++++ b/src/Interactive/HostProcess/InteractiveHost32.csproj
+@@ -1,7 +1,7 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+-  <Import Project="$(RepositoryEngineeringDir)targets\GenerateCompilerExecutableBindingRedirects.targets" />
++  <Import Project="$(RepositoryEngineeringDir)targets\GenerateCompilerExecutableBindingRedirects.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   <PropertyGroup>
+     <Prefer32Bit>true</Prefer32Bit>
+     <OutputType>Exe</OutputType>
+@@ -25,7 +25,7 @@
+ 
+     Use BuiltProjectOutputGroup as the dependend target to ensure the targets has all dependencies that BuiltProjectOutputGroupOutput would have.
+   -->
+-  <Target Name="PublishProjectOutputGroup" DependsOnTargets="Build;BuiltProjectOutputGroup" Returns="@(_PublishProjectOutputGroup)">
++  <Target Name="PublishProjectOutputGroup" DependsOnTargets="Build;BuiltProjectOutputGroup" Returns="@(_PublishProjectOutputGroup)" Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <ItemGroup>
+       <_PublishProjectOutputGroup Include="$(TargetPath)">
+         <TargetPath>$(TargetFileName)</TargetPath>
+diff --git a/src/Interactive/HostProcess/InteractiveHost64.csproj b/src/Interactive/HostProcess/InteractiveHost64.csproj
+index 7aa8d1281f6..9ba077901ee 100644
+--- a/src/Interactive/HostProcess/InteractiveHost64.csproj
++++ b/src/Interactive/HostProcess/InteractiveHost64.csproj
+@@ -1,7 +1,7 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+-  <Import Project="$(RepositoryEngineeringDir)targets\GenerateCompilerExecutableBindingRedirects.targets"/>
++  <Import Project="$(RepositoryEngineeringDir)targets\GenerateCompilerExecutableBindingRedirects.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   <PropertyGroup>
+     <Prefer32Bit>false</Prefer32Bit>
+     <OutputType>Exe</OutputType>
+diff --git a/src/VisualStudio/Core/Def/Microsoft.VisualStudio.LanguageServices.csproj b/src/VisualStudio/Core/Def/Microsoft.VisualStudio.LanguageServices.csproj
+index b9c2de05e63..75953997be3 100644
+--- a/src/VisualStudio/Core/Def/Microsoft.VisualStudio.LanguageServices.csproj
++++ b/src/VisualStudio/Core/Def/Microsoft.VisualStudio.LanguageServices.csproj
+@@ -1,7 +1,7 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+-  <Import Project="$(RepositoryEngineeringDir)targets\Services.props" />
++  <Import Project="$(RepositoryEngineeringDir)targets\Services.props" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.VisualStudio.LanguageServices</RootNamespace>
+@@ -178,7 +178,7 @@
+       <SubType>Designer</SubType>
+     </VSCTCompile>
+   </ItemGroup>
+-  <Import Project="$(RepositoryEngineeringDir)targets\Vsdconfig.targets" />
++  <Import Project="$(RepositoryEngineeringDir)targets\Vsdconfig.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+ 
+   <Target Name="GeneratePkgDefServiceRegistrations" BeforeTargets="GeneratePkgDef">
+     <ItemGroup>
