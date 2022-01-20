@@ -82,7 +82,7 @@ steps:
       find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
       find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
       find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find test/ -type f -name "*.trx" -exec cp {} --parents -t ${targetFolder} \;
+      find test/*/*/*/*/*/testing-smoke/logs -exec cp {} --parents -t ${targetFolder} \;
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
