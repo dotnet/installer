@@ -27,7 +27,7 @@ public class SmokeTests
         string smokeTestArgs = $"--dotnetDir {Directory.GetParent(DotNetHelper.DotNetPath)} --minimal --projectOutput --archiveRestoredPackages --targetRid {Config.TargetRid}";
         if (Config.TargetRid.Contains("osx"))
         {
-            smokeTestArgs += "--excludeWebHttpsTests";
+            smokeTestArgs += " --excludeWebHttpsTests";
         }
 
         (Process Process, string StdOut, string StdErr) executeResult = ExecuteHelper.ExecuteProcess("./smoke-tests/smoke-test.sh", smokeTestArgs, OutputHelper);
