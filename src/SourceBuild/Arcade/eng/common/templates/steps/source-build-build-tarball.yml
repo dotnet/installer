@@ -103,7 +103,7 @@ steps:
       searchFolder: ${{ parameters.tarballDir }}
       mergeTestResults: true
       publishRunAttachments: true
-      testRunTitle: Smoke Tests
+      testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
   - publish: '${{ parameters.tarballDir }}/artifacts/${{ parameters.buildArch}}/Release/'
     artifact: $(Agent.JobName)_Artifacts
