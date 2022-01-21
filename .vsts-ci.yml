@@ -46,6 +46,13 @@ stages:
 - stage: build
   jobs:
   - job: Publish_Build_Configuration
+    pool:      
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        name: NetCore1ESPool-Svc-Public
+        demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+        name: NetCore1ESPool-Svc-Internal
+        demands: ImageOverride -equals build.windows.10.amd64.vs2019
     steps:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
