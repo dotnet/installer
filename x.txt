@@ -1,133 +1,3 @@
-# .NET Core SDK
-
-[![Join the chat at https://gitter.im/dotnet/cli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotnet/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![GitHub release](https://img.shields.io/github/release/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/releases/)
-[![GitHub repo size](https://img.shields.io/github/repo-size/dotnet/installer)](https://github.com/dotnet/installer)
-[![GitHub issues-opened](https://img.shields.io/github/issues/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/issues?q=is%3Aissue+is%3Aopened)
-[![GitHub issues-closed](https://img.shields.io/github/issues-closed/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/issues?q=is%3Aissue+is%3Aclosed)
-[![GitHub pulls-opened](https://img.shields.io/github/issues-pr/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/pulls?q=is%3Aissue+is%3Aopened)
-[![GitHub pulls-merged](https://img.shields.io/github/issues-search/dotnet/installer?label=merged%20pull%20requests&query=is%3Apr%20is%3Aclosed%20is%3Amerged&color=darkviolet)](https://github.com/dotnet/installer/pulls?q=is%3Apr+is%3Aclosed+is%3Amerged)
-[![GitHub pulls-unmerged](https://img.shields.io/github/issues-search/dotnet/installer?label=unmerged%20pull%20requests&query=is%3Apr%20is%3Aclosed%20is%3Aunmerged&color=red)](https://github.com/dotnet/installer/pulls?q=is%3Apr+is%3Aclosed+is%3Aunmerged)
-[![GitHub contributors](https://img.shields.io/github/contributors/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/graphs/contributors/)
-[![Commit Activity](https://img.shields.io/github/commit-activity/m/badges/shields)]()
-
-
-This repo contains the source code for the cross-platform [.NET Core](http://github.com/dotnet/core) SDK. It aggregates the .NET Toolchain, the .NET Core runtime, the templates, and the .NET Core Windows Desktop runtime. It produces zip, tarballs, and native packages for various supported platforms.
-
-Looking for released versions of the .NET Core tooling?
-----------------------------------------
-
-Download released versions of the .NET Core tools (CLI, MSBuild and the new csproj) at https://dot.net/core.
-
-Found an issue?
----------------
-You can consult the [Documents Index for the SDK repo](https://github.com/dotnet/sdk/blob/main/documentation/README.md) to find out current issues, see workarounds, and to see how to file new issues.
-
-This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
-
-# Building 
-
-The repository contains native code project required for the Windows installer. If you intend to build it locally on Windows, you will need to ensure that you have the following items installed.
-- Install CMAKE 3.21.0 is required if you're building VS 17.0. Make sure to add CMAKE to your PATH (the installer will prompt you).
-- Install MSVC Build tools for x86/x64/arm64, v14.28-16.9
-
-- `build` for basic build
-- `build -pack` to build the installer
-- To build in VS, run a command line build first, then run `artifacts\core-sdk-build-env.bat` from a VS command prompt and then `devenv Microsoft.DotNet.Cli.sln`
-- To test different languages of the installer, run `artifacts\packages\Debug\Shipping>dotnet-sdk-3.1.412-win-x64.exe /lang 1046` using the LCID of the language you want to test
-
-# Building (source-build)
-
-This repo also contains code to help you build the entire .NET product end-to-end from sources (often referred to as source-build), even in disconnected/offline mode. This is currently only tested on Linux.
-
-1. `./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/path/to/place/complete/dotnet/sources`
-
-   This fetches the complete set of source code used to build the .NET SDK. It creates a tarball of the complete .NET source code at `artifacts/packages/<Release|Debug>/Shipping/`. It also places the extracted sources at `/path/to/place/complete/dotnet/sources`. Due to a few known issues, that source directory should be outside (and not somewhere under) this repository.
-
-2. `cd /path/to/complete/dotnet/sources`
-
-3. `./prep.sh --bootstrap`
-
-    This downloads a .NET SDK and a number of .NET packages and other prebuilts needed to build .NET from source.
-
-    Eventually, we want to make it possible to bootstrap .NET 6 in which case this step can be skipped.
-
-4. `./build.sh`
-
-    This builds the entire .NET SDK. The resulting SDK is placed at `artifacts/$ARCH/Release/dotnet-sdk-$VERSION-$ARCH.tar.gz`.
-
-# Build status
-
-Visibility|All legs|
-|:------|:------|
-|Public|[![Status](https://dev.azure.com/dnceng/public/_apis/build/status/176)](https://dev.azure.com/dnceng/public/_build?definitionId=176)|
-|Microsoft Internal|[![Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
-
-Installers and Binaries
------------------------
-
-You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (zip, tar.gz). The .NET Core SDK contains both the .NET Core runtime and CLI tools.
-
-**Note:** Be aware that the following installers are the **latest bits**. If you
-want to install the latest released versions, check out the [preceding section](#looking-for-released-versions-of-the-net-core-tooling).
-With development builds, internal NuGet feeds are necessary for some scenarios (for example, to acquire the runtime pack for self-contained apps). You can use the following NuGet.config to configure these feeds. See the following document [Configuring NuGet behavior](https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior) for more information on where to modify your NuGet.config to apply the changes.
-> Example:
-
-**For .NET 7 builds**
-
-```
-<configuration>
-  <packageSources>
-    <add key="dotnet7" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-**For .NET 6 builds**
-
-```
-<configuration>
-  <packageSources>
-    <add key="dotnet6" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-**For .NET 6 Optional workloads**
-_The below feed is needed for 6.0 releases before RC1_
-
-We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
-
-```
-<configuration>
-  <packageSources>
-    <add key="maui" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-**For .NET 5 builds**
-
-```
-<configuration>
-  <packageSources>
-    <add key="dotnet5" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-**For .NET 3.1 builds**
-
-```
-<configuration>
-  <packageSources>
-    <add key="dotnet3.1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3.1/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-Please do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table.
-
 | Platform | main<br>(7.0.x&nbsp;Runtime) | Release/6.0.2XX<br>(6.0.x&nbsp;Runtime) | Release/6.0.1XX<br>(6.0.x&nbsp;Runtime) | Release/5.0.4XX<br>(5.0 Runtime) | Release/5.0.2XX<br>(5.0 Runtime) | Release/3.1.4XX<br>(3.1.x Runtime) |
 | :--------- | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: |
 | **Windows x64** | [![][win-x64-badge-main]][win-x64-version-main]<br>[Installer][win-x64-installer-main] - [Checksum][win-x64-installer-checksum-main]<br>[zip][win-x64-zip-main] - [Checksum][win-x64-zip-checksum-main] | [![][win-x64-badge-6.0.2XX]][win-x64-version-6.0.2XX]<br>[Installer][win-x64-installer-6.0.2XX] - [Checksum][win-x64-installer-checksum-6.0.2XX]<br>[zip][win-x64-zip-6.0.2XX] - [Checksum][win-x64-zip-checksum-6.0.2XX] | [![][win-x64-badge-6.0.1XX]][win-x64-version-6.0.1XX]<br>[Installer][win-x64-installer-6.0.1XX] - [Checksum][win-x64-installer-checksum-6.0.1XX]<br>[zip][win-x64-zip-6.0.1XX] - [Checksum][win-x64-zip-checksum-6.0.1XX] | [![][win-x64-badge-5.0.4XX]][win-x64-version-5.0.4XX]<br>[Installer][win-x64-installer-5.0.4XX] - [Checksum][win-x64-installer-checksum-5.0.4XX]<br>[zip][win-x64-zip-5.0.4XX] - [Checksum][win-x64-zip-checksum-5.0.4XX] | [![][win-x64-badge-5.0.2XX]][win-x64-version-5.0.2XX]<br>[Installer][win-x64-installer-5.0.2XX] - [Checksum][win-x64-installer-checksum-5.0.2XX]<br>[zip][win-x64-zip-5.0.2XX] - [Checksum][win-x64-zip-checksum-5.0.2XX] | [![][win-x64-badge-3.1.4XX]][win-x64-version-3.1.4XX]<br>[Installer][win-x64-installer-3.1.4XX] - [Checksum][win-x64-installer-checksum-3.1.4XX]<br>[zip][win-x64-zip-3.1.4XX] - [Checksum][win-x64-zip-checksum-3.1.4XX] |
@@ -145,8 +15,7 @@ Please do not directly edit the table below. Use https://github.com/dotnet/insta
 | **RHEL 6** | **N/A** | **N/A** | **N/A** | **N/A** | **N/A** | [![][rhel-6-badge-3.1.4XX]][rhel-6-version-3.1.4XX]<br>[tar.gz][rhel-6-targz-3.1.4XX] - [Checksum][rhel-6-targz-checksum-3.1.4XX] |
 
 Reference notes:
-> **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other
-. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
+> **1**: Our Debian packages are put together slightly differently than the other OS specific installers. Instead of combining everything, we have separate component packages that depend on each other. If you're installing the SDK from the .deb file (via dpkg or similar), then you'll need to install the corresponding dependencies first:
 > * [Host, Host FX Resolver, and Shared Framework](https://github.com/dotnet/runtime/blob/main/docs/project/dogfooding.md#nightly-builds-table)
 > * [ASP.NET Core Shared Framework](https://github.com/aspnet/AspNetCore/blob/main/docs/DailyBuilds.md)
 
@@ -182,9 +51,9 @@ Reference notes:
 
 [win-x64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/win_x64_Release_version_badge.svg
 [win-x64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-win-x64.txt
-[win-x64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-x64.exe
+[win-x64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x64.exe
 [win-x64-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x64.exe.sha
-[win-x64-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-x64.zip
+[win-x64-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x64.zip
 [win-x64-zip-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x64.zip.sha
 
 [win-x64-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/win_x64_Release_version_badge.svg
@@ -224,9 +93,9 @@ Reference notes:
 
 [win-x86-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/win_x86_Release_version_badge.svg
 [win-x86-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-win-x86.txt
-[win-x86-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-x86.exe
+[win-x86-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x86.exe
 [win-x86-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x86.exe.sha
-[win-x86-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-x86.zip
+[win-x86-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x86.zip
 [win-x86-zip-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-x86.zip.sha
 
 [win-x86-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/win_x86_Release_version_badge.svg
@@ -266,9 +135,9 @@ Reference notes:
 
 [osx-x64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/osx_x64_Release_version_badge.svg
 [osx-x64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-osx-x64.txt
-[osx-x64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-osx-x64.pkg
+[osx-x64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-osx-x64.pkg
 [osx-x64-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-osx-x64.pkg.sha
-[osx-x64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-osx-x64.tar.gz
+[osx-x64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-osx-x64.tar.gz
 [osx-x64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-osx-x64.pkg.tar.gz.sha
 
 [osx-x64-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/osx_x64_Release_version_badge.svg
@@ -337,11 +206,11 @@ Reference notes:
 
 [linux-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_x64_Release_version_badge.svg
 [linux-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-x64.txt
-[linux-DEB-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-x64.deb
+[linux-DEB-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-x64.deb
 [linux-DEB-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-x64.deb.sha
-[linux-RPM-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-x64.rpm
+[linux-RPM-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-x64.rpm
 [linux-RPM-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-x64.rpm.sha
-[linux-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-x64.tar.gz
+[linux-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-x64.tar.gz
 [linux-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-x64.tar.gz.sha
 
 [linux-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/linux_x64_Release_version_badge.svg
@@ -375,7 +244,7 @@ Reference notes:
 
 [linux-arm-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_arm_Release_version_badge.svg
 [linux-arm-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-arm.txt
-[linux-arm-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-arm.tar.gz
+[linux-arm-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-arm.tar.gz
 [linux-arm-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-arm.tar.gz.sha
 
 [linux-arm-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/linux_arm_Release_version_badge.svg
@@ -405,7 +274,7 @@ Reference notes:
 
 [linux-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_arm64_Release_version_badge.svg
 [linux-arm64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-arm64.txt
-[linux-arm64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-arm64.tar.gz
+[linux-arm64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-arm64.tar.gz
 [linux-arm64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-arm64.tar.gz.sha
 
 [linux-arm64-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/linux_arm64_Release_version_badge.svg
@@ -435,7 +304,7 @@ Reference notes:
 
 [rhel-6-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/rhel.6_x64_Release_version_badge.svg
 [rhel-6-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-rhel.6-x64.txt
-[rhel-6-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-rhel.6-x64.tar.gz
+[rhel-6-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-rhel.6-x64.tar.gz
 [rhel-6-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-rhel.6-x64.tar.gz.sha
 
 [rhel-6-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/rhel.6_x64_Release_version_badge.svg
@@ -465,7 +334,7 @@ Reference notes:
 
 [linux-musl-x64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_musl_x64_Release_version_badge.svg
 [linux-musl-x64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-musl-x64.txt
-[linux-musl-x64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-musl-x64.tar.gz
+[linux-musl-x64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-x64.tar.gz
 [linux-musl-x64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-x64.tar.gz.sha
 
 [linux-musl-x64-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/linux_musl_x64_Release_version_badge.svg
@@ -495,7 +364,7 @@ Reference notes:
 
 [linux-musl-arm-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_musl_arm_Release_version_badge.svg
 [linux-musl-arm-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-musl-arm.txt
-[linux-musl-arm-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-musl-arm.tar.gz
+[linux-musl-arm-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-arm.tar.gz
 [linux-musl-arm-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-arm.tar.gz.sha
 
 [linux-musl-arm64-badge-main]: https://aka.ms/dotnet/7.0.1xx/daily/linux_musl_arm64_Release_version_badge.svg
@@ -520,7 +389,7 @@ Reference notes:
 
 [linux-musl-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/linux_musl_arm64_Release_version_badge.svg
 [linux-musl-arm64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-linux-musl-arm64.txt
-[linux-musl-arm64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-linux-musl-arm64.tar.gz
+[linux-musl-arm64-targz-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz
 [linux-musl-arm64-targz-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-linux-musl-arm64.tar.gz.sha
 
 [win-arm-badge-main]: https://aka.ms/dotnet/7.0.1xx/daily/win_arm_Release_version_badge.svg
@@ -545,7 +414,7 @@ Reference notes:
 
 [win-arm-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/win_arm_Release_version_badge.svg
 [win-arm-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-win-arm.txt
-[win-arm-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-arm.zip
+[win-arm-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm.zip
 [win-arm-zip-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm.zip.sha
 
 [win-arm-badge-3.1.4XX]: https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.1.4xx/win_arm_Release_version_badge.svg
@@ -583,25 +452,9 @@ Reference notes:
 
 [win-arm64-badge-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/win_arm64_Release_version_badge.svg
 [win-arm64-version-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/productCommit-win-arm64.txt
-[win-arm64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-arm64.exe
+[win-arm64-installer-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm64.exe
 [win-arm64-installer-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm64.exe.sha
-[win-arm64-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/dotnet-sdk-win-arm64.zip
+[win-arm64-zip-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm64.zip
 [win-arm64-zip-checksum-5.0.2XX]: https://aka.ms/dotnet/5.0.2xx/Sdk/dotnet-sdk-win-arm64.zip.sha
 
 [sdk-shas-2.2.1XX]: https://github.com/dotnet/versions/tree/master/build-info/dotnet/product/cli/release/2.2#built-repositories
-
-Looking for dotnet-install sources?
------------------------------------
-
-Sources for dotnet-install.sh and dotnet-install.ps1 are in the [install-scripts repo](https://github.com/dotnet/install-scripts).
-
-Questions & Comments
---------------------
-
-For all feedback, use the Issues on the [.NET CLI](https://github.com/dotnet/cli) repository.
-
-License
--------
-
-By downloading the .zip you are agreeing to the terms in the project [EULA](https://aka.ms/dotnet-core-eula).
-
