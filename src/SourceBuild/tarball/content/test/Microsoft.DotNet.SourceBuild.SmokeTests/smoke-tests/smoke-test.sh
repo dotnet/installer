@@ -55,7 +55,7 @@ excludeLocalTests=false
 excludeOnlineTests=false
 excludeOmniSharpTests=${excludeOmniSharpTests:-false}
 devCertsVersion="$DEV_CERTS_VERSION_DEFAULT"
-testingDir="$SCRIPT_ROOT/testing-smoke"
+testingDir="$SCRIPT_ROOT/testing-smoke-$(date +"%m%d%H%M%S")"
 cliDir="$testingDir/builtCli"
 logsDir="$testingDir/logs"
 logFile="$logsDir/smoke-test.log"
@@ -63,8 +63,7 @@ omnisharpLogFile="$logsDir/omnisharp.log"
 restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
 archiveRestoredPackages=false
-archivedPackagesDir="$testingDir/smoke-test-packages"
-smokeTestPrebuilts="$SCRIPT_ROOT/packages/smoke-test-packages"
+smokeTestPrebuilts="$SCRIPT_ROOT/prereq-packages"
 runningOnline=false
 runningHttps=false
 
@@ -85,10 +84,7 @@ function usage() {
     echo "  --excludeOnlineTests           exclude test that use online sources for nuget packages"
     echo "  --excludeOmniSharpTests        don't run the OmniSharp tests"
     echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
-    echo "  --prodConBlobFeedUrl <url>     override the prodcon blob feed specified in ProdConFeed.txt, removing it if empty"
-    echo "  --archiveRestoredPackages      capture all restored packages to $archivedPackagesDir"
-    echo "environment:"
-    echo "  prodConBlobFeedUrl    override the prodcon blob feed specified in ProdConFeed.txt, removing it if empty"
+    echo "  --archiveRestoredPackages      capture all restored packages to $smokeTestPrebuilts"
     echo ""
 }
 
@@ -149,10 +145,6 @@ while :; do
             shift
             devCertsVersion="$1"
             ;;
-        --prodconblobfeedurl)
-            shift
-            prodConBlobFeedUrl="$1"
-            ;;
         --archiverestoredpackages)
             archiveRestoredPackages=true
             ;;
@@ -165,8 +157,6 @@ while :; do
 
     shift
 done
-
-prodConBlobFeedUrl="${prodConBlobFeedUrl-}"
 
 function doCommand() {
     lang=$1
@@ -323,16 +313,19 @@ function runAllTests() {
         doCommand C# console new restore build run multi-rid-publish
         doCommand C# classlib new restore build multi-rid-publish
         doCommand C# xunit new restore test
+        doCommand C# nunit new restore test
         doCommand C# mstest new restore test
 
         doCommand VB console new restore build run multi-rid-publish
         doCommand VB classlib new restore build multi-rid-publish
         doCommand VB xunit new restore test
+        doCommand VB nunit new restore test
         doCommand VB mstest new restore test
 
         doCommand F# console new restore build run multi-rid-publish
         doCommand F# classlib new restore build multi-rid-publish
         doCommand F# xunit new restore test
+        doCommand F# nunit new restore test
         doCommand F# mstest new restore test
     fi
 
@@ -377,8 +370,7 @@ function runOmniSharpTests() {
     tar xf "../omnisharp-linux-x64.tar.gz"
     popd
 
-    # 'blazorwasm' requires prereqs (non-source-built packages) - re-enable with https://github.com/dotnet/source-build/issues/2550
-    for project in blazorserver classlib console mstest mvc nunit web webapp webapi worker xunit ; do
+    for project in blazorwasm blazorserver classlib console mstest mvc nunit web webapp webapi worker xunit ; do
 
         mkdir hello-$project
         pushd hello-$project
@@ -428,14 +420,6 @@ function resetCaches() {
     fi
 }
 
-function setupProdConFeed() {
-    if [ "$prodConBlobFeedUrl" ]; then
-        sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConBlobFeedUrl|g" "$testingDir/NuGet.Config"
-    else
-        sed -i.bakProdCon "/PRODUCT_CONTRUCTION_PACKAGES/d" "$testingDir/NuGet.Config"
-    fi
-}
-
 function setupSmokeTestFeed() {
     # Setup smoke-test-packages if they exist
     if [ -e "$smokeTestPrebuilts" ]; then
@@ -447,8 +431,19 @@ function setupSmokeTestFeed() {
 
 function copyRestoredPackages() {
     if [ "$archiveRestoredPackages" == "true" ]; then
-        mkdir -p "$archivedPackagesDir"
-        cp -rf "$restoredPackagesDir"/* "$archivedPackagesDir"
+        rm -rf "$smokeTestPrebuilts"
+        mkdir -p "$smokeTestPrebuilts"
+        find "$restoredPackagesDir" -iname "*.nupkg" -exec mv {} "$smokeTestPrebuilts" \;
+
+        smokeTestPackages=$(find $smokeTestPrebuilts -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
+        sourceBuiltPackages=$(find $SOURCE_BUILT_PKGS_PATH -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
+
+        echo "Removing smoke-test prereq packages that are source built:"
+        comm -12 <(printf "$smokeTestPackages") <(printf "$sourceBuiltPackages") | while read line
+        do
+            echo "$line"
+            rm -f $smokeTestPrebuilts/$line
+        done 
     fi
 }
 
@@ -494,34 +489,13 @@ SOURCE_BUILT_PKGS_PATH="${ARTIFACTS_DIR}obj/$buildArch/$configuration/blob-feed/
 export DOTNET_ROOT="$dotnetDir"
 export PATH="$dotnetDir:$PATH"
 
-# Run all tests, local restore sources first, online restore sources second
-if [ "$excludeLocalTests" == "false" ]; then
-    resetCaches
-    runningOnline=false
-    # Setup NuGet.Config with local restore source
-    if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
-        cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
-        sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
-        setupProdConFeed
-        setupSmokeTestFeed
-        echo "$testingDir/NuGet.Config Contents:"
-        cat "$testingDir/NuGet.Config"
-    fi
-    echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
-    runAllTests
-    copyRestoredPackages
-    echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
-fi
-
+# Run all tests, online restore sources first, local restore sources second
 if [ "$excludeOnlineTests" == "false" ]; then
     resetCaches
     runningOnline=true
     # Setup NuGet.Config to use online restore sources
-    if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
-        cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
-        sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
-        setupProdConFeed
-        setupSmokeTestFeed
+    if [ -e "$SCRIPT_ROOT/online.NuGet.Config" ]; then
+        cp "$SCRIPT_ROOT/online.NuGet.Config" "$testingDir/NuGet.Config"
         echo "$testingDir/NuGet.Config Contents:"
         cat "$testingDir/NuGet.Config"
     fi
@@ -529,6 +503,22 @@ if [ "$excludeOnlineTests" == "false" ]; then
     runAllTests
     copyRestoredPackages
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
+fi
+
+if [ "$excludeLocalTests" == "false" ]; then
+    resetCaches
+    runningOnline=false
+    # Setup NuGet.Config with local restore source
+    if [ -e "$SCRIPT_ROOT/local.NuGet.Config" ]; then
+        cp "$SCRIPT_ROOT/local.NuGet.Config" "$testingDir/NuGet.Config"
+        sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+        setupSmokeTestFeed
+        echo "$testingDir/NuGet.Config Contents:"
+        cat "$testingDir/NuGet.Config"
+    fi
+    echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
+    runAllTests
+    echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
 if [ "$excludeOmniSharpTests" == "false" ]; then
