@@ -73,7 +73,16 @@ jobs:
     clean: all
 
   steps:
-  - checkout: none
+  - checkout: self
+
+  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+    - task: Bash@3
+      displayName: Setup Private Feeds Credentials
+      inputs:
+        filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.sh
+        arguments: $(Build.SourcesDirectory)/NuGet.config $Token
+      env:
+        Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/steps/source-build-build-tarball.yml
     parameters:
