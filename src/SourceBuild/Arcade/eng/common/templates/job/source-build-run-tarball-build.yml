@@ -74,6 +74,7 @@ jobs:
 
   steps:
   - checkout: self
+    clean: true
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
     - task: Bash@3
