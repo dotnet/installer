@@ -391,8 +391,6 @@ stages:
           - Source_Build_Create_Tarball
         publishUsingPipelines: true
         pool:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          vmImage: vs2017-win2016
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
