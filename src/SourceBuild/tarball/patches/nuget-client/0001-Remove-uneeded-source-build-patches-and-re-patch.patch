@@ -69,7 +69,7 @@ index c11557248..0e7dd7861 100644
  
      <!-- Test and package versions -->
 @@ -33,7 +34,7 @@
-         <PackageReference Update="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
+         <PackageReference Update="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.2" />
          <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" />
          <PackageReference Update="Microsoft.DataAI.NuGetRecommender.Contracts" Version="2.1.0" />
 -        <PackageReference Update="Microsoft.Extensions.CommandLineUtils" Version="1.0.1" />
@@ -90,15 +90,6 @@ index c94acffd8..f4d083e52 100644
      </PropertyGroup>
      <ItemGroup>
        <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)NuGet.Build.Tasks.Pack.dll" Condition="'$(IsBuildOnlyXPLATProjects)' != 'true'">
-@@ -189,7 +189,7 @@
-       <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)NuGet*.dll" Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">
-         <PackagePath>$(PackagePathDir)</PackagePath>
-       </TfmSpecificPackageFile>
--    </ItemGroup>    
-+    </ItemGroup>
-   </Target>
- 
-   <Import Project="$(BuildCommonDirectory)common.targets"/>
 diff --git a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
 index 21015c00a..e306cdee4 100644
 --- a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
