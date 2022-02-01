@@ -127,7 +127,17 @@ jobs:
       clean: all
 
     steps:
-    - checkout: none
+    - checkout: self
+      clean: true
+
+    - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+      - task: Bash@3
+        displayName: Setup Private Feeds Credentials
+        inputs:
+          filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.sh
+          arguments: $(Build.SourcesDirectory)/NuGet.config $Token
+        env:
+          Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
     - download: current
       artifact: $(_PreviousSourceBuildArtifact)
