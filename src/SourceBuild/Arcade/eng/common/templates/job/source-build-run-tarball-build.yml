@@ -69,6 +69,9 @@ jobs:
           _ExcludeOmniSharpTests: false
           _RunOnline: false
   timeoutInMinutes: 300
+  variables:
+  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+    - group: AzureDevOps-Artifact-Feeds-Pats
   workspace:
     clean: all
 
