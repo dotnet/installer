@@ -123,6 +123,9 @@ jobs:
           _Container: ${{ parameters.fedora33Container }}
           _RunOnline: false
     timeoutInMinutes: 180
+    variables:
+    - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+      - group: AzureDevOps-Artifact-Feeds-Pats
     workspace:
       clean: all
 
