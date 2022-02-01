@@ -63,8 +63,7 @@ Visibility|All legs|
 |Public|[![Status](https://dev.azure.com/dnceng/public/_apis/build/status/176)](https://dev.azure.com/dnceng/public/_build?definitionId=176)|
 |Microsoft Internal|[![Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
 
-Installers and Binaries
------------------------
+## Installers and Binaries
 
 You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (zip, tar.gz). The .NET Core SDK contains both the .NET Core runtime and CLI tools.
 
@@ -127,6 +126,8 @@ We strongly recommend using `--skip-manifest-update` with `dotnet workload insta
 ```
 
 Please do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table.
+
+### Table
 
 | Platform | main<br>(7.0.x&nbsp;Runtime) | Release/7.0.1xx-preview1<br>(7.0.x&nbsp;Runtime) | Release/6.0.2XX<br>(6.0.x&nbsp;Runtime) | Release/6.0.1XX<br>(6.0.x&nbsp;Runtime) | Release/5.0.4XX<br>(5.0 Runtime) | Release/5.0.2XX<br>(5.0 Runtime) | Release/3.1.4XX<br>(3.1.x Runtime) |
 | :--------- | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: |
