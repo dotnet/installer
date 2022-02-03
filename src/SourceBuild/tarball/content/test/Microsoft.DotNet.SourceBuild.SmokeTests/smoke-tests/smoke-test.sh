@@ -64,6 +64,7 @@ restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
 archiveRestoredPackages=false
 smokeTestPrebuilts="$SCRIPT_ROOT/prereq-packages"
+nonSbSmokeTestPrebuilts="$SCRIPT_ROOT/non-source-built-prereq-packages"
 runningOnline=false
 runningHttps=false
 
@@ -422,8 +423,8 @@ function resetCaches() {
 
 function setupSmokeTestFeed() {
     # Setup smoke-test-packages if they exist
-    if [ -e "$smokeTestPrebuilts" ]; then
-        sed -i.bakSmokeTestFeed "s|SMOKE_TEST_PACKAGE_FEED|$smokeTestPrebuilts|g" "$testingDir/NuGet.Config"
+    if [ -e "$nonSbSmokeTestPrebuilts" ]; then
+        sed -i.bakSmokeTestFeed "s|SMOKE_TEST_PACKAGE_FEED|$nonSbSmokeTestPrebuilts|g" "$testingDir/NuGet.Config"
     else
         sed -i.bakSmokeTestFeed "/SMOKE_TEST_PACKAGE_FEED/d" "$testingDir/NuGet.Config"
     fi
@@ -432,17 +433,19 @@ function setupSmokeTestFeed() {
 function copyRestoredPackages() {
     if [ "$archiveRestoredPackages" == "true" ]; then
         rm -rf "$smokeTestPrebuilts"
+        rm -rf "$nonSbSmokeTestPrebuilts"
         mkdir -p "$smokeTestPrebuilts"
+        mkdir -p "$nonSbSmokeTestPrebuilts"
         find "$restoredPackagesDir" -iname "*.nupkg" -exec mv {} "$smokeTestPrebuilts" \;
 
-        smokeTestPackages=$(find $smokeTestPrebuilts -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
-        sourceBuiltPackages=$(find $SOURCE_BUILT_PKGS_PATH -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
+        smokeTestPackages=$(find "$smokeTestPrebuilts" -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
+        sourceBuiltPackages=$(find "$SOURCE_BUILT_PKGS_PATH" -iname "*.nupkg" -type f -printf "%f\n" | tr '[A-Z]' '[a-z]' | sort)
 
         echo "Removing smoke-test prereq packages that are source built:"
-        comm -12 <(printf "$smokeTestPackages") <(printf "$sourceBuiltPackages") | while read line
+        comm -23 <(printf "$smokeTestPackages") <(printf "$sourceBuiltPackages") | while read line
         do
             echo "$line"
-            rm -f $smokeTestPrebuilts/$line
+            cp "$smokeTestPrebuilts/$line" "$nonSbSmokeTestPrebuilts"
         done 
     fi
 }
