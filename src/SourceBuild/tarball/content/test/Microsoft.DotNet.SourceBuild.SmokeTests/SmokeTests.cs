@@ -29,6 +29,10 @@ public class SmokeTests
         {
             smokeTestArgs += " --excludeWebHttpsTests";
         }
+        if (Config.ExcludeOmniSharpTests)
+        {
+            smokeTestArgs += " --excludeOmniSharpTests";
+        }
         if (Config.ExcludeOnlineTests)
         {
             smokeTestArgs += " --excludeOnlineTests";

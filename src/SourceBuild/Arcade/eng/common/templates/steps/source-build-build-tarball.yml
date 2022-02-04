@@ -70,7 +70,7 @@ steps:
       rm -f ${{ parameters.tarballDir }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/smoke-tests/online.NuGet.Config
       cp NuGet.config ${{ parameters.tarballDir }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/smoke-tests/online.NuGet.Config
 
-      docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball -e excludeOmniSharpTests=${{ parameters.excludeOmniSharpTests}} ${{ parameters.container }} ./build.sh --run-smoke-test ${{ parameters.additionalBuildArgs }}
+      docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball -e EXCLUDE_OMNISHARP_TESTS=${{ parameters.excludeOmniSharpTests}} ${{ parameters.container }} ./build.sh --run-smoke-test ${{ parameters.additionalBuildArgs }}
     displayName: Run Tests
 
   # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
