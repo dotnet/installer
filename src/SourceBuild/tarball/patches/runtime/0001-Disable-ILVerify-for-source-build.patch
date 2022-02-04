@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jan Kotas <jkotas@microsoft.com>
+Date: Fri, 4 Feb 2022 13:57:42 -0800
+Subject: [PATCH] Disable ILVerify for source build
+
+---
+ src/coreclr/.nuget/coreclr-packages.proj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/coreclr/.nuget/coreclr-packages.proj b/src/coreclr/.nuget/coreclr-packages.proj
+index 5d6391b6124..80e3f60a919 100644
+--- a/src/coreclr/.nuget/coreclr-packages.proj
++++ b/src/coreclr/.nuget/coreclr-packages.proj
+@@ -1,8 +1,8 @@
+ <Project Sdk="Microsoft.Build.Traversal" DefaultTargets="Pack">
+   <ItemGroup Condition="'$(TargetOS)' == 'windows' or '$(DotNetBuildFromSource)' == 'true'">
+     <ProjectReference Include="Microsoft.NET.Sdk.IL\Microsoft.NET.Sdk.IL.pkgproj" />
+-    <ProjectReference Include="Microsoft.ILVerification\Microsoft.ILVerification.pkgproj" />
+-    <ProjectReference Include="dotnet-ilverify\dotnet-ilverify.pkgproj" />
++    <ProjectReference Include="Microsoft.ILVerification\Microsoft.ILVerification.pkgproj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
++    <ProjectReference Include="dotnet-ilverify\dotnet-ilverify.pkgproj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(RuntimeFlavor)' == 'CoreCLR' and '$(DotNetBuildFromSource)' != 'true'">
