@@ -104,14 +104,14 @@
       <Sha>16c76b5ef95da71ad80159ab9df94d732481234b</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.100-preview.1.22102.9">
+    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.100-preview.1.22104.6">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3e97105183613e39c71171007b582b73a5958c5b</Sha>
+      <Sha>d34ca3175055fc63b16b20956e74543de57db643</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.100-preview.1.22102.9">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.100-preview.1.22104.6">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3e97105183613e39c71171007b582b73a5958c5b</Sha>
+      <Sha>d34ca3175055fc63b16b20956e74543de57db643</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="7.0.0-preview.1.22076.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -142,9 +142,9 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.1.0-3.22068.11" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.2.0-1.22104.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>073b71936e04e334dacebea3cf00662b0a13a280</Sha>
+      <Sha>8d81aa51ec316d6a545cbc1a0afebad320444d7b</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.2.0-preview-22101-02" CoherentParentDependency="Microsoft.NET.Sdk">
