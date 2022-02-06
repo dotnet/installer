@@ -391,9 +391,9 @@ stages:
           - Source_Build_Create_Tarball
         publishUsingPipelines: true
         pool:
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: NetCore1ESPool-Svc-Internal
+            demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
 
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
