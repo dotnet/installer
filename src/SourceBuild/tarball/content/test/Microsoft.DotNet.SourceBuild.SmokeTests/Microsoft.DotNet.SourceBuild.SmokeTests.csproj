@@ -24,6 +24,15 @@
     <Content Include="smoke-tests/*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="format/**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="format/**" />
+    <EmbeddedResource Remove="format/**" />
+    <None Remove="format/**" />
   </ItemGroup>
 
   <ItemGroup>
