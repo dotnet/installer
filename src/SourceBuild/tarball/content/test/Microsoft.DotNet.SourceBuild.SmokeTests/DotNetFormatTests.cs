@@ -34,7 +34,7 @@ public class DotNetFormatTests
     {
         string testProjectPath = Path.Join(this._formatTestRootDirectory, nameof(VerifyNoChanges));
 
-        CreateNewProject(testProjectPath);
+        DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
 
         string csprojPath = Path.Combine(testProjectPath, nameof(VerifyNoChanges) + ".csproj");
 
@@ -55,28 +55,12 @@ public class DotNetFormatTests
         string solutionCsFilePath = Path.Combine(this._formatTestRootDirectory, "solution", TestFileName);
         string testCsFilePath = Path.Combine(testProjectPath, TestFileName);
 
-        CreateNewProject(testProjectPath);
+        DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
 
         File.Copy(unformattedCsFilePath, testCsFilePath);
 
         DotNetHelper.ExecuteDotNetCmd($"format {csprojPath}", OutputHelper);
 
-        Assert.True(File.ReadAllLines(testCsFilePath).SequenceEqual(File.ReadAllLines(solutionCsFilePath)));
-    }
-
-    /// <Summary>
-    /// Run `dotnet new console` in projectDirectory. If projectDirectory
-    /// already exists, then empty it out first.
-    /// </Summary>
-    private void CreateNewProject(string projectDirectory)
-    {
-        if (Directory.Exists(projectDirectory))
-        {
-            Directory.Delete(projectDirectory, true);
-        }
-
-        Directory.CreateDirectory(projectDirectory);
-
-        DotNetHelper.ExecuteDotNetCmd($"new console --output {projectDirectory}", OutputHelper);
+        Assert.True(BaselineHelper.FilesAreEqual(testCsFilePath, solutionCsFilePath));
     }
 }

@@ -63,6 +63,11 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             return diffResult.StdOut;
         }
 
+        public static bool FilesAreEqual(string file1Path, string file2Path)
+        {
+            return File.ReadAllLines(file1Path).SequenceEqual(File.ReadAllLines(file2Path));
+        }
+
         private static string GetBaselineFilePath(string baselineFileName) => Path.Combine(Directory.GetCurrentDirectory(), "baselines", baselineFileName);
     }
 }

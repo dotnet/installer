@@ -41,4 +41,20 @@ internal class DotNetHelper
 
         Assert.Equal(0, executeResult.Process.ExitCode);
     }
+
+    /// <Summary>
+    /// Create a new project of type projectType with the specified langauge in the directory outputPath.
+    /// If the directory at outputPath already exists, clear its contents first.
+    /// </Summary>
+    public void NewProject(string projectType, string language, string outputPath, ITestOutputHelper outputHelper)
+    {
+        if (Directory.Exists(outputPath))
+        {
+            Directory.Delete(outputPath, true);
+        }
+
+        Directory.CreateDirectory(outputPath);
+
+        ExecuteDotNetCmd($"new {projectType} --language \"{language}\" --output {outputPath}", outputHelper);
+    }
 }
