@@ -13,42 +13,32 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class DotNetFormatTests
 {
-    const string VerifyNoChangesTestDirectoryName = "VerifyNoChanges";
-    const string FormatTestDirectoryName = "FormatTest";
-    const string UnformattedDirectoryName = "unformatted";
-    const string SolutionDirectoryName = "solution";
-    const string TestFileName = "Test.cs";
+    private const string TestFileName = "Test.cs";
 
-    private ITestOutputHelper _outputHelper { get; }
-    private DotNetHelper _dotNetHelper { get; }
+    private ITestOutputHelper OutputHelper { get; }
+    private DotNetHelper DotNetHelper { get; }
     private string _formatTestRootDirectory { get; }
 
     public DotNetFormatTests(ITestOutputHelper outputHelper)
     {
-        this._outputHelper = outputHelper;
-        this._dotNetHelper = new DotNetHelper(outputHelper);
-        this._formatTestRootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "format");
+        OutputHelper = outputHelper;
+        DotNetHelper = new DotNetHelper(outputHelper);
+        _formatTestRootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "format");
     }
 
     /// <Summary>
     /// Create a new project and verify that it doesn't need to be formatted.
     /// </Summary>
     [Fact]
-    public void DotNetFormatVerifyNoChanges()
+    public void VerifyNoChanges()
     {
-        string verifyNoChangesTestPath = Path.Join(this._formatTestRootDirectory, VerifyNoChangesTestDirectoryName);
+        string testProjectPath = Path.Join(this._formatTestRootDirectory, nameof(VerifyNoChanges));
 
-        CreateNewProject(verifyNoChangesTestPath);
+        CreateNewProject(testProjectPath);
 
-        string verifyNoChangesCsprojPath = Path.Combine(verifyNoChangesTestPath, VerifyNoChangesTestDirectoryName + ".csproj");
+        string csprojPath = Path.Combine(testProjectPath, nameof(VerifyNoChanges) + ".csproj");
 
-        string[] dotnetFormatArgs = {
-            "format",
-            verifyNoChangesCsprojPath,
-            "--verify-no-changes"
-        };
-
-        _dotNetHelper.ExecuteDotNetCmd(String.Join(' ', dotnetFormatArgs), _outputHelper);
+        DotNetHelper.ExecuteDotNetCmd($"format {csprojPath} --verify-no-changes", OutputHelper);
     }
 
     /// <Summary>
@@ -56,25 +46,20 @@ public class DotNetFormatTests
     /// pre-computed solution.
     /// </Summary>
     [Fact]
-    public void DotNetFormatProject()
+    public void FormatProject()
     {
-        string formatTestPath = Path.Join(this._formatTestRootDirectory, FormatTestDirectoryName);
-        string formatTestCsprojPath = Path.Join(formatTestPath, FormatTestDirectoryName + ".csproj");
+        string testProjectPath = Path.Join(this._formatTestRootDirectory, nameof(FormatProject));
+        string csprojPath = Path.Join(testProjectPath, nameof(FormatProject) + ".csproj");
 
-        string unformattedCsFilePath = Path.Combine(this._formatTestRootDirectory, UnformattedDirectoryName, TestFileName);
-        string solutionCsFilePath = Path.Combine(this._formatTestRootDirectory, SolutionDirectoryName, TestFileName);
-        string testCsFilePath = Path.Combine(formatTestPath, TestFileName);
+        string unformattedCsFilePath = Path.Combine(this._formatTestRootDirectory, "unformatted", TestFileName);
+        string solutionCsFilePath = Path.Combine(this._formatTestRootDirectory, "solution", TestFileName);
+        string testCsFilePath = Path.Combine(testProjectPath, TestFileName);
 
-        CreateNewProject(formatTestPath);
+        CreateNewProject(testProjectPath);
 
         File.Copy(unformattedCsFilePath, testCsFilePath);
 
-        string[] dotnetFormatArgs = {
-            "format",
-            formatTestCsprojPath,
-        };
-
-        _dotNetHelper.ExecuteDotNetCmd(String.Join(' ', dotnetFormatArgs), _outputHelper);
+        DotNetHelper.ExecuteDotNetCmd($"format {csprojPath}", OutputHelper);
 
         Assert.True(File.ReadAllLines(testCsFilePath).SequenceEqual(File.ReadAllLines(solutionCsFilePath)));
     }
@@ -92,13 +77,6 @@ public class DotNetFormatTests
 
         Directory.CreateDirectory(projectDirectory);
 
-        string[] dotnetNewArgs = {
-            "new",
-            "console",
-            "--output",
-            projectDirectory
-        };
-
-        _dotNetHelper.ExecuteDotNetCmd(String.Join(' ', dotnetNewArgs), _outputHelper);
+        DotNetHelper.ExecuteDotNetCmd($"new console --output {projectDirectory}", OutputHelper);
     }
 }
