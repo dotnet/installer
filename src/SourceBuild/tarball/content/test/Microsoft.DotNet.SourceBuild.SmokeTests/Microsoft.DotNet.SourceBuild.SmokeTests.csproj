@@ -18,21 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="baselines/*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="smoke-tests/*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="format/**">
+    <Content Include="assets/**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="format/**" />
-    <EmbeddedResource Remove="format/**" />
-    <None Remove="format/**" />
+    <Compile Remove="assets/**" />
+    <EmbeddedResource Remove="assets/**" />
+    <None Remove="assets/**" />
   </ItemGroup>
 
   <ItemGroup>

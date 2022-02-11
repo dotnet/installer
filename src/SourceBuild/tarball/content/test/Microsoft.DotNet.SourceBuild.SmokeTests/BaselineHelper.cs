@@ -68,6 +68,6 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             return File.ReadAllLines(file1Path).SequenceEqual(File.ReadAllLines(file2Path));
         }
 
-        private static string GetBaselineFilePath(string baselineFileName) => Path.Combine(Directory.GetCurrentDirectory(), "baselines", baselineFileName);
+        private static string GetBaselineFilePath(string baselineFileName) => Path.Combine(Directory.GetCurrentDirectory(), "assets", "baselines", baselineFileName);
     }
 }

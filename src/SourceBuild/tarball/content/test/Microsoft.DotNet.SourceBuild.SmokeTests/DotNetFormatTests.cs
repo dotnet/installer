@@ -2,28 +2,28 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
-using System;
-using System.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class DotNetFormatTests
 {
-    private const string TestFileName = "Test.cs";
+    private const string TestFileName = "FormatTestUnformatted.cs";
+    private const string SolutionFileName = "FormatTestSolution.cs";
 
     private ITestOutputHelper OutputHelper { get; }
     private DotNetHelper DotNetHelper { get; }
-    private string _formatTestRootDirectory { get; }
+    private string _assetsDirectoryPath { get; }
+    private string _formatTestsDirectoryPath { get; }
 
     public DotNetFormatTests(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
         DotNetHelper = new DotNetHelper(outputHelper);
-        _formatTestRootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "format");
+        _assetsDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "assets");
+        _formatTestsDirectoryPath = Path.Combine(_assetsDirectoryPath, nameof(DotNetFormatTests));
     }
 
     /// <Summary>
@@ -32,7 +32,7 @@ public class DotNetFormatTests
     [Fact]
     public void VerifyNoChanges()
     {
-        string testProjectPath = Path.Join(this._formatTestRootDirectory, nameof(VerifyNoChanges));
+        string testProjectPath = Path.Join(_formatTestsDirectoryPath, nameof(VerifyNoChanges));
 
         DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
 
@@ -42,17 +42,16 @@ public class DotNetFormatTests
     }
 
     /// <Summary>
-    /// Format an unformatted project and verify that the output matches the
-    /// pre-computed solution.
+    /// Format an unformatted project and verify that the output matches the pre-computed solution.
     /// </Summary>
     [Fact]
     public void FormatProject()
     {
-        string testProjectPath = Path.Join(this._formatTestRootDirectory, nameof(FormatProject));
+        string testProjectPath = Path.Join(_formatTestsDirectoryPath, nameof(FormatProject));
         string csprojPath = Path.Join(testProjectPath, nameof(FormatProject) + ".csproj");
 
-        string unformattedCsFilePath = Path.Combine(this._formatTestRootDirectory, "unformatted", TestFileName);
-        string solutionCsFilePath = Path.Combine(this._formatTestRootDirectory, "solution", TestFileName);
+        string unformattedCsFilePath = Path.Combine(_assetsDirectoryPath, TestFileName);
+        string solutionCsFilePath = Path.Combine(_assetsDirectoryPath, SolutionFileName);
         string testCsFilePath = Path.Combine(testProjectPath, TestFileName);
 
         DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
