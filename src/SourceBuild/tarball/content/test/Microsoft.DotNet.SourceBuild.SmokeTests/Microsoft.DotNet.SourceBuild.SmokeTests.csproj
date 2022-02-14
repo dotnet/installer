@@ -34,6 +34,6 @@
   </ItemGroup>
 
   <Target Name="CopySmokeTestPrereqs" BeforeTargets="Build">
-    <Copy SourceFiles="@(SmokeTestPrereqs)" DestinationFolder="$(OutputPath)\smoke-tests\prereq-packages" />
+    <Copy SourceFiles="@(SmokeTestPrereqs)" DestinationFolder="$(OutputPath)\assets\smoke-tests\prereq-packages" />
   </Target>
 </Project>
