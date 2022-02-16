@@ -62,7 +62,7 @@ jobs:
           _Platform: linux
           _RunOnline: false
         CentOSStream9-Offline:
-          _BootstrapPrep: true
+          _BootstrapPrep: false
           _BuildArch: x64
           _Container: ${{ parameters.centOSStream9Container }}
           _ExcludeOmniSharpTests: false
