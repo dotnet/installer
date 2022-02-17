@@ -14,7 +14,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 {
     internal class BaselineHelper
     {
-        public static void Compare(string baselineFileName, IOrderedEnumerable<string> actualEntries)
+        public static void CompareEntries(string baselineFileName, IOrderedEnumerable<string> actualEntries)
         {
             IEnumerable<string> baseline = File.ReadAllLines(GetBaselineFilePath(baselineFileName));
             string[] missingEntries = actualEntries.Except(baseline).ToArray();
@@ -34,22 +34,22 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             Assert.Null(message);
         }
 
-        public static void Compare(string baselineFileName, string actual, ITestOutputHelper outputHelper)
+        public static void CompareContents(string baselineFileName, string actualContents, ITestOutputHelper outputHelper)
         {
             string baselineFilePath = GetBaselineFilePath(baselineFileName);
             string baseline = File.ReadAllText(baselineFilePath);
 
-            string? message = null;
-            if (baseline != actual)
-            {
-                string actualBaselineFilePath = Path.Combine(Environment.CurrentDirectory, $"{baselineFileName}");
-                File.WriteAllText(actualBaselineFilePath, actual);
+            string actualFilePath = Path.Combine(Environment.CurrentDirectory, $"{baselineFileName}");
+            File.WriteAllText(actualFilePath, actualContents);
 
-                // Retrieve a diff in order to provide a UX which calls out the diffs.
-                string diff = DiffFiles(baselineFilePath, actualBaselineFilePath, outputHelper);
-                message = $"{Environment.NewLine}Baseline '{baselineFilePath}' does not match actual '{actualBaselineFilePath}`.  {Environment.NewLine}"
-                    + $"{diff}{Environment.NewLine}";
-            }
+            string? message = CompareFilesInternal(baselineFilePath, actualFilePath, outputHelper);
+
+            Assert.Null(message);
+        }
+
+        public static void CompareFiles(string baselineFilePath, string actualFilePath, ITestOutputHelper outputHelper)
+        {
+            string? message = CompareFilesInternal(baselineFilePath, actualFilePath, outputHelper);
 
             Assert.Null(message);
         }
@@ -63,14 +63,26 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             return diffResult.StdOut;
         }
 
-        public static bool FilesAreEqual(string file1Path, string file2Path)
-        {
-            return File.ReadAllLines(file1Path).SequenceEqual(File.ReadAllLines(file2Path));
-        }
-
-
         public static string GetAssetsDirectory() => Path.Combine(Directory.GetCurrentDirectory(), "assets");
 
         private static string GetBaselineFilePath(string baselineFileName) => Path.Combine(GetAssetsDirectory(), "baselines", baselineFileName);
+
+        private static string? CompareFilesInternal(string baselineFilePath, string actualFilePath, ITestOutputHelper outputHelper)
+        {
+            string baselineFileText = File.ReadAllText(baselineFilePath);
+            string actualFileText = File.ReadAllText(actualFilePath);
+
+            string? message = null;
+
+            if (baselineFileText != actualFileText)
+            {
+                // Retrieve a diff in order to provide a UX which calls out the diffs.
+                string diff = DiffFiles(baselineFilePath, actualFilePath, outputHelper);
+                message = $"{Environment.NewLine}Baseline '{baselineFilePath}' does not match actual '{actualFilePath}`.  {Environment.NewLine}"
+                    + $"{diff}{Environment.NewLine}";
+            }
+
+            return message;
+        }
     }
 }

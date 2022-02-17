@@ -42,6 +42,6 @@ public class DotNetFormatTests
 
         DotNetHelper.ExecuteCmd($"format {projectFilePath}", OutputHelper);
 
-        Assert.True(BaselineHelper.FilesAreEqual(testCsFilePath, solutionCsFilePath));
+        BaselineHelper.CompareFiles(solutionCsFilePath, testCsFilePath, OutputHelper);
     }
 }
