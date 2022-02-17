@@ -129,12 +129,14 @@ stages:
             _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
             # Never run tests on PGO bits
             _TestArg: ''
+            disableComponentGovernance: true
           Build_Release_x86:
             _BuildConfig: Release
             _BuildArchitecture: x86
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: ''
             _TestArg: ''
+            disableComponentGovernance: true
       pgoInstrument: true
 
   - template: /eng/build.yml
@@ -346,8 +348,12 @@ stages:
             _TestArg: ''
 
   - template: /eng/common/templates/jobs/source-build.yml
+    parameters:
+      disableComponentGovernance: true
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
+    parameters:
+      disableComponentGovernance: true
 
   # disable tarball build ci until 7.0 stabilizes
   # - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
