@@ -15,30 +15,15 @@ public class DotNetFormatTests
 
     private ITestOutputHelper OutputHelper { get; }
     private DotNetHelper DotNetHelper { get; }
-    private string _assetsDirectoryPath { get; }
-    private string _formatTestsDirectoryPath { get; }
+    private string AssetsDirectoryPath { get; }
+    private string FormatTestsDirectoryPath { get; }
 
     public DotNetFormatTests(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
         DotNetHelper = new DotNetHelper(outputHelper);
-        _assetsDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "assets");
-        _formatTestsDirectoryPath = Path.Combine(_assetsDirectoryPath, nameof(DotNetFormatTests));
-    }
-
-    /// <Summary>
-    /// Create a new project and verify that it doesn't need to be formatted.
-    /// </Summary>
-    [Fact]
-    public void VerifyNoChanges()
-    {
-        string testProjectPath = Path.Join(_formatTestsDirectoryPath, nameof(VerifyNoChanges));
-
-        DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
-
-        string csprojPath = Path.Combine(testProjectPath, nameof(VerifyNoChanges) + ".csproj");
-
-        DotNetHelper.ExecuteDotNetCmd($"format {csprojPath} --verify-no-changes", OutputHelper);
+        AssetsDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "assets");
+        FormatTestsDirectoryPath = Path.Combine(AssetsDirectoryPath, nameof(DotNetFormatTests));
     }
 
     /// <Summary>
@@ -47,11 +32,11 @@ public class DotNetFormatTests
     [Fact]
     public void FormatProject()
     {
-        string testProjectPath = Path.Join(_formatTestsDirectoryPath, nameof(FormatProject));
+        string testProjectPath = Path.Join(FormatTestsDirectoryPath, nameof(FormatProject));
         string csprojPath = Path.Join(testProjectPath, nameof(FormatProject) + ".csproj");
 
-        string unformattedCsFilePath = Path.Combine(_assetsDirectoryPath, TestFileName);
-        string solutionCsFilePath = Path.Combine(_assetsDirectoryPath, SolutionFileName);
+        string unformattedCsFilePath = Path.Combine(AssetsDirectoryPath, TestFileName);
+        string solutionCsFilePath = Path.Combine(AssetsDirectoryPath, SolutionFileName);
         string testCsFilePath = Path.Combine(testProjectPath, TestFileName);
 
         DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
