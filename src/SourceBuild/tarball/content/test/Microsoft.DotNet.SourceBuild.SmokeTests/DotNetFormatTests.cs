@@ -15,15 +15,11 @@ public class DotNetFormatTests
 
     private ITestOutputHelper OutputHelper { get; }
     private DotNetHelper DotNetHelper { get; }
-    private string AssetsDirectoryPath { get; }
-    private string FormatTestsDirectoryPath { get; }
 
     public DotNetFormatTests(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
         DotNetHelper = new DotNetHelper(outputHelper);
-        AssetsDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "assets");
-        FormatTestsDirectoryPath = Path.Combine(AssetsDirectoryPath, nameof(DotNetFormatTests));
     }
 
     /// <Summary>
@@ -32,18 +28,19 @@ public class DotNetFormatTests
     [Fact]
     public void FormatProject()
     {
-        string testProjectPath = Path.Join(FormatTestsDirectoryPath, nameof(FormatProject));
-        string csprojPath = Path.Join(testProjectPath, nameof(FormatProject) + ".csproj");
+        string assetsDirectory = BaselineHelper.GetAssetsDirectory();
 
-        string unformattedCsFilePath = Path.Combine(AssetsDirectoryPath, TestFileName);
-        string solutionCsFilePath = Path.Combine(AssetsDirectoryPath, SolutionFileName);
-        string testCsFilePath = Path.Combine(testProjectPath, TestFileName);
+        string unformattedCsFilePath = Path.Combine(assetsDirectory, TestFileName);
+        string solutionCsFilePath = Path.Combine(assetsDirectory, SolutionFileName);
 
-        DotNetHelper.NewProject("console", "C#", testProjectPath, OutputHelper);
+        string projectDirectory = DotNetHelper.ExecuteNew("console", "C#", nameof(FormatProject), OutputHelper);
+
+        string projectFilePath = Path.Combine(projectDirectory, nameof(FormatProject) + ".csproj");
+        string testCsFilePath = Path.Combine(projectDirectory, TestFileName);
 
         File.Copy(unformattedCsFilePath, testCsFilePath);
 
-        DotNetHelper.ExecuteDotNetCmd($"format {csprojPath}", OutputHelper);
+        DotNetHelper.ExecuteCmd($"format {projectFilePath}", OutputHelper);
 
         Assert.True(BaselineHelper.FilesAreEqual(testCsFilePath, solutionCsFilePath));
     }
