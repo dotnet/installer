@@ -62,5 +62,4 @@ while [[ $# > 0 ]]; do
 
     shift
 done
-
 . "$REPOROOT/eng/common/build.sh" --build --restore "${args[@]}"
