@@ -10,8 +10,8 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class DotNetFormatTests
 {
-    private const string TestFileName = "FormatTestUnformatted.cs";
-    private const string SolutionFileName = "FormatTestSolution.cs";
+    private const string UnformattedFileName = "FormatTestUnformatted.cs";
+    private const string ExpectedFormattedFileName = "FormatTestExpectedFormatted.cs";
 
     private ITestOutputHelper OutputHelper { get; }
     private DotNetHelper DotNetHelper { get; }
@@ -30,18 +30,18 @@ public class DotNetFormatTests
     {
         string assetsDirectory = BaselineHelper.GetAssetsDirectory();
 
-        string unformattedCsFilePath = Path.Combine(assetsDirectory, TestFileName);
-        string solutionCsFilePath = Path.Combine(assetsDirectory, SolutionFileName);
+        string unformattedCsFilePath = Path.Combine(assetsDirectory, UnformattedFileName);
+        string expectedFormattedCsFilePath = Path.Combine(assetsDirectory, ExpectedFormattedFileName);
 
         string projectDirectory = DotNetHelper.ExecuteNew("console", "C#", nameof(FormatProject), OutputHelper);
 
         string projectFilePath = Path.Combine(projectDirectory, nameof(FormatProject) + ".csproj");
-        string testCsFilePath = Path.Combine(projectDirectory, TestFileName);
+        string formattedCsFilePath = Path.Combine(projectDirectory, UnformattedFileName);
 
-        File.Copy(unformattedCsFilePath, testCsFilePath);
+        File.Copy(unformattedCsFilePath, formattedCsFilePath);
 
         DotNetHelper.ExecuteCmd($"format {projectFilePath}", OutputHelper);
 
-        BaselineHelper.CompareFiles(solutionCsFilePath, testCsFilePath, OutputHelper);
+        BaselineHelper.CompareFiles(expectedFormattedCsFilePath, formattedCsFilePath, OutputHelper);
     }
 }
