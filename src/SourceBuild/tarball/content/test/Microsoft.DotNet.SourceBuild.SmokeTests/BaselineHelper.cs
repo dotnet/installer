@@ -37,19 +37,27 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
         public static void CompareContents(string baselineFileName, string actualContents, ITestOutputHelper outputHelper)
         {
             string baselineFilePath = GetBaselineFilePath(baselineFileName);
-            string baseline = File.ReadAllText(baselineFilePath);
 
             string actualFilePath = Path.Combine(Environment.CurrentDirectory, $"{baselineFileName}");
             File.WriteAllText(actualFilePath, actualContents);
 
-            string? message = CompareFilesInternal(baselineFilePath, actualFilePath, outputHelper);
-
-            Assert.Null(message);
+            CompareFiles(baselineFilePath, actualFilePath, outputHelper);
         }
 
         public static void CompareFiles(string baselineFilePath, string actualFilePath, ITestOutputHelper outputHelper)
         {
-            string? message = CompareFilesInternal(baselineFilePath, actualFilePath, outputHelper);
+            string baselineFileText = File.ReadAllText(baselineFilePath);
+            string actualFileText = File.ReadAllText(actualFilePath);
+
+            string? message = null;
+
+            if (baselineFileText != actualFileText)
+            {
+                // Retrieve a diff in order to provide a UX which calls out the diffs.
+                string diff = DiffFiles(baselineFilePath, actualFilePath, outputHelper);
+                message = $"{Environment.NewLine}Baseline '{baselineFilePath}' does not match actual '{actualFilePath}`.  {Environment.NewLine}"
+                    + $"{diff}{Environment.NewLine}";
+            }
 
             Assert.Null(message);
         }
@@ -66,23 +74,5 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
         public static string GetAssetsDirectory() => Path.Combine(Directory.GetCurrentDirectory(), "assets");
 
         private static string GetBaselineFilePath(string baselineFileName) => Path.Combine(GetAssetsDirectory(), "baselines", baselineFileName);
-
-        private static string? CompareFilesInternal(string baselineFilePath, string actualFilePath, ITestOutputHelper outputHelper)
-        {
-            string baselineFileText = File.ReadAllText(baselineFilePath);
-            string actualFileText = File.ReadAllText(actualFilePath);
-
-            string? message = null;
-
-            if (baselineFileText != actualFileText)
-            {
-                // Retrieve a diff in order to provide a UX which calls out the diffs.
-                string diff = DiffFiles(baselineFilePath, actualFilePath, outputHelper);
-                message = $"{Environment.NewLine}Baseline '{baselineFilePath}' does not match actual '{actualFilePath}`.  {Environment.NewLine}"
-                    + $"{diff}{Environment.NewLine}";
-            }
-
-            return message;
-        }
     }
 }
