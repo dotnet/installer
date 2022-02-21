@@ -103,14 +103,14 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>5a191c3f5cf233cd4eec14411da4ab9faeb05e50</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.201-servicing.22116.30">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.201-servicing.22121.5">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>b2b2897587848c79d435dbc5b9fa5c5333c021cc</Sha>
+      <Sha>1a8eb3bb727a04f0da5a4f519119f9646d18c0e2</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.201-servicing.22116.30">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.201-servicing.22121.5">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>b2b2897587848c79d435dbc5b9fa5c5333c021cc</Sha>
+      <Sha>1a8eb3bb727a04f0da5a4f519119f9646d18c0e2</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.3-servicing.22115.6" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -141,9 +141,9 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.1.0-5.22114.11" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.1.0-5.22116.13" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>260d16a8ee0ab42d94d8dfdfe85a1279c85dcffd</Sha>
+      <Sha>dbffaa4a4e4507b8e8dcf0cae6e3209d32113391</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.1.0" CoherentParentDependency="Microsoft.NET.Sdk">
