@@ -90,27 +90,27 @@
       <Sha>c40ef7e056b48e011c43a21354d6790ba6b8b4fc</Sha>
       <SourceBuild RepoName="test-templates" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.200" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.300-preview.22117.1" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/templating</Uri>
+      <Sha>ae80bff914f34ef76920e93d87a7805483abae27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.200-rtm.22103.10" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.300-preview.22117.1" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/templating</Uri>
+      <Sha>ae80bff914f34ef76920e93d87a7805483abae27</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ProjectTemplates.6.0" Version="6.0.200" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+    <Dependency Name="Microsoft.DotNet.Common.ProjectTemplates.6.0" Version="6.0.300-preview.22117.1" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/templating</Uri>
+      <Sha>ae80bff914f34ef76920e93d87a7805483abae27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.200-rtm.22104.9">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>f9b6be31b19097cb47125075ca2e8322bf591fc0</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.300-preview.22121.3">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>f6997d5bc9239c83357d0fef91043c2b4ab60c70</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.200-rtm.22104.9">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>f9b6be31b19097cb47125075ca2e8322bf591fc0</Sha>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.300-preview.22121.3">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>f6997d5bc9239c83357d0fef91043c2b4ab60c70</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.2-servicing.22064.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -211,9 +211,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>fe5cc1841d12196d94a4ae3b276cb92d8d7ca73d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="6.0.0-servicing.22115.1">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="6.0.0-servicing.22117.5">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>d933cf368424482afb2bd8aebe6a412932f4fee4</Sha>
+      <Sha>58acc1f97a4c7b121356ea9b33b7db29b861b81d</Sha>
       <SourceBuildTarball RepoName="source-build-reference-packages" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-21480-02" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
