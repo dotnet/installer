@@ -88,7 +88,7 @@ steps:
 
       # Use installer repo's NuGet.config during online testing to utilize internal feeds
       rm -f ${{ parameters.tarballDir }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/smoke-tests/online.NuGet.Config
-      cp NuGet.config ${{ parameters.tarballDir }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/smoke-tests/online.NuGet.Config
+      cp ${{ Build.SourcesDirectory }}/NuGet.config ${{ parameters.tarballDir }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/smoke-tests/online.NuGet.Config
 
       dockerVolumeArgs="-v ${{ parameters.tarballDir }}:/tarball"
       dockerEnvArgs="-e EXCLUDE_OMNISHARP_TESTS=${{ parameters.excludeOmniSharpTests}}"
