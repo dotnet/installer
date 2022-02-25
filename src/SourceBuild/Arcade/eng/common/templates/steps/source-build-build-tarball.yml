@@ -93,7 +93,7 @@ steps:
       dockerVolumeArgs="-v ${{ parameters.tarballDir }}:/tarball"
       dockerEnvArgs="-e EXCLUDE_OMNISHARP_TESTS=${{ parameters.excludeOmniSharpTests}}"
 
-      if [ '${{ parameters.isBootstrapped }}' != 'true' && '${{ parameters.installerBuildResourceId }}' != 'current' ]; then
+      if [[ '${{ parameters.isBootstrapped }}' != 'true' && '${{ parameters.installerBuildResourceId }}' != 'current' ]]; then
         dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
         msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-${{ parameters.Platform }}-${{ parameters.buildArch }}.tar.gz" -exec basename {} \;)
         dockerEnvArgs+=" -e MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
