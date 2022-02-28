@@ -110,21 +110,25 @@
             CreateCreateSmokeTestPrereqsTarballIfPrereqsExist"/>
 
   <Target Name="CheckIfCreateSmokeTestPrereqsExistToPack">
+    <PropertyGroup>
+      <SmokeTestsPrereqsDir>$(ProjectDir)test/Microsoft.DotNet.SourceBuild.SmokeTests/bin/$(Configuration)/net6.0/assets/smoke-tests/prereq-packages/</SmokeTestsPrereqsDir>
+    </PropertyGroup>
+
     <ItemGroup>
-      <Prereqs Include="test/Microsoft.DotNet.SourceBuild.SmokeTests/bin/$(Configuration)/net6.0/smoke-tests/prereq-packages/**" />
+      <SmokeTestsPrereqs Include="$(SmokeTestsPrereqsDir)**" />
     </ItemGroup>
 
-    <Message Text="Found @(Prereqs->Count()) files in prereqs packages dir." Importance="High" />
+    <Message Text="Found @(SmokeTestsPrereqs->Count()) prereqs in '$(SmokeTestsPrereqsDir)'." Importance="High" />
   </Target>
 
   <Target Name="CreateCreateSmokeTestPrereqsTarballIfPrereqsExist"
-          Condition="'@(Prereqs->Count())' != '0'">
+          Condition="'@(SmokeTestsPrereqs->Count())' != '0'">
     <PropertyGroup>
       <SmokeTestPrereqsTarballName>$(OutputPath)dotnet-smoke-test-prereqs.$(installerOutputPackageVersion).tar.gz</SmokeTestPrereqsTarballName>
     </PropertyGroup>
 
     <Exec Command="tar --numeric-owner -czf $(SmokeTestPrereqsTarballName) ."
-          WorkingDirectory="./test/Microsoft.DotNet.SourceBuild.SmokeTests/bin/$(Configuration)/net6.0/assets/smoke-tests/prereq-packages/"/>
+          WorkingDirectory="$(SmokeTestsPrereqsDir)"/>
 
     <Message Importance="High" Text="Packaged smoke-test prereqs in '$(SmokeTestPrereqsTarballName)'" />
   </Target>
