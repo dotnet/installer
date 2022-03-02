@@ -24,13 +24,10 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 
         internal void Execute(DotNetHelper dotNetHelper)
         {
-            string templateName = Template.GetName();
-            string languageName = GetLanguageName();
+            // Don't use the cli language name in the project name because it may contain '#': https://github.com/dotnet/roslyn/issues/51692
+            string projectName = $"{ScenarioName}_{Template}_{Language}";
             string customNewArgs = Template.IsAspNetCore() && NoHttps ? "--no-https" : string.Empty;
-
-            // Can't use '#' in the project name: https://github.com/dotnet/roslyn/issues/51692
-            string projectName = $"{ScenarioName}_{templateName}_{languageName.Replace("#", "Sharp")}";
-            dotNetHelper.ExecuteNew(templateName, projectName, languageName, customArgs: customNewArgs);
+            dotNetHelper.ExecuteNew(Template.GetName(), projectName, Language.ToCliName(), customArgs: customNewArgs);
 
             if (Commands.HasFlag(DotNetActions.Build))
             {
@@ -66,13 +63,5 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
                 dotNetHelper.ExecuteTest(projectName);
             }
         }
-
-        private string GetLanguageName() => Language switch
-        {
-            DotNetLanguage.CSharp => "C#",
-            DotNetLanguage.FSharp => "F#",
-            DotNetLanguage.VB => "VB",
-            _ => throw new NotImplementedException()
-        };
     }
 }
