@@ -27,13 +27,13 @@ public class BasicScenarioTests : SmokeTests
 
     private static IEnumerable<TestScenario> GetScenarios()
     {
-        foreach (DotnetLanguage language in Enum.GetValues<DotnetLanguage>())
+        foreach (DotNetLanguage language in Enum.GetValues<DotNetLanguage>())
         {
-            yield return new(nameof(BasicScenarioTests), language, DotnetTemplate.Console,  DotnetActions.Build | DotnetActions.Run | DotnetActions.PublishComplex | DotnetActions.PublishR2R);
-            yield return new(nameof(BasicScenarioTests), language, DotnetTemplate.ClassLib, DotnetActions.Build | DotnetActions.Publish);
-            yield return new(nameof(BasicScenarioTests), language, DotnetTemplate.XUnit,    DotnetActions.Test);
-            yield return new(nameof(BasicScenarioTests), language, DotnetTemplate.NUnit,    DotnetActions.Test);
-            yield return new(nameof(BasicScenarioTests), language, DotnetTemplate.MSTest,   DotnetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | DotNetActions.PublishR2R);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.ClassLib, DotNetActions.Build | DotNetActions.Publish);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.XUnit,    DotNetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.NUnit,    DotNetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.MSTest,   DotNetActions.Test);
         }
     }
 }

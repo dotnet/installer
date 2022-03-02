@@ -8,13 +8,13 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 {
     public class TestScenario
     {
-        public DotnetActions Commands { get; }
-        public DotnetLanguage Language { get; }
+        public DotNetActions Commands { get; }
+        public DotNetLanguage Language { get; }
         public bool NoHttps { get; set; } = Config.TargetRid.Contains("osx");
         public string ScenarioName { get; }
-        public DotnetTemplate Template { get; }
+        public DotNetTemplate Template { get; }
 
-        public TestScenario(string scenarioName, DotnetLanguage language, DotnetTemplate template, DotnetActions commands = DotnetActions.None)
+        public TestScenario(string scenarioName, DotNetLanguage language, DotNetTemplate template, DotNetActions commands = DotNetActions.None)
         {
             ScenarioName = scenarioName;
             Template = template;
@@ -32,11 +32,11 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             string projectName = $"{ScenarioName}_{templateName}_{languageName.Replace("#", "Sharp")}";
             dotNetHelper.ExecuteNew(templateName, projectName, languageName, customArgs: customNewArgs);
 
-            if (Commands.HasFlag(DotnetActions.Build))
+            if (Commands.HasFlag(DotNetActions.Build))
             {
                 dotNetHelper.ExecuteBuild(projectName);
             }
-            if (Commands.HasFlag(DotnetActions.Run))
+            if (Commands.HasFlag(DotNetActions.Run))
             {
                 if (Template.IsAspNetCore())
                 {
@@ -47,21 +47,21 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
                     dotNetHelper.ExecuteRun(projectName);
                 }
             }
-            if (Commands.HasFlag(DotnetActions.Publish))
+            if (Commands.HasFlag(DotNetActions.Publish))
             {
                 dotNetHelper.ExecutePublish(projectName);
             }
-            if (Commands.HasFlag(DotnetActions.PublishComplex))
+            if (Commands.HasFlag(DotNetActions.PublishComplex))
             {
                 dotNetHelper.ExecutePublish(projectName, selfContained: false);
                 dotNetHelper.ExecutePublish(projectName, selfContained: true, Config.TargetRid);
                 dotNetHelper.ExecutePublish(projectName, selfContained: true, "linux-x64");
             }
-            if (Commands.HasFlag(DotnetActions.PublishR2R))
+            if (Commands.HasFlag(DotNetActions.PublishR2R))
             {
                 dotNetHelper.ExecutePublish(projectName, selfContained: true, "linux-x64", trimmed: true, readyToRun: true);
             }
-            if (Commands.HasFlag(DotnetActions.Test))
+            if (Commands.HasFlag(DotNetActions.Test))
             {
                 dotNetHelper.ExecuteTest(projectName);
             }
@@ -69,9 +69,9 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 
         private string GetLanguageName() => Language switch
         {
-            DotnetLanguage.CSharp => "C#",
-            DotnetLanguage.FSharp => "F#",
-            DotnetLanguage.VB => "VB",
+            DotNetLanguage.CSharp => "C#",
+            DotNetLanguage.FSharp => "F#",
+            DotNetLanguage.VB => "VB",
             _ => throw new NotImplementedException()
         };
     }

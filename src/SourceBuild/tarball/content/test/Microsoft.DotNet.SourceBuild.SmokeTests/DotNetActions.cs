@@ -7,7 +7,7 @@ using System;
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 [Flags]
-public enum DotnetActions
+public enum DotNetActions
 {
     None = 0,
     Build = 1,

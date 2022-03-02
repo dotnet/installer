@@ -4,9 +4,20 @@
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public enum DotnetLanguage
+public enum DotNetTemplate
 {
-    CSharp,
-    FSharp,
-    VB
+    Console,
+    ClassLib,
+    XUnit,
+    NUnit,
+    MSTest,
+    Web,
+    Mvc,
+    Razor,
+    BlazorWasm,
+    BlazorServer,
+    WebApi,
+    WebApp,
+    Worker,
+    Angular,
 }

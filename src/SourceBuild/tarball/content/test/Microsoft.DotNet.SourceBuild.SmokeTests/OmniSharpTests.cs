@@ -22,19 +22,19 @@ public class OmniSharpTests : SmokeTests
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrue: true)]
-    [InlineData(DotnetTemplate.BlazorWasm)]
-    [InlineData(DotnetTemplate.BlazorServer)]
-    [InlineData(DotnetTemplate.ClassLib)]
-    [InlineData(DotnetTemplate.Console)]
-    [InlineData(DotnetTemplate.MSTest)]
-    [InlineData(DotnetTemplate.Mvc)]
-    [InlineData(DotnetTemplate.NUnit)]
-    [InlineData(DotnetTemplate.Web)]
-    [InlineData(DotnetTemplate.WebApp)]
-    [InlineData(DotnetTemplate.WebApi)]
-    [InlineData(DotnetTemplate.Worker)]
-    [InlineData(DotnetTemplate.XUnit)]
-    public async void VerifyScenario(DotnetTemplate template)
+    [InlineData(DotNetTemplate.BlazorWasm)]
+    [InlineData(DotNetTemplate.BlazorServer)]
+    [InlineData(DotNetTemplate.ClassLib)]
+    [InlineData(DotNetTemplate.Console)]
+    [InlineData(DotNetTemplate.MSTest)]
+    [InlineData(DotNetTemplate.Mvc)]
+    [InlineData(DotNetTemplate.NUnit)]
+    [InlineData(DotNetTemplate.Web)]
+    [InlineData(DotNetTemplate.WebApp)]
+    [InlineData(DotNetTemplate.WebApi)]
+    [InlineData(DotNetTemplate.Worker)]
+    [InlineData(DotNetTemplate.XUnit)]
+    public async void VerifyScenario(DotNetTemplate template)
     {
         await InitializeOmniSharp();
 
