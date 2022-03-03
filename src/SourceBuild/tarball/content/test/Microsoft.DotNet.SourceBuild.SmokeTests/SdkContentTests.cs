@@ -58,7 +58,7 @@ public class SdkContentTests : SmokeTests
         return diffSegmentRegex.Replace(result, "@@ ------------ @@");
     }
 
-    private static string RemoveRids(string diff) => diff.Replace(Config.TargetRid, "bannana.rid");
+    private static string RemoveRids(string diff) => diff.Replace(Config.TargetRid, "banana.rid");
 
     private static string RemoveVersionedPaths(string source)
     {
