@@ -21,6 +21,6 @@ internal static class Config
     public static string? MsftSdkTarballPath { get; } = Environment.GetEnvironmentVariable(MsftSdkTarballPathEnv);
     public static string? PrereqsPath { get; } = Environment.GetEnvironmentVariable(PrereqsPathEnv);
     public static string? SdkTarballPath { get; } = Environment.GetEnvironmentVariable(SdkTarballPathEnv);
-    public static string TargetRid { get; } = Environment.GetEnvironmentVariable(TargetRidPathEnv) ??
-        throw new InvalidOperationException($"'{Config.TargetRidPathEnv}' must be specified");
+    public static string TargetRid { get; } = Environment.GetEnvironmentVariable(TargetRidEnv) ??
+        throw new InvalidOperationException($"'{Config.TargetRidEnv}' must be specified");
 }
