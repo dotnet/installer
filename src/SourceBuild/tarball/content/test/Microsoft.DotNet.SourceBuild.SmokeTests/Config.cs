@@ -14,7 +14,7 @@ internal static class Config
     public const string MsftSdkTarballPathEnv = "SMOKE_TESTS_MSFT_SDK_TARBALL_PATH";
     public const string PrereqsPathEnv = "SMOKE_TESTS_PREREQS_PATH";
     public const string SdkTarballPathEnv = "SMOKE_TESTS_SDK_TARBALL_PATH";
-    public const string TargetRidPathEnv = "SMOKE_TESTS_TARGET_RID";
+    public const string TargetRidEnv = "SMOKE_TESTS_TARGET_RID";
 
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
