@@ -39,7 +39,7 @@ namespace EndToEnd
         {
             get
             {
-                return SupportedNetCoreAppVersions.Versions.Except(new List<string>() { "1.0", "1.1", "2.0" });
+                return SupportedNetCoreAppVersions.Versions.Except(new List<string>() { "1.0", "1.1", "2.0", "2.1" });
             }
         }
     }
