@@ -79,14 +79,25 @@ internal class DotNetHelper
         }
     }
 
-    public void ExecuteCmd(string args, string? workingDirectory = null)
+    public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? customConfigureProcess = null, int expectedExitCode = 0)
     {
+        Action<Process, string?> configureProcess = (Process process, string? workingDirectory) => {
+            ConfigureProcess(process, workingDirectory);
+
+            if (customConfigureProcess != null)
+            {
+                customConfigureProcess(process);
+            }
+        };
+
         (Process Process, string StdOut, string StdErr) executeResult = ExecuteHelper.ExecuteProcess(
             DotNetPath,
             args,
             OutputHelper,
-            configure: (process) => ConfigureProcess(process, workingDirectory));
-        ExecuteHelper.ValidateExitCode(executeResult);
+            configure: (process) => configureProcess(process, workingDirectory),
+            millisecondTimeout: 30000);
+        
+        ExecuteHelper.ValidateExitCode(executeResult, expectedExitCode);
     }
 
     public static void ConfigureProcess(Process process, string? workingDirectory, bool setPath = false)
