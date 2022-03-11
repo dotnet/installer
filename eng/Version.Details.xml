@@ -90,27 +90,27 @@
       <Sha>c40ef7e056b48e011c43a21354d6790ba6b8b4fc</Sha>
       <SourceBuild RepoName="test-templates" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.200" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="6.0.201" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+      <Sha>eeae34ecb55d49616c9cd79bebfd6978b9ee54a0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.200-rtm.22103.10" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="6.0.201-servicing.22123.7" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+      <Sha>eeae34ecb55d49616c9cd79bebfd6978b9ee54a0</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ProjectTemplates.6.0" Version="6.0.200" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.DotNet.Common.ProjectTemplates.6.0" Version="6.0.201" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
-      <Sha>e6d9bf1868c4aa2808714ada839018a8506bd7dd</Sha>
+      <Sha>eeae34ecb55d49616c9cd79bebfd6978b9ee54a0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.200-rtm.22104.9">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.201-servicing.22124.17">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>f9b6be31b19097cb47125075ca2e8322bf591fc0</Sha>
+      <Sha>11428db5b702966c7750a82c099718a398a1aa15</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.200-rtm.22104.9">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.201-servicing.22124.17">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>f9b6be31b19097cb47125075ca2e8322bf591fc0</Sha>
+      <Sha>11428db5b702966c7750a82c099718a398a1aa15</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.3-servicing.22123.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -135,15 +135,15 @@
       <Sha>d3c6439b04452047cb62fc645ce341a034bdb5be</Sha>
       <SourceBuildTarball RepoName="vstest" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22081.5" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22122.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>cc3dc76c374152f86ff73aa02f35782b713908c6</Sha>
+      <Sha>4a231cedcaf6b93b04d07e5f7670e88e5fa937fe</Sha>
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.1.0-3.22075.3" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.1.0-5.22116.13" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>592501cbb9c9394072a245c15b3458ff88155d85</Sha>
+      <Sha>dbffaa4a4e4507b8e8dcf0cae6e3209d32113391</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.1.0" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -166,13 +166,17 @@
       <Sha>698fdad58fa64a55f16cd9562c90224cc498ed02</Sha>
       <SourceBuildTarball RepoName="xdt" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-6.0.200" Version="6.0.1" CoherentParentDependency="VS.Redist.Common.NetCore.SharedFramework.x64.6.0">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-6.0.100" Version="6.0.2" CoherentParentDependency="VS.Redist.Common.NetCore.SharedFramework.x64.6.0">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>e8ffccbd683205bf94e406e43556f8baca07dc5b</Sha>
+      <Sha>ee0a97a0009c0e048789126253fea7994db676ac</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build" Version="0.1.0-alpha.1.21519.2" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-6.0.200" Version="6.0.2" CoherentParentDependency="VS.Redist.Common.NetCore.SharedFramework.x64.6.0">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>ee0a97a0009c0e048789126253fea7994db676ac</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build" Version="0.1.0-alpha.1.21616.4" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/source-build</Uri>
-      <Sha>10d0f7e94aa45889155c312f51cfc01bf326b853</Sha>
+      <Sha>90bdf447e1b97605f109b34243ab8c9f215308e9</Sha>
       <SourceBuild RepoName="source-build" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.21310.2">
