@@ -79,14 +79,14 @@ internal class DotNetHelper
         }
     }
 
-    public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? customConfigureProcess = null, int expectedExitCode = 0)
+    public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? additionalProcessConfigCallback = null, int expectedExitCode = 0, int millisecondTimeout = -1)
     {
         Action<Process, string?> configureProcess = (Process process, string? workingDirectory) => {
             ConfigureProcess(process, workingDirectory);
 
-            if (customConfigureProcess != null)
+            if (additionalProcessConfigCallback != null)
             {
-                customConfigureProcess(process);
+                additionalProcessConfigCallback(process);
             }
         };
 
@@ -95,7 +95,7 @@ internal class DotNetHelper
             args,
             OutputHelper,
             configure: (process) => configureProcess(process, workingDirectory),
-            millisecondTimeout: 30000);
+            millisecondTimeout: millisecondTimeout);
         
         ExecuteHelper.ValidateExitCode(executeResult, expectedExitCode);
     }
@@ -181,18 +181,14 @@ internal class DotNetHelper
 
     public void ExecuteRunWeb(string projectName)
     {
-        (Process Process, string StdOut, string StdErr) executeResult = ExecuteHelper.ExecuteProcess(
-            DotNetPath,
+        ExecuteCmd(
             $"run {GetBinLogOption(projectName, "run")}",
-            OutputHelper,
-            configure: configureProcess,
+            GetProjectDirectory(projectName),
+            additionalProcessConfigCallback: processConfigCallback,
             millisecondTimeout: 30000);
-        ExecuteHelper.ValidateExitCode(executeResult);
 
-        void configureProcess(Process process)
+        void processConfigCallback(Process process)
         {
-            ConfigureProcess(process, GetProjectDirectory(projectName));
-
             process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
                 if (e.Data?.Contains("Application started. Press Ctrl+C to shut down.") ?? false)
