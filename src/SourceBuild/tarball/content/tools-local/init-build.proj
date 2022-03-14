@@ -103,10 +103,12 @@
           DependsOnTargets="UnpackTarballs"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)BuildXPlatTasks.complete">
+    <PropertyGroup>
+      <XPlatTaskProjects>tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj;tasks\SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.csproj</XPlatTaskProjects>
+      <XPlatTaskProjects Condition="'$(EnablePoison)' == 'true'">$(XPlatTaskProjects);tasks\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj</XPlatTaskProjects>
+    </PropertyGroup>
     <MSBuild
-      Projects="
-        tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj;
-        tasks\SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.csproj"
+      Projects="$(XPlatTaskProjects)"
       Targets="%(BuildTasksTarget.Identity)"
       SkipNonexistentTargets="true"
       Properties="
