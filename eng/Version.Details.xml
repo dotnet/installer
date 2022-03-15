@@ -121,13 +121,13 @@
       <Uri>https://github.com/dotnet/wpf</Uri>
       <Sha>e977c7e0269d216f0befc6bad4350cf7ee691d02</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.0-beta.21522.2" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.3-beta.22161.4" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>6d626ff0752a77d339f609b4d361787dc9ca93a5</Sha>
+      <Sha>695d8c1e326fd7cfb7fa4c5c8d9c5559a7ef8a63</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.1-beta.21522.2" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.4-beta.22161.4" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>6d626ff0752a77d339f609b4d361787dc9ca93a5</Sha>
+      <Sha>695d8c1e326fd7cfb7fa4c5c8d9c5559a7ef8a63</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.2.0-preview-20220308-05" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -149,7 +149,7 @@
     <Dependency Name="Microsoft.Build" Version="17.2.0-preview-22157-01" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
       <Sha>9c173296404f9c365cc524569766f16d7cfcf308</Sha>
-      <SourceBuild RepoName="msbuild" ManagedOnly="true" />
+      <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="NuGet.Build.Tasks" Version="6.2.0-preview.2.91" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/nuget/nuget.client</Uri>
@@ -166,9 +166,19 @@
       <Sha>698fdad58fa64a55f16cd9562c90224cc498ed02</Sha>
       <SourceBuildTarball RepoName="xdt" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-7.0.100" Version="7.0.0-preview.3.22128.1" CoherentParentDependency="VS.Redist.Common.NetCore.SharedFramework.x64.7.0">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-7.0.100" Version="7.0.0-preview.3.22128.1">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>0589b22424ef2046b3fa0f96da4ffe261ffdf7c8</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build" Version="0.1.0-alpha.1.21519.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/source-build</Uri>
+      <Sha>10d0f7e94aa45889155c312f51cfc01bf326b853</Sha>
+      <SourceBuild RepoName="source-build" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.21310.2">
+      <Uri>https://github.com/dotnet/clicommandlineparser</Uri>
+      <Sha>3198bf5660cad3dab85f5475bf1fda9688146e3f</Sha>
+      <SourceBuildTarball RepoName="clicommandlineparser" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Deployment.DotNet.Releases" Version="1.0.247101">
       <Uri>https://github.com/dotnet/deployment-tools</Uri>
@@ -206,9 +216,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>81001b45bd54f9223905bf55f6ed0125273580fa</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.22160.2">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.22164.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>a5570c613d359a0ac38403f517e92b7c1e6994a2</Sha>
+      <Sha>5d865ff0971f712b52cf1dd7d3e98ff4c0ff5759</Sha>
       <SourceBuildTarball RepoName="source-build-reference-packages" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.2.0-beta-22156-01" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
