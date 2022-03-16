@@ -1,0 +1,121 @@
+trigger: none
+pr: none
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+parameters:
+  - name: sdkVersion
+    displayName: SDK Version
+    type: string
+    default: 6.0.103
+  - name: useCustomTag
+    displayName: Use custom tag?
+    type: boolean
+    default: false
+  - name: customTag
+    displayName: Installer custom tag
+    type: string
+    default: v6.0.XXX-source-build
+
+variables:
+  repoId: ''
+  discussionCategoryId: ''
+  announcementOrg: 'dotnet'
+  announcementRepo: 'source-build'
+
+stages:
+
+- stage: Setup
+  jobs:
+  - job: SetupJob
+    displayName: Setup
+    steps:
+    - script: |
+        set -euxo pipefail
+        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
+          tag=${{ parameters.customTag }}
+          echo "Using custom tag $(tag)"
+        else
+          tag=v${{ parameters.sdkVersion }}
+          echo "Using tag $(tag)"
+        fi
+        echo "##vso[task.setvariable variable=Tag;isOutput=true]${tag}"
+      name: SetTag
+      displayName: Set tag
+    - script: |
+        set -euxo pipefail
+        tag="$(SetTag.Tag)"
+        cd $(Build.SourcesDirectory)
+        git show-ref --tags 
+        if git rev-parse "$tag" >/dev/null 2>&1; then
+          echo "Tag $tag exists.";
+        else
+          echo "Tag $tag does not exist."
+          exit 1
+        fi
+      displayName: Ensure tag exists
+
+- stage: ReleaseAnnouncement
+  displayName: Release Announcement
+  dependsOn: Setup
+  jobs:
+  - job: create_release_discussion_announcement
+    displayName: Create Announcement
+    variables:
+    - name: Tag
+      value: $[ stageDependencies.Setup.SetupJob.outputs['SetTag.Tag'] ]
+    steps:
+
+    - script: |
+        set -euxo pipefail
+        query='query { repository(owner: "${{ variables.announcementOrg }}", name: "${{ variables.announcementRepo }}") { id } }'
+        repo_id=$( gh api graphql -f query="$query" --template '{{.data.repository.id}}' )
+        echo ${{ variables.announcementOrg }}/${{ variables.announcementRepo }} repo ID is ${repo_id}
+        echo "##vso[task.setvariable variable=repoId;]${repo_id}"
+      displayName: Get repo ID
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+    - script: |
+        set -euxo pipefail
+        query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussionCategories(first: 10) { edges { node { id, name } } } } }'
+        category_id=$( gh api graphql -f query="$query" --template '{{range .data.repository.discussionCategories.edges}}{{if eq .node.name "Announcements"}}{{.node.id}}{{end}}{{end}}' )
+        echo Discussion Category ID is ${category_id}
+        echo "##vso[task.setvariable variable=discussionCategoryId;]${category_id}"
+      displayName: Get announcement discussion category ID
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+    - script: |
+        set -euxo pipefail
+        echo Repo ID is $(repoId)
+        echo Discussion Category ID is $(discussionCategoryId)
+
+        # Read runtime version from release commit
+        git checkout $(Tag)
+        runtime_version=$(cat $(Build.SourcesDirectory)/eng/Version.Details.xml | grep 'Microsoft.NETCore.App.Runtime.win-x64' | grep -P -o -e '(?<=Version=").*?(?=")')
+        dotnet_version=$(echo "$runtime_version" | head -c 3)
+
+        # Set environment variables that go in the announcement template
+        export TAG=$(Tag)
+        export RUNTIME_VERSION="$runtime_version"
+        export SDK_VERSION="${{ parameters.sdkVersion }}"
+        export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
+        export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$dotnet_version/$runtime_version/${{ parameters.sdkVersion }}.md"
+
+        # Switch back to current branch to read announcement template
+        git checkout -
+        title="Automation Test"
+        body="$(envsubst < $(Build.SourcesDirectory)/eng/source-build-release-announcement.md)"
+
+        query='mutation($repoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $repoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
+        announcement_url=$( gh api graphql -F repoId=$(repoId) -F categoryId=$(discussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+
+        echo "Announcement URL: $announcement_url"
+        echo "Tag URL: $TAG_URL"
+        echo "Release Notes URL: $RELEASE_NOTES_URL"
+      displayName: Submit announcement discussion
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
