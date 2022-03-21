@@ -79,10 +79,10 @@ internal class DotNetHelper
         }
     }
 
-    public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? additionalProcessConfigCallback = null, int expectedExitCode = 0, int millisecondTimeout = -1)
+    public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? additionalProcessConfigCallback = null, int expectedExitCode = 0, int millisecondTimeout = -1, bool setPath = false)
     {
         Action<Process, string?> configureProcess = (Process process, string? workingDirectory) => {
-            ConfigureProcess(process, workingDirectory);
+            ConfigureProcess(process, workingDirectory, setPath);
 
             if (additionalProcessConfigCallback != null)
             {
