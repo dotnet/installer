@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests
@@ -13,14 +16,19 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
         [SkippableFact(Config.PoisonReportPathEnv, skipOnNullOrWhiteSpace: true)]
         public void VerifyUsage()
         {
-            // TODO: Do we need to pre-process the poison report to strip content that changes over time and distro?
-            // See the SdkContentTests for how specific rid and versions are abstracted.
-            // If needed, RemoveRids and RemoveVersionedPaths should be moved to the BaselineHelper
+            if (!File.Exists(Config.PoisonReportPath))
+            {
+                throw new InvalidOperationException($"Poison report '{Config.PoisonReportPath}' does not exist.");
+            }
 
-            // TODO: Should poison diffs result in failures or warnings?  
-            // The answer is related to how much is changing in the poison report which may be a direct result of the SdkContent changing.
+            string currentPoisonReport = File.ReadAllText(Config.PoisonReportPath);
+            currentPoisonReport = RemoveHashes(currentPoisonReport);
+            currentPoisonReport = BaselineHelper.RemoveRids(currentPoisonReport);
+            currentPoisonReport = BaselineHelper.RemoveVersions(currentPoisonReport);
 
-            BaselineHelper.CompareFiles("PoisonUsage.txt", Config.PoisonReportPath, OutputHelper);
+            BaselineHelper.CompareContents("PoisonUsage.txt", currentPoisonReport, OutputHelper);
         }
+
+        private static string RemoveHashes(string source) => Regex.Replace(source, "^\\s*<Hash>.*</Hash>(\r\n?|\n)", string.Empty, RegexOptions.Multiline);
     }
 }
