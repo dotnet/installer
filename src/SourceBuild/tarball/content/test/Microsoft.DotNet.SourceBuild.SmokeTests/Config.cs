@@ -12,6 +12,7 @@ internal static class Config
     public const string DotNetDirectoryEnv = "SMOKE_TESTS_DOTNET_DIR";
     public const string ExcludeOmniSharpEnv = "SMOKE_TESTS_EXCLUDE_OMNISHARP";
     public const string MsftSdkTarballPathEnv = "SMOKE_TESTS_MSFT_SDK_TARBALL_PATH";
+    public const string PoisonReportPathEnv = "SMOKE_TESTS_POISON_REPORT_PATH";
     public const string PrereqsPathEnv = "SMOKE_TESTS_PREREQS_PATH";
     public const string SdkTarballPathEnv = "SMOKE_TESTS_SDK_TARBALL_PATH";
     public const string TargetRidEnv = "SMOKE_TESTS_TARGET_RID";
@@ -19,6 +20,7 @@ internal static class Config
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
     public static string? MsftSdkTarballPath { get; } = Environment.GetEnvironmentVariable(MsftSdkTarballPathEnv);
+    public static string? PoisonReportPath { get; } = Environment.GetEnvironmentVariable(PoisonReportPathEnv);
     public static string? PrereqsPath { get; } = Environment.GetEnvironmentVariable(PrereqsPathEnv);
     public static string? SdkTarballPath { get; } = Environment.GetEnvironmentVariable(SdkTarballPathEnv);
     public static string TargetRid { get; } = Environment.GetEnvironmentVariable(TargetRidEnv) ??

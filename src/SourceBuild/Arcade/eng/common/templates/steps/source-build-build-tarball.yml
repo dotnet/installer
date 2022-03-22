@@ -10,6 +10,9 @@ parameters:
   # Container image to build within
   container: null
 
+  # Enable the poison report
+  enablePoison: false
+
   # Skip running the OmniSharp smoke-tests
   excludeOmniSharpTests: false
 
@@ -26,7 +29,7 @@ parameters:
   prepScript: null
 
   # Whether or not to build online
-  runOnline: null
+  runOnline: false
 
   # Directory to build the tarball in
   tarballDir:
@@ -78,6 +81,10 @@ steps:
         customBuildArgs='--online'
       else
         networkArgs='--network none'
+      fi
+
+      if [ '${{ parameters.enablePoison}}' = 'true' ]; then
+        customBuildArgs=' --poison'
       fi
 
       docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball ${networkArgs} ${{ parameters.container }} ./build.sh ${customBuildArgs} ${{ parameters.additionalBuildArgs }} -- /p:CleanWhileBuilding=true

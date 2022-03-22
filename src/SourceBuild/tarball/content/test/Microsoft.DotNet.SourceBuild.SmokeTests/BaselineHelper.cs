@@ -36,16 +36,20 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 
         public static void CompareContents(string baselineFileName, string actualContents, ITestOutputHelper outputHelper)
         {
-            string baselineFilePath = GetBaselineFilePath(baselineFileName);
-
             string actualFilePath = Path.Combine(Environment.CurrentDirectory, $"{baselineFileName}");
             File.WriteAllText(actualFilePath, actualContents);
 
-            CompareFiles(baselineFilePath, actualFilePath, outputHelper);
+            CompareFiles(baselineFileName, actualFilePath, outputHelper);
         }
 
-        public static void CompareFiles(string baselineFilePath, string actualFilePath, ITestOutputHelper outputHelper)
+        public static void CompareFiles(string baselineFileName, string? actualFilePath, ITestOutputHelper outputHelper)
         {
+            if (!File.Exists(actualFilePath))
+            {
+                throw new InvalidOperationException($"Baseline comparison path '{actualFilePath}' does not exist.");
+            }
+
+            string baselineFilePath = GetBaselineFilePath(baselineFileName);
             string baselineFileText = File.ReadAllText(baselineFilePath);
             string actualFileText = File.ReadAllText(actualFilePath);
 

@@ -93,13 +93,14 @@
 
     <PropertyGroup>
       <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
+      <CustomTestEnvVars Condition="'$(EnablePoison)' == 'true'">SMOKE_TESTS_POISON_REPORT_PATH=$(PoisonUsageReportFile);</CustomTestEnvVars>
     </PropertyGroup>
 
     <Exec Command="$(DotnetToolCommand) test $(SmokeTestsDir) --logger:trx -c $(Configuration)"
           EnvironmentVariables="
             SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath);
             SMOKE_TESTS_TARGET_RID=$(TargetRid);
-            " />
+            $(CustomTestEnvVars)" />
   </Target>
 
   <Target Name="CreateSmokeTestPrereqsTarball"
