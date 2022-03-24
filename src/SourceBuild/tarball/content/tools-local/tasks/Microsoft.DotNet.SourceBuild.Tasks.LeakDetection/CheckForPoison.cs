@@ -182,7 +182,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 // add its contents to the list to be checked.
                 if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
                 {
-                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetRandomFileName(), Path.GetFileNameWithoutExtension(checking));
+                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(checking));
                     PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
                     {
@@ -215,8 +215,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             var poisonEntry = new PoisonedFileEntry();
-            // remove the first (random) component of the path
-            poisonEntry.Path = Path.Combine(Utility.MakeRelativePath(fileToCheck, rootPath).Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray());
+            poisonEntry.Path = Utility.MakeRelativePath(fileToCheck, rootPath);
 
             // There seems to be some weird issues with using file streams both for hashing and assembly loading.
             // Copy everything into a memory stream to avoid these problems.
