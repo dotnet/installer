@@ -167,8 +167,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<string>(initialCandidates);
-            // avoid collisions between nupkgs with the same name
-            var dirCounter = 0;
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
                 Directory.CreateDirectory(OverrideTempPath);
@@ -184,7 +182,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 // add its contents to the list to be checked.
                 if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
                 {
-                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetRandomFileName(), Path.GetFileNameWithoutExtension(checking) + "." + (++dirCounter).ToString());
+                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetRandomFileName(), Path.GetFileNameWithoutExtension(checking));
                     PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
                     {
@@ -217,7 +215,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             var poisonEntry = new PoisonedFileEntry();
-            poisonEntry.Path = Utility.MakeRelativePath(fileToCheck, rootPath);
+            // remove the first (random) component of the path
+            poisonEntry.Path = Path.Combine(Utility.MakeRelativePath(fileToCheck, rootPath).Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray());
 
             // There seems to be some weird issues with using file streams both for hashing and assembly loading.
             // Copy everything into a memory stream to avoid these problems.
