@@ -12,5 +12,4 @@ title Core SDK Test (%CLI_REPO_ROOT%)
 REM Add Stage 2 CLI to path
 set PATH=%CLI_REPO_ROOT%artifacts\bin\redist\Debug\dotnet;%PATH%
 
-set DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 set DOTNET_MULTILEVEL_LOOKUP=0
