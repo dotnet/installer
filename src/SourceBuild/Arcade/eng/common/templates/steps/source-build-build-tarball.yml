@@ -77,13 +77,13 @@ steps:
 
       networkArgs=
       customBuildArgs=
-      if [ '${{ parameters.runOnline}}' = 'true' ]; then
+      if [ '${{ parameters.runOnline }}' = 'true' ]; then
         customBuildArgs='--online'
       else
         networkArgs='--network none'
       fi
 
-      if [ '${{ parameters.enablePoison}}' = 'true' ]; then
+      if [ '${{ parameters.enablePoison }}' = 'true' ]; then
         customBuildArgs=' --poison'
       fi
 
