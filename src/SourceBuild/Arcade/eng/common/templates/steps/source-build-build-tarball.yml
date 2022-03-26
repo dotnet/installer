@@ -84,7 +84,7 @@ steps:
       fi
 
       if [ '${{ parameters.enablePoison }}' = 'true' ]; then
-        customBuildArgs=' --poison'
+        customBuildArgs="$customBuildArgs --poison"
       fi
 
       docker run --rm -v ${{ parameters.tarballDir }}:/tarball -w /tarball ${networkArgs} ${{ parameters.container }} ./build.sh ${customBuildArgs} ${{ parameters.additionalBuildArgs }} -- /p:CleanWhileBuilding=true
