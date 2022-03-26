@@ -103,6 +103,7 @@ jobs:
     parameters:
       buildArch: $(_BuildArch)
       container: $(_Container)
+      enablePoison: $(_EnablePoison)
       excludeOmniSharpTests: $(_ExcludeOmniSharpTests)
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       platform: $(_Platform)
