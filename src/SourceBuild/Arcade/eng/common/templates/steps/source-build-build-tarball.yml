@@ -107,9 +107,9 @@ steps:
         dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
       fi
 
-      if [[ '${{ parameters.enablePoison }} == 'true' ]]; then
+      if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
         poisonArg='--poison'
-      endif
+      fi
 
       docker run --rm $dockerVolumeArgs -w /tarball $dockerEnvArgs ${{ parameters.container }} ./build.sh $(poisonArg) --run-smoke-test ${{ parameters.additionalBuildArgs }} -- /p:SmokeTestConsoleVerbosity=detailed
     displayName: Run Tests
