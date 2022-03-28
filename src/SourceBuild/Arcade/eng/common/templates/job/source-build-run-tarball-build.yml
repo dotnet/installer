@@ -167,7 +167,6 @@ jobs:
         additionalBuildArgs: --with-sdk /tarball/.dotnet
         buildArch: $(_BuildArch)
         container: $(_Container)
-        enablePoison: $(_EnablePoison)
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         isBootstrapped: true
         platform: $(_Platform)
