@@ -111,7 +111,7 @@ jobs:
         set -x
 
         customPrepArgs=
-        if [ '$(_BootstrapPrep)' = 'true' ]; then
+        if [[ '$(_BootstrapPrep)' == 'true' ]]; then
           customPrepArgs='--bootstrap'
         fi
 
