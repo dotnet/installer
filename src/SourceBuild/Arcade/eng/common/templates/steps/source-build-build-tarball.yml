@@ -109,6 +109,7 @@ steps:
 
       if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
         poisonArg='--poison'
+        dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
       fi
 
       docker run --rm $dockerVolumeArgs -w /tarball $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test ${{ parameters.additionalBuildArgs }} -- /p:SmokeTestConsoleVerbosity=detailed

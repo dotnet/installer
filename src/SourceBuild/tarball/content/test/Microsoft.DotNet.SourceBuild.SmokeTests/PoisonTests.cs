@@ -26,7 +26,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             currentPoisonReport = BaselineHelper.RemoveRids(currentPoisonReport);
             currentPoisonReport = BaselineHelper.RemoveVersions(currentPoisonReport);
 
-            BaselineHelper.CompareContents("PoisonUsage.txt", currentPoisonReport, OutputHelper);
+            BaselineHelper.CompareContents("PoisonUsage.txt", currentPoisonReport, OutputHelper, Config.WarnOnPoisonDiffs);
         }
 
         private static string RemoveHashes(string source) => Regex.Replace(source, "^\\s*<Hash>.*</Hash>(\r\n?|\n)", string.Empty, RegexOptions.Multiline);
