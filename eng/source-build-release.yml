@@ -48,7 +48,7 @@ stages:
         set -euxo pipefail
         tag="$(SetTag.Tag)"
         cd $(Build.SourcesDirectory)
-        git show-ref --tags 
+        git show-ref --tags
         if git rev-parse "$tag" >/dev/null 2>&1; then
           echo "Tag $tag exists.";
         else
