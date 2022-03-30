@@ -107,7 +107,7 @@ stages:
 
         # Switch back to current branch to read announcement template
         git checkout -
-        title="Automation Test"
+        title=".NET $SDK_VERSION Source-Build Released"
         body="$(envsubst < $(Build.SourcesDirectory)/eng/source-build-release-announcement.md)"
 
         query='mutation($repoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $repoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
