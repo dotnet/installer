@@ -134,7 +134,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             // if we should write out the poison report, do that
             if (!string.IsNullOrWhiteSpace(PoisonReportOutputFilePath))
             {
-                File.WriteAllText(PoisonReportOutputFilePath, (new XElement("PrebuiltLeakReport", poisons.Select(p => p.ToXml()))).ToString());
+                File.WriteAllText(PoisonReportOutputFilePath, (new XElement("PrebuiltLeakReport", poisons.OrderBy(p => p.Path).Select(p => p.ToXml()))).ToString());
             }
 
             if (FailOnPoisonFound && poisons.Count() > 0)
