@@ -46,8 +46,8 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
         public static void CompareFiles(string baselineFileName, string actualFilePath, ITestOutputHelper outputHelper, bool warnOnDiffs = false)
         {
             string baselineFilePath = GetBaselineFilePath(baselineFileName);
-            string baselineFileText = File.ReadAllText(baselineFilePath);
-            string actualFileText = File.ReadAllText(actualFilePath);
+            string baselineFileText = File.ReadAllText(baselineFilePath).Trim();
+            string actualFileText = File.ReadAllText(actualFilePath).Trim();
 
             string? message = null;
 
