@@ -97,9 +97,9 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
                 + $"?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?");
             string result = semanticVersionRegex.Replace(source, $"x.y.z");
 
-            // Remove net.x.y path segments
+            // Remove netx.y path segments
             string pathSeparator = Regex.Escape(Path.DirectorySeparatorChar.ToString());
-            Regex netTfmRegex = new($"{pathSeparator}net[1-9]*.[0-9]{pathSeparator}");
+            Regex netTfmRegex = new($"{pathSeparator}net[1-9]+\\.[0-9]+{pathSeparator}");
             return netTfmRegex.Replace(result, $"{Path.DirectorySeparatorChar}netx.y{Path.DirectorySeparatorChar}");
         }
     }
