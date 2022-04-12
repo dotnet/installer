@@ -322,7 +322,7 @@ stages:
               _BuildArchitecture: 'arm64'
               # Do not publish zips and tarballs. The linux-x64 binaries are
               # already published by Build_LinuxPortable_Release_x64
-              _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+              _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
               # Never run tests on arm64
               _TestArg: ''
           Build_LinuxPortable_Release_x64:
