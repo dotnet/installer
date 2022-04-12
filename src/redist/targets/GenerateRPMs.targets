@@ -186,10 +186,16 @@
       SkipUnchangedFiles="False"
       UseHardlinksIfPossible="False"/>
 
+    <Copy SourceFiles="@(GeneratedRpmFiles)"
+      DestinationFiles="$(Mariner2RpmFile)"
+      OverwriteReadOnlyFiles="True"
+      SkipUnchangedFiles="False"
+      UseHardlinksIfPossible="False"/>
+
   </Target>
 
   <Target Name="SetupRpmProps"
-          DependsOnTargets="CalculateLinuxNativeInstallerDependencyVersions;GetCurrentRuntimeInformation;SetupFileExtensions">
+          DependsOnTargets="CalculateLinuxNativeInstallerDependencyVersions;GetCurrentRuntimeInformation;SetupFileExtensions;SetupBundledComponents">
     <PropertyGroup>
       <SdkRpmPackageVersion>$(MajorMinorVersion)</SdkRpmPackageVersion>
       <SdkRpmPackageName>$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(SdkRpmPackageVersion)</SdkRpmPackageName>
@@ -199,6 +205,7 @@
       <SdkRPMInstallerFile>$(ArtifactsShippingPackagesDir)$(DistroSpecificArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(InstallerExtension)</SdkRPMInstallerFile>
       <RpmFile>$(SdkRPMInstallerFile)</RpmFile>
       <MarinerRpmFile>$(ArtifactsShippingPackagesDir)$(MarinerArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(InstallerExtension)</MarinerRpmFile>
+      <Mariner2RpmFile>$(ArtifactsShippingPackagesDir)$(MarinerArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk)$(InstallerExtension)</Mariner2RpmFile>
       <!-- Need to acquire manpage files from CLI repo: https://github.com/dotnet/cli/issues/10266 -->
       <ManPagesDir>$(RepoRoot)/Documentation/manpages</ManPagesDir>
       <EndToEndTestProject>$(RepoRoot)/test/EndToEnd/EndToEnd.csproj</EndToEndTestProject>
