@@ -7,8 +7,8 @@
   <PropertyGroup>
     <VersionMajor>6</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionFeature>05</VersionFeature>
+    <VersionSDKMinor>2</VersionSDKMinor>
+    <VersionFeature>03</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/templating -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>6.0.104</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>6.0.202</MicrosoftDotNetCommonItemTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
@@ -56,8 +56,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftNETSdkPackageVersion>6.0.104-servicing.22172.6</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>6.0.104-servicing.22172.6</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftNETSdkPackageVersion>6.0.202-servicing.22172.7</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>6.0.202-servicing.22172.7</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
@@ -113,7 +113,7 @@
     <MicrosoftDotNetWpfProjectTemplates60PackageVersion>$(MicrosoftDotNetWpfProjectTemplatesPackageVersion)</MicrosoftDotNetWpfProjectTemplates60PackageVersion>
     <NUnit3Templates60PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates60PackageVersion>
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates60PackageVersion>6.0.104</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
+    <MicrosoftDotNetCommonProjectTemplates60PackageVersion>6.0.202</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
     <AspNetCorePackageVersionFor60Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor60Templates>
     <!-- 5.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftDotnetWinFormsProjectTemplatesPackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
@@ -150,7 +150,7 @@
   <PropertyGroup>
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
-    <MicrosoftNETTestSdkVersion>17.0.0</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>17.1.0-release-20220113-05</MicrosoftNETTestSdkVersion>
   </PropertyGroup>
   <!-- dependencies for source-build tarball -->
   <PropertyGroup>
@@ -172,19 +172,19 @@
       or minor release, prebuilts may be needed. When the release is mature, prebuilts are not
       necessary, and this property is removed from the file.
     -->
-    <PrivateSourceBuiltArtifactsPackageVersion>6.0.104</PrivateSourceBuiltArtifactsPackageVersion>
+    <PrivateSourceBuiltArtifactsPackageVersion>6.0.103</PrivateSourceBuiltArtifactsPackageVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>
-    <MauiWorkloadManifestVersion>6.0.101-preview.9.1805</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>31.0.101-preview.9.16</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>15.0.101-preview.9.31</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>15.0.101-preview.9.31</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>12.0.101-preview.9.31</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>15.0.101-preview.9.31</XamarinTvOSWorkloadManifestVersion>
+    <MauiWorkloadManifestVersion>6.0.200-preview.13.2747</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>31.0.200-preview.13.41</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>15.2.301-preview.13.2</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>15.2.301-preview.13.2</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>12.1.301-preview.13.2</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>15.2.301-preview.13.2</XamarinTvOSWorkloadManifestVersion>
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
-    <MicrosoftNETWorkloadEmscriptenManifest60100Version>6.0.4</MicrosoftNETWorkloadEmscriptenManifest60100Version>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenManifest60100Version)</EmscriptenWorkloadManifestVersion>
+    <MicrosoftNETWorkloadEmscriptenManifest60200Version>6.0.4</MicrosoftNETWorkloadEmscriptenManifest60200Version>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenManifest60200Version)</EmscriptenWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
