@@ -206,6 +206,7 @@ stages:
               _BuildArchitecture: 'arm64'
               # Never run tests on arm
               _TestArg: ''
+              _AdditionalBuildParameters: '/p:CLIBUILD_SKIP_TESTS=true'
             Build_Arm_Debug:
               _BuildConfig: Debug
               _DockerParameter: ''
