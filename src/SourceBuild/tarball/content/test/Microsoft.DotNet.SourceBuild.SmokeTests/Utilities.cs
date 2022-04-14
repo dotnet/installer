@@ -51,7 +51,7 @@ public static class Utilities
                 outputHelper.WriteLine($"Retry {retryCount}/{maxRetries}, retrying in {waitTime} seconds...");
             }
 
-            Thread.Sleep(waitTime * 1000);
+            Thread.Sleep(TimeSpan.FromSeconds(waitTime));
             exception = await executor();
         }
     }
