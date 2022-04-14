@@ -36,8 +36,6 @@
 
       <PublicBaseURL Condition="'$(PublicBaseURL)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</PublicBaseURL>
 
-      <InstallerTargetArchitecture>$(Architecture)</InstallerTargetArchitecture>
-      <InstallerTargetArchitecture Condition=" '$(IsRPMBasedDistro)' == 'true' and '$(Architecture)' == 'Arm64' ">aarch64</InstallerTargetArchitecture>
 
       <CoreSetupRid Condition="'$(CoreSetupRid)' == ''">$(HostRid)</CoreSetupRid>
       <CoreSetupRid Condition=" ('$(OSName)' == 'win' or '$(OSName)' == 'osx' or '$(OSName)' == 'freebsd') and '$(DotNetBuildFromSource)' != 'true' ">$(OSName)-$(Architecture)</CoreSetupRid>
@@ -106,10 +104,6 @@
 
       <!-- Used to detect if ASP.NET Core is built against the same version of Microsoft.NETCore.App. -->
       <AspNetCoreSharedFxBaseRuntimeVersionFileName>aspnetcore_base_runtime.version</AspNetCoreSharedFxBaseRuntimeVersionFileName>
-
-      <!-- Mariner RPM names -->
-      <MarinerArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk Condition=" '$(IsRPMBasedDistro)' == 'True' ">$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(Version)-cm.1-$(InstallerTargetArchitecture)</MarinerArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>
-      <Mariner2ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk Condition=" '$(IsRPMBasedDistro)' == 'True' ">$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(Version)-cm.2-$(InstallerTargetArchitecture)</Mariner2ArtifactNameWithVersionCombinedHostHostFxrFrameworkSdk>
 
     </PropertyGroup>
 

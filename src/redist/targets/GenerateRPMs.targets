@@ -195,7 +195,7 @@
   </Target>
 
   <Target Name="SetupRpmProps"
-          DependsOnTargets="CalculateLinuxNativeInstallerDependencyVersions;GetCurrentRuntimeInformation;SetupFileExtensions;SetupBundledComponents">
+          DependsOnTargets="CalculateLinuxNativeInstallerDependencyVersions;GetCurrentRuntimeInformation;SetupFileExtensions">
     <PropertyGroup>
       <SdkRpmPackageVersion>$(MajorMinorVersion)</SdkRpmPackageVersion>
       <SdkRpmPackageName>$(ArtifactNameCombinedHostHostFxrFrameworkSdk)-$(SdkRpmPackageVersion)</SdkRpmPackageName>
