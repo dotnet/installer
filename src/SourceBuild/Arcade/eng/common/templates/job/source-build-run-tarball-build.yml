@@ -43,12 +43,12 @@ jobs:
         _ExcludeOmniSharpTests: true
         _RunOnline: true
       ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-      CentOS7-Offline:
-        _BootstrapPrep: false
-        _Container: ${{ parameters.centOS7Container }}
-        _EnablePoison: false
-        _ExcludeOmniSharpTests: true
-        _RunOnline: false
+        CentOS7-Offline:
+          _BootstrapPrep: false
+          _Container: ${{ parameters.centOS7Container }}
+          _EnablePoison: false
+          _ExcludeOmniSharpTests: true
+          _RunOnline: false
         CentOS8-Offline:
           _BootstrapPrep: false
           _Container: ${{ parameters.centOS8Container }}
