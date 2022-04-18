@@ -36,15 +36,21 @@
     <ExtraPackageVersionPropsPackageInfo Include="SourceBuildLiftedSystemTextEncodingCodePagesVersion" Version="%24(SystemTextEncodingCodePagesVersion)" />
   </ItemGroup>
 
+  <!-- TODO: Delete UseBootstrapArcade and enable use of source-built arcade once it's part of SB -->
+  <PropertyGroup>
+    <UseBootstrapArcade>true</UseBootstrapArcade>
+  </PropertyGroup>
+
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
+    <!-- <RepositoryReference Include="arcade" /> -->
     <RepositoryReference Include="command-line-api" />
-    <RepositoryReference Include="source-build" />
+    <RepositoryReference Include="source-build-externals" />
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 
   <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
+    <!-- <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" /> -->
     <UseSourceBuiltSdkOverride Include="@(WindowsDesktopSdkOverride)" />
   </ItemGroup>
 
