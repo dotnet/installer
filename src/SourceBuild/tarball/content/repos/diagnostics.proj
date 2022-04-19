@@ -10,16 +10,9 @@
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
-  <!-- TODO: Delete UseBootstrapArcade and enable use of source-built arcade once it's part of SB -->
-  <PropertyGroup>
-    <UseBootstrapArcade>true</UseBootstrapArcade>
-  </PropertyGroup>
   <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
-  </ItemGroup>
-  <!-- <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-  </ItemGroup> -->
+  </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
