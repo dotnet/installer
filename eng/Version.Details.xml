@@ -48,9 +48,9 @@
       <Uri>https://github.com/dotnet/core-setup</Uri>
       <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="6.0.2" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="6.0.3" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>c24d9a9c91c5d04b7b4de71f1a9f33ac35e09663</Sha>
+      <Sha>be98e88c760526452df94ef452fff4602fb5bded</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
@@ -103,19 +103,19 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>60a2f73de55434984bbe3d5ad9281b3863355b31</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.300-rtm.22220.16">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.300-rtm.22221.4">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>679e847e5414a9035443a3faf25799e71590f051</Sha>
+      <Sha>ac00abef032d4d576a844d7f1287119a9d20166e</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.300-rtm.22220.16">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.300-rtm.22221.4">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>679e847e5414a9035443a3faf25799e71590f051</Sha>
+      <Sha>ac00abef032d4d576a844d7f1287119a9d20166e</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
-    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.3-servicing.22123.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
+    <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.4-servicing.22164.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-winforms</Uri>
-      <Sha>1f426c90a9589dabc16d114aa91bfea9f21f8571</Sha>
+      <Sha>0c636f9d7cf5e0d9f23cf070c36711e7ac4d66ee</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Wpf.ProjectTemplates" Version="6.0.5-servicing.22215.9" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
@@ -141,9 +141,9 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.2.0-4.22212.4" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.2.0-4.22220.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>f2d278f9a5131b7944d6ac5fecf2ce5b0a98195f</Sha>
+      <Sha>1e40aa11ca0b522e201320f70d469de40f211b2c</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.2.0" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -151,9 +151,9 @@
       <Sha>41abc5629965e3f9e41f1e67fdf78345c0c5cc4b</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.2.0-rc.140" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="NuGet.Build.Tasks" Version="6.2.0-rc.146" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>6f54dbd49fcda01ca8d71eb4fa4eea6ef54379ab</Sha>
+      <Sha>b8a61266d9a6780cb7eb9c1942695cf813fdef0a</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
