@@ -33,6 +33,7 @@
         <!-- Tier 1 -->
         <RepositoryReference Include="command-line-api" />
         <RepositoryReference Include="diagnostics" />
+        <RepositoryReference Include="razor-compiler" />
         <RepositoryReference Include="roslyn" />
         <RepositoryReference Include="source-build-externals" />
         <RepositoryReference Include="symreader" />
@@ -41,8 +42,8 @@
         <RepositoryReference Include="xliff-tasks" />
 
         <!-- Tier 2 -->
-        <!-- <RepositoryReference Include="linker" /> -->
-        <!-- <RepositoryReference Include="msbuild" /> -->
+        <RepositoryReference Include="linker" />
+        <RepositoryReference Include="msbuild" />
         <!-- <RepositoryReference Include="runtime-portable" /> -->
         <!-- <RepositoryReference Include="runtime" /> -->
         <!-- <RepositoryReference Include="templating" /> -->
@@ -52,20 +53,20 @@
 
         <!-- Tier 4 -->
         <!-- <RepositoryReference Include="aspnetcore" /> -->
-        <!-- <RepositoryReference Include="deployment-tools" /> -->
+        <RepositoryReference Include="deployment-tools" />
         <!-- <RepositoryReference Include="format" /> -->
         <!-- <RepositoryReference Include="nuget-client" /> -->
 
         <!-- Tier 5 -->
         <!-- <RepositoryReference Include="fsharp" /> -->
         <!-- <RepositoryReference Include="sdk" /> -->
-        <!-- <RepositoryReference Include="vstest" /> -->
+        <RepositoryReference Include="vstest" />
 
         <!-- Tier 6 -->
         <!-- <RepositoryReference Include="installer" /> -->
 
         <!-- Package source-build artifacts -->
-        <!-- <RepositoryReference Include="package-source-build" /> -->
+        <RepositoryReference Include="package-source-build" />
       </ItemGroup>
     </Otherwise>
   </Choose>
