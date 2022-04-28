@@ -1,0 +1,68 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Wed, 20 Apr 2022 10:48:03 -0500
+Subject: [PATCH] Use Versions.props to eliminate source-build prebuilts
+ (#7547)
+
+Related to dotnet/source-build#2835
+
+Context
+Update Packages.props to utilizes properties defined in versions.props which get overridden by the built versions in source-build. This eliminates prebuilts. Before these changes, references to 6.0.0 were being added instead of the current versions e.g. System.Text.Json,6.0.4.
+
+I applied the same change to all 6.0.0 references. This is only a problem for System.Text.Json but will be once the other packages are serviced for 6.0.
+
+Testing
+Ran a complete source-build to validate the prebuilts were removed.
+
+Backport PR: https://github.com/dotnet/msbuild/pull/7547
+---
+ eng/Packages.props | 8 ++++----
+ eng/Versions.props | 4 ++++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Packages.props b/eng/Packages.props
+index 36912191d..4208a9115 100644
+--- a/eng/Packages.props
++++ b/eng/Packages.props
+@@ -12,7 +12,7 @@
+     <PackageReference Update="Microsoft.CodeAnalysis.Build.Tasks" Version="$(MicrosoftNetCompilersToolsetVersion)" />
+     <PackageReference Update="Microsoft.CodeAnalysis.Collections" Version="4.2.0-1.22102.8" />
+     <PackageReference Update="Microsoft.DotNet.XUnitExtensions" Version="$(MicrosoftDotNetXUnitExtensionsVersion)" />
+-    <PackageReference Update="Microsoft.IO.Redist" Version="6.0.0" />
++    <PackageReference Update="Microsoft.IO.Redist" Version="$(MicrosoftIORedistVersion)" />
+     <PackageReference Update="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetVersion)" />
+     <PackageReference Update="NuGet.Build.Tasks" Version="$(NuGetBuildTasksVersion)" />
+     <PackageReference Update="NuGet.Frameworks" Version="$(NuGetBuildTasksVersion)" />
+@@ -22,12 +22,12 @@
+     <PackageReference Update="System.Memory" Version="4.5.4" />
+     <PackageReference Update="System.Reflection.Metadata" Version="1.6.0" />
+     <PackageReference Update="System.Resources.Extensions" Version="$(SystemResourcesExtensionsPackageVersion)" />
+-    <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
++    <PackageReference Update="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafeVersion)" />
+     <PackageReference Update="System.Security.Permissions" Version="4.7.0" />
+     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
+     <PackageReference Update="System.Text.Encoding.CodePages" Version="4.0.1" />
+-    <PackageReference Update="System.Text.Json" Version="6.0.0" />
+-    <PackageReference Update="System.Threading.Tasks.Dataflow" Version="6.0.0" />
++    <PackageReference Update="System.Text.Json" Version="$(SystemTextJsonVersion)" />
++    <PackageReference Update="System.Threading.Tasks.Dataflow" Version="$(SystemThreadingTasksDataflowVersion)" />
+     <PackageReference Update="xunit.assert" Version="$(XUnitVersion)" />
+     <PackageReference Update="xunit.console" Version="$(XUnitVersion)" />
+     <PackageReference Update="xunit.core" Version="$(XUnitVersion)" />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 38aa1022a..e00c8965c 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -34,8 +34,12 @@
+     <DotNetCliVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\global.json')), '"dotnet": "([^"]*)"').Groups.get_Item(1))</DotNetCliVersion>
+     <MicrosoftDotNetXUnitExtensionsVersion>6.0.0-beta.22212.5</MicrosoftDotNetXUnitExtensionsVersion>
+     <MicrosoftExtensionsDependencyModelVersion>6.0.0-preview.2.21154.6</MicrosoftExtensionsDependencyModelVersion>
++    <MicrosoftIORedistVersion>6.0.0</MicrosoftIORedistVersion>
+     <MicrosoftNetCompilersToolsetVersion>4.2.0-4.22208.7</MicrosoftNetCompilersToolsetVersion>
+     <NuGetBuildTasksVersion>6.2.0-preview.2.109</NuGetBuildTasksVersion>
++    <SystemRuntimeCompilerServicesUnsafeVersion>6.0.0</SystemRuntimeCompilerServicesUnsafeVersion>
++    <SystemTextJsonVersion>6.0.0</SystemTextJsonVersion>
++    <SystemThreadingTasksDataflowVersion>6.0.0</SystemThreadingTasksDataflowVersion>
+   </PropertyGroup>
+   <Target Name="OverrideArcadeFileVersion" AfterTargets="_InitializeAssemblyVersion">
+     <!-- See https://github.com/dotnet/arcade/issues/3386
