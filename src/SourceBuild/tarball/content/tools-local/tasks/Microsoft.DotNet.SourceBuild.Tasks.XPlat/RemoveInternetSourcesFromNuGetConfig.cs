@@ -42,6 +42,7 @@ namespace Microsoft.DotNet.Build.Tasks
             XDocument d = XDocument.Parse(xml);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
             XElement disabledPackageSourcesElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "disabledPackageSources");
+            XElement packageSourceMappingElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "packageSourceMapping");
 
             IEnumerable<XElement> local = packageSourcesElement.Descendants().Where(e =>
             {
@@ -74,6 +75,9 @@ namespace Microsoft.DotNet.Build.Tasks
 
             // Remove disabledPackageSources element so if any internal packages remain, they are used in source-build
             disabledPackageSourcesElement?.ReplaceNodes(new XElement("clear"));
+
+            // Do the same for packageSourceMappings, these are re-added in AddSourceToNuGetConfig
+            packageSourceMappingElement?.ReplaceNodes(new XElement("clear"));
 
             using (var w = XmlWriter.Create(NuGetConfigFile, new XmlWriterSettings { NewLineChars = newLineChars, Indent = true }))
             {

@@ -9,6 +9,9 @@ using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.DotNet.SourceBuild.Tasks;
+using NuGet.Packaging;
+using NuGet.Packaging.Core;
 
 
 namespace Microsoft.DotNet.Build.Tasks
@@ -40,6 +43,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
             XElement exisitingSourceBuildElement = packageSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute(XName.Get("key")).Value == SourceName);
             XElement lastClearElement = packageSourcesElement.Descendants().LastOrDefault(e => e.Name == "clear");
+            XElement packageSourceMappingElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "packageSourceMapping");
 
             if (exisitingSourceBuildElement != null)
             {
@@ -53,6 +57,33 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 packageSourcesElement.AddFirst(toAdd);
                 packageSourcesElement.AddFirst(clearTag);
+            }
+
+            if (packageSourceMappingElement != null)
+            {
+                // Package sources look like:
+                // <packageSource key="contoso.com">
+                //      <package pattern="Contoso.*" />
+                //      <package pattern="NuGet.Common" />
+                // </packageSource>
+                // https://docs.microsoft.com/en-us/nuget/consume-packages/package-source-mapping
+                XElement pkgSrc = new XElement("packageSource", new XAttribute("key", SourceName));
+                try
+                {
+                    // We use the complete name for each available package so our sources are considered
+                    // the most specific and override any other sources that were not removed if the package
+                    // is available on multiple feeds.
+                    foreach (var p in Directory.EnumerateFiles(SourcePath, "*.nupkg"))
+                    {
+                        PackageIdentity pkgId = ReadNuGetPackageInfos.ReadIdentity(p);
+                        pkgSrc.Add(new XElement("package", new XAttribute("pattern", pkgId.Id)));
+                        packageSourceMappingElement.Add(pkgSrc);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.LogWarning($"Couldn't add package source mapping: {e.ToString()}");
+                }
             }
 
             using (var w = XmlWriter.Create(NuGetConfigFile, new XmlWriterSettings { NewLineChars = newLineChars, Indent = true }))
