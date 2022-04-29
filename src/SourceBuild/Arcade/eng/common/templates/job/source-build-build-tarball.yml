@@ -138,6 +138,15 @@ jobs:
   - script: |
       set -x
 
+      networkArgs=
+      buildRunArgs=
+      if [[ '$(_ExcludeOnlineTests)' == 'true' ]]; then
+        networkArgs='--network none'
+        buildRunArgs='--run-offline-smoke-test'
+      else
+        buildRunArgs='--run-smoke-test'
+      fi
+
       # Use installer repo's NuGet.config during online testing to utilize internal feeds
       rm -f $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
       cp $(Build.SourcesDirectory)/NuGet.config $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
@@ -157,7 +166,7 @@ jobs:
         dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
       fi
 
-      docker run --rm $dockerVolumeArgs -w /tarball $dockerEnvArgs $(_Container) ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) -- /p:SmokeTestConsoleVerbosity=detailed
+      docker run --rm $dockerVolumeArgs -w /tarball $networkArgs $dockerEnvArgs $(_Container) ./build.sh $poisonArg $buildRunArgs $(additionalBuildArgs) -- /p:SmokeTestConsoleVerbosity=detailed
     displayName: Run Tests
 
   # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.

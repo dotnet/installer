@@ -31,7 +31,7 @@ public static class Utilities
 
     private static async Task RetryAsync(Func<Task<Exception?>> executor, ITestOutputHelper outputHelper)
     {
-        const int maxRetries = 5;
+        const int maxRetries = 4;
         const int waitFactor = 5;
 
         int retryCount = 0;

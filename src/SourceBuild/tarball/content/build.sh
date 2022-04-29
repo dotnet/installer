@@ -9,6 +9,7 @@ usage() {
     echo "  --online                           build using online sources"
     echo "  --poison                           build with poisoning checks"
     echo "  --run-smoke-test                   don't build; run smoke tests"
+    echo "  --run-offline-smoke-test           don't build; run offline smoke tests (runs reduced set of tests with no online dependencies)"
     echo "  --with-packages <dir>              use the specified directory of previously-built packages"
     echo "  --with-sdk <dir>                   use the SDK in the specified directory for bootstrapping"
     echo "use -- to send the remaining arguments to MSBuild"
@@ -39,9 +40,12 @@ while :; do
         --poison)
             MSBUILD_ARGUMENTS+=( "/p:EnablePoison=true")
             ;;
-        --run-smoke-test)
+        --run-smoke-test|--run-offline-smoke-test)
             alternateTarget=true
             MSBUILD_ARGUMENTS+=( "/t:RunSmokeTest" )
+            if [[ "$lowerI" == *"offline"* ]]; then
+              MSBUILD_ARGUMENTS+=( "/p:SmokeTestExcludeOnline=true" )
+            fi
             ;;
         --with-packages)
             CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR="$(cd -P "$2" && pwd)"

@@ -11,6 +11,7 @@ internal static class Config
 {
     public const string DotNetDirectoryEnv = "SMOKE_TESTS_DOTNET_DIR";
     public const string ExcludeOmniSharpEnv = "SMOKE_TESTS_EXCLUDE_OMNISHARP";
+    public const string ExcludeOnlineEnv = "SMOKE_TESTS_EXCLUDE_ONLINE";
     public const string MsftSdkTarballPathEnv = "SMOKE_TESTS_MSFT_SDK_TARBALL_PATH";
     public const string PoisonReportPathEnv = "SMOKE_TESTS_POISON_REPORT_PATH";
     public const string PortableRidEnv = "SMOKE_TESTS_PORTABLE_RID";
@@ -22,6 +23,8 @@ internal static class Config
 
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
+    public static bool ExcludeOnlineTests { get; } =
+        bool.TryParse(Environment.GetEnvironmentVariable(ExcludeOnlineEnv), out bool value) && value;
     public static string? MsftSdkTarballPath { get; } = Environment.GetEnvironmentVariable(MsftSdkTarballPathEnv);
     public static string? PoisonReportPath { get; } = Environment.GetEnvironmentVariable(PoisonReportPathEnv);
     public static string PortableRid { get; } = Environment.GetEnvironmentVariable(PortableRidEnv) ??
@@ -32,7 +35,7 @@ internal static class Config
         throw new InvalidOperationException($"'{Config.TargetRidEnv}' must be specified");
     public static string TargetArchitecture { get; } = TargetRid.Split('-')[1];
     public static bool WarnOnPoisonDiffs { get; } =
-        bool.TryParse(Environment.GetEnvironmentVariable(WarnPoisonDiffsEnv), out bool excludeOnlineTests) && excludeOnlineTests;
+        bool.TryParse(Environment.GetEnvironmentVariable(WarnPoisonDiffsEnv), out bool value) && value;
     public static bool WarnOnSdkContentDiffs { get; } =
-        bool.TryParse(Environment.GetEnvironmentVariable(WarnSdkContentDiffsEnv), out bool excludeOnlineTests) && excludeOnlineTests;
+        bool.TryParse(Environment.GetEnvironmentVariable(WarnSdkContentDiffsEnv), out bool value) && value;
 }
