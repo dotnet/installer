@@ -77,8 +77,8 @@ namespace Microsoft.DotNet.Build.Tasks
                     {
                         PackageIdentity pkgId = ReadNuGetPackageInfos.ReadIdentity(p);
                         pkgSrc.Add(new XElement("package", new XAttribute("pattern", pkgId.Id)));
-                        packageSourceMappingElement.Add(pkgSrc);
                     }
+                    packageSourceMappingElement.Add(pkgSrc);
                 }
                 catch (Exception e)
                 {
