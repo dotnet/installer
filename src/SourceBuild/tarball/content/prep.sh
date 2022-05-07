@@ -79,13 +79,13 @@ while read -r line; do
     if [[ $line == *"Private.SourceBuilt.Artifacts"* ]]; then
         if [ "$downloadArtifacts" == "true" ]; then
             echo "  Downloading source-built artifacts from $line..."
-            (cd $SCRIPT_ROOT/packages/archive/ && curl -O $line)
+            (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $line)
         fi
     fi
     if [[ $line == *"Private.SourceBuilt.Prebuilts"* ]]; then
         if [ "$downloadPrebuilts" == "true" ]; then
             echo "  Downloading source-built prebuilts from $line..."
-            (cd $SCRIPT_ROOT/packages/archive/ && curl -O $line)
+            (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $line)
         fi
     fi
 done < $SCRIPT_ROOT/packages/archive/archiveArtifacts.txt
@@ -108,7 +108,7 @@ if [ "$buildBootstrap" == "true" ]; then
     cp $SCRIPT_ROOT/scripts/bootstrap/buildBootstrapPreviouslySB.csproj $workingDir
 
     # Copy NuGet.config from the installer repo to have the right feeds
-    cp $SCRIPT_ROOT/src/installer.*/NuGet.config $workingDir
+    cp $SCRIPT_ROOT/src/installer/NuGet.config $workingDir
 
     # Get PackageVersions.props from existing prev-sb archive
     echo "  Retrieving PackageVersions.props from existing archive"
