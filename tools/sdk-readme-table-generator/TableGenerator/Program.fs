@@ -12,24 +12,9 @@ let inputBranches =
           { GitBranchName = "release/7.0.1xx-preview4"
             DisplayName = "Release/7.0.1xx-preview4<br>(7.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("7.0.1xx-preview4/daily") }
-          { GitBranchName = "release/6.0.3xx"
-            DisplayName = "Release/6.0.3XX<br>(6.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("6.0.3xx/daily") }
-          { GitBranchName = "release/6.0.2xx"
-            DisplayName = "Release/6.0.2XX<br>(6.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("6.0.2xx/daily") }
-          { GitBranchName = "release/6.0.1xx"
-            DisplayName = "Release/6.0.1XX<br>(6.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("6.0.1xx/daily") }
-          { GitBranchName = "release/5.0.4xx"
-            DisplayName = "Release/5.0.4XX<br>(5.0 Runtime)"
-            AkaMsChannel = Some("5.0.4xx/daily") }
-          { GitBranchName = "release/5.0.2xx"
-            DisplayName = "Release/5.0.2XX<br>(5.0 Runtime)"
-            AkaMsChannel = Some("5.0.2xx/daily") }
-          { GitBranchName = "release/3.1.4xx"
-            DisplayName = "Release/3.1.4XX<br>(3.1.x Runtime)"
-            AkaMsChannel = None }]
+          { GitBranchName = "release/6.0.4xx"
+            DisplayName = "Release/6.0.4XX<br>(6.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("6.0.4xx/daily") }]
 
 
 let referentNotes = """Reference notes:
