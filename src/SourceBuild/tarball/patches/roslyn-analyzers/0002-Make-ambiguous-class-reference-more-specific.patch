@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 11 May 2022 17:26:52 -0700
+Subject: [PATCH] Make ambiguous class reference more specific
+
+---
+ .../CSharpDisableRuntimeMarshalling.FixAllProvider.cs           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NetAnalyzers/CSharp/Microsoft.NetCore.Analyzers/InteropServices/CSharpDisableRuntimeMarshalling.FixAllProvider.cs b/src/NetAnalyzers/CSharp/Microsoft.NetCore.Analyzers/InteropServices/CSharpDisableRuntimeMarshalling.FixAllProvider.cs
+index 4bb27f03d..6d93ac3f7 100644
+--- a/src/NetAnalyzers/CSharp/Microsoft.NetCore.Analyzers/InteropServices/CSharpDisableRuntimeMarshalling.FixAllProvider.cs
++++ b/src/NetAnalyzers/CSharp/Microsoft.NetCore.Analyzers/InteropServices/CSharpDisableRuntimeMarshalling.FixAllProvider.cs
+@@ -15,7 +15,7 @@ namespace Microsoft.NetCore.Analyzers.InteropServices
+ {
+     public sealed partial class CSharpDisableRuntimeMarshallingFixer
+     {
+-        private class CustomFixAllProvider : DocumentBasedFixAllProvider
++        private class CustomFixAllProvider : Analyzer.Utilities.DocumentBasedFixAllProvider
+         {
+             public static readonly CustomFixAllProvider Instance = new();
+ 
