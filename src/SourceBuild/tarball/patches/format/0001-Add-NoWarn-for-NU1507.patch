@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Fri, 13 May 2022 16:16:10 -0700
+Subject: [PATCH] Add NoWarn for NU1507
+
+This warning occurs when using NuGet central package management without defining
+any Package Source Mappings.
+
+Remove when issue is closed: https://github.com/dotnet/format/issues/1602
+
+---
+ Directory.Build.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 88d303e..0d36ccd 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <Project>
+   <PropertyGroup>
+-    <NoWarn>$(NoWarn);NU5125;NU1701</NoWarn>
++    <NoWarn>$(NoWarn);NU5125;NU1701;NU1507</NoWarn>
+   </PropertyGroup>
+ 
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
