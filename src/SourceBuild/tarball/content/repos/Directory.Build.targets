@@ -179,12 +179,12 @@
           Outputs="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete">
 
     <PropertyGroup>
-      <PrebuiltNuGetSourceName>prebuilt<PrebuiltNuGetSourceName>
-      <PreviouslySourceBuiltNuGetSourceName>previously-source-built<PreviouslySourceBuiltNuGetSourceName>
-      <ReferencePackagesNuGetSourceName>reference-packages<ReferencePackagesNuGetSourceName>
-      <SourceBuiltNuGetSourceName>source-built<SourceBuiltNuGetSourceName>
-      <ExtraSourcesNuGetSourceName>ExtraSources<ExtraSourcesNuGetSourceName>
-      <DotNet5InternalTransportNuGetSourceName>dotnet5-internal-transport<DotNet5InternalTransportNuGetSourceName>
+      <PrebuiltNuGetSourceName>prebuilt</PrebuiltNuGetSourceName>
+      <PreviouslySourceBuiltNuGetSourceName>previously-source-built</PreviouslySourceBuiltNuGetSourceName>
+      <ReferencePackagesNuGetSourceName>reference-packages</ReferencePackagesNuGetSourceName>
+      <SourceBuiltNuGetSourceName>source-built</SourceBuiltNuGetSourceName>
+      <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
+      <DotNet5InternalTransportNuGetSourceName>dotnet5-internal-transport</DotNet5InternalTransportNuGetSourceName>
       <SourceBuildSources>$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName);$(SourceBuiltNuGetSourceName)</SourceBuildSources>
       <SourceBuildSources Condition="'$(ExtraRestoreSourcePath)' != ''">$(SourceBuildSources);$(ExtraSourcesNuGetSourceName)</SourceBuildSources>
       <SourceBuildSources Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != '' and '$(SetUpInternalTransportFeed)' == 'true'">$(SourceBuildSources);$(DotNet5InternalTransportNuGetSourceName)</SourceBuildSources>
