@@ -103,14 +103,14 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>c5ab390e42d0023fba2668fc1f6b2914c7838eda</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.400-preview.22265.4">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.400-preview.22266.1">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>52703c399dbba560461c12b17267357642fe4c09</Sha>
+      <Sha>b0cb8ac2186acc08f4740443b8a0363a4fe04cd7</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.400-preview.22265.4">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.400-preview.22266.1">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>52703c399dbba560461c12b17267357642fe4c09</Sha>
+      <Sha>b0cb8ac2186acc08f4740443b8a0363a4fe04cd7</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.4-servicing.22164.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -135,9 +135,9 @@
       <Sha>717d0cf94925e9cf67466dbee46c1019930eb212</Sha>
       <SourceBuildTarball RepoName="vstest" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22219.3" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22178.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>28db36b95cf83c8e2ad11e67a2ad0de301b4cad6</Sha>
+      <Sha>01c4f5905959c29f86781b85187bb676fc517ee9</Sha>
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
@@ -146,9 +146,9 @@
       <Sha>a61e6b243d51f6a0f49bd689a2aa67b97f6eb5dc</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22263-01" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22263-02" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>9fd120730f6319606b57d412820897e4861d61ac</Sha>
+      <Sha>78bb45f0f7033ba5658903dacd6164e83af68c94</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="NuGet.Build.Tasks" Version="6.3.0-preview.1.40" CoherentParentDependency="Microsoft.NET.Sdk">
