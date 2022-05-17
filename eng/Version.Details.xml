@@ -103,14 +103,14 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>60a2f73de55434984bbe3d5ad9281b3863355b31</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.301-rtm.22262.4">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.301-rtm.22266.33">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>a78ea1e97e04406618daaa48309d1c05336ca0ed</Sha>
+      <Sha>0ffb32f6130125c44acbd6fbc314d9c9e34c7c0c</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.301-rtm.22262.4">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.301-rtm.22266.33">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>a78ea1e97e04406618daaa48309d1c05336ca0ed</Sha>
+      <Sha>0ffb32f6130125c44acbd6fbc314d9c9e34c7c0c</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.6-servicing.22255.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -151,9 +151,9 @@
       <Sha>41abc5629965e3f9e41f1e67fdf78345c0c5cc4b</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.2.0-rc.146" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>b8a61266d9a6780cb7eb9c1942695cf813fdef0a</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.2.1-rc.2" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
+      <Sha>a8942f45835ba527cedacc02f7a75468f7a7b4bd</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
