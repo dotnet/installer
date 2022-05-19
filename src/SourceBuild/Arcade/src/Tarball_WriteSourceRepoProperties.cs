@@ -72,6 +72,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                     ["OutputPackageVersion"] = dependency.Version,
                     ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel,
                     ["IsStable"] = string.IsNullOrWhiteSpace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
+                    ["Uri"] = dependency.Uri,
                 };
                 if (!string.IsNullOrEmpty(dependency.GitCommitCount))
                 {
