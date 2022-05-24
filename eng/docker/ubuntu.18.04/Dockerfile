@@ -11,6 +11,7 @@ RUN apt-get update && \
         curl \
         libcurl4 \
         devscripts \
+        debhelper \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
