@@ -106,9 +106,7 @@
 
     <PropertyGroup>
       <CoreSetupRootUrl>$(PublicBaseURL)Runtime/</CoreSetupRootUrl>
-      <CoreSetupRootUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(PublicBaseURL)</CoreSetupRootUrl>
       <AspNetCoreSharedFxRootUrl>$(PublicBaseURL)aspnetcore/Runtime/</AspNetCoreSharedFxRootUrl>
-      <AspNetCoreSharedFxRootUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(PublicBaseURL)</AspNetCoreSharedFxRootUrl>
       <WinFormsAndWpfSharedFxRootUrl>$(PublicBaseURL)WindowsDesktop/</WinFormsAndWpfSharedFxRootUrl>
       <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(CoreSetupDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
@@ -123,7 +121,7 @@
     <ItemGroup>
       <BundledLayoutComponent Include="CombinedSharedHostAndFrameworkArchive">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
-        <BaseUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(CoreSetupRootUrl)</BaseUrl>
+        <BaseUrl Condition=" '$(SharedAssetsDir)' != '' ">$(SharedAssetsDir)</BaseUrl>
         <DownloadFileName>$(CombinedFrameworkHostArchiveFileName)</DownloadFileName>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
@@ -247,7 +245,7 @@
 
       <BundledLayoutComponent Include="ToolsetArchive">
         <BaseUrl>$(PublicBaseURL)Sdk/$(MicrosoftDotnetToolsetInternalPackageVersion)</BaseUrl>
-        <BaseUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(PublicBaseURL)</BaseUrl>
+        <BaseUrl Condition=" '$(SharedAssetsDir)' != '' ">$(SharedAssetsDir)</BaseUrl>
         <DownloadFileName>dotnet-toolset-internal-$(MicrosoftDotnetToolsetInternalPackageVersion).zip</DownloadFileName>
         <RelativeLayoutPath>sdk/$(Version)</RelativeLayoutPath>
       </BundledLayoutComponent>
@@ -256,7 +254,7 @@
     <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
       <BundledLayoutComponent Include="DownloadedAspNetCoreSharedFxArchiveFile">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobVersion)</BaseUrl>
-        <BaseUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(AspNetCoreSharedFxRootUrl)</BaseUrl>
+        <BaseUrl Condition=" '$(SharedAssetsDir)' != '' ">$(SharedAssetsDir)</BaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxArchiveFileName)</DownloadFileName>
         <RelativeLayoutPath></RelativeLayoutPath>
       </BundledLayoutComponent>
@@ -297,7 +295,7 @@
       <BundledInstallerComponent Include="AspNetCoreSharedFxBaseRuntimeVersionFile"
                                  Condition="!$(Architecture.StartsWith('arm')) or '$(Rid)' == 'win-arm64' or '$(Rid)' == 'osx-arm64'">
         <BaseUrl>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreBlobVersion)</BaseUrl>
-        <BaseUrl Condition=" '$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildOffline)' == 'true' ">$(AspNetCoreSharedFxRootUrl)</BaseUrl>
+        <BaseUrl Condition=" '$(SharedAssetsDir)' != '' ">$(SharedAssetsDir)</BaseUrl>
         <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFileName)</DownloadFileName>
       </BundledInstallerComponent>
     </ItemGroup>
