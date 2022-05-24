@@ -61,10 +61,10 @@ index eaeac80f3..417beac4e 100644
 +    <ProjectReference Include="..\fsi\fsi.fsproj">
 +      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
 +    </ProjectReference>
-+    <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj">
++    <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj" Targets="Restore;Build;Pack">
 +      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
 +    </ProjectReference>
-+    <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
++    <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj" Targets="Restore;Build;Pack">
 +      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
 +    </ProjectReference>
 +  </ItemGroup>
