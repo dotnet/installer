@@ -12,6 +12,7 @@ RUN apt-get update && \
         libcurl4 \
         sudo && \
     apt-get clean && \
+    apt-get devscripts && \
     rm -rf /var/lib/apt/lists/*
 
 # Setup User to match Host User, and give superuser permissions
