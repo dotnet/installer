@@ -177,8 +177,21 @@
 
     <!-- Remove the git objects folder to free up tarball space -->
     <Exec
+      Command="git submodule foreach 'rm -rf %24%28git rev-parse --git-dir%29/objects ||:'"
+      WorkingDirectory="$(TarballRepoSourceDir)"
+      Condition="$(PreserveTarballGitFolders) != 'true' AND '$(SourceBuildRepoName)' != 'source-build'" />
+
+    <Exec
+      Command="git config --file $(TarballRepoSourceDir)/.git/config --unset remote.origin.url"
+      WorkingDirectory="$(RepoRoot)"/>
+
+    <Exec
+      Command="git config --file $(TarballRepoSourceDir)/.git/config --add remote.origin.url $(RepoUri)"
+      WorkingDirectory="$(RepoRoot)"/>
+
+    <Exec
       Command="rm -rf objects"
-      WorkingDirectory="$(TarballRepoSourceDir).git" 
+      WorkingDirectory="$(TarballRepoSourceDir).git"
       Condition="$(PreserveTarballGitFolders) != 'true'" />
 
     <Message Text="--> Done Cloning Repo $(SourceBuildRepoName)" Importance="High" />
