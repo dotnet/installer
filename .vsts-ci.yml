@@ -150,6 +150,13 @@ stages:
       strategy:
         matrix:
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+            Build_Ubuntu_16_04_Debug_x64:
+              _BuildConfig: Debug
+              _DockerParameter: '--docker ubuntu.16.04'
+              _LinuxPortable: ''
+              _RuntimeIdentifier: ''
+              _BuildArchitecture: 'x64'
+              _TestArg: $(_NonWindowsTestArg)
             Build_Ubuntu_18_04_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker ubuntu.18.04'
@@ -284,7 +291,7 @@ stages:
               _AdditionalBuildParameters: '/p:HostOSName="linux-musl"'
             Build_Linux_Portable_Deb_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker ubuntu.18.04'
+              _DockerParameter: '--docker ubuntu.16.04'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
