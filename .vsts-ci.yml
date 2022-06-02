@@ -10,6 +10,8 @@ trigger:
     - internal/release/6.*
 
 variables:
+- name: DisableDockerDetector
+  value: true
 - name: _PublishUsingPipelines
   value: false
 - name: PostBuildSign
