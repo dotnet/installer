@@ -6,8 +6,7 @@ Subject: [PATCH] Add Microsoft.FSharp.Compiler to source-build
 Backport issue: Tracking issue: https://github.com/dotnet/fsharp/issues/13174
 ---
  eng/SourceBuild.props                           | 17 +----------------
- .../Microsoft.FSharp.Compiler.csproj            | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ 1 files changed, 1 insertions(+), 16 deletions(-)
 
 diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
 index 903ee00d3..b8402e043 100644
@@ -43,32 +42,3 @@ index 903ee00d3..b8402e043 100644
      </PropertyGroup>
    </Target>
  
-diff --git a/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj b/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
-index eaeac80f3..417beac4e 100644
---- a/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
-+++ b/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
-@@ -9,8 +9,24 @@
-     <PackageDescription>.NET Core compatible version of the F# compiler fsc.exe.</PackageDescription>
-     <PackageReleaseNotes>/blob/main/release-notes.md#FSharp-Tools-$(FSProductVersionReleaseNotesVersion)</PackageReleaseNotes>
-     <NoDefaultExcludes>true</NoDefaultExcludes>
-+    <ShouldUnsetParentConfigurationAndPlatform>false</ShouldUnsetParentConfigurationAndPlatform>
-   </PropertyGroup>
- 
-+  <ItemGroup>
-+    <ProjectReference Include="..\fsc\fsc.fsproj">
-+      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
-+    </ProjectReference>
-+    <ProjectReference Include="..\fsi\fsi.fsproj">
-+      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
-+    </ProjectReference>
-+    <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj" Targets="Restore;Build;Pack">
-+      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+    </ProjectReference>
-+    <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj" Targets="Restore;Build;Pack">
-+      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+    </ProjectReference>
-+  </ItemGroup>
-+
-   <ItemGroup>
-     <NuspecProperty Include="fSharpCorePreviewPackageVersion=$(FSCorePackageVersionValue)-$(VersionSuffix)" />
-     <NuspecProperty Include="fSharpCorePackageVersion=$(FSCorePackageVersionValue)" />
