@@ -10,6 +10,8 @@ RUN apt-get update && \
     apt-get -qqy install \
         curl \
         libcurl4 \
+        devscripts \
+        debhelper \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
