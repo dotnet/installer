@@ -156,13 +156,6 @@ stages:
       strategy:
         matrix:
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-            Build_Ubuntu_16_04_Debug_x64:
-              _BuildConfig: Debug
-              _DockerParameter: '--docker ubuntu.16.04'
-              _LinuxPortable: ''
-              _RuntimeIdentifier: ''
-              _BuildArchitecture: 'x64'
-              _TestArg: $(_NonWindowsTestArg)
             Build_Ubuntu_18_04_Debug_x64:
               _BuildConfig: Debug
               _DockerParameter: '--docker ubuntu.18.04'
@@ -190,6 +183,7 @@ stages:
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
+              _AdditionalBuildParameters: '/p:BuildSdkDeb=true'
               _TestArg: $(_NonWindowsTestArg)
             Build_Rhel_7_2_Release_x64:
               _BuildConfig: Release
@@ -297,13 +291,13 @@ stages:
               _AdditionalBuildParameters: '/p:HostOSName="linux-musl"'
             Build_Linux_Portable_Deb_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker ubuntu.16.04'
+              _DockerParameter: '--docker ubuntu.18.04'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               # Do not publish zips and tarballs. The linux-x64 binaries are
               # already published by Build_LinuxPortable_Release_x64
-              _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+              _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
               _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_x64:
               _BuildConfig: Release
