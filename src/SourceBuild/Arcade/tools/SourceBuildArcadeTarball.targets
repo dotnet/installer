@@ -124,6 +124,7 @@
       <TarballRepoSourceEngDir>$(TarballSourceDir)$(SourceDir)eng/</TarballRepoSourceEngDir>
       <TarballVersionDetailsFile>$(TarballRepoSourceEngDir)Version.Details.xml</TarballVersionDetailsFile>
       <CloneParam Condition=" '$(CloneVerbosity)' == 'quiet' ">-q</CloneParam>
+      <OriginalRepoUri>$(RepoUri)</OriginalRepoUri>
       <RepoUri Condition=" '$(AzDoPat)' != '' ">$(RepoUri.Replace('https://dev.azure.com', 'https://dn-bot:$(AzDoPat)@dev.azure.com'))</RepoUri>
     </PropertyGroup>
 
@@ -186,7 +187,7 @@
       WorkingDirectory="$(RepoRoot)"/>
 
     <Exec
-      Command="git config --file $(TarballRepoSourceDir)/.git/config --add remote.origin.url $(RepoUri)"
+      Command="git config --file $(TarballRepoSourceDir)/.git/config --add remote.origin.url $(OriginalRepoUri)"
       WorkingDirectory="$(RepoRoot)"/>
 
     <Exec
