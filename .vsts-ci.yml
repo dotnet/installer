@@ -134,6 +134,13 @@ stages:
             _DOTNET_CLI_UI_LANGUAGE: ''
             _AdditionalBuildParameters: ''
             _TestArg: ''
+          Build_Release_arm64:
+            _BuildConfig: Release
+            _BuildArchitecture: arm64
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: ''
+            # Never run tests on arm64
+            _TestArg: ''
       pgoInstrument: true
 
   - template: /eng/build.yml
@@ -342,6 +349,13 @@ stages:
             _LinuxPortable: '--linux-portable'
             _RuntimeIdentifier: ''
             _BuildArchitecture: 'x64'
+            _TestArg: ''
+          Build_Release_arm64:
+            _BuildConfig: Release
+            _BuildArchitecture: arm64
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: ''
+            # Never run tests on arm64
             _TestArg: ''
       pgoInstrument: true
 
