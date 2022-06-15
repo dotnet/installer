@@ -176,12 +176,6 @@
       Command="git submodule update --init --recursive --depth 1"
       WorkingDirectory="$(TarballRepoSourceDir)" />
 
-    <!-- Remove the git objects folder to free up tarball space -->
-    <Exec
-      Command="git submodule foreach 'rm -rf %24%28git rev-parse --git-dir%29/objects ||:'"
-      WorkingDirectory="$(TarballRepoSourceDir)"
-      Condition="$(PreserveTarballGitFolders) != 'true' AND '$(SourceBuildRepoName)' != 'source-build'" />
-
     <Exec
       Command="git config --file $(TarballRepoSourceDir)/.git/config --unset remote.origin.url"
       WorkingDirectory="$(RepoRoot)"/>
@@ -190,6 +184,7 @@
       Command="git config --file $(TarballRepoSourceDir)/.git/config --add remote.origin.url $(OriginalRepoUri)"
       WorkingDirectory="$(RepoRoot)"/>
 
+    <!-- Remove the git objects folder to free up tarball space -->
     <Exec
       Command="rm -rf objects"
       WorkingDirectory="$(TarballRepoSourceDir).git"
