@@ -17,7 +17,7 @@ index cbdd6d8..a3e3d63 100644
  
      <Exec
 -      Command="git --work-tree=$(ProjectRoot) apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
-+      Command="git --work-tree=$(ProjectRoot) apply --ignore-whitespace --whitespace=nowarn  --unsafe-paths&quot;%(SourceBuildPatchFile.FullPath)&quot;"
++      Command="git --work-tree=$(ProjectRoot) apply --ignore-whitespace --whitespace=nowarn --unsafe-paths &quot;%(SourceBuildPatchFile.FullPath)&quot;"
        WorkingDirectory="$(ProjectRoot)"
        Condition="'@(SourceBuildPatchFile)' != ''" />
    </Target>
