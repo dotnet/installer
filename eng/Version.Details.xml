@@ -103,14 +103,14 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>11bc94b8ceb7d753d43b8ed6732d1a5eb91081f8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.106-servicing.22268.20">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.107-servicing.22321.28">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>5080045df61ed4394fb46368acaa7ba7c7d2f664</Sha>
+      <Sha>8c1950cf1f86d705a5df9be278e39d40ae7bd5ac</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.106-servicing.22268.20">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.107-servicing.22321.28">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>5080045df61ed4394fb46368acaa7ba7c7d2f664</Sha>
+      <Sha>8c1950cf1f86d705a5df9be278e39d40ae7bd5ac</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.6-servicing.22267.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -151,9 +151,9 @@
       <Sha>c9eb9dd64e9a2e8a433900a1a626d65a2bce4428</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.0.2-rc.3" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
-      <Sha>a5782faf46b91a7b43935a28d1e185e79a50588a</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.0.2-rc.5" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/nuget/nuget.client</Uri>
+      <Sha>75551652b352f860ea0b29095b64fa63715dd672</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
