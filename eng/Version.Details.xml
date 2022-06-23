@@ -103,14 +103,14 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>4ffcc8a85649b22d710db1b5342cc2fd358431dc</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.400-preview.22322.22">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.400-preview.22322.35">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3b9f8f768d79227a9798a535179611fe37898e18</Sha>
+      <Sha>aad9d44bd4bd4aad838b5e4ee17de7d07c177a32</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.400-preview.22322.22">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.400-preview.22322.35">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>3b9f8f768d79227a9798a535179611fe37898e18</Sha>
+      <Sha>aad9d44bd4bd4aad838b5e4ee17de7d07c177a32</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.4-servicing.22164.7" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -121,13 +121,13 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
       <Sha>14bf2e54800ba75bfd06cbb4f2e470cbfffc9a5b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.4-beta.22322.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.4-beta.22322.6" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>33c02fc761a44cb00f941da5ac32e3f41ea6bedd</Sha>
+      <Sha>09bf981828093ca2fbc6ba319420733d030debbc</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.5-beta.22322.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.5-beta.22322.6" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>33c02fc761a44cb00f941da5ac32e3f41ea6bedd</Sha>
+      <Sha>09bf981828093ca2fbc6ba319420733d030debbc</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.3.0-preview-20220622-04" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -146,9 +146,9 @@
       <Sha>3bd38ba691ad9776bd4f641a6b9fd46295010372</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22322-04" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22322-07" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>e504ba9f4f1ac7a8d86a4962ef4f6923f8d7815f</Sha>
+      <Sha>334835f647360028b75d827347fd73ec5433a481</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="NuGet.Build.Tasks" Version="6.3.0-preview.3.89" CoherentParentDependency="Microsoft.NET.Sdk">
