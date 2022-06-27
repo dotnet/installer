@@ -38,13 +38,12 @@ The repository contains native code project required for the Windows installer. 
 
 # Build .NET from source (source-build)
 
-This repo also contains code to help you build the entire .NET product end-to-end from sources (often referred to as source-build), even in disconnected/offline mode.
-This is currently only supported on Linux.
+This repo also contains code to help you build the entire .NET product end-to-end from source (often referred to as source-build), even in disconnected/offline mode.
 Please see the [dotnet/source-build](https://github.com/dotnet/source-build) repo for more information.
 
 ## Support
 
-.NET Source-Build is supported on the oldest available .NET SDK feature update.
+.NET Source-Build is supported on the oldest available .NET SDK feature update, and on Linux only.
 For example, if both .NET 6.0.1XX and 6.0.2XX feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will only support 6.0.1XX.
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
