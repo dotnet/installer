@@ -107,14 +107,14 @@
       <Sha>302ab2bf2db02656f7b8af27b6a21a9a9106e851</Sha>
       <SourceBuild RepoName="templating" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.100-preview.7.22324.6">
+    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.100-preview.7.22327.2">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>18c815b323b4ea40db52788c146de9b2c89c9baf</Sha>
+      <Sha>a02f826add7bb174a9f2b389a8d56aaace687488</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.100-preview.7.22324.6">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.100-preview.7.22327.2">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>18c815b323b4ea40db52788c146de9b2c89c9baf</Sha>
+      <Sha>a02f826add7bb174a9f2b389a8d56aaace687488</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="7.0.0-preview.6.22322.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -125,13 +125,13 @@
       <Uri>https://github.com/dotnet/wpf</Uri>
       <Sha>21ec4e9d4e4b0c98624ee4c53f21f131f9a514a9</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.4-beta.22323.6" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.0.4-beta.22324.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>4f4f0a39fb6fda9779297d7767754308e4061beb</Sha>
+      <Sha>18e9ef16a372c2f3d348561abd3fd5722b3ed3bf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.5-beta.22323.6" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="6.0.5-beta.22324.5" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>4f4f0a39fb6fda9779297d7767754308e4061beb</Sha>
+      <Sha>18e9ef16a372c2f3d348561abd3fd5722b3ed3bf</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.3.0-preview-20220623-03" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -145,19 +145,19 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.3.0-3.22321.8" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.3.0-3.22326.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>3bd38ba691ad9776bd4f641a6b9fd46295010372</Sha>
+      <Sha>0bbbbeb4e226c47cc17e8ea28078058cae5866e9</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22323-15" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Build" Version="17.3.0-preview-22324-06" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>b99b39a350392d9d4a438b5251cc2b06d708db5a</Sha>
+      <Sha>cd5f87420c9170af906f64075b45b44a038ba0d5</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.3.0-preview.3.89" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="NuGet.Build.Tasks" Version="6.3.0-rc.104" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/nuget/nuget.client</Uri>
-      <Sha>6f99a10b228b521bb5d2c7412bb2e3c43e6e7b3f</Sha>
+      <Sha>84e277cd819a84e85e1893c2596a68dd55e6f252</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
