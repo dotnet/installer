@@ -76,14 +76,16 @@ The dependencies for building .NET from source can be found [here](https://githu
 3. Build the .NET SDK
 
     ```bash
-    ./build.sh
+    ./build.sh --clean-while-building
     ```
 
     This builds the entire .NET SDK from source.
     The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz`.
 
     Optionally add the `--online` flag to add online NuGet restore sources to the build.
-    This is useful for testing unsupported releases that don't yet build without pulling pre-built binaries from the internet.
+    This is useful for testing unsupported releases that don't yet build without downloading pre-built binaries from the internet.
+
+    Run `./build.sh --help` to see more information about supported build options.
 
 4. (Optional) Unpack and install the .NET SDK
 
