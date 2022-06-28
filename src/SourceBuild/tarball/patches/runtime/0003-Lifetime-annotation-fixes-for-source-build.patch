@@ -4,10 +4,10 @@ Date: Tue, 28 Jun 2022 13:18:31 -0700
 Subject: [PATCH] Lifetime annotation fixes for source build
 
 ---
- .../src/System/Globalization/DateTimeFormat.cs                | 4 ++--
- .../src/System/Globalization/TimeSpanFormat.cs                | 2 +-
- .../System.Private.CoreLib/src/System/TimeZoneInfo.Unix.cs    | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ .../src/System/Globalization/DateTimeFormat.cs         |  4 ++--
+ .../src/System/Globalization/TimeSpanFormat.cs         |  2 +-
+ .../src/System/TimeZoneInfo.Unix.cs                    | 10 +++++-----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/src/libraries/System.Private.CoreLib/src/System/Globalization/DateTimeFormat.cs b/src/libraries/System.Private.CoreLib/src/System/Globalization/DateTimeFormat.cs
 index cfdbe719b8d..bb5917a06fd 100644
@@ -45,7 +45,7 @@ index 8695e9b9bea..f66e5482c36 100644
              Debug.Assert(dtfi != null);
  
 diff --git a/src/libraries/System.Private.CoreLib/src/System/TimeZoneInfo.Unix.cs b/src/libraries/System.Private.CoreLib/src/System/TimeZoneInfo.Unix.cs
-index 99aec155a29..157ae33cf0c 100644
+index 99aec155a29..d4307307463 100644
 --- a/src/libraries/System.Private.CoreLib/src/System/TimeZoneInfo.Unix.cs
 +++ b/src/libraries/System.Private.CoreLib/src/System/TimeZoneInfo.Unix.cs
 @@ -1007,7 +1007,7 @@ private static bool TZif_ParseMDateRule(ReadOnlySpan<char> dateRule, out int mon
@@ -66,3 +66,20 @@ index 99aec155a29..157ae33cf0c 100644
              TZif_ParsePosixString(posixFormat, ref index, c => !char.IsDigit(c) && c != '+' && c != '-' && c != ':');
  
          private static void TZif_ParsePosixDateTime(ReadOnlySpan<char> posixFormat, ref int index, out ReadOnlySpan<char> date, out ReadOnlySpan<char> time)
+@@ -1049,13 +1049,13 @@ private static void TZif_ParsePosixDateTime(ReadOnlySpan<char> posixFormat, ref
+             }
+         }
+ 
+-        private static ReadOnlySpan<char> TZif_ParsePosixDate(ReadOnlySpan<char> posixFormat, ref int index) =>
++        private static ReadOnlySpan<char> TZif_ParsePosixDate(ReadOnlySpan<char> posixFormat, scoped ref int index) =>
+             TZif_ParsePosixString(posixFormat, ref index, c => c == '/' || c == ',');
+ 
+-        private static ReadOnlySpan<char> TZif_ParsePosixTime(ReadOnlySpan<char> posixFormat, ref int index) =>
++        private static ReadOnlySpan<char> TZif_ParsePosixTime(ReadOnlySpan<char> posixFormat, scoped ref int index) =>
+             TZif_ParsePosixString(posixFormat, ref index, c => c == ',');
+ 
+-        private static ReadOnlySpan<char> TZif_ParsePosixString(ReadOnlySpan<char> posixFormat, ref int index, Func<char, bool> breakCondition)
++        private static ReadOnlySpan<char> TZif_ParsePosixString(ReadOnlySpan<char> posixFormat, scoped ref int index, Func<char, bool> breakCondition)
+         {
+             int startIndex = index;
+             for (; index < posixFormat.Length; index++)
