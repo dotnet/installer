@@ -33,7 +33,7 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-          vmImage: windows.vs2017.amd64
+          vmImage: build.windows.10.amd64.vs2017.open
         ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals build.windows.10.amd64.vs2017
