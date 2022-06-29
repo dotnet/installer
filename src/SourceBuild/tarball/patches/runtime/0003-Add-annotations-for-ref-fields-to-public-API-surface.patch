@@ -1,0 +1,183 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "github-actions[bot]"
+ <41898282+github-actions[bot]@users.noreply.github.com>
+Date: Fri, 24 Jun 2022 15:56:59 -0700
+Subject: [PATCH 1/2] Add annotations for ref fields to public API surface
+ (#71266)
+
+Co-authored-by: Aaron Robinson <arobins@microsoft.com>
+---
+ .../System.Memory/ref/System.Memory.cs        | 19 +++++++++++---
+ .../System.Private.CoreLib.Shared.projitems   |  1 +
+ .../LifetimeAnnotationAttribute.cs            | 25 +++++++++++++++++++
+ .../System/Runtime/CompilerServices/Unsafe.cs |  2 +-
+ .../Runtime/InteropServices/MemoryMarshal.cs  |  8 +++---
+ .../System.Runtime/ref/System.Runtime.cs      | 10 +++++++-
+ 6 files changed, 55 insertions(+), 10 deletions(-)
+ create mode 100644 src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/LifetimeAnnotationAttribute.cs
+
+diff --git a/src/libraries/System.Memory/ref/System.Memory.cs b/src/libraries/System.Memory/ref/System.Memory.cs
+index 088efa1c8eb..c96b01b0f7f 100644
+--- a/src/libraries/System.Memory/ref/System.Memory.cs
++++ b/src/libraries/System.Memory/ref/System.Memory.cs
+@@ -530,6 +530,17 @@ public static partial class Utf8Parser
+         public static bool TryParse(System.ReadOnlySpan<byte> source, out ulong value, out int bytesConsumed, char standardFormat = '\0') { throw null; }
+     }
+ }
++namespace System.Runtime.CompilerServices
++{
++    // See src\libraries\System.Private.CoreLib\src\System\Runtime\CompilerServices\LifetimeAnnotationAttribute.cs
++    [System.AttributeUsageAttribute(System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
++    internal sealed class LifetimeAnnotationAttribute : System.Attribute
++    {
++        public LifetimeAnnotationAttribute(bool isRefScoped, bool isValueScoped) { throw null; }
++        public bool IsRefScoped { get { throw null; } }
++        public bool IsValueScoped { get { throw null; } }
++    }
++}
+ namespace System.Runtime.InteropServices
+ {
+     public static partial class MemoryMarshal
+@@ -542,16 +553,16 @@ public static partial class MemoryMarshal
+         public static System.ReadOnlySpan<TTo> Cast<TFrom, TTo>(System.ReadOnlySpan<TFrom> span) where TFrom : struct where TTo : struct { throw null; }
+         public static System.Span<TTo> Cast<TFrom, TTo>(System.Span<TFrom> span) where TFrom : struct where TTo : struct { throw null; }
+         public static System.Memory<T> CreateFromPinnedArray<T>(T[]? array, int start, int length) { throw null; }
+-        public static System.ReadOnlySpan<T> CreateReadOnlySpan<T>(ref T reference, int length) { throw null; }
++        public static System.ReadOnlySpan<T> CreateReadOnlySpan<T>([System.Runtime.CompilerServices.LifetimeAnnotation(true, false)] ref T reference, int length) { throw null; }
+         [System.CLSCompliant(false)]
+         public static unsafe ReadOnlySpan<byte> CreateReadOnlySpanFromNullTerminated(byte* value) { throw null; }
+         [System.CLSCompliant(false)]
+         public static unsafe ReadOnlySpan<char> CreateReadOnlySpanFromNullTerminated(char* value) { throw null; }
+-        public static System.Span<T> CreateSpan<T>(ref T reference, int length) { throw null; }
++        public static System.Span<T> CreateSpan<T>([System.Runtime.CompilerServices.LifetimeAnnotation(true, false)] ref T reference, int length) { throw null; }
+         public static ref T GetArrayDataReference<T>(T[] array) { throw null; }
+         public static ref byte GetArrayDataReference(System.Array array) { throw null; }
+-        public static ref T GetReference<T>(System.ReadOnlySpan<T> span) { throw null; }
+-        public static ref T GetReference<T>(System.Span<T> span) { throw null; }
++        public static ref T GetReference<T>([System.Runtime.CompilerServices.LifetimeAnnotation(false, true)] System.ReadOnlySpan<T> span) { throw null; }
++        public static ref T GetReference<T>([System.Runtime.CompilerServices.LifetimeAnnotation(false, true)] System.Span<T> span) { throw null; }
+         public static T Read<T>(System.ReadOnlySpan<byte> source) where T : struct { throw null; }
+         public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(System.ReadOnlyMemory<T> memory) { throw null; }
+         public static bool TryGetArray<T>(System.ReadOnlyMemory<T> memory, out System.ArraySegment<T> segment) { throw null; }
+diff --git a/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems b/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems
+index 6a4a0e06269..73661ee4f13 100644
+--- a/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems
++++ b/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems
+@@ -758,6 +758,7 @@
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\DefaultInterpolatedStringHandler.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\IteratorStateMachineAttribute.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\ITuple.cs" />
++    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\LifetimeAnnotationAttribute.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\LoadHint.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\MethodCodeType.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\MethodImplAttribute.cs" />
+diff --git a/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/LifetimeAnnotationAttribute.cs b/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/LifetimeAnnotationAttribute.cs
+new file mode 100644
+index 00000000000..f792a7a8e22
+--- /dev/null
++++ b/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/LifetimeAnnotationAttribute.cs
+@@ -0,0 +1,25 @@
++// Licensed to the .NET Foundation under one or more agreements.
++// The .NET Foundation licenses this file to you under the MIT license.
++
++using System;
++
++namespace System.Runtime.CompilerServices
++{
++    /// <summary>
++    /// This type is defined until we consume the C# 11 compiler.
++    /// </summary>
++    /// <remarks>
++    /// Also remove in the reference assemblies.
++    /// </remarks>
++    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
++    internal sealed class LifetimeAnnotationAttribute : Attribute
++    {
++        public LifetimeAnnotationAttribute(bool isRefScoped, bool isValueScoped)
++        {
++            IsRefScoped = isRefScoped;
++            IsValueScoped = isValueScoped;
++        }
++        public bool IsRefScoped { get; }
++        public bool IsValueScoped { get; }
++    }
++}
+diff --git a/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/Unsafe.cs b/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/Unsafe.cs
+index 2c17b9f4ca3..d006bd58cbc 100644
+--- a/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/Unsafe.cs
++++ b/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/Unsafe.cs
+@@ -671,7 +671,7 @@ public static void Write<T>(void* destination, T value)
+         // Mono:AsRef
+         [NonVersionable]
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+-        public static ref T AsRef<T>(in T source)
++        public static ref T AsRef<T>([LifetimeAnnotation(true, false)] in T source)
+         {
+             throw new PlatformNotSupportedException();
+ 
+diff --git a/src/libraries/System.Private.CoreLib/src/System/Runtime/InteropServices/MemoryMarshal.cs b/src/libraries/System.Private.CoreLib/src/System/Runtime/InteropServices/MemoryMarshal.cs
+index c0c2bf3e0c0..f089434fa33 100644
+--- a/src/libraries/System.Private.CoreLib/src/System/Runtime/InteropServices/MemoryMarshal.cs
++++ b/src/libraries/System.Private.CoreLib/src/System/Runtime/InteropServices/MemoryMarshal.cs
+@@ -77,13 +77,13 @@ public static ReadOnlySpan<byte> AsBytes<T>(ReadOnlySpan<T> span)
+         /// Returns a reference to the 0th element of the Span. If the Span is empty, returns a reference to the location where the 0th element
+         /// would have been stored. Such a reference may or may not be null. It can be used for pinning but must never be dereferenced.
+         /// </summary>
+-        public static ref T GetReference<T>(Span<T> span) => ref span._reference.Value;
++        public static ref T GetReference<T>([LifetimeAnnotation(false, true)] Span<T> span) => ref span._reference.Value;
+ 
+         /// <summary>
+         /// Returns a reference to the 0th element of the ReadOnlySpan. If the ReadOnlySpan is empty, returns a reference to the location where the 0th element
+         /// would have been stored. Such a reference may or may not be null. It can be used for pinning but must never be dereferenced.
+         /// </summary>
+-        public static ref T GetReference<T>(ReadOnlySpan<T> span) => ref span._reference.Value;
++        public static ref T GetReference<T>([LifetimeAnnotation(false, true)] ReadOnlySpan<T> span) => ref span._reference.Value;
+ 
+         /// <summary>
+         /// Returns a reference to the 0th element of the Span. If the Span is empty, returns a reference to fake non-null pointer. Such a reference can be used
+@@ -219,7 +219,7 @@ public static ReadOnlySpan<byte> AsBytes<T>(ReadOnlySpan<T> span)
+         /// <returns>A span representing the specified reference and length.</returns>
+         /// <remarks>The lifetime of the returned span will not be validated for safety by span-aware languages.</remarks>
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+-        public static Span<T> CreateSpan<T>(ref T reference, int length) => new Span<T>(ref reference, length);
++        public static Span<T> CreateSpan<T>([LifetimeAnnotation(true, false)] ref T reference, int length) => new Span<T>(ref reference, length);
+ 
+         /// <summary>
+         /// Creates a new read-only span over a portion of a regular managed object. This can be useful
+@@ -231,7 +231,7 @@ public static ReadOnlySpan<byte> AsBytes<T>(ReadOnlySpan<T> span)
+         /// <returns>A read-only span representing the specified reference and length.</returns>
+         /// <remarks>The lifetime of the returned span will not be validated for safety by span-aware languages.</remarks>
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+-        public static ReadOnlySpan<T> CreateReadOnlySpan<T>(ref T reference, int length) => new ReadOnlySpan<T>(ref reference, length);
++        public static ReadOnlySpan<T> CreateReadOnlySpan<T>([LifetimeAnnotation(true, false)] ref T reference, int length) => new ReadOnlySpan<T>(ref reference, length);
+ 
+         /// <summary>Creates a new read-only span for a null-terminated string.</summary>
+         /// <param name="value">The pointer to the null-terminated string of characters.</param>
+diff --git a/src/libraries/System.Runtime/ref/System.Runtime.cs b/src/libraries/System.Runtime/ref/System.Runtime.cs
+index 27ab63296fb..34a334d5317 100644
+--- a/src/libraries/System.Runtime/ref/System.Runtime.cs
++++ b/src/libraries/System.Runtime/ref/System.Runtime.cs
+@@ -12523,6 +12523,14 @@ public partial interface ITuple
+         object? this[int index] { get; }
+         int Length { get; }
+     }
++    // See src\libraries\System.Private.CoreLib\src\System\Runtime\CompilerServices\LifetimeAnnotationAttribute.cs
++    [System.AttributeUsageAttribute(System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
++    internal sealed class LifetimeAnnotationAttribute : System.Attribute
++    {
++        public LifetimeAnnotationAttribute(bool isRefScoped, bool isValueScoped) { throw null; }
++        public bool IsRefScoped { get { throw null; } }
++        public bool IsValueScoped { get { throw null; } }
++    }
+     public enum LoadHint
+     {
+         Default = 0,
+@@ -12766,7 +12774,7 @@ public static partial class Unsafe
+         public unsafe static void* AsPointer<T>(ref T value) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         public unsafe static ref T AsRef<T>(void* source) { throw null; }
+-        public static ref T AsRef<T>(in T source) { throw null; }
++        public static ref T AsRef<T>([System.Runtime.CompilerServices.LifetimeAnnotation(true, false)] in T source) { throw null; }
+         [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNull("o")]
+         public static T? As<T>(object? o) where T : class? { throw null; }
+         public static ref TTo As<TFrom, TTo>(ref TFrom source) { throw null; }
