@@ -85,7 +85,7 @@ index d006bd58cbc..a2cbe16e4b5 100644
          // Mono:AsRef
          [NonVersionable]
          [MethodImpl(MethodImplOptions.AggressiveInlining)]
--        public static ref T AsRef<T>(in T source)
+-        public static ref T AsRef<T>([LifetimeAnnotation(true, false)] in T source)
 +        public static ref T AsRef<T>(scoped in T source)
          {
              throw new PlatformNotSupportedException();
@@ -98,7 +98,7 @@ index f089434fa33..b6d7e8c266a 100644
          /// <returns>A span representing the specified reference and length.</returns>
          /// <remarks>The lifetime of the returned span will not be validated for safety by span-aware languages.</remarks>
          [MethodImpl(MethodImplOptions.AggressiveInlining)]
--        public static Span<T> CreateSpan<T>(ref T reference, int length) => new Span<T>(ref reference, length);
+-        public static Span<T> CreateSpan<T>([LifetimeAnnotation(true, false)] ref T reference, int length) => new Span<T>(ref reference, length);
 +        public static Span<T> CreateSpan<T>(scoped ref T reference, int length) => new Span<T>(ref Unsafe.AsRef(in reference), length);
 
          /// <summary>
@@ -107,7 +107,7 @@ index f089434fa33..b6d7e8c266a 100644
          /// <returns>A read-only span representing the specified reference and length.</returns>
          /// <remarks>The lifetime of the returned span will not be validated for safety by span-aware languages.</remarks>
          [MethodImpl(MethodImplOptions.AggressiveInlining)]
--        public static ReadOnlySpan<T> CreateReadOnlySpan<T>(ref T reference, int length) => new ReadOnlySpan<T>(ref reference, length);
+-        public static ReadOnlySpan<T> CreateReadOnlySpan<T>([LifetimeAnnotation(true, false)] ref T reference, int length) => new ReadOnlySpan<T>(ref reference, length);
 +        public static ReadOnlySpan<T> CreateReadOnlySpan<T>(scoped ref T reference, int length) => new ReadOnlySpan<T>(ref Unsafe.AsRef(in reference), length);
 
          /// <summary>Creates a new read-only span for a null-terminated string.</summary>
