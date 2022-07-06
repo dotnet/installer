@@ -4,7 +4,7 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.13-20210714125444-ae5be29
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.15-20220610131707-f0ea7ba
 
 RUN apk update && apk upgrade && apk add --no-cache curl ncurses
 
