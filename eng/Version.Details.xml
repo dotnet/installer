@@ -103,14 +103,14 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha>60a2f73de55434984bbe3d5ad9281b3863355b31</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.301-rtm.22274.11">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>8daa5f75dfc7592e30e28e71d448621d12442893</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.302-servicing.22321.30">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>3ff7c9567a7cbe3a489ef6a895d26c4114e76f1e</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.301-rtm.22274.11">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>8daa5f75dfc7592e30e28e71d448621d12442893</Sha>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.302-servicing.22321.30">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>3ff7c9567a7cbe3a489ef6a895d26c4114e76f1e</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.6-servicing.22267.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -151,9 +151,9 @@
       <Sha>41abc5629965e3f9e41f1e67fdf78345c0c5cc4b</Sha>
       <SourceBuildTarball RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.2.1-rc.2" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
-      <Sha>a8942f45835ba527cedacc02f7a75468f7a7b4bd</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.2.1-rc.7" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/nuget/nuget.client</Uri>
+      <Sha>4be14ee6b6587a02f05337505bd840fbcbe898f6</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
