@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.238.0/containers/dotnet
 {
-	"name": "Source-Build Build Tarball",
+	"name": "Source-Build w/ Built Tarball",
 	"image": "mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-33-20210222183538-031e7d2",
 	// A completely built .NET source-tarball is >64 GB
 	"hostRequirements": {
@@ -19,7 +19,5 @@
 		}
 	},
 	// Use 'onCreateCommand' to run pre-build commands inside the codespace.
-	"onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/tarballBuild.sh",
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/postCreateCommand.sh"
+	"onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/source-build-scripts/buildTarball.sh"
 }
