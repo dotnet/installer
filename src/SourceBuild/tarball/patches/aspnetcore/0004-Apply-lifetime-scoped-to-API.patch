@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Aaron Robinson <arobins@microsoft.com>
+Date: Wed, 29 Jun 2022 17:15:09 -0700
+Subject: [PATCH] Apply lifetime scoped to API.
+
+---
+ src/Shared/ServerInfrastructure/BufferExtensions.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Shared/ServerInfrastructure/BufferExtensions.cs b/src/Shared/ServerInfrastructure/BufferExtensions.cs
+index d68ccc1145..305ddbdd8f 100644
+--- a/src/Shared/ServerInfrastructure/BufferExtensions.cs
++++ b/src/Shared/ServerInfrastructure/BufferExtensions.cs
+@@ -19,7 +19,7 @@ internal static class BufferExtensions
+     private static byte[]? _numericBytesScratch;
+ 
+     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+-    public static ReadOnlySpan<byte> ToSpan(in this ReadOnlySequence<byte> buffer)
++    public static ReadOnlySpan<byte> ToSpan(scoped in this ReadOnlySequence<byte> buffer)
+     {
+         if (buffer.IsSingleSegment)
+         {
