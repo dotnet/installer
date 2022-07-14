@@ -25,7 +25,7 @@ You can consult the [Documents Index for the SDK repo](https://github.com/dotnet
 
 This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
 
-# Building 
+# Build .NET installer 
 
 The repository contains native code project required for the Windows installer. If you intend to build it locally on Windows, you will need to ensure that you have the following items installed.
 - Install CMAKE 3.21.0 is required if you're building VS 17.0. Make sure to add CMAKE to your PATH (the installer will prompt you).
@@ -36,25 +36,69 @@ The repository contains native code project required for the Windows installer. 
 - To build in VS, run a command line build first, then run `artifacts\core-sdk-build-env.bat` from a VS command prompt and then `devenv Microsoft.DotNet.Cli.sln`
 - To test different languages of the installer, run `artifacts\packages\Debug\Shipping>dotnet-sdk-3.1.412-win-x64.exe /lang 1046` using the LCID of the language you want to test
 
-# Building (source-build)
+# Build .NET from source (source-build)
 
-This repo also contains code to help you build the entire .NET product end-to-end from sources (often referred to as source-build), even in disconnected/offline mode. This is currently only tested on Linux.
+This repo also contains code to help you build the entire .NET product end-to-end from source (often referred to as source-build), even in disconnected/offline mode.
+Please see the [dotnet/source-build](https://github.com/dotnet/source-build) repo for more information.
 
-1. `./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/path/to/place/complete/dotnet/sources`
+## Support
 
-   This fetches the complete set of source code used to build the .NET SDK. It creates a tarball of the complete .NET source code at `artifacts/packages/<Release|Debug>/Shipping/`. It also places the extracted sources at `/path/to/place/complete/dotnet/sources`. Due to a few known issues, that source directory should be outside (and not somewhere under) this repository.
+.NET Source-Build is supported on the oldest available .NET SDK feature update, and on Linux only.
+For example, if both .NET 6.0.1XX and 6.0.2XX feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will only support 6.0.1XX.
+For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
-2. `cd /path/to/complete/dotnet/sources`
+## Prerequisites
 
-3. `./prep.sh --bootstrap`
+The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md).
 
-    This downloads a .NET SDK and a number of .NET packages and other prebuilts needed to build .NET from source.
+## Building
 
-    Eventually, we want to make it possible to bootstrap .NET 6 in which case this step can be skipped.
+1. Create a .NET source tarball.
 
-4. `./build.sh`
+   ```bash
+   ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/path/to/place/complete/dotnet/sources
+   ```
 
-    This builds the entire .NET SDK. The resulting SDK is placed at `artifacts/$ARCH/Release/dotnet-sdk-$VERSION-$ARCH.tar.gz`.
+   This fetches the complete .NET source code and creates a tarball at `artifacts/packages/<Release|Debug>/Shipping/`.
+   The extracted source code is also placed at `/path/to/place/complete/dotnet/sources`.
+   The source directory should be outside (and not somewhere under) the installer directory.
+
+2. Prep the source to build on your distro. This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
+
+    ```bash
+    cd /path/to/complete/dotnet/sources
+    ./prep.sh
+    ```
+    
+    On arm64, please use `./prep.sh --bootstrap` instead. This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2758).
+
+3. Build the .NET SDK
+
+    ```bash
+    ./build.sh --clean-while-building
+    ```
+
+    This builds the entire .NET SDK from source.
+    The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz`.
+
+    Optionally add the `--online` flag to add online NuGet restore sources to the build.
+    This is useful for testing unsupported releases that don't yet build without downloading pre-built binaries from the internet.
+
+    Run `./build.sh --help` to see more information about supported build options.
+
+4. (Optional) Unpack and install the .NET SDK
+
+    ```bash
+    mkdir -p $HOME/dotnet
+    tar zxf artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz -C $HOME/dotnet
+    ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
+    ```
+    
+    To test your source-built SDK, run the following:
+
+    ```bash
+    dotnet --info
+    ```
 
 # Build status
 
