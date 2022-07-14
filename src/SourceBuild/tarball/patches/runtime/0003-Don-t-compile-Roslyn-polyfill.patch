@@ -1,0 +1,291 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Thu, 14 Jul 2022 11:49:08 -0700
+Subject: [PATCH] Don't compile Roslyn polyfill
+
+---
+ .../gen/LoggerMessageGenerator.Parser.cs          |  1 -
+ .../gen/LoggerMessageGenerator.Roslyn4.0.cs       |  2 --
+ ...Extensions.Logging.Generators.Roslyn4.0.csproj | 14 --------------
+ .../gen/EventSourceGenerator.Parser.cs            |  1 -
+ .../gen/EventSourceGenerator.cs                   |  2 --
+ .../gen/System.Private.CoreLib.Generators.csproj  | 15 ---------------
+ .../LibraryImportGenerator.cs                     |  2 --
+ .../LibraryImportGenerator.csproj                 | 15 ---------------
+ .../gen/JsonSourceGenerator.Parser.cs             |  1 -
+ .../gen/JsonSourceGenerator.Roslyn4.0.cs          |  2 --
+ .../gen/Reflection/MetadataLoadContextInternal.cs |  1 -
+ ...em.Text.Json.SourceGeneration.Roslyn4.0.csproj |  9 ---------
+ .../gen/RegexGenerator.Parser.cs                  |  1 -
+ .../gen/RegexGenerator.cs                         |  1 -
+ ...ystem.Text.RegularExpressions.Generator.csproj |  9 ---------
+ 15 files changed, 76 deletions(-)
+
+diff --git a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs
+index 504008c4c36..d15adb4ba1b 100644
+--- a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs
++++ b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs
+@@ -10,7 +10,6 @@
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace Microsoft.Extensions.Logging.Generators
+ {
+diff --git a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Roslyn4.0.cs b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Roslyn4.0.cs
+index ab342384270..3589bd74fae 100644
+--- a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Roslyn4.0.cs
++++ b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Roslyn4.0.cs
+@@ -7,7 +7,6 @@
+ using System.Text;
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ using Microsoft.CodeAnalysis.Text;
+ 
+ [assembly: System.Resources.NeutralResourcesLanguage("en-us")]
+@@ -21,7 +20,6 @@ public void Initialize(IncrementalGeneratorInitializationContext context)
+         {
+             IncrementalValuesProvider<ClassDeclarationSyntax> classDeclarations = context.SyntaxProvider
+                 .ForAttributeWithMetadataName(
+-                    context,
+                     Parser.LoggerMessageAttribute,
+                     (node, _) => node is MethodDeclarationSyntax,
+                     (context, _) => context.TargetNode.Parent as ClassDeclarationSyntax)
+diff --git a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/Microsoft.Extensions.Logging.Generators.Roslyn4.0.csproj b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/Microsoft.Extensions.Logging.Generators.Roslyn4.0.csproj
+index 862fe40be95..1b6400b9908 100644
+--- a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/Microsoft.Extensions.Logging.Generators.Roslyn4.0.csproj
++++ b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/Microsoft.Extensions.Logging.Generators.Roslyn4.0.csproj
+@@ -7,20 +7,6 @@
+   </PropertyGroup>
+ 
+   <Import Project="Microsoft.Extensions.Logging.Generators.targets" />
+-
+-  <ItemGroup>
+-    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
+-
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Production\ValueListBuilder.cs" />
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Production\ValueListBuilder.Pop.cs" />
+-  </ItemGroup>
+   
+   <ItemGroup>
+     <Compile Remove="LoggerMessageGenerator.Roslyn3.11.cs" />
+diff --git a/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.Parser.cs b/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.Parser.cs
+index 43a498b589a..fa2e1a2fc85 100644
+--- a/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.Parser.cs
++++ b/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.Parser.cs
+@@ -9,7 +9,6 @@
+ using System.Threading;
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace Generators
+ {
+diff --git a/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.cs b/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.cs
+index e57f11d6f4e..90ea79020dd 100644
+--- a/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.cs
++++ b/src/libraries/System.Private.CoreLib/gen/EventSourceGenerator.cs
+@@ -7,7 +7,6 @@
+ using System.Threading;
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace Generators
+ {
+@@ -40,7 +39,6 @@ public void Initialize(IncrementalGeneratorInitializationContext context)
+ 
+             IncrementalValuesProvider<EventSourceClass> eventSourceClasses =
+                 context.SyntaxProvider.ForAttributeWithMetadataName(
+-                    context,
+                     EventSourceAutoGenerateAttribute,
+                     (node, _) => node is ClassDeclarationSyntax,
+                     GetSemanticTargetForGeneration)
+diff --git a/src/libraries/System.Private.CoreLib/gen/System.Private.CoreLib.Generators.csproj b/src/libraries/System.Private.CoreLib/gen/System.Private.CoreLib.Generators.csproj
+index 90d6ae99bb2..41709a49982 100644
+--- a/src/libraries/System.Private.CoreLib/gen/System.Private.CoreLib.Generators.csproj
++++ b/src/libraries/System.Private.CoreLib/gen/System.Private.CoreLib.Generators.csproj
+@@ -12,21 +12,6 @@
+     <Compile Include="$(CoreLibSharedDir)\System\Runtime\CompilerServices\IsExternalInit.cs" Link="Common\System\Runtime\CompilerServices\IsExternalInit.cs" />
+   </ItemGroup>
+ 
+-  <ItemGroup>
+-    <Compile Include="$(CommonPath)Roslyn\GetBestTypeByMetadataName.cs" Link="Common\Roslyn\GetBestTypeByMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
+-
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Production\ValueListBuilder.cs" />
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Production\ValueListBuilder.Pop.cs" />
+-  </ItemGroup>
+-  
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
+   </ItemGroup>
+diff --git a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
+index eba67b0b5c6..703a7ab8ccb 100644
+--- a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
++++ b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
+@@ -12,7 +12,6 @@
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+ 
+ [assembly: System.Resources.NeutralResourcesLanguage("en-US")]
+@@ -63,7 +62,6 @@ public void Initialize(IncrementalGeneratorInitializationContext context)
+         {
+             var attributedMethods = context.SyntaxProvider
+                 .ForAttributeWithMetadataName(
+-                    context,
+                     TypeNames.LibraryImportAttribute,
+                     static (node, ct) => node is MethodDeclarationSyntax,
+                     static (context, ct) => context.TargetSymbol is IMethodSymbol methodSymbol
+diff --git a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
+index ab8172b6979..ce7d023384e 100644
+--- a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
++++ b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
+@@ -34,20 +34,5 @@
+   <ItemGroup>
+     <ProjectReference Include="..\Microsoft.Interop.SourceGeneration\Microsoft.Interop.SourceGeneration.csproj" Pack="true" PackagePath="analyzers/dotnet/cs" />
+   </ItemGroup>
+-
+-  <ItemGroup>
+-    <Compile Include="$(CommonPath)Roslyn\GetBestTypeByMetadataName.cs" Link="Common\Roslyn\GetBestTypeByMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
+-    
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Production\ValueListBuilder.cs" />
+-    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Production\ValueListBuilder.Pop.cs" />
+-  </ItemGroup>
+   
+ </Project>
+diff --git a/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs b/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs
+index f16cfeedaa6..387c65c0460 100644
+--- a/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs
++++ b/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs
+@@ -14,7 +14,6 @@
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace System.Text.Json.SourceGeneration
+ {
+diff --git a/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Roslyn4.0.cs b/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Roslyn4.0.cs
+index 8f4cd15e2df..db7eb7234b1 100644
+--- a/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Roslyn4.0.cs
++++ b/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Roslyn4.0.cs
+@@ -13,7 +13,6 @@
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+ using Microsoft.CodeAnalysis.Text;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace System.Text.Json.SourceGeneration
+ {
+@@ -27,7 +26,6 @@ public void Initialize(IncrementalGeneratorInitializationContext context)
+         {
+             IncrementalValuesProvider<ClassDeclarationSyntax> classDeclarations = context.SyntaxProvider
+                 .ForAttributeWithMetadataName(
+-                    context,
+                     Parser.JsonSerializableAttributeFullName,
+                     (node, _) => node is ClassDeclarationSyntax,
+                     (context, _) => (ClassDeclarationSyntax)context.TargetNode);
+diff --git a/src/libraries/System.Text.Json/gen/Reflection/MetadataLoadContextInternal.cs b/src/libraries/System.Text.Json/gen/Reflection/MetadataLoadContextInternal.cs
+index 7923a18f7a9..a99780c4b66 100644
+--- a/src/libraries/System.Text.Json/gen/Reflection/MetadataLoadContextInternal.cs
++++ b/src/libraries/System.Text.Json/gen/Reflection/MetadataLoadContextInternal.cs
+@@ -8,7 +8,6 @@
+ using System.Reflection;
+ using System.Runtime.CompilerServices;
+ using Microsoft.CodeAnalysis;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace System.Text.Json.Reflection
+ {
+diff --git a/src/libraries/System.Text.Json/gen/System.Text.Json.SourceGeneration.Roslyn4.0.csproj b/src/libraries/System.Text.Json/gen/System.Text.Json.SourceGeneration.Roslyn4.0.csproj
+index 638e4a6e4b5..ad4924436b8 100644
+--- a/src/libraries/System.Text.Json/gen/System.Text.Json.SourceGeneration.Roslyn4.0.csproj
++++ b/src/libraries/System.Text.Json/gen/System.Text.Json.SourceGeneration.Roslyn4.0.csproj
+@@ -13,15 +13,6 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
+-    
+     <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Production\ValueListBuilder.cs" />
+     <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Production\ValueListBuilder.Pop.cs" />
+   </ItemGroup>
+diff --git a/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.Parser.cs b/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.Parser.cs
+index 33dd18fc67f..73cead0fc62 100644
+--- a/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.Parser.cs
++++ b/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.Parser.cs
+@@ -9,7 +9,6 @@
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ namespace System.Text.RegularExpressions.Generator
+ {
+diff --git a/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.cs b/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.cs
+index 5f71b9d4e63..25c29f88e5c 100644
+--- a/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.cs
++++ b/src/libraries/System.Text.RegularExpressions/gen/RegexGenerator.cs
+@@ -11,7 +11,6 @@
+ using Microsoft.CodeAnalysis;
+ using Microsoft.CodeAnalysis.CSharp;
+ using Microsoft.CodeAnalysis.CSharp.Syntax;
+-using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
+ 
+ [assembly: System.Resources.NeutralResourcesLanguage("en-us")]
+ 
+diff --git a/src/libraries/System.Text.RegularExpressions/gen/System.Text.RegularExpressions.Generator.csproj b/src/libraries/System.Text.RegularExpressions/gen/System.Text.RegularExpressions.Generator.csproj
+index bf14a855c90..b83d8f6c41f 100644
+--- a/src/libraries/System.Text.RegularExpressions/gen/System.Text.RegularExpressions.Generator.csproj
++++ b/src/libraries/System.Text.RegularExpressions/gen/System.Text.RegularExpressions.Generator.csproj
+@@ -19,15 +19,6 @@
+ 
+   <ItemGroup>
+     <!-- Common generator support -->
+-    <Compile Include="$(CommonPath)Roslyn\GetBestTypeByMetadataName.cs" Link="Common\Roslyn\GetBestTypeByMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
+-    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
+     <Compile Include="$(CoreLibSharedDir)System\Runtime\CompilerServices\IsExternalInit.cs" Link="Common\System\Runtime\CompilerServices\IsExternalInit.cs" />
+ 
+     <!-- Code included from System.Text.RegularExpressions -->
