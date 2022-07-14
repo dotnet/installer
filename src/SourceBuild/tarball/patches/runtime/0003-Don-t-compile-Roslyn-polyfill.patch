@@ -4,22 +4,22 @@ Date: Thu, 14 Jul 2022 11:49:08 -0700
 Subject: [PATCH] Don't compile Roslyn polyfill
 
 ---
- .../gen/LoggerMessageGenerator.Parser.cs          |  1 -
- .../gen/LoggerMessageGenerator.Roslyn4.0.cs       |  2 --
- ...Extensions.Logging.Generators.Roslyn4.0.csproj | 14 --------------
- .../gen/EventSourceGenerator.Parser.cs            |  1 -
- .../gen/EventSourceGenerator.cs                   |  2 --
- .../gen/System.Private.CoreLib.Generators.csproj  | 15 ---------------
- .../LibraryImportGenerator.cs                     |  2 --
- .../LibraryImportGenerator.csproj                 | 15 ---------------
- .../gen/JsonSourceGenerator.Parser.cs             |  1 -
- .../gen/JsonSourceGenerator.Roslyn4.0.cs          |  2 --
- .../gen/Reflection/MetadataLoadContextInternal.cs |  1 -
- ...em.Text.Json.SourceGeneration.Roslyn4.0.csproj |  9 ---------
- .../gen/RegexGenerator.Parser.cs                  |  1 -
- .../gen/RegexGenerator.cs                         |  1 -
- ...ystem.Text.RegularExpressions.Generator.csproj |  9 ---------
- 15 files changed, 76 deletions(-)
+ .../gen/LoggerMessageGenerator.Parser.cs      |  1 -
+ .../gen/LoggerMessageGenerator.Roslyn4.0.cs   |  2 --
+ ...nsions.Logging.Generators.Roslyn4.0.csproj | 14 --------------
+ .../gen/EventSourceGenerator.Parser.cs        |  1 -
+ .../gen/EventSourceGenerator.cs               |  2 --
+ .../System.Private.CoreLib.Generators.csproj  | 15 ---------------
+ .../LibraryImportGenerator.cs                 | 19 ++++++-------------
+ .../LibraryImportGenerator.csproj             |  1 -
+ .../gen/JsonSourceGenerator.Parser.cs         |  1 -
+ .../gen/JsonSourceGenerator.Roslyn4.0.cs      |  2 --
+ .../Reflection/MetadataLoadContextInternal.cs |  1 -
+ ...ext.Json.SourceGeneration.Roslyn4.0.csproj |  9 ---------
+ .../gen/RegexGenerator.Parser.cs              |  1 -
+ .../gen/RegexGenerator.cs                     |  1 -
+ ...m.Text.RegularExpressions.Generator.csproj |  9 ---------
+ 15 files changed, 6 insertions(+), 73 deletions(-)
 
 diff --git a/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs b/src/libraries/Microsoft.Extensions.Logging.Abstractions/gen/LoggerMessageGenerator.Parser.cs
 index 504008c4c36..d15adb4ba1b 100644
@@ -137,49 +137,44 @@ index 90d6ae99bb2..41709a49982 100644
      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
    </ItemGroup>
 diff --git a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
-index eba67b0b5c6..703a7ab8ccb 100644
+index e32ccc145f6..7162b96e941 100644
 --- a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
 +++ b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.cs
-@@ -12,7 +12,6 @@
- using Microsoft.CodeAnalysis;
- using Microsoft.CodeAnalysis.CSharp;
- using Microsoft.CodeAnalysis.CSharp.Syntax;
--using Microsoft.CodeAnalysis.DotnetRuntime.Extensions;
- using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
- 
- [assembly: System.Resources.NeutralResourcesLanguage("en-US")]
-@@ -63,7 +62,6 @@ public void Initialize(IncrementalGeneratorInitializationContext context)
+@@ -61,19 +61,12 @@ public static class StepNames
+         public void Initialize(IncrementalGeneratorInitializationContext context)
          {
              var attributedMethods = context.SyntaxProvider
-                 .ForAttributeWithMetadataName(
--                    context,
-                     TypeNames.LibraryImportAttribute,
-                     static (node, ct) => node is MethodDeclarationSyntax,
-                     static (context, ct) => context.TargetSymbol is IMethodSymbol methodSymbol
+-                .CreateSyntaxProvider(
+-                    static (node, ct) => ShouldVisitNode(node),
+-                    static (context, ct) =>
+-                    {
+-                        MethodDeclarationSyntax syntax = (MethodDeclarationSyntax)context.Node;
+-                        if (context.SemanticModel.GetDeclaredSymbol(syntax, ct) is IMethodSymbol methodSymbol
+-                            && methodSymbol.GetAttributes().Any(static attribute => attribute.AttributeClass?.ToDisplayString() == TypeNames.LibraryImportAttribute))
+-                        {
+-                            return new { Syntax = syntax, Symbol = methodSymbol };
+-                        }
+-
+-                        return null;
+-                    })
++                .ForAttributeWithMetadataName(
++                    TypeNames.LibraryImportAttribute,
++                    static (node, ct) => node is MethodDeclarationSyntax,
++                    static (context, ct) => context.TargetSymbol is IMethodSymbol methodSymbol
++                        ? new { Syntax = (MethodDeclarationSyntax)context.TargetNode, Symbol = methodSymbol }
++                        : null)
+                 .Where(
+                     static modelData => modelData is not null);
+ 
 diff --git a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
-index ab8172b6979..ce7d023384e 100644
+index 5806bf43f58..1b6281d9c1a 100644
 --- a/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
 +++ b/src/libraries/System.Runtime.InteropServices/gen/LibraryImportGenerator/LibraryImportGenerator.csproj
-@@ -34,20 +34,5 @@
+@@ -34,5 +34,4 @@
    <ItemGroup>
      <ProjectReference Include="..\Microsoft.Interop.SourceGeneration\Microsoft.Interop.SourceGeneration.csproj" Pack="true" PackagePath="analyzers/dotnet/cs" />
    </ItemGroup>
 -
--  <ItemGroup>
--    <Compile Include="$(CommonPath)Roslyn\GetBestTypeByMetadataName.cs" Link="Common\Roslyn\GetBestTypeByMetadataName.cs" />
--    <Compile Include="$(CommonPath)Roslyn\Hash.cs" Link="Common\Roslyn\Hash.cs" />
--    <Compile Include="$(CommonPath)Roslyn\ISyntaxHelper.cs" Link="Common\Roslyn\ISyntaxHelper.cs" />
--    <Compile Include="$(CommonPath)Roslyn\CSharpSyntaxHelper.cs" Link="Common\Roslyn\CSharpSyntaxHelper.cs" />
--    <Compile Include="$(CommonPath)Roslyn\GlobalAliases.cs" Link="Common\Roslyn\GlobalAliases.cs" />
--    <Compile Include="$(CommonPath)Roslyn\SyntaxNodeGrouping.cs" Link="Common\Roslyn\SyntaxNodeGrouping.cs" />
--    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" Link="Common\Roslyn\SyntaxValueProvider.ImmutableArrayValueComparer.cs" />
--    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithMetadataName.cs" />
--    <Compile Include="$(CommonPath)Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" Link="Common\Roslyn\SyntaxValueProvider_ForAttributeWithSimpleName.cs" />
--    
--    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.cs" Link="Production\ValueListBuilder.cs" />
--    <Compile Include="$(CoreLibSharedDir)System\Collections\Generic\ValueListBuilder.Pop.cs" Link="Production\ValueListBuilder.Pop.cs" />
--  </ItemGroup>
-   
  </Project>
 diff --git a/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs b/src/libraries/System.Text.Json/gen/JsonSourceGenerator.Parser.cs
 index f16cfeedaa6..387c65c0460 100644
