@@ -71,50 +71,45 @@ stages:
         matrix:
           # Public-only builds
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-            Build_Debug_x86:
-              _BuildConfig: Debug
-              _BuildArchitecture: x86
-              _DOTNET_CLI_UI_LANGUAGE: ''
-              _AdditionalBuildParameters: ''
-              _TestArg: $(_WindowsTestArg)
+            Build_Release_x64:
+            _BuildConfig: Debug
+            _BuildArchitecture: x64
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+            _TestArg: $(_WindowsTestArg)
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+            Build_Release_x64:
+            _BuildConfig: Release
+            _BuildArchitecture: x64
+            _DOTNET_CLI_UI_LANGUAGE: ''
+            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+            _TestArg: $(_WindowsTestArg)
             Build_Release_x86:
               _BuildConfig: Release
               _BuildArchitecture: x86
               _DOTNET_CLI_UI_LANGUAGE: ''
               _AdditionalBuildParameters: ''
               _TestArg: $(_WindowsTestArg)
-          # Always run builds
-          Build_Release_x64:
-            _BuildConfig: Release
-            _BuildArchitecture: x64
-            _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
-            _TestArg: $(_WindowsTestArg)
-          Build_Release_arm64:
-            _BuildConfig: Release
-            _BuildArchitecture: arm64
-            _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: ''
-            # Never run tests on arm64
-            _TestArg: ''
+            Build_Release_arm64:
+              _BuildConfig: Release
+              _BuildArchitecture: arm64
+              _DOTNET_CLI_UI_LANGUAGE: ''
+              _AdditionalBuildParameters: ''
+              # Never run tests on arm64
+              _TestArg: ''
 
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Windows_NT
-      pool:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
-      timeoutInMinutes: 180
-      strategy:
-        matrix:
-          ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-            # Always run builds
+  ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Windows_NT
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals build.windows.10.amd64.vs2019
+        timeoutInMinutes: 180
+        strategy:
+          matrix:
             Build_Release_x64:
               _BuildConfig: Release
               _BuildArchitecture: x64
@@ -135,7 +130,7 @@ stages:
               _AdditionalBuildParameters: ''
               # Never run tests on arm64
               _TestArg: ''
-      pgoInstrument: true
+        pgoInstrument: true
 
   - template: /eng/build.yml
     parameters:
@@ -186,15 +181,6 @@ stages:
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
-              # Never run tests on arm64
-              _TestArg: ''
-            Build_Linux_musl_Debug_arm64:
-              _BuildConfig: Debug
-              _DockerParameter: ''
-              _LinuxPortable: ''
-              _RuntimeIdentifier: '--runtime-id linux-musl-arm64'
-              _BuildArchitecture: 'arm64'
-              _AdditionalBuildParameters: '/p:OSName="linux-musl"'
               # Never run tests on arm64
               _TestArg: ''
             Build_Linux_musl_Debug_x64:
@@ -289,21 +275,17 @@ stages:
             _BuildArchitecture: 'x64'
             _TestArg: $(_NonWindowsTestArg)
 
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Linux
-      pool:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Public
-          demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Internal
-          demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
-      timeoutInMinutes: 180
-      strategy:
-        matrix:
-          ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-            # Always run builds
+  ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+        timeoutInMinutes: 180
+        strategy:
+          matrix:
             Build_LinuxPortable_Release_x64:
               _BuildConfig: Release
               _DockerParameter: ''
@@ -318,7 +300,7 @@ stages:
               _AdditionalBuildParameters: ''
               # Never run tests on arm64
               _TestArg: ''
-      pgoInstrument: true
+        pgoInstrument: true
 
   - template: /eng/build.yml
     parameters:
