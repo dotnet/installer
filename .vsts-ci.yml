@@ -72,19 +72,19 @@ stages:
           # Public-only builds
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x64:
-            _BuildConfig: Debug
-            _BuildArchitecture: x64
-            _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
-            _TestArg: $(_WindowsTestArg)
+              _BuildConfig: Debug
+              _BuildArchitecture: x64
+              _DOTNET_CLI_UI_LANGUAGE: ''
+              _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+              _TestArg: $(_WindowsTestArg)
           # Internal-only builds
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
             Build_Release_x64:
-            _BuildConfig: Release
-            _BuildArchitecture: x64
-            _DOTNET_CLI_UI_LANGUAGE: ''
-            _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
-            _TestArg: $(_WindowsTestArg)
+              _BuildConfig: Release
+              _BuildArchitecture: x64
+              _DOTNET_CLI_UI_LANGUAGE: ''
+              _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
+              _TestArg: $(_WindowsTestArg)
             Build_Release_x86:
               _BuildConfig: Release
               _BuildArchitecture: x86
