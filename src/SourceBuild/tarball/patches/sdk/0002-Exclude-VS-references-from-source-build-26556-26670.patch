@@ -1,0 +1,65 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jacques Eloff <joeloff@users.noreply.github.com>
+Date: Mon, 18 Jul 2022 12:44:27 -0700
+Subject: [PATCH] Exclude VS references from source build (#26556) (#26670)
+
+---
+ Directory.Build.props                                         | 1 +
+ src/Cli/dotnet/commands/dotnet-workload/WorkloadInfoHelper.cs | 4 ++--
+ src/Cli/dotnet/dotnet.csproj                                  | 4 +++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 601bb648c2..8ee962ab1d 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -21,6 +21,7 @@
+     <!-- <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir> -->
+ 
+     <DefineConstants Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(DefineConstants);CI_BUILD</DefineConstants>
++    <DefineConstants Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefineConstants);DOT_NET_BUILD_FROM_SOURCE</DefineConstants>
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+diff --git a/src/Cli/dotnet/commands/dotnet-workload/WorkloadInfoHelper.cs b/src/Cli/dotnet/commands/dotnet-workload/WorkloadInfoHelper.cs
+index 94602bd3f1..365eea9074 100644
+--- a/src/Cli/dotnet/commands/dotnet-workload/WorkloadInfoHelper.cs
++++ b/src/Cli/dotnet/commands/dotnet-workload/WorkloadInfoHelper.cs
+@@ -66,13 +66,13 @@ internal class WorkloadInfoHelper : IWorkloadInfoHelper
+         public InstalledWorkloadsCollection AddInstalledVsWorkloads(IEnumerable<WorkloadId> sdkWorkloadIds)
+         {
+             InstalledWorkloadsCollection installedWorkloads = new(sdkWorkloadIds, $"SDK {_currentSdkFeatureBand}");
+-
++#if !DOT_NET_BUILD_FROM_SOURCE
+             if (OperatingSystem.IsWindows())
+             {
+                 VisualStudioWorkloads.GetInstalledWorkloads(WorkloadResolver, _currentSdkFeatureBand,
+                     installedWorkloads);
+             }
+-
++#endif
+             return installedWorkloads;
+         }
+ 
+diff --git a/src/Cli/dotnet/dotnet.csproj b/src/Cli/dotnet/dotnet.csproj
+index 0f08cabb15..9c0dab5d33 100644
+--- a/src/Cli/dotnet/dotnet.csproj
++++ b/src/Cli/dotnet/dotnet.csproj
+@@ -19,6 +19,7 @@
+     <Compile Include="..\..\Resolvers\Microsoft.DotNet.MSBuildSdkResolver\FXVersion.cs" />
+     <Compile Include="$(RepoRoot)src\Common\EnvironmentVariableNames.cs" LinkBase="Common" />
+     <Compile Include="$(RepoRoot)src\Common\WorkloadFileBasedInstall.cs" LinkBase="Common" />
++    <Compile Remove="commands\dotnet-workload\list\VisualStudioWorkloads.cs" Condition="'$(DotNetBuildFromSource)' == 'true'" />
+     <EmbeddedResource Include="commands\dotnet-new\*.zip" />
+     <EmbeddedResource Update="**\*.resx" GenerateSource="true" />
+     <EmbeddedResource Update="*.resx" Namespace="Microsoft.DotNet.Tools" />
+@@ -95,7 +96,8 @@
+     <PackageReference Include="System.CommandLine" Version="$(SystemCommandLineVersion)" />
+     <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="$(MicrosoftDeploymentDotNetReleasesVersion)" />
+     <PackageReference Include="System.ServiceProcess.ServiceController" Version="$(SystemServiceProcessServiceControllerVersion)" />
+-    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="$(MicrosoftVisualStudioSetupConfigurationInteropVersion)" PrivateAssets="All" ExcludeAssets="Runtime" />
++    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="$(MicrosoftVisualStudioSetupConfigurationInteropVersion)" PrivateAssets="All" ExcludeAssets="Runtime"
++                      Condition="'$(DotNetBuildFromSource)' != 'true'"/>
+   </ItemGroup>
+   <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
+     <PackageReference Include="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)" />
