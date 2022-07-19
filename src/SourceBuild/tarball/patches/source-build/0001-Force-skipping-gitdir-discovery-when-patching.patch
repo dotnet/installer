@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 17 Jun 2022 12:04:29 -0500
+Subject: [PATCH] Force skipping .gitdir discovery when patching submodules. In
+ the installer tarball build, we want to remove the `objects` directories from
+ the .gitdirs in order to save space and allow the tarball to be checked into
+ a Git repo itself.  This causes a problem in the specific configuration of a
+ submodule with a redirected .gitdir where the `objects` directory has been
+ deleted - Git will error out attempting to apply patches from that current
+ directory.  This introduces a workaround by setting GIT_DIR to /dev/null, so
+ Git will skip .gitdir discovery and instead treat the submodule directory
+ like any other non-source-controlled directory.  This is acceptable because
+ we just need the patches to be applied.  # Please enter the commit message
+ for your changes. Lines starting
+
+---
+ repos/Directory.Build.targets | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/repos/Directory.Build.targets b/repos/Directory.Build.targets
+index d00b4119bf..e0e88eac3b 100644
+--- a/repos/Directory.Build.targets
++++ b/repos/Directory.Build.targets
+@@ -29,9 +29,15 @@
+       <PatchCommand>git --work-tree=$(ProjectDirectory) apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
+     </PropertyGroup>
+ 
++    <!-- in the installer tarball, we want to remove the objects directory from the .gitdir to save space.
++         This causes a problem specifically in the combination of submodules which have redirected .gitdirs
++         when we are applying patches in the current directory (which is required due to the way Git
++         interprets the paths in a patch).  GIT_DIR=/dev/null short-circuits the .gitdir discovery process
++         and lets Git treat the directory like any non-Git-controlled directory instead.            -->
+     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
+           WorkingDirectory="$(ProjectDirectory)"
+-          Condition="'@(PatchesToApply)' != ''" />
++          Condition="'@(PatchesToApply)' != ''"
++          EnvironmentVariables="GIT_DIR=/dev/null" />
+ 
+     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Overwrite="true" />
+   </Target>
