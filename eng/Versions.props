@@ -209,7 +209,10 @@
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
+    <!--
+      pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change.
+      If changed, the Microsoft.Deployment.DotNet.Releases dependency in Version.Details.xml must be updated to be kept in sync.
+    -->
     <DotNetDeploymentReleasesPackageVersion>1.0.0-preview5.1.22263.1</DotNetDeploymentReleasesPackageVersion>
   </PropertyGroup>
   <Import Project="$(RepositoryEngineeringDir)ManualVersions.props" />
