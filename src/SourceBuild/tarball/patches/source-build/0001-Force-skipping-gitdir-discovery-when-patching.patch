@@ -10,8 +10,7 @@ Subject: [PATCH] Force skipping .gitdir discovery when patching submodules. In
  directory.  This introduces a workaround by setting GIT_DIR to /dev/null, so
  Git will skip .gitdir discovery and instead treat the submodule directory
  like any other non-source-controlled directory.  This is acceptable because
- we just need the patches to be applied.  # Please enter the commit message
- for your changes. Lines starting
+ we just need the patches to be applied.
 
 ---
  repos/Directory.Build.targets | 8 +++++++-
