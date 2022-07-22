@@ -1,0 +1,94 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Andy Gocke <angocke@microsoft.com>
+Date: Thu, 21 Jul 2022 15:53:29 -0700
+Subject: [PATCH] Make StaticCs work in source build (#2909)
+
+backport: https://github.com/dotnet/linker/pull/2909
+---
+ eng/Versions.props                                |  2 +-
+ .../ILLink.RoslynAnalyzer.csproj                  |  4 +++-
+ src/ILLink.Shared/ClosedAttribute.cs              | 15 +++++++++++++++
+ src/linker/Mono.Linker.csproj                     |  5 +++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
+ create mode 100644 src/ILLink.Shared/ClosedAttribute.cs
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 60cc3b30..201586ae 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -28,7 +28,7 @@
+          when we build the cecil submodule. The reference assembly package will depend on this version of cecil.
+          Keep this in sync with ProjectInfo.cs in the submodule. -->
+     <MonoCecilVersion>0.11.4</MonoCecilVersion>
+-    <StaticCsVersion>0.1.0</StaticCsVersion>
++    <StaticCsVersion>0.2.0</StaticCsVersion>
+     <UseVSTestRunner>true</UseVSTestRunner>
+   </PropertyGroup>
+ </Project>
+diff --git a/src/ILLink.RoslynAnalyzer/ILLink.RoslynAnalyzer.csproj b/src/ILLink.RoslynAnalyzer/ILLink.RoslynAnalyzer.csproj
+index 8ea1ca77..83eec689 100644
+--- a/src/ILLink.RoslynAnalyzer/ILLink.RoslynAnalyzer.csproj
++++ b/src/ILLink.RoslynAnalyzer/ILLink.RoslynAnalyzer.csproj
+@@ -10,13 +10,15 @@
+     <EnableXlfLocalization>false</EnableXlfLocalization>
+     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+     <AnalysisLevel>Latest</AnalysisLevel>
++    <NoWarn Condition="'$(DotNetBuildFromSource)' == 'true'">$(NoWarn);CS8524</NoWarn>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <None Include="Microsoft.NET.ILLink.Analyzers.props" CopyToOutputDirectory="PreserveNewest" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisVersion)" PrivateAssets="all" />
+-    <PackageReference Include="StaticCs" Version="$(StaticCsVersion)">
++    <PackageReference Condition="'$(DotNetBuildFromSource)' != 'true'" Include="StaticCs" Version="$(StaticCsVersion)">
+       <PrivateAssets>all</PrivateAssets>
++      <ExcludeAssets>contentfiles</ExcludeAssets> <!-- We include our own copy of the ClosedAttribute to work in source build -->
+     </PackageReference>
+   </ItemGroup>
+ 
+diff --git a/src/ILLink.Shared/ClosedAttribute.cs b/src/ILLink.Shared/ClosedAttribute.cs
+new file mode 100644
+index 00000000..5c0260fc
+--- /dev/null
++++ b/src/ILLink.Shared/ClosedAttribute.cs
+@@ -0,0 +1,15 @@
++// Copyright (c) .NET Foundation and contributors. All rights reserved.
++// Licensed under the MIT license. See LICENSE file in the project root for full license information.
++
++using System;
++using System.Diagnostics;
++
++namespace StaticCs
++{
++	[AttributeUsage (AttributeTargets.Enum)]
++	[Conditional ("EMIT_STATICCS_CLOSEDATTRIBUTE")]
++	internal sealed class ClosedAttribute : Attribute
++	{
++		public ClosedAttribute () { }
++	}
++}
+\ No newline at end of file
+diff --git a/src/linker/Mono.Linker.csproj b/src/linker/Mono.Linker.csproj
+index 84d98f25..6e6b5a00 100644
+--- a/src/linker/Mono.Linker.csproj
++++ b/src/linker/Mono.Linker.csproj
+@@ -16,6 +16,7 @@
+     <RootNamespace>Mono.Linker</RootNamespace>
+     <!-- There are currently no translations, so the satellite assemblies are a waste of space. -->
+     <EnableXlfLocalization>false</EnableXlfLocalization>
++    <NoWarn Condition="'$(DotNetBuildFromSource)' == 'true'">$(NoWarn);CS8524</NoWarn>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -25,9 +26,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="StaticCs" Version="$(StaticCsVersion)">
++    <PackageReference Condition="'$(DotNetBuildFromSource)' != 'true'" Include="StaticCs" Version="$(StaticCsVersion)">
+       <PrivateAssets>all</PrivateAssets>
+-      <ExcludeAssets>runtime</ExcludeAssets>
++      <ExcludeAssets>contentfiles</ExcludeAssets> <!-- We include our own copy of the ClosedAttribute to work in source build -->
+     </PackageReference>
+     <PackageReference Condition="'$(UseCecilPackage)' == 'true'" Include="Mono.Cecil" Version="$(MonoCecilVersion)" />
+     <ProjectReference Condition="'$(UseCecilPackage)' != 'true'" Include="..\..\external\cecil\Mono.Cecil.csproj" />
