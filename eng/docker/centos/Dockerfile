@@ -4,7 +4,7 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9-20220716123555-dee2d19
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-b46d863-20180719033416
 
 RUN yum -q -y install sudo
 
