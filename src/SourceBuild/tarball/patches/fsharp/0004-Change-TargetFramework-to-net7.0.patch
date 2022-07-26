@@ -9,15 +9,14 @@ Subject: [PATCH] Change TargetFramework to net7.0
  buildtools/fsyacc/fsyacc.fsproj               |  2 +-
  eng/DumpPackageRoot/DumpPackageRoot.csproj    |  2 +-
  .../EditorService/EditorService.fsproj        |  2 +-
- proto.proj                                    |  4 +--
  src/Compiler/Driver/FxResolver.fs             |  2 +-
  src/Compiler/Facilities/CompilerLocation.fs   |  1 +
  .../Microsoft.FSharp.Compiler.csproj          |  2 +-
  .../Microsoft.FSharp.Compiler.nuspec          | 28 +++++++++----------
- src/fsc/fscProject/fsc.fsproj                 |  4 +--
+ src/fsc/fscProject/fsc.fsproj                 |  4 +++
  src/fsi/fsi.targets                           |  2 +-
- src/fsi/fsiProject/fsi.fsproj                 |  4 +--
- 13 files changed, 29 insertions(+), 28 deletions(-)
+ src/fsi/fsiProject/fsi.fsproj                 |  4 +++
+ 12 files changed, 31 insertions(+), 22 deletions(-)
 
 diff --git a/buildtools/AssemblyCheck/AssemblyCheck.fsproj b/buildtools/AssemblyCheck/AssemblyCheck.fsproj
 index d396c055f..d82763ddc 100644
@@ -84,23 +83,6 @@ index 56654b8ee..6e5b8d99e 100644
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
      <OutputType>Exe</OutputType>
      <IsPackable>false</IsPackable>
-diff --git a/proto.proj b/proto.proj
-index 8973f53fb..818d3da0a 100644
---- a/proto.proj
-+++ b/proto.proj
-@@ -10,10 +10,10 @@
-       <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-     </Projects>
-     <Projects Include="src\fsc\fscProject\fsc.fsproj">
--      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net6.0</AdditionalProperties>
-+      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net7.0</AdditionalProperties>
-     </Projects>
-     <Projects Include="src\fsi\fsiProject\fsi.fsproj">
--      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net6.0</AdditionalProperties>
-+      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net7.0</AdditionalProperties>
-     </Projects>
-   </ItemGroup>
- 
 diff --git a/src/Compiler/Driver/FxResolver.fs b/src/Compiler/Driver/FxResolver.fs
 index d769b3667..70a233a65 100644
 --- a/src/Compiler/Driver/FxResolver.fs
@@ -198,15 +180,15 @@ index ee67b15c5..f46b28fd9 100644
          <file src="$artifactsPackagesDir$Release\FSharp.Core.$fSharpCorePackageVersion$*nupkg"             target="contentFiles\Release" />
          <file src="$artifactsPackagesDir$Shipping\FSharp.Compiler.Service.$fSharpCompilerServicePreviewPackageVersion$*nupkg"
 diff --git a/src/fsc/fscProject/fsc.fsproj b/src/fsc/fscProject/fsc.fsproj
-index 03fbcd56d..e4a379270 100644
+index d6bdf814c..6239c9f36 100644
 --- a/src/fsc/fscProject/fsc.fsproj
 +++ b/src/fsc/fscProject/fsc.fsproj
-@@ -4,8 +4,8 @@
- 
-   <PropertyGroup >
-     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
--    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;net6.0</TargetFrameworks>
--    <TargetFrameworks Condition="'$(OS)' == 'Unix'">net6.0</TargetFrameworks>
+@@ -12,6 +12,10 @@
+   <PropertyGroup Condition="'$(BUILD_PROTO)' == 'true'">
+     <TargetFrameworks Condition="'$(OS)' != 'Unix'">net472</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Unix'">net6.0</TargetFrameworks>
++  <PropertyGroup >
++    <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;net7.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' == 'Unix'">net7.0</TargetFrameworks>
      <PlatformTarget Condition="'$(TargetFramework)' == 'net472'">x86</PlatformTarget>
@@ -226,15 +208,15 @@ index ce90d34c3..6b6e89dc6 100644
      <PackageReference Include="System.Linq.Expressions" Version="$(SystemLinqExpressionsVersion)" />
      <PackageReference Include="System.Reflection.Emit" Version="$(SystemReflectionEmitVersion)" />
 diff --git a/src/fsi/fsiProject/fsi.fsproj b/src/fsi/fsiProject/fsi.fsproj
-index b027f97e2..ef7664186 100644
+index 46ca382c3..76420ad0a 100644
 --- a/src/fsi/fsiProject/fsi.fsproj
 +++ b/src/fsi/fsiProject/fsi.fsproj
-@@ -4,8 +4,8 @@
- 
-   <PropertyGroup>
-     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
--    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;net6.0</TargetFrameworks>
--    <TargetFrameworks Condition="'$(OS)' == 'Unix'">net6.0</TargetFrameworks>
+@@ -12,6 +12,10 @@
+   <PropertyGroup Condition="'$(BUILD_PROTO)' == 'true'">
+     <TargetFrameworks Condition="'$(OS)' != 'Unix'">net472</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Unix'">net6.0</TargetFrameworks>
++  <PropertyGroup>
++    <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;net7.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' == 'Unix'">net7.0</TargetFrameworks>
      <PlatformTarget Condition="'$(TargetFramework)' == 'net472'">x86</PlatformTarget>
