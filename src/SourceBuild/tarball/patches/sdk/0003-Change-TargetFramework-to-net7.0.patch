@@ -4,75 +4,21 @@ Date: Fri, 22 Jul 2022 15:10:08 -0700
 Subject: [PATCH] Change TargetFramework to net7.0
 
 ---
- .../Client/BlazorWasmHosted60.Client.csproj                   | 2 +-
- .../Server/BlazorWasmHosted60.Server.csproj                   | 2 +-
- .../Shared/BlazorWasmHosted60.Shared.csproj                   | 2 +-
- .../PackageValidationTestProject.csproj                       | 4 ++--
- .../WatchAppWithLaunchSettings.csproj                         | 2 +-
- .../WindowsFormsTestApp/WindowsFormsTestApp.csproj            | 2 +-
- .../Microsoft.Extensions.DotNetDeltaApplier.csproj            | 2 +-
- .../Microsoft.DotNet.Cli.Utils.csproj                         | 2 +-
- .../Microsoft.DotNet.Compatibility.Console.csproj             | 2 +-
- .../Microsoft.DotNet.Compatibility.csproj                     | 2 +-
- .../build/Microsoft.DotNet.Compatibility.targets              | 2 +-
- .../Microsoft.DotNet.PackageValidation.csproj                 | 2 +-
- src/Layout/redist/targets/GenerateLayout.targets              | 4 ++--
- src/Layout/redist/targets/OverlaySdkOnLKG.targets             | 2 +-
- src/Layout/tool_fsharp/tool_fsc.csproj                        | 2 +-
- 15 files changed, 17 insertions(+), 17 deletions(-)
+ .../PackageValidationTestProject.csproj                         | 2 +-
+ .../Microsoft.Extensions.DotNetDeltaApplier.csproj              | 2 +-
+ .../Microsoft.DotNet.Cli.Utils.csproj                           | 2 +-
+ .../Microsoft.DotNet.Compatibility.Console.csproj               | 2 +-
+ .../Microsoft.DotNet.Compatibility.csproj                       | 2 +-
+ .../build/Microsoft.DotNet.Compatibility.targets                | 2 +-
+ .../Microsoft.DotNet.PackageValidation.csproj                   | 2 +-
+ src/Layout/redist/targets/OverlaySdkOnLKG.targets               | 2 +-
+ src/Layout/tool_fsharp/tool_fsc.csproj                          | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/src/Assets/TestProjects/BlazorWasmHosted60/Client/BlazorWasmHosted60.Client.csproj b/src/Assets/TestProjects/BlazorWasmHosted60/Client/BlazorWasmHosted60.Client.csproj
-index 6ebc7744e6..d555dbd016 100644
---- a/src/Assets/TestProjects/BlazorWasmHosted60/Client/BlazorWasmHosted60.Client.csproj
-+++ b/src/Assets/TestProjects/BlazorWasmHosted60/Client/BlazorWasmHosted60.Client.csproj
-@@ -1,7 +1,7 @@
- <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
- 
-   <PropertyGroup>
--    <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework>net7.0</TargetFramework>
-     <Nullable>enable</Nullable>
-     <ImplicitUsings>enable</ImplicitUsings>
-   </PropertyGroup>
-diff --git a/src/Assets/TestProjects/BlazorWasmHosted60/Server/BlazorWasmHosted60.Server.csproj b/src/Assets/TestProjects/BlazorWasmHosted60/Server/BlazorWasmHosted60.Server.csproj
-index 68287405b5..b3cc40b41f 100644
---- a/src/Assets/TestProjects/BlazorWasmHosted60/Server/BlazorWasmHosted60.Server.csproj
-+++ b/src/Assets/TestProjects/BlazorWasmHosted60/Server/BlazorWasmHosted60.Server.csproj
-@@ -1,7 +1,7 @@
- <Project Sdk="Microsoft.NET.Sdk.Web">
- 
-   <PropertyGroup>
--    <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework>net7.0</TargetFramework>
-     <Nullable>enable</Nullable>
-     <ImplicitUsings>enable</ImplicitUsings>
-   </PropertyGroup>
-diff --git a/src/Assets/TestProjects/BlazorWasmHosted60/Shared/BlazorWasmHosted60.Shared.csproj b/src/Assets/TestProjects/BlazorWasmHosted60/Shared/BlazorWasmHosted60.Shared.csproj
-index a5b78ac428..3c56617bd6 100644
---- a/src/Assets/TestProjects/BlazorWasmHosted60/Shared/BlazorWasmHosted60.Shared.csproj
-+++ b/src/Assets/TestProjects/BlazorWasmHosted60/Shared/BlazorWasmHosted60.Shared.csproj
-@@ -1,7 +1,7 @@
- <Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework>net7.0</TargetFramework>
-     <Nullable>enable</Nullable>
-     <ImplicitUsings>enable</ImplicitUsings>
-   </PropertyGroup>
 diff --git a/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj b/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj
-index 45911620b0..0d574e437d 100644
+index 45911620b0..844dba95c2 100644
 --- a/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj
 +++ b/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-+    <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
-     <DefineConstants Condition="'$(ForceValidationProblem)' == 'true'">$(DefineConstants);ForceValidationProblem</DefineConstants>
-     <DefineConstants Condition="'$(AddBreakingChange)' == 'true'">$(DefineConstants);AddBreakingChange</DefineConstants>
-     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 @@ -20,7 +20,7 @@
  
    <PropertyGroup>
@@ -82,32 +28,6 @@ index 45911620b0..0d574e437d 100644
    </PropertyGroup>
  
  </Project>
-diff --git a/src/Assets/TestProjects/WatchAppWithLaunchSettings/WatchAppWithLaunchSettings.csproj b/src/Assets/TestProjects/WatchAppWithLaunchSettings/WatchAppWithLaunchSettings.csproj
-index 74abf5c976..f02677bf64 100644
---- a/src/Assets/TestProjects/WatchAppWithLaunchSettings/WatchAppWithLaunchSettings.csproj
-+++ b/src/Assets/TestProjects/WatchAppWithLaunchSettings/WatchAppWithLaunchSettings.csproj
-@@ -2,7 +2,7 @@
- 
-   <PropertyGroup>
-     <OutputType>Exe</OutputType>
--    <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework>net7.0</TargetFramework>
-     <ImplicitUsings>enable</ImplicitUsings>
-     <Nullable>enable</Nullable>
-   </PropertyGroup>
-diff --git a/src/Assets/TestProjects/WindowsFormsTestApp/WindowsFormsTestApp.csproj b/src/Assets/TestProjects/WindowsFormsTestApp/WindowsFormsTestApp.csproj
-index b57c89e694..e1a0735019 100644
---- a/src/Assets/TestProjects/WindowsFormsTestApp/WindowsFormsTestApp.csproj
-+++ b/src/Assets/TestProjects/WindowsFormsTestApp/WindowsFormsTestApp.csproj
-@@ -2,7 +2,7 @@
- 
-   <PropertyGroup>
-     <OutputType>WinExe</OutputType>
--    <TargetFramework>net6.0-windows</TargetFramework>
-+    <TargetFramework>net7.0-windows</TargetFramework>
-     <Nullable>enable</Nullable>
-     <UseWindowsForms>true</UseWindowsForms>
-     <ImplicitUsings>enable</ImplicitUsings>
 diff --git a/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj b/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj
 index 40927ae1f2..3c2236e38d 100644
 --- a/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj
@@ -186,28 +106,6 @@ index 165b43ca9c..615e3cfdc1 100644
      <StrongNameKeyId>Open</StrongNameKeyId>
      <Nullable>enable</Nullable>
    </PropertyGroup>
-diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
-index c493a1111c..7aa7a82bde 100644
---- a/src/Layout/redist/targets/GenerateLayout.targets
-+++ b/src/Layout/redist/targets/GenerateLayout.targets
-@@ -161,7 +161,7 @@
-           BeforeTargets="Build">
-     <PropertyGroup>
-       <TestCliNuGetDirectoryTargetFramework Condition="'$(DotNetBuildFromSource)' != 'true'" >netcoreapp2.1</TestCliNuGetDirectoryTargetFramework>
--      <TestCliNuGetDirectoryTargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'" >net6.0</TestCliNuGetDirectoryTargetFramework>
-+      <TestCliNuGetDirectoryTargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'" >net7.0</TestCliNuGetDirectoryTargetFramework>
-       <TestCliNuGetDirectory>$(NuGetPackageRoot)/microsoft.testplatform.cli/$(MicrosoftTestPlatformCLIPackageVersion)/contentFiles/any/$(TestCliNuGetDirectoryTargetFramework)/</TestCliNuGetDirectory>
-     </PropertyGroup>
-     <ItemGroup>
-@@ -196,7 +196,7 @@
-     <ItemGroup>
-       <DotNetWatchFile Include="$(ArtifactsDir)bin\dotnet-watch\$(Configuration)\$(SdkTargetFramework)\**" />
-       <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.AspNetCore.Watch.BrowserRefresh\$(Configuration)\netcoreapp3.1\*.dll" DeploymentSubpath="middleware" />
--      <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.Extensions.DotNetDeltaApplier\$(Configuration)\net6.0\*.dll" DeploymentSubpath="hotreload" />
-+      <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.Extensions.DotNetDeltaApplier\$(Configuration)\net7.0\*.dll" DeploymentSubpath="hotreload" />
-       <DotNetWatchFile Include="$(ArtifactsDir)bin\DotNetWatchTasks\$(Configuration)\netstandard2.0\DotNetWatchTasks.dll" />
-     </ItemGroup>
- 
 diff --git a/src/Layout/redist/targets/OverlaySdkOnLKG.targets b/src/Layout/redist/targets/OverlaySdkOnLKG.targets
 index ea27beca35..e25ed74f35 100644
 --- a/src/Layout/redist/targets/OverlaySdkOnLKG.targets
