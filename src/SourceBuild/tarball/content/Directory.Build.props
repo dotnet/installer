@@ -247,6 +247,9 @@
     <!-- if MicrosoftSourceLinkCommonPackageVersion is non-empty, then we've already built SourceLink, regardless of whether
          this is the production or offline build, so we should use that version.  -->
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+
+    <!-- Used by runtime to determine current Roslyn version -->
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_4_X" Version="%24(MicrosoftCodeAnalysisVersion)" />
   </ItemGroup>
 
 </Project>
