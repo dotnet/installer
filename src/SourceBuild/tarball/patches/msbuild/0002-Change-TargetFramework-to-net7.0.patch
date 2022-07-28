@@ -203,7 +203,7 @@ index 6696e3861..40bc57ecb 100644
 --- a/src/Directory.BeforeCommon.targets
 +++ b/src/Directory.BeforeCommon.targets
 @@ -92,7 +92,7 @@
-     <DefineConstants>$(DefineConstants);WORKAROUND_COREFX_19110</DefineConstants>
+     <DefineConstants>$(DefineConstants);FEATURE_SYMLINK_TARGET</DefineConstants>
    </PropertyGroup>
  
 -  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'net6.0'">
