@@ -11,9 +11,10 @@ Subject: [PATCH] Change TargetFramework to net7.0
  .../Microsoft.DotNet.Compatibility.csproj                       | 2 +-
  .../build/Microsoft.DotNet.Compatibility.targets                | 2 +-
  .../Microsoft.DotNet.PackageValidation.csproj                   | 2 +-
+ src/Layout/redist/targets/GenerateLayout.targets                | 2 +-
  src/Layout/redist/targets/OverlaySdkOnLKG.targets               | 2 +-
  src/Layout/tool_fsharp/tool_fsc.csproj                          | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+ 10 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj b/src/Assets/TestProjects/PackageValidationTestProject/PackageValidationTestProject.csproj
 index 45911620b0..844dba95c2 100644
@@ -106,6 +107,19 @@ index 165b43ca9c..615e3cfdc1 100644
      <StrongNameKeyId>Open</StrongNameKeyId>
      <Nullable>enable</Nullable>
    </PropertyGroup>
+diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
+index c493a1111c..1976556dbc 100644
+--- a/src/Layout/redist/targets/GenerateLayout.targets
++++ b/src/Layout/redist/targets/GenerateLayout.targets
+@@ -196,7 +196,7 @@
+     <ItemGroup>
+       <DotNetWatchFile Include="$(ArtifactsDir)bin\dotnet-watch\$(Configuration)\$(SdkTargetFramework)\**" />
+       <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.AspNetCore.Watch.BrowserRefresh\$(Configuration)\netcoreapp3.1\*.dll" DeploymentSubpath="middleware" />
+-      <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.Extensions.DotNetDeltaApplier\$(Configuration)\net6.0\*.dll" DeploymentSubpath="hotreload" />
++      <DotNetWatchFile Include="$(ArtifactsDir)bin\Microsoft.Extensions.DotNetDeltaApplier\$(Configuration)\net7.0\*.dll" DeploymentSubpath="hotreload" />
+       <DotNetWatchFile Include="$(ArtifactsDir)bin\DotNetWatchTasks\$(Configuration)\netstandard2.0\DotNetWatchTasks.dll" />
+     </ItemGroup>
+ 
 diff --git a/src/Layout/redist/targets/OverlaySdkOnLKG.targets b/src/Layout/redist/targets/OverlaySdkOnLKG.targets
 index ea27beca35..e25ed74f35 100644
 --- a/src/Layout/redist/targets/OverlaySdkOnLKG.targets
