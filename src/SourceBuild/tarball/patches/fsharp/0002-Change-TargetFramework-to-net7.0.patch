@@ -4,74 +4,18 @@ Date: Fri, 22 Jul 2022 15:03:25 -0700
 Subject: [PATCH] Change TargetFramework to net7.0
 
 ---
- .vscode/launch.json                           |  4 +--
- FSharpTests.Directory.Build.props             |  6 ++--
  buildtools/AssemblyCheck/AssemblyCheck.fsproj |  2 +-
  buildtools/fslex/fslex.fsproj                 |  2 +-
  buildtools/fsyacc/fsyacc.fsproj               |  2 +-
- eng/Build.ps1                                 |  8 +++---
  eng/DumpPackageRoot/DumpPackageRoot.csproj    |  2 +-
- eng/build-utils.ps1                           |  6 ++--
- eng/build.sh                                  |  8 +++---
- eng/test-determinism.ps1                      |  2 +-
- .../EditorService/EditorService.fsproj        |  2 +-
- src/Compiler/Driver/FxResolver.fs             |  2 +-
- src/Compiler/Facilities/CompilerLocation.fs   |  1 +
+ eng/build.sh                                  | 10 +++----
  .../Microsoft.FSharp.Compiler.csproj          |  2 +-
  .../Microsoft.FSharp.Compiler.nuspec          | 28 +++++++++----------
  src/fsc/fscProject/fsc.fsproj                 |  6 ++--
  src/fsi/fsi.targets                           |  2 +-
  src/fsi/fsiProject/fsi.fsproj                 |  6 ++--
- 18 files changed, 46 insertions(+), 45 deletions(-)
+ 10 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/.vscode/launch.json b/.vscode/launch.json
-index d00e32e86..c1a48e29a 100644
---- a/.vscode/launch.json
-+++ b/.vscode/launch.json
-@@ -17,7 +17,7 @@
-             // TODO: Shall we assume that it's already been built, or build it every time we debug?
-             // "preLaunchTask": "Build (Debug)",
-             // If you have changed target frameworks, make sure to update the program p
--            "program": "${workspaceFolder}/artifacts/bin/fsi/Debug/net6.0/fsi.dll",
-+            "program": "${workspaceFolder}/artifacts/bin/fsi/Debug/net7.0/fsi.dll",
-             "cwd": "${workspaceFolder}/src",
-             "console": "integratedTerminal", // This is the default to be able to run in Codespaces.
-             "internalConsoleOptions": "neverOpen",
-@@ -42,7 +42,7 @@
-             // TODO: Shall we assume that it's already been built, or build it every time we debug?
-             // "preLaunchTask": "Build (Debug)",
-             // If you have changed target frameworks, make sure to update the program path.
--            "program": "${workspaceFolder}/artifacts/bin/fsc/Debug/net6.0/fsc.dll",
-+            "program": "${workspaceFolder}/artifacts/bin/fsc/Debug/net7.0/fsc.dll",
-             "args": [
-                 "${input:argsPrompt}"
-             ],
-diff --git a/FSharpTests.Directory.Build.props b/FSharpTests.Directory.Build.props
-index d191970e3..ceb3e19c4 100644
---- a/FSharpTests.Directory.Build.props
-+++ b/FSharpTests.Directory.Build.props
-@@ -22,18 +22,18 @@
-     <FscToolPath>$([System.IO.Path]::GetDirectoryName('$(DOTNET_HOST_PATH)'))</FscToolPath>
-     <FscToolExe Condition="'$(OS)' != 'Unix'">dotnet.exe</FscToolExe>
-     <FscToolExe Condition="'$(OS)' == 'Unix'">dotnet</FscToolExe>
--    <DotnetFscCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\net6.0\fsc.dll</DotnetFscCompilerPath>
-+    <DotnetFscCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\net7.0\fsc.dll</DotnetFscCompilerPath>
- 
-     <FsiToolPath>$([System.IO.Path]::GetDirectoryName('$(DOTNET_HOST_PATH)'))</FsiToolPath>
-     <FsiToolExe Condition="'$(OS)' != 'Unix'">dotnet.exe</FsiToolExe>
-     <FsiToolExe Condition="'$(OS)' == 'Unix'">dotnet</FsiToolExe>
--    <DotnetFsiCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsi\$(Configuration)\net6.0\fsi.dll</DotnetFsiCompilerPath>
-+    <DotnetFsiCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsi\$(Configuration)\net7.0\fsi.dll</DotnetFsiCompilerPath>
-   </PropertyGroup>
- 
-   <!-- SDK targets override -->
-   <PropertyGroup>
-     <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'!='Core'">net472</_FSharpBuildTargetFramework>
--    <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'=='Core'">net6.0</_FSharpBuildTargetFramework>
-+    <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'=='Core'">net7.0</_FSharpBuildTargetFramework>
-     <_FSharpBuildBinPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\$(_FSharpBuildTargetFramework)</_FSharpBuildBinPath>
- 
-     <FSharpBuildAssemblyFile>$(_FSharpBuildBinPath)\FSharp.Build.dll</FSharpBuildAssemblyFile>
 diff --git a/buildtools/AssemblyCheck/AssemblyCheck.fsproj b/buildtools/AssemblyCheck/AssemblyCheck.fsproj
 index d396c055f..d82763ddc 100644
 --- a/buildtools/AssemblyCheck/AssemblyCheck.fsproj
@@ -111,42 +55,6 @@ index 839c91961..e3a4b88a3 100644
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
      <UseAppHost Condition="'$(DotNetBuildFromSource)' == 'true'">false</UseAppHost>
-diff --git a/eng/Build.ps1 b/eng/Build.ps1
-index bacf90f8c..0e7766ab1 100644
---- a/eng/Build.ps1
-+++ b/eng/Build.ps1
-@@ -181,11 +181,11 @@ function Process-Arguments() {
- 
- function Update-Arguments() {
-     if ($script:noVisualStudio) {
--        $script:bootstrapTfm = "net6.0"
-+        $script:bootstrapTfm = "net7.0"
-         $script:msbuildEngine = "dotnet"
-     }
- 
--    if ($bootstrapTfm -eq "net6.0") {
-+    if ($bootstrapTfm -eq "net7.0") {
-         if (-Not (Test-Path "$ArtifactsDir\Bootstrap\fsc\fsc.runtimeconfig.json")) {
-             $script:bootstrap = $True
-         }
-@@ -206,7 +206,7 @@ function BuildSolution([string] $solutionName) {
-     $officialBuildId = if ($official) { $env:BUILD_BUILDNUMBER } else { "" }
-     $toolsetBuildProj = InitializeToolset
-     $quietRestore = !$ci
--    $testTargetFrameworks = if ($testCoreClr) { "net6.0" } else { "" }
-+    $testTargetFrameworks = if ($testCoreClr) { "net7.0" } else { "" }
- 
-     # Do not set the property to true explicitly, since that would override value projects might set.
-     $suppressExtensionDeployment = if (!$deployExtensions) { "/p:DeployExtension=false" } else { "" }
-@@ -481,7 +481,7 @@ try {
-     $script:BuildCategory = "Test"
-     $script:BuildMessage = "Failure running tests"
-     $desktopTargetFramework = "net472"
--    $coreclrTargetFramework = "net6.0"
-+    $coreclrTargetFramework = "net7.0"
- 
-     if ($testDesktop) {
-         TestUsingXUnit -testProject "$RepoRoot\tests\FSharp.Compiler.ComponentTests\FSharp.Compiler.ComponentTests.fsproj" -targetFramework $desktopTargetFramework -testadapterpath "$ArtifactsDir\bin\FSharp.Compiler.ComponentTests\" -noTestFilter $true
 diff --git a/eng/DumpPackageRoot/DumpPackageRoot.csproj b/eng/DumpPackageRoot/DumpPackageRoot.csproj
 index fb030a523..913463393 100644
 --- a/eng/DumpPackageRoot/DumpPackageRoot.csproj
@@ -160,28 +68,11 @@ index fb030a523..913463393 100644
    </PropertyGroup>
  
    <ItemGroup>
-diff --git a/eng/build-utils.ps1 b/eng/build-utils.ps1
-index 2aca2e02a..2162fc880 100644
---- a/eng/build-utils.ps1
-+++ b/eng/build-utils.ps1
-@@ -251,9 +251,9 @@ function Make-BootstrapBuild() {
-     }
-     Exec-Console $dotnetExe $args
- 
--    Copy-Item "$ArtifactsDir\bin\fslex\$bootstrapConfiguration\net6.0" -Destination "$dir\fslex" -Force -Recurse
--    Copy-Item "$ArtifactsDir\bin\fsyacc\$bootstrapConfiguration\net6.0" -Destination "$dir\fsyacc" -Force  -Recurse
--    Copy-Item "$ArtifactsDir\bin\AssemblyCheck\$bootstrapConfiguration\net6.0" -Destination "$dir\AssemblyCheck" -Force  -Recurse
-+    Copy-Item "$ArtifactsDir\bin\fslex\$bootstrapConfiguration\net7.0" -Destination "$dir\fslex" -Force -Recurse
-+    Copy-Item "$ArtifactsDir\bin\fsyacc\$bootstrapConfiguration\net7.0" -Destination "$dir\fsyacc" -Force  -Recurse
-+    Copy-Item "$ArtifactsDir\bin\AssemblyCheck\$bootstrapConfiguration\net7.0" -Destination "$dir\AssemblyCheck" -Force  -Recurse
- 
-     # prepare compiler
-     $protoProject = "`"$RepoRoot\proto.sln`""
 diff --git a/eng/build.sh b/eng/build.sh
-index 8bac7ce52..18bf7fd90 100755
+index 16ecfaf30..de5352612 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
-@@ -257,8 +257,8 @@ function BuildSolution {
+@@ -261,8 +261,8 @@ function BuildSolution {
          /p:Configuration=$bootstrap_config
  
        mkdir -p "$bootstrap_dir"
@@ -192,7 +83,7 @@ index 8bac7ce52..18bf7fd90 100755
      fi
      if [ ! -f "$bootstrap_dir/fsc.exe" ]; then
        BuildMessage="Error building bootstrap"
-@@ -266,7 +266,7 @@ function BuildSolution {
+@@ -270,7 +270,7 @@ function BuildSolution {
          /restore \
          /p:Configuration=$bootstrap_config
  
@@ -201,7 +92,7 @@ index 8bac7ce52..18bf7fd90 100755
      fi
    fi
  
-@@ -308,7 +308,7 @@ InitializeDotNetCli $restore
+@@ -312,7 +312,7 @@ InitializeDotNetCli $restore
  BuildSolution
  
  if [[ "$test_core_clr" == true ]]; then
@@ -210,57 +101,15 @@ index 8bac7ce52..18bf7fd90 100755
    TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.ComponentTests/FSharp.Compiler.ComponentTests.fsproj" --targetframework $coreclrtestframework  --notestfilter 
    TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.Service.Tests/FSharp.Compiler.Service.Tests.fsproj" --targetframework $coreclrtestframework  --notestfilter 
    TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.UnitTests/FSharp.Compiler.UnitTests.fsproj" --targetframework $coreclrtestframework
-diff --git a/eng/test-determinism.ps1 b/eng/test-determinism.ps1
-index de136c125..621fe7c6c 100644
---- a/eng/test-determinism.ps1
-+++ b/eng/test-determinism.ps1
-@@ -379,7 +379,7 @@ try {
-   $script:bootstrapTfm = "net472"
+@@ -322,7 +322,7 @@ if [[ "$test_core_clr" == true ]]; then
+ fi
  
-   if ($script:msbuildEngine -eq "dotnet") {
--    $script.bootstrapTfm = "net6.0"
-+    $script.bootstrapTfm = "net7.0"
-   }
+ if [[ "$test_compilercomponent_tests" == true ]]; then
+-  coreclrtestframework=net6.0
++  coreclrtestframework=net7.0
+   TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.ComponentTests/FSharp.Compiler.ComponentTests.fsproj" --targetframework $coreclrtestframework  --notestfilter 
+ fi
  
-   $bootstrapDir = Make-BootstrapBuild
-diff --git a/fcs-samples/EditorService/EditorService.fsproj b/fcs-samples/EditorService/EditorService.fsproj
-index 56654b8ee..6e5b8d99e 100644
---- a/fcs-samples/EditorService/EditorService.fsproj
-+++ b/fcs-samples/EditorService/EditorService.fsproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <Import Project="..\..\netfx.props" />
-   <PropertyGroup>
--    <TargetFrameworks>$(FcsTargetNetFxFramework);net6.0</TargetFrameworks>
-+    <TargetFrameworks>$(FcsTargetNetFxFramework);net7.0</TargetFrameworks>
-     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
-     <OutputType>Exe</OutputType>
-     <IsPackable>false</IsPackable>
-diff --git a/src/Compiler/Driver/FxResolver.fs b/src/Compiler/Driver/FxResolver.fs
-index d769b3667..70a233a65 100644
---- a/src/Compiler/Driver/FxResolver.fs
-+++ b/src/Compiler/Driver/FxResolver.fs
-@@ -430,7 +430,7 @@ type internal FxResolver
-             | _, -1 ->
-                 if isRunningOnCoreClr then
-                     // Running on coreclr but no deps.json was deployed with the host so default to 6.0
--                    Some "net6.0"
-+                    Some "net7.0"
-                 else
-                     // Running on desktop
-                     None
-diff --git a/src/Compiler/Facilities/CompilerLocation.fs b/src/Compiler/Facilities/CompilerLocation.fs
-index 993443e57..8291c0c4f 100644
---- a/src/Compiler/Facilities/CompilerLocation.fs
-+++ b/src/Compiler/Facilities/CompilerLocation.fs
-@@ -297,6 +297,7 @@ module internal FSharpEnvironment =
-             |]
-         elif typeof<obj>.Assembly.GetName().Name = "System.Private.CoreLib" then
-             [|
-+                "net7.0"
-                 "net6.0"
-                 "net5.0"
-                 "netcoreapp3.1"
 diff --git a/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj b/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
 index a16bc1310..507a90a4e 100644
 --- a/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
@@ -275,7 +124,7 @@ index a16bc1310..507a90a4e 100644
      <IsPackable>true</IsPackable>
      <PackageDescription>.NET Core compatible version of the F# compiler fsc.exe.</PackageDescription>
 diff --git a/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec b/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec
-index ee67b15c5..f46b28fd9 100644
+index ee67b15c5..c87a70d9d 100644
 --- a/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec
 +++ b/src/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec
 @@ -4,7 +4,7 @@
@@ -283,7 +132,7 @@ index ee67b15c5..f46b28fd9 100644
          <language>en-US</language>
          <dependencies>
 -            <group targetFramework=".NET6.0" />
-+            <group targetFramework=".net7.0" />
++            <group targetFramework=".NET7.0" />
          </dependencies>
          <contentFiles>
              <files include="any\any\default.win32manifest"                       buildAction="Content" copyToOutput="true" flatten="false" />
