@@ -13,7 +13,8 @@ Subject: [PATCH] Change TargetFramework to net7.0
  .../Microsoft.DotNet.PackageValidation.csproj                 | 2 +-
  src/Layout/redist/targets/GenerateLayout.targets              | 4 ++--
  src/Layout/redist/targets/OverlaySdkOnLKG.targets             | 2 +-
- 9 files changed, 10 insertions(+), 10 deletions(-)
+ src/Layout/tool_fsharp/tool_fsc.csproj                        | 2 +-
+ 10 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj b/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj
 index 40927ae1f2..3c2236e38d 100644
@@ -141,3 +142,16 @@ index ea27beca35..e25ed74f35 100644
        <DotNetWatchOverlay Include="$(ArtifactsDir)bin\DotNetWatchTasks\$(Configuration)\netstandard2.0\DotNetWatchTasks.dll" />
      </ItemGroup>
  
+diff --git a/src/Layout/tool_fsharp/tool_fsc.csproj b/src/Layout/tool_fsharp/tool_fsc.csproj
+index a40c245de5..573e20c971 100644
+--- a/src/Layout/tool_fsharp/tool_fsc.csproj
++++ b/src/Layout/tool_fsharp/tool_fsc.csproj
+@@ -19,7 +19,7 @@
+     </PropertyGroup>
+     <ItemGroup>
+         <ResolvedFileToPublish
+-          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/net6.0/FSharp.Core.xml"
++          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/net7.0/FSharp.Core.xml"
+           CopyToPublishDirectory="PreserveNewest"
+           DestinationSubPath="FSharp.Core.xml"
+           RelativePath="FSharp.Core.xml"
