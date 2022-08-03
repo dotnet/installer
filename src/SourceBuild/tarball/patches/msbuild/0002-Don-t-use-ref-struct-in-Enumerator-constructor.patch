@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 3 Aug 2022 10:37:03 -0700
+Subject: [PATCH] Don't use ref struct in Enumerator constructor
+
+---
+ src/StringTools/InternableString.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/StringTools/InternableString.cs b/src/StringTools/InternableString.cs
+index f04d2a9e9..7b4afac54 100644
+--- a/src/StringTools/InternableString.cs
++++ b/src/StringTools/InternableString.cs
+@@ -170,7 +170,7 @@ namespace Microsoft.NET.StringTools
+         /// <returns>The enumerator.</returns>
+         public Enumerator GetEnumerator()
+         {
+-            return new Enumerator(ref this);
++            return new Enumerator(this);
+         }
+ 
+         /// <summary>
