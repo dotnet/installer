@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Thu, 4 Aug 2022 15:25:54 -0700
+Subject: [PATCH] Target net7.0 in additional projects
+
+---
+ .../src/System.Diagnostics.DiagnosticSource.csproj            | 4 ++--
+ .../tools/GenerateRegexCasingTable.csproj                     | 2 +-
+ src/mono/msbuild/apple/build/AppleApp.LocalBuild.props        | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
+index b8f3b225c72..8ae354428d6 100644
+--- a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
++++ b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
+@@ -1,13 +1,13 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>$(NetCoreAppCurrent);$(NetCoreAppMinimum);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <CLSCompliant>false</CLSCompliant>
+     <NoWarn>$(NoWarn);SA1205;CA1845</NoWarn>
+     <EnableTrimAnalyzer Condition="$([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETFramework'">false</EnableTrimAnalyzer>
+     <IsPackable>true</IsPackable>
+     <!-- Lifetime rules introduced in C# 11 impact scenarios in net6 framework -->
+-    <LangVersion Condition="'$(TargetFramework)' == 'net6.0'">10</LangVersion>
++    <LangVersion Condition="'$(TargetFramework)' == 'net7.0'">10</LangVersion>
+     <PackageDescription>Provides Classes that allow you to decouple code logging rich (unserializable) diagnostics/telemetry (e.g. framework) from code that consumes it (e.g. tools)
+ 
+ Commonly Used Types:
+diff --git a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj b/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
+index 26b5733684c..12d28657c3c 100644
+--- a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
++++ b/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+       <OutputType>Exe</OutputType>
+-      <TargetFramework>net6.0</TargetFramework>
++      <TargetFramework>net7.0</TargetFramework>
+       <LangVersion>latest</LangVersion>
+       <Nullable>enable</Nullable>
+   </PropertyGroup>
+diff --git a/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props b/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
+index 5d1d76f585d..a0c1dbe51d6 100644
+--- a/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
++++ b/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
+@@ -23,7 +23,7 @@
+ 
+   <PropertyGroup>
+     <_NetCoreAppCurrent>net7.0</_NetCoreAppCurrent>
+-    <_NetCoreAppToolCurrent>net6.0</_NetCoreAppToolCurrent>
++    <_NetCoreAppToolCurrent>net7.0</_NetCoreAppToolCurrent>
+     <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+   </PropertyGroup>
+ 
