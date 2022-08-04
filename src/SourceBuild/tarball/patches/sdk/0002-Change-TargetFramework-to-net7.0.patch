@@ -4,18 +4,83 @@ Date: Fri, 22 Jul 2022 15:10:08 -0700
 Subject: [PATCH] Change TargetFramework to net7.0
 
 ---
- .../Microsoft.Extensions.DotNetDeltaApplier.csproj            | 2 +-
- .../Microsoft.DotNet.Cli.Utils.csproj                         | 2 +-
  .../Microsoft.DotNet.ApiCompat.Task.csproj                    | 2 +-
  .../build/Microsoft.DotNet.ApiCompat.Task.targets             | 2 +-
  .../Microsoft.DotNet.ApiCompat.Tool.csproj                    | 2 +-
  .../Microsoft.DotNet.ApiCompatibility.csproj                  | 2 +-
  .../Microsoft.DotNet.PackageValidation.csproj                 | 2 +-
+ .../Microsoft.Extensions.DotNetDeltaApplier.csproj            | 2 +-
+ .../Microsoft.DotNet.Cli.Utils.csproj                         | 2 +-
  src/Layout/redist/targets/GenerateLayout.targets              | 4 ++--
  src/Layout/redist/targets/OverlaySdkOnLKG.targets             | 2 +-
  src/Layout/tool_fsharp/tool_fsc.csproj                        | 2 +-
  10 files changed, 11 insertions(+), 11 deletions(-)
 
+diff --git a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
+index 8177095a90..0c1f7acebf 100644
+--- a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
++++ b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net6.0;net472</TargetFrameworks>
++    <TargetFrameworks>net7.0;net472</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShippingPackage>true</IsShippingPackage>
+     <StrongNameKeyId>Open</StrongNameKeyId>
+diff --git a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
+index fb49a12fb4..2ce737c75d 100644
+--- a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
++++ b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net472\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
+-    <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net6.0\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
++    <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net7.0\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
+     <UseApiCompatPackage>true</UseApiCompatPackage>
+     <!-- TODO: Remove when the consumers of this package upgraded to a newer SDK with this change. -->
+     <UseCompatibilityPackage>true</UseCompatibilityPackage>
+diff --git a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
+index 2de17ce715..32e6580920 100644
+--- a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
++++ b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFramework>net6.0</TargetFramework>
++    <TargetFramework>net7.0</TargetFramework>
+     <OutputType>Exe</OutputType>
+     <Nullable>enable</Nullable>
+     <IsPackable>true</IsPackable>
+diff --git a/src/ApiCompat/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj b/src/ApiCompat/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
+index d875a6a5a4..a58cf47e98 100644
+--- a/src/ApiCompat/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
++++ b/src/ApiCompat/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net6.0;net472</TargetFrameworks>
++    <TargetFrameworks>net7.0;net472</TargetFrameworks>
+     <StrongNameKeyId>Open</StrongNameKeyId>
+     <Nullable>enable</Nullable>
+     <!-- We need to compare ISymbols in a special way (by name) and roslyn symbol comparers take more heuristics into consideration.-->
+diff --git a/src/ApiCompat/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj b/src/ApiCompat/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
+index aa6de655f5..fca12f7f67 100644
+--- a/src/ApiCompat/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
++++ b/src/ApiCompat/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net6.0;net472</TargetFrameworks>
++    <TargetFrameworks>net7.0;net472</TargetFrameworks>
+     <StrongNameKeyId>Open</StrongNameKeyId>
+     <Nullable>enable</Nullable>
+   </PropertyGroup>
 diff --git a/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj b/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj
 index 40927ae1f2..3c2236e38d 100644
 --- a/src/BuiltInTools/DotNetDeltaApplier/Microsoft.Extensions.DotNetDeltaApplier.csproj
@@ -42,71 +107,6 @@ index 006f56939d..ddcfe2e362 100644
      </PropertyGroup>
      <Error Condition="!Exists('$(MSBuildPathInPackage)')" Text="Something moved around in Microsoft.Build.Runtime, adjust code here accordingly." />
      <ItemGroup>
-diff --git a/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj b/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
-index 8177095a90..0c1f7acebf 100644
---- a/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
-+++ b/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFrameworks>net6.0;net472</TargetFrameworks>
-+    <TargetFrameworks>net7.0;net472</TargetFrameworks>
-     <IsPackable>true</IsPackable>
-     <IsShippingPackage>true</IsShippingPackage>
-     <StrongNameKeyId>Open</StrongNameKeyId>
-diff --git a/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets b/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
-index fb49a12fb4..2ce737c75d 100644
---- a/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
-+++ b/src/Compatibility/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.Task.targets
-@@ -2,7 +2,7 @@
- <Project>
-   <PropertyGroup>
-     <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net472\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
--    <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net6.0\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
-+    <DotNetApiCompatTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net7.0\Microsoft.DotNet.ApiCompat.Task.dll</DotNetApiCompatTaskAssembly>
-     <UseApiCompatPackage>true</UseApiCompatPackage>
-     <!-- TODO: Remove when the consumers of this package upgraded to a newer SDK with this change. -->
-     <UseCompatibilityPackage>true</UseCompatibilityPackage>
-diff --git a/src/Compatibility/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj b/src/Compatibility/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
-index 2de17ce715..32e6580920 100644
---- a/src/Compatibility/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
-+++ b/src/Compatibility/Microsoft.DotNet.ApiCompat.Tool/Microsoft.DotNet.ApiCompat.Tool.csproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework>net7.0</TargetFramework>
-     <OutputType>Exe</OutputType>
-     <Nullable>enable</Nullable>
-     <IsPackable>true</IsPackable>
-diff --git a/src/Compatibility/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj b/src/Compatibility/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
-index 0f880d418d..833b801809 100644
---- a/src/Compatibility/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
-+++ b/src/Compatibility/Microsoft.DotNet.ApiCompatibility/Microsoft.DotNet.ApiCompatibility.csproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFrameworks>net6.0;net472</TargetFrameworks>
-+    <TargetFrameworks>net7.0;net472</TargetFrameworks>
-     <StrongNameKeyId>Open</StrongNameKeyId>
-     <!-- We need to compare ISymbols in a special way (by name) and roslyn symbol comparers take more heuristics into consideration.-->
-     <NoWarn>RS1024;$(NoWarn)</NoWarn>
-diff --git a/src/Compatibility/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj b/src/Compatibility/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
-index aa6de655f5..fca12f7f67 100644
---- a/src/Compatibility/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
-+++ b/src/Compatibility/Microsoft.DotNet.PackageValidation/Microsoft.DotNet.PackageValidation.csproj
-@@ -1,7 +1,7 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
-   <PropertyGroup>
--    <TargetFrameworks>net6.0;net472</TargetFrameworks>
-+    <TargetFrameworks>net7.0;net472</TargetFrameworks>
-     <StrongNameKeyId>Open</StrongNameKeyId>
-     <Nullable>enable</Nullable>
-   </PropertyGroup>
 diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
 index c493a1111c..7aa7a82bde 100644
 --- a/src/Layout/redist/targets/GenerateLayout.targets
