@@ -4,11 +4,60 @@ Date: Thu, 4 Aug 2022 15:25:54 -0700
 Subject: [PATCH] Target net7.0 in additional projects
 
 ---
- .../src/System.Diagnostics.DiagnosticSource.csproj            | 4 ++--
- .../tools/GenerateRegexCasingTable.csproj                     | 2 +-
- src/mono/msbuild/apple/build/AppleApp.LocalBuild.props        | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ .../ref/System.Diagnostics.DiagnosticSource.csproj        | 2 +-
+ .../src/CompatibilitySuppressions.xml                     | 8 ++++----
+ .../src/System.Diagnostics.DiagnosticSource.csproj        | 4 ++--
+ .../tools/GenerateRegexCasingTable.csproj                 | 2 +-
+ src/mono/msbuild/apple/build/AppleApp.LocalBuild.props    | 2 +-
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
+index 339529877cf..264f76853f3 100644
+--- a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
++++ b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
+@@ -1,6 +1,6 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>$(NetCoreAppCurrent);$(NetCoreAppMinimum);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
+     <CLSCompliant>false</CLSCompliant>
+   </PropertyGroup>
+ 
+diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml b/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
+index 994ad65b294..df9a74b66f5 100644
+--- a/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
++++ b/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
+@@ -3,25 +3,25 @@
+   <Suppression>
+     <DiagnosticId>CP0002</DiagnosticId>
+     <Target>M:System.Diagnostics.SampleActivity`1.#ctor(System.Object,System.IntPtr)</Target>
+-    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
++    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
+     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
+   </Suppression>
+   <Suppression>
+     <DiagnosticId>CP0002</DiagnosticId>
+     <Target>M:System.Diagnostics.DistributedContextPropagator.PropagatorGetterCallback.#ctor(System.Object,System.IntPtr)</Target>
+-    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
++    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
+     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
+   </Suppression>
+   <Suppression>
+     <DiagnosticId>CP0002</DiagnosticId>
+     <Target>M:System.Diagnostics.DistributedContextPropagator.PropagatorSetterCallback.#ctor(System.Object,System.IntPtr)</Target>
+-    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
++    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
+     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
+   </Suppression>
+   <Suppression>
+     <DiagnosticId>CP0002</DiagnosticId>
+     <Target>M:System.Diagnostics.Metrics.MeasurementCallback`1.#ctor(System.Object,System.IntPtr)</Target>
+-    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
++    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
+     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
+   </Suppression>
+ </Suppressions>
+\ No newline at end of file
 diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
 index b8f3b225c72..8ae354428d6 100644
 --- a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
