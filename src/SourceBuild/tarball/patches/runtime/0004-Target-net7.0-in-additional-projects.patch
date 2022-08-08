@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
 Date: Thu, 4 Aug 2022 15:25:54 -0700
-Subject: [PATCH] Target net7.0 in additional projects
+Subject: [PATCH 4/5] Target net7.0 in additional projects
 
 ---
  .../ref/System.Diagnostics.DiagnosticSource.csproj        | 2 +-
@@ -12,11 +12,11 @@ Subject: [PATCH] Target net7.0 in additional projects
  5 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
-index 339529877cf..264f76853f3 100644
+index c82926c2d6e..1158f355fac 100644
 --- a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
 +++ b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
 @@ -1,6 +1,6 @@
- <Project Sdk="Microsoft.NET.Sdk">
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>$(NetCoreAppCurrent);$(NetCoreAppMinimum);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
 +    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
@@ -59,7 +59,7 @@ index 994ad65b294..df9a74b66f5 100644
  </Suppressions>
 \ No newline at end of file
 diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
-index b8f3b225c72..8ae354428d6 100644
+index 9c22bce30da..13aaecb88da 100644
 --- a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
 +++ b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
 @@ -1,13 +1,13 @@
@@ -75,9 +75,9 @@ index b8f3b225c72..8ae354428d6 100644
      <!-- Lifetime rules introduced in C# 11 impact scenarios in net6 framework -->
 -    <LangVersion Condition="'$(TargetFramework)' == 'net6.0'">10</LangVersion>
 +    <LangVersion Condition="'$(TargetFramework)' == 'net7.0'">10</LangVersion>
+     <EnableAOTAnalyzer>true</EnableAOTAnalyzer>
      <PackageDescription>Provides Classes that allow you to decouple code logging rich (unserializable) diagnostics/telemetry (e.g. framework) from code that consumes it (e.g. tools)
  
- Commonly Used Types:
 diff --git a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj b/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
 index 26b5733684c..12d28657c3c 100644
 --- a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
