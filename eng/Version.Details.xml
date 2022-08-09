@@ -103,14 +103,14 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>bb5ba57f877b922b418138a969b82b3c1b4e40ad</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.401-servicing.22407.5">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.401-servicing.22409.10">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>4c0bf3084642f527f80fdd2631bf8d395ca36b42</Sha>
+      <Sha>555e57592038c7243d11c0c44334cc1ce4af5af1</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.401-servicing.22407.5">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.401-servicing.22409.10">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>4c0bf3084642f527f80fdd2631bf8d395ca36b42</Sha>
+      <Sha>555e57592038c7243d11c0c44334cc1ce4af5af1</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.8-servicing.22368.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -130,7 +130,7 @@
       <Sha>80858f017d7121a4d3f6c1228cc05b063dfe8082</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.3.0-release-20220708-01" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.3.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/microsoft/vstest</Uri>
       <Sha>c7ba2ca721808f830482ace6be06ae93077e0e7b</Sha>
       <SourceBuildTarball RepoName="vstest" ManagedOnly="true" />
