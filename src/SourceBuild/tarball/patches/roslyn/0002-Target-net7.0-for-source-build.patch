@@ -17,9 +17,11 @@ Subject: [PATCH] Target net7.0 for source-build
  src/Interactive/csi/csi.csproj                                 | 3 ++-
  src/Interactive/vbi/vbi.vbproj                                 | 3 ++-
  .../AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj      | 1 +
+ .../AnyCpu/build/Microsoft.Net.Compilers.Toolset.props         | 2 +-
+ .../arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props    | 2 +-
  src/Tools/AnalyzerRunner/AnalyzerRunner.csproj                 | 1 +
  .../Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj  | 1 +
- 15 files changed, 18 insertions(+), 5 deletions(-)
+ 17 files changed, 20 insertions(+), 7 deletions(-)
 
 diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 index 9b17f5da588..39bd096d974 100644
@@ -200,6 +202,32 @@ index 2ff9bc9edd3..81fc1061f92 100644
  
      <IsPackable>true</IsPackable>
      <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
+index 4b771afb964..e839b246e24 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
+@@ -2,7 +2,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net6.0</_RoslynTargetDirectoryName>   
++    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net7.0</_RoslynTargetDirectoryName>   
+     <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_RoslynTargetDirectoryName>   
+     <_RoslynTasksDirectory>$(MSBuildThisFileDirectory)..\tasks\$(_RoslynTargetDirectoryName)\</_RoslynTasksDirectory>
+     <RoslynTasksAssembly>$(_RoslynTasksDirectory)Microsoft.Build.Tasks.CodeAnalysis.dll</RoslynTasksAssembly> 
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props b/src/NuGet/Microsoft.Net.Compilers.Toolset/arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props
+index 4b771afb964..e839b246e24 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props
+@@ -2,7 +2,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net6.0</_RoslynTargetDirectoryName>   
++    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net7.0</_RoslynTargetDirectoryName>   
+     <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_RoslynTargetDirectoryName>   
+     <_RoslynTasksDirectory>$(MSBuildThisFileDirectory)..\tasks\$(_RoslynTargetDirectoryName)\</_RoslynTasksDirectory>
+     <RoslynTasksAssembly>$(_RoslynTasksDirectory)Microsoft.Build.Tasks.CodeAnalysis.dll</RoslynTasksAssembly> 
 diff --git a/src/Tools/AnalyzerRunner/AnalyzerRunner.csproj b/src/Tools/AnalyzerRunner/AnalyzerRunner.csproj
 index d99d5b18fff..1be1e623eba 100644
 --- a/src/Tools/AnalyzerRunner/AnalyzerRunner.csproj
