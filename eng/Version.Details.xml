@@ -103,14 +103,14 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>bb5ba57f877b922b418138a969b82b3c1b4e40ad</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.401-servicing.22409.25">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.401-servicing.22409.41">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>30fdd35bcf10c662e637e72f44b01e51d8e0ee01</Sha>
+      <Sha>525e8c102f8712e91b8aa60d0dfdda836083537b</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.401-servicing.22409.25">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.401-servicing.22409.41">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>30fdd35bcf10c662e637e72f44b01e51d8e0ee01</Sha>
+      <Sha>525e8c102f8712e91b8aa60d0dfdda836083537b</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.8-servicing.22368.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -141,9 +141,9 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.3.0-3.22401.3" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.3.0-3.22409.16" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>41ae77386c335929113f61d6f51f2663d2780443</Sha>
+      <Sha>3afc3513e29bb157c2437ab3564fe0a622fe2ccc</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.3.0" CoherentParentDependency="Microsoft.NET.Sdk">
