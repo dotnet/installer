@@ -72,27 +72,7 @@
     <Bundled31Templates Include="Microsoft.Dotnet.Wpf.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWpfProjectTemplates31PackageVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
     <Bundled31Templates Include="Microsoft.Dotnet.WinForms.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWinFormsProjectTemplates31PackageVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
   </ItemGroup>
-  <ItemGroup Condition="!$(Architecture.StartsWith('arm'))">
-    <Bundled30Templates Include="Microsoft.DotNet.Common.ItemTemplates" PackageVersion="$(MicrosoftDotNetCommonItemTemplates30PackageVersion)" />
-    <Bundled30Templates Include="Microsoft.DotNet.Common.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetCommonProjectTemplates30PackageVersion)" />
-    <Bundled30Templates Include="Microsoft.DotNet.Test.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetTestProjectTemplates30PackageVersion)" />
-    <Bundled30Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
-    <Bundled30Templates Include="Microsoft.Dotnet.Wpf.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWpfProjectTemplates30PackageVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
-    <Bundled30Templates Include="Microsoft.Dotnet.WinForms.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWinFormsProjectTemplates30PackageVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
-    <Bundled30Templates Include="Microsoft.DotNet.Web.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" UseVersionForTemplateInstallPath="true" />
-    <Bundled30Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
-    <Bundled30Templates Include="NUnit3.DotNetNew.Template" PackageVersion="$(NUnit3Templates30PackageVersion)" />
-  </ItemGroup>
-  <ItemGroup Condition="!$(Architecture.StartsWith('arm'))">
-    <Bundled21Templates Include="Microsoft.DotNet.Common.ItemTemplates" PackageVersion="$(MicrosoftDotNetCommonItemTemplates21PackageVersion)" />
-    <Bundled21Templates Include="Microsoft.DotNet.Common.ProjectTemplates.2.1" PackageVersion="$(MicrosoftDotNetCommonProjectTemplates21PackageVersion)" />
-    <Bundled21Templates Include="Microsoft.DotNet.Test.ProjectTemplates.2.1" PackageVersion="$(MicrosoftDotNetTestProjectTemplates21PackageVersion)" />
-    <Bundled21Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
-    <Bundled21Templates Include="Microsoft.DotNet.Web.ProjectTemplates.2.1" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" UseVersionForTemplateInstallPath="true" />
-    <Bundled21Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.2.1" PackageVersion="$(AspNetCorePackageVersionFor21Templates)" />
-    <Bundled21Templates Include="NUnit3.DotNetNew.Template" PackageVersion="$(NUnit3Templates21PackageVersion)" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <CurrentVersionBundledTemplates Include="@(Bundled70Templates)" TemplateFrameworkVersion="7.0"/>
   </ItemGroup>
