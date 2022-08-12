@@ -71,7 +71,7 @@ jobs:
           _RunOnline: false
         Ubuntu1804-Offline:
           _BootstrapPrep: false
-          _Container: ${{ parameters.ubuntu1804Container }}
+          _Container: ${{ parameters.ubuntu2004Container }}
           _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _RunOnline: false
@@ -95,7 +95,7 @@ jobs:
         ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
           Debian9-Offline:
             _BootstrapPrep: true
-            _Container: ${{ parameters.debian9Arm64Container }}
+            _Container: ${{ parameters.debian11Arm64Container }}
             _EnablePoison: false
             _ExcludeOmniSharpTests: false
             _RunOnline: false
