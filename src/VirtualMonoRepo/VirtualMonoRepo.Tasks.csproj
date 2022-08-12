@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RunAnalyzers>false</RunAnalyzers>
+    <Nullable>disable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+
+    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkVersion)" PrivateAssets="All" ExcludeAssets="Runtime" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCoreVersion)" Publish="false" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.DotNet.DarcLib" Version="1.1.0-beta.22411.2" /> <!-- TODO (@prvysoky): Set the version properly -->
+  </ItemGroup>
+
+</Project>
