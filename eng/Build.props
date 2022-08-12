@@ -11,6 +11,7 @@
       <When Condition=" '$(InitializeVMR)' == 'true' ">
         <!-- VMR bootstrap -->
         <ItemGroup>
+          <ProjectToBuild Include="$(RepoRoot)src/SourceBuild/Arcade/src/SourceBuild.Tasks.csproj" BuildInParallel="false" />
           <ProjectToBuild Include="$(RepoRoot)src/VirtualMonoRepo/VirtualMonoRepo.Tasks.csproj" BuildInParallel="false" />
           <ProjectToBuild Include="$(RepoRoot)src/VirtualMonoRepo/InitializeVMR.proj" BuildInParallel="false" />
         </ItemGroup>
