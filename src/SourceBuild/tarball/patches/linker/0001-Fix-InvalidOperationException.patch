@@ -3,18 +3,11 @@ From: MichaelSimons <msimons@microsoft.com>
 Date: Fri, 12 Aug 2022 18:46:56 +0000
 Subject: [PATCH] Fix InvalidOperationException
 
+Backport: https://github.com/dotnet/linker/issues/2971
 ---
- external/cecil                     | 2 +-
  src/linker/Linker/MessageOrigin.cs | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 files changed, 2 insertions(+)
 
-diff --git a/external/cecil b/external/cecil
-index 2cd569a9..fcbb2341 160000
---- a/external/cecil
-+++ b/external/cecil
-@@ -1 +1 @@
--Subproject commit 2cd569a98964629b8fa88284a8b5af8077d5f9de
-+Subproject commit fcbb234133cf1ffba99373b46b5f21edb3bc3787
 diff --git a/src/linker/Linker/MessageOrigin.cs b/src/linker/Linker/MessageOrigin.cs
 index 24d18c06..73a97e80 100644
 --- a/src/linker/Linker/MessageOrigin.cs
