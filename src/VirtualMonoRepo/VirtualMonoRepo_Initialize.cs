@@ -8,6 +8,7 @@ using Microsoft.DotNet.DarcLib;
 using Microsoft.DotNet.DarcLib.Helpers;
 using Microsoft.DotNet.DarcLib.VirtualMonoRepo;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.DotNet.VirtualMonoRepo.Tasks;
 
@@ -39,7 +40,7 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task
     private IVmrManager CreateVmrManager()
     {
         var services = new ServiceCollection()
-            .AddLogging()
+            .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))
             .AddTransient<IProcessManager>(s => ActivatorUtilities.CreateInstance<ProcessManager>(s, "git"))
             .AddSingleton<ISourceMappingParser, SourceMappingParser>()
             .AddSingleton<IVmrManagerFactory, VmrManagerFactory>()
