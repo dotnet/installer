@@ -4,6 +4,10 @@ Date: Fri, 12 Aug 2022 14:02:46 -0500
 Subject: [PATCH] Revert "Consider types with ref fields as managed (#63209)"
 
 This reverts commit e3985ed961e17ba4b53107d14d0bb43826988353.
+
+Related to https://github.com/dotnet/runtime/pull/73466,
+https://github.com/dotnet/source-build/issues/2985,
+https://github.com/dotnet/runtime/issues/73850.
 ---
  .../Portable/Symbols/BaseTypeAnalysis.cs      | 169 +++++++++---------
  .../Test/Semantic/Semantics/RefFieldTests.cs  | 111 ------------
