@@ -6,13 +6,13 @@ Subject: [PATCH] NoWarn IL2070
 Backport: https://github.com/dotnet/aspnetcore/issues/43253
 ---
  Directory.Build.props | 1 +
- 1 file changed, 1 insertions(+)
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 166dbd6487..ebdbe0204b 100644
+index 166dbd6487..d5b1c9a1a8 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -113,6 +113,8 @@
+@@ -113,6 +113,7 @@
      <!-- Ensure API docs are available. -->
      <NoWarn>$(NoWarn.Replace('1591', ''))</NoWarn>
      <NoWarn Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">$(NoWarn);0105</NoWarn>
