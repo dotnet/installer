@@ -14,7 +14,7 @@
 
   <PropertyGroup>
     <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
-    <TarballDir>$(ArtifactsDir)tarball/</TarballDir>
+    <TarballDir Condition=" '$(TarballDir)' == '' ">$(ArtifactsDir)tarball/</TarballDir>
     <TarballRootDir>$([MSBuild]::EnsureTrailingSlash('$(TarballDir)'))</TarballRootDir>
     <TarballSourceDir>$(TarballRootDir)src/</TarballSourceDir>
     <TarballGitInfoDir>$(TarballRootDir)git-info/</TarballGitInfoDir>
@@ -298,7 +298,7 @@
       <EngCommonContent Include="$(RepoRoot)eng/common/**/*" />
     </ItemGroup>
 
-    <Copy
+    <Copy Condition=" '$(InitializeVMR)' != 'true' "
       SourceFiles="$(TarballGitInfoDir)runtime.props"
       DestinationFiles="$(TarballGitInfoDir)runtime-portable.props" />
 
