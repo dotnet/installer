@@ -8,7 +8,7 @@
     <VmrDir>$([MSBuild]::EnsureTrailingSlash('$(VmrDir)'))</VmrDir>
     <TmpDir Condition=" '$(TmpDir)' == '' ">$(RepoRoot)tmp/</TmpDir>
 
-    <!-- Override this for the source build targets -->
+    <!-- We set this for the source build targets to work well -->
     <TarballDir>$(VmrDir)</TarballDir>
   </PropertyGroup>
 
@@ -26,8 +26,9 @@
                                                  GenerateVersionFile;
                                                  InitializeCleanVmr;
                                                  CopyTarballContent;
-                                                 InitialVmrCommit;
-                                                 SetupSelfGithubInfo">
+                                                 CommitInitialContent;
+                                                 SetupSelfGithubInfo;
+                                                 InitializeRepoAndDependentsRecursive">
     <Message Text="VMR was successfully initialized in '$(VmrDir)'" Importance="High" />
   </Target>
 
@@ -39,12 +40,77 @@
     <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
 
-    <Exec Command="git init -b main" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git -C '$(VmrDir)' init -b main" />
   </Target>
 
-  <Target Name="InitialVmrCommit">
-    <Exec Command="git add -A" WorkingDirectory="$(VmrDir)" />
-    <Exec Command="git commit -m 'VMR initialized'" WorkingDirectory="$(VmrDir)" />
+  <Target Name="CommitInitialContent">
+    <Exec Command="git -C '$(VmrDir)' add -A" />
+    <Exec Command="git -C '$(VmrDir)' commit -m 'VMR initialized'" />
+  </Target>
+
+  <Target Name="InitializeRepoAndDependentsRecursive"
+    DependsOnTargets="GetSourceBuildIntermediateNupkgNameConvention">
+
+    <Message Text="--> Initializing repo $(SourceBuildRepoName)" Importance="High" />
+    <PropertyGroup>
+      <SourceDir>$(SourceBuildRepoName)/</SourceDir>
+      <TarballRepoSourceDir>$(TarballSourceDir)$(SourceDir)</TarballRepoSourceDir>
+      <TarballRepoSourceEngDir>$(TarballSourceDir)$(SourceDir)eng/</TarballRepoSourceEngDir>
+      <TarballVersionDetailsFile>$(TarballRepoSourceEngDir)Version.Details.xml</TarballVersionDetailsFile>
+    </PropertyGroup>
+
+    <VirtualMonoRepo_Initialize
+      Repository="$(SourceBuildRepoName)"
+      Revision="$(RepoSha)"
+      VmrPath="$(VmrDir)"
+      TmpPath="$(TmpDir)" />
+
+    <Message Text="--> Done initializing repo $(SourceBuildRepoName)" Importance="High" />
+
+    <!-- Apply source-build patches -->
+    <ItemGroup>
+      <SourceBuildPatchFile Include="$(RepoRoot)src/SourceBuild/tarball/patches/$(SourceBuildRepoName)/*.patch" />
+    </ItemGroup>
+
+    <Message
+      Text="--> Applying $(SourceBuildRepoName) Patches"
+      Importance="High"
+      Condition="'@(SourceBuildPatchFile)' != ''" />
+    <Exec
+      Command="git --work-tree=$(TarballRepoSourceDir) apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
+      WorkingDirectory="$(TarballRepoSourceDir)"
+      Condition="'@(SourceBuildPatchFile)' != ''" />
+    <Message
+      Text="--> Done Applying $(SourceBuildRepoName) Patches"
+      Importance="High"
+      Condition="'@(SourceBuildPatchFile)' != ''" />
+
+    <Tarball_ReadSourceBuildIntermediateNupkgDependencies
+      VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(TarballVersionDetailsFile)))"
+      SourceBuildIntermediateNupkgPrefix="$(SourceBuildIntermediateNupkgPrefix)"
+      SourceBuildIntermediateNupkgRid="$(SourceBuildIntermediateNupkgRid)"
+      ConvertInternalRepos="$(ConvertInternalRepos)">
+      <Output TaskParameter="Dependencies" ItemName="SourceBuildRepos" />
+    </Tarball_ReadSourceBuildIntermediateNupkgDependencies>
+
+    <!-- Remove repo if it has already be cloned at any sha.  This results in
+         The commit sha for the cloned repo in the tarball being the one that
+         was first encountered. -->
+    <ItemGroup>
+      <SourceBuildRepos Remove="@(SourceBuildRepos)" Condition=" EXISTS('$(TarballGitInfoDir)%(SourceBuildRepoName).props')" />
+    </ItemGroup>
+
+    <Tarball_WriteSourceRepoProperties
+      SourceBuildMetadataDir="$(TarballGitInfoDir)"
+      Dependencies="@(SourceBuildRepos)" />
+
+    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
+    <Message Text="-->     [@(SourceBuildRepos)]" Importance="High" />
+    <MSBuild Projects="$(MSBuildProjectFile)"
+      Condition=" '@(SourceBuildRepos)' != '' "
+      Targets="InitializeRepoAndDependentsRecursive"
+      Properties="SourceBuildRepoName=%(SourceBuildRepos.SourceBuildRepoName);RepoSha=%(SourceBuildRepos.Sha)" />
+
   </Target>
 
 </Project>
