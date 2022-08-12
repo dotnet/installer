@@ -14,13 +14,20 @@
 
   <Import Project="../SourceBuild/Arcade/tools/SourceBuildArcadeTarball.targets" />
 
+  <PropertyGroup>
+    <VmrGitInfoDir>$(TarballGitInfoDir)</VmrGitInfoDir>
+  </PropertyGroup>
+
   <UsingTask TaskName="Microsoft.DotNet.VirtualMonoRepo.Tasks.VirtualMonoRepo_Initialize" AssemblyFile="$(VirtualMonoRepoTasksAssembly)" />
 
   <Target Name="Build" DependsOnTargets="InitializeVMR" />
 
-  <Target Name="InitializeVMR" DependsOnTargets="InitializeCleanVmr;
+  <Target Name="InitializeVMR" DependsOnTargets="GenerateFullNuGetVersion;
+                                                 GenerateVersionFile;
+                                                 InitializeCleanVmr;
                                                  CopyTarballContent;
-                                                 InitialVmrCommit">
+                                                 InitialVmrCommit;
+                                                 SetupSelfGithubInfo">
     <Message Text="VMR was successfully initialized in '$(VmrDir)'" Importance="High" />
   </Target>
 
@@ -29,9 +36,10 @@
 
     <RemoveDir Directories='$(VmrDir)' Condition=" EXISTS('$(VmrDir)') " />
     <MakeDir Directories="$(VmrDir)" />
+    <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
 
-    <Exec Command="git init" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git init -b main" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="InitialVmrCommit">
