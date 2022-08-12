@@ -69,7 +69,7 @@ jobs:
           _EnablePoison: true
           _ExcludeOmniSharpTests: false
           _RunOnline: false
-        Ubuntu1804-Offline:
+        Ubuntu2004-Offline:
           _BootstrapPrep: false
           _Container: ${{ parameters.ubuntu2004Container }}
           _EnablePoison: false
@@ -93,7 +93,7 @@ jobs:
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       matrix:
         ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-          Debian9-Offline:
+          Debian11-Offline:
             _BootstrapPrep: true
             _Container: ${{ parameters.debian11Arm64Container }}
             _EnablePoison: false
