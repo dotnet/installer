@@ -14,9 +14,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.DotNet.VirtualMonoRepo.Tasks;
 
-public class VirtualMonoRepo_Initialize : Build.Utilities.Task
+public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
 {
     private readonly Lazy<IServiceProvider> _serviceProvider;
+    private readonly CancellationTokenSource _cancellationToken = new();
 
     [Required]
     public string Repository { get; set; }
@@ -40,8 +41,13 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task
     {
         var factory = _serviceProvider.Value.GetRequiredService<IVmrManagerFactory>();
         var vmrManager = await factory.CreateVmrManager(_serviceProvider.Value, VmrPath, TmpPath);
-        await vmrManager.InitializeVmr(Repository, Revision, false, default);
+        await vmrManager.InitializeVmr(Repository, Revision, false, _cancellationToken.Token);
         return true;
+    }
+
+    public void Cancel()
+    {
+        _cancellationToken.Cancel();
     }
 
     private IServiceProvider CreateServiceProvider() => new ServiceCollection()
