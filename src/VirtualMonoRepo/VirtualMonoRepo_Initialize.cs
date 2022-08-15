@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 using Microsoft.DotNet.DarcLib;
 using Microsoft.DotNet.DarcLib.Helpers;
@@ -14,6 +16,8 @@ namespace Microsoft.DotNet.VirtualMonoRepo.Tasks;
 
 public class VirtualMonoRepo_Initialize : Build.Utilities.Task
 {
+    private readonly Lazy<IServiceProvider> _serviceProvider;
+
     [Required]
     public string Repository { get; set; }
 
@@ -25,32 +29,26 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task
 
     public string Revision { get; set; }
 
-    public override bool Execute()
+    public VirtualMonoRepo_Initialize()
     {
-        var vmrManager = CreateVmrManager();
+        _serviceProvider = new(CreateServiceProvider);
+    }
 
-        var mapping = vmrManager.Mappings.FirstOrDefault(m => m.Name == Repository)
-            ?? throw new Exception($"No repository mapping named `{Repository}` found!");
+    public override bool Execute() => ExecuteAsync().GetAwaiter().GetResult();
 
-        vmrManager.InitializeVmr(mapping, Revision, false, default).GetAwaiter().GetResult();
-
+    private async Task<bool> ExecuteAsync()
+    {
+        var factory = _serviceProvider.Value.GetRequiredService<IVmrManagerFactory>();
+        var vmrManager = await factory.CreateVmrManager(_serviceProvider.Value, VmrPath, TmpPath);
+        await vmrManager.InitializeVmr(Repository, Revision, false, default);
         return true;
     }
 
-    private IVmrManager CreateVmrManager()
-    {
-        var services = new ServiceCollection()
-            .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))
-            .AddTransient<IProcessManager>(s => ActivatorUtilities.CreateInstance<ProcessManager>(s, "git"))
-            .AddSingleton<ISourceMappingParser, SourceMappingParser>()
-            .AddSingleton<IVmrManagerFactory, VmrManagerFactory>()
-            .AddSingleton<IRemoteFactory>(s => ActivatorUtilities.CreateInstance<RemoteFactory>(s, TmpPath))
-            .AddSingleton<IVmrManager>(s =>
-            {
-                var factory = s.GetRequiredService<IVmrManagerFactory>();
-                return factory.CreateVmrManager(s, VmrPath, TmpPath).GetAwaiter().GetResult();
-            });
-
-        return services.BuildServiceProvider().GetRequiredService<IVmrManager>();
-    }
+    private IServiceProvider CreateServiceProvider() => new ServiceCollection()
+        .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))
+        .AddTransient<IProcessManager>(sp => ActivatorUtilities.CreateInstance<ProcessManager>(sp, "git"))
+        .AddSingleton<ISourceMappingParser, SourceMappingParser>()
+        .AddSingleton<IVmrManagerFactory, VmrManagerFactory>()
+        .AddSingleton<IRemoteFactory>(sp => ActivatorUtilities.CreateInstance<RemoteFactory>(sp, TmpPath))
+        .BuildServiceProvider();
 }
