@@ -10,9 +10,16 @@ usage() {
     echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
     echo "  installing the version of dotnet referenced in global.json"
     echo ""
+    echo "options:"
+    echo "  --runtime-source-feed        URL of a remote server or a local directory, from which SDKs and"
+    echo "                               runtimes can be downloaded"
+    echo "  --runtime-source-feed-key    Key for accessing the above server, if necessary"
+    echo ""
 }
 
 buildBootstrap=false
+runtime_source_feed=''
+runtime_source_feed_key=''
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
@@ -23,6 +30,14 @@ while :; do
         "-?"|-h|--help)
             usage
             exit 0
+            ;;
+        --runtime-source-feed)
+            runtime_source_feed=$2
+            shift
+            ;;
+        --runtime-source-feed-key)
+            runtime_source_feed_key=$2
+            shift
             ;;
         *)
             positional_args+=("$1")
