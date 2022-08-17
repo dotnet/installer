@@ -45,10 +45,7 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
         return true;
     }
 
-    public void Cancel()
-    {
-        _cancellationToken.Cancel();
-    }
+    public void Cancel() => _cancellationToken.Cancel();
 
     private IServiceProvider CreateServiceProvider() => new ServiceCollection()
         .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))

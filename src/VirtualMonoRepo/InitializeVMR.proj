@@ -10,6 +10,7 @@
 
     <!-- We set this for the source build targets to work well -->
     <TarballDir>$(VmrDir)</TarballDir>
+    <InitializeVMR>true</InitializeVMR>
   </PropertyGroup>
 
   <Import Project="../SourceBuild/Arcade/tools/SourceBuildArcadeTarball.targets" />
@@ -67,24 +68,6 @@
 
     <Message Text="--> Done initializing repo $(SourceBuildRepoName)" Importance="High" />
 
-    <!-- Apply source-build patches -->
-    <ItemGroup>
-      <SourceBuildPatchFile Include="$(RepoRoot)src/SourceBuild/tarball/patches/$(SourceBuildRepoName)/*.patch" />
-    </ItemGroup>
-
-    <Message
-      Text="--> Applying $(SourceBuildRepoName) Patches"
-      Importance="High"
-      Condition="'@(SourceBuildPatchFile)' != ''" />
-    <Exec
-      Command="git --work-tree=$(TarballRepoSourceDir) apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
-      WorkingDirectory="$(TarballRepoSourceDir)"
-      Condition="'@(SourceBuildPatchFile)' != ''" />
-    <Message
-      Text="--> Done Applying $(SourceBuildRepoName) Patches"
-      Importance="High"
-      Condition="'@(SourceBuildPatchFile)' != ''" />
-
     <Tarball_ReadSourceBuildIntermediateNupkgDependencies
       VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(TarballVersionDetailsFile)))"
       SourceBuildIntermediateNupkgPrefix="$(SourceBuildIntermediateNupkgPrefix)"
@@ -105,7 +88,7 @@
       Dependencies="@(SourceBuildRepos)" />
 
     <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
-    <Message Text="-->     [@(SourceBuildRepos)]" Importance="High" />
+    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" />
     <MSBuild Projects="$(MSBuildProjectFile)"
       Condition=" '@(SourceBuildRepos)' != '' "
       Targets="InitializeRepoAndDependentsRecursive"
