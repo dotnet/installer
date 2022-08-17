@@ -235,7 +235,7 @@
       Dependencies="@(SourceBuildRepos)" />
 
     <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
-    <Message Text="-->     [@(SourceBuildRepos)]" Importance="High" />
+    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" />
     <MSBuild Projects="$(MSBuildProjectFile)"
       Condition=" '@(SourceBuildRepos)' != '' "
       Targets="CloneRepoAndDependentsRecursive"
