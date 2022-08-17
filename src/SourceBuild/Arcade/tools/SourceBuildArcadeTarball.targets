@@ -234,8 +234,8 @@
       SourceBuildMetadataDir="$(TarballGitInfoDir)"
       Dependencies="@(SourceBuildRepos)" />
 
-    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
-    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" />
+    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
+    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
     <MSBuild Projects="$(MSBuildProjectFile)"
       Condition=" '@(SourceBuildRepos)' != '' "
       Targets="CloneRepoAndDependentsRecursive"

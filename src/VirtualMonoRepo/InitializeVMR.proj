@@ -23,6 +23,7 @@
 
   <Target Name="Build" DependsOnTargets="InitializeVMR" />
 
+  <!-- <Target Name="InitializeVMR" DependsOnTargets="InitializeRepoAndDependentsRecursive"> -->
   <Target Name="InitializeVMR" DependsOnTargets="GenerateFullNuGetVersion;
                                                  GenerateVersionFile;
                                                  InitializeCleanVmr;
@@ -87,8 +88,8 @@
       SourceBuildMetadataDir="$(TarballGitInfoDir)"
       Dependencies="@(SourceBuildRepos)" />
 
-    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" />
-    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" />
+    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
+    <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
     <MSBuild Projects="$(MSBuildProjectFile)"
       Condition=" '@(SourceBuildRepos)' != '' "
       Targets="InitializeRepoAndDependentsRecursive"
