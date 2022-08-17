@@ -61,9 +61,9 @@
 
   <PropertyGroup>
       <VersionFeature21>30</VersionFeature21>
-      <VersionFeature31>27</VersionFeature31>
+      <VersionFeature31>28</VersionFeature31>
       <VersionFeature50>17</VersionFeature50>
-      <VersionFeature60>7</VersionFeature60>
+      <VersionFeature60>8</VersionFeature60>
   </PropertyGroup>
 
   <Target Name="GenerateBundledVersionsProps" DependsOnTargets="SetupBundledComponents">
@@ -371,6 +371,7 @@ Copyright (c) .NET Foundation. All rights reserved.
                       AppHostPackNamePattern="Microsoft.NETCore.App.Host.**RID**"
                       AppHostPackVersion="$(_NETCoreAppPackageVersion)"
                       AppHostRuntimeIdentifiers="@(NetCoreAppHostRids, '%3B')"
+                      ExcludedRuntimeIdentifiers="android"
                       />
 
     <KnownCrossgen2Pack Include="Microsoft.NETCore.App.Crossgen2"
@@ -502,6 +503,7 @@ Copyright (c) .NET Foundation. All rights reserved.
                       AppHostPackNamePattern="Microsoft.NETCore.App.Host.**RID**"
                       AppHostPackVersion="$(_NET60RuntimePackVersion)"
                       AppHostRuntimeIdentifiers="@(Net60AppHostRids, '%3B')"
+                      ExcludedRuntimeIdentifiers="android"
                       />
 
     <KnownCrossgen2Pack Include="Microsoft.NETCore.App.Crossgen2"
