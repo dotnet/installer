@@ -30,7 +30,6 @@
       SetupSelfGithubInfo;
       CloneRepoAndDependentsRecursive;
       CleanClonedSource;
-      RestoreTextOnlyPackages;
       CopyTextOnlyPackages;
       CopyTarballContent;
       ">
@@ -285,7 +284,7 @@
 
     <Message Text="Restoring text only packages..." Importance="High" />
 
-    <MSBuild Projects="../Arcade/tools/TextOnlyPackages.csproj"
+    <MSBuild Projects="$(RepoRoot)src/SourceBuild/Arcade/tools/TextOnlyPackages.csproj"
              Properties="TargetPackagesPath=$(TextOnlyPackageRestoreDir)"
              Targets="Restore" />
   </Target>
@@ -428,4 +427,3 @@
   </Target>
 
 </Project>
-

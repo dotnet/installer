@@ -7,6 +7,7 @@
     <VmrDir Condition=" '$(VmrDir)' == '' ">$(ArtifactsDir)vmr/</VmrDir>
     <VmrDir>$([MSBuild]::EnsureTrailingSlash('$(VmrDir)'))</VmrDir>
     <TmpDir Condition=" '$(TmpDir)' == '' ">$(RepoRoot)tmp/</TmpDir>
+    <VmrDefaultBranch Condition=" '$(VmrDefaultBranch)' == '' ">main</VmrDefaultBranch>
 
     <!-- We set this for the source build targets to work well -->
     <TarballDir>$(VmrDir)</TarballDir>
@@ -23,14 +24,21 @@
 
   <Target Name="Build" DependsOnTargets="InitializeVMR" />
 
-  <!-- <Target Name="InitializeVMR" DependsOnTargets="InitializeRepoAndDependentsRecursive"> -->
+  <!--
+    This target initializes a fresh VMR from scratch by assembling it similarly to the tarball.
+    Instead of cloning the repositories, we pull the sources via the `darc vmr initialize` command.
+    Most of the targets are reused from the tarball generation process (SourceBuildArcadeTarball.targets).
+  -->
   <Target Name="InitializeVMR" DependsOnTargets="GenerateFullNuGetVersion;
                                                  GenerateVersionFile;
                                                  InitializeCleanVmr;
                                                  CopyTarballContent;
                                                  CommitInitialContent;
                                                  SetupSelfGithubInfo;
-                                                 InitializeRepoAndDependentsRecursive">
+                                                 InitializeRepoAndDependentsRecursive;
+                                                 CommitGitInfoFiles;
+                                                 CopyTextOnlyPackages;
+                                                 CommitTextOnlyPackages">
     <Message Text="VMR was successfully initialized in '$(VmrDir)'" Importance="High" />
   </Target>
 
@@ -42,7 +50,7 @@
     <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
 
-    <Exec Command="git -C '$(VmrDir)' init -b main" />
+    <Exec Command="git -C '$(VmrDir)' init -b $(VmrDefaultBranch)" />
   </Target>
 
   <Target Name="CommitInitialContent">
@@ -95,6 +103,20 @@
       Targets="InitializeRepoAndDependentsRecursive"
       Properties="SourceBuildRepoName=%(SourceBuildRepos.SourceBuildRepoName);RepoSha=%(SourceBuildRepos.Sha)" />
 
+  </Target>
+
+  <Target Name="CommitGitInfoFiles">
+    <Copy
+      SourceFiles="$(TarballGitInfoDir)runtime.props"
+      DestinationFiles="$(TarballGitInfoDir)runtime-portable.props" />
+
+    <Exec Command="git -C '$(VmrDir)' add git-info" />
+    <Exec Command="git -C '$(VmrDir)' commit -m 'Initialized git-info files'" />
+  </Target>
+
+  <Target Name="CommitTextOnlyPackages">
+    <Exec Command="git -C '$(VmrDir)' add packages/text-only" />
+    <Exec Command="git -C '$(VmrDir)' commit -m 'Initialized text-only packages'" />
   </Target>
 
 </Project>
