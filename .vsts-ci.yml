@@ -14,6 +14,9 @@ variables:
   value: false
 - name: PostBuildSign
   value: true
+- ${{ if eq(variables['System.TeamProject'], 'public') }}:
+   - name: "skipComponentGovernanceDetection"
+   value: "true"
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
   - group: DotNet-Installer-SDLValidation-Params
