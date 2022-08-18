@@ -15,8 +15,10 @@
 
   <Import Project="../SourceBuild/Arcade/tools/SourceBuildArcadeTarball.targets" />
 
+  <!-- Pull back in some properties from the tarball defaults -->
   <PropertyGroup>
     <VmrGitInfoDir>$(TarballGitInfoDir)</VmrGitInfoDir>
+    <VmrSourceDir>$(TarballSourceDir)</VmrSourceDir>
   </PropertyGroup>
 
   <UsingTask TaskName="Microsoft.DotNet.VirtualMonoRepo.Tasks.VirtualMonoRepo_Initialize" AssemblyFile="$(VirtualMonoRepoTasksAssembly)" />
@@ -42,8 +44,6 @@
   </Target>
 
   <Target Name="InitializeCleanVmr">
-    <Error Text="VmrDir not specified" Condition=" '$(VmrDir)' == '' " />
-
     <RemoveDir Directories='$(VmrDir)' Condition=" EXISTS('$(VmrDir)') " />
     <MakeDir Directories="$(VmrDir)" />
     <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
@@ -63,9 +63,9 @@
     <Message Text="--> Initializing repo $(SourceBuildRepoName)" Importance="High" />
     <PropertyGroup>
       <SourceDir>$(SourceBuildRepoName)/</SourceDir>
-      <TarballRepoSourceDir>$(TarballSourceDir)$(SourceDir)</TarballRepoSourceDir>
-      <TarballRepoSourceEngDir>$(TarballSourceDir)$(SourceDir)eng/</TarballRepoSourceEngDir>
-      <TarballVersionDetailsFile>$(TarballRepoSourceEngDir)Version.Details.xml</TarballVersionDetailsFile>
+      <IndividualRepoSourceDir>$(VmrSourceDir)$(SourceDir)</IndividualRepoSourceDir>
+      <IndividualRepoSourceEngDir>$(VmrSourceDir)$(SourceDir)eng/</IndividualRepoSourceEngDir>
+      <IndividualRepoVersionDetailsFile>$(IndividualRepoSourceEngDir)Version.Details.xml</IndividualRepoVersionDetailsFile>
     </PropertyGroup>
 
     <VirtualMonoRepo_Initialize
@@ -77,7 +77,7 @@
     <Message Text=" -> Done initializing repo $(SourceBuildRepoName)" Importance="High" />
 
     <Tarball_ReadSourceBuildIntermediateNupkgDependencies
-      VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(TarballVersionDetailsFile)))"
+      VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(IndividualRepoVersionDetailsFile)))"
       SourceBuildIntermediateNupkgPrefix="$(SourceBuildIntermediateNupkgPrefix)"
       SourceBuildIntermediateNupkgRid="$(SourceBuildIntermediateNupkgRid)"
       ConvertInternalRepos="$(ConvertInternalRepos)">
@@ -88,14 +88,14 @@
          The commit sha for the cloned repo in the tarball being the one that
          was first encountered. -->
     <ItemGroup>
-      <SourceBuildRepos Remove="@(SourceBuildRepos)" Condition=" EXISTS('$(TarballGitInfoDir)%(SourceBuildRepoName).props')" />
+      <SourceBuildRepos Remove="@(SourceBuildRepos)" Condition=" EXISTS('$(VmrGitInfoDir)%(SourceBuildRepoName).props')" />
     </ItemGroup>
 
     <Tarball_WriteSourceRepoProperties
-      SourceBuildMetadataDir="$(TarballGitInfoDir)"
+      SourceBuildMetadataDir="$(VmrGitInfoDir)"
       Dependencies="@(SourceBuildRepos)" />
 
-    <Message Text="--> Dependencies for $(TarballVersionDetailsFile):" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
+    <Message Text="--> Dependencies for $(IndividualRepoVersionDetailsFile):" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
     <Message Text="-->     %(SourceBuildRepos.SourceBuildRepoName) / %(SourceBuildRepos.Sha)" Importance="High" Condition=" '@(SourceBuildRepos)' != '' " />
     <MSBuild Projects="$(MSBuildProjectFile)"
       Condition=" '@(SourceBuildRepos)' != '' "
@@ -106,8 +106,8 @@
 
   <Target Name="CommitGitInfoFiles">
     <Copy
-      SourceFiles="$(TarballGitInfoDir)runtime.props"
-      DestinationFiles="$(TarballGitInfoDir)runtime-portable.props" />
+      SourceFiles="$(VmrGitInfoDir)runtime.props"
+      DestinationFiles="$(VmrGitInfoDir)runtime-portable.props" />
 
     <Exec Command="git add git-info" WorkingDirectory="$(VmrDir)" />
     <Exec Command="git commit -m 'Initialized git-info files'" WorkingDirectory="$(VmrDir)" />
