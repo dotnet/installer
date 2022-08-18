@@ -50,12 +50,12 @@
     <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
 
-    <Exec Command="git -C '$(VmrDir)' init -b $(VmrDefaultBranch)" />
+    <Exec Command="git init -b $(VmrDefaultBranch)" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="CommitInitialContent">
-    <Exec Command="git -C '$(VmrDir)' add -A" />
-    <Exec Command="git -C '$(VmrDir)' commit -m 'VMR initialized'" />
+    <Exec Command="git add -A" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git commit -m 'VMR initialized'" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="InitializeRepoAndDependentsRecursive"
@@ -75,7 +75,7 @@
       VmrPath="$(VmrDir)"
       TmpPath="$(TmpDir)" />
 
-    <Message Text="--> Done initializing repo $(SourceBuildRepoName)" Importance="High" />
+    <Message Text=" -> Done initializing repo $(SourceBuildRepoName)" Importance="High" />
 
     <Tarball_ReadSourceBuildIntermediateNupkgDependencies
       VersionDetailsXmlFile="$([MSBuild]::NormalizePath($(TarballVersionDetailsFile)))"
@@ -110,13 +110,13 @@
       SourceFiles="$(TarballGitInfoDir)runtime.props"
       DestinationFiles="$(TarballGitInfoDir)runtime-portable.props" />
 
-    <Exec Command="git -C '$(VmrDir)' add git-info" />
-    <Exec Command="git -C '$(VmrDir)' commit -m 'Initialized git-info files'" />
+    <Exec Command="git add git-info" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git commit -m 'Initialized git-info files'" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="CommitTextOnlyPackages">
-    <Exec Command="git -C '$(VmrDir)' add packages/text-only" />
-    <Exec Command="git -C '$(VmrDir)' commit -m 'Initialized text-only packages'" />
+    <Exec Command="git add packages/text-only" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git commit -m 'Initialized text-only packages'" WorkingDirectory="$(VmrDir)" />
   </Target>
 
 </Project>
