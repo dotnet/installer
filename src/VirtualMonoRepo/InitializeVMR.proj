@@ -2,7 +2,7 @@
 <Project>
   <PropertyGroup>
     <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
-    <VirtualMonoRepoTasksAssembly>$(ArtifactsDir)bin/VirtualMonoRepo.Tasks/$(Configuration)/net6.0/VirtualMonoRepo.Tasks.dll</VirtualMonoRepoTasksAssembly>
+    <VirtualMonoRepoTasksAssembly>$(ArtifactsDir)bin/VirtualMonoRepo.Tasks/$(Configuration)/net7.0/VirtualMonoRepo.Tasks.dll</VirtualMonoRepoTasksAssembly>
 
     <VmrDir Condition=" '$(VmrDir)' != '' ">$([MSBuild]::EnsureTrailingSlash('$(VmrDir)'))</VmrDir>
     <TmpDir Condition=" '$(TmpDir)' == '' ">$(RepoRoot)tmp/</TmpDir>
