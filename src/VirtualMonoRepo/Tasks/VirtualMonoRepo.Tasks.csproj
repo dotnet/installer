@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net7.0</TargetFrameworks>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <RunAnalyzers>false</RunAnalyzers>
-    <Nullable>disable</Nullable>
     <LangVersion>preview</LangVersion>
+    <Nullable>disable</Nullable>
+    <RunAnalyzers>false</RunAnalyzers>
     <SignAssembly>false</SignAssembly>
     <IsPackable>false</IsPackable>
     <IsShipping>false</IsShipping>
@@ -12,8 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="*.cs" />
-
     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkVersion)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCoreVersion)" />
     <PackageReference Include="Microsoft.DotNet.DarcLib" Version="$(MicrosoftDotNetDarcLibVersion)" />
