@@ -1,0 +1,31 @@
+From 451aa3e9544b0214d0e8e844c27af3847f5bf391 Mon Sep 17 00:00:00 2001
+From: Antoine Martin <dev@ayakael.net>
+Date: Fri, 18 Feb 2022 05:14:39 +0000
+Subject: [PATCH 1/1] musl build fix
+
+Line causes build of aspnetcore on arm to look for linux version of
+CrossGen2 rather than linux-musl. This removes the line so that
+BuildOsName is pulled from TargetOsName as expected
+
+Will be fixed once https://github.com/dotnet/aspnetcore/issues/37400
+is addressed.
+
+---
+ .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj      | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+index aeb3c08f13..380fc5fbac 100644
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+@@ -104,7 +104,6 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+       Special case the crossgen2 package reference on Windows to avoid the x86 package when building in Visual Studio.
+     -->
+     <BuildOsName>$(TargetOsName)</BuildOsName>
+-    <BuildOsName Condition="'$(TargetOsName)' == 'linux-musl' and '$(TargetArchitecture)'!='x64'">linux</BuildOsName>
+     <Crossgen2BuildArchitecture Condition=" '$(BuildOsName)' == 'win' ">x64</Crossgen2BuildArchitecture>
+     <Crossgen2BuildArchitecture Condition=" '$(Crossgen2BuildArchitecture)' == '' ">$(BuildArchitecture)</Crossgen2BuildArchitecture>
+     <Crossgen2PackageRootVariableName>PkgMicrosoft_NETCore_App_Crossgen2_$(BuildOsName)-$(Crossgen2BuildArchitecture)</Crossgen2PackageRootVariableName>
+-- 
+2.34.1
+

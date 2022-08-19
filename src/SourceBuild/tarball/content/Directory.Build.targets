@@ -10,6 +10,13 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="GetOSPlatformIsMuslCheck"
+          BeforeTargets="CollectPackageReferences">
+    <Exec IgnoreExitCode="true" Command="ldd --version 2&gt;&amp;1 | grep -q musl">
+      <Output TaskParameter="ExitCode" PropertyName="OSPlatformIsMuslCheck" />
+    </Exec>
+  </Target>
+
   <Import Condition="'$(SkipArcadeSdkImport)' != 'true'" Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
 </Project>

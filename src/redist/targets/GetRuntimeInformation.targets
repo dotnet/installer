@@ -1,6 +1,13 @@
 <Project>
   <Target Name="GetCurrentRuntimeInformation">
+    <Exec IgnoreExitCode="true" Command="ldd --version 2&gt;&amp;1 | grep -q musl">
+      <Output TaskParameter="ExitCode" PropertyName="OSPlatformIsMuslCheck" />
+    </Exec>
+
     <PropertyGroup>
+      <OSPlatformIsMusl Condition="$(OSPlatformIsMuslCheck) == '0'">true</OSPlatformIsMusl>
+      <OSPlatformIsMusl Condition="$(OSPlatformIsMusl) == ''">false</OSPlatformIsMusl>
+
       <HostRid Condition="'$(HostRid)' == '' and '$(MSBuildRuntimeType)' == 'core'">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</HostRid>
       <HostRid Condition="'$(HostRid)' == '' and '$(MSBuildRuntimeType)' != 'core'">win-$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant)</HostRid>
 
@@ -9,6 +16,8 @@
       <HostOSName Condition=" '$(HostOSName)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) ">osx</HostOSName>
       <HostOSName Condition=" '$(HostOSName)' == '' AND $([MSBuild]::IsOSPlatform('FREEBSD')) ">freebsd</HostOSName>
       <HostOSName Condition=" '$(HostOSName)' == '' AND '$(IsLinux)' == 'True' ">linux</HostOSName>
+      <!-- If platform is musl based, adds information to HostOSName -->
+      <HostOSName Condition="$(OSPlatformIsMusl) == 'true'">$(HostOSName)-musl</HostOSName>
       
       <OSName Condition=" '$(OSName)' == '' ">$(HostOSName)</OSName>
 

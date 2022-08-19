@@ -171,21 +171,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetRid Condition="'$(TargetRid)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</TargetRid>
-
-    <TargetOS Condition="'$(TargetOS)' == '' AND $([MSBuild]::IsOSPlatform('WINDOWS'))">Windows_NT</TargetOS>
-    <TargetOS Condition="'$(TargetOS)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">OSX</TargetOS>
-    <TargetOS Condition="'$(TargetOS)' == '' AND $([MSBuild]::IsOSPlatform('LINUX'))">Linux</TargetOS>
-    <TargetOS Condition="'$(TargetOS)' == '' AND $([MSBuild]::IsOSPlatform('FREEBSD'))">FreeBSD</TargetOS>
-
-    <PortableRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-$(Platform)</PortableRid>
-    <PortableRid Condition="'$(TargetOS)' == 'OSX'">osx-$(Platform)</PortableRid>
-    <PortableRid Condition="'$(TargetOS)' == 'Linux'">linux-$(Platform)</PortableRid>
-    <PortableRid Condition="'$(TargetOS)' == 'Windows_NT'">win-$(Platform)</PortableRid>
-    <TargetRid Condition="'$(PortableBuild)' == 'true' AND '$(PortableRid)' != ''">$(PortableRid)</TargetRid>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <!-- known-good (repos/known-good.proj) conditionally includes submodules based on the platform,
          so this will not always correspond to the same repos - see that file for details.
          We need an "empty" project after the last real project in order for prebuilt detection
