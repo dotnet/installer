@@ -5,7 +5,7 @@
     <VirtualMonoRepoTasksAssembly>$(ArtifactsDir)bin/VirtualMonoRepo.Tasks/$(Configuration)/net7.0/VirtualMonoRepo.Tasks.dll</VirtualMonoRepoTasksAssembly>
 
     <VmrDir Condition=" '$(VmrDir)' != '' ">$([MSBuild]::EnsureTrailingSlash('$(VmrDir)'))</VmrDir>
-    <TmpDir Condition=" '$(TmpDir)' == '' ">$(RepoRoot)tmp/</TmpDir>
+    <TmpDir Condition=" '$(TmpDir)' == '' ">$(ArtifactsDir)tmp/</TmpDir>
     <VmrDefaultBranch Condition=" '$(VmrDefaultBranch)' == '' ">main</VmrDefaultBranch>
 
     <!-- We set this for the source build targets to work well -->
@@ -64,7 +64,7 @@
     <PropertyGroup>
       <SourceDir>$(SourceBuildRepoName)/</SourceDir>
       <IndividualRepoSourceDir>$(VmrSourceDir)$(SourceDir)</IndividualRepoSourceDir>
-      <IndividualRepoSourceEngDir>$(VmrSourceDir)$(SourceDir)eng/</IndividualRepoSourceEngDir>
+      <IndividualRepoSourceEngDir>$(IndividualRepoSourceDir)eng/</IndividualRepoSourceEngDir>
       <IndividualRepoVersionDetailsFile>$(IndividualRepoSourceEngDir)Version.Details.xml</IndividualRepoVersionDetailsFile>
     </PropertyGroup>
 
