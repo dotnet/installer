@@ -2,8 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,20 +17,23 @@ public class DotNetWatchTests : SmokeTests
     public DotNetWatchTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     [Fact]
-    public void WatchTests()
+    public async void WatchTests()
     {
-        string projectDirectory = DotNetHelper.ExecuteNew(DotNetTemplate.Console.GetName(), nameof(DotNetWatchTests));
-        bool outputChanged = false;
+        bool result = await DotNetWatchHasExpectedOutput();
+        Assert.True(result);
+    }
 
-        // We expect an exit code of 143 (128 + 15, i.e. SIGTERM) because we are killing the process manually
+    private Task<bool> DotNetWatchHasExpectedOutput() {
+        TaskCompletionSource<bool> tcs = new();
+
+        string projectDirectory = DotNetHelper.ExecuteNew(DotNetTemplate.Console.GetName(), nameof(DotNetWatchTests));
+
         DotNetHelper.ExecuteCmd(
             "watch run",
             workingDirectory: projectDirectory,
             additionalProcessConfigCallback: processConfigCallback,
-            expectedExitCode: 143,
+            expectedExitCode: null, // The exit code does not reflect whether or not dotnet watch is working properly
             millisecondTimeout: 30000);
-
-        Assert.True(outputChanged);
 
         void processConfigCallback(Process process)
         {
@@ -50,11 +56,13 @@ public class DotNetWatchTests : SmokeTests
                 }
                 else if (e.Data?.Contains(expectedString) ?? false)
                 {
-                    outputChanged = true;
                     OutputHelper.WriteLine("Successfully re-ran program after code change.");
-                    ExecuteHelper.ExecuteProcessValidateExitCode("kill", $"-s TERM {process.Id}", OutputHelper);
+                    process.Kill(true);
+                    tcs.TrySetResult(true);
                 }
             });
         }
+
+        return tcs.Task;
     }
 }
