@@ -17,6 +17,11 @@
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>d5046afdd2d0e6234ae3fc5bd4ae878594079cc7</Sha>
     </Dependency>
+    <Dependency Name="runtime.linux-x64.Microsoft.NETCore.Runtime.ObjWriter" Version="1.0.0-alpha.1.22364.1" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/llvm-project</Uri>
+      <Sha>75e182c26dbf5d9f8ccca0ac68ee63b0bebb17b8</Sha>
+      <SourceBuildTarball RepoName="llvm-project" ManagedOnly="true" />
+    </Dependency>
     <Dependency Name="VS.Redist.Common.NetCore.SharedFramework.x64.7.0" Version="7.0.0-rc.1.22411.12" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>f52d8c59bb49360eb2cbeeb863c5856ebd62adda</Sha>
