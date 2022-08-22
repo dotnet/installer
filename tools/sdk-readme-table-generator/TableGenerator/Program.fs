@@ -7,14 +7,14 @@ open TableGenerator.Table
 
 let inputBranches =
         [ { GitBranchName = "main"
-            DisplayName = "main<br>(7.0.x&nbsp;Runtime)"
+            DisplayName = "main<br>(8.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("8.0.1xx/daily") }
+          { GitBranchName = "release/7.0.1xx"
+            DisplayName = "Release/7.0.1xx<br>(7.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("7.0.1xx/daily") }
-          { GitBranchName = "release/7.0.1xx-preview7"
-            DisplayName = "Release/7.0.1xx-preview7<br>(7.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("7.0.1xx-preview7/daily") }
-          { GitBranchName = "release/6.0.4xx"
-            DisplayName = "Release/6.0.4XX<br>(6.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("6.0.4xx/daily") }]
+          { GitBranchName = "release/7.0.1xx-rc1"
+            DisplayName = "Release/7.0.1xx-rc1<br>(7.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("7.0.1xx-rc1/daily") }]
 
 
 let referentNotes = """Reference notes:
