@@ -1,27 +1,27 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
 Date: Tue, 9 Aug 2022 16:03:12 -0700
-Subject: [PATCH] Target net7.0 for source-build
+Subject: [PATCH 2/2] Target net7.0 for source-build
 
 ---
- .../Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj       | 2 +-
- src/CodeStyle/Tools/CodeStyleConfigFileGenerator.csproj        | 1 +
- .../Microsoft.CodeAnalysis.VisualBasic.CodeStyle.Fixes.vbproj  | 2 +-
- .../Microsoft.CodeAnalysis.CSharp.CommandLine.UnitTests.csproj | 1 +
- src/Compilers/CSharp/csc/AnyCpu/csc.csproj                     | 1 +
- .../Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj | 1 +
- .../Core/Rebuild/Microsoft.CodeAnalysis.Rebuild.csproj         | 1 +
- src/Compilers/Server/VBCSCompiler/AnyCpu/VBCSCompiler.csproj   | 1 +
- src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj                | 1 +
- .../Microsoft.CodeAnalysis.Collections.Package.csproj          | 3 ++-
- src/Interactive/csi/csi.csproj                                 | 3 ++-
- src/Interactive/vbi/vbi.vbproj                                 | 3 ++-
- .../AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj      | 1 +
- .../AnyCpu/build/Microsoft.Net.Compilers.Toolset.props         | 2 +-
- .../arm64/build/Microsoft.Net.Compilers.Toolset.Arm64.props    | 2 +-
- src/Tools/AnalyzerRunner/AnalyzerRunner.csproj                 | 1 +
- .../Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj  | 1 +
- 17 files changed, 20 insertions(+), 7 deletions(-)
+ ...t.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj |  2 +-
+ .../Tools/CodeStyleConfigFileGenerator.csproj   |  1 +
+ ...eAnalysis.VisualBasic.CodeStyle.Fixes.vbproj |  2 +-
+ ...Analysis.CSharp.CommandLine.UnitTests.csproj |  1 +
+ src/Compilers/CSharp/csc/AnyCpu/csc.csproj      |  1 +
+ .../Microsoft.Build.Tasks.CodeAnalysis.csproj   |  1 +
+ .../Microsoft.CodeAnalysis.Rebuild.csproj       |  1 +
+ .../VBCSCompiler/AnyCpu/VBCSCompiler.csproj     |  1 +
+ src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj |  1 +
+ ...soft.CodeAnalysis.Collections.Package.csproj |  3 ++-
+ src/Interactive/csi/csi.csproj                  |  3 ++-
+ src/Interactive/vbi/vbi.vbproj                  |  3 ++-
+ ...crosoft.Net.Compilers.Toolset.Package.csproj | 17 +++++++++--------
+ .../build/Microsoft.Net.Compilers.Toolset.props |  2 +-
+ .../Microsoft.Net.Compilers.Toolset.Arm64.props |  2 +-
+ src/Tools/AnalyzerRunner/AnalyzerRunner.csproj  |  1 +
+ .../CSharpSyntaxGenerator.csproj                |  1 +
+ 17 files changed, 28 insertions(+), 15 deletions(-)
 
 diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 index 9b17f5da588..39bd096d974 100644
@@ -191,7 +191,7 @@ index 46de599bd88..1a78b17dbbd 100644
 \ No newline at end of file
 +</Project>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 2ff9bc9edd3..81fc1061f92 100644
+index 2ff9bc9edd3..b915526561d 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
 @@ -2,6 +2,7 @@
@@ -202,6 +202,47 @@ index 2ff9bc9edd3..81fc1061f92 100644
  
      <IsPackable>true</IsPackable>
      <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
+@@ -24,7 +25,7 @@
+     <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+ 
+     <_DependsOn Condition="'$(TargetFramework)' == 'net472'">InitializeDesktopCompilerArtifacts</_DependsOn>
+-    <_DependsOn Condition="'$(TargetFramework)' == 'net6.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
++    <_DependsOn Condition="'$(TargetFramework)' == 'net7.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -38,18 +39,18 @@
+                       Targets="Publish"
+                       ReferenceOutputAssembly="false"
+                       SkipGetTargetFrameworkProperties="true"
+-                      Condition="'$(TargetFramework)' == 'net6.0'"
+-                      SetTargetFramework="TargetFramework=net6.0" />
++                      Condition="'$(TargetFramework)' == 'net7.0'"
++                      SetTargetFramework="TargetFramework=net7.0" />
+   </ItemGroup>
+ 
+   <Target Name="_GetFilesToPackage" DependsOnTargets="$(_DependsOn)">
+     <ItemGroup>
+       <_File Include="@(DesktopCompilerArtifact)" TargetDir="tasks/net472"/>
+       <_File Include="@(DesktopCompilerResourceArtifact)" TargetDir="tasks/net472"/>
+-      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/net6.0"/>
+-      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/net6.0"/>
+-      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/net6.0/bincore"/>
+-      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/net6.0/bincore/runtimes"/>
++      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/net7.0"/>
++      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/net7.0"/>
++      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/net7.0/bincore"/>
++      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/net7.0/bincore/runtimes"/>
+      
+       <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="build" />
+       <_File Include="$(MSBuildProjectDirectory)\buildMultiTargeting\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="buildMultiTargeting" />
+@@ -59,5 +60,5 @@
+   </Target>
+ 
+   <Import Project="..\DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" />
+-  <Import Project="..\CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net6.0'" />
++  <Import Project="..\CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net7.0'" />
+ </Project>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
 index 4b771afb964..e839b246e24 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
@@ -241,7 +282,7 @@ index d99d5b18fff..1be1e623eba 100644
      <PlatformTarget>AnyCPU</PlatformTarget>
      <ServerGarbageCollection>true</ServerGarbageCollection>
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
-index 7eae8afa275..61a8e978c32 100644
+index a50822a6aeb..ec9695c3255 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 @@ -10,6 +10,7 @@
