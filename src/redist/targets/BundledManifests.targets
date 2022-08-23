@@ -55,8 +55,8 @@
     <ItemGroup>
       <!-- Don't try to validate signing for workload manifests that will be signed as part of post-build signing -->
       <BundledManifestsToValidateSigning Include="@(BundledManifests)"
-                                         Exclude="Microsoft.NET.Workload.Mono.ToolChain;
-                                                  Microsoft.NET.Workload.Emscripten" />
+                                         Exclude="Microsoft.NET.Workload.Mono.ToolChain*;
+                                                  Microsoft.NET.Workload.Emscripten*" />
       
       <SignCheckWorkloadManifestMsiInputFiles Include="@(BundledManifestsToValidateSigning->'%(RestoredMsiPathInNupkg)')" />
     </ItemGroup>
