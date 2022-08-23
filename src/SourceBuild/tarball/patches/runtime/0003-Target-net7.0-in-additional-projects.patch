@@ -1,16 +1,30 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
 Date: Thu, 4 Aug 2022 15:25:54 -0700
-Subject: [PATCH 4/5] Target net7.0 in additional projects
+Subject: [PATCH] Target net7.0 in additional projects
 
 ---
+ Directory.Build.props                                     | 2 +-
  .../ref/System.Diagnostics.DiagnosticSource.csproj        | 2 +-
  .../src/CompatibilitySuppressions.xml                     | 8 ++++----
  .../src/System.Diagnostics.DiagnosticSource.csproj        | 4 ++--
  .../tools/GenerateRegexCasingTable.csproj                 | 2 +-
  src/mono/msbuild/apple/build/AppleApp.LocalBuild.props    | 2 +-
- 5 files changed, 9 insertions(+), 9 deletions(-)
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 60a661e66ca..09131b8d3d7 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -53,7 +53,7 @@
+     <MicrosoftNetCoreAppFrameworkName>Microsoft.NETCore.App</MicrosoftNetCoreAppFrameworkName>
+     <NetCoreAppCurrentBrandName>.NET $(NetCoreAppCurrentVersion)</NetCoreAppCurrentBrandName>
+     <NetCoreAppCurrent>net$(NetCoreAppCurrentVersion)</NetCoreAppCurrent>
+-    <NetCoreAppMinimum>net6.0</NetCoreAppMinimum>
++    <NetCoreAppMinimum>net7.0</NetCoreAppMinimum>
+ 
+     <NetCoreAppToolCurrentVersion>7.0</NetCoreAppToolCurrentVersion>
+     <NetCoreAppToolCurrent>net$(NetCoreAppToolCurrentVersion)</NetCoreAppToolCurrent>
 diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
 index c82926c2d6e..1158f355fac 100644
 --- a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
