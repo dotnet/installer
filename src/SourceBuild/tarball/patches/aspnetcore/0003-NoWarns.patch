@@ -1,9 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: MichaelSimons <msimons@microsoft.com>
 Date: Fri, 12 Aug 2022 23:02:54 +0000
-Subject: [PATCH] NoWarn IL2070
+Subject: [PATCH] NoWarns
 
-Backport: https://github.com/dotnet/aspnetcore/issues/43253
+Backport: IL2070 - https://github.com/dotnet/aspnetcore/issues/43253
+Backport: CA1825 - https://github.com/dotnet/aspnetcore/issues/43461
+Backport: IDE0060 - https://github.com/dotnet/aspnetcore/issues/43462
 ---
  Directory.Build.props | 1 +
  1 file changed, 1 insertion(+)
@@ -16,7 +18,7 @@ index 166dbd6487..d5b1c9a1a8 100644
      <!-- Ensure API docs are available. -->
      <NoWarn>$(NoWarn.Replace('1591', ''))</NoWarn>
      <NoWarn Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">$(NoWarn);0105</NoWarn>
-+    <NoWarn>$(NoWarn);IL2070</NoWarn>
++    <NoWarn>$(NoWarn);IL2070;CA1825;IDE0060</NoWarn>
  
      <!-- For local builds, don't make missing XML docs a fatal build error, but still surface so we have visibility into undocumented APIs. -->
      <WarningsNotAsErrors Condition=" '$(ContinuousIntegrationBuild)' != 'true' ">$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
