@@ -12,6 +12,7 @@ Subject: [PATCH 2/2] Target net7.0 for source-build
  .../Microsoft.Build.Tasks.CodeAnalysis.csproj   |  1 +
  .../Microsoft.CodeAnalysis.Rebuild.csproj       |  1 +
  .../VBCSCompiler/AnyCpu/VBCSCompiler.csproj     |  1 +
+ .../VBCSCompilerCommandLine.projitems           |  2 +-
  src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj |  1 +
  ...soft.CodeAnalysis.Collections.Package.csproj |  3 ++-
  src/Interactive/csi/csi.csproj                  |  3 ++-
@@ -21,7 +22,7 @@ Subject: [PATCH 2/2] Target net7.0 for source-build
  .../Microsoft.Net.Compilers.Toolset.Arm64.props |  2 +-
  src/Tools/AnalyzerRunner/AnalyzerRunner.csproj  |  1 +
  .../CSharpSyntaxGenerator.csproj                |  1 +
- 17 files changed, 28 insertions(+), 15 deletions(-)
+ 18 files changed, 29 insertions(+), 16 deletions(-)
 
 diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 index 9b17f5da588..39bd096d974 100644
@@ -121,6 +122,19 @@ index 2f0adbf0c28..a6d47b8f906 100644
      <UseAppHost>false</UseAppHost>
    </PropertyGroup>
    <Import Project="..\VBCSCompilerCommandLine.projitems" Label="Shared" />
+diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems b/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
+index 517d6b27080..b56b684b38f 100644
+--- a/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
++++ b/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
+@@ -57,7 +57,7 @@
+     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\VisualBasic\Portable\Microsoft.CodeAnalysis.VisualBasic.vbproj" />
+     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+ 
+-    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'net6.0'" />
++    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'net7.0'" />
+ 
+     <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'net6.0'" />
+   </ItemGroup>
 diff --git a/src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj b/src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj
 index f8f2ea41243..18faeb6bf59 100644
 --- a/src/Compilers/VisualBasic/vbc/AnyCpu/vbc.csproj
