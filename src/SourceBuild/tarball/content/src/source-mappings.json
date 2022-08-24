@@ -58,7 +58,10 @@
         },
         {
             "name": "installer",
-            "defaultRemote": "https://github.com/dotnet/installer"
+            "defaultRemote": "https://github.com/dotnet/installer",
+            "exclude": [
+                "src/SourceBuild/tarball/content/**/*"
+            ]
         },
         {
             "name": "linker",
