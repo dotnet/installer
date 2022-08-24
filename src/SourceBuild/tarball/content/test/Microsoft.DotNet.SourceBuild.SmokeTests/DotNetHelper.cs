@@ -66,6 +66,8 @@ internal class DotNetHelper
 
         if (useLocalPackages)
         {
+            // When using local packages this feed is always required.  It contains packages that are
+            // not produced by source-build but are required by the various project templates.
             if (!Directory.Exists(Config.PrereqsPath))
             {
                 throw new InvalidOperationException(
@@ -74,6 +76,21 @@ internal class DotNetHelper
 
             string nugetConfig = File.ReadAllText(nugetConfigPath);
             nugetConfig = nugetConfig.Replace("SMOKE_TEST_PACKAGE_FEED", Config.PrereqsPath);
+
+            // This package feed is optional.  You can use an additional feed of source-built packages to run the
+            // smoke-tests as offline as possible.
+            if (Config.PreviouslySourceBuiltPackagesPath != null && Directory.Exists(Config.PreviouslySourceBuiltPackagesPath))
+            {
+                nugetConfig = nugetConfig.Replace("PREVIOUSLY_SOURCE_BUILT_PACKAGE_FEED", Config.PreviouslySourceBuiltPackagesPath);
+            }
+            else if (Config.PreviouslySourceBuiltPackagesPath != null)
+            {
+                throw new ArgumentException($"Specified --with-packages {Config.PreviouslySourceBuiltPackagesPath} does not exist.");
+            }
+            else
+            {
+                nugetConfig = string.Join(Environment.NewLine, nugetConfig.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.Contains("PREVIOUSLY_SOURCE_BUILT_PACKAGE_FEED")).ToArray());
+            }
             File.WriteAllText(nugetConfigPath, nugetConfig);
         }
     }
