@@ -1,0 +1,144 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MichaelSimons <msimons@microsoft.com>
+Date: Wed, 24 Aug 2022 11:20:00 +0000
+Subject: [PATCH] Prevent System.Memory downgrade
+
+Everyplace that references Microsoft.CodeAnalysis.CSharp encounters the following errors.  Accepting the downgrade causes additional compiler errors.
+error NU1605: Detected package downgrade: System.Memory from 4.5.5 to 4.5.4. Reference the package directly from the project to select a different version.  [/repos/tarball-rc1/src/razor-compiler/artifacts/source-build/self/src/razor-compiler.sln]
+error NU1605:  Microsoft.CodeAnalysis.Razor -> Microsoft.CodeAnalysis.CSharp 4.4.0 -> Microsoft.CodeAnalysis.Common 4.4.0 -> System.Collections.Immutable 7.0.0-rc.1.22422.23 -> System.Memory (>= 4.5.5)  [/repos/tarball-rc1/src/razor-compiler/artifacts/source-build/self/src/razor-compiler.sln]
+error NU1605:  Microsoft.CodeAnalysis.Razor -> Microsoft.CodeAnalysis.CSharp 4.4.0 -> Microsoft.CodeAnalysis.Common 4.4.0 -> System.Memory (>= 4.5.4) [/repos/tarball-rc1/src/razor-compiler/artifacts/source-build/self/src/razor-compiler.sln]
+
+Backport: https://github.com/dotnet/source-build/issues/3005
+---
+ Directory.Packages.props                                         | 1 +
+ eng/Versions.props                                               | 1 +
+ ...rosoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.Test.csproj | 1 +
+ ...rosoft.AspNetCore.Mvc.Razor.Extensions.Version2_X.Test.csproj | 1 +
+ .../test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Test.csproj   | 1 +
+ .../src/Microsoft.CodeAnalysis.Razor.csproj                      | 1 +
+ .../test/Microsoft.CodeAnalysis.Razor.Test.csproj                | 1 +
+ .../Microsoft.NET.Sdk.Razor.SourceGenerators.csproj              | 1 +
+ .../Microsoft.AspNetCore.Razor.Test.Common.csproj                | 1 +
+ ...soft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj | 1 +
+ 10 files changed, 10 insertions(+)
+
+diff --git a/Directory.Packages.props b/Directory.Packages.props
+index 6bb9c542..8ced3fa4 100644
+--- a/Directory.Packages.props
++++ b/Directory.Packages.props
+@@ -14,6 +14,7 @@
+     <PackageVersion Include="Moq" Version="$(MoqVersion)" />
+     <PackageVersion Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+     <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="$(SystemDiagnosticsDiagnosticSourceVersion)" />
++    <PackageVersion Include="System.Memory" Version="$(SystemMemoryVersion)" />
+     <PackageVersion Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageVersion Include="System.Text.Encodings.Web" Version="$(SystemTextEncodingsWebVersion)" />
+     <PackageVersion Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index ba59e586..db49597d 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -50,6 +50,7 @@
+     <MoqVersion>4.10.0</MoqVersion>
+     <NewtonsoftJsonVersion>13.0.1</NewtonsoftJsonVersion>
+     <SystemDiagnosticsDiagnosticSourceVersion>6.0.0</SystemDiagnosticsDiagnosticSourceVersion>
++    <SystemMemoryVersion>4.5.5</SystemMemoryVersion>
+     <SystemReflectionMetadataVersion>5.0.0</SystemReflectionMetadataVersion>
+     <SystemTextEncodingsWebVersion>6.0.0</SystemTextEncodingsWebVersion>
+     <SystemTextJsonVersion>6.0.0</SystemTextJsonVersion>
+diff --git a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.Test.csproj b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.Test.csproj
+index 86c62601..0a585342 100644
+--- a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.Test.csproj
++++ b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version1_X.Test.csproj
+@@ -20,6 +20,7 @@
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.Common\Microsoft.AspNetCore.Razor.Test.Common.csproj" />
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.MvcShim.Version1_X\Microsoft.AspNetCore.Razor.Test.MvcShim.Version1_X.csproj" />
+ 
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+     <PackageReference Include="Moq" />
+diff --git a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X.Test.csproj b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X.Test.csproj
+index aeadad98..746dce58 100644
+--- a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X.Test.csproj
++++ b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Version2_X.Test.csproj
+@@ -20,6 +20,7 @@
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.Common\Microsoft.AspNetCore.Razor.Test.Common.csproj" />
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.MvcShim.Version2_X\Microsoft.AspNetCore.Razor.Test.MvcShim.Version2_X.csproj" />
+ 
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+     <PackageReference Include="Moq" />
+diff --git a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Test.csproj b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Test.csproj
+index e534534d..d4b51285 100644
+--- a/src/Microsoft.AspNetCore.Mvc.Razor.Extensions/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Test.csproj
++++ b/src/Microsoft.AspNetCore.Mvc.Razor.Extensions/test/Microsoft.AspNetCore.Mvc.Razor.Extensions.Test.csproj
+@@ -20,6 +20,7 @@
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.Common\Microsoft.AspNetCore.Razor.Test.Common.csproj" />
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.MvcShim\Microsoft.AspNetCore.Razor.Test.MvcShim.csproj" />
+ 
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+     <PackageReference Include="Moq" />
+diff --git a/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj b/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
+index 5eb6ea9f..9de1ee67 100644
+--- a/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
++++ b/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
+@@ -10,6 +10,7 @@
+ 
+   <ItemGroup>
+     <ProjectReference Include="..\..\Microsoft.AspNetCore.Razor.Language\src\Microsoft.AspNetCore.Razor.Language.csproj" />
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/Microsoft.CodeAnalysis.Razor/test/Microsoft.CodeAnalysis.Razor.Test.csproj b/src/Microsoft.CodeAnalysis.Razor/test/Microsoft.CodeAnalysis.Razor.Test.csproj
+index 3e2fdfba..4ef5c4b0 100644
+--- a/src/Microsoft.CodeAnalysis.Razor/test/Microsoft.CodeAnalysis.Razor.Test.csproj
++++ b/src/Microsoft.CodeAnalysis.Razor/test/Microsoft.CodeAnalysis.Razor.Test.csproj
+@@ -22,6 +22,7 @@
+      <!-- Included for definitions of Tag Helper types -->
+     <ProjectReference Include="..\..\test\Microsoft.AspNetCore.Razor.Test.MvcShim\Microsoft.AspNetCore.Razor.Test.MvcShim.csproj" />
+ 
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+     <PackageReference Include="Moq" />
+diff --git a/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj b/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
+index 27c23c27..e8db9329 100644
+--- a/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
++++ b/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
+@@ -12,6 +12,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
+ 
+diff --git a/src/test/Microsoft.AspNetCore.Razor.Test.Common/Microsoft.AspNetCore.Razor.Test.Common.csproj b/src/test/Microsoft.AspNetCore.Razor.Test.Common/Microsoft.AspNetCore.Razor.Test.Common.csproj
+index 356e21f8..d957032f 100644
+--- a/src/test/Microsoft.AspNetCore.Razor.Test.Common/Microsoft.AspNetCore.Razor.Test.Common.csproj
++++ b/src/test/Microsoft.AspNetCore.Razor.Test.Common/Microsoft.AspNetCore.Razor.Test.Common.csproj
+@@ -12,6 +12,7 @@
+ 
+     <ProjectReference Include="..\..\Microsoft.AspNetCore.Razor.Language\src\Microsoft.AspNetCore.Razor.Language.csproj" />
+     <ProjectReference Include="..\..\Microsoft.CodeAnalysis.Razor\src\Microsoft.CodeAnalysis.Razor.csproj" />
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" />
+     <PackageReference Include="DiffPlex" />
+diff --git a/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj b/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
+index e3501517..c12ac480 100644
+--- a/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
++++ b/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
+@@ -27,6 +27,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
++    <PackageReference Include="System.Memory" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
+ 
