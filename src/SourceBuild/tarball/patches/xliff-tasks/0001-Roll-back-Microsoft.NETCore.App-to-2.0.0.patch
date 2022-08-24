@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 24 Aug 2022 16:42:48 -0700
+Subject: [PATCH] Roll back Microsoft.NETCore.App to 2.0.0
+
+Backport: https://github.com/dotnet/xliff-tasks/issues/650
+---
+ src/XliffTasks/XliffTasks.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/XliffTasks/XliffTasks.csproj b/src/XliffTasks/XliffTasks.csproj
+index 4d1968c..a1957f9 100644
+--- a/src/XliffTasks/XliffTasks.csproj
++++ b/src/XliffTasks/XliffTasks.csproj
+@@ -29,7 +29,7 @@
+   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" PrivateAssets="All" />
+-    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" PrivateAssets="All" />
++    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" PrivateAssets="All" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
