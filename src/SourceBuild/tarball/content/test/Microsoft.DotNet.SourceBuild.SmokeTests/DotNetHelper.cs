@@ -79,17 +79,17 @@ internal class DotNetHelper
 
             // This package feed is optional.  You can use an additional feed of source-built packages to run the
             // smoke-tests as offline as possible.
-            if (Config.PreviouslySourceBuiltPackagesPath != null && Directory.Exists(Config.PreviouslySourceBuiltPackagesPath))
+            if (Config.CustomPackagesPath != null && Directory.Exists(Config.CustomPackagesPath))
             {
-                nugetConfig = nugetConfig.Replace("PREVIOUSLY_SOURCE_BUILT_PACKAGE_FEED", Config.PreviouslySourceBuiltPackagesPath);
+                nugetConfig = nugetConfig.Replace("CUSTOM_PACKAGE_FEED", Config.CustomPackagesPath);
             }
-            else if (Config.PreviouslySourceBuiltPackagesPath != null)
+            else if (Config.CustomPackagesPath != null)
             {
-                throw new ArgumentException($"Specified --with-packages {Config.PreviouslySourceBuiltPackagesPath} does not exist.");
+                throw new ArgumentException($"Specified --with-packages {Config.CustomPackagesPath} does not exist.");
             }
             else
             {
-                nugetConfig = string.Join(Environment.NewLine, nugetConfig.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.Contains("PREVIOUSLY_SOURCE_BUILT_PACKAGE_FEED")).ToArray());
+                nugetConfig = string.Join(Environment.NewLine, nugetConfig.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Where(s => !s.Contains("CUSTOM_PACKAGE_FEED")).ToArray());
             }
             File.WriteAllText(nugetConfigPath, nugetConfig);
         }
