@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Thu, 25 Aug 2022 09:47:56 -0700
+Subject: [PATCH] Disable targeting windows on unix
+
+Backport: https://github.com/dotnet/roslyn/pull/63598
+---
+ eng/targets/Settings.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index 0e281c66a7c..d1285480efd 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -24,7 +24,7 @@
+     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <GenerateFullPaths>true</GenerateFullPaths>
+-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
++    <EnableWindowsTargeting>false</EnableWindowsTargeting>
+ 
+     <!-- Set to non-existent file to prevent common targets from importing Microsoft.CodeAnalysis.targets -->
+     <CodeAnalysisTargets>NON_EXISTENT_FILE</CodeAnalysisTargets>
