@@ -134,7 +134,9 @@ fi
 packageVersionsPath=''
 restoredPackagesDir="$SCRIPT_ROOT/packages/restored"
 
-if [ -d "$SCRIPT_ROOT/packages/archive" ]; then
+if [[ "$CUSTOM_PACKAGES_DIR" != "" && -f "$CUSTOM_PACKAGES_DIR/PackageVersions.props" ]]; then
+  packageVersionsPath="$CUSTOM_PACKAGES_DIR/PackageVersions.props"
+elif [ -d "$SCRIPT_ROOT/packages/archive" ]; then
   sourceBuiltArchive=`find $SCRIPT_ROOT/packages/archive -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz'`
   if [ -f "$SCRIPT_ROOT/packages/previously-source-built/PackageVersions.props" ]; then
     packageVersionsPath=$SCRIPT_ROOT/packages/previously-source-built/PackageVersions.props
@@ -142,8 +144,6 @@ if [ -d "$SCRIPT_ROOT/packages/archive" ]; then
     tar -xzf "$sourceBuiltArchive" -C /tmp PackageVersions.props
     packageVersionsPath=/tmp/PackageVersions.props
   fi
-elif [ -f "$CUSTOM_PACKAGES_DIR/PackageVersions.props" ]; then
-  packageVersionsPath="$CUSTOM_PACKAGES_DIR/PackageVersions.props"
 fi
 
 if [ ! -f "$packageVersionsPath" ]; then
