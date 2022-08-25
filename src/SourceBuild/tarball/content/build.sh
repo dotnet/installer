@@ -84,15 +84,10 @@ while :; do
 done
 
 if [ "$CUSTOM_PACKAGES_DIR" != "" ]; then
-  if [ -d "$CUSTOM_PACKAGES_DIR" ]; then
-    if [ "$runningSmokeTests" == "true" ]; then
-      MSBUILD_ARGUMENTS+=( "/p:CustomSourceBuiltPackagesPath=$CUSTOM_PACKAGES_DIR" )
-    else
-      MSBUILD_ARGUMENTS+=( "/p:CustomPrebuiltSourceBuiltPackagesPath=$CUSTOM_PACKAGES_DIR" )
-    fi
+  if [ "$runningSmokeTests" == "true" ]; then
+    MSBUILD_ARGUMENTS+=( "/p:CustomSourceBuiltPackagesPath=$CUSTOM_PACKAGES_DIR" )
   else
-    echo "Specified custom package directory $CUSTOM_PACKAGES_DIR that doesn't exist or is not a directory."
-    exit 1
+    MSBUILD_ARGUMENTS+=( "/p:CustomPrebuiltSourceBuiltPackagesPath=$CUSTOM_PACKAGES_DIR" )
   fi
 fi
 
