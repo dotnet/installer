@@ -5,13 +5,13 @@
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionMajor>7</VersionMajor>
+    <VersionMajor>8</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
     <VersionFeature>00</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
-    <PreReleaseVersionLabel>rc</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration>2</PreReleaseVersionIteration>
+    <PreReleaseVersionLabel>alpha</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration>1</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <!-- Enable to remove prerelease label. -->
@@ -26,15 +26,19 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
-    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.22418.4</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersPackageVersion>8.0.0-beta.22430.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/arcade-services -->
+    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.22429.1</MicrosoftDotNetDarcLibVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
-    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>7.0.0-rc.2.22425.10</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
+    <MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>7.0.0-rc.2.22424.12</MicrosoftDotnetWinFormsProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/wpf -->
-    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>7.0.0-rc.2.22425.10</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
+    <MicrosoftDotNetWpfProjectTemplatesPackageVersion>7.0.0-rc.2.22424.8</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
@@ -49,22 +53,22 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/aspnet/AspNetCore -->
-    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>7.0.0-rc.2.22426.4</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
-    <MicrosoftAspNetCoreAppRefPackageVersion>7.0.0-rc.2.22426.4</MicrosoftAspNetCoreAppRefPackageVersion>
-    <MicrosoftAspNetCoreAppRefInternalPackageVersion>7.0.0-rc.2.22426.4</MicrosoftAspNetCoreAppRefInternalPackageVersion>
-    <VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>7.0.0-rc.2.22426.4</VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>
-    <dotnetdevcertsPackageVersion>7.0.0-rc.2.22426.4</dotnetdevcertsPackageVersion>
-    <dotnetuserjwtsPackageVersion>7.0.0-rc.2.22426.4</dotnetuserjwtsPackageVersion>
-    <dotnetusersecretsPackageVersion>7.0.0-rc.2.22426.4</dotnetusersecretsPackageVersion>
+    <MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>7.0.0-rc.2.22424.4</MicrosoftAspNetCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftAspNetCoreAppRefPackageVersion>7.0.0-rc.2.22424.4</MicrosoftAspNetCoreAppRefPackageVersion>
+    <MicrosoftAspNetCoreAppRefInternalPackageVersion>7.0.0-rc.2.22424.4</MicrosoftAspNetCoreAppRefInternalPackageVersion>
+    <VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>7.0.0-rc.2.22424.4</VSRedistCommonAspNetCoreSharedFrameworkx6470PackageVersion>
+    <dotnetdevcertsPackageVersion>7.0.0-rc.2.22424.4</dotnetdevcertsPackageVersion>
+    <dotnetuserjwtsPackageVersion>7.0.0-rc.2.22424.4</dotnetuserjwtsPackageVersion>
+    <dotnetusersecretsPackageVersion>7.0.0-rc.2.22424.4</dotnetusersecretsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>7.0.100-rc.2.22426.31</MicrosoftDotNetCommonItemTemplatesPackageVersion>
-    <MicrosoftNETSdkPackageVersion>7.0.100-rc.2.22426.31</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>7.0.100-rc.2.22426.31</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>7.0.100-rc.2.22425.6</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftNETSdkPackageVersion>7.0.100-rc.2.22425.6</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>7.0.100-rc.2.22425.6</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
@@ -85,10 +89,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/windowsdesktop -->
-    <VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>7.0.0-rc.2.22426.1</VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>
-    <VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>7.0.0-rc.2.22426.1</VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>
-    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>7.0.0-rc.2.22426.1</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
-    <MicrosoftWindowsDesktopAppRefPackageVersion>7.0.0-rc.2.22426.1</MicrosoftWindowsDesktopAppRefPackageVersion>
+    <VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>7.0.0-rc.2.22424.8</VSRedistCommonWindowsDesktopSharedFrameworkx6470PackageVersion>
+    <VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>7.0.0-rc.2.22424.8</VSRedistCommonWindowsDesktopTargetingPackx6470PackageVersion>
+    <MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>7.0.0-rc.2.22424.8</MicrosoftWindowsDesktopAppRuntimewinx64PackageVersion>
+    <MicrosoftWindowsDesktopAppRefPackageVersion>7.0.0-rc.2.22424.8</MicrosoftWindowsDesktopAppRefPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Runtime and Apphost pack versions are the same for all RIDs. We flow the x64    -->
@@ -171,6 +175,7 @@
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
     <MicrosoftNETTestSdkVersion>17.4.0-preview-20220813-01</MicrosoftNETTestSdkVersion>
+    <MicrosoftExtensionsLoggingConsoleVersion>7.0.0-preview.7.22375.6</MicrosoftExtensionsLoggingConsoleVersion>
   </PropertyGroup>
   <!-- dependencies for source-build tarball -->
   <PropertyGroup>
