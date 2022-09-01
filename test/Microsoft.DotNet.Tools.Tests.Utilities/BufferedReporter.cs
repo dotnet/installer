@@ -8,6 +8,8 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
     {
         public List<string> Lines { get; private set; } = new List<string>();
 
+        public void WriteLine(string format, params object?[] args) => WriteLine(string.Format(format, args));
+
         public void WriteLine(string message)
         {
             Lines.Add(message);
