@@ -14,6 +14,9 @@ variables:
   value: false
 - name: PostBuildSign
   value: true
+- ${{ if eq(variables['System.TeamProject'], 'public') }}:
+   - name: "skipComponentGovernanceDetection"
+     value: "true"
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - group: DotNet-DotNetCli-Storage
   - group: DotNet-Installer-SDLValidation-Params
@@ -47,7 +50,7 @@ stages:
   - job: Publish_Build_Configuration
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
-        name: NetCore1ESPool-Svc-Public
+        name: NetCore-Svc-Public
         demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: NetCore1ESPool-Svc-Internal
@@ -61,7 +64,7 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
@@ -137,7 +140,7 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
