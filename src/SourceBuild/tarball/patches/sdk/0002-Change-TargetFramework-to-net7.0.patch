@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
 Date: Fri, 22 Jul 2022 15:10:08 -0700
-Subject: [PATCH 2/2] Change TargetFramework to net7.0
+Subject: [PATCH] Change TargetFramework to net7.0
 
 ---
  .../Microsoft.DotNet.ApiCompat.Task.csproj                  | 2 +-
@@ -13,8 +13,7 @@ Subject: [PATCH 2/2] Change TargetFramework to net7.0
  .../Microsoft.DotNet.Cli.Utils.csproj                       | 2 +-
  src/Layout/redist/targets/GenerateLayout.targets            | 6 +++---
  src/Layout/redist/targets/OverlaySdkOnLKG.targets           | 2 +-
- src/Layout/tool_fsharp/tool_fsc.csproj                      | 2 +-
- 10 files changed, 12 insertions(+), 12 deletions(-)
+ 9 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj b/src/ApiCompat/Microsoft.DotNet.ApiCompat.Task/Microsoft.DotNet.ApiCompat.Task.csproj
 index 8177095a90..0c1f7acebf 100644
@@ -151,16 +150,3 @@ index b31188d592..4052c1581b 100644
        <DotNetWatchOverlay Include="$(ArtifactsDir)bin\DotNetWatchTasks\$(Configuration)\netstandard2.0\DotNetWatchTasks.dll" />
      </ItemGroup>
  
-diff --git a/src/Layout/tool_fsharp/tool_fsc.csproj b/src/Layout/tool_fsharp/tool_fsc.csproj
-index a40c245de5..573e20c971 100644
---- a/src/Layout/tool_fsharp/tool_fsc.csproj
-+++ b/src/Layout/tool_fsharp/tool_fsc.csproj
-@@ -19,7 +19,7 @@
-     </PropertyGroup>
-     <ItemGroup>
-         <ResolvedFileToPublish
--          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/net6.0/FSharp.Core.xml"
-+          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/net7.0/FSharp.Core.xml"
-           CopyToPublishDirectory="PreserveNewest"
-           DestinationSubPath="FSharp.Core.xml"
-           RelativePath="FSharp.Core.xml"
