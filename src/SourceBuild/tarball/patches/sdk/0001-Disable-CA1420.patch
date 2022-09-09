@@ -9,10 +9,10 @@ Workaround until NuGet updates to build with latest .NET toolset.
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 8ee962ab1d..ce999a306f 100644
+index 323bd720da..e792fa6952 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -13,9 +13,11 @@
+@@ -14,9 +14,11 @@
      <SdkTargetFramework>net7.0</SdkTargetFramework>
      <ToolsetTargetFramework>$(SdkTargetFramework)</ToolsetTargetFramework>
  
@@ -24,6 +24,6 @@ index 8ee962ab1d..ce999a306f 100644
 +      CA1420 - Temporarily disable for source-build until SDK builds with latest toolset.
 +    -->
 +    <NoWarn>$(NoWarn);NU1701;CA1420</NoWarn>
+     <!-- do not enable analyzers on source build-->
+     <EnforceCodeStyleInBuild Condition="'$(DotNetBuildFromSource)' != 'true'">true</EnforceCodeStyleInBuild>
      <DisableImplicitPackageTargetFallback>true</DisableImplicitPackageTargetFallback>
- 
-     <!-- <ArtifactsShippingSymbolsDir>$(ArtifactsDir)symbols\$(Configuration)\Shipping</ArtifactsShippingSymbolsDir> -->
