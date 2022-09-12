@@ -1,99 +1,57 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 01e9fdd1449324e547230530aea2532488e0b0ce Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
-Date: Thu, 4 Aug 2022 15:25:54 -0700
-Subject: [PATCH] Target net7.0 in additional projects
+Date: Mon, 12 Sep 2022 09:50:31 -0700
+Subject: [PATCH] [release/7.0] Target only net7.0 during source-build (#75168)
 
+* Target net7.0 in additional projects
+
+Backport: https://github.com/dotnet/runtime/pull/75168
 ---
- Directory.Build.props                                     | 2 +-
- .../ref/System.Diagnostics.DiagnosticSource.csproj        | 2 +-
- .../src/CompatibilitySuppressions.xml                     | 8 ++++----
- .../src/System.Diagnostics.DiagnosticSource.csproj        | 4 ++--
- .../tools/GenerateRegexCasingTable.csproj                 | 2 +-
- src/mono/msbuild/apple/build/AppleApp.LocalBuild.props    | 2 +-
- 6 files changed, 10 insertions(+), 10 deletions(-)
+ Directory.Build.props                                           | 1 +
+ eng/SourceBuild.props                                           | 1 +
+ .../src/System.Diagnostics.DiagnosticSource.csproj              | 2 --
+ .../tools/GenerateRegexCasingTable.csproj                       | 2 +-
+ 4 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 60a661e66ca..09131b8d3d7 100644
+index 60a661e66ca44..ce67527ff8ed1 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -53,7 +53,7 @@
-     <MicrosoftNetCoreAppFrameworkName>Microsoft.NETCore.App</MicrosoftNetCoreAppFrameworkName>
+@@ -54,6 +54,7 @@
      <NetCoreAppCurrentBrandName>.NET $(NetCoreAppCurrentVersion)</NetCoreAppCurrentBrandName>
      <NetCoreAppCurrent>net$(NetCoreAppCurrentVersion)</NetCoreAppCurrent>
--    <NetCoreAppMinimum>net6.0</NetCoreAppMinimum>
-+    <NetCoreAppMinimum>net7.0</NetCoreAppMinimum>
+     <NetCoreAppMinimum>net6.0</NetCoreAppMinimum>
++    <NetCoreAppMinimum Condition="'$(DotNetBuildFromSource)' == 'true'">$(NetCoreAppCurrent)</NetCoreAppMinimum>
  
      <NetCoreAppToolCurrentVersion>7.0</NetCoreAppToolCurrentVersion>
      <NetCoreAppToolCurrent>net$(NetCoreAppToolCurrentVersion)</NetCoreAppToolCurrent>
-diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
-index c82926c2d6e..1158f355fac 100644
---- a/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
-+++ b/src/libraries/System.Diagnostics.DiagnosticSource/ref/System.Diagnostics.DiagnosticSource.csproj
-@@ -1,6 +1,6 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
--    <TargetFrameworks>$(NetCoreAppCurrent);$(NetCoreAppMinimum);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
-+    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
-     <CLSCompliant>false</CLSCompliant>
-   </PropertyGroup>
+diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+index c17838918f8ce..9ca390c502f75 100644
+--- a/eng/SourceBuild.props
++++ b/eng/SourceBuild.props
+@@ -39,6 +39,7 @@
+       <InnerBuildArgs>$(InnerBuildArgs) /p:PortableBuild=$(SourceBuildPortable)</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:BuildDebPackage=false</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:EnableNgenOptimization=false</InnerBuildArgs>
++      <InnerBuildArgs>$(InnerBuildArgs) /p:EnablePackageValidation=false</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
  
-diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml b/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
-index 994ad65b294..df9a74b66f5 100644
---- a/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
-+++ b/src/libraries/System.Diagnostics.DiagnosticSource/src/CompatibilitySuppressions.xml
-@@ -3,25 +3,25 @@
-   <Suppression>
-     <DiagnosticId>CP0002</DiagnosticId>
-     <Target>M:System.Diagnostics.SampleActivity`1.#ctor(System.Object,System.IntPtr)</Target>
--    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
-+    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
-     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
-   </Suppression>
-   <Suppression>
-     <DiagnosticId>CP0002</DiagnosticId>
-     <Target>M:System.Diagnostics.DistributedContextPropagator.PropagatorGetterCallback.#ctor(System.Object,System.IntPtr)</Target>
--    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
-+    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
-     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
-   </Suppression>
-   <Suppression>
-     <DiagnosticId>CP0002</DiagnosticId>
-     <Target>M:System.Diagnostics.DistributedContextPropagator.PropagatorSetterCallback.#ctor(System.Object,System.IntPtr)</Target>
--    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
-+    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
-     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
-   </Suppression>
-   <Suppression>
-     <DiagnosticId>CP0002</DiagnosticId>
-     <Target>M:System.Diagnostics.Metrics.MeasurementCallback`1.#ctor(System.Object,System.IntPtr)</Target>
--    <Left>lib/net6.0/System.Diagnostics.DiagnosticSource.dll</Left>
-+    <Left>lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll</Left>
-     <Right>lib/net7.0/System.Diagnostics.DiagnosticSource.dll</Right>
-   </Suppression>
- </Suppressions>
-\ No newline at end of file
 diff --git a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
-index 9c22bce30da..13aaecb88da 100644
+index 9c22bce30dae9..6d40be2f856b7 100644
 --- a/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
 +++ b/src/libraries/System.Diagnostics.DiagnosticSource/src/System.Diagnostics.DiagnosticSource.csproj
-@@ -1,13 +1,13 @@
- <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
--    <TargetFrameworks>$(NetCoreAppCurrent);$(NetCoreAppMinimum);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
-+    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkMinimum)</TargetFrameworks>
-     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-     <CLSCompliant>false</CLSCompliant>
+@@ -6,8 +6,6 @@
      <NoWarn>$(NoWarn);SA1205;CA1845</NoWarn>
      <EnableTrimAnalyzer Condition="$([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETFramework'">false</EnableTrimAnalyzer>
      <IsPackable>true</IsPackable>
-     <!-- Lifetime rules introduced in C# 11 impact scenarios in net6 framework -->
+-    <!-- Lifetime rules introduced in C# 11 impact scenarios in net6 framework -->
 -    <LangVersion Condition="'$(TargetFramework)' == 'net6.0'">10</LangVersion>
-+    <LangVersion Condition="'$(TargetFramework)' == 'net7.0'">10</LangVersion>
      <EnableAOTAnalyzer>true</EnableAOTAnalyzer>
      <PackageDescription>Provides Classes that allow you to decouple code logging rich (unserializable) diagnostics/telemetry (e.g. framework) from code that consumes it (e.g. tools)
  
 diff --git a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj b/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
-index 26b5733684c..12d28657c3c 100644
+index 26b5733684c3f..4df9075220402 100644
 --- a/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
 +++ b/src/libraries/System.Text.RegularExpressions/tools/GenerateRegexCasingTable.csproj
 @@ -2,7 +2,7 @@
@@ -101,20 +59,7 @@ index 26b5733684c..12d28657c3c 100644
    <PropertyGroup>
        <OutputType>Exe</OutputType>
 -      <TargetFramework>net6.0</TargetFramework>
-+      <TargetFramework>net7.0</TargetFramework>
++      <TargetFramework>$(NetCoreAppToolCurrent)</TargetFramework>
        <LangVersion>latest</LangVersion>
        <Nullable>enable</Nullable>
    </PropertyGroup>
-diff --git a/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props b/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
-index 5d1d76f585d..a0c1dbe51d6 100644
---- a/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
-+++ b/src/mono/msbuild/apple/build/AppleApp.LocalBuild.props
-@@ -23,7 +23,7 @@
- 
-   <PropertyGroup>
-     <_NetCoreAppCurrent>net7.0</_NetCoreAppCurrent>
--    <_NetCoreAppToolCurrent>net6.0</_NetCoreAppToolCurrent>
-+    <_NetCoreAppToolCurrent>net7.0</_NetCoreAppToolCurrent>
-     <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
-   </PropertyGroup>
- 

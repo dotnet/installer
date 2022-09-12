@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Logan Bussell <loganbussell@microsoft.com>
 Date: Tue, 9 Aug 2022 16:03:12 -0700
-Subject: [PATCH 2/2] Target net7.0 for source-build
+Subject: [PATCH] Target net7.0 for source-build
 
 ---
- ...CodeAnalysis.CSharp.CodeStyle.Fixes.csproj |  2 +-
+ ...CodeAnalysis.CSharp.CodeStyle.Fixes.csproj |  3 +-
  .../Tools/CodeStyleConfigFileGenerator.csproj |  1 +
- ...nalysis.VisualBasic.CodeStyle.Fixes.vbproj |  2 +-
+ ...nalysis.VisualBasic.CodeStyle.Fixes.vbproj |  3 +-
  ...alysis.CSharp.CommandLine.UnitTests.csproj |  1 +
  src/Compilers/CSharp/csc/AnyCpu/csc.csproj    |  1 +
  .../Microsoft.Build.Tasks.CodeAnalysis.csproj |  1 +
@@ -17,24 +17,25 @@ Subject: [PATCH 2/2] Target net7.0 for source-build
  ...ft.CodeAnalysis.Collections.Package.csproj |  3 +-
  src/Interactive/csi/csi.csproj                |  3 +-
  src/Interactive/vbi/vbi.vbproj                |  3 +-
- ...osoft.Net.Compilers.Toolset.Package.csproj | 17 ++++++-----
+ ...osoft.Net.Compilers.Toolset.Package.csproj | 23 ++++++++++----
  .../Microsoft.Net.Compilers.Toolset.props     |  2 +-
  .../CoreClrCompilerArtifacts.targets          | 30 +++++++++----------
  ...icrosoft.Net.Compilers.Toolset.Arm64.props |  2 +-
  .../AnalyzerRunner/AnalyzerRunner.csproj      |  1 +
  .../CSharpSyntaxGenerator.csproj              |  1 +
- 19 files changed, 44 insertions(+), 31 deletions(-)
+ 19 files changed, 54 insertions(+), 29 deletions(-)
 
 diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
-index 9b17f5da588..39bd096d974 100644
+index 9b17f5da588..066b1358db4 100644
 --- a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 +++ b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
-@@ -31,7 +31,7 @@
+@@ -31,7 +31,8 @@
        <DotNetExecutable Condition="'$(DotNetExecutable)' == ''">$(DotNetRoot)dotnet</DotNetExecutable>
      </PropertyGroup>
  
 -    <Exec Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net6.0\CodeStyleConfigFileGenerator.dll" "CSharp" "$(CSharpCodeStyleFixesArtifactsBinDir)" "$(CSharpCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(CSharpCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"' />
-+    <Exec Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net7.0\CodeStyleConfigFileGenerator.dll" "CSharp" "$(CSharpCodeStyleFixesArtifactsBinDir)" "$(CSharpCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(CSharpCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"' />
++    <Exec Condition="'$(DotNetBuildFromSource)' != 'true'" Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net6.0\CodeStyleConfigFileGenerator.dll" "CSharp" "$(CSharpCodeStyleFixesArtifactsBinDir)" "$(CSharpCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(CSharpCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"' />
++    <Exec Condition="'$(DotNetBuildFromSource)' == 'true'" Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net7.0\CodeStyleConfigFileGenerator.dll" "CSharp" "$(CSharpCodeStyleFixesArtifactsBinDir)" "$(CSharpCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(CSharpCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"' />
  
      <ItemGroup>
        <_File Include="$(CSharpCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll" TargetDir="analyzers/dotnet/cs" />
@@ -51,15 +52,16 @@ index 91956df402f..0938ab3d017 100644
      <UseAppHost>false</UseAppHost>
      <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 diff --git a/src/CodeStyle/VisualBasic/CodeFixes/Microsoft.CodeAnalysis.VisualBasic.CodeStyle.Fixes.vbproj b/src/CodeStyle/VisualBasic/CodeFixes/Microsoft.CodeAnalysis.VisualBasic.CodeStyle.Fixes.vbproj
-index 2815e090c92..ad8157b3a26 100644
+index 2815e090c92..5187c5dd6d3 100644
 --- a/src/CodeStyle/VisualBasic/CodeFixes/Microsoft.CodeAnalysis.VisualBasic.CodeStyle.Fixes.vbproj
 +++ b/src/CodeStyle/VisualBasic/CodeFixes/Microsoft.CodeAnalysis.VisualBasic.CodeStyle.Fixes.vbproj
-@@ -31,7 +31,7 @@
+@@ -31,7 +31,8 @@
        <DotNetExecutable Condition="'$(DotNetExecutable)' == ''">$(DotNetRoot)dotnet</DotNetExecutable>
      </PropertyGroup>
  
 -    <Exec Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net6.0\CodeStyleConfigFileGenerator.dll" "VisualBasic" "$(VisualBasicCodeStyleFixesArtifactsBinDir)" "$(VisualBasicCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(VisualBasicCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.VisualBasic.CodeStyle.dll"' />
-+    <Exec Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net7.0\CodeStyleConfigFileGenerator.dll" "VisualBasic" "$(VisualBasicCodeStyleFixesArtifactsBinDir)" "$(VisualBasicCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(VisualBasicCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.VisualBasic.CodeStyle.dll"' />
++    <Exec Condition="'$(DotNetBuildFromSource)' != 'true'" Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net6.0\CodeStyleConfigFileGenerator.dll" "VisualBasic" "$(VisualBasicCodeStyleFixesArtifactsBinDir)" "$(VisualBasicCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(VisualBasicCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.VisualBasic.CodeStyle.dll"' />
++    <Exec Condition="'$(DotNetBuildFromSource)' == 'true'" Command='"$(DotNetExecutable)" "$(ArtifactsBinDir)CodeStyleConfigFileGenerator\$(Configuration)\net7.0\CodeStyleConfigFileGenerator.dll" "VisualBasic" "$(VisualBasicCodeStyleFixesArtifactsBinDir)" "$(VisualBasicCodeStyleTargetsFileName)" "$(CodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.CodeStyle.dll;$(VisualBasicCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.VisualBasic.CodeStyle.dll"' />
  
      <ItemGroup>
        <_File Include="$(VisualBasicCodeStyleAnalyzerArtifactsBinDir)\Microsoft.CodeAnalysis.VisualBasic.CodeStyle.dll" TargetDir="analyzers/dotnet/vb" />
@@ -124,7 +126,7 @@ index 2f0adbf0c28..a6d47b8f906 100644
    </PropertyGroup>
    <Import Project="..\VBCSCompilerCommandLine.projitems" Label="Shared" />
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems b/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
-index 517d6b27080..b56b684b38f 100644
+index 517d6b27080..0ab5381e2bf 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompilerCommandLine.projitems
 @@ -57,7 +57,7 @@
@@ -132,7 +134,7 @@ index 517d6b27080..b56b684b38f 100644
      <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Core\Portable\Microsoft.CodeAnalysis.csproj" />
  
 -    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'net6.0'" />
-+    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'net7.0'" />
++    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0'" />
  
      <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'net6.0'" />
    </ItemGroup>
@@ -206,32 +208,38 @@ index 46de599bd88..1a78b17dbbd 100644
 \ No newline at end of file
 +</Project>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 2ff9bc9edd3..b915526561d 100644
+index 2ff9bc9edd3..81a5311ea57 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
-@@ -2,6 +2,7 @@
+@@ -2,6 +2,10 @@
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
      <TargetFrameworks>net6.0;net472</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net7.0;net472</TargetFrameworks>
++
++    <CoreClrArtifactsDir>net6.0</CoreClrArtifactsDir>
++    <CoreClrArtifactsDir Condition="'$(DotNetBuildFromSource)' == 'true'">net7.0</CoreClrArtifactsDir>
  
      <IsPackable>true</IsPackable>
      <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
-@@ -24,7 +25,7 @@
+@@ -24,7 +28,7 @@
      <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
  
      <_DependsOn Condition="'$(TargetFramework)' == 'net472'">InitializeDesktopCompilerArtifacts</_DependsOn>
 -    <_DependsOn Condition="'$(TargetFramework)' == 'net6.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
-+    <_DependsOn Condition="'$(TargetFramework)' == 'net7.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
++    <_DependsOn Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
    </PropertyGroup>
  
    <ItemGroup>
-@@ -38,18 +39,18 @@
-                       Targets="Publish"
-                       ReferenceOutputAssembly="false"
+@@ -40,16 +44,23 @@
                        SkipGetTargetFrameworkProperties="true"
--                      Condition="'$(TargetFramework)' == 'net6.0'"
--                      SetTargetFramework="TargetFramework=net6.0" />
+                       Condition="'$(TargetFramework)' == 'net6.0'"
+                       SetTargetFramework="TargetFramework=net6.0" />
++
++    <ProjectReference Update="@(ProjectReference)"
++                      Targets="Publish"
++                      ReferenceOutputAssembly="false"
++                      SkipGetTargetFrameworkProperties="true"
 +                      Condition="'$(TargetFramework)' == 'net7.0'"
 +                      SetTargetFramework="TargetFramework=net7.0" />
    </ItemGroup>
@@ -244,19 +252,19 @@ index 2ff9bc9edd3..b915526561d 100644
 -      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/net6.0"/>
 -      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/net6.0/bincore"/>
 -      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/net6.0/bincore/runtimes"/>
-+      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/net7.0"/>
-+      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/net7.0"/>
-+      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/net7.0/bincore"/>
-+      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/net7.0/bincore/runtimes"/>
++      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/$(CoreClrArtifactsDir)"/>
++      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/$(CoreClrArtifactsDir)"/>
++      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/$(CoreClrArtifactsDir)/bincore"/>
++      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/$(CoreClrArtifactsDir)/bincore/runtimes"/>
       
        <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="build" />
        <_File Include="$(MSBuildProjectDirectory)\buildMultiTargeting\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="buildMultiTargeting" />
-@@ -59,5 +60,5 @@
+@@ -59,5 +70,5 @@
    </Target>
  
    <Import Project="..\DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" />
 -  <Import Project="..\CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net6.0'" />
-+  <Import Project="..\CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net7.0'" />
++  <Import Project="..\CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'" />
  </Project>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/build/Microsoft.Net.Compilers.Toolset.props
 index 4b771afb964..e839b246e24 100644
@@ -272,7 +280,7 @@ index 4b771afb964..e839b246e24 100644
      <_RoslynTasksDirectory>$(MSBuildThisFileDirectory)..\tasks\$(_RoslynTargetDirectoryName)\</_RoslynTasksDirectory>
      <RoslynTasksAssembly>$(_RoslynTasksDirectory)Microsoft.Build.Tasks.CodeAnalysis.dll</RoslynTasksAssembly> 
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets b/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
-index 5f1ae0d08a6..63961f3d764 100644
+index 5f1ae0d08a6..eaa343cd8af 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
 @@ -3,10 +3,10 @@
@@ -283,10 +291,10 @@ index 5f1ae0d08a6..63961f3d764 100644
 -      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net6.0\publish\Microsoft.Build.Tasks.CodeAnalysis.dll" />
 -      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net6.0\publish\Microsoft.Build.Tasks.CodeAnalysis.deps.json" />
 -      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net6.0\publish\**\Microsoft.Build.Tasks.CodeAnalysis.resources.dll" />
-+      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net7.0\publish\*.targets" />
-+      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net7.0\publish\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-+      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net7.0\publish\Microsoft.Build.Tasks.CodeAnalysis.deps.json" />
-+      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net7.0\publish\**\Microsoft.Build.Tasks.CodeAnalysis.resources.dll" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\$(CoreClrArtifactsDir)\publish\*.targets" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\$(CoreClrArtifactsDir)\publish\Microsoft.Build.Tasks.CodeAnalysis.dll" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\$(CoreClrArtifactsDir)\publish\Microsoft.Build.Tasks.CodeAnalysis.deps.json" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\$(CoreClrArtifactsDir)\publish\**\Microsoft.Build.Tasks.CodeAnalysis.resources.dll" />
  
        <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp3.1\Microsoft.CodeAnalysis.dll" />
        <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp3.1\**\Microsoft.CodeAnalysis.resources.dll" />
@@ -297,31 +305,31 @@ index 5f1ae0d08a6..63961f3d764 100644
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net6.0\publish\csc.dll" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net6.0\publish\csc.deps.json" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net6.0\publish\csc.runtimeconfig.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net7.0\publish\csc.dll" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net7.0\publish\csc.deps.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net7.0\publish\csc.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\$(CoreClrArtifactsDir)\publish\csc.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\$(CoreClrArtifactsDir)\publish\csc.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\$(CoreClrArtifactsDir)\publish\csc.runtimeconfig.json" />
  
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net6.0\publish\vbc.dll" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net6.0\publish\vbc.deps.json" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net6.0\publish\vbc.runtimeconfig.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net7.0\publish\vbc.dll" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net7.0\publish\vbc.deps.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\net7.0\publish\vbc.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\$(CoreClrArtifactsDir)\publish\vbc.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\$(CoreClrArtifactsDir)\publish\vbc.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\$(CoreClrArtifactsDir)\publish\vbc.runtimeconfig.json" />
  
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net6.0\publish\VBCSCompiler.dll" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net6.0\publish\VBCSCompiler.deps.json" />
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net6.0\publish\VBCSCompiler.runtimeconfig.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net7.0\publish\VBCSCompiler.dll" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net7.0\publish\VBCSCompiler.deps.json" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\net7.0\publish\VBCSCompiler.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\$(CoreClrArtifactsDir)\publish\VBCSCompiler.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\$(CoreClrArtifactsDir)\publish\VBCSCompiler.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\$(CoreClrArtifactsDir)\publish\VBCSCompiler.runtimeconfig.json" />
  
        <!-- References that are either not in the target framework or are a higher version -->
        <!-- N.B.: The backslashes below cannot be replaced with forward slashes.
           https://github.com/NuGet/Home/issues/3584 -->
 -      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net6.0\publish\System.*.dll"/>
 -      <CoreClrCompilerBinRuntimesArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net6.0\publish\runtimes\**" />
-+      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net7.0\publish\System.*.dll"/>
-+      <CoreClrCompilerBinRuntimesArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net7.0\publish\runtimes\**" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\$(CoreClrArtifactsDir)\publish\System.*.dll"/>
++      <CoreClrCompilerBinRuntimesArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\$(CoreClrArtifactsDir)\publish\runtimes\**" />
      </ItemGroup>
    </Target>
  </Project>
@@ -351,7 +359,7 @@ index d99d5b18fff..1be1e623eba 100644
      <PlatformTarget>AnyCPU</PlatformTarget>
      <ServerGarbageCollection>true</ServerGarbageCollection>
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
-index a50822a6aeb..ec9695c3255 100644
+index 7eae8afa275..61a8e978c32 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 @@ -10,6 +10,7 @@
