@@ -30,6 +30,10 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
 
     public string Revision { get; set; }
 
+    public string PackageVersion { get; set; }
+
+    public bool Recursive { get; set; }
+
     public VirtualMonoRepo_Initialize()
     {
         _serviceProvider = new(CreateServiceProvider);
@@ -40,7 +44,7 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
     private async Task<bool> ExecuteAsync()
     {
         var vmrInitializer = _serviceProvider.Value.GetRequiredService<IVmrInitializer>();
-        await vmrInitializer.InitializeVmr(Repository, Revision, _cancellationToken.Token);
+        await vmrInitializer.InitializeRepository(Repository, Revision, PackageVersion, Recursive, _cancellationToken.Token);
         return true;
     }
 
