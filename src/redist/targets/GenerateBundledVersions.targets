@@ -61,9 +61,9 @@
 
   <PropertyGroup>
       <VersionFeature21>30</VersionFeature21>
-      <VersionFeature31>28</VersionFeature31>
+      <VersionFeature31>30</VersionFeature31>
       <VersionFeature50>17</VersionFeature50>
-      <VersionFeature60>8</VersionFeature60>
+      <VersionFeature60>10</VersionFeature60>
   </PropertyGroup>
 
   <Target Name="GenerateBundledVersionsProps" DependsOnTargets="SetupBundledComponents">
@@ -249,7 +249,8 @@
 
       <Crossgen2SupportedRids Include="@(Net60Crossgen2SupportedRids)" />
 
-      <ILCompilerSupportedRids Include="linux-musl-x64;linux-x64;linux-arm64;win-x64;win-arm64" />
+      <!-- Match the Crossgen2 RIDs although some are currently not supported in NativeAOT. Its better for the SDK not to block on the RIDs and let NativeAOT manage the experience -->
+      <ILCompilerSupportedRids Include="@(Net60Crossgen2SupportedRids)" />
 
       <AspNetCore31RuntimePackRids Include="@(AspNetCore30RuntimePackRids)" />
       <AspNetCore50RuntimePackRids Include="@(AspNetCore31RuntimePackRids);linux-musl-arm;win-arm64" />
