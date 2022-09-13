@@ -14,6 +14,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.DotNet.VirtualMonoRepo.Tasks;
 
+/// <summary>
+/// This tasks equals calling the "darc vmr initialize" command.
+/// This command pulls an individual repository into the VMR for the first time.
+/// It can also recursively pull all of its dependencies based on Version.Details.xml.
+/// </summary>
 public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
 {
     private readonly Lazy<IServiceProvider> _serviceProvider;
