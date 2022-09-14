@@ -25,7 +25,6 @@ function CreateBuildEnvScript()
   $scriptContents = @"
 @echo off
 title Core SDK Build ($RepoRoot)
-set DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 set DOTNET_MULTILEVEL_LOOKUP=0
 
 set PATH=$env:DOTNET_INSTALL_DIR;%PATH%

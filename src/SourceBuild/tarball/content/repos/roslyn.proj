@@ -11,6 +11,8 @@
     <!-- issue: https://github.com/dotnet/source-build/issues/1719 -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:UsingToolMicrosoftNetCompilers=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:RepoRoot=$(ProjectDirectory)</BuildCommandArgs>
+    <!-- Investigate how to remove this specialization for source-build: https://github.com/dotnet/source-build/issues/2889 -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SuppressTfmSupportBuildWarnings=true</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
@@ -30,16 +32,12 @@
       need to support VS.
     -->
     <ExtraPackageVersionPropsPackageInfo Include="SourceGeneratorMicrosoftCodeAnalysisVersion" Version="%24(MicrosoftCodeAnalysisCommonVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="SourceBuildLiftedSystemCollectionsImmutableVersion" Version="%24(SystemCollectionsImmutableVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="SourceBuildLiftedSystemReflectionMetadataVersion" Version="%24(SystemReflectionMetadataVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="SourceBuildLiftedSystemRuntimeCompilerServicesUnsafeVersion" Version="%24(SystemRuntimeCompilerServicesUnsafeVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="SourceBuildLiftedSystemTextEncodingCodePagesVersion" Version="%24(SystemTextEncodingCodePagesVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="command-line-api" />
-    <RepositoryReference Include="source-build" />
+    <RepositoryReference Include="source-build-externals" />
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 
