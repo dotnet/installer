@@ -105,7 +105,7 @@ stages:
           name: VSEngSS-MicroBuild2022-1ES
           demands: Cmd
         # If it's not devdiv, it's dnceng
-        ${{ else }}:
+        ${{ if ne(variables['System.TeamProject'], 'DevDiv') }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals windows.vs2019.amd64
 
@@ -142,7 +142,7 @@ stages:
           name: VSEngSS-MicroBuild2022-1ES
           demands: Cmd
         # If it's not devdiv, it's dnceng
-        ${{ else }}:
+        ${{ if ne(variables['System.TeamProject'], 'DevDiv') }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals windows.vs2019.amd64
       steps:
@@ -202,7 +202,7 @@ stages:
           name: VSEngSS-MicroBuild2022-1ES
           demands: Cmd
         # If it's not devdiv, it's dnceng
-        ${{ else }}:
+        ${{ if ne(variables['System.TeamProject'], 'DevDiv') }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals windows.vs2019.amd64
       steps:
@@ -261,7 +261,7 @@ stages:
           name: VSEngSS-MicroBuild2022-1ES
           demands: Cmd
         # If it's not devdiv, it's dnceng
-        ${{ else }}:
+        ${{ if ne(variables['System.TeamProject'], 'DevDiv') }}:
           name: NetCore1ESPool-Svc-Internal
           demands: ImageOverride -equals windows.vs2019.amd64
       steps:
