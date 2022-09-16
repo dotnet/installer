@@ -52,11 +52,11 @@ stages:
   - job: Publish_Build_Configuration
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
-        name: NetCore-Svc-Public
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+        name: NetCore-Public
+        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre.Open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-        name: NetCore1ESPool-Svc-Internal
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019
+        name: NetCore1ESPool-Internal
+        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
     steps:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
@@ -66,11 +66,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          name: NetCore-Public
+          demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          name: NetCore1ESPool-Internal
+          demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -110,8 +110,8 @@ stages:
         agentOs: Windows_NT
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: NetCore1ESPool-Svc-Internal
-            demands: ImageOverride -equals build.windows.10.amd64.vs2019
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals Windows.Amd64.VS2022.Pre
         timeoutInMinutes: 180
         strategy:
           matrix:
@@ -142,10 +142,10 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore-Svc-Public
+          name: NetCore-Public
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: NetCore1ESPool-Svc-Internal
+          name: NetCore1ESPool-Internal
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
       timeoutInMinutes: 180
       strategy:
@@ -286,7 +286,7 @@ stages:
         agentOs: Linux
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: NetCore1ESPool-Svc-Internal
+            name: NetCore1ESPool-Internal
             demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
         timeoutInMinutes: 180
         strategy:
@@ -337,19 +337,6 @@ stages:
       dependsOn: Source_Build_Create_Tarball
       condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
 
-  # https://github.com/dotnet/core-sdk/issues/248
-  # - template: /eng/build.yml
-  #   parameters:
-  #     agentOs: FreeBSD
-  #     queue:
-  #       name: dnceng-freebsd-internal
-  #       timeoutInMinutes: 180
-  #       matrix:
-  #         Build_Release:
-  #           _BuildConfig: Release
-  #           _BuildArchitecture: 'x64'
-  #           _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
-
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
     - template: /eng/common/templates/job/publish-build-assets.yml
       parameters:
@@ -362,8 +349,8 @@ stages:
         publishUsingPipelines: true
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: NetCore1ESPool-Svc-Internal
-            demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals Build.Windows.Amd64.VS2022
 
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
