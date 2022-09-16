@@ -53,10 +53,10 @@ stages:
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
         name: NetCore-Public
-        demands: ImageOverride -equals Windows.Amd64.VS2022.Pre.Open
+        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre.Open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: NetCore1ESPool-Internal
-        demands: ImageOverride -equals Windows.Amd64.VS2022.Pre
+        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
     steps:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
@@ -67,10 +67,10 @@ stages:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCore-Public
-          demands: ImageOverride -equals Windows.Amd64.VS2022.Pre.Open
+          demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Internal
-          demands: ImageOverride -equals Windows.Amd64.VS2022.Pre
+          demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -350,7 +350,7 @@ stages:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Internal
-            demands: ImageOverride -equals Windows.Amd64.VS2022
+            demands: ImageOverride -equals Build.Windows.Amd64.VS2022
 
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
