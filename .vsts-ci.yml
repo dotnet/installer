@@ -111,7 +111,7 @@ stages:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Internal
-            demands: ImageOverride -equals Windows.Amd64.VS2022.Pre
+            demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
         timeoutInMinutes: 180
         strategy:
           matrix:
