@@ -81,20 +81,20 @@ index e5425507f..b4404b7e4 100755
  elif [ $host_type = "mono" ]
  then
 diff --git a/global.json b/global.json
-index 471f88dbc..efd25efd1 100644
+index 6758761a2..c6b05988b 100644
 --- a/global.json
 +++ b/global.json
 @@ -3,7 +3,7 @@
      "allowPrerelease": true
    },
    "tools": {
--    "dotnet": "6.0.200",
+-    "dotnet": "6.0.401",
 +    "dotnet": "7.0.100-preview.5.22307.18",
      "vs": {
-       "version": "17.0"
-     }
+       "version": "17.2.1"
+     },
 diff --git a/scripts/Deploy-MSBuild.ps1 b/scripts/Deploy-MSBuild.ps1
-index ef1959fc3..8cfecb6a0 100644
+index f6044dd69..d7a084641 100644
 --- a/scripts/Deploy-MSBuild.ps1
 +++ b/scripts/Deploy-MSBuild.ps1
 @@ -69,7 +69,7 @@ else {
@@ -186,7 +186,7 @@ index 8887b9cca..ddb164cb7 100644
              ReadEachToolset(toolsets, globalProperties, initialProperties, accumulateProperties);
  
 diff --git a/src/Build/Microsoft.Build.csproj b/src/Build/Microsoft.Build.csproj
-index 309d14bdc..c4eb0bce6 100644
+index cb7786b30..418d16140 100644
 --- a/src/Build/Microsoft.Build.csproj
 +++ b/src/Build/Microsoft.Build.csproj
 @@ -4,7 +4,7 @@
@@ -199,10 +199,10 @@ index 309d14bdc..c4eb0bce6 100644
      <RootNamespace>Microsoft.Build</RootNamespace>
      <AssemblyName>Microsoft.Build</AssemblyName>
 diff --git a/src/Directory.BeforeCommon.targets b/src/Directory.BeforeCommon.targets
-index 6696e3861..40bc57ecb 100644
+index 1aac46b4e..67ae24a57 100644
 --- a/src/Directory.BeforeCommon.targets
 +++ b/src/Directory.BeforeCommon.targets
-@@ -92,7 +92,7 @@
+@@ -93,7 +93,7 @@
      <DefineConstants>$(DefineConstants);FEATURE_SYMLINK_TARGET</DefineConstants>
    </PropertyGroup>
  
@@ -286,10 +286,10 @@ index 6972b5e9a..0e37d41d9 100644
    </PropertyGroup>
    <ItemGroup>
 diff --git a/src/Tasks/Microsoft.Build.Tasks.csproj b/src/Tasks/Microsoft.Build.Tasks.csproj
-index 5bd98bfbe..547075939 100644
+index 6421d98c6..6296eca71 100644
 --- a/src/Tasks/Microsoft.Build.Tasks.csproj
 +++ b/src/Tasks/Microsoft.Build.Tasks.csproj
-@@ -1013,7 +1013,7 @@
+@@ -1014,7 +1014,7 @@
      <PackageReference Include="System.Security.Permissions" />
      <PackageReference Include="System.Threading.Tasks.Dataflow" />
  
