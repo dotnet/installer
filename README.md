@@ -115,9 +115,19 @@ You can download the .NET Core SDK as either an installer (MSI, PKG) or a zip (z
 want to install the latest released versions, check out the [preceding section](#looking-for-released-versions-of-the-net-core-tooling).
 With development builds, internal NuGet feeds are necessary for some scenarios (for example, to acquire the runtime pack for self-contained apps). You can use the following NuGet.config to configure these feeds. See the following document [Configuring NuGet behavior](https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior) for more information on where to modify your NuGet.config to apply the changes.
 
+**For .NET 8 builds**
+
+```xml
+<configuration>
+  <packageSources>
+    <add key="dotnet8" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json" />
+  </packageSources>
+</configuration>
+```
+
 **For .NET 7 builds**
 
-```
+```xml
 <configuration>
   <packageSources>
     <add key="dotnet7" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json" />
@@ -125,28 +135,6 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 </configuration>
 ```
 
-**For .NET 6 builds**
-
-```
-<configuration>
-  <packageSources>
-    <add key="dotnet6" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
-
-**For .NET 6 Optional workloads**
-_The below feed is needed for 6.0 releases before RC1_
-
-We strongly recommend using `--skip-manifest-update` with `dotnet workload install` as otherwise you could pick up a random build of various workloads as we'll automatically update to the newest one available on the feed.
-
-```
-<configuration>
-  <packageSources>
-    <add key="maui" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json" />
-  </packageSources>
-</configuration>
-```
 Please do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table. Daily servicing builds have been removed as all servicing is done in private repos to avoid disclosure of critical security fixes. All public servicing builds can be downloaded at http://aka.ms/dotnet-download.
 
 ### Table
