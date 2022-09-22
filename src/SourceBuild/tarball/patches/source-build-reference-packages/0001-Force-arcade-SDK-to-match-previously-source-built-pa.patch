@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Thu, 22 Sep 2022 16:45:10 -0700
+Subject: [PATCH] Force arcade SDK to match previously source-built packages
+
+Workaround for https://github.com/dotnet/source-build/issues/3021
+---
+ global.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/global.json b/global.json
+index 2407ce75..03332c51 100644
+--- a/global.json
++++ b/global.json
+@@ -3,6 +3,6 @@
+     "dotnet": "7.0.100-preview.5.22307.18"
+   },
+   "msbuild-sdks": {
+-    "Microsoft.DotNet.Arcade.Sdk": "7.0.0-beta.22411.2"
++    "Microsoft.DotNet.Arcade.Sdk": "7.0.0-beta.22418.4"
+   }
+ }
