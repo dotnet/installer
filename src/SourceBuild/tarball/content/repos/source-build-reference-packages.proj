@@ -4,7 +4,7 @@
   <PropertyGroup>
     <LocalNuGetPackageCacheDirectory>$(BaseIntermediatePath)source-build-reference-package-cache</LocalNuGetPackageCacheDirectory>
 
-    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs) /p:NuGetPackageCacheDirectory=$(NuGetPackageCacheDirectory)</BuildCommand>
+    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs) /p:LocalNuGetPackageCacheDirectory=$(LocalNuGetPackageCacheDirectory)</BuildCommand>
 
     <NuGetConfigFile>$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
