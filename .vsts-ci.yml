@@ -226,7 +226,7 @@ stages:
         buildArchitecture: x64
         runtimeIdentifier: 'linux-musl-x64'
         # Pass in HostOSName when running on alpine
-        additionalBuildParameters: '/p:OSName="linux-musl"'
+        additionalBuildParameters: '/p:HostOSName="linux-musl"'
         linuxPortable: false
         runTests: false
     - template: /eng/build.yml

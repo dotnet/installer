@@ -105,46 +105,49 @@ jobs:
 
 # Test parameters
     variables:
-      - _PgoInstrument: ''
-      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-        - _PackArg: '-pack'
-        - ${{ if parameters.runTests }}:
-          - _TestArg: '-test'
-        - ${{ else }}:
-          - _TestArg: ''
-      - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
-        - _PackArg: '--pack'
-        - ${{ if parameters.runTests }}:
-          - _TestArg: '--test'
-        - ${{ else }}:
-          - _TestArg: ''
-
-      - ${{ if parameters.pgoInstrument }}:
-        - _PgoInstrument: '/p:PgoInstrument=true'
-        - _PackArg: ''
-
-      - ${{ if parameters.linuxPortable }}:
-        - _LinuxPortable: '--linux-portable'
-
-      - ${{ if ne(parameters.runtimeIdentifier, '') }}:
-        - _RuntimeIdentifier: '--runtime-id ${{ parameters.runtimeIdentifier }}'
+    - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
+      - _PackArg: '-pack'
+      - ${{ if parameters.runTests }}:
+        - _TestArg: '-test'
       - ${{ else }}:
-        - _RuntimeIdentifier: ''
+        - _TestArg: ''
+    - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
+      - _PackArg: '--pack'
+      - ${{ if parameters.runTests }}:
+        - _TestArg: '--test'
+      - ${{ else }}:
+        - _TestArg: ''
 
-      - _AgentOSName: ${{ parameters.agentOs }}
-      - _TeamName: Roslyn-Project-System
-      - _SignType: test
-      - _BuildArgs: '/p:DotNetSignType=$(_SignType) $(_PgoInstrument)'
+    - ${{ if parameters.pgoInstrument }}:
+      - _PgoInstrument: '/p:PgoInstrument=true'
+      - _PackArg: ''
+    - ${{ else }}:
+      - _PgoInstrument: ''
 
-      - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-        - group: DotNet-HelixApi-Access
-        - _PushToVSFeed: true
-        - _SignType: real
-        - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-                  /p:DotNetSignType=$(_SignType)
-                  /p:TeamName=$(_TeamName)
-                  /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
-                  $(_PgoInstrument)
+    - ${{ if parameters.linuxPortable }}:
+      - _LinuxPortable: '--linux-portable'
+    - ${{ else }}:
+      - _LinuxPortable: ''
+
+    - ${{ if ne(parameters.runtimeIdentifier, '') }}:
+      - _RuntimeIdentifier: '--runtime-id ${{ parameters.runtimeIdentifier }}'
+    - ${{ else }}:
+      - _RuntimeIdentifier: ''
+
+    - _AgentOSName: ${{ parameters.agentOs }}
+    - _TeamName: Roslyn-Project-System
+    - _SignType: test
+    - _BuildArgs: '/p:DotNetSignType=$(_SignType) $(_PgoInstrument)'
+
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      - group: DotNet-HelixApi-Access
+      - _PushToVSFeed: true
+      - _SignType: real
+      - _BuildArgs: /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+                /p:DotNetSignType=$(_SignType)
+                /p:TeamName=$(_TeamName)
+                /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
+                $(_PgoInstrument)
 
     steps:
     - checkout: self
