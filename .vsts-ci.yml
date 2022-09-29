@@ -43,10 +43,10 @@ stages:
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
         name: NetCore-Public
-        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre.Open
+        demands: ImageOverride -equals windows.vs2022preview.amd64.open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: NetCore1ESPool-Internal
-        demands: ImageOverride -equals Build.Windows.Amd64.VS2022.Pre
+        demands: ImageOverride -equals windows.vs2022preview.amd64
     steps:
     - publish: $(Build.SourcesDirectory)\eng\buildConfiguration
       artifact: buildConfiguration
@@ -364,4 +364,4 @@ stages:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Internal
-            demands: ImageOverride -equals Build.Windows.Amd64.VS2022
+            demands: ImageOverride -equals windows.vs2022.amd64
