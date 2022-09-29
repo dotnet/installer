@@ -78,10 +78,10 @@ jobs:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCore-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          demands: ImageOverride -equals windows.vs2019.amd64.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          demands: ImageOverride -equals windows.vs2019.amd64
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
@@ -208,18 +208,6 @@ jobs:
                   ${{ parameters.additionalBuildParameters }}
                   $(_InternalRuntimeDownloadArgs)
         displayName: Build
-
-    # In general, only push VS nupkgs if post-build signing is off, and this is not a PR
-    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), ne(variables['PostBuildSign'], 'true')) }}:
-      # In addition, restrict to just Windows x86 or x64 builds (other windows builds do not produce VS redist packages.)
-      - ${{ if and(eq(parameters.agentOs, 'Windows_NT'), in(parameters.buildArchitecture, 'x64', 'x86')) }}:
-        - task: NuGetCommand@2
-          displayName: Push Visual Studio NuPkgs
-          inputs:
-            command: push
-            packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/${{ parameters.buildConfiguration }}/NonShipping/VS.*.nupkg'
-            nuGetFeedType: external
-            publishFeedCredentials: 'DevDiv - VS package feed'
 
     - task: PublishTestResults@2
       displayName: Publish Test Results
