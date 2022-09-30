@@ -13,6 +13,7 @@
     <ItemsToSign Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
     <ItemsToSign Include="$(ArtifactsNonShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
     <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.wixpack.zip" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
   </ItemGroup>
 
   <PropertyGroup>
