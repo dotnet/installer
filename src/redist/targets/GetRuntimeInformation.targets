@@ -24,9 +24,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-      <ProductMonikerRid Condition=" '$(Rid)' == 'ubuntu.16.04-x64' OR
-                                   '$(Rid)' == 'rhel.6-x64' OR
-                                   $(Rid.StartsWith('linux-musl')) ">$(Rid)</ProductMonikerRid>
+      <ProductMonikerRid Condition="$(Rid.StartsWith('linux-musl'))">$(Rid)</ProductMonikerRid>
       <ProductMonikerRid Condition=" '$(ProductMonikerRid)' == '' ">$(OSName)-$(Architecture)</ProductMonikerRid>
 
       <PortableProductMonikerRid Condition=" '$(PortableProductMonikerRid)' == '' ">$(HostOSName)-$(Architecture)</PortableProductMonikerRid>
