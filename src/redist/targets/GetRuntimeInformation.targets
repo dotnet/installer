@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-      <ProductMonikerRid Condition="$(Rid.StartsWith('linux-musl'))">$(Rid)</ProductMonikerRid>
+      <ProductMonikerRid Condition="$(Rid.StartsWith('linux-musl')) OR $(Rid.StartsWith('alpine'))">$(Rid)</ProductMonikerRid>
       <ProductMonikerRid Condition=" '$(ProductMonikerRid)' == '' ">$(OSName)-$(Architecture)</ProductMonikerRid>
 
       <PortableProductMonikerRid Condition=" '$(PortableProductMonikerRid)' == '' ">$(HostOSName)-$(Architecture)</PortableProductMonikerRid>
