@@ -82,6 +82,7 @@
       <_WindowsDesktop60TargetingPackVersion>6.0.$(VersionFeature60)</_WindowsDesktop60TargetingPackVersion>
       <_AspNet60RuntimePackVersion>6.0.$(VersionFeature60)</_AspNet60RuntimePackVersion>
       <_AspNet60TargetingPackVersion>6.0.$(VersionFeature60)</_AspNet60TargetingPackVersion>
+      <_Net60ServicingVersionOverride>6.0.$([MSBuild]::Add($(VersionFeature60), -1))</_Net60ServicingVersionOverride>
 
       <_NET50RuntimePackVersion>5.0.$(VersionFeature50)</_NET50RuntimePackVersion>
       <_NET50TargetingPackVersion>5.0.0</_NET50TargetingPackVersion>
@@ -95,6 +96,7 @@
 
       <_NETCoreApp31RuntimePackVersion>3.1.$(VersionFeature31)</_NETCoreApp31RuntimePackVersion>
       <_NETCoreApp31TargetingPackVersion>3.1.0</_NETCoreApp31TargetingPackVersion>
+      <_Net31ServicingVersionOverride>3.1.$([MSBuild]::Add($(VersionFeature31), -1))</_Net31ServicingVersionOverride>
 
       <_WindowsDesktop30RuntimePackVersion>3.0.3</_WindowsDesktop30RuntimePackVersion>
       <_WindowsDesktop30TargetingPackVersion>3.0.0</_WindowsDesktop30TargetingPackVersion>
@@ -888,6 +890,34 @@ Copyright (c) .NET Foundation. All rights reserved.
     <WindowsSdkSupportedTargetPlatformVersion Include="8.0" />
     <WindowsSdkSupportedTargetPlatformVersion Include="7.0" />
 
+  </ItemGroup>
+
+ <!-- Implicit Version Downgrade -->
+ <ItemGroup Condition="'%24(DowngradeImplicitVersion)' == 'true'">
+    <KnownFrameworkReference Update="%40(KnownFrameworkReference)">
+      <TargetingPackVersion Condition="'%25(KnownFrameworkReference.TargetFramework)' == 'net6.0'">$(_Net60ServicingVersionOverride)</TargetingPackVersion>       
+      <LatestRuntimeFrameworkVersion Condition="'%25(KnownFrameworkReference.TargetFramework)' == 'net6.0'">$(_Net60ServicingVersionOverride)</LatestRuntimeFrameworkVersion>
+    </KnownFrameworkReference>
+
+    <KnownRuntimePack Update="%40(KnownRuntimePack)">
+      <LatestRuntimeFrameworkVersion Condition="'%25(KnownRuntimePack.TargetFramework)' == 'net6.0'">$(_Net60ServicingVersionOverride)</LatestRuntimeFrameworkVersion>     
+    </KnownRuntimePack>
+
+    <KnownAppHostPack Update="%40(KnownAppHostPack)">
+      <AppHostPackVersion Condition="'%25(KnownAppHostPack.TargetFramework)' == 'net6.0'">$(_Net60ServicingVersionOverride)</AppHostPackVersion>
+    </KnownAppHostPack>
+
+    <KnownCrossgen2Pack Update="%40(KnownCrossgen2Pack)">
+      <Crossgen2PackVersion Condition="'%25(KnownCrossgen2Pack.TargetFramework)' == 'net6.0'">$(_Net60ServicingVersionOverride)</Crossgen2PackVersion>
+    </KnownCrossgen2Pack>
+
+    <KnownFrameworkReference Update="%40(KnownFrameworkReference)">
+      <LatestRuntimeFrameworkVersion Condition="'%25(KnownFrameworkReference.TargetFramework)' == 'netcoreapp3.1'">$(_Net31ServicingVersionOverride)</LatestRuntimeFrameworkVersion>
+    </KnownFrameworkReference>
+
+    <KnownAppHostPack Update="%40(KnownAppHostPack)">
+      <AppHostPackVersion Condition="'%25(KnownAppHostPack.TargetFramework)' == 'netcoreapp3.1'">$(_Net31ServicingVersionOverride)</AppHostPackVersion>
+    </KnownAppHostPack>
   </ItemGroup>
 </Project>
 ]]>
