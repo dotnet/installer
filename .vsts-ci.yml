@@ -48,10 +48,10 @@ stages:
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
         name: NetCore-Svc-Public
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+        demands: ImageOverride -equals windows.vs2019.amd64.open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: NetCore1ESPool-Svc-Internal
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019
+        demands: ImageOverride -equals windows.vs2019.amd64
     steps:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
@@ -62,10 +62,10 @@ stages:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCore-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          demands: ImageOverride -equals windows.vs2019.amd64.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          demands: ImageOverride -equals windows.vs2019.amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -119,10 +119,10 @@ stages:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: NetCore-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          demands: ImageOverride -equals windows.vs2019.amd64.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          demands: ImageOverride -equals windows.vs2019.amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -406,7 +406,7 @@ stages:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Svc-Internal
-            demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
+            demands: ImageOverride -equals windows.vs2017.amd64
 
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
