@@ -24,7 +24,7 @@ index c55ee607da773..4e1246b481b10 100644
 +++ b/src/coreclr/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.CoreCLR.cs
 @@ -316,7 +316,9 @@ public override MethodImplAttributes GetMethodImplementationFlags()
                  Span<ParameterCopyBackAction> shouldCopyBackParameters = new(ref argStorage._copyBack0, 1);
-Bad Patch change to test CI
+ 
                  StackAllocatedByRefs byrefStorage = default;
 +#pragma warning disable 8500
                  IntPtr* pByRefStorage = (IntPtr*)&byrefStorage;
