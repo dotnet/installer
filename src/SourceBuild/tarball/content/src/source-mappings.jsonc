@@ -12,7 +12,7 @@
             "**/*.pdb",
             "**/*.mdb",
             "**/*.zip",
-            "**/*.nupkg"
+            "**/*.nupkg",
         ]
     },
 
@@ -25,7 +25,9 @@
             "name": "aspnetcore",
             "defaultRemote": "https://github.com/dotnet/aspnetcore",
             "exclude": [
-                "submodules/MessagePack-CSharp/**/*.dll"
+                "submodules/MessagePack-CSharp/**/*.dll",
+                "**/samples/**/jquery-validation-unobtrusive/.bower.json",
+                "**/samples/**/jquery-validation-unobtrusive/*.js",
             ]
         },
         {
@@ -57,7 +59,7 @@
             "defaultRemote": "https://github.com/dotnet/installer",
             "exclude": [
                 // We don't need the tarball content in the VMR again, it's already in the root
-                "src/SourceBuild/tarball/content/**/*"
+                "src/SourceBuild/tarball/content/**/*",
             ]
         },
         {
@@ -112,10 +114,10 @@
             "name": "source-build-externals",
             "defaultRemote": "https://github.com/dotnet/source-build-externals",
             "exclude": [
-                "src/humanizer/samples",
+                "src/humanizer/samples/**/*.js",
                 "src/application-insights/**/*.exe",
                 "src/application-insights/**/*.dll",
-                "src/application-insights/**/*.zip"
+                "src/application-insights/**/*.zip",
             ]
         },
         {
