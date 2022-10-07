@@ -42,7 +42,7 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals build.windows.10.amd64.vs2017.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
@@ -99,7 +99,7 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
@@ -314,27 +314,3 @@ stages:
         -TsaRepositoryName "dotnet-installer"
         -TsaCodebaseName "dotnet-installer"
         -TsaPublish $True'
-
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), not(contains(variables['Build.SourceBranch'], 'refs/heads/internal/'))) }}:
-  - stage: copy_to_latest
-    displayName: Copy to latest
-    dependsOn:
-      # This will run only after all the publishing stages have run.
-      # These stages are introduced in the eng/common/templates/post-build/channels YAML templates
-      - publish_using_darc
-    jobs:
-    - job: Copy_SDK_To_Latest
-      pool:
-        name: Hosted VS2017
-      condition: succeeded()
-      variables:
-        - group: DotNet-DotNetCli-Storage
-      steps:
-        - script: eng/CopyToLatest.cmd
-                  /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-                  /p:DotnetPublishSdkAssetsBlobFeedUrl=https://dotnetcli.blob.core.windows.net/dotnet/index.json
-                  /p:DotNetPublishSdkAssetsBlobFeedKey=$(dotnetcli-storage-key)
-                  /p:DotnetPublishChecksumsBlobFeedUrl=https://dotnetclichecksums.blob.core.windows.net/dotnet/index.json
-                  /p:DotNetPublishChecksumsBlobFeedKey=$(dotnetclichecksums-storage-key)
-                  /p:SourceBranch=$(BUILD.SOURCEBRANCH)
-          displayName: Copy to latest
