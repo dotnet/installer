@@ -47,11 +47,11 @@ stages:
   - job: Publish_Build_Configuration
     pool:
       ${{ if eq(variables['System.TeamProject'], 'public') }}:
-        name: NetCore1ESPool-Svc-Public
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+        name: NetCore-Svc-Public
+        demands: ImageOverride -equals windows.vs2019.amd64.open
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: NetCore1ESPool-Svc-Internal
-        demands: ImageOverride -equals build.windows.10.amd64.vs2019
+        demands: ImageOverride -equals windows.vs2019.amd64
     steps:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
@@ -61,11 +61,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          name: NetCore-Svc-Public
+          demands: ImageOverride -equals windows.vs2019.amd64.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          demands: ImageOverride -equals windows.vs2019.amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -118,11 +118,11 @@ stages:
       agentOs: Windows_NT
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019.open
+          name: NetCore-Svc-Public
+          demands: ImageOverride -equals windows.vs2019.amd64.open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
-          demands: ImageOverride -equals build.windows.10.amd64.vs2019
+          demands: ImageOverride -equals windows.vs2019.amd64
       timeoutInMinutes: 180
       strategy:
         matrix:
@@ -147,7 +147,7 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
@@ -333,7 +333,7 @@ stages:
       agentOs: Linux
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: NetCore1ESPool-Svc-Public
+          name: NetCore-Svc-Public
           demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: NetCore1ESPool-Svc-Internal
@@ -375,10 +375,10 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-    parameters:
-      dependsOn: Source_Build_Create_Tarball
-      condition: eq(dependencies.Source_Build_Create_Tarball.outputs['Tarball_Build_Check._includeTarballBuild'], 'true')
+  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+      parameters:
+        dependsOn: Source_Build_Create_Tarball
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
@@ -406,7 +406,7 @@ stages:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Svc-Internal
-            demands: ImageOverride -equals Build.Windows.10.Amd64.VS2017
+            demands: ImageOverride -equals windows.vs2017.amd64
 
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
