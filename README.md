@@ -79,7 +79,7 @@ The dependencies for building .NET from source can be found [here](https://githu
     ```
 
     This builds the entire .NET SDK from source.
-    The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz`.
+    The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-7.0.100-your-RID.tar.gz`.
 
     Optionally add the `--online` flag to add online NuGet restore sources to the build.
     This is useful for testing unsupported releases that don't yet build without downloading pre-built binaries from the internet.
@@ -90,7 +90,7 @@ The dependencies for building .NET from source can be found [here](https://githu
 
     ```bash
     mkdir -p $HOME/dotnet
-    tar zxf artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz -C $HOME/dotnet
+    tar zxf artifacts/x64/Release/dotnet-sdk-7.0.100-your-RID.tar.gz -C $HOME/dotnet
     ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
     ```
     
