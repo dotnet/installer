@@ -44,7 +44,7 @@ Please see the [dotnet/source-build](https://github.com/dotnet/source-build) rep
 ## Support
 
 .NET Source-Build is supported on the oldest available .NET SDK feature update for each major release, and on Linux only.
-For example, if both .NET 6.0.1xx, 6.0.2xx, and 7.0.1xx feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support 6.0.1xx and 7.0.1xx.
+For example, if .NET 6.0.1xx, 6.0.2xx, and 7.0.1xx feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support 6.0.1xx and 7.0.1xx.
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
 ## Prerequisites
