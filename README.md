@@ -410,7 +410,7 @@ Sources for dotnet-install.sh and dotnet-install.ps1 are in the [install-scripts
 Questions & Comments
 --------------------
 
-For all feedback, use the Issues on the [.NET CLI](https://github.com/dotnet/cli) repository.
+For all feedback, use the Issues on the [.NET SDK](https://github.com/dotnet/sdk) repository.
 
 License
 -------
