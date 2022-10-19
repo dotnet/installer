@@ -1,0 +1,24 @@
+From c562789d1ad0cab0e924c49c3df16974c81099b9 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Wed, 19 Oct 2022 13:00:50 +0200
+Subject: [PATCH] source-build: support building with mono runtime.
+
+---
+ eng/SourceBuild.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+index c197d8afd..55c1c1d22 100644
+--- a/eng/SourceBuild.props
++++ b/eng/SourceBuild.props
+@@ -41,6 +41,7 @@
+       <InnerBuildArgs>$(InnerBuildArgs) /p:EnableNgenOptimization=false</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:EnablePackageValidation=false</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:DisableSourceLink=false</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(InnerBuildArgs) /p:PrimaryRuntimeFlavor=Mono /p:RuntimeFlavor=Mono</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
+ 
+-- 
+2.37.3
+

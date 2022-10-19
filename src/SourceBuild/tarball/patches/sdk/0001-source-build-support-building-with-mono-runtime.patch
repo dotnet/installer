@@ -1,0 +1,51 @@
+From e358070323a74a46391567101be4c583680a0df0 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Wed, 19 Oct 2022 13:00:45 +0200
+Subject: [PATCH] source-build: support building with mono runtime.
+
+---
+ eng/SourceBuild.props                                           | 1 +
+ src/Layout/redist/targets/BundledSdks.targets                   | 2 +-
+ .../Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.props   | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+index 61b9a91..2107a71 100644
+--- a/eng/SourceBuild.props
++++ b/eng/SourceBuild.props
+@@ -8,6 +8,7 @@
+     <PropertyGroup>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:Projects="$(InnerSourceBuildRepoRoot)\source-build.slnf"</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:UseSharedCompilation=false</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(InnerBuildArgs) /p:NativeAotSupported=false</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
+ 
+diff --git a/src/Layout/redist/targets/BundledSdks.targets b/src/Layout/redist/targets/BundledSdks.targets
+index 6f8b0fc..64638ef 100644
+--- a/src/Layout/redist/targets/BundledSdks.targets
++++ b/src/Layout/redist/targets/BundledSdks.targets
+@@ -5,6 +5,6 @@
+     <BundledSdk Include="FSharp.NET.Sdk" Version="1.0.4-bundled-0100" />
+     <BundledSdk Include="Microsoft.Docker.Sdk" Version="1.1.0" />
+     <BundledSdk Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+-    <BundledSdk Include="Microsoft.DotNet.ILCompiler" Version="$(MicrosoftDotNetILCompilerPackageVersion)" />
++    <BundledSdk Include="Microsoft.DotNet.ILCompiler" Version="$(MicrosoftDotNetILCompilerPackageVersion)" Condition="'$(NativeAotSupported)' != 'false'" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.props b/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.props
+index 73a1821..8466fff 100644
+--- a/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.props
++++ b/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.props
+@@ -151,7 +151,7 @@ Copyright (c) .NET Foundation. All rights reserved.
+   <Import Project="$(MSBuildThisFileDirectory)Microsoft.NET.Sdk.CSharp.props" Condition="'$(MSBuildProjectExtension)' == '.csproj'" />
+   <Import Project="$(MSBuildThisFileDirectory)Microsoft.NET.Sdk.VisualBasic.props" Condition="'$(MSBuildProjectExtension)' == '.vbproj'" />
+   <Import Project="$(MSBuildThisFileDirectory)Microsoft.NET.Sdk.FSharp.props" Condition="'$(MSBuildProjectExtension)' == '.fsproj'" />
+-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.ILCompiler" />
++  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.ILCompiler" Condition="Exists('$(MSBuildThisFileDirectory)../../Microsoft.DotNet.ILCompiler')" />
+   <Import Project="Sdk.props" Sdk="Microsoft.NET.ILLink.Tasks" />
+ 
+   <Import Project="$(MSBuildThisFileDirectory)Microsoft.NET.PackTool.props" />
+-- 
+2.37.3
+
