@@ -21,7 +21,7 @@ internal class VmrSyncPipeline : SingleStagePipelineDefinition
     public override SingleStagePipeline Pipeline => new()
     {
         Trigger = new("main"),
-        Pr = new("main"),
+        Pr = PrTrigger.None, // new("main", "release/*"),
 
         Parameters =
         {
