@@ -1,4 +1,10 @@
-# This pipeline synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
+###
+### DO NOT MODIFY THIS FILE!
+###
+### This YAML was auto-generated from VmrSyncPipeline
+### To make changes, change the C# definition and rebuild its project
+###
+### This pipeline synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
 
 parameters:
 - name: targetRef
@@ -16,7 +22,10 @@ trigger:
     include:
     - main
 
-pr: none
+pr:
+  branches:
+    include:
+    - main
 
 resources:
   repositories:
@@ -34,13 +43,7 @@ variables:
     value: N/A
 
 jobs:
-- job: Synchronize
-  displayName: Synchronize dotnet/dotnet
-  pool:
-    vmImage: ubuntu-latest
-  steps:
-  - template: ./common/template/steps/vmr-synchronization.yml
-    parameters:
-      targetRef: ${{ parameters.targetRef }}
-      vmrBranch: ${{ parameters.vmrBranch }}
-  timeoutInMinutes: 120
+- template: ./common/templates/jobs/vmr-synchronization.yml
+  parameters:
+    targetRef: ${{ parameters.targetRef }}
+    vmrBranch: ${{ parameters.vmrBranch }}

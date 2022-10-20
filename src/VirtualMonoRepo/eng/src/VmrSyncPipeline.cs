@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Sharpliner;
 using Sharpliner.AzureDevOps;
 
@@ -53,33 +52,11 @@ internal class VmrSyncPipeline : SingleStagePipelineDefinition
 
         Jobs =
         {
-            new Job("Synchronize", $"Synchronize {Configuration.VmrName}")
+            JobTemplate($"./{VmrSyncJobTemplate.TemplatePath}", new()
             {
-                //Pool = 
-                //    If.Equal(variables.System.TeamProject, "public")
-                //        .Pool(new HostedPool()
-                //        {
-                //            Name = "NetCore-Public",
-                //            Demands = new() { "ImageOverride -equals Build.Ubuntu.1804.Amd64.Open" }
-                //        })
-                //    .Else
-                //        .Pool(new HostedPool()
-                //        {
-                //            Name = "NetCore1ESPool-Internal",
-                //            Demands = new() { "ImageOverride -equals Build.Ubuntu.1804.Amd64" }
-                //        }),
-                Pool = new HostedPool(vmImage: "ubuntu-latest"),
-
-                Timeout = TimeSpan.FromHours(2),
-                Steps =
-                {
-                    StepTemplate($"./{VmrSyncTemplate.TemplatePath}", new()
-                    {
-                        { "targetRef", parameters["targetRef"] },
-                        { "vmrBranch", parameters["vmrBranch"] },
-                    })
-                }
-            }
+                { "targetRef", parameters["targetRef"] },
+                { "vmrBranch", parameters["vmrBranch"] },
+            })
         }
     };
 }
