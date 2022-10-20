@@ -44,13 +44,13 @@ internal class VmrSyncJobTemplate : JobTemplateDefinition
                     .Pool(new HostedPool()
                     {
                         Name = "NetCore-Public",
-                        Demands = new() { "ImageOverride -equals Build.Ubuntu.1804.Amd64.Open" }
+                        Demands = new() { "ImageOverride -equals Build.Ubuntu.2004.Amd64.Open" }
                     })
                 .Else
                     .Pool(new HostedPool()
                     {
                         Name = "NetCore1ESPool-Internal",
-                        Demands = new() { "ImageOverride -equals Build.Ubuntu.1804.Amd64" }
+                        Demands = new() { "ImageOverride -equals Build.Ubuntu.2004.Amd64" }
                     }),
 
             Timeout = TimeSpan.FromHours(2),
