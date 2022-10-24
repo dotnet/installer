@@ -1,9 +1,3 @@
-###
-### DO NOT MODIFY THIS FILE!
-###
-### This YAML was auto-generated from VmrSyncJobTemplate
-### To make changes, change the C# definition and rebuild its project
-###
 ### These steps synchronize code from product repositories into the VMR (https://github.com/dotnet/dotnet)
 
 parameters:
@@ -17,9 +11,15 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
+- name: vmrToken
+  displayName: PAT that allows pushing to dotnet/dotnet
+  type: string
+
 jobs:
 - job: Synchronize
   displayName: Synchronize dotnet/dotnet
+  timeoutInMinutes: 120
+
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: NetCore-Public
@@ -29,6 +29,7 @@ jobs:
       name: NetCore1ESPool-Internal
       demands:
       - ImageOverride -equals Build.Ubuntu.2004.Amd64
+
   steps:
   - checkout: self
     clean: true
@@ -41,7 +42,6 @@ jobs:
     displayName: Checkout dotnet/dotnet
     fetchDepth: 0
     path: vmr
-    timeoutInMinutes: 30
 
   - script: |-
       source ./eng/common/tools.sh
@@ -50,27 +50,27 @@ jobs:
     displayName: Restore toolset
     workingDirectory: $(Agent.BuildDirectory)/installer
 
+  # TODO (https://github.com/dotnet/arcade/issues/11386): Remove this step
+  # This step is here so that darc can find the PR commit (which might be in some fork)
+  # We need to make darc understand that it needs to look in the fork from this PR
   - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - script: |-
         cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/installer
       displayName: '[PR Only] Prepare dotnet/installer clone'
 
   - script: |-
-      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update --vmr $(Agent.BuildDirectory)/vmr --tmp $(Agent.TempDirectory) --azdev-pat $(System.AccessToken) --github-pat $(BotAccount-dotnet-bot-repo-PAT) --recursive --verbose installer:${{ parameters.targetRef }}
+      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update --vmr $(Agent.BuildDirectory)/vmr --tmp $(Agent.TempDirectory) --azdev-pat $(System.AccessToken) --github-pat ${{ parameters.vmrToken }} --recursive --verbose installer:${{ parameters.targetRef }}
     displayName: Synchronize dotnet/dotnet
     workingDirectory: $(Agent.BuildDirectory)/installer
-    timeoutInMinutes: 90
 
   - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
-        git remote add dotnet 'https://$(BotAccount-dotnet-bot-repo-PAT)@github.com/dotnet/dotnet.git'
+        git remote add dotnet 'https://${{ parameters.vmrToken }}@github.com/dotnet/dotnet.git'
         git fetch dotnet
         git branch ${{ parameters.vmrBranch }}
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(Agent.BuildDirectory)/vmr
-      timeoutInMinutes: 60
-  timeoutInMinutes: 120

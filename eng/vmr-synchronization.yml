@@ -1,9 +1,3 @@
-###
-### DO NOT MODIFY THIS FILE!
-###
-### This YAML was auto-generated from VmrSyncPipeline
-### To make changes, change the C# definition and rebuild its project
-###
 ### This pipeline synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
 
 parameters:
@@ -44,3 +38,4 @@ jobs:
   parameters:
     targetRef: ${{ parameters.targetRef }}
     vmrBranch: ${{ parameters.vmrBranch }}
+    vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
