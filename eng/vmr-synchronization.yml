@@ -34,7 +34,7 @@ variables:
     value: N/A
 
 jobs:
-- template: ./common/templates/jobs/vmr-synchronization.yml
+- template: ./pipelines/templates/jobs/vmr-synchronization.yml
   parameters:
     targetRef: ${{ parameters.targetRef }}
     vmrBranch: ${{ parameters.vmrBranch }}
