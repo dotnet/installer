@@ -17,20 +17,12 @@
   <PropertyGroup>
     <Platform Condition="'$(Platform)' == 'AnyCPU'"></Platform>
     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
-    <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
+    <Platform Condition="'$(Platform)' == '' AND ('$(BuildArchitecture)' == 'arm64' OR '$(BuildArchitecture)' == 'arm')">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 's390x'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'ppc64le'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
-
-    <!-- new supported portable/nonportable options.  These control whether to build portable runtime
-         or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
-         no longer be passed in.  -->
-    <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == ''">false</BuildPortableRuntime>
-    <BuildPortableSdk Condition="'$(BuildPortableSdk)' == ''">false</BuildPortableSdk>
-    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableRuntime)' != 'true'">true</UseSystemLibraries>
-    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == ''">false</UseSystemLibraries>
   </PropertyGroup>
 
   <!-- This repo's projects are entirely infrastructure and do not ship. -->
