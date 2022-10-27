@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MichaelSimons <msimons@microsoft.com>
+Date: Thu, 27 Oct 2022 02:47:08 +0000
+Subject: [PATCH] Workaround obsolete errors
+
+---
+ src/Servers/Kestrel/Core/src/KestrelServerOptions.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Servers/Kestrel/Core/src/KestrelServerOptions.cs b/src/Servers/Kestrel/Core/src/KestrelServerOptions.cs
+index fc6322dd41..caff75a489 100644
+--- a/src/Servers/Kestrel/Core/src/KestrelServerOptions.cs
++++ b/src/Servers/Kestrel/Core/src/KestrelServerOptions.cs
+@@ -99,7 +99,7 @@ public class KestrelServerOptions
+     /// <remarks>
+     /// Defaults to false.
+     /// </remarks>
+-    [Obsolete($"This property is obsolete and will be removed in a future version. It no longer has any impact on runtime behavior. Use {nameof(Microsoft.AspNetCore.Server.Kestrel.Core.ListenOptions)}.{nameof(Microsoft.AspNetCore.Server.Kestrel.Core.ListenOptions.DisableAltSvcHeader)} to configure \"Alt-Svc\" behavior.", error: true)]
++    [Obsolete($"This property is obsolete and will be removed in a future version. It no longer has any impact on runtime behavior. Use {nameof(Microsoft.AspNetCore.Server.Kestrel.Core.ListenOptions)}.{nameof(Microsoft.AspNetCore.Server.Kestrel.Core.ListenOptions.DisableAltSvcHeader)} to configure \"Alt-Svc\" behavior.")]
+     public bool EnableAltSvc { get; set; }
+ 
+     /// <summary>
