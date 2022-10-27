@@ -9,12 +9,12 @@ let inputBranches =
         [ { GitBranchName = "main"
             DisplayName = "main<br>(8.0.x&nbsp;Runtime)"
             AkaMsChannel = Some("8.0.1xx/daily") }
+          { GitBranchName = "release/7.0.2xx"
+            DisplayName = "Release/7.0.2xx<br>(7.0.x&nbsp;Runtime)"
+            AkaMsChannel = Some("7.0.2xx/daily") }
           { GitBranchName = "release/7.0.1xx"
             DisplayName = "Release/7.0.1xx<br>(7.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("7.0.1xx/daily") }
-          { GitBranchName = "release/7.0.1xx-rc2"
-            DisplayName = "Release/7.0.1xx-rc2<br>(7.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("7.0.1xx-rc2/daily") }]
+            AkaMsChannel = Some("7.0.1xx/daily") }]
 
 
 let referentNotes = """Reference notes:
