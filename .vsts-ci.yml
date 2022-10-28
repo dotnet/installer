@@ -347,11 +347,10 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-  # TODO: Enable once source-build is supported for 8.0 - https://github.com/dotnet/source-build/issues/3026
-  # - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-  #   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-  #     parameters:
-  #       dependsOn: Source_Build_Create_Tarball
+  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+      parameters:
+        dependsOn: Source_Build_Create_Tarball
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish
