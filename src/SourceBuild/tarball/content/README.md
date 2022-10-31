@@ -9,11 +9,11 @@
 - [.NET Foundation](#net-foundation)
 - [License](#license)
 
-This repository is an **Experimental Virtual Monolithic Repository** that hosts all the code to help you build the entire .NET product end-to-end from source (often referred to as source-build).
+This repository is a **Virtual Monolithic Repository (VMR)**. It includes all the code needed to build the .NET SDK, mirrored from many atomic repos (like dotnet/runtime). It also includes [source-build](https://github.com/dotnet/source-build),  our whole-product build system. The VMR is currently experimental.
 
 What this means:
 - **Monolithic** - a join of multiple individual repositories that make up the whole product, such as [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk).
-- **Virtual** - not a replacement for the individual repositories that the product consists of but rather a mirror where sources of the individual repositories are synchronized into.
+- **Virtual** - a mirror (not replacement) of product repos where sources from those repositories are synchronized into.
 - **Experimental** - not to be depended on as we reserve the right to delete the current instance and create a new, different one in its stead.
 
 In the VMR, you can find:
@@ -22,8 +22,8 @@ In the VMR, you can find:
 - small customizations, in the form of patches, applied on top of the original code to make the build possible,
 - *[in future]* E2E tests for the whole .NET product.
 
-More in-depth documentation about the VMR can be found in the [here (VMR Design And Operation)](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#layout).  
-See also the [dotnet/source-build](https://github.com/dotnet/source-build) repo for more information about the source-build itself.
+More in-depth documentation about the VMR can be found in [VMR Design And Operation](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#layout).  
+See also [dotnet/source-build](https://github.com/dotnet/source-build) for more information about our whole-product source-build.
 
 ## Limitations
 **This is a work-in-progress and an experiment.**
@@ -64,7 +64,7 @@ Furthermore, we hope to solve other problems that the current multi-repo setup b
 ## Building the VMR
 
 Please note that **this repository is an experiment and a work-in-progress so it is possible that the build is broken**.
-For the latest information about Source-Build support, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
+For the latest information about Source-Build support, please watch for announcements posted on our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions).
 
 ### Prerequisites
 
