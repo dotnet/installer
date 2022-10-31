@@ -43,6 +43,14 @@ jobs:
     fetchDepth: 0
     path: vmr
 
+  # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
+  # Currently, we ignore dirs of individual repos - they have been scanned before
+  - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+    - task: ComponentGovernanceComponentDetection@0
+      inputs:
+        sourceScanPath: $(Agent.BuildDirectory)/vmr
+        ignoreDirectories: $(Agent.BuildDirectory)/vmr/src
+
   - script: |-
       source ./eng/common/tools.sh
       InitializeDotNetCli true
@@ -58,8 +66,15 @@ jobs:
         cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/installer
       displayName: '[PR Only] Prepare dotnet/installer clone'
 
-  - script: |-
-      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update --vmr $(Agent.BuildDirectory)/vmr --tmp $(Agent.TempDirectory) --azdev-pat $(System.AccessToken) --github-pat ${{ parameters.vmrToken }} --recursive --verbose installer:${{ parameters.targetRef }}
+  - script: >
+      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
+      --vmr $(Agent.BuildDirectory)/vmr
+      --tmp $(Agent.TempDirectory)
+      --azdev-pat $(System.AccessToken)
+      --github-pat ${{ parameters.vmrToken }}
+      --recursive
+      --verbose
+      installer:${{ parameters.targetRef }}
     displayName: Synchronize dotnet/dotnet
     workingDirectory: $(Agent.BuildDirectory)/installer
 
