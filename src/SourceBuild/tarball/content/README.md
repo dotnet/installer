@@ -1,15 +1,6 @@
-# dotnet/dotnet - Home of the .NET VMR (experimental)
+# dotnet/dotnet - Home of the .NET VMR
 
-- [Limitations](#limitations)
-- [Goals](#goals)
-- [Building the VMR](#building-the-vmr)
-- [List of components](#list-of-components)
-- [Filing Issues](#filing-issues)
-- [Useful Links](#useful-links)
-- [.NET Foundation](#net-foundation)
-- [License](#license)
-
-This repository is a **Virtual Monolithic Repository (VMR)**. It includes all the code needed to build the .NET SDK, mirrored from many atomic repos (like dotnet/runtime). It also includes [source-build](https://github.com/dotnet/source-build),  our whole-product build system. The VMR is currently experimental.
+This repository is a **Virtual Monolithic Repository (VMR)**. It includes all the code needed to build the .NET SDK, mirrored from many atomic repos (like `dotnet/runtime`). It also includes [source-build](https://github.com/dotnet/source-build), our whole-product build system. The VMR is currently experimental.
 
 What this means:
 - **Monolithic** - a join of multiple individual repositories that make up the whole product, such as [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk).
