@@ -69,6 +69,8 @@ The dependencies for building .NET from source can be found [here](https://githu
     cd /path/to/complete/dotnet/sources
     ./prep.sh
     ```
+    
+    On arm64, please use `./prep.sh --bootstrap` instead.
 
 3. Build the .NET SDK
 
