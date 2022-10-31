@@ -48,8 +48,10 @@ Please, make the changes in the respective development repositories (e.g., [dotn
 
 ## Goals
 
-This repository eventually aims to become the place from which we release and service future versions of .NET.
-The goal is to reduce complexity of the product construction process and thus enable partners and 3rd parties to easily build, test and modify .NET using their custom infrastructure.
+The main purpose of this repository is to have all source code necessary to build the whole .NET product from source contained in any given commit.
+
+Further, the VMR eventually aims to become the place from which we release and service future versions of .NET.
+This is to reduce the complexity of the product construction process and thus enable partners and 3rd parties to easily build, test and modify .NET using their custom infrastructure.
 
 Furthermore, we hope to solve other problems that the current multi-repo setup brings:
 - Enable developers to make and test changes spanning multiple repositories.
@@ -69,20 +71,21 @@ The dependencies for building .NET from source can be found [here](https://githu
 
 ### Building
 
-1. Clone the VMR.
+1. **Clone the VMR**
 
    ```bash
    git clone https://github.com/dotnet/dotnet dotnet-dotnet
    ```
 
-2. Prep the source to build on your distro. This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
+2. **Prep the source to build on your distro**  
+   This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
 
     ```bash
     cd dotnet-dotnet
     ./prep.sh
     ```
 
-3. Build the .NET SDK
+3. **Build the .NET SDK**
 
     ```bash
     ./build.sh --clean-while-building --online
@@ -96,7 +99,7 @@ The dependencies for building .NET from source can be found [here](https://githu
 
     Run `./build.sh --help` to see more information about supported build options.
 
-4. (Optional) Unpack and install the .NET SDK
+4. *(Optional)* **Unpack and install the .NET SDK**
 
     ```bash
     mkdir -p $HOME/dotnet
