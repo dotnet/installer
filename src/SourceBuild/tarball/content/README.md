@@ -30,6 +30,10 @@ For the latest information about Source-Build support for new .NET versions, ple
 
 It is expected that other platforms will be supported in the future.
 
+### Online build only
+
+Building the product offline is not fully working at the moment. The `--online` switch is needed when [building](#building) as not all dependencies are currently built from source.
+
 ### Code flow
 For the time being, the source code only flows one way - from the individual repos into the VMR.
 Changes done to the VMR are not automatically mirrored back. More details on this process:
@@ -54,7 +58,7 @@ Furthermore, we hope to solve other problems that the current multi-repo setup b
 - Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
 - More efficient pipeline for security fixes during the CVE pre-disclosure process.
 
-## Building the VMR
+## Dev instructions
 
 Please note that **this repository is an experiment and a work-in-progress so it is possible that the build is broken**.
 For the latest information about Source-Build support, please watch for announcements posted on our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions).
@@ -81,13 +85,13 @@ The dependencies for building .NET from source can be found [here](https://githu
 3. Build the .NET SDK
 
     ```bash
-    ./build.sh --clean-while-building
+    ./build.sh --clean-while-building --online
     ```
 
     This builds the entire .NET SDK from source.
     The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-7.0.100-your-RID.tar.gz`.
 
-    Optionally add the `--online` flag to add online NuGet restore sources to the build.
+    Currently, the `--online` flag is required to allow NuGet restore from online sources during the build.
     This is useful for testing unsupported releases that don't yet build without downloading pre-built binaries from the internet.
 
     Run `./build.sh --help` to see more information about supported build options.
