@@ -69,8 +69,6 @@ The dependencies for building .NET from source can be found [here](https://githu
     cd /path/to/complete/dotnet/sources
     ./prep.sh
     ```
-    
-    On arm64, please use `./prep.sh --bootstrap` instead. This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2758).
 
 3. Build the .NET SDK
 
@@ -104,7 +102,7 @@ The dependencies for building .NET from source can be found [here](https://githu
 
 Visibility|All legs|
 |:------|:------|
-|Public|[![Status](https://dev.azure.com/dnceng/public/_apis/build/status/176)](https://dev.azure.com/dnceng/public/_build?definitionId=176)|
+|Public|[![Status](https://dev.azure.com/dnceng-public/public/_apis/build/status/20)](https://dev.azure.com/dnceng/public/_build?definitionId=20)|
 |Microsoft Internal|[![Status](https://dev.azure.com/dnceng/internal/_apis/build/status/286)](https://dev.azure.com/dnceng/internal/_build?definitionId=286)|
 
 ## Installers and Binaries
