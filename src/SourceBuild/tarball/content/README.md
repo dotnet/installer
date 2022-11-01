@@ -64,7 +64,7 @@ This is to reduce the complexity of the product construction process and thus en
 Furthermore, we hope to solve other problems that the current multi-repo setup brings:
 - Enable developers to make and test changes spanning multiple repositories.
 - Fulfill requirements of .NET distro builders such as RedHat or Canonical to natively include .NET in their distribution repositories.
-- Make it possible for anyone to build the product without the need for currently used CI systems and inter-repo code flow orchestration. This should simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
+- Simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
 - Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
 - More efficient pipeline for security fixes during the CVE pre-disclosure process.
 
