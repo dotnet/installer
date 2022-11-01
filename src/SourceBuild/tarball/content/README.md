@@ -46,6 +46,9 @@ Changes done to the VMR are not automatically mirrored back. More details on thi
 - [Source Synchronization Process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#source-synchronization-process)
 - [Moving Code and Dependencies between the VMR and Development Repos](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#moving-code-and-dependencies-between-the-vmr-and-development-repos)
 
+We expect the code flow to start working both ways in the .NET 9 timeframe.
+See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild) for more details.
+
 ### Contribution
 
 At this time, the VMR will not accept any changes outside of those necessary for enabling the supported builds to work.
