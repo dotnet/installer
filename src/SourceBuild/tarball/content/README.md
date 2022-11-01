@@ -5,10 +5,10 @@ This repository is a **Virtual Monolithic Repository (VMR)**. It includes all th
 What this means:
 - **Monolithic** - a join of multiple individual repositories that make up the whole product, such as [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk).
 - **Virtual** - a mirror (not replacement) of product repos where sources from those repositories are synchronized into.
-- **Experimental** - not to be depended on as we reserve the right to delete the current instance and create a new, different one in its stead.
+- **Experimental** - not to be depended on as we reserve the right to delete the current instance and create a new, different one in its stead. See [Limitations](#limitations).
 
 In the VMR, you can find:
-- [source files of each product repository](#list-of-components) which are mirrored inside of their respective directories under [`src/`](src/),
+- source files of [each product repository](#list-of-components) which are mirrored inside of their respective directories under [`src/`](src/),
 - tooling that enables [building the whole .NET product from source](https://github.com/dotnet/source-build) on Linux platforms,
 - small customizations, in the form of patches, applied on top of the original code to make the build possible,
 - *[in future]* E2E tests for the whole .NET product.
@@ -20,6 +20,11 @@ See also [dotnet/source-build](https://github.com/dotnet/source-build) for more 
 
 **This is a work-in-progress and an experiment.**
 There are considerable limitations to what is possible at the moment. For an extensive list of current limitations, please see [Temporary Mechanics](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#temporary-mechanics).
+
+The VMR is expected to become non-experimental by .NET 8 Preview 1 (Februrary, 2023) 
+This means it won't be short-lived anymore and we won't be reserving the right to delete and re-create it anymore.
+Other limitations might apply until the .NET 9 timeframe.
+See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild) for more details.
 
 ### Supported platforms / builds
 
