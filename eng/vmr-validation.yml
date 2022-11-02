@@ -69,21 +69,22 @@ variables:
 
 jobs:
 - job: Build_And_Test
-  displayName: Build and test dotnet/dotnet
+  displayName: Validate VMR changes
   timeoutInMinutes: 120
 
   pool:
+    vmImage: ubuntu-latest
     # TODO: Add Arm64 leg
-    ${{ if eq(variables['System.TeamProject'], 'public') }}:
-      name: ${{ variables.poolPublicAmd64Name }}
-      demands: ImageOverride -equals ${{ variables.poolPublicAmd64Image }}
-    ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-      ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-        name: ${{ variables.poolInternalAmd64PRName }}
-        demands: ImageOverride -equals ${{ variables.poolInternalAmd64PRImage }}
-      ${{ else }}:
-        name: ${{ variables.poolInternalAmd64Name }}
-        demands: ImageOverride -equals ${{ variables.poolInternalAmd64Image }}
+    # ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    #   name: ${{ variables.poolPublicAmd64Name }}
+    #   demands: ImageOverride -equals ${{ variables.poolPublicAmd64Image }}
+    # ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    #   ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+    #     name: ${{ variables.poolInternalAmd64PRName }}
+    #     demands: ImageOverride -equals ${{ variables.poolInternalAmd64PRImage }}
+    #   ${{ else }}:
+    #     name: ${{ variables.poolInternalAmd64Name }}
+    #     demands: ImageOverride -equals ${{ variables.poolInternalAmd64Image }}
 
   strategy:
     matrix:
