@@ -70,7 +70,7 @@ jobs:
       vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
       targetRef: ${{ parameters.targetRef }}
 
-  - ${{ if and(eq('${{ parameters.noPush }}', 'false'), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+  - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
