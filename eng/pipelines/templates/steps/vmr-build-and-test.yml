@@ -1,0 +1,148 @@
+### These steps build and test the VMR (https://github.com/dotnet/dotnet)
+
+parameters:
+- name: vmrPath
+  displayName: Path where the dotnet/dotnet is checked out to
+  type: string
+  default: $(Agent.BuildDirectory)/vmr
+
+- name: architecture
+  displayName: Architecture to build
+  type: string
+
+- name: excludeSdkContentTests
+  displayName: Skip running the SDK content smoke-tests
+  type: boolean
+  default: false
+
+- name: usePreviousArtifacts
+  displayName: Build using the previous source-build artifacts
+  type: boolean
+  default: false
+
+- name: additionalBuildArgs
+  displayName: Additional arguments to pass to the build
+  type: string
+
+steps:
+# - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+#   - task: Bash@3
+#     displayName: Setup Private Feeds Credentials
+#     inputs:
+#       filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.sh
+#       arguments: $(Build.SourcesDirectory)/NuGet.config $Token
+#     env:
+#       Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
+# - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
+#   - download: ${{ parameters.installerBuildResourceId }}
+#     artifact: BlobArtifacts
+#     patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
+#     displayName: Download MSFT sdk Tarball
+
+- script: |
+    set -x
+
+    if [[ '${{ parameters.usePreviousArtifacts }}' != 'true' ]]; then
+      customPrepArgs=
+      if [[ '$(_BootstrapPrep)' == 'true' ]]; then
+        customPrepArgs='--bootstrap'
+      fi
+
+      docker run --rm -v $(vmrPath):/tarball -w /tarball $(_Container) ./prep.sh  ${customPrepArgs}
+    else
+      mkdir $(vmrPath)/.dotnet
+      tarballFilePath="$(vmrPath)/packages/archive/dotnet-sdk-*.tar.gz"
+      eval tar -ozxf "$tarballFilePath" -C "$(vmrPath)/.dotnet"
+      eval rm -f "$tarballFilePath"
+    fi
+  displayName: Prep Tarball
+
+- script: |
+    set -x
+    df -h
+
+    networkArgs=
+    customBuildArgs=
+    if [[ '$(_RunOnline)' == 'true' ]]; then
+      customBuildArgs='--online'
+    else
+      networkArgs='--network none'
+    fi
+
+    if [[ '$(_EnablePoison)' == 'true' ]]; then
+      customBuildArgs="$customBuildArgs --poison"
+    fi
+
+    docker run --rm -v $(vmrPath):/tarball -w /tarball ${networkArgs} $(_Container) ./build.sh --clean-while-building ${customBuildArgs} $(additionalBuildArgs)
+  displayName: Build Tarball
+
+- script: |
+    set -x
+
+    # Use installer repo's NuGet.config during online testing to utilize internal feeds
+    rm -f $(vmrPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+    cp $(Build.SourcesDirectory)/NuGet.config $(vmrPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+
+    dockerVolumeArgs="-v $(vmrPath):/tarball"
+    dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=$(_ExcludeOmniSharpTests) -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
+    poisonArg=''
+
+    # TODO
+    # if [[ '${{ parameters.excludeSdkContentTests}}' != 'true' ]]; then
+    #   dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
+    #   msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+    #   dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
+    # fi
+
+    if [[ '$(_EnablePoison)' == 'true' ]]; then
+      poisonArg='--poison'
+      dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
+    fi
+
+    docker run --rm $dockerVolumeArgs -w /tarball $dockerEnvArgs $(_Container) ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) -- -p:SmokeTestConsoleVerbosity=detailed
+  displayName: Run Tests
+
+# Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
+- script: |
+    set -x
+
+    targetFolder=$(Build.StagingDirectory)/BuildLogs/
+    mkdir -p ${targetFolder}
+
+    cd "$(vmrPath)"
+    find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+    find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
+    find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "Updated*.diff" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
+  displayName: Prepare BuildLogs staging directory
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- publish: '$(Build.StagingDirectory)/BuildLogs'
+  artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+  displayName: Publish BuildLogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: PublishTestResults@2
+  displayName: Publish Test Results
+  condition: succeededOrFailed()
+  continueOnError: true
+  inputs:
+    testRunner: vSTest
+    testResultsFiles: 'test/**/*.trx'
+    searchFolder: $(vmrPath)
+    mergeTestResults: true
+    publishRunAttachments: true
+    testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+
+- publish: '$(vmrPath)/artifacts/${{ parameters.architecture }}/Release/'
+  artifact: $(Agent.JobName)_Artifacts
+  displayName: Publish Artifacts
+  condition: succeededOrFailed()
+  continueOnError: true
