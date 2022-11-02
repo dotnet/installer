@@ -23,6 +23,7 @@ parameters:
 - name: additionalBuildArgs
   displayName: Additional arguments to pass to the build
   type: string
+  default: ''
 
 steps:
 # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
@@ -90,8 +91,8 @@ steps:
 
     # TODO
     # if [[ '${{ parameters.excludeSdkContentTests}}' != 'true' ]]; then
-    #   dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
-    #   msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+    #   dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/$__{{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
+    #   msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/$__{{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
     #   dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
     # fi
 
