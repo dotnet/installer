@@ -11,6 +11,11 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
+- name: noPush
+  displayName: Don't push changes to dotnet/dotnet
+  type: boolean
+  default: false
+
 trigger:
   branches:
     include:
@@ -39,3 +44,4 @@ jobs:
     targetRef: ${{ parameters.targetRef }}
     vmrBranch: ${{ parameters.vmrBranch }}
     vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+    noPush: ${{ parameters.noPush }}
