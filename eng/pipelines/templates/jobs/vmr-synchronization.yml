@@ -75,7 +75,7 @@ jobs:
         cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/installer
       displayName: '[PR Only] Prepare dotnet/installer clone'
 
-  - script: git branch -B ${{ parameters.vmrBranch }}
+  - script: git checkout -B ${{ parameters.vmrBranch }}
     displayName: Prepare branch ${{ parameters.vmrBranch }}
     workingDirectory: $(vmrPath)
 
