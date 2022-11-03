@@ -2,11 +2,6 @@
 ### VMR is cloned, updates applied locally. The VMR is then built and tests run.
 
 parameters:
-- name: targetRef
-  displayName: Target revision in dotnet/installer to synchronize to
-  type: string
-  default: $(Build.SourceVersion)
-
 - name: vmrBranch
   displayName: dotnet/dotnet branch to use
   type: string
