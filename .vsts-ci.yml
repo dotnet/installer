@@ -20,6 +20,8 @@ variables:
 - name: _PublishUsingPipelines
   value: false
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - name: Codeql.Enabled
+    value: true
   - group: DotNet-DotNetCli-Storage
   - group: DotNet-Blob-Feed
   - name: _PublishUsingPipelines
