@@ -25,6 +25,10 @@ jobs:
   displayName: Synchronize dotnet/dotnet
   timeoutInMinutes: 120
 
+  variables:
+  - name: vmrPath
+    value: $(Agent.BuildDirectory)/vmr
+
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: NetCore-Public
@@ -53,8 +57,8 @@ jobs:
   - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - task: ComponentGovernanceComponentDetection@0
       inputs:
-        sourceScanPath: $(Agent.BuildDirectory)/vmr
-        ignoreDirectories: $(Agent.BuildDirectory)/vmr/src
+        sourceScanPath: $(vmrPath)
+        ignoreDirectories: $(vmrPath)/src
 
   - script: |-
       source ./eng/common/tools.sh
@@ -77,7 +81,7 @@ jobs:
 
   - script: >
       $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
-      --vmr $(Agent.BuildDirectory)/vmr
+      --vmr $(vmrPath)
       --tmp $(Agent.TempDirectory)
       --azdev-pat $(System.AccessToken)
       --github-pat ${{ parameters.vmrToken }}
@@ -96,4 +100,4 @@ jobs:
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
-      workingDirectory: $(Agent.BuildDirectory)/vmr
+      workingDirectory: $(vmrPath)
