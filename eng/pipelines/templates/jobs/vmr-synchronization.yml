@@ -15,6 +15,11 @@ parameters:
   displayName: PAT that allows pushing to dotnet/dotnet
   type: string
 
+- name: noPush
+  displayName: Don't push changes to dotnet/dotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: Synchronize
   displayName: Synchronize dotnet/dotnet
@@ -66,6 +71,10 @@ jobs:
         cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/installer
       displayName: '[PR Only] Prepare dotnet/installer clone'
 
+  - script: git branch -B ${{ parameters.vmrBranch }}
+    displayName: Prepare branch ${{ parameters.vmrBranch }}
+    workingDirectory: $(vmrPath)
+
   - script: >
       $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
       --vmr $(Agent.BuildDirectory)/vmr
@@ -78,13 +87,12 @@ jobs:
     displayName: Synchronize dotnet/dotnet
     workingDirectory: $(Agent.BuildDirectory)/installer
 
-  - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+  - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
         git remote add dotnet 'https://${{ parameters.vmrToken }}@github.com/dotnet/dotnet.git'
         git fetch dotnet
-        git branch ${{ parameters.vmrBranch }}
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
