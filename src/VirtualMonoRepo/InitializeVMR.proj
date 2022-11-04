@@ -33,8 +33,6 @@
   <Target Name="InitializeVMR" DependsOnTargets="GenerateFullNuGetVersion;
                                                  GenerateVersionFile;
                                                  InitializeCleanVmr;
-                                                 CopyTarballContent;
-                                                 CommitInitialContent;
                                                  InitializeRepoAndDependentsRecursive;
                                                  CopyTextOnlyPackages;
                                                  CommitTextOnlyPackages">
@@ -48,11 +46,6 @@
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
 
     <Exec Command="git init -b $(VmrDefaultBranch)" WorkingDirectory="$(VmrDir)" />
-  </Target>
-
-  <Target Name="CommitInitialContent">
-    <Exec Command="git add -A" WorkingDirectory="$(VmrDir)" />
-    <Exec Command="git commit -m '[Initialization] Initial commit%0D%0A%0D%0A[[ commit created by automation ]]'" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="InitializeRepoAndDependentsRecursive"
