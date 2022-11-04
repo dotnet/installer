@@ -44,8 +44,12 @@
     <MakeDir Directories="$(VmrDir)" />
     <MakeDir Directories="$(VmrGitInfoDir)" Condition=" '$(VmrGitInfoDir)' != '' " />
     <MakeDir Directories="$(TmpDir)" Condition=" !EXISTS('$(TmpDir)') " />
+    <MakeDir Directories="$(VmrDir)/src" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)/source-mappings.json" DestinationFolder="$(VmrDir)/src" />
 
     <Exec Command="git init -b $(VmrDefaultBranch)" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git add -A" WorkingDirectory="$(VmrDir)" />
+    <Exec Command="git commit -m '[Initialization] Initial commit%0D%0A%0D%0A[[ commit created by automation ]]'" WorkingDirectory="$(VmrDir)" />
   </Target>
 
   <Target Name="InitializeRepoAndDependentsRecursive"
