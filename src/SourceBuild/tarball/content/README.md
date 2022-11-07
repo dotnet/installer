@@ -100,7 +100,7 @@ The dependencies for building .NET from source can be found [here](https://githu
     ```
 
     This builds the entire .NET SDK from source.
-    The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-7.0.100-your-RID.tar.gz`.
+    The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-8.0.100-your-RID.tar.gz`.
 
     Currently, the `--online` flag is required to allow NuGet restore from online sources during the build.
     This is useful for testing unsupported releases that don't yet build without downloading pre-built binaries from the internet.
