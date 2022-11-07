@@ -111,7 +111,7 @@ The dependencies for building .NET from source can be found [here](https://githu
 
     ```bash
     mkdir -p $HOME/dotnet
-    tar zxf artifacts/x64/Release/dotnet-sdk-7.0.100-your-RID.tar.gz -C $HOME/dotnet
+    tar zxf artifacts/x64/Release/dotnet-sdk-8.0.100-your-RID.tar.gz -C $HOME/dotnet
     ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
     ```
     
