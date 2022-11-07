@@ -157,4 +157,4 @@ This repo should only contain issues that are tied to the VMR construction/build
 
 ## License
 
-.NET (including the runtime repo) is licensed under the [MIT](LICENSE.TXT) license.
+.NET is licensed under the [MIT](LICENSE.TXT) license.
