@@ -15,10 +15,19 @@ parameters:
   displayName: PAT that allows pushing to dotnet/dotnet
   type: string
 
+- name: noPush
+  displayName: Don't push changes to dotnet/dotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: Synchronize
   displayName: Synchronize dotnet/dotnet
   timeoutInMinutes: 120
+
+  variables:
+  - name: vmrPath
+    value: $(Agent.BuildDirectory)/vmr
 
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
@@ -43,6 +52,14 @@ jobs:
     fetchDepth: 0
     path: vmr
 
+  # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
+  # Currently, we ignore dirs of individual repos - they have been scanned before
+  - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+    - task: ComponentGovernanceComponentDetection@0
+      inputs:
+        sourceScanPath: $(vmrPath)
+        ignoreDirectories: $(vmrPath)/src
+
   - script: |-
       source ./eng/common/tools.sh
       InitializeDotNetCli true
@@ -58,19 +75,29 @@ jobs:
         cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/installer
       displayName: '[PR Only] Prepare dotnet/installer clone'
 
-  - script: |-
-      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update --vmr $(Agent.BuildDirectory)/vmr --tmp $(Agent.TempDirectory) --azdev-pat $(System.AccessToken) --github-pat ${{ parameters.vmrToken }} --recursive --verbose installer:${{ parameters.targetRef }}
+  - script: git checkout -B ${{ parameters.vmrBranch }}
+    displayName: Prepare branch ${{ parameters.vmrBranch }}
+    workingDirectory: $(vmrPath)
+
+  - script: >
+      $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
+      --vmr $(vmrPath)
+      --tmp $(Agent.TempDirectory)
+      --azdev-pat $(System.AccessToken)
+      --github-pat ${{ parameters.vmrToken }}
+      --recursive
+      --verbose
+      installer:${{ parameters.targetRef }}
     displayName: Synchronize dotnet/dotnet
     workingDirectory: $(Agent.BuildDirectory)/installer
 
-  - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+  - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
         git remote add dotnet 'https://${{ parameters.vmrToken }}@github.com/dotnet/dotnet.git'
         git fetch dotnet
-        git branch ${{ parameters.vmrBranch }}
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
-      workingDirectory: $(Agent.BuildDirectory)/vmr
+      workingDirectory: $(vmrPath)
