@@ -38,15 +38,6 @@ jobs:
   pool:
     vmImage: ubuntu-latest
 
-  strategy:
-    matrix:
-      CentOSStream8-Online:
-        _BootstrapPrep: false
-        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-        _EnablePoison: false
-        _ExcludeOmniSharpTests: true
-        _RunOnline: true
-
   steps:
   - template: ./pipelines/templates/steps/vmr-prepare.yml
     parameters:
