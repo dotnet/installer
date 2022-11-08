@@ -3,6 +3,10 @@
 ### Changes are applied locally onto the already cloned VMR (located in $vmrPath).
 
 parameters:
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+
 - name: targetRef
   displayName: Target revision in dotnet/installer to synchronize
   type: string
@@ -16,6 +20,10 @@ parameters:
   displayName: Path where the dotnet/dotnet is checked out to
   type: string
   default: $(Agent.BuildDirectory)/vmr
+
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
 
 steps:
 - checkout: self

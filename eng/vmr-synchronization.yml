@@ -65,8 +65,9 @@ jobs:
   - template: ./pipelines/templates/steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
-      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+      vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: ${{ parameters.targetRef }}
+      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
 
   - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-

@@ -55,5 +55,6 @@ jobs:
   - template: ./pipelines/templates/steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
-      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+      vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: $(Build.SourceVersion)
+      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
