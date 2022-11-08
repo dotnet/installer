@@ -24,9 +24,6 @@ resources:
 variables:
 - template: /eng/common/templates/variables/pool-providers.yml
 
-- name: vmrPath
-  value: $(Agent.BuildDirectory)/vmr
-
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBot-GitHub
 - ${{ else }}:
@@ -36,10 +33,13 @@ variables:
 jobs:
 - job: Validate
   displayName: Test VMR synchronization
-  timeoutInMinutes: 120
-
   pool:
-    vmImage: ubuntu-latest
+    ${{ if eq(variables['System.TeamProject'], 'public') }}:
+      name: $(DncEngPublicBuildPool)
+      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64.Open
+    ${{ else }}:
+      name: $(DncEngInternalBuildPool)
+      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
 
   steps:
   - template: ./pipelines/templates/steps/vmr-prepare.yml
