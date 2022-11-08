@@ -37,7 +37,7 @@ steps:
 
 - script: git checkout -B ${{ parameters.vmrBranch }}
   displayName: Prepare branch ${{ parameters.vmrBranch }}
-  workingDirectory: ${{ parameters.vmrPath }}
+  workingDirectory: $(vmrPath)
 
 # TODO (https://github.com/dotnet/arcade/issues/11386): Remove this step
 # This step is here so that darc can find the PR commit (which might be in some fork)
