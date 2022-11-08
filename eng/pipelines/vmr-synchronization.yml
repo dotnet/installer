@@ -34,7 +34,7 @@ variables:
 - name: vmrPath
   value: $(Agent.BuildDirectory)/vmr
 
-- template: /eng/common/templates/variables/pool-providers.yml
+- template: templates/variables/pool-providers.yml
 
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBot-GitHub
@@ -58,11 +58,11 @@ jobs:
       - ImageOverride -equals Build.Ubuntu.2004.Amd64
 
   steps:
-  - template: ./pipelines/templates/steps/vmr-prepare.yml
+  - template: templates/steps/vmr-prepare.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
 
-  - template: ./pipelines/templates/steps/vmr-pull-updates.yml
+  - template: templates/steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
       vmrBranch: ${{ parameters.vmrBranch }}
