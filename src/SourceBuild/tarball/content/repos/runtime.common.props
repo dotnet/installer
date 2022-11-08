@@ -13,7 +13,7 @@
     <BuildCommandArgs>$(StandardSourceBuildArgs.Replace('-bl', '-nobl'))</BuildCommandArgs>
 
     <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64' AND '$(BuildArchitecture)' != 'arm'">$(ArmEnvironmentVariables) $(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
@@ -31,13 +31,17 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadeCoreFxTestingOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ArcadeTargetFrameworkSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeTargetFrameworkOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
   </ItemGroup>
 
   <!-- Environment Variables -->
   <ItemGroup>
     <EnvironmentVariables Include="BuildInParallel=false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_4_X" Version="%24(MicrosoftCodeAnalysisVersion)" />
   </ItemGroup>
 
 </Project>
