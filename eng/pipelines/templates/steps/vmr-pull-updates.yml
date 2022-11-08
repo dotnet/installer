@@ -49,7 +49,7 @@ steps:
 
 - script: >
     $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
-    --vmr $(vmrPath)
+    --vmr ${{ parameters.vmrPath }}
     --tmp $(Agent.TempDirectory)
     --azdev-pat $(System.AccessToken)
     --github-pat ${{ parameters.vmrToken }}
