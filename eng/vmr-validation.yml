@@ -52,9 +52,8 @@ jobs:
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
 
-  - template: ./pipelines/templates/steps/vmr-build-and-test.yml
+  - template: ./pipelines/templates/steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
-      architecture: x64
-      ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-        excludeSdkContentTests: true
+      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+      targetRef: $(Build.SourceVersion)
