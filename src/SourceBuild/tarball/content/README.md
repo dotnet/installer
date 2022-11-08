@@ -45,7 +45,7 @@ See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Docum
 .NET Source-Build is supported on the oldest available .NET SDK feature update for each major release, and on Linux only.
 For example, if .NET `6.0.1xx`, `6.0.2xx`, `7.0.1xx`, and `7.0.2xx` feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support `6.0.1xx` and `7.0.1xx`.
 
-That being said, the VMR has only been created after .NET 7.0 had been released so it will contain .NET 8.0 and higher.
+The VMR only support .NET 8.0 and higher.  Additionally source-build currently support Linux only.
 Just like the development repositories, the VMR will have a release branch for every feature band (e.g. `release/8.0.1xx-preview1`).
 Similarly, VMR's `main` branch will follow `main` branches of product repositories (see [Synchronization Based on Declared Dependencies](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#synchronization-based-on-declared-dependencies)).
 
