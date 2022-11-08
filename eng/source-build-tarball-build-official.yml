@@ -4,7 +4,19 @@ resources:
   pipelines:
   - pipeline: installer-build-resource
     source: dotnet-installer-official-ci
-    trigger: true
+    trigger:
+      branches:
+        include:
+        - main
+        - release/*
+        - internal/release/*
+        exclude:
+        - release/6.0.3xx
+        - internal/release/6.0.3xx
+        - release/6.0.4xx
+        - internal/release/6.0.4xx
+      stages:
+      - build
 
 stages:
 - stage: build
