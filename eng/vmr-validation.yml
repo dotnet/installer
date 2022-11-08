@@ -24,6 +24,9 @@ resources:
 variables:
 - template: /eng/common/templates/variables/pool-providers.yml
 
+- name: vmrPath
+  value: $(Agent.BuildDirectory)/vmr
+
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBot-GitHub
 - ${{ else }}:
