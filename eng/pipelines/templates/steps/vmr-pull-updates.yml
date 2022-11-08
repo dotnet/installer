@@ -21,10 +21,6 @@ parameters:
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
-- name: vmrBranch
-  displayName: dotnet/dotnet branch to use
-  type: string
-
 steps:
 - checkout: self
   clean: true
