@@ -1,6 +1,6 @@
 # dotnet/dotnet - Home of the .NET VMR
 
-This repository is a **Virtual Monolithic Repository (VMR)**. It includes all the code needed to build the .NET SDK, mirrored from many atomic repos (like `dotnet/runtime`). It also includes [source-build](https://github.com/dotnet/source-build), our whole-product build system. The VMR is currently experimental.
+This repository is a **Virtual Monolithic Repository (VMR)** which includes all the source code and infrastructure needed to build the .NET SDK.
 
 What this means:
 - **Monolithic** - a join of multiple individual repositories that make up the whole product, such as [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk).
@@ -16,6 +16,20 @@ In the VMR, you can find:
 More in-depth documentation about the VMR can be found in [VMR Design And Operation](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#layout).  
 See also [dotnet/source-build](https://github.com/dotnet/source-build) for more information about our whole-product source-build.
 
+## Goals
+
+The main purpose of this repository is to have all source code necessary to build the whole .NET product from source contained in any given commit.
+
+Further, the VMR eventually aims to become the place from which we release and service future versions of .NET.
+This is to reduce the complexity of the product construction process and thus enable partners and 3rd parties to easily build, test and modify .NET using their custom infrastructure.
+
+Furthermore, we hope to solve other problems that the current multi-repo setup brings:
+- Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
+- Fulfill requirements of .NET distro builders such as RedHat or Canonical to natively include .NET in their distribution repositories.
+- Simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
+- Enable developers to make and test changes spanning multiple repositories.
+- More efficient pipeline for security fixes during the CVE pre-disclosure process.
+
 ## Limitations
 
 **This is a work-in-progress and an experiment.**
@@ -29,7 +43,11 @@ See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Docum
 ### Supported platforms / builds
 
 .NET Source-Build is supported on the oldest available .NET SDK feature update for each major release, and on Linux only.
-For example, if .NET `6.0.1xx`, `6.0.2xx`, and `7.0.1xx` feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support `6.0.1xx` and `7.0.1xx`.
+For example, if .NET `6.0.1xx`, `6.0.2xx`, `7.0.1xx`, and `7.0.2xx` feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support `6.0.1xx` and `7.0.1xx`.
+
+That being said, the VMR has only been created after .NET 7.0 had been released so it will contain .NET 8.0 and higher.
+Just like the development repositories, the VMR will have a release branch for every feature band (e.g. `release/8.0.1xx-preview1`).
+Similarly, VMR's `main` branch will follow `main` branches of product repositories (see [Synchronization Based on Declared Dependencies](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#synchronization-based-on-declared-dependencies)).
 
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
@@ -51,22 +69,8 @@ See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Docum
 
 ### Contribution
 
-At this time, the VMR will not accept any changes outside of those necessary for enabling the supported builds to work.
+At this time, the VMR will not accept any changes and is a read-only mirror of the development repositories only.
 Please, make the changes in the respective development repositories (e.g., [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk)) and they will get synchronized into the VMR automatically.
-
-## Goals
-
-The main purpose of this repository is to have all source code necessary to build the whole .NET product from source contained in any given commit.
-
-Further, the VMR eventually aims to become the place from which we release and service future versions of .NET.
-This is to reduce the complexity of the product construction process and thus enable partners and 3rd parties to easily build, test and modify .NET using their custom infrastructure.
-
-Furthermore, we hope to solve other problems that the current multi-repo setup brings:
-- Enable developers to make and test changes spanning multiple repositories.
-- Fulfill requirements of .NET distro builders such as RedHat or Canonical to natively include .NET in their distribution repositories.
-- Simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
-- Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
-- More efficient pipeline for security fixes during the CVE pre-disclosure process.
 
 ## Dev instructions
 
@@ -139,7 +143,8 @@ The repository also contains a [JSON manifest](https://github.com/dotnet/dotnet/
 
 ## Filing Issues
 
-This repo should only contain issues that are tied to the VMR construction/build itself. For other issues, please file them to their appropriate development repos.
+This repo does not accept issues as of now. Please file issues to the appropriate development repos.
+For issues with the VMR itself, please use the [source-build repository](https://github.com/dotnet/source-build).
 
 ## Useful Links
 
