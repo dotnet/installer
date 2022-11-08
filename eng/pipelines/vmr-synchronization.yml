@@ -33,16 +33,8 @@ resources:
     endpoint: dotnet
 
 variables:
-- name: vmrPath
-  value: $(Agent.BuildDirectory)/vmr
-
-- template: templates/variables/pool-providers.yml
-
-- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-  - group: DotNetBot-GitHub
-- ${{ else }}:
-  - name: BotAccount-dotnet-bot-repo-PAT
-    value: N/A
+- template: /eng/common/templates/variables/pool-providers.yml
+- template: templates/variables/vmr-variables.yml
 
 jobs:
 - job: Synchronize
