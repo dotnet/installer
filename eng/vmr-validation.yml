@@ -1,25 +1,18 @@
 ### This pipeline validates new changes of the VMR (https://github.com/dotnet/dotnet)
-### VMR is cloned, updates applied locally. The VMR is then built and tests run.
+### VMR is cloned and updates are applied locally
 
 parameters:
 - name: vmrBranch
   displayName: dotnet/dotnet branch to use
   type: string
-  default: $(Build.SourceBranchName)
+  default: $(System.PullRequest.TargetBranch)
 
-trigger:
-  branches:
-    include:
-    - main
-    - release/8.0.*
-    - internal/release/8.0.*
+trigger: none
 
 pr:
   branches:
     include:
     - main
-    - release/8.0.*
-    - internal/release/8.0.*
 
 resources:
   repositories:
@@ -29,31 +22,6 @@ resources:
     endpoint: public
 
 variables:
-- name: vmrPath
-  value: $(Agent.BuildDirectory)/vmr
-- name: centOSStream8Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-- name: centOSStream9Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
-- name: debian11Arm64Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
-- name: fedora36Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36
-- name: ubuntu2004Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
-- name: poolInternalAmd64Name
-  value: NetCore1ESPool-Svc-Internal
-- name: poolInternalAmd64Image
-  value: Build.Ubuntu.1804.Amd64
-- name: poolInternalAmd64PRName
-  value: NetCore1ESPool-Internal-XL
-- name: poolInternalAmd64PRImage
-  value: Build.Ubuntu.1804.Amd64
-- name: poolPublicAmd64Name
-  value: NetCore-Public-XL
-- name: poolPublicAmd64Image
-  value: Build.Ubuntu.1804.Amd64.Open
-
 - template: /eng/common/templates/variables/pool-providers.yml
 
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
@@ -69,51 +37,15 @@ jobs:
 
   pool:
     vmImage: ubuntu-latest
-    # TODO: Add Arm64 leg
-    # ${{ if eq(variables['System.TeamProject'], 'public') }}:
-    #   name: ${{ variables.poolPublicAmd64Name }}
-    #   demands: ImageOverride -equals ${{ variables.poolPublicAmd64Image }}
-    # ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-    #   ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    #     name: ${{ variables.poolInternalAmd64PRName }}
-    #     demands: ImageOverride -equals ${{ variables.poolInternalAmd64PRImage }}
-    #   ${{ else }}:
-    #     name: ${{ variables.poolInternalAmd64Name }}
-    #     demands: ImageOverride -equals ${{ variables.poolInternalAmd64Image }}
 
   strategy:
     matrix:
       CentOSStream8-Online:
         _BootstrapPrep: false
-        _Container: ${{ variables.centOSStream8Container }}
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
         _EnablePoison: false
         _ExcludeOmniSharpTests: true
         _RunOnline: true
-      # ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-      #   CentOSStream8-Offline:
-      #     _BootstrapPrep: false
-      #     _Container: ${{ parameters.centOSStream8Container }}
-      #     _EnablePoison: false
-      #     _ExcludeOmniSharpTests: true
-      #     _RunOnline: false
-      #   CentOSStream9-Offline:
-      #     _BootstrapPrep: false
-      #     _Container: ${{ parameters.centOSStream9Container }}
-      #     _EnablePoison: false
-      #     _ExcludeOmniSharpTests: false
-      #     _RunOnline: false
-      #   Fedora36-Offline:
-      #     _BootstrapPrep: false
-      #     _Container: ${{ parameters.fedora36Container }}
-      #     _EnablePoison: true
-      #     _ExcludeOmniSharpTests: false
-      #     _RunOnline: false
-      #   Ubuntu2004-Offline:
-      #     _BootstrapPrep: false
-      #     _Container: ${{ parameters.ubuntu2004Container }}
-      #     _EnablePoison: false
-      #     _ExcludeOmniSharpTests: false
-      #     _RunOnline: false
 
   steps:
   - template: ./pipelines/templates/steps/vmr-prepare.yml
