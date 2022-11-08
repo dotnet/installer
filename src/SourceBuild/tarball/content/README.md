@@ -33,7 +33,7 @@ For example, if .NET `6.0.1xx`, `6.0.2xx`, and `7.0.1xx` feature updates are ava
 
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
-It is expected that other platforms will be supported in the future.
+It is expected that Mac and Window will be supported in the .NET 9.0.
 
 ### Online build only
 
