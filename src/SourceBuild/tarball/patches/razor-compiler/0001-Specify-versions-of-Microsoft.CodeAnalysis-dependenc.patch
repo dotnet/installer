@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 9 Nov 2022 14:17:00 -0800
+Subject: [PATCH] Specify versions of Microsoft.CodeAnalysis dependencies
+
+---
+ .../src/Microsoft.CodeAnalysis.Razor.csproj                | 7 +++++++
+ .../Microsoft.NET.Sdk.Razor.SourceGenerators.csproj        | 7 +++++++
+ ...spNetCore.Razor.SourceGenerator.Tooling.Internal.csproj | 7 +++++++
+ 3 files changed, 21 insertions(+)
+
+diff --git a/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj b/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
+index 5eb6ea9f..89f667d5 100644
+--- a/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
++++ b/src/Microsoft.CodeAnalysis.Razor/src/Microsoft.CodeAnalysis.Razor.csproj
+@@ -12,4 +12,11 @@
+     <ProjectReference Include="..\..\Microsoft.AspNetCore.Razor.Language\src\Microsoft.AspNetCore.Razor.Language.csproj" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
++
++  <!-- When building offline we need to bump the version of System.Reflection.Metadata that CodeAnalysis package depends on to match what the source build tarball expects. -->
++  <ItemGroup Condition="'$(DotNetBuildOffline)' == 'true'">
++    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
++  </ItemGroup>
+ </Project>
+diff --git a/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj b/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
+index 27c23c27..473ee427 100644
+--- a/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
++++ b/src/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.csproj
+@@ -15,6 +15,13 @@
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
+ 
++  <!-- When building offline we need to bump the version of System.Reflection.Metadata that CodeAnalysis package depends on to match what the source build tarball expects. -->
++  <ItemGroup Condition="'$(DotNetBuildOffline)' == 'true'">
++    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
++  </ItemGroup>
++
+   <ItemGroup>
+     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions\src\Microsoft.AspNetCore.Mvc.Razor.Extensions.csproj" />
+     <ProjectReference Include="..\Microsoft.AspNetCore.Razor.Language\src\Microsoft.AspNetCore.Razor.Language.csproj" />
+diff --git a/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj b/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
+index e3501517..aba28738 100644
+--- a/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
++++ b/src/tools/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal/Microsoft.AspNetCore.Razor.SourceGenerator.Tooling.Internal.csproj
+@@ -30,4 +30,11 @@
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+   </ItemGroup>
+ 
++  <!-- When building offline we need to bump the version of System.Reflection.Metadata that CodeAnalysis package depends on to match what the source build tarball expects. -->
++  <ItemGroup Condition="'$(DotNetBuildOffline)' == 'true'">
++    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
++  </ItemGroup>
++
+ </Project>
