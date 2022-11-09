@@ -35,7 +35,7 @@ See also [dotnet/source-build](https://github.com/dotnet/source-build) for more 
 **This is a work-in-progress and an experiment.**
 There are considerable limitations to what is possible at the moment. For an extensive list of current limitations, please see [Temporary Mechanics](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#temporary-mechanics).
 
-The VMR is expected to become non-experimental by .NET 8 Preview 1 (Februrary, 2023) 
+The VMR is expected to become non-experimental by .NET 8 Preview 1 (Februrary, 2023).
 This means it won't be short-lived anymore and we won't be reserving the right to delete and re-create it anymore.
 Other limitations might apply until the .NET 9 timeframe.
 See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Roadmap.md) for more details.
@@ -52,10 +52,11 @@ For the latest information about Source-Build support for new .NET versions, ple
 Building the product offline is not fully working at the moment. The `--online` switch is needed when building the VMR as not all dependencies are currently built from source.
 
 ### Code flow
-For the time being, the source code only flows one way - from the individual repos into the VMR.
-Changes done to the VMR are not automatically mirrored back. More details on this process:
+For the time being, the source code only flows one way - from the development repos into the VMR.
+More details on this process:
 
 - [Source Synchronization Process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#source-synchronization-process)
+- [Synchronization Based on Declared Dependencies](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#synchronization-based-on-declared-dependencies)
 - [Moving Code and Dependencies between the VMR and Development Repos](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#moving-code-and-dependencies-between-the-vmr-and-development-repos)
 
 We expect the code flow to start working both ways in the .NET 9 timeframe.
