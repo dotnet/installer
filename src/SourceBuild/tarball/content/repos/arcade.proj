@@ -17,6 +17,13 @@
     <!-- we need to use a prebuilt Arcade to build Arcade -->
     <UseBootstrapArcade>true</UseBootstrapArcade>
     <IsToolingProject>true</IsToolingProject>
+    
+    <!-- NU1605: Package downgrade warning. During a bootstrap, arcade needs to
+                 reference the newly-built version of Microsoft.CodeAnalysis but
+                 we no longer have access to its N-1 dependencies from before
+                 the stage 1 build, so we manually reference the current version
+                 of M.CA's dependencies, causing NU1605. -->
+    <RepoNoWarns>NU1605</RepoNoWarns>
   </PropertyGroup>
 
   <ItemGroup>
