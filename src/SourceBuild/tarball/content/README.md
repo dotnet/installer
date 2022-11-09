@@ -8,30 +8,27 @@ What this means:
 - **Experimental** - not to be depended on as we reserve the right to delete the current instance and create a new, different one in its stead. See [Limitations](#limitations).
 
 In the VMR, you can find:
-- source files of [each product repository](#list-of-components) which are mirrored inside of their respective directories under [`src/`](src/),
+- source files of [each product repository](#list-of-components) which are mirrored inside of their respective directories under [`src/`](https://github.com/dotnet/dotnet/tree/main/src),
 - tooling that enables [building the whole .NET product from source](https://github.com/dotnet/source-build) on Linux platforms,
-- small customizations, in the form of patches, applied on top of the original code to make the build possible,
+- small customizations, in the form of [patches](https://github.com/dotnet/dotnet/tree/main/src/installer/src/SourceBuild/tarball/patches), applied on top of the original code to make the build possible,
 - *[in future]* E2E tests for the whole .NET product.
 
 Just like the development repositories, the VMR will have a release branch for every feature band (e.g. `release/8.0.1xx-preview1`).
 Similarly, VMR's `main` branch will follow `main` branches of product repositories (see [Synchronization Based on Declared Dependencies](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#synchronization-based-on-declared-dependencies)).
 
-More in-depth documentation about the VMR can be found in [VMR Design And Operation](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#layout).  
+More in-depth documentation about the VMR can be found in [VMR Design And Operation](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#layout).
 See also [dotnet/source-build](https://github.com/dotnet/source-build) for more information about our whole-product source-build.
 
 ## Goals
 
-The main purpose of this repository is to have all source code necessary to build the whole .NET product from source contained in any given commit.
-
-Further, the VMR eventually aims to become the place from which we release and service future versions of .NET.
-This is to reduce the complexity of the product construction process and thus enable partners and 3rd parties to easily build, test and modify .NET using their custom infrastructure.
-
-Furthermore, we hope to solve other problems that the current multi-repo setup brings:
-- Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
-- Fulfill requirements of .NET distro builders such as RedHat or Canonical to natively include .NET in their distribution repositories.
-- Simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
-- Enable developers to make and test changes spanning multiple repositories.
-- More efficient pipeline for security fixes during the CVE pre-disclosure process.
+- The main purpose of the [dotnet/dotnet](https://github.com/dotnet/dotnet) repository is to have all source code necessary to build the .NET product available in one repository and identified by a single commit.
+- The VMR also aims to become the place from which we release and service future versions of .NET to reduce the complexity of the product construction process. This should allow our partners and and 3rd parties to easily build, test and modify .NET using their custom infrastructure as well as make the process available to the community.
+- Lastly, we hope to solve other problems that the current multi-repo setup brings:
+    - Enable the standard [down-/up-stream open-source model](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Upstream-Downstream.md).
+    - Fulfill requirements of .NET distro builders such as RedHat or Canonical to natively include .NET in their distribution repositories.
+    - Simplify scenarios such as client-run testing of bug fixes and improvements. The build should work in an offline environment too for certain platforms.
+    - Enable developers to make and test changes spanning multiple repositories.
+    - More efficient pipeline for security fixes during the CVE pre-disclosure process.
 
 ## Limitations
 
@@ -41,19 +38,18 @@ There are considerable limitations to what is possible at the moment. For an ext
 The VMR is expected to become non-experimental by .NET 8 Preview 1 (Februrary, 2023) 
 This means it won't be short-lived anymore and we won't be reserving the right to delete and re-create it anymore.
 Other limitations might apply until the .NET 9 timeframe.
-See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild) for more details.
+See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Roadmap.md) for more details.
 
 ### Supported platforms
 
-The VMR only supports .NET 8.0 and higher. Additionally, source-build currently supports Linux only.
-
+The VMR only supports .NET 8.0 and higher. Additionally, source-build currently supports Linux only.  
 It is expected that Mac and Window will be supported in the .NET 9.0.
 
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
 ### Online build only
 
-Building the product offline is not fully working at the moment. The `--online` switch is needed when [building](#building) as not all dependencies are currently built from source.
+Building the product offline is not fully working at the moment. The `--online` switch is needed when building the VMR as not all dependencies are currently built from source.
 
 ### Code flow
 For the time being, the source code only flows one way - from the individual repos into the VMR.
@@ -63,7 +59,7 @@ Changes done to the VMR are not automatically mirrored back. More details on thi
 - [Moving Code and Dependencies between the VMR and Development Repos](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#moving-code-and-dependencies-between-the-vmr-and-development-repos)
 
 We expect the code flow to start working both ways in the .NET 9 timeframe.
-See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild) for more details.
+See the [Unified Build roadmap](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Roadmap.md) for more details.
 
 ### Contribution
 
