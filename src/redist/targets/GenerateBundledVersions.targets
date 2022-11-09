@@ -283,7 +283,7 @@
     <GenerateDefaultRuntimeFrameworkVersion RuntimePackVersion="$(MicrosoftWindowsDesktopAppRuntimePackageVersion)">
       <Output TaskParameter="DefaultRuntimeFrameworkVersion" PropertyName="MicrosoftWindowsDesktopAppDefaultRuntimeFrameworkVersion" />
     </GenerateDefaultRuntimeFrameworkVersion>
-    <GenerateDefaultRuntimeFrameworkVersion RuntimePackVersion="$(MicrosoftAspNetCoreAppRuntimePackageVersion)">
+    <GenerateDefaultRuntimeFrameworkVersion RuntimePackVersion="$(MicrosoftAspNetCoreAppRuntimePackageVersionBuilt)">
       <Output TaskParameter="DefaultRuntimeFrameworkVersion" PropertyName="MicrosoftAspNetCoreAppDefaultRuntimeFrameworkVersion" />
     </GenerateDefaultRuntimeFrameworkVersion>
 
@@ -452,7 +452,7 @@ Copyright (c) .NET Foundation. All rights reserved.
                               TargetFramework="net8.0"
                               RuntimeFrameworkName="Microsoft.AspNetCore.App"
                               DefaultRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppDefaultRuntimeFrameworkVersion)"
-                              LatestRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppRuntimePackageVersion)"
+                              LatestRuntimeFrameworkVersion="$(MicrosoftAspNetCoreAppRuntimePackageVersionBuilt)"
                               TargetingPackName="Microsoft.AspNetCore.App.Ref"
                               TargetingPackVersion="$(MicrosoftAspNetCoreAppRefPackageVersion)"
                               RuntimePackNamePatterns="Microsoft.AspNetCore.App.Runtime.**RID**"
