@@ -9,8 +9,13 @@
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
 
     <!-- NU1507 - https://github.com/dotnet/razor-compiler/issues/242
-                  Occurs when using NuGet central package management without defining any Package Source Mappings. -->
-    <RepoNoWarns>NU1507</RepoNoWarns>
+                  Occurs when using NuGet central package management without defining any Package Source Mappings.
+         NU1605 - Package downgrade warning. During a bootstrap, arcade needs to
+                  reference the newly-built version of Microsoft.CodeAnalysis but
+                  we no longer have access to its N-1 dependencies from before
+                  the stage 1 build, so we manually reference the current version
+                  of M.CA's dependencies, causing NU1605. -->
+    <RepoNoWarns>NU1507;NU1605</RepoNoWarns>
   </PropertyGroup>
 
   <ItemGroup>
