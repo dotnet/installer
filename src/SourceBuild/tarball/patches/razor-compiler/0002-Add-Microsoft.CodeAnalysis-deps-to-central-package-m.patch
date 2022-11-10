@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Wed, 9 Nov 2022 16:01:01 -0800
+Subject: [PATCH 2/2] Add Microsoft.CodeAnalysis deps to central package
+ management
+
+---
+ Directory.Packages.props | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Directory.Packages.props b/Directory.Packages.props
+index 6bb9c542..67e8603c 100644
+--- a/Directory.Packages.props
++++ b/Directory.Packages.props
+@@ -20,4 +20,9 @@
+     <PackageVersion Include="xunit.assert" Version="$(XunitAssertVersion)" />
+     <PackageVersion Include="xunit.extensibility.execution" Version="$(XunitExtensibilityExecutionVersion)" />
+   </ItemGroup>
++  <!-- When building offline we need to bump the version of System.Reflection.Metadata that CodeAnalysis package depends on to match what the source build tarball expects. -->
++  <ItemGroup Condition="'$(DotNetBuildOffline)' == 'true'">
++    <PackageVersion Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageVersion Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
++  </ItemGroup>
+ </Project>
