@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Fri, 11 Nov 2022 20:29:20 +0000
+Subject: [PATCH] Remove nuget config from humanizer patch
+
+---
+ ...x-building-in-a-source-build-context.patch | 30 ++-----------------
+ 1 file changed, 3 insertions(+), 27 deletions(-)
+
+diff --git a/patches/humanizer/0001-Fix-building-in-a-source-build-context.patch b/patches/humanizer/0001-Fix-building-in-a-source-build-context.patch
+index 7a5e5f32..ea58c1c8 100644
+--- a/patches/humanizer/0001-Fix-building-in-a-source-build-context.patch
++++ b/patches/humanizer/0001-Fix-building-in-a-source-build-context.patch
+@@ -1,4 +1,4 @@
+-From a7a9cea5471babcf1055f1552f0946dda8927c40 Mon Sep 17 00:00:00 2001
++From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+ From: Omair Majid <omajid@redhat.com>
+ Date: Tue, 17 Nov 2020 13:14:19 -0500
+ Subject: [PATCH] Fix building in a source-build context
+@@ -6,18 +6,14 @@ Subject: [PATCH] Fix building in a source-build context
+ The GitVersionTask is not compatible with .NET Core. So disable it and
+ use an explicit PackageVersion.
+ 
+-The NuGet feed points to something that returns an error for me. So just
+-disable it for now.
+-
+ Disable SourceLink.Create.CommandLine since upstream is dead and we dont
+ really need it for now.
+ ---
+  src/Humanizer/Humanizer.csproj | 5 ++---
+- src/NuGet.config               | 5 ++++-
+- 2 files changed, 6 insertions(+), 4 deletions(-)
++ 1 file changed, 2 insertions(+), 3 deletions(-)
+ 
+ diff --git a/src/Humanizer/Humanizer.csproj b/src/Humanizer/Humanizer.csproj
+-index 842a373..e018285 100644
++index 842a373..27b1d65 100644
+ --- a/src/Humanizer/Humanizer.csproj
+ +++ b/src/Humanizer/Humanizer.csproj
+ @@ -3,6 +3,7 @@
+@@ -38,23 +34,3 @@ index 842a373..e018285 100644
+ -</Project>
+ \ No newline at end of file
+ +</Project>
+-diff --git a/src/NuGet.config b/src/NuGet.config
+-index be02089..2fb8ff3 100644
+---- a/src/NuGet.config
+-+++ b/src/NuGet.config
+-@@ -1,7 +1,10 @@
+- <?xml version="1.0" encoding="utf-8"?>
+- <configuration>
+-   <packageSources>    
+-+    <!--
+-+    This feed gives an error: Feed does not exist.
+-     <add key="CI Builds (Humanizer)" value="https://www.myget.org/F/humanizer/api/v3/index.json" />    
+-+    -->
+-     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+-   </packageSources>
+--</configuration>
+-\ No newline at end of file
+-+</configuration>
+--- 
+-2.26.2
+-
