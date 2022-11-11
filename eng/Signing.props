@@ -7,9 +7,9 @@
   </ItemGroup>
   <ItemGroup Condition="'$(PostBuildSign)' != 'true'">
     <ItemsToSign Remove="@(ItemsToSign)" />
-    <ItemsToSign Include="$(ArtifactsPackagesDir)*.exe" />
-    <ItemsToSign Include="$(ArtifactsPackagesDir)*.zip" />
-    <ItemsToSign Include="$(ArtifactsPackagesDir)*.msi" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.exe" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.zip" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.msi" />
     <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
   </ItemGroup>
 
