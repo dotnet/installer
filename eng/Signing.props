@@ -7,11 +7,11 @@
   </ItemGroup>
   <ItemGroup Condition="'$(PostBuildSign)' != 'true'">
     <ItemsToSign Remove="@(ItemsToSign)" />
-    <ItemsToSign Include="$(ArtifactsShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <ItemsToSign Include="$(ArtifactsShippingPackagesDir)*.zip" />
     <ItemsToSign Include="$(ArtifactsShippingPackagesDir)*.exe" />
     <ItemsToSign Include="$(ArtifactsShippingPackagesDir)*.msi" />
     <ItemsToSign Include="$(ArtifactsNonShippingPackagesDir)*.msi" />
-    <ItemsToSign Include="$(ArtifactsNonShippingPackagesDir)*.zip" Condition=" '$(PublishBinariesAndBadge)' == 'true' " />
+    <ItemsToSign Include="$(ArtifactsNonShippingPackagesDir)*.zip" />
     <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.wixpack.zip" />
     <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
   </ItemGroup>
