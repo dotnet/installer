@@ -120,8 +120,10 @@
     <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
   </Target>
 
+  <!-- TODO: Remove this when the .NET 8 artifacts tarball no longer includes MicrosoftAspNetCoreAppRuntimePackageVersion -->
   <Target Name="PatchPackageVersions">
-    <!-- Rename MicrosoftAspNetCoreAppRuntimePackageVersion so it isn't used. -->
+    <!-- Rename MicrosoftAspNetCoreAppRuntimePackageVersion so it isn't used
+         Fixes https://github.com/dotnet/installer/issues/14492 -->
     <ReplaceRegexInFiles
       InputFiles="$(IntermediatePath)PreviouslySourceBuiltPackageVersions.props"
       OldTextRegex="\bMicrosoftAspNetCoreAppRuntimePackageVersion\b"
