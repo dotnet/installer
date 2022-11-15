@@ -9,6 +9,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="NuGetPack" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceRegexInFiles" />
 
   <ItemGroup>
     <BuildTasksTarget Include="Restore;Build;InstallResolver" />
@@ -22,6 +23,7 @@
     <CallTarget Targets="
       UnpackTarballs;
       BuildXPlatTasks;
+      PatchPackageVersions;
       BuildLeakDetection;
       ExtractToolPackage;
       GenerateRootFs;
@@ -116,6 +118,14 @@
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
 
     <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
+  </Target>
+
+  <Target Name="PatchPackageVersions">
+    <!-- Rename MicrosoftAspNetCoreAppRuntimePackageVersion so it isn't used. -->
+    <ReplaceRegexInFiles
+      InputFiles="$(IntermediatePath)PreviouslySourceBuiltPackageVersions.props"
+      OldTextRegex="\bMicrosoftAspNetCoreAppRuntimePackageVersion\b"
+      NewText="__unused" />
   </Target>
 
   <Target Name="BuildLeakDetection"
