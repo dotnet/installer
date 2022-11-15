@@ -74,6 +74,20 @@ jobs:
       patterns: '**/dotnet-sdk-source*.tar.gz'
       displayName: Download Source Tarball
 
+    - script: |
+        set -x
+
+        resourceIdPathSegment=
+        if [[ '${{ parameters.installerBuildResourceId }}' != 'current' ]]; then
+          resourceIdPathSegment='${{ parameters.installerBuildResourceId }}/'
+        fi
+
+        mkdir -p "$(tarballDir)"
+        tarballFilePath="$(PIPELINE.WORKSPACE)/${resourceIdPathSegment}BlobArtifacts/dotnet-sdk-source*.tar.gz"
+        eval tar -ozxf "$tarballFilePath" -C "$(tarballDir)"
+        eval rm -f "$tarballFilePath"
+      displayName: Extract Tarball
+
   - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
     - download: ${{ parameters.installerBuildResourceId }}
       artifact: BlobArtifacts
@@ -92,21 +106,6 @@ jobs:
         SourceFolder: $(PIPELINE.WORKSPACE)/$(_PreviousSourceBuildArtifact)
         Contents: '*.tar.gz'
         TargetFolder: $(tarballDir)/packages/archive/
-
-  - ${{ if ne(parameters.installerBuildResourceId, '') }}:
-    - script: |
-        set -x
-
-        resourceIdPathSegment=
-        if [[ '${{ parameters.installerBuildResourceId }}' != 'current' ]]; then
-          resourceIdPathSegment='${{ parameters.installerBuildResourceId }}/'
-        fi
-
-        mkdir -p "$(tarballDir)"
-        tarballFilePath="$(PIPELINE.WORKSPACE)/${resourceIdPathSegment}BlobArtifacts/dotnet-sdk-source*.tar.gz"
-        eval tar -ozxf "$tarballFilePath" -C "$(tarballDir)"
-        eval rm -f "$tarballFilePath"
-      displayName: Extract Tarball
 
   - script: |
       set -x
