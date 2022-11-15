@@ -2,7 +2,9 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <BuildCommand>$(StandardSourceBuildCommand) $(StandardSourceBuildArgs)</BuildCommand>
+    <BuildCommandArgs>$(StandardSourceBuildArgs)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildCommandArgs>
+    <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
 
     <NuGetConfigFile>$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
