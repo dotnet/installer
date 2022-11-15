@@ -9,9 +9,9 @@ usage() {
     echo "  --online                           build using online sources"
     echo "  --poison                           build with poisoning checks"
     echo "  --run-smoke-test                   don't build; run smoke tests"
+    echo "  --use-mono-runtime                 output uses the mono runtime"
     echo "  --with-packages <dir>              use the specified directory of previously-built packages"
     echo "  --with-sdk <dir>                   use the SDK in the specified directory for bootstrapping"
-    echo "  --use-mono-runtime                 output uses the mono runtime"
     echo "use -- to send the remaining arguments to MSBuild"
     echo ""
 }
@@ -46,6 +46,9 @@ while :; do
             runningSmokeTests=true
             MSBUILD_ARGUMENTS+=( "/t:RunSmokeTest" )
             ;;
+        --use-mono-runtime)
+            MSBUILD_ARGUMENTS+=( "/p:SourceBuildUseMonoRuntime=true" )
+            ;;
         --with-packages)
             CUSTOM_PACKAGES_DIR="$(cd -P "$2" && pwd)"
             if [ ! -d "$CUSTOM_PACKAGES_DIR" ]; then
@@ -65,9 +68,6 @@ while :; do
                 exit 1
             fi
             shift
-            ;;
-        --use-mono-runtime)
-            MSBUILD_ARGUMENTS+=( "/p:SourceBuildUseMonoRuntime=true" )
             ;;
         --)
             shift
