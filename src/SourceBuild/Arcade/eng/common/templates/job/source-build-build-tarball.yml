@@ -80,7 +80,7 @@ jobs:
       displayName: Extract Tarball
 
   - script: cp $(installerSrcDir)/NuGet.config $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
-    displayName: Copy NuGet Config for smoke tests
+    displayName: Copy Test NuGet Config
 
   - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
     - download: ${{ parameters.installerBuildResourceId }}
