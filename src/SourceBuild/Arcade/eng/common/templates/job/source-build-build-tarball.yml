@@ -59,15 +59,6 @@ jobs:
   - checkout: self
     clean: true
 
-  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-    - task: Bash@3
-      displayName: Setup Private Feeds Credentials
-      inputs:
-        filePath: $(installerSrcDir)/eng/common/SetupNugetSources.sh
-        arguments: $(installerSrcDir)/NuGet.config $Token
-      env:
-        Token: $(dn-bot-dnceng-artifact-feeds-rw)
-
   - ${{ if ne(parameters.installerBuildResourceId, '') }}:
     - download: ${{ parameters.installerBuildResourceId }}
       artifact: BlobArtifacts
@@ -87,6 +78,9 @@ jobs:
         eval tar -ozxf "$tarballFilePath" -C "$(tarballDir)"
         eval rm -f "$tarballFilePath"
       displayName: Extract Tarball
+
+  - script: cp $(installerSrcDir)/NuGet.config $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+    displayName: Copy NuGet Config for smoke tests
 
   - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
     - download: ${{ parameters.installerBuildResourceId }}
@@ -144,12 +138,17 @@ jobs:
       docker run --rm -v $(tarballDir):/tarball -w /tarball ${networkArgs} $(_Container) ./build.sh --clean-while-building ${customBuildArgs} $(additionalBuildArgs)
     displayName: Build Tarball
 
+  - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+    - task: Bash@3
+      displayName: Setup Private Feeds Credentials
+      inputs:
+        filePath: $(installerSrcDir)/eng/common/SetupNugetSources.sh
+        arguments: $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config $Token
+      env:
+        Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
   - script: |
       set -x
-
-      # Use installer repo's NuGet.config during online testing to utilize internal feeds
-      rm -f $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
-      cp $(installerSrcDir)/NuGet.config $(tarballDir)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
 
       dockerVolumeArgs="-v $(tarballDir):/tarball"
       dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=$(_ExcludeOmniSharpTests) -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
