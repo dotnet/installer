@@ -177,10 +177,6 @@
       WorkingDirectory="$(TarballRepoSourceDir)" />
 
     <Exec
-      Command="git submodule foreach 'find . -iname NuGet.config -delete'"
-      WorkingDirectory="$(TarballRepoSourceDir)" />
-
-    <Exec
       Command="git submodule foreach 'rm -rf %24%28git rev-parse --git-dir%29/objects ||:'"
       WorkingDirectory="$(TarballRepoSourceDir)"
       Condition="$(PreserveTarballGitFolders) != 'true'" />
