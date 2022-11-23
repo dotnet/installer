@@ -1,0 +1,205 @@
+# Source-builds an already checked out the VMR
+
+parameters:
+
+# Path where the dotnet/dotnet is checked out to
+- name: vmrPath
+  type: string
+  default: $(Agent.BuildDirectory)/vmr
+
+# Architecture to build for, e.g. x64
+- name: architecture
+  type: string
+
+# Container to use for building
+- name: container
+  type: string
+
+# Resource id of the installer build to retrieve source/product tarball's from
+- name: installerBuildResourceId
+  type: string
+
+# Skip running the SDK content smoke-tests
+- name: excludeSdkContentTests
+  type: boolean
+  default: false
+
+# Build using the previous source-build artifacts
+- name: usePreviousArtifacts
+  type: boolean
+  default: false
+
+# Excludes running the OmniSharp tests
+- name: excludeOmniSharpTests
+  type: boolean
+
+# Allow downloading artifacts from the internet during the build
+- name: runOnline
+  type: boolean
+
+# Should we create the bootstrap build/
+- name: bootstrapPrep
+  type: boolean
+
+# Poison the artifacts
+- name: enablePoison
+  type: boolean
+
+# Path where the dotnet/dotnet is checked out to
+- name: additionalBuildArgs
+  type: string
+  default: ''
+
+steps:
+- ${{ if ne(variables['System.TeamProject'], 'public') }}:
+  - task: Bash@3
+    displayName: Setup Private Feeds Credentials
+    inputs:
+      filePath: $(Build.SourcesDirectory)/eng/common/SetupNugetSources.sh
+      arguments: $(Build.SourcesDirectory)/NuGet.config $Token
+    env:
+      Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
+- download: ${{ parameters.installerBuildResourceId }}
+  artifact: BlobArtifacts
+  patterns: '**/dotnet-sdk-source*.tar.gz'
+  displayName: Download Source Tarball
+
+- ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
+  - download: ${{ parameters.installerBuildResourceId }}
+    artifact: BlobArtifacts
+    patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
+    displayName: Download MSFT sdk Tarball
+
+- ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
+  - download: current
+    artifact: $(_PreviousSourceBuildArtifact)
+    patterns: '*.tar.gz'
+    displayName: Download Previous Source Build Artifacts
+
+  - task: CopyFiles@2
+    displayName: Copy Previous Source Build Artifacts
+    inputs:
+      SourceFolder: $(PIPELINE.WORKSPACE)/$(_PreviousSourceBuildArtifact)
+      Contents: '*.tar.gz'
+      TargetFolder: ${{ parameters.vmrPath }}/packages/archive/
+
+- script: |
+    set -x
+
+    resourceIdPathSegment=
+    if [[ '${{ parameters.installerBuildResourceId }}' != 'current' ]]; then
+      resourceIdPathSegment='${{ parameters.installerBuildResourceId }}/'
+    fi
+
+    mkdir -p "${{ parameters.vmrPath }}"
+    tarballFilePath="$(PIPELINE.WORKSPACE)/${resourceIdPathSegment}BlobArtifacts/dotnet-sdk-source*.tar.gz"
+    eval tar -ozxf "$tarballFilePath" -C "${{ parameters.vmrPath }}"
+    eval rm -f "$tarballFilePath"
+  displayName: Extract Tarball
+
+- script: |
+    set -x
+
+    if [[ '${{ parameters.usePreviousArtifacts }}' != 'true' ]]; then
+      customPrepArgs=
+      if [[ '${{ parameters.bootstrapPrep }}' == 'true' ]]; then
+        customPrepArgs='--bootstrap'
+      fi
+
+      docker run --rm -v ${{ parameters.vmrPath }}:/tarball -w /tarball ${{ parameters.container }} ./prep.sh  ${customPrepArgs}
+    else
+      mkdir ${{ parameters.vmrPath }}/.dotnet
+      tarballFilePath="${{ parameters.vmrPath }}/packages/archive/dotnet-sdk-*.tar.gz"
+      eval tar -ozxf "$tarballFilePath" -C "${{ parameters.vmrPath }}/.dotnet"
+      eval rm -f "$tarballFilePath"
+    fi
+  displayName: Prep
+
+- script: |
+    set -x
+    df -h
+
+    networkArgs=
+    customBuildArgs=
+    if [[ '${{ parameters.runOnline }}' == 'true' ]]; then
+      customBuildArgs='--online'
+    else
+      networkArgs='--network none'
+    fi
+
+    if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
+      customBuildArgs="$customBuildArgs --poison"
+    fi
+
+    docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building ${{ parameters.additionalBuildArgs }} ${customBuildArgs}
+  displayName: Build
+
+- script: |
+    set -x
+
+    # Use installer repo's NuGet.config during online testing to utilize internal feeds
+    rm -f ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+    cp $(Agent.BuildDirectory)/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+
+    dockerVolumeArgs="-v ${{ parameters.vmrPath }}:/vmr"
+    dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=$(_ExcludeOmniSharpTests) -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
+    poisonArg=''
+
+    if [[ '${{ parameters.excludeSdkContentTests }}' != 'true' ]]; then
+      dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
+      msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+      dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
+    fi
+
+    if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
+      poisonArg='--poison'
+      dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
+    fi
+
+    docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test ${{ parameters.additionalBuildArgs }} -- -p:SmokeTestConsoleVerbosity=detailed
+  displayName: Run Tests
+
+# Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
+- script: |
+    set -x
+
+    targetFolder=$(Build.StagingDirectory)/BuildLogs/
+    mkdir -p ${targetFolder}
+
+    cd "${{ parameters.vmrPath }}"
+    find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+    find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
+    find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "Updated*.diff" -exec cp {} --parents -t ${targetFolder} \;
+    find test/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
+  displayName: Prepare BuildLogs staging directory
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- publish: '$(Build.StagingDirectory)/BuildLogs'
+  artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+  displayName: Publish BuildLogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: PublishTestResults@2
+  displayName: Publish Test Results
+  condition: succeededOrFailed()
+  continueOnError: true
+  inputs:
+    testRunner: vSTest
+    testResultsFiles: 'test/**/*.trx'
+    searchFolder: ${{ parameters.vmrPath }}
+    mergeTestResults: true
+    publishRunAttachments: true
+    testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+
+- publish: '${{ parameters.vmrPath }}/artifacts/${{ parameters.architecture }}/Release/'
+  artifact: $(Agent.JobName)_Artifacts
+  displayName: Publish Artifacts
+  condition: succeededOrFailed()
+  continueOnError: true
