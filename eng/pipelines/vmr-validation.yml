@@ -1,5 +1,6 @@
-### This pipeline validates new changes of the VMR (https://github.com/dotnet/dotnet)
-### VMR is cloned and updates are applied locally
+### This pipeline validates incoming changes to the VMR (https://github.com/dotnet/dotnet)
+### The build is run during dotnet/installer's PR
+### New changes are applied locally in the VMR, then we source-build and test the content
 
 parameters:
 - name: vmrBranch

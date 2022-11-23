@@ -1,4 +1,6 @@
 ### This pipeline synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
+### It runs internally for each commit in dotnet/installer
+### It synchronizes the content of the VMR to this new commit and pushes the changes
 
 parameters:
 - name: targetRef
