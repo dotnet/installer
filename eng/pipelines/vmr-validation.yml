@@ -31,8 +31,8 @@ variables:
 
 jobs:
 - job: Build_and_Test
-  displayName: Build & Test / CentOSStream8-Online x64
-  timeoutInMinutes: 300
+  displayName: Source-Build - CentOSStream8-Online x64
+  timeoutInMinutes: 150
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: ${{ variables.poolPublicAmd64Name }}
