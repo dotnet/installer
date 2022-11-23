@@ -60,11 +60,6 @@ steps:
     env:
       Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
-- download: ${{ parameters.installerBuildResourceId }}
-  artifact: BlobArtifacts
-  patterns: '**/dotnet-sdk-source*.tar.gz'
-  displayName: Download Source Tarball
-
 - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
   - download: ${{ parameters.installerBuildResourceId }}
     artifact: BlobArtifacts
@@ -87,34 +82,20 @@ steps:
 - script: |
     set -x
 
-    resourceIdPathSegment=
-    if [[ '${{ parameters.installerBuildResourceId }}' != 'current' ]]; then
-      resourceIdPathSegment='${{ parameters.installerBuildResourceId }}/'
-    fi
-
-    mkdir -p "${{ parameters.vmrPath }}"
-    tarballFilePath="$(PIPELINE.WORKSPACE)/${resourceIdPathSegment}BlobArtifacts/dotnet-sdk-source*.tar.gz"
-    eval tar -ozxf "$tarballFilePath" -C "${{ parameters.vmrPath }}"
-    eval rm -f "$tarballFilePath"
-  displayName: Extract Tarball
-
-- script: |
-    set -x
-
     if [[ '${{ parameters.usePreviousArtifacts }}' != 'true' ]]; then
       customPrepArgs=
       if [[ '${{ parameters.bootstrapPrep }}' == 'true' ]]; then
         customPrepArgs='--bootstrap'
       fi
 
-      docker run --rm -v ${{ parameters.vmrPath }}:/tarball -w /tarball ${{ parameters.container }} ./prep.sh  ${customPrepArgs}
+      docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${{ parameters.container }} ./prep.sh  ${customPrepArgs}
     else
       mkdir ${{ parameters.vmrPath }}/.dotnet
-      tarballFilePath="${{ parameters.vmrPath }}/packages/archive/dotnet-sdk-*.tar.gz"
-      eval tar -ozxf "$tarballFilePath" -C "${{ parameters.vmrPath }}/.dotnet"
-      eval rm -f "$tarballFilePath"
+      previousSdkPath="${{ parameters.vmrPath }}/packages/archive/dotnet-sdk-*.tar.gz"
+      eval tar -ozxf "$previousSdkPath" -C "${{ parameters.vmrPath }}/.dotnet"
+      eval rm -f "$previousSdkPath"
     fi
-  displayName: Prep
+  displayName: Prep the VMR
 
 - script: |
     set -x
@@ -133,7 +114,7 @@ steps:
     fi
 
     docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building ${{ parameters.additionalBuildArgs }} ${customBuildArgs}
-  displayName: Build
+  displayName: Build the VMR
 
 - script: |
     set -x
