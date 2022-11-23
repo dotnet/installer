@@ -30,8 +30,8 @@ variables:
   - group: AzureDevOps-Artifact-Feeds-Pats
 
 jobs:
-- job: Validate
-  displayName: Test VMR synchronization
+- job: Build_and_Test
+  displayName: Build & Test / CentOSStream8-Online x64
   timeoutInMinutes: 300
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
@@ -59,6 +59,7 @@ jobs:
 
   - template: templates/steps/vmr-source-build.yml
     parameters:
+      name: CentOSStream8-Online
       architecture: x64
       excludeSdkContentTests: true
       container: $(centOSStream8Container)

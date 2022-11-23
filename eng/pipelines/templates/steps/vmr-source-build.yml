@@ -7,6 +7,10 @@ parameters:
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
+# Name of the run
+- name: name
+  type: string
+
 # Architecture to build for, e.g. x64
 - name: architecture
   type: string
@@ -95,7 +99,7 @@ steps:
       eval tar -ozxf "$previousSdkPath" -C "${{ parameters.vmrPath }}/.dotnet"
       eval rm -f "$previousSdkPath"
     fi
-  displayName: Prep the VMR
+  displayName: Prep the build
 
 - script: |
     set -x
@@ -114,7 +118,7 @@ steps:
     fi
 
     docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building ${{ parameters.additionalBuildArgs }} ${customBuildArgs}
-  displayName: Build the VMR
+  displayName: Build ${{ parameters.name }} / ${{ parameters.architecture }}
 
 - script: |
     set -x
