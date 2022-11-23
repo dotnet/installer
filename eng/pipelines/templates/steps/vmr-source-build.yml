@@ -86,9 +86,9 @@ steps:
 - script: |
     set -x
 
-    if [[ '${{ parameters.usePreviousArtifacts }}' != 'true' ]]; then
+    if [[ '${{ parameters.usePreviousArtifacts }}' != 'True' ]]; then
       customPrepArgs=
-      if [[ '${{ parameters.bootstrapPrep }}' == 'true' ]]; then
+      if [[ '${{ parameters.bootstrapPrep }}' == 'True' ]]; then
         customPrepArgs='--bootstrap'
       fi
 
@@ -107,13 +107,13 @@ steps:
 
     networkArgs=
     customBuildArgs=
-    if [[ '${{ parameters.runOnline }}' == 'true' ]]; then
+    if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
       customBuildArgs='--online'
     else
       networkArgs='--network none'
     fi
 
-    if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
+    if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
       customBuildArgs="$customBuildArgs --poison"
     fi
 
@@ -124,20 +124,20 @@ steps:
     set -x
 
     # Use installer repo's NuGet.config during online testing to utilize internal feeds
-    rm -f ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
-    cp $(Agent.BuildDirectory)/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+    rm -vf ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+    cp -v $(Agent.BuildDirectory)/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
 
     dockerVolumeArgs="-v ${{ parameters.vmrPath }}:/vmr"
     dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=$(_ExcludeOmniSharpTests) -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
     poisonArg=''
 
-    if [[ '${{ parameters.excludeSdkContentTests }}' != 'true' ]]; then
+    if [[ '${{ parameters.excludeSdkContentTests }}' != 'True' ]]; then
       dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
       msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
       dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
     fi
 
-    if [[ '${{ parameters.enablePoison }}' == 'true' ]]; then
+    if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
       poisonArg='--poison'
       dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
     fi
