@@ -103,10 +103,10 @@ stages:
 
     - template: ../steps/vmr-source-build.yml
       parameters:
-        architecture: $(_Architecture)
-        excludeSdkContentTests: $(_ExcludeSdkContentTests)
-        container: $(_Container)
-        excludeOmniSharpTests: $(_ExcludeOmniSharpTests)
-        runOnline: $(_RunOnline)
-        bootstrapPrep: $(_BootstrapPrep)
-        enablePoison: $(_EnablePoison)
+        architecture: variables._Architecture
+        excludeSdkContentTests: variables._ExcludeSdkContentTests
+        container: variables._Container
+        excludeOmniSharpTests: variables._ExcludeOmniSharpTests
+        runOnline: variables._RunOnline
+        bootstrapPrep: variables._BootstrapPrep
+        enablePoison: variables._EnablePoison
