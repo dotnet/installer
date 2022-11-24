@@ -7,20 +7,12 @@ parameters:
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
-# Name of the run
-- name: name
-  type: string
-
 # Architecture to build for, e.g. x64
 - name: architecture
   type: string
 
 # Container to use for building
 - name: container
-  type: string
-
-# Resource id of the installer build to retrieve source/product tarball's from
-- name: installerBuildResourceId
   type: string
 
 # Skip running the SDK content smoke-tests
@@ -65,7 +57,7 @@ steps:
       Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
 - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
-  - download: ${{ parameters.installerBuildResourceId }}
+  - download: current
     artifact: BlobArtifacts
     patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
     displayName: Download MSFT sdk Tarball
@@ -118,7 +110,7 @@ steps:
     fi
 
     docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building ${{ parameters.additionalBuildArgs }} ${customBuildArgs}
-  displayName: Build ${{ parameters.name }} / ${{ parameters.architecture }}
+  displayName: $(Agent.JobName)
 
 - script: |
     set -x
@@ -132,8 +124,8 @@ steps:
     poisonArg=''
 
     if [[ '${{ parameters.excludeSdkContentTests }}' != 'True' ]]; then
-      dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/:/BlobArtifacts"
-      msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/${{ parameters.installerBuildResourceId }}/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+      dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/current/BlobArtifacts/:/BlobArtifacts"
+      msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/current/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
       dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
     fi
 

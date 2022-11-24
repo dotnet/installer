@@ -10,6 +10,13 @@ trigger:
     - internal/release/6.*
     - internal/release/7.*
 
+resources:
+  repositories:
+  - repository: vmr
+    type: github
+    name: dotnet/dotnet
+    endpoint: dotnet
+
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -148,8 +155,8 @@ stages:
         runTests: true
 
   ## Official/PGO instrumentation Builds
-  
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  ## TODO REVERT THE LINE BELOW
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq('TODO', 'REMOVE THIS')) }}:
     
     ## Windows
 
@@ -343,25 +350,30 @@ stages:
         linuxPortable: true
         runTests: false
 
-  - template: /eng/common/templates/jobs/source-build.yml
+  ## TODO: REMOVE THIS IF AND MERGE WITH THE BLOCK ABOVE
+  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
+#   - template: /eng/common/templates/jobs/source-build.yml
 
-  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-      parameters:
-        dependsOn: Source_Build_Create_Tarball
+#   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - stage: Publish
-    dependsOn:
-    - Build
-    jobs:
-    - template: /eng/common/templates/job/publish-build-assets.yml
-      parameters:
-        publishUsingPipelines: true
-        publishAssetsImmediately: true
-        pool:
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: NetCore1ESPool-Internal
-            demands: ImageOverride -equals windows.vs2022.amd64
+#   - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+#     - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+#       parameters:
+#         dependsOn: Source_Build_Create_Tarball
+
+# - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+#   - stage: Publish
+#     dependsOn:
+#     - Build
+#     jobs:
+#     - template: /eng/common/templates/job/publish-build-assets.yml
+#       parameters:
+#         publishUsingPipelines: true
+#         publishAssetsImmediately: true
+#         pool:
+#           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+#             name: NetCore1ESPool-Internal
+#             demands: ImageOverride -equals windows.vs2022.amd64
+
+- template: /eng/pipelines/templates/stages/vmr-source-build.yml

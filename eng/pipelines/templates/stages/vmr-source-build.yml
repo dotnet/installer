@@ -1,0 +1,112 @@
+### This pipeline validates incoming changes to the VMR (https://github.com/dotnet/dotnet)
+### The build is run during dotnet/installer's PR
+### New changes are applied locally in the VMR, then we source-build and test the content
+
+parameters:
+  # The following parameters aren't expected to be passed in rather they are used for encapsulation
+  # -----------------------------------------------------------------------------------------------
+  centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+  centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
+  debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
+  fedora36Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36
+  ubuntu2004Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
+  poolInternalAmd64:
+    name: NetCore1ESPool-Svc-Internal
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+  poolInternalAmd64PR:
+    name: NetCore1ESPool-Internal-XL
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+  poolInternalArm64:
+    name: Docker-Linux-Arm-Internal
+  poolPublicAmd64:
+    name: NetCore-Public-XL
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
+
+stages:
+- stage: VMR_Source_Build
+  displayName: VMR Source-Build
+  dependsOn: Build
+  variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
+  - template: ../variables/vmr-variables.yml
+  # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+  #   - group: AzureDevOps-Artifact-Feeds-Pats
+  jobs:
+  - job: Build_VMR_$(_Architecture)
+    timeoutInMinutes: 150
+    strategy:
+      matrix:
+        CentOSStream8-Online:
+          _Architecture: x64
+          _BootstrapPrep: false
+          _Container: ${{ parameters.centOSStream8Container }}
+          _EnablePoison: false
+          _ExcludeSdkContentTests: true
+          _ExcludeOmniSharpTests: true
+          _RunOnline: true
+        ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+          CentOSStream8-Offline:
+            _Architecture: x64
+            _BootstrapPrep: false
+            _Container: ${{ parameters.centOSStream8Container }}
+            _EnablePoison: false
+            _ExcludeSdkContentTests: false
+            _ExcludeOmniSharpTests: true
+            _RunOnline: false
+          CentOSStream9-Offline:
+            _Architecture: x64
+            _BootstrapPrep: false
+            _Container: ${{ parameters.centOSStream9Container }}
+            _EnablePoison: false
+            _ExcludeSdkContentTests: false
+            _ExcludeOmniSharpTests: false
+            _RunOnline: false
+          Fedora36-Offline:
+            _Architecture: x64
+            _BootstrapPrep: false
+            _Container: ${{ parameters.fedora36Container }}
+            _EnablePoison: true
+            _ExcludeSdkContentTests: false
+            _ExcludeOmniSharpTests: false
+            _RunOnline: false
+          Ubuntu2004-Offline:
+            _Architecture: x64
+            _BootstrapPrep: false
+            _Container: ${{ parameters.ubuntu2004Container }}
+            _EnablePoison: false
+            _ExcludeSdkContentTests: false
+            _ExcludeOmniSharpTests: false
+            _RunOnline: false
+    pool:
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        ${{ parameters.poolPublicAmd64 }}
+      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+        ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+          ${{ parameters.poolInternalAmd64PR }}
+        ${{ else }}:
+          ${{ parameters.poolInternalAmd64 }}
+
+    steps:
+    - template: ../steps/vmr-prepare.yml
+      parameters:
+        vmrBranch: ${{ parameters.vmrBranch }}
+
+    # Synchronize new content in the VMR locally for PRs
+    - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+      - template: ../steps/vmr-pull-updates.yml
+        parameters:
+          vmrPath: $(vmrPath)
+          vmrBranch: ${{ parameters.vmrBranch }}
+          targetRef: $(Build.SourceVersion)
+          vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+    ## TODO: else branch => checkout the VMR revision from the pipeline variable lastVmrSha
+
+    - template: ../steps/vmr-source-build.yml
+      parameters:
+        architecture: $(_Architecture)
+        excludeSdkContentTests: $(_ExcludeSdkContentTests)
+        container: $(_Container)
+        excludeOmniSharpTests: $(_ExcludeOmniSharpTests)
+        runOnline: $(_RunOnline)
+        bootstrapPrep: $(_BootstrapPrep)
+        enablePoison: $(_EnablePoison)

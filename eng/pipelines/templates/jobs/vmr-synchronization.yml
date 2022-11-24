@@ -1,10 +1,9 @@
-### This pipeline synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
-### It runs internally for each commit in dotnet/installer
+### This job synchronizes code from product repositories into the VMR (https://github.com/dotnet/dotnet)
 ### It synchronizes the content of the VMR to this new commit and pushes the changes
 
 parameters:
 - name: targetRef
-  displayName: Target revision in dotnet/installer to synchronize to
+  displayName: Target revision of dotnet/installer to synchronize
   type: string
   default: $(Build.SourceVersion)
 
@@ -18,45 +17,24 @@ parameters:
   type: boolean
   default: false
 
-trigger:
-  branches:
-    include:
-    - main
-    - release/*
-    - internal/release/*
-
-pr: none
-
-resources:
-  repositories:
-  - repository: vmr
-    type: github
-    name: dotnet/dotnet
-    endpoint: dotnet
-
-variables:
-- template: /eng/common/templates/variables/pool-providers.yml
-- template: templates/variables/vmr-variables.yml
-
 jobs:
-- job: Synchronize
+- job: Synchronize_VMR
   displayName: Synchronize dotnet/dotnet
   timeoutInMinutes: 120
+  variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
+  - template: ../variables/vmr-variables.yml
 
   pool:
-    ${{ if eq(variables['System.TeamProject'], 'public') }}:
-      name: $(DncEngPublicBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64.Open
-    ${{ else }}:
-      name: $(DncEngInternalBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
+    name: $(DncEngInternalBuildPool)
+    demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
 
   steps:
-  - template: templates/steps/vmr-prepare.yml
+  - template: ../steps/vmr-prepare.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
 
-  - template: templates/steps/vmr-pull-updates.yml
+  - template: ../steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
       vmrBranch: ${{ parameters.vmrBranch }}
@@ -71,6 +49,10 @@ jobs:
         git fetch dotnet
         git branch ${{ parameters.vmrBranch }}
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
-        git push dotnet ${{ parameters.vmrBranch }}
+
+        # TODO
+        # git push dotnet ${{ parameters.vmrBranch }}
+
+        echo "##vso[task.setvariable variable=lastVmrSha;isOutput=true]`git rev-parse HEAD`"
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
