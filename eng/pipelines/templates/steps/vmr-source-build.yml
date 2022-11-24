@@ -2,16 +2,13 @@
 
 parameters:
 
-# Path where the dotnet/dotnet is checked out to
 - name: vmrPath
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
-# Architecture to build for, e.g. x64
 - name: architecture
   type: string
 
-# Container to use for building
 - name: container
   type: string
 

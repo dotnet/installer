@@ -1,0 +1,93 @@
+### This pipeline validates incoming changes to the VMR (https://github.com/dotnet/dotnet)
+### The build is run during dotnet/installer's PR
+### New changes are applied locally in the VMR, then we source-build and test the content
+
+parameters:
+
+- name: vmrPath
+  type: string
+  default: $(Agent.BuildDirectory)/vmr
+
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+  default: $(Build.SourceBranchName)
+
+- name: name
+  type: string
+
+- name: architecture
+  type: string
+
+- name: container
+  type: string
+
+- name: pool
+  type: object
+
+# Skip running the SDK content smoke-tests
+- name: excludeSdkContentTests
+  type: boolean
+  default: false
+
+# Build using the previous source-build artifacts
+- name: usePreviousArtifacts
+  type: boolean
+  default: false
+
+# Excludes running the OmniSharp tests
+- name: excludeOmniSharpTests
+  type: boolean
+
+# Allow downloading artifacts from the internet during the build
+- name: runOnline
+  type: boolean
+
+# Should we create the bootstrap build/
+- name: bootstrapPrep
+  type: boolean
+
+# Poison the artifacts
+- name: enablePoison
+  type: boolean
+
+# Path where the dotnet/dotnet is checked out to
+- name: additionalBuildArgs
+  type: string
+  default: ''
+
+jobs:
+- job: Build_VMR_${{ parameters.name }}_${{ parameters.architecture }}
+  displayName: Build ${{ parameters.name }} (${{ parameters.architecture }})
+  timeoutInMinutes: 150
+  pool: ${{ parameters.pool }}
+  variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
+  - template: ../variables/vmr-variables.yml
+  # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+  #   - group: AzureDevOps-Artifact-Feeds-Pats
+
+  steps:
+  - template: ../steps/vmr-prepare.yml
+    parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
+
+  # Synchronize new content in the VMR locally for PRs
+  - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+    - template: ../steps/vmr-pull-updates.yml
+      parameters:
+        vmrPath: ${{ parameters.vmrPath }}
+        vmrBranch: ${{ parameters.vmrBranch }}
+        targetRef: $(Build.SourceVersion)
+        vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
+  ## TODO: else branch => checkout the VMR revision from the pipeline variable lastVmrSha
+
+  - template: ../steps/vmr-source-build.yml
+    parameters:
+      architecture: ${{ parameters.architecture }}
+      excludeSdkContentTests: ${{ parameters.excludeSdkContentTests }}
+      container: ${{ parameters.container }}
+      excludeOmniSharpTests: ${{ parameters.excludeOmniSharpTests }}
+      runOnline: ${{ parameters.runOnline }}
+      bootstrapPrep: ${{ parameters.bootstrapPrep }}
+      enablePoison: ${{ parameters.enablePoison }}

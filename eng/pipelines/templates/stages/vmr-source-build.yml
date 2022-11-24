@@ -31,82 +31,96 @@ stages:
   - template: ../variables/vmr-variables.yml
   # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   #   - group: AzureDevOps-Artifact-Feeds-Pats
+
   jobs:
-  - job: Build_VMR_$(_Architecture)
-    timeoutInMinutes: 150
-    strategy:
-      matrix:
-        CentOSStream8-Online:
-          _Architecture: x64
-          _BootstrapPrep: false
-          _Container: ${{ parameters.centOSStream8Container }}
-          _EnablePoison: false
-          _ExcludeSdkContentTests: true
-          _ExcludeOmniSharpTests: true
-          _RunOnline: true
-        ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-          CentOSStream8-Offline:
-            _Architecture: x64
-            _BootstrapPrep: false
-            _Container: ${{ parameters.centOSStream8Container }}
-            _EnablePoison: false
-            _ExcludeSdkContentTests: false
-            _ExcludeOmniSharpTests: true
-            _RunOnline: false
-          CentOSStream9-Offline:
-            _Architecture: x64
-            _BootstrapPrep: false
-            _Container: ${{ parameters.centOSStream9Container }}
-            _EnablePoison: false
-            _ExcludeSdkContentTests: false
-            _ExcludeOmniSharpTests: false
-            _RunOnline: false
-          Fedora36-Offline:
-            _Architecture: x64
-            _BootstrapPrep: false
-            _Container: ${{ parameters.fedora36Container }}
-            _EnablePoison: true
-            _ExcludeSdkContentTests: false
-            _ExcludeOmniSharpTests: false
-            _RunOnline: false
-          Ubuntu2004-Offline:
-            _Architecture: x64
-            _BootstrapPrep: false
-            _Container: ${{ parameters.ubuntu2004Container }}
-            _EnablePoison: false
-            _ExcludeSdkContentTests: false
-            _ExcludeOmniSharpTests: false
-            _RunOnline: false
-    pool:
-      ${{ if eq(variables['System.TeamProject'], 'public') }}:
-        ${{ parameters.poolPublicAmd64 }}
-      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-        ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-          ${{ parameters.poolInternalAmd64PR }}
-        ${{ else }}:
-          ${{ parameters.poolInternalAmd64 }}
-
-    steps:
-    - template: ../steps/vmr-prepare.yml
+  - template: ../jobs/vmr-source-build.yml
+    parameters:
+      name: CentOSStream8_Online
+      architecture: x64
+      pool:
+        ${{ if eq(variables['System.TeamProject'], 'public') }}:
+          ${{ parameters.poolPublicAmd64 }}
+        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+          ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+            ${{ parameters.poolInternalAmd64PR }}
+          ${{ else }}:
+            ${{ parameters.poolInternalAmd64 }}
+      bootstrapPrep: false
+      container: ${{ parameters.centOSStream8Container }}
+      enablePoison: false
+      excludeSdkContentTests: true
+      excludeOmniSharpTests: true
+      runOnline: true
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - template: ../jobs/vmr-source-build.yml
       parameters:
-        vmrBranch: ${{ parameters.vmrBranch }}
-
-    # Synchronize new content in the VMR locally for PRs
-    - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: ../steps/vmr-pull-updates.yml
-        parameters:
-          vmrPath: $(vmrPath)
-          vmrBranch: ${{ parameters.vmrBranch }}
-          targetRef: $(Build.SourceVersion)
-          vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
-    ## TODO: else branch => checkout the VMR revision from the pipeline variable lastVmrSha
-
-    - template: ../steps/vmr-source-build.yml
+        name: CentOSStream8_Offline
+        architecture: x64
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            ${{ parameters.poolPublicAmd64 }}
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+              ${{ parameters.poolInternalAmd64PR }}
+            ${{ else }}:
+              ${{ parameters.poolInternalAmd64 }}
+        bootstrapPrep: false
+        container: ${{ parameters.centOSStream8Container }}
+        enablePoison: false
+        excludeSdkContentTests: false
+        excludeOmniSharpTests: true
+        runOnline: false
+    - template: ../jobs/vmr-source-build.yml
       parameters:
-        architecture: variables._Architecture
-        excludeSdkContentTests: variables._ExcludeSdkContentTests
-        container: variables._Container
-        excludeOmniSharpTests: variables._ExcludeOmniSharpTests
-        runOnline: variables._RunOnline
-        bootstrapPrep: variables._BootstrapPrep
-        enablePoison: variables._EnablePoison
+        name: CentOSStream9_Offline
+        architecture: x64
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            ${{ parameters.poolPublicAmd64 }}
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+              ${{ parameters.poolInternalAmd64PR }}
+            ${{ else }}:
+              ${{ parameters.poolInternalAmd64 }}
+        bootstrapPrep: false
+        container: ${{ parameters.centOSStream9Container }}
+        enablePoison: false
+        excludeSdkContentTests: false
+        excludeOmniSharpTests: false
+        runOnline: false
+    - template: ../jobs/vmr-source-build.yml
+      parameters:
+        name: Fedora36_Offline
+        architecture: x64
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            ${{ parameters.poolPublicAmd64 }}
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+              ${{ parameters.poolInternalAmd64PR }}
+            ${{ else }}:
+              ${{ parameters.poolInternalAmd64 }}
+        bootstrapPrep: false
+        container: ${{ parameters.fedora36Container }}
+        enablePoison: true
+        excludeSdkContentTests: false
+        excludeOmniSharpTests: false
+        runOnline: false
+    - template: ../jobs/vmr-source-build.yml
+      parameters:
+        name: Ubuntu2004_Offline
+        architecture: x64
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            ${{ parameters.poolPublicAmd64 }}
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+              ${{ parameters.poolInternalAmd64PR }}
+            ${{ else }}:
+              ${{ parameters.poolInternalAmd64 }}
+        bootstrapPrep: false
+        container: ${{ parameters.ubuntu2004Container }}
+        enablePoison: false
+        excludeSdkContentTests: false
+        excludeOmniSharpTests: false
+        runOnline: false
