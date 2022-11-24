@@ -42,7 +42,7 @@ steps:
 # TODO (https://github.com/dotnet/arcade/issues/11386): Remove this step
 # This step is here so that darc can find the PR commit (which might be in some fork)
 # We need to make darc understand that it needs to look in the fork from this PR
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if in(variables['Build.Reason'], 'PullRequest', 'Manual') }}:
   - script: |
       cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/03298978DFFFCD23
     displayName: Prepare dotnet/installer clone
