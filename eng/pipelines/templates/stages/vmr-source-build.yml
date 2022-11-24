@@ -31,6 +31,23 @@ stages:
   - template: ../variables/vmr-variables.yml
   # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   #   - group: AzureDevOps-Artifact-Feeds-Pats
+  
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - name: defaultPoolName
+      value: ${{ parameters.poolPublicAmd64.name }}
+    - name: defaultPoolDemands
+      demands: ${{ parameters.poolPublicAmd64.demands }}
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+      - name: defaultPoolName
+        value: ${{ parameters.poolInternalAmd64PR.name }}
+      - name: defaultPoolDemands
+        demands: ${{ parameters.poolInternalAmd64PR.demands }}
+    - ${{ else }}:
+      - name: defaultPoolName
+        value: ${{ parameters.poolInternalAmd64.name }}
+      - name: defaultPoolDemands
+        demands: ${{ parameters.poolInternalAmd64.demands }}
 
   jobs:
   - template: ../jobs/vmr-source-build.yml
@@ -51,19 +68,15 @@ stages:
       excludeSdkContentTests: true
       excludeOmniSharpTests: true
       runOnline: true
+
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream8_Offline
         architecture: x64
         pool:
-          ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            ${{ parameters.poolPublicAmd64 }}
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-              ${{ parameters.poolInternalAmd64PR }}
-            ${{ else }}:
-              ${{ parameters.poolInternalAmd64 }}
+          name: ${{ defaultPoolName }}
+          demands: ${{ defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.centOSStream8Container }}
         enablePoison: false
@@ -75,13 +88,8 @@ stages:
         name: CentOSStream9_Offline
         architecture: x64
         pool:
-          ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            ${{ parameters.poolPublicAmd64 }}
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-              ${{ parameters.poolInternalAmd64PR }}
-            ${{ else }}:
-              ${{ parameters.poolInternalAmd64 }}
+          name: ${{ defaultPoolName }}
+          demands: ${{ defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.centOSStream9Container }}
         enablePoison: false
@@ -93,13 +101,8 @@ stages:
         name: Fedora36_Offline
         architecture: x64
         pool:
-          ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            ${{ parameters.poolPublicAmd64 }}
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-              ${{ parameters.poolInternalAmd64PR }}
-            ${{ else }}:
-              ${{ parameters.poolInternalAmd64 }}
+          name: ${{ defaultPoolName }}
+          demands: ${{ defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.fedora36Container }}
         enablePoison: true
@@ -111,13 +114,8 @@ stages:
         name: Ubuntu2004_Offline
         architecture: x64
         pool:
-          ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            ${{ parameters.poolPublicAmd64 }}
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-              ${{ parameters.poolInternalAmd64PR }}
-            ${{ else }}:
-              ${{ parameters.poolInternalAmd64 }}
+          name: ${{ defaultPoolName }}
+          demands: ${{ defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.ubuntu2004Container }}
         enablePoison: false
