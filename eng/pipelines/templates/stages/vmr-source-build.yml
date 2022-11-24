@@ -36,18 +36,18 @@ stages:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}
     - name: defaultPoolDemands
-      demands: ${{ parameters.poolPublicAmd64.demands }}
+      value: ${{ parameters.poolPublicAmd64.demands }}
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
       - name: defaultPoolName
         value: ${{ parameters.poolInternalAmd64PR.name }}
       - name: defaultPoolDemands
-        demands: ${{ parameters.poolInternalAmd64PR.demands }}
+        value: ${{ parameters.poolInternalAmd64PR.demands }}
     - ${{ else }}:
       - name: defaultPoolName
         value: ${{ parameters.poolInternalAmd64.name }}
       - name: defaultPoolDemands
-        demands: ${{ parameters.poolInternalAmd64.demands }}
+        value: ${{ parameters.poolInternalAmd64.demands }}
 
   jobs:
   - template: ../jobs/vmr-source-build.yml
@@ -75,8 +75,8 @@ stages:
         name: CentOSStream8_Offline
         architecture: x64
         pool:
-          name: ${{ defaultPoolName }}
-          demands: ${{ defaultPoolDemands }}
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.centOSStream8Container }}
         enablePoison: false
@@ -88,8 +88,8 @@ stages:
         name: CentOSStream9_Offline
         architecture: x64
         pool:
-          name: ${{ defaultPoolName }}
-          demands: ${{ defaultPoolDemands }}
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.centOSStream9Container }}
         enablePoison: false
@@ -101,8 +101,8 @@ stages:
         name: Fedora36_Offline
         architecture: x64
         pool:
-          name: ${{ defaultPoolName }}
-          demands: ${{ defaultPoolDemands }}
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.fedora36Container }}
         enablePoison: true
@@ -114,8 +114,8 @@ stages:
         name: Ubuntu2004_Offline
         architecture: x64
         pool:
-          name: ${{ defaultPoolName }}
-          demands: ${{ defaultPoolDemands }}
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
         bootstrapPrep: false
         container: ${{ parameters.ubuntu2004Container }}
         enablePoison: false
@@ -142,16 +142,17 @@ stages:
         name: Fedora36_Offline_Using_Previous
         architecture: x64
         pool:
-          name: ${{ defaultPoolName }}
-          demands: ${{ defaultPoolDemands }}
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
         # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
         # The bootstrap build will shortcut if the stage 1 build failed.
         # TODO
         # condition: succeededOrFailed()
-        previousSourceBuildArtifact: Build_Tarball_x64 Fedora36-Offline_Artifacts
         container: ${{ parameters.fedora36Container }}
+        bootstrapPrep: false
         enablePoison: false
         excludeSdkContentTests: true
         excludeOmniSharpTests: false
         usePreviousArtifacts: true
+        previousSourceBuildArtifact: Build_Tarball_x64 Fedora36-Offline_Artifacts
         runOnline: false

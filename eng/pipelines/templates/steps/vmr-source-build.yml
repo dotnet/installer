@@ -43,6 +43,11 @@ parameters:
   type: string
   default: ''
 
+# In case we use different bootstrap SDK
+- name: previousSourceBuildArtifact
+  type: string
+  default: ''
+
 steps:
 - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   - task: Bash@3
@@ -61,14 +66,14 @@ steps:
 
 - ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
   - download: current
-    artifact: $(_PreviousSourceBuildArtifact)
+    artifact: ${{ parameters.previousSourceBuildArtifact }}
     patterns: '*.tar.gz'
     displayName: Download Previous Source Build Artifacts
 
   - task: CopyFiles@2
     displayName: Copy Previous Source Build Artifacts
     inputs:
-      SourceFolder: $(PIPELINE.WORKSPACE)/$(_PreviousSourceBuildArtifact)
+      SourceFolder: $(PIPELINE.WORKSPACE)/${{ parameters.previousSourceBuildArtifact }}
       Contents: '*.tar.gz'
       TargetFolder: ${{ parameters.vmrPath }}/packages/archive/
 

@@ -56,6 +56,11 @@ parameters:
   type: string
   default: ''
 
+# In case we use different bootstrap SDK
+- name: previousSourceBuildArtifact
+  type: string
+  default: ''
+
 jobs:
 - job: Build_VMR_${{ parameters.name }}_${{ parameters.architecture }}
   displayName: Build ${{ parameters.name }} (${{ parameters.architecture }})
@@ -91,3 +96,4 @@ jobs:
       runOnline: ${{ parameters.runOnline }}
       bootstrapPrep: ${{ parameters.bootstrapPrep }}
       enablePoison: ${{ parameters.enablePoison }}
+      previousSourceBuildArtifact: ${{ parameters.previousSourceBuildArtifact }}
