@@ -54,7 +54,6 @@ stages:
       name: CentOSStream8_Online
       architecture: x64
       vmrBranch: ${{ parameters.vmrBranch }}
-      vmrPath: ${{ parameters.vmrPath }}
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
@@ -71,7 +70,6 @@ stages:
         name: CentOSStream8_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -87,7 +85,6 @@ stages:
         name: CentOSStream9_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -103,7 +100,6 @@ stages:
         name: Fedora36_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -119,7 +115,6 @@ stages:
         name: Ubuntu2004_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -136,7 +131,6 @@ stages:
         name: Debian11_Offline
         architecture: arm64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool: ${{ parameters.poolInternalArm64 }}
         bootstrapPrep: true
         container: ${{ parameters.debian11Arm64Container }}
@@ -151,7 +145,6 @@ stages:
         name: Fedora36_Offline_Using_Previous
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrPath: ${{ parameters.vmrPath }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
