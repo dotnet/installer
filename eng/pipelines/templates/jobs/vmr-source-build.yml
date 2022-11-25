@@ -83,7 +83,13 @@ jobs:
         vmrPath: ${{ parameters.vmrPath }}
         vmrBranch: ${{ parameters.vmrBranch }}
         targetRef: $(Build.SourceVersion)
-  ## TODO: else branch => checkout the VMR revision from the pipeline variable lastVmrSha
+  # Checkout dotnet/dotnet's revision that was created during the last sync
+  - ${{ else }}:
+    - script: |
+        set -x
+        git checkout $[ stageDependencies.Build.Synchronize_VMR.outputs['vmrPushStep.sourceVmrSha']
+      displayName: Checkout new VMR commit
+      workingDirectory: ${{ parameters.vmrPath }}
 
   - template: ../steps/vmr-source-build.yml
     parameters:

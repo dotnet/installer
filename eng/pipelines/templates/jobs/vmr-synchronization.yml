@@ -60,6 +60,13 @@ jobs:
         # TODO
         # git push dotnet ${{ parameters.vmrBranch }}
 
-        echo "##vso[task.setvariable variable=lastVmrSha;isOutput=true]`git rev-parse HEAD`"
+        echo "##vso[task.setvariable variable=sourceVmrSha;isOutput=true]`git rev-parse HEAD`"
       displayName: Push changes to dotnet/dotnet
+      name: vmrPushStep
+      workingDirectory: $(vmrPath)
+  - ${{ else }}:
+    - script: |-
+        echo "##vso[task.setvariable variable=sourceVmrSha;isOutput=true]`git rev-parse HEAD`"
+      displayName: Export current revision SHA
+      name: vmrPushStep
       workingDirectory: $(vmrPath)

@@ -28,7 +28,6 @@ steps:
 
 - script: |
     git switch -c ${{ parameters.vmrBranch }}
-    echo "##vso[task.setvariable variable=lastVmrSha;isOutput=true]`git rev-parse HEAD`"
   displayName: Checkout ${{ parameters.vmrBranch }}
   workingDirectory: ${{ parameters.vmrPath }}
 
