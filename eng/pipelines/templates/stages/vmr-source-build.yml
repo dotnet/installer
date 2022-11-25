@@ -77,6 +77,7 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: true
         runOnline: false
+
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream9_Offline
@@ -90,6 +91,7 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Fedora36_Offline
@@ -103,6 +105,7 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Ubuntu2004_Offline
@@ -138,10 +141,6 @@ stages:
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
-        # The bootstrap build will shortcut if the stage 1 build failed.
-        # TODO
-        # condition: succeededOrFailed()
         container: ${{ parameters.fedora36Container }}
         bootstrapPrep: false
         enablePoison: false
@@ -149,5 +148,5 @@ stages:
         excludeOmniSharpTests: false
         usePreviousArtifacts: true
         additionalBuildArgs: --with-sdk /vmr/.dotnet
-        previousSourceBuildArtifact: Build_Tarball_x64 Fedora36-Offline_Artifacts
+        previousSourceBuildArtifact: Build_VMR_Fedora36_Offline_x64
         runOnline: false

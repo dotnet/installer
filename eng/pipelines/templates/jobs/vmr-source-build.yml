@@ -66,6 +66,11 @@ jobs:
   displayName: Build ${{ parameters.name }} (${{ parameters.architecture }})
   timeoutInMinutes: 150
   pool: ${{ parameters.pool }}
+  ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
+    # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
+    # The bootstrap build will shortcut if the stage 1 build failed.
+    condition: succeededOrFailed()
+    dependsOn: ${{ parameters.previousSourceBuildArtifact }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
   - name: vmrSourceSha
@@ -116,14 +121,14 @@ jobs:
 
   - ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
     - download: current
-      artifact: ${{ parameters.previousSourceBuildArtifact }}
+      artifact: ${{ parameters.previousSourceBuildArtifact }}_Artifacts
       patterns: '*.tar.gz'
       displayName: Download Previous Source Build Artifacts
 
     - task: CopyFiles@2
       displayName: Copy Previous Source Build Artifacts
       inputs:
-        SourceFolder: $(Pipeline.Workspace)/${{ parameters.previousSourceBuildArtifact }}
+        SourceFolder: $(Pipeline.Workspace)/${{ parameters.previousSourceBuildArtifact }}_Artifacts
         Contents: '*.tar.gz'
         TargetFolder: ${{ parameters.vmrPath }}/packages/archive/
 
