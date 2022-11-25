@@ -18,6 +18,11 @@ resources:
     endpoint: dotnet
 
 parameters:
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+  default: $(Build.SourceBranchName)
+
 - name: noPush
   displayName: Don't push changes to dotnet/dotnet
   type: boolean
@@ -358,6 +363,7 @@ stages:
 
   - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
     parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
       noPush: ${{ parameters.noPush }}
 
 #   - template: /eng/common/templates/jobs/source-build.yml
