@@ -68,6 +68,8 @@ jobs:
   pool: ${{ parameters.pool }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
+  - name: vmrSourceSha
+    value: $[stageDependencies.Build.Synchronize_VMR.outputs['vmrRevision.sha']]
   # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   #   - group: AzureDevOps-Artifact-Feeds-Pats
 
@@ -88,8 +90,8 @@ jobs:
   - ${{ else }}:
     - script: |
         set -x
-        git checkout $[ stageDependencies.Build.Synchronize_VMR.outputs['vmrPushStep.sourceVmrSha']
-      displayName: Checkout new VMR commit
+        git checkout $(vmrSourceSha)
+      displayName: Checkout the right SHA
       workingDirectory: ${{ parameters.vmrPath }}
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
