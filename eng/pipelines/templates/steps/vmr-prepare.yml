@@ -19,14 +19,6 @@ steps:
   path: vmr
 
 - script: |
-    rm -v src/nuget-client/submodules/Common/NuGet.config
-    rm -v src/nuget-client/submodules/FileSystem/NuGet.config
-  displayName: Remove problematic NuGet.config files
-  workingDirectory: ${{ parameters.vmrPath }}
-
-- task: nuget-security-analysis@0
-
-- script: |
     git switch -c ${{ parameters.vmrBranch }}
   displayName: Checkout ${{ parameters.vmrBranch }}
   workingDirectory: ${{ parameters.vmrPath }}
