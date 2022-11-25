@@ -23,6 +23,8 @@ jobs:
   timeoutInMinutes: 120
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
+  - name: vmrPath
+    value: $(Agent.BuildDirectory)/vmr
   - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - group: DotNetBot-GitHub
 
@@ -33,6 +35,7 @@ jobs:
   steps:
   - template: ../steps/vmr-prepare.yml
     parameters:
+      vmrPath: $(vmrPath)
       vmrBranch: ${{ parameters.vmrBranch }}
 
   - template: ../steps/vmr-pull-updates.yml

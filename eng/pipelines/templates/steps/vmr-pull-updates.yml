@@ -33,7 +33,7 @@ steps:
 
 - script: git checkout -B ${{ parameters.vmrBranch }}
   displayName: Prepare branch ${{ parameters.vmrBranch }}
-  workingDirectory: $(vmrPath)
+  workingDirectory: ${{ parameters.vmrPath }}
 
 # This step make sure that darc finds the PR commit (which might be in a fork of installer)
 # The cloned folder does have the commit so we copy it into temp where the tooling will find it

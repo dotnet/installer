@@ -54,13 +54,8 @@ stages:
       name: CentOSStream8_Online
       architecture: x64
       pool:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          ${{ parameters.poolPublicAmd64 }}
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-            ${{ parameters.poolInternalAmd64PR }}
-          ${{ else }}:
-            ${{ parameters.poolInternalAmd64 }}
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
       bootstrapPrep: false
       container: ${{ parameters.centOSStream8Container }}
       enablePoison: false
@@ -153,5 +148,6 @@ stages:
         excludeSdkContentTests: true
         excludeOmniSharpTests: false
         usePreviousArtifacts: true
+        additionalBuildArgs: --with-sdk /vmr/.dotnet
         previousSourceBuildArtifact: Build_Tarball_x64 Fedora36-Offline_Artifacts
         runOnline: false

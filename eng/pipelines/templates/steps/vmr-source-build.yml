@@ -22,6 +22,11 @@ parameters:
   type: boolean
   default: false
 
+# In case we use different bootstrap SDK
+- name: previousSourceBuildArtifact
+  type: string
+  default: ''
+
 # Excludes running the OmniSharp tests
 - name: excludeOmniSharpTests
   type: boolean
@@ -40,11 +45,6 @@ parameters:
 
 # Path where the dotnet/dotnet is checked out to
 - name: additionalBuildArgs
-  type: string
-  default: ''
-
-# In case we use different bootstrap SDK
-- name: previousSourceBuildArtifact
   type: string
   default: ''
 
@@ -73,7 +73,7 @@ steps:
   - task: CopyFiles@2
     displayName: Copy Previous Source Build Artifacts
     inputs:
-      SourceFolder: $(PIPELINE.WORKSPACE)/${{ parameters.previousSourceBuildArtifact }}
+      SourceFolder: $(Pipeline.Workspace)/${{ parameters.previousSourceBuildArtifact }}
       Contents: '*.tar.gz'
       TargetFolder: ${{ parameters.vmrPath }}/packages/archive/
 
@@ -86,7 +86,7 @@ steps:
         customPrepArgs='--bootstrap'
       fi
 
-      docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${{ parameters.container }} ./prep.sh  ${customPrepArgs}
+      docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${{ parameters.container }} ./prep.sh ${customPrepArgs}
     else
       mkdir ${{ parameters.vmrPath }}/.dotnet
       previousSdkPath="${{ parameters.vmrPath }}/packages/archive/dotnet-sdk-*.tar.gz"
@@ -122,12 +122,12 @@ steps:
     cp $(Agent.BuildDirectory)/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
 
     dockerVolumeArgs="-v ${{ parameters.vmrPath }}:/vmr"
-    dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=$(_ExcludeOmniSharpTests) -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
+    dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
     poisonArg=''
 
     if [[ '${{ parameters.excludeSdkContentTests }}' != 'True' ]]; then
-      dockerVolumeArgs+=" -v $(PIPELINE.WORKSPACE)/current/BlobArtifacts/:/BlobArtifacts"
-      msftSdkTarballName=$(find "$(PIPELINE.WORKSPACE)/current/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+      dockerVolumeArgs+=" -v $(Pipeline.Workspace)/current/BlobArtifacts/:/BlobArtifacts"
+      msftSdkTarballName=$(find "$(Pipeline.Workspace)/current/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
       dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
     fi
 
