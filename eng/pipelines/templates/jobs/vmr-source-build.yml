@@ -1,6 +1,5 @@
-### This pipeline validates incoming changes to the VMR (https://github.com/dotnet/dotnet)
-### The build is run during dotnet/installer's PR
-### New changes are applied locally in the VMR, then we source-build and test the content
+### This job source-builds https://github.com/dotnet/dotnet with given parameters
+### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
 
 parameters:
 
@@ -12,10 +11,6 @@ parameters:
   displayName: dotnet/dotnet branch to use
   type: string
   default: $(Build.SourceBranchName)
-
-- name: vmrSourceSha
-  displayName: dotnet/dotnet commit to use
-  type: string
 
 - name: name
   type: string
@@ -39,7 +34,11 @@ parameters:
   type: boolean
   default: false
 
-# Excludes running the OmniSharp tests
+# In case we use different bootstrap SDK
+- name: previousSourceBuildArtifact
+  type: string
+  default: ''
+
 - name: excludeOmniSharpTests
   type: boolean
 
@@ -47,27 +46,19 @@ parameters:
 - name: runOnline
   type: boolean
 
-# Should we create the bootstrap build/
 - name: bootstrapPrep
   type: boolean
 
-# Poison the artifacts
+# Poison the artifacts?
 - name: enablePoison
   type: boolean
 
-# Path where the dotnet/dotnet is checked out to
 - name: additionalBuildArgs
-  type: string
-  default: ''
-
-# In case we use different bootstrap SDK
-- name: previousSourceBuildArtifact
   type: string
   default: ''
 
 jobs:
 - job: Build_${{ parameters.name }}_${{ parameters.architecture }}
-  displayName: Build_${{ parameters.name }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
   pool: ${{ parameters.pool }}
   ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
@@ -77,6 +68,8 @@ jobs:
     dependsOn: ${{ parameters.previousSourceBuildArtifact }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
+  - name: vmrSourceSha
+    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrRevision.sha']]
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: DotNetBot-GitHub
     - group: AzureDevOps-Artifact-Feeds-Pats

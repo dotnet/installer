@@ -166,8 +166,8 @@ stages:
         runTests: true
 
   ## Official/PGO instrumentation Builds
-  ## TODO REVERT THE LINE BELOW
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq('TODO', 'REMOVE THIS')) }}:
+  
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
     
     ## Windows
 
@@ -323,6 +323,7 @@ stages:
         runTests: false
 
     ## Linux PGO Instrumentation builds
+
     - template: /eng/build.yml
       parameters:
         agentOs: Linux
@@ -343,32 +344,10 @@ stages:
         linuxPortable: true
         runTests: false
 
-#   - template: /eng/common/templates/jobs/source-build.yml
-
-#   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
-
-#   - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-#     - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-#       parameters:
-#         dependsOn: Source_Build_Create_Tarball
-
-# - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-#   - stage: Publish
-#     dependsOn:
-#     - Build
-#     - Build_Linux_PGO
-#     jobs:
-#     - template: /eng/common/templates/job/publish-build-assets.yml
-#       parameters:
-#         publishUsingPipelines: true
-#         publishAssetsImmediately: true
-#         pool:
-#           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-#             name: NetCore1ESPool-Internal
-#             demands: ImageOverride -equals windows.vs2022.amd64
+  - template: /eng/common/templates/jobs/source-build.yml
 
 - stage: Build_Linux
-  displayName: Build Linux Portable, Arm64
+  displayName: Build Linux (for Source-Build)
   dependsOn: []
   jobs:
   - template: /eng/build.yml
@@ -401,3 +380,18 @@ stages:
 - template: /eng/pipelines/templates/stages/vmr-source-build.yml
   parameters:
     vmrBranch: ${{ parameters.vmrBranch }}
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - stage: Publish
+    dependsOn:
+    - Build
+    - Build_Linux
+    jobs:
+    - template: /eng/common/templates/job/publish-build-assets.yml
+      parameters:
+        publishUsingPipelines: true
+        publishAssetsImmediately: true
+        pool:
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals windows.vs2022.amd64

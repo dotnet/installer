@@ -7,10 +7,6 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
-- name: vmrPath
-  type: string
-  default: $(Agent.BuildDirectory)/vmr
-
 steps:
 - checkout: vmr
   clean: true
@@ -21,12 +17,12 @@ steps:
 - script: |
     git switch -c ${{ parameters.vmrBranch }}
   displayName: Checkout ${{ parameters.vmrBranch }}
-  workingDirectory: ${{ parameters.vmrPath }}
+  workingDirectory: $(Agent.BuildDirectory)/vmr
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
 # Currently, we ignore dirs of individual repos - they have been scanned before
 - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
   - task: ComponentGovernanceComponentDetection@0
     inputs:
-      sourceScanPath: ${{ parameters.vmrPath }}
-      ignoreDirectories: ${{ parameters.vmrPath }}/src
+      sourceScanPath: $(Agent.BuildDirectory)/vmr
+      ignoreDirectories: $(Agent.BuildDirectory)/vmr/src

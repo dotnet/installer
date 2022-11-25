@@ -1,6 +1,5 @@
-### This pipeline validates incoming changes to the VMR (https://github.com/dotnet/dotnet)
-### The build is run during dotnet/installer's PR
-### New changes are applied locally in the VMR, then we source-build and test the content
+### This stage source-builds https://github.com/dotnet/dotnet with varying parameters
+### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
 
 parameters:
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
@@ -33,8 +32,6 @@ stages:
   - Build_Linux
   - Synchronize_VMR
   variables:
-  - name: vmrSourceSha
-    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrRevision.sha']]
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}
@@ -58,7 +55,6 @@ stages:
       name: CentOSStream8_Online
       architecture: x64
       vmrBranch: ${{ parameters.vmrBranch }}
-      vmrSourceSha: $(vmrSourceSha)
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
@@ -75,7 +71,6 @@ stages:
         name: CentOSStream8_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -91,7 +86,6 @@ stages:
         name: CentOSStream9_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -107,7 +101,6 @@ stages:
         name: Fedora36_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -123,7 +116,6 @@ stages:
         name: Ubuntu2004_Offline
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -140,7 +132,6 @@ stages:
         name: Debian11_Offline
         architecture: arm64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool: ${{ parameters.poolInternalArm64 }}
         bootstrapPrep: true
         container: ${{ parameters.debian11Arm64Container }}
@@ -155,7 +146,6 @@ stages:
         name: Fedora36_Offline_Using_Previous
         architecture: x64
         vmrBranch: ${{ parameters.vmrBranch }}
-        vmrSourceSha: $(vmrSourceSha)
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
