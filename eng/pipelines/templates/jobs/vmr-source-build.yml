@@ -74,6 +74,7 @@ jobs:
   - template: ../steps/vmr-prepare.yml
     parameters:
       vmrBranch: ${{ parameters.vmrUpdate.branch }}
+      skipComponentGovernanceDetection: true
 
   # Synchronize new content in the VMR if it hasn't been pushed already
   - ${{ if ne(parameters.vmrUpdate.isPushed, 'true') }}:

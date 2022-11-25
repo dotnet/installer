@@ -7,6 +7,10 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
+- name: skipComponentGovernanceDetection
+  type: boolean
+  default: false
+
 steps:
 - checkout: vmr
   clean: true
@@ -21,7 +25,7 @@ steps:
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
 # Currently, we ignore dirs of individual repos - they have been scanned before
-- ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+- ${{ if and(not(parameters.skipComponentGovernanceDetection), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
   - task: ComponentGovernanceComponentDetection@0
     inputs:
       sourceScanPath: $(Agent.BuildDirectory)/vmr
