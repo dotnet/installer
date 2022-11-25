@@ -10,6 +10,8 @@ parameters:
   debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
   fedora36Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36
   ubuntu2004Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
+
+  # Internal builds
   poolInternalAmd64:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
@@ -18,6 +20,8 @@ parameters:
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
   poolInternalArm64:
     name: Docker-Linux-Arm-Internal
+
+  # Public builds / PRs
   poolPublicAmd64:
     name: NetCore-Public-XL
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
@@ -27,11 +31,6 @@ stages:
   displayName: VMR Source-Build
   dependsOn: Build
   variables:
-  - template: /eng/common/templates/variables/pool-providers.yml
-  - template: ../variables/vmr-variables.yml
-  # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-  #   - group: AzureDevOps-Artifact-Feeds-Pats
-  
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}

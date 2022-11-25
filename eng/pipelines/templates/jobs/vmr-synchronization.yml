@@ -23,7 +23,8 @@ jobs:
   timeoutInMinutes: 120
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
-  - template: ../variables/vmr-variables.yml
+  - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
+    - group: DotNetBot-GitHub
 
   pool:
     name: $(DncEngInternalBuildPool)
@@ -39,8 +40,8 @@ jobs:
       vmrPath: $(vmrPath)
       vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: ${{ parameters.targetRef }}
-      vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
 
+  # For official builds, push the changes to the VMR
   - ${{ if and(not(parameters.noPush), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x

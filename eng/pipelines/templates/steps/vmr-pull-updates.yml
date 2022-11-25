@@ -12,10 +12,6 @@ parameters:
   type: string
   default: $(Build.SourceVersion)
 
-- name: vmrToken
-  displayName: PAT that allows pushing to dotnet/dotnet
-  type: string
-
 - name: vmrPath
   displayName: Path where the dotnet/dotnet is checked out to
   type: string
@@ -39,20 +35,16 @@ steps:
   displayName: Prepare branch ${{ parameters.vmrBranch }}
   workingDirectory: $(vmrPath)
 
-# TODO (https://github.com/dotnet/arcade/issues/11386): Remove this step
-# This step is here so that darc can find the PR commit (which might be in some fork)
-# We need to make darc understand that it needs to look in the fork from this PR
-- ${{ if in(variables['Build.Reason'], 'PullRequest', 'Manual') }}:
-  - script: |
-      cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/03298978DFFFCD23
-    displayName: Prepare dotnet/installer clone
+# This step make sure that darc finds the PR commit (which might be in a fork of installer)
+# The cloned folder does have the commit so we copy it into temp where the tooling will find it
+- script: |
+    cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/03298978DFFFCD23
+  displayName: Prepare dotnet/installer clone
 
 - script: >
     $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
     --vmr ${{ parameters.vmrPath }}
     --tmp $(Agent.TempDirectory)
-    --azdev-pat $(System.AccessToken)
-    --github-pat ${{ parameters.vmrToken }}
     --recursive
     --verbose
     installer:${{ parameters.targetRef }}

@@ -68,7 +68,6 @@ jobs:
   pool: ${{ parameters.pool }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
-  - template: ../variables/vmr-variables.yml
   # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   #   - group: AzureDevOps-Artifact-Feeds-Pats
 
@@ -84,7 +83,6 @@ jobs:
         vmrPath: ${{ parameters.vmrPath }}
         vmrBranch: ${{ parameters.vmrBranch }}
         targetRef: $(Build.SourceVersion)
-        vmrToken: $(BotAccount-dotnet-bot-repo-PAT)
   ## TODO: else branch => checkout the VMR revision from the pipeline variable lastVmrSha
 
   - template: ../steps/vmr-source-build.yml
