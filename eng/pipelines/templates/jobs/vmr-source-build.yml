@@ -70,6 +70,11 @@ jobs:
   - template: /eng/common/templates/variables/pool-providers.yml
   - name: vmrSourceSha
     value: $[stageDependencies.Build.Synchronize_VMR.outputs['vmrRevision.sha']]
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    - group: DotNetBot-GitHub
+  - ${{ else }}:
+    - name: BotAccount-dotnet-bot-repo-PAT
+      value: N/A
   # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
   #   - group: AzureDevOps-Artifact-Feeds-Pats
 
