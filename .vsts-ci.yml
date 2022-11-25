@@ -390,3 +390,5 @@ stages:
 #             demands: ImageOverride -equals windows.vs2022.amd64
 
 - template: /eng/pipelines/templates/stages/vmr-source-build.yml
+  parameters:
+    vmrBranch: ${{ parameters.vmrBranch }}
