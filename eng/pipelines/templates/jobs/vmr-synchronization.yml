@@ -48,7 +48,7 @@ jobs:
       targetRef: ${{ parameters.targetRef }}
 
   # For official builds, push the changes to the VMR
-  - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest', 'Manual')), eq(variables['System.TeamProject'], 'internal')) }}:
+  - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |-
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'

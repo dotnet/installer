@@ -17,6 +17,12 @@ resources:
     name: dotnet/dotnet
     endpoint: dotnet
 
+parameters:
+- name: noPush
+  displayName: Don't push changes to dotnet/dotnet
+  type: boolean
+  default: false
+
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -351,6 +357,8 @@ stages:
         runTests: false
 
   - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+    parameters:
+      noPush: ${{ parameters.noPush }}
 
 #   - template: /eng/common/templates/jobs/source-build.yml
 
