@@ -24,26 +24,22 @@ parameters:
 - name: pool
   type: object
 
+# Allow downloading artifacts from the internet during the build
+- name: runOnline
+  type: boolean
+
 # Skip running the SDK content smoke-tests
 - name: excludeSdkContentTests
   type: boolean
   default: false
 
-# Build using the previous source-build artifacts
-- name: usePreviousArtifacts
-  type: boolean
-  default: false
-
-# In case we use different bootstrap SDK
-- name: previousSourceBuildArtifact
+# Name of a previous job (from the same template as this) whose output will be used to build this job
+# The SDK from its artifacts is copied to vmr/.dotnet
+- name: reuseBuildArtifactsFrom
   type: string
   default: ''
 
 - name: excludeOmniSharpTests
-  type: boolean
-
-# Allow downloading artifacts from the internet during the build
-- name: runOnline
   type: boolean
 
 - name: bootstrapPrep
@@ -53,19 +49,15 @@ parameters:
 - name: enablePoison
   type: boolean
 
-- name: additionalBuildArgs
-  type: string
-  default: ''
-
 jobs:
 - job: Build_${{ parameters.name }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
   pool: ${{ parameters.pool }}
-  ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
+  ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
     # The bootstrap build will shortcut if the stage 1 build failed.
     condition: succeededOrFailed()
-    dependsOn: ${{ parameters.previousSourceBuildArtifact }}
+    dependsOn: Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
   - name: vmrSourceSha
@@ -76,6 +68,12 @@ jobs:
   - ${{ else }}:
     - name: BotAccount-dotnet-bot-repo-PAT
       value: N/A
+  - ${{ if eq(parameters.reuseBuildArtifactsFrom, '') }}:
+    - name: additionalBuildArgs
+      value: ''
+  - ${{ else }}:
+    - name: additionalBuildArgs
+      value: ' --with-sdk /vmr/.dotnet'
 
   steps:
   - template: ../steps/vmr-prepare.yml
@@ -113,23 +111,23 @@ jobs:
       patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
       displayName: Download MSFT sdk Tarball
 
-  - ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
+  - ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     - download: current
-      artifact: ${{ parameters.previousSourceBuildArtifact }}_Artifacts
+      artifact: Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
       patterns: '*.tar.gz'
       displayName: Download Previous Source Build Artifacts
 
     - task: CopyFiles@2
       displayName: Copy Previous Source Build Artifacts
       inputs:
-        SourceFolder: $(Pipeline.Workspace)/${{ parameters.previousSourceBuildArtifact }}_Artifacts
+        SourceFolder: $(Pipeline.Workspace)/Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
         Contents: '*.tar.gz'
         TargetFolder: ${{ parameters.vmrPath }}/packages/archive/
 
   - script: |
       set -x
 
-      if [[ '${{ parameters.usePreviousArtifacts }}' != 'True' ]]; then
+      if [[ -z '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
         customPrepArgs=
         if [[ '${{ parameters.bootstrapPrep }}' == 'True' ]]; then
           customPrepArgs='--bootstrap'
@@ -160,7 +158,7 @@ jobs:
         customBuildArgs="$customBuildArgs --poison"
       fi
 
-      docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building ${{ parameters.additionalBuildArgs }} ${customBuildArgs}
+      docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) ${customBuildArgs}
     displayName: $(Agent.JobName)
 
   - script: |
@@ -185,7 +183,7 @@ jobs:
         dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
       fi
 
-      docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test ${{ parameters.additionalBuildArgs }} -- -p:SmokeTestConsoleVerbosity=detailed
+      docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) -- -p:SmokeTestConsoleVerbosity=detailed
     displayName: Run Tests
 
   # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.

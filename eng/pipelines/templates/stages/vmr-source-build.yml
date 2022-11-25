@@ -154,7 +154,5 @@ stages:
         enablePoison: false
         excludeSdkContentTests: true
         excludeOmniSharpTests: false
-        usePreviousArtifacts: true
-        additionalBuildArgs: --with-sdk /vmr/.dotnet
-        previousSourceBuildArtifact: Build_Fedora36_Offline_x64
+        reuseBuildArtifactsFrom: Fedora36_Offline
         runOnline: false
