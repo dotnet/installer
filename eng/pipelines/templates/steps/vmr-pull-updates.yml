@@ -37,8 +37,12 @@ steps:
 
 # This step make sure that darc finds the PR commit (which might be in a fork of installer)
 # The cloned folder does have the commit so we copy it into temp where the tooling will find it
+# We also cannot keep the AzDO remote as pulling from it would require a token
 - script: |
     cp -r $(Agent.BuildDirectory)/installer $(Agent.TempDirectory)/03298978DFFFCD23
+    cd $(Agent.TempDirectory)/03298978DFFFCD23
+    git remote remove origin
+    git remote add origin https://github.com/dotnet/installer
   displayName: Prepare dotnet/installer clone
 
 - script: >
