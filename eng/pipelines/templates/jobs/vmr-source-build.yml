@@ -79,11 +79,10 @@ jobs:
   - template: /eng/common/templates/variables/pool-providers.yml
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: DotNetBot-GitHub
+    - group: AzureDevOps-Artifact-Feeds-Pats
   - ${{ else }}:
     - name: BotAccount-dotnet-bot-repo-PAT
       value: N/A
-  # - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-  #   - group: AzureDevOps-Artifact-Feeds-Pats
 
   steps:
   - template: ../steps/vmr-prepare.yml
