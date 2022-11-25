@@ -66,8 +66,8 @@ parameters:
   default: ''
 
 jobs:
-- job: Build_VMR_${{ parameters.name }}_${{ parameters.architecture }}
-  displayName: Build ${{ parameters.name }} (${{ parameters.architecture }})
+- job: Build_${{ parameters.name }}_${{ parameters.architecture }}
+  displayName: Build_${{ parameters.name }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
   pool: ${{ parameters.pool }}
   ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
