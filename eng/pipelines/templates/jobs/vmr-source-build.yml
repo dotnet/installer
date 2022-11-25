@@ -79,7 +79,7 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
 
   # Synchronize new content in the VMR locally for PRs
-  - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+  - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest', 'Manual')) }}:
     - template: ../steps/vmr-pull-updates.yml
       parameters:
         vmrPath: ${{ parameters.vmrPath }}
@@ -91,7 +91,7 @@ jobs:
     - script: |
         set -x
         git checkout $(vmrSourceSha)
-      displayName: Checkout the right SHA
+      displayName: Checkout target revision
       workingDirectory: ${{ parameters.vmrPath }}
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
