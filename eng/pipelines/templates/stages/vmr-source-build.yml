@@ -29,7 +29,7 @@ parameters:
 stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
-  dependsOn: Build
+  dependsOn: Build_Linux_PGO
   variables:
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName

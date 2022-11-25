@@ -57,18 +57,18 @@ stages:
 - stage: Build
   jobs:
   # This job is for build retry configuration.
-  # - job: Publish_Build_Configuration
-  #   pool:
-  #     ${{ if eq(variables['System.TeamProject'], 'public') }}:
-  #       name: NetCore-Public
-  #       demands: ImageOverride -equals windows.vs2022preview.amd64.open
-  #     ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-  #       name: NetCore1ESPool-Internal
-  #       demands: ImageOverride -equals windows.vs2022preview.amd64
-  #   steps:
-  #   - publish: $(Build.SourcesDirectory)\eng\buildConfiguration
-  #     artifact: buildConfiguration
-  #     displayName: Publish Build Config
+  - job: Publish_Build_Configuration
+    pool:
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        name: NetCore-Public
+        demands: ImageOverride -equals windows.vs2022preview.amd64.open
+      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+        name: NetCore1ESPool-Internal
+        demands: ImageOverride -equals windows.vs2022preview.amd64
+    steps:
+    - publish: $(Build.SourcesDirectory)\eng\buildConfiguration
+      artifact: buildConfiguration
+      displayName: Publish Build Config
   
   ## PR-only jobs
   
@@ -339,27 +339,29 @@ stages:
         buildArchitecture: arm64
         runTests: false
 
-    ## Linux PGO Instrumentation builds
+## Linux PGO Instrumentation builds
+- stage: Build_Linux_PGO
+  dependsOn: []
+  jobs:
+  - template: /eng/build.yml
+    parameters:
+      agentOs: Linux
+      pgoInstrument: true
+      jobName: Build_LinuxPortable_Release_x64
+      buildConfiguration: Release
+      buildArchitecture: x64
+      linuxPortable: true
+      runTests: false
 
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
-        pgoInstrument: true
-        jobName: Build_LinuxPortable_Release_x64
-        buildConfiguration: Release
-        buildArchitecture: x64
-        linuxPortable: true
-        runTests: false
-
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
-        pgoInstrument: true
-        jobName: Build_Release_arm64
-        buildConfiguration: Release
-        buildArchitecture: arm64
-        linuxPortable: true
-        runTests: false
+  - template: /eng/build.yml
+    parameters:
+      agentOs: Linux
+      pgoInstrument: true
+      jobName: Build_Release_arm64
+      buildConfiguration: Release
+      buildArchitecture: arm64
+      linuxPortable: true
+      runTests: false
 
   - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
     parameters:
@@ -379,6 +381,7 @@ stages:
 #   - stage: Publish
 #     dependsOn:
 #     - Build
+#     - Build_Linux_PGO
 #     jobs:
 #     - template: /eng/common/templates/job/publish-build-assets.yml
 #       parameters:
