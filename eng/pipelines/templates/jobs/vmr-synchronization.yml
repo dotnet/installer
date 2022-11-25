@@ -48,7 +48,7 @@ jobs:
 
   # For official builds, push the changes to the VMR
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
-    - script: |-
+    - script: |
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
         git remote add dotnet 'https://$(BotAccount-dotnet-bot-repo-PAT)@github.com/dotnet/dotnet.git'
@@ -56,13 +56,15 @@ jobs:
         git branch ${{ parameters.vmrBranch }}
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
+
+        echo "##vso[task.setvariable variable=sha;isOutput=true;isreadonly=true]$sha"
+        echo "##vso[task.setvariable variable=vmrUpdatePushed;isOutput=true;isreadonly=true]true"
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
+      name: vmrPush
 
-  - script: |-
-      sha=`git rev-parse HEAD`
-      echo "##vso[task.setvariable variable=sha;isOutput=true;isreadonly=true]$sha"
-      echo "dotnet/dotnet revision that will be used for the build: $sha"
-    displayName: Export dotnet/dotnet's SHA
-    name: vmrRevision
-    workingDirectory: $(vmrPath)
+  - ${{ else }}:
+    - script: |
+        echo "##vso[task.setvariable variable=vmrUpdatePushed;isOutput=true;isreadonly=true]false"
+      displayName: Skip push to dotnet/dotnet
+      name: vmrPush

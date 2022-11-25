@@ -48,13 +48,16 @@ stages:
         value: ${{ parameters.poolInternalAmd64.name }}
       - name: defaultPoolDemands
         value: ${{ parameters.poolInternalAmd64.demands }}
+  - name: vmrUpdatePushed
+    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.vmrUpdatePushed']]
+  - name: vmrSourceSha
+    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
 
   jobs:
   - template: ../jobs/vmr-source-build.yml
     parameters:
       name: CentOSStream8_Online
       architecture: x64
-      vmrBranch: ${{ parameters.vmrBranch }}
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
@@ -64,13 +67,16 @@ stages:
       excludeSdkContentTests: true
       excludeOmniSharpTests: true
       runOnline: true
+      vmrUpdate:
+        branch: ${{ parameters.vmrBranch }}
+        isPushed: $(vmrUpdatePushed)
+        revision: $(vmrSourceSha)
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream8_Offline
         architecture: x64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -80,12 +86,15 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: true
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream9_Offline
         architecture: x64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -95,12 +104,15 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Fedora36_Offline
         architecture: x64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -110,12 +122,15 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Ubuntu2004_Offline
         architecture: x64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -125,13 +140,16 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
 
   - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Debian11_Offline
         architecture: arm64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool: ${{ parameters.poolInternalArm64 }}
         bootstrapPrep: true
         container: ${{ parameters.debian11Arm64Container }}
@@ -139,13 +157,16 @@ stages:
         excludeSdkContentTests: false
         excludeOmniSharpTests: false
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Fedora36_Offline_Using_Previous
         architecture: x64
-        vmrBranch: ${{ parameters.vmrBranch }}
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -156,3 +177,7 @@ stages:
         excludeOmniSharpTests: false
         reuseBuildArtifactsFrom: Fedora36_Offline
         runOnline: false
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrUpdatePushed)
+          revision: $(vmrSourceSha)
