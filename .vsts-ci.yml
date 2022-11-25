@@ -208,15 +208,6 @@ stages:
     - template: /eng/build.yml
       parameters:
         agentOs: Linux
-        jobName: Build_Arm64_Release
-        buildConfiguration: Release
-        buildArchitecture: arm64
-        runtimeIdentifier: 'linux-arm64'
-        linuxPortable: true
-        runTests: false
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
         jobName: Build_Linux_musl_Release_arm
         container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-cross'
         buildConfiguration: Release
@@ -284,14 +275,6 @@ stages:
         additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
-        jobName: Build_LinuxPortable_Release_x64
-        buildConfiguration: Release
-        buildArchitecture: x64
-        linuxPortable: true
-        runTests: false
 
     # MacOS
 
@@ -339,34 +322,26 @@ stages:
         buildArchitecture: arm64
         runTests: false
 
-## Linux PGO Instrumentation builds
-- stage: Build_Linux_PGO
-  dependsOn: []
-  jobs:
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Linux
-      pgoInstrument: true
-      jobName: Build_LinuxPortable_Release_x64
-      buildConfiguration: Release
-      buildArchitecture: x64
-      linuxPortable: true
-      runTests: false
+    ## Linux PGO Instrumentation builds
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pgoInstrument: true
+        jobName: Build_LinuxPortable_Release_x64
+        buildConfiguration: Release
+        buildArchitecture: x64
+        linuxPortable: true
+        runTests: false
 
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Linux
-      pgoInstrument: true
-      jobName: Build_Release_arm64
-      buildConfiguration: Release
-      buildArchitecture: arm64
-      linuxPortable: true
-      runTests: false
-
-  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
-    parameters:
-      vmrBranch: ${{ parameters.vmrBranch }}
-      noPush: ${{ parameters.noPush }}
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pgoInstrument: true
+        jobName: Build_Release_arm64
+        buildConfiguration: Release
+        buildArchitecture: arm64
+        linuxPortable: true
+        runTests: false
 
 #   - template: /eng/common/templates/jobs/source-build.yml
 
@@ -391,6 +366,37 @@ stages:
 #           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
 #             name: NetCore1ESPool-Internal
 #             demands: ImageOverride -equals windows.vs2022.amd64
+
+- stage: Build_Linux
+  displayName: Build Linux Portable, Arm64
+  dependsOn: []
+  jobs:
+  - template: /eng/build.yml
+    parameters:
+      agentOs: Linux
+      jobName: Build_LinuxPortable_Release_x64
+      buildConfiguration: Release
+      buildArchitecture: x64
+      linuxPortable: true
+      runTests: false
+  - template: /eng/build.yml
+    parameters:
+      agentOs: Linux
+      jobName: Build_Arm64_Release
+      buildConfiguration: Release
+      buildArchitecture: arm64
+      runtimeIdentifier: 'linux-arm64'
+      linuxPortable: true
+      runTests: false
+
+- stage: Synchronize_VMR
+  displayName: Synchronize VMR
+  dependsOn: []
+  jobs:
+  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+    parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
+      noPush: ${{ parameters.noPush }}
 
 - template: /eng/pipelines/templates/stages/vmr-source-build.yml
   parameters:

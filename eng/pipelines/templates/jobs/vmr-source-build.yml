@@ -13,6 +13,10 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
+- name: vmrSourceSha
+  displayName: dotnet/dotnet commit to use
+  type: string
+
 - name: name
   type: string
 
@@ -73,8 +77,6 @@ jobs:
     dependsOn: ${{ parameters.previousSourceBuildArtifact }}
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
-  - name: vmrSourceSha
-    value: $[stageDependencies.Build.Synchronize_VMR.outputs['vmrRevision.sha']]
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: DotNetBot-GitHub
   - ${{ else }}:
