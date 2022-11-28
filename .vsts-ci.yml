@@ -15,7 +15,8 @@ resources:
   - repository: vmr
     type: github
     name: dotnet/dotnet
-    endpoint: dotnet
+    ${{ if ne(variables['System.TeamProject'], 'public') }}:
+      endpoint: dotnet
 
 parameters:
 - name: vmrBranch
