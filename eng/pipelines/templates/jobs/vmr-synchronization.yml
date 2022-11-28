@@ -58,7 +58,7 @@ jobs:
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
 
-        # Prepare the SHA to be uploaded as part of the build
+        # Export the SHA as an artifact to be reused by the official VMR build
         sha=`git rev-parse HEAD`
         mkdir -p "$(Build.ArtifactStagingDirectory)/VmrRevision"
         echo $sha > "$(Build.ArtifactStagingDirectory)/VmrRevision/VmrRevision.txt"

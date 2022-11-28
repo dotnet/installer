@@ -2,10 +2,10 @@
 ### Component Governance scan is also triggered over the VMR's non-repo sources
 
 parameters:
-# Contains information whether the VMR has been synchronized in the current pipeline
-# If it is, the object contains the commit hash
-# If it isn't, we synchronize the newest changes locally before the build
-# Example data: { "branch": "main", "revision": "a1b2c3d4e5f6" }
+# Contains information whether new changes have been synchronized into the VMR
+# When they have, we build this new commit
+# Otherwise (say in a PR), we synchronize the newest changes locally before the build
+# Example data: { branch: main, revision: a1b2c3d4e5f6 }
 - name: vmrUpdate
   type: object
 
@@ -23,8 +23,7 @@ steps:
   displayName: Clone dotnet/dotnet
   path: vmr
   clean: true
-  fetchDepth: 0
-  persistCredentials: true
+  fetchDepth: 0 # We need this so that we can check out the new commit
 
 - ${{ if ne(parameters.installerBuildResourceId, 'current') }}:
   - download: ${{ parameters.installerBuildResourceId }}

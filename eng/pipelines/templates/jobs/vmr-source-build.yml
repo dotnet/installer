@@ -60,7 +60,7 @@ jobs:
   pool: ${{ parameters.pool }}
   ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
-    # The bootstrap build will shortcut if the stage 1 build failed.
+    # The build shortcuts when stage 1 build fails and doesn't produce the SDK.
     condition: succeededOrFailed()
     dependsOn: Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}
   variables:
@@ -91,14 +91,13 @@ jobs:
       parameters:
         vmrPath: ${{ parameters.vmrPath }}
         vmrBranch: ${{ parameters.vmrUpdate.branch }}
-        targetRef: $(Build.SourceVersion)
+        targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
     - ${{ if parameters.vmrUpdate.isPushed }}:
       - checkout: self
         displayName: Clone dotnet/installer
         path: installer
-        fetchDepth: 1
 
     - task: Bash@3
       displayName: Setup Private Feeds Credentials
@@ -118,10 +117,10 @@ jobs:
     - download: current
       artifact: Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
       patterns: '*.tar.gz'
-      displayName: Download Previous Source Build Artifacts
+      displayName: Download Previous Build
 
     - task: CopyFiles@2
-      displayName: Copy Previous Source Build Artifacts
+      displayName: Copy Previous Build
       inputs:
         SourceFolder: $(Pipeline.Workspace)/Build_${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
         Contents: '*.tar.gz'
