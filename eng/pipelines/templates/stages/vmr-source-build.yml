@@ -49,7 +49,7 @@ stages:
     - name: vmrIsPushed
       value: true
     - name: vmrRevision
-      value: '[from installerBuildResourceId]'
+      value: ''
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}

@@ -94,6 +94,12 @@ jobs:
         targetRef: $(Build.SourceVersion)
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
+    - ${{ if parameters.vmrUpdate.isPushed }}:
+      - checkout: self
+        displayName: Clone dotnet/installer
+        path: installer
+        fetchDepth: 1
+
     - task: Bash@3
       displayName: Setup Private Feeds Credentials
       inputs:

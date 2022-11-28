@@ -21,9 +21,6 @@ steps:
 - checkout: self
   displayName: Clone dotnet/installer
   path: installer
-  clean: true
-  fetchDepth: 0
-  persistCredentials: true
 
 - script: |
     source ./eng/common/tools.sh
