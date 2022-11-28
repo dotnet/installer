@@ -2,6 +2,12 @@
 ### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
 
 parameters:
+  # Resource id of the installer build to retrieve source/product tarball's from
+  installerBuildResourceId: current
+
+  # Branch of the VMR to use (to push to for internal builds)
+  vmrBranch: $(Build.SourceBranchName)
+
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
   centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
@@ -24,9 +30,6 @@ parameters:
   poolPublicAmd64:
     name: NetCore-Public-XL
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
-
-  # Branch of the VMR to use (to push to for internal builds)
-  vmrBranch: $(Build.SourceBranchName)
 
 stages:
 - stage: VMR_Source_Build
@@ -61,127 +64,134 @@ stages:
   - template: ../jobs/vmr-source-build.yml
     parameters:
       name: CentOSStream8_Online
-      architecture: x64
-      pool:
-        name: ${{ variables.defaultPoolName }}
-        demands: ${{ variables.defaultPoolDemands }}
-      bootstrapPrep: false
-      container: ${{ parameters.centOSStream8Container }}
-      enablePoison: false
-      excludeSdkContentTests: true
-      excludeOmniSharpTests: true
-      runOnline: true
+      installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       vmrUpdate:
         branch: ${{ parameters.vmrBranch }}
         isPushed: $(vmrIsPushed)
         revision: $(vmrRevision)
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.centOSStream8Container }}
+      bootstrapPrep: false            # 🚫
+      enablePoison: false             # 🚫
+      excludeSdkContentTests: true    # ✅
+      excludeOmniSharpTests: true     # ✅
+      runOnline: true                 # ✅
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream8_Offline
-        architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemands }}
-        bootstrapPrep: false
-        container: ${{ parameters.centOSStream8Container }}
-        enablePoison: false
-        excludeSdkContentTests: false
-        excludeOmniSharpTests: true
-        runOnline: false
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
           isPushed: $(vmrIsPushed)
           revision: $(vmrRevision)
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream8Container }}
+        bootstrapPrep: false          # 🚫
+        enablePoison: false           # 🚫
+        excludeSdkContentTests: false # 🚫
+        excludeOmniSharpTests: true   # ✅
+        runOnline: false              # 🚫
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: CentOSStream9_Offline
-        architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemands }}
-        bootstrapPrep: false
-        container: ${{ parameters.centOSStream9Container }}
-        enablePoison: false
-        excludeSdkContentTests: false
-        excludeOmniSharpTests: false
-        runOnline: false
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
           isPushed: $(vmrIsPushed)
           revision: $(vmrRevision)
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream9Container }}
+        bootstrapPrep: false          # 🚫
+        enablePoison: false           # 🚫
+        excludeSdkContentTests: false # 🚫
+        excludeOmniSharpTests: false  # 🚫
+        runOnline: false              # 🚫
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Fedora36_Offline
-        architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemands }}
-        bootstrapPrep: false
-        container: ${{ parameters.fedora36Container }}
-        enablePoison: true
-        excludeSdkContentTests: false
-        excludeOmniSharpTests: false
-        runOnline: false
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
           isPushed: $(vmrIsPushed)
           revision: $(vmrRevision)
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.fedora36Container }}
+        bootstrapPrep: false          # 🚫
+        enablePoison: true            # ✅
+        excludeSdkContentTests: false # 🚫
+        excludeOmniSharpTests: false  # 🚫
+        runOnline: false              # 🚫
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Ubuntu2004_Offline
-        architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemands }}
-        bootstrapPrep: false
-        container: ${{ parameters.ubuntu2004Container }}
-        enablePoison: false
-        excludeSdkContentTests: false
-        excludeOmniSharpTests: false
-        runOnline: false
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
           isPushed: $(vmrIsPushed)
           revision: $(vmrRevision)
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.ubuntu2004Container }}
+        bootstrapPrep: false          # 🚫
+        enablePoison: false           # 🚫
+        excludeSdkContentTests: false # 🚫
+        excludeOmniSharpTests: false  # 🚫
+        runOnline: false              # 🚫
 
   - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Debian11_Offline
-        architecture: arm64
-        pool: ${{ parameters.poolInternalArm64 }}
-        bootstrapPrep: true
-        container: ${{ parameters.debian11Arm64Container }}
-        enablePoison: false
-        excludeSdkContentTests: false
-        excludeOmniSharpTests: false
-        runOnline: false
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
           isPushed: $(vmrIsPushed)
           revision: $(vmrRevision)
+        architecture: arm64
+        pool: ${{ parameters.poolInternalArm64 }}
+        container: ${{ parameters.debian11Arm64Container }}
+        bootstrapPrep: true           # ✅
+        enablePoison: false           # 🚫
+        excludeSdkContentTests: false # 🚫
+        excludeOmniSharpTests: false  # 🚫
+        runOnline: false              # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
       parameters:
         name: Fedora36_Offline_Using_Previous
+        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        vmrUpdate:
+          branch: ${{ parameters.vmrBranch }}
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
         container: ${{ parameters.fedora36Container }}
-        bootstrapPrep: false
-        enablePoison: false
-        excludeSdkContentTests: true
-        excludeOmniSharpTests: false
+        bootstrapPrep: false          # 🚫
+        enablePoison: false           # 🚫
+        excludeSdkContentTests: true  # ✅
+        excludeOmniSharpTests: false  # 🚫
+        runOnline: false              # 🚫
         reuseBuildArtifactsFrom: Fedora36_Offline
-        runOnline: false
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
