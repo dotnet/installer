@@ -373,19 +373,20 @@ stages:
       linuxPortable: true
       runTests: false
 
-- stage: Synchronize_VMR
-  displayName: Synchronize VMR
-  dependsOn: []
-  jobs:
-  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+- ${{ if or(ne(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+  - stage: Synchronize_VMR
+    displayName: Synchronize VMR
+    dependsOn: []
+    jobs:
+    - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+      parameters:
+        vmrBranch: ${{ parameters.vmrBranch }}
+        noPush: ${{ parameters.noPush }}
+
+  - template: /eng/pipelines/templates/stages/vmr-source-build.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
-      noPush: ${{ parameters.noPush }}
-
-- template: /eng/pipelines/templates/stages/vmr-source-build.yml
-  parameters:
-    vmrBranch: ${{ parameters.vmrBranch }}
-    installerBuildResourceId: current
+      installerBuildResourceId: current
 
 - ${{ if and(not(parameters.noPublish), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish

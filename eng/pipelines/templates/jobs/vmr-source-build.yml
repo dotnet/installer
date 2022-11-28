@@ -81,7 +81,8 @@ jobs:
   steps:
   - template: ../steps/vmr-prepare.yml
     parameters:
-      vmrBranch: ${{ parameters.vmrUpdate.branch }}
+      vmrUpdate: ${{ parameters.vmrUpdate }}
+      installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       skipComponentGovernanceDetection: true
 
   # Synchronize new content in the VMR if it hasn't been pushed already
@@ -91,13 +92,6 @@ jobs:
         vmrPath: ${{ parameters.vmrPath }}
         vmrBranch: ${{ parameters.vmrUpdate.branch }}
         targetRef: $(Build.SourceVersion)
-  # If it has, checkout the commit that was created earlier
-  - ${{ else }}:
-    - script: |
-        set -x
-        git checkout ${{ parameters.vmrUpdate.revision }}
-      displayName: Checkout dotnet/dotnet revision
-      workingDirectory: ${{ parameters.vmrPath }}
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
     - task: Bash@3
@@ -112,7 +106,7 @@ jobs:
     - download: ${{ parameters.installerBuildResourceId }}
       artifact: BlobArtifacts
       patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
-      displayName: Download MSFT sdk Tarball
+      displayName: Download MSFT SDK
 
   - ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     - download: current

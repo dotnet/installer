@@ -2,10 +2,17 @@
 ### Component Governance scan is also triggered over the VMR's non-repo sources
 
 parameters:
-- name: vmrBranch
-  displayName: dotnet/dotnet branch to use
+# Contains information whether the VMR has been synchronized in the current pipeline
+# If it is, the object contains the commit hash
+# If it isn't, we synchronize the newest changes locally before the build
+# Example data: { "branch": "main", "isPushed": true, "revision": "a1b2c3d4e5f6" }
+- name: vmrUpdate
+  type: object
+
+- name: installerBuildResourceId
+  displayName: Installer build to get the commit hash to check out from
   type: string
-  default: $(Build.SourceBranchName)
+  default: current
 
 - name: skipComponentGovernanceDetection
   type: boolean
@@ -13,15 +20,28 @@ parameters:
 
 steps:
 - checkout: vmr
-  clean: true
   displayName: Clone dotnet/dotnet
-  fetchDepth: 0
   path: vmr
+  clean: true
+  fetchDepth: 0
+  persistCredentials: true
 
-- script: |
-    git switch -c ${{ parameters.vmrBranch }}
-  displayName: Checkout ${{ parameters.vmrBranch }}
-  workingDirectory: $(Agent.BuildDirectory)/vmr
+- ${{ if ne(parameters.installerBuildResourceId, 'current') }}:
+  - download: ${{ parameters.installerBuildResourceId }}
+    artifact: VmrRevision
+    displayName: Download VmrRevision
+
+  - script: |
+      set -ex
+      sha=`head -n 1 $(Pipeline.Workspace)/${{ parameters.installerBuildResourceId }}/VmrRevision/VmrRevision.txt`
+      git checkout $sha
+    displayName: Check out dotnet/dotnet commit
+    workingDirectory: $(Agent.BuildDirectory)/vmr
+- ${{ else }}:
+  - script: |
+      git checkout ${{ parameters.vmrUpdate.revision }}
+    displayName: Check out ${{ parameters.vmrUpdate.revision }}
+    workingDirectory: $(Agent.BuildDirectory)/vmr
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
 # Currently, we ignore dirs of individual repos - they have been scanned before

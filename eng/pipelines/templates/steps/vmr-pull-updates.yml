@@ -19,10 +19,11 @@ parameters:
 
 steps:
 - checkout: self
-  clean: true
   displayName: Clone dotnet/installer
-  fetchDepth: 0
   path: installer
+  clean: true
+  fetchDepth: 0
+  persistCredentials: true
 
 - script: |
     source ./eng/common/tools.sh

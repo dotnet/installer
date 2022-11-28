@@ -40,10 +40,16 @@ stages:
     - Synchronize_VMR
 
   variables:
-  - name: vmrIsPushed
-    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.pushed']]
-  - name: vmrRevision
-    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
+  - ${{ if eq(parameters.installerBuildResourceId, 'current') }}:
+    - name: vmrIsPushed
+      value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.pushed']]
+    - name: vmrRevision
+      value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
+  - ${{ else }}:
+    - name: vmrIsPushed
+      value: true
+    - name: vmrRevision
+      value: '[from installerBuildResourceId]'
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}
