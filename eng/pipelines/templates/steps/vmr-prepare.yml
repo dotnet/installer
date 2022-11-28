@@ -5,7 +5,7 @@ parameters:
 # Contains information whether the VMR has been synchronized in the current pipeline
 # If it is, the object contains the commit hash
 # If it isn't, we synchronize the newest changes locally before the build
-# Example data: { "branch": "main", "isPushed": true, "revision": "a1b2c3d4e5f6" }
+# Example data: { "branch": "main", "revision": "a1b2c3d4e5f6" }
 - name: vmrUpdate
   type: object
 
@@ -38,9 +38,15 @@ steps:
     displayName: Check out dotnet/dotnet commit
     workingDirectory: $(Agent.BuildDirectory)/vmr
 - ${{ else }}:
+  - ${{ if ne(parameters.vmrUpdate.revision, '') }}:
+    - script: |
+        git checkout ${{ parameters.vmrUpdate.revision }}
+      displayName: Check out ${{ parameters.vmrUpdate.revision }}
+      workingDirectory: $(Agent.BuildDirectory)/vmr
+
   - script: |
-      git checkout ${{ parameters.vmrUpdate.revision }}
-    displayName: Check out ${{ parameters.vmrUpdate.revision }}
+      git switch -c ${{ parameters.vmrUpdate.branch }}
+    displayName: Checkout ${{ parameters.vmrUpdate.branch }}
     workingDirectory: $(Agent.BuildDirectory)/vmr
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?

@@ -38,7 +38,8 @@ jobs:
   steps:
   - template: ../steps/vmr-prepare.yml
     parameters:
-      vmrBranch: ${{ parameters.vmrBranch }}
+      vmrUpdate:
+        branch: ${{ parameters.vmrBranch }}
 
   - template: ../steps/vmr-pull-updates.yml
     parameters:
