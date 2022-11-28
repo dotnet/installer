@@ -34,9 +34,10 @@ parameters:
 stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
-  dependsOn:
-  - Build_Linux
-  - Synchronize_VMR
+  ${{ if eq(parameters.installerBuildResourceId, 'current') }}:
+    dependsOn:
+    - Build_Linux
+    - Synchronize_VMR
 
   variables:
   - name: vmrIsPushed
