@@ -17,6 +17,8 @@ resources:
     name: dotnet/dotnet
     ${{ if ne(variables['System.TeamProject'], 'public') }}:
       endpoint: dotnet
+    ${{ else }}:
+      endpoint: public
 
 parameters:
 - name: vmrBranch
