@@ -385,6 +385,7 @@ stages:
 - template: /eng/pipelines/templates/stages/vmr-source-build.yml
   parameters:
     vmrBranch: ${{ parameters.vmrBranch }}
+    installerBuildResourceId: current
 
 - ${{ if and(not(parameters.noPublish), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish

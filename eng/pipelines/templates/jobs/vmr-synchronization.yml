@@ -57,11 +57,20 @@ jobs:
         git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
         git push dotnet ${{ parameters.vmrBranch }}
 
+        # Prepare the SHA to be uploaded as part of the build
+        sha=`git rev-parse HEAD`
+        mkdir -p "$(Build.ArtifactStagingDirectory)/VmrRevision"
+        echo $sha > "$(Build.ArtifactStagingDirectory)/VmrRevision/VmrRevision.txt"
+
         echo "##vso[task.setvariable variable=sha;isOutput=true;isreadonly=true]$sha"
         echo "##vso[task.setvariable variable=pushed;isOutput=true;isreadonly=true]true"
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
       name: vmrPush
+
+    - publish: $(Build.ArtifactStagingDirectory)/VmrRevision
+      artifact: VmrRevision
+      displayName: Publish dotnet/dotnet revision
 
   - ${{ else }}:
     - script: |

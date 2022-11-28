@@ -1,0 +1,35 @@
+trigger: none
+pr: none
+resources:
+  pipelines:
+  - pipeline: installer-build-resource
+    source: dotnet-installer-official-ci
+    trigger:
+      branches:
+        include:
+        - main
+        - release/*
+        - internal/release/*
+        exclude:
+        - release/7*
+        - release/6*
+        - internal/release/6*
+        - internal/release/7*
+      stages:
+      - Build
+      - VMR_Synchronization
+
+  repositories:
+  - repository: vmr
+    type: github
+    name: dotnet/dotnet
+    endpoint: dotnet
+
+  - repository: installer
+    type: git
+    name: dotnet-installer
+
+stages:
+- template: /eng/pipelines/templates/stages/vmr-source-build.yml
+  parameters:
+    installerBuildResourceId: installer-build-resource
