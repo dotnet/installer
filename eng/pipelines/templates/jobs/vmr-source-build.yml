@@ -7,6 +7,10 @@ parameters:
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
+# Contains information whether the VMR has been synchronized in the current pipeline
+# If it is, the object contains the commit hash
+# If it isn't, we synchronize the newest changes locally before the build
+# Example data: { "branch": "main", "isPushed": true, "revision": "a1b2c3d4e5f6" }
 - name: vmrUpdate
   type: object
 

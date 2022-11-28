@@ -58,13 +58,13 @@ jobs:
         git push dotnet ${{ parameters.vmrBranch }}
 
         echo "##vso[task.setvariable variable=sha;isOutput=true;isreadonly=true]$sha"
-        echo "##vso[task.setvariable variable=vmrUpdatePushed;isOutput=true;isreadonly=true]true"
+        echo "##vso[task.setvariable variable=pushed;isOutput=true;isreadonly=true]true"
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
       name: vmrPush
 
   - ${{ else }}:
     - script: |
-        echo "##vso[task.setvariable variable=vmrUpdatePushed;isOutput=true;isreadonly=true]false"
+        echo "##vso[task.setvariable variable=pushed;isOutput=true;isreadonly=true]false"
       displayName: Skip push to dotnet/dotnet
       name: vmrPush

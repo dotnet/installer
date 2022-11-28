@@ -25,13 +25,21 @@ parameters:
     name: NetCore-Public-XL
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
 
+  # Branch of the VMR to use (to push to for internal builds)
+  vmrBranch: $(Build.SourceBranchName)
+
 stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
   dependsOn:
   - Build_Linux
   - Synchronize_VMR
+
   variables:
+  - name: vmrIsPushed
+    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.pushed']]
+  - name: vmrRevision
+    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}
@@ -48,10 +56,6 @@ stages:
         value: ${{ parameters.poolInternalAmd64.name }}
       - name: defaultPoolDemands
         value: ${{ parameters.poolInternalAmd64.demands }}
-  - name: vmrUpdatePushed
-    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.vmrUpdatePushed']]
-  - name: vmrSourceSha
-    value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
 
   jobs:
   - template: ../jobs/vmr-source-build.yml
@@ -69,8 +73,8 @@ stages:
       runOnline: true
       vmrUpdate:
         branch: ${{ parameters.vmrBranch }}
-        isPushed: $(vmrUpdatePushed)
-        revision: $(vmrSourceSha)
+        isPushed: $(vmrIsPushed)
+        revision: $(vmrRevision)
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
@@ -88,8 +92,8 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
@@ -106,8 +110,8 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
@@ -124,8 +128,8 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
 
     - template: ../jobs/vmr-source-build.yml
       parameters:
@@ -142,8 +146,8 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
 
   - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - template: ../jobs/vmr-source-build.yml
@@ -159,8 +163,8 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-source-build.yml
@@ -179,5 +183,5 @@ stages:
         runOnline: false
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrUpdatePushed)
-          revision: $(vmrSourceSha)
+          isPushed: $(vmrIsPushed)
+          revision: $(vmrRevision)
