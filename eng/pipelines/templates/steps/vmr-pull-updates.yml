@@ -47,7 +47,6 @@ steps:
     $(Agent.BuildDirectory)/installer/.dotnet/dotnet darc vmr update
     --vmr ${{ parameters.vmrPath }}
     --tmp $(Agent.TempDirectory)
-    --azdev-pat $(System.AccessToken)
     --github-pat $(BotAccount-dotnet-bot-repo-PAT)
     --recursive
     --verbose
