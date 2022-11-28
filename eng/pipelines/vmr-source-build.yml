@@ -28,6 +28,7 @@ resources:
   - repository: installer
     type: git
     name: dotnet-installer
+    ref: $[ resources.pipeline.installer-build-resource.sourceCommit ]
 
 stages:
 - template: /eng/pipelines/templates/stages/vmr-source-build.yml
