@@ -26,7 +26,7 @@ Looking for .NET Framework downloads?
 Want to contribute or find out more about the .NET project?
 ----------------------------------------
 
-This repo is for the installers. Most of the implementation is in other repos, such as the [dotnet/runtime repo](https://github.com/dotnet/runtime) or the [dotnet/aspnetcore repo](https://github.com/dotnet/aspnetcore). We welcome you to join us there!
+This repo is for the installers. Most of the implementation is in other repos, such as the [dotnet/runtime repo](https://github.com/dotnet/runtime) or the [dotnet/aspnetcore repo](https://github.com/dotnet/aspnetcore) and [many others](https://github.com/dotnet/core/blob/main/Documentation/core-repos.md). We welcome you to join us there!
 
 Found an issue?
 ---------------
