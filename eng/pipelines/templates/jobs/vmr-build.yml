@@ -142,7 +142,7 @@ jobs:
         eval tar -ozxf "$previousSdkPath" -C "${{ parameters.vmrPath }}/.dotnet"
         eval rm -f "$previousSdkPath"
       fi
-    displayName: Prep the build
+    displayName: Prep the Build
 
   - script: |
       set -x
@@ -161,7 +161,7 @@ jobs:
       fi
 
       docker run --rm -v ${{ parameters.vmrPath }}:/vmr -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) ${customBuildArgs}
-    displayName: $(Agent.JobName)
+    displayName: Build
 
   - script: |
       set -x
