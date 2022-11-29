@@ -68,7 +68,7 @@ stages:
         value: ${{ parameters.poolInternalAmd64.demands }}
 
   jobs:
-  - template: ../jobs/vmr-source-build.yml
+  - template: ../jobs/vmr-build.yml
     parameters:
       name: CentOSStream8_Online
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -88,7 +88,7 @@ stages:
       runOnline: true                 # ✅
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: CentOSStream8_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -107,7 +107,7 @@ stages:
         excludeOmniSharpTests: true   # ✅
         runOnline: false              # 🚫
 
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: CentOSStream9_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -126,7 +126,7 @@ stages:
         excludeOmniSharpTests: false  # 🚫
         runOnline: false              # 🚫
 
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: Fedora36_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -145,7 +145,7 @@ stages:
         excludeOmniSharpTests: false  # 🚫
         runOnline: false              # 🚫
 
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: Ubuntu2004_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -165,7 +165,7 @@ stages:
         runOnline: false              # 🚫
 
   - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: Debian11_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
@@ -183,7 +183,7 @@ stages:
         runOnline: false              # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-    - template: ../jobs/vmr-source-build.yml
+    - template: ../jobs/vmr-build.yml
       parameters:
         name: Fedora36_Offline_Using_Previous
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}

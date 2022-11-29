@@ -383,7 +383,7 @@ stages:
         vmrBranch: ${{ parameters.vmrBranch }}
         noPush: ${{ parameters.noPush }}
 
-  - template: /eng/pipelines/templates/stages/vmr-source-build.yml
+  - template: /eng/pipelines/templates/stages/vmr-build.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
       installerBuildResourceId: current
