@@ -164,7 +164,6 @@ stages:
         excludeOmniSharpTests: false  # 🚫
         runOnline: false              # 🚫
 
-  - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - template: ../jobs/vmr-build.yml
       parameters:
         name: Debian11_Offline
@@ -182,7 +181,6 @@ stages:
         excludeOmniSharpTests: false  # 🚫
         runOnline: false              # 🚫
 
-  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
       parameters:
         name: Fedora36_Offline_Using_Previous
