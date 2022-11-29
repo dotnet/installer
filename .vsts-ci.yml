@@ -28,11 +28,6 @@ parameters:
   type: boolean
   default: false
 
-- name: noPublish
-  displayName: Don't publish build assets
-  type: boolean
-  default: false
-
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -389,7 +384,7 @@ stages:
       vmrBranch: ${{ parameters.vmrBranch }}
       installerBuildResourceId: current
 
-- ${{ if and(not(parameters.noPublish), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish
     dependsOn:
     - Build
