@@ -21,7 +21,7 @@ The links below are for preview versions of .NET tooling. Prefer to use released
 Looking for .NET Framework downloads?
 ----------------------------------------
 
-.NET Framework is the product from which the .NET Core project originated. .NET Core (mostly just called ".NET" here) adds many features and improvements and supports many more platforms than .NET Framework. .NET Framework remains fully supported and and you can find the downloads on the [.NET website](https://dotnet.microsoft.com/download/dotnet-framework). For new projects, we recommend you use .NET Core.
+.NET Framework is the product from which the .NET Core project originated. .NET Core (mostly just called ".NET" here) adds many features and improvements and supports many more platforms than .NET Framework. .NET Framework remains fully supported and you can find the downloads on the [.NET website](https://dotnet.microsoft.com/download/dotnet-framework). For new projects, we recommend you use .NET Core.
 
 Want to contribute or find out more about the .NET project?
 ----------------------------------------
@@ -144,7 +144,7 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 </configuration>
 ```
 
-Please do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table. Daily servicing builds aren't shown here because they may contain upcoming security fixes. All public servicing builds can be downloaded at http://aka.ms/dotnet-download.
+Do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table. Daily servicing builds aren't shown here because they may contain upcoming security fixes. All public servicing builds can be downloaded at http://aka.ms/dotnet-download.
 
 ### Table
 *Note* the 7.0.100 build will be finished internally. Below is the last public version available from that branch but is not fully updated with the final runtime.
