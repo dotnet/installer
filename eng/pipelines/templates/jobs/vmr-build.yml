@@ -7,16 +7,14 @@ parameters:
   type: string
   default: $(Agent.BuildDirectory)/vmr
 
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+  default: $(Build.SourceBranchName)
+
 # Resource id of the installer build to retrieve MSFT SDK from
 - name: installerBuildResourceId
   type: string
-
-# Contains information whether the VMR has been synchronized in the current pipeline
-# If it is, the object contains the commit hash
-# If it isn't, we synchronize the newest changes locally before the build
-# Example data: { "branch": "main", "isPushed": true, "revision": "a1b2c3d4e5f6" }
-- name: vmrUpdate
-  type: object
 
 - name: buildName
   type: string
@@ -81,16 +79,16 @@ jobs:
   steps:
   - template: ../steps/vmr-prepare.yml
     parameters:
-      vmrUpdate: ${{ parameters.vmrUpdate }}
+      vmrBranch: ${{ parameters.vmrBranch }}
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       skipComponentGovernanceDetection: true
 
-  # Synchronize new content in the VMR if it hasn't been pushed already
-  - ${{ if not(parameters.vmrUpdate.isPushed) }}:
+  # Synchronize new content in the VMR during PRs (we expect this to come
+  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../steps/vmr-pull-updates.yml
       parameters:
         vmrPath: ${{ parameters.vmrPath }}
-        vmrBranch: ${{ parameters.vmrUpdate.branch }}
+        vmrBranch: ${{ parameters.vmrBranch }}
         targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:

@@ -373,7 +373,7 @@ stages:
       linuxPortable: true
       runTests: false
 
-- ${{ if or(ne(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+- ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Synchronize_VMR
     displayName: Synchronize VMR
     dependsOn: []
@@ -383,6 +383,7 @@ stages:
         vmrBranch: ${{ parameters.vmrBranch }}
         noPush: ${{ parameters.noPush }}
 
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - template: /eng/pipelines/templates/stages/vmr-build.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}

@@ -34,22 +34,8 @@ parameters:
 stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
-  ${{ if eq(parameters.installerBuildResourceId, 'current') }}:
-    dependsOn:
-    - Build_Linux
-    - Synchronize_VMR
-
+  dependsOn: []
   variables:
-  - ${{ if eq(parameters.installerBuildResourceId, 'current') }}:
-    - name: vmrIsPushed
-      value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.pushed']]
-    - name: vmrRevision
-      value: $[stageDependencies.Synchronize_VMR.Synchronize_VMR.outputs['vmrPush.sha']]
-  - ${{ else }}:
-    - name: vmrIsPushed
-      value: true
-    - name: vmrRevision
-      value: ''
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
       value: ${{ parameters.poolPublicAmd64.name }}
@@ -72,10 +58,7 @@ stages:
     parameters:
       buildName: CentOSStream8_Online
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-      vmrUpdate:
-        branch: ${{ parameters.vmrBranch }}
-        isPushed: $(vmrIsPushed)
-        revision: $(vmrRevision)
+      vmrBranch: ${{ parameters.vmrBranch }}
       architecture: x64
       pool:
         name: ${{ variables.defaultPoolName }}
@@ -92,10 +75,7 @@ stages:
       parameters:
         buildName: CentOSStream8_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
@@ -111,10 +91,7 @@ stages:
       parameters:
         buildName: CentOSStream9_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
@@ -130,10 +107,7 @@ stages:
       parameters:
         buildName: Fedora36_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
@@ -149,10 +123,7 @@ stages:
       parameters:
         buildName: Ubuntu2004_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
@@ -168,10 +139,7 @@ stages:
       parameters:
         buildName: Debian11_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: arm64
         pool: ${{ parameters.poolInternalArm64 }}
         container: ${{ parameters.debian11Arm64Container }}
@@ -185,10 +153,7 @@ stages:
       parameters:
         buildName: Fedora36_Offline_Using_Previous
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
-        vmrUpdate:
-          branch: ${{ parameters.vmrBranch }}
-          isPushed: $(vmrIsPushed)
-          revision: $(vmrRevision)
+        vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}

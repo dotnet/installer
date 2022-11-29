@@ -2,12 +2,10 @@
 ### Component Governance scan is also triggered over the VMR's non-repo sources
 
 parameters:
-# Contains information whether new changes have been synchronized into the VMR
-# When they have, we build this new commit
-# Otherwise (say in a PR), we synchronize the newest changes locally before the build
-# Example data: { branch: main, revision: a1b2c3d4e5f6 }
-- name: vmrUpdate
-  type: object
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+  default: $(Build.SourceBranchName)
 
 - name: installerBuildResourceId
   displayName: Installer build to get the commit hash to check out from
@@ -37,15 +35,9 @@ steps:
     displayName: Check out dotnet/dotnet commit
     workingDirectory: $(Agent.BuildDirectory)/vmr
 - ${{ else }}:
-  - ${{ if ne(parameters.vmrUpdate.revision, '') }}:
-    - script: |
-        git checkout ${{ parameters.vmrUpdate.revision }}
-      displayName: Check out ${{ parameters.vmrUpdate.revision }}
-      workingDirectory: $(Agent.BuildDirectory)/vmr
-
   - script: |
-      git switch -c ${{ parameters.vmrUpdate.branch }}
-    displayName: Checkout ${{ parameters.vmrUpdate.branch }}
+      git switch -c ${{ parameters.vmrBranch }}
+    displayName: Checkout ${{ parameters.vmrBranch }}
     workingDirectory: $(Agent.BuildDirectory)/vmr
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
