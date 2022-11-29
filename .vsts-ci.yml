@@ -23,11 +23,6 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
-- name: noPush
-  displayName: Don't push changes to dotnet/dotnet
-  type: boolean
-  default: false
-
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -376,7 +371,6 @@ stages:
     - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
       parameters:
         vmrBranch: ${{ parameters.vmrBranch }}
-        noPush: ${{ parameters.noPush }}
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - template: /eng/pipelines/templates/stages/vmr-build.yml
