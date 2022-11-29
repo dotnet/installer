@@ -94,16 +94,11 @@ jobs:
         targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
 
   - ${{ if ne(variables['System.TeamProject'], 'public') }}:
-    - ${{ if parameters.vmrUpdate.isPushed }}:
-      - checkout: self
-        displayName: Clone dotnet/installer
-        path: installer
-
     - task: Bash@3
       displayName: Setup Private Feeds Credentials
       inputs:
-        filePath: $(Agent.BuildDirectory)/installer/eng/common/SetupNugetSources.sh
-        arguments: $(Agent.BuildDirectory)/installer/NuGet.config $Token
+        filePath: ${{ parameters.vmrPath }}/src/installer/eng/common/SetupNugetSources.sh
+        arguments: ${{ parameters.vmrPath }}/src/installer/NuGet.config $Token
       env:
         Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
@@ -168,7 +163,7 @@ jobs:
 
       # Use installer repo's NuGet.config during online testing to utilize internal feeds
       rm -f ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
-      cp $(Agent.BuildDirectory)/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
+      cp ${{ parameters.vmrPath }}/src/installer/NuGet.config ${{ parameters.vmrPath }}/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config
 
       dockerVolumeArgs="-v ${{ parameters.vmrPath }}:/vmr"
       dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
