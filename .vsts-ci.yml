@@ -203,6 +203,15 @@ stages:
     - template: /eng/build.yml
       parameters:
         agentOs: Linux
+        jobName: Build_Arm64_Release
+        buildConfiguration: Release
+        buildArchitecture: arm64
+        runtimeIdentifier: 'linux-arm64'
+        linuxPortable: true
+        runTests: false
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
         jobName: Build_Linux_musl_Release_arm
         container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-cross'
         buildConfiguration: Release
@@ -270,6 +279,15 @@ stages:
         additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
         linuxPortable: true
         runTests: false
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pgoInstrument: true
+        jobName: Build_LinuxPortable_Release_x64
+        buildConfiguration: Release
+        buildArchitecture: x64
+        linuxPortable: true
+        runTests: false
 
     # MacOS
 
@@ -317,51 +335,7 @@ stages:
         buildArchitecture: arm64
         runTests: false
 
-    ## Linux PGO Instrumentation builds
-
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
-        pgoInstrument: true
-        jobName: Build_LinuxPortable_Release_x64
-        buildConfiguration: Release
-        buildArchitecture: x64
-        linuxPortable: true
-        runTests: false
-
-    - template: /eng/build.yml
-      parameters:
-        agentOs: Linux
-        pgoInstrument: true
-        jobName: Build_Release_arm64
-        buildConfiguration: Release
-        buildArchitecture: arm64
-        linuxPortable: true
-        runTests: false
-
   - template: /eng/common/templates/jobs/source-build.yml
-
-- stage: Build_Linux
-  displayName: Build Linux (for Source-Build)
-  dependsOn: []
-  jobs:
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Linux
-      jobName: Build_LinuxPortable_Release_x64
-      buildConfiguration: Release
-      buildArchitecture: x64
-      linuxPortable: true
-      runTests: false
-  - template: /eng/build.yml
-    parameters:
-      agentOs: Linux
-      jobName: Build_Arm64_Release
-      buildConfiguration: Release
-      buildArchitecture: arm64
-      runtimeIdentifier: 'linux-arm64'
-      linuxPortable: true
-      runTests: false
 
 - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Synchronize_VMR
@@ -382,7 +356,6 @@ stages:
   - stage: Publish
     dependsOn:
     - Build
-    - Build_Linux
     jobs:
     - template: /eng/common/templates/job/publish-build-assets.yml
       parameters:
