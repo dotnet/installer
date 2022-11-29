@@ -70,7 +70,7 @@ stages:
   jobs:
   - template: ../jobs/vmr-build.yml
     parameters:
-      name: CentOSStream8_Online
+      buildName: CentOSStream8_Online
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       vmrUpdate:
         branch: ${{ parameters.vmrBranch }}
@@ -90,7 +90,7 @@ stages:
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: CentOSStream8_Offline
+        buildName: CentOSStream8_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
@@ -109,7 +109,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: CentOSStream9_Offline
+        buildName: CentOSStream9_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
@@ -128,7 +128,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: Fedora36_Offline
+        buildName: Fedora36_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
@@ -147,7 +147,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: Ubuntu2004_Offline
+        buildName: Ubuntu2004_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
@@ -166,7 +166,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: Debian11_Offline
+        buildName: Debian11_Offline
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
@@ -183,7 +183,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        name: Fedora36_Offline_Using_Previous
+        buildName: Fedora36_Offline_Using_Previous
         installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
         vmrUpdate:
           branch: ${{ parameters.vmrBranch }}
