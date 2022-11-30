@@ -1,10 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Premek Vysoky <premek.vysoky@microsoft.com>
-Date: Wed, 30 Nov 2022 11:10:15 +0100
+Date: Wed, 30 Nov 2022 11:07:41 +0100
 Subject: [PATCH] Remove non-compliant feeds from NuGet config
 
 ---
- NuGet.Config                      | 14 +++++++-------
+ NuGet.Config | 14 +++++++-------
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/NuGet.Config b/NuGet.Config
@@ -52,3 +52,6 @@ index 0a4c87ea06..7b913598f6 100644
      <packageSource key = "myget-legacy@Local">
        <package pattern="microsoft.*" />
      </packageSource>
+-- 
+2.30.2.windows.1
+
