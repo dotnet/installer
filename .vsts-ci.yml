@@ -282,7 +282,6 @@ stages:
     - template: /eng/build.yml
       parameters:
         agentOs: Linux
-        pgoInstrument: true
         jobName: Build_LinuxPortable_Release_x64
         buildConfiguration: Release
         buildArchitecture: x64
@@ -333,6 +332,28 @@ stages:
         jobName: Build_Release_arm64
         buildConfiguration: Release
         buildArchitecture: arm64
+        runTests: false
+
+    ## Linux PGO Instrumentation builds
+
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pgoInstrument: true
+        jobName: Build_LinuxPortable_Release_x64
+        buildConfiguration: Release
+        buildArchitecture: x64
+        linuxPortable: true
+        runTests: false
+
+    - template: /eng/build.yml
+      parameters:
+        agentOs: Linux
+        pgoInstrument: true
+        jobName: Build_Release_arm64
+        buildConfiguration: Release
+        buildArchitecture: arm64
+        linuxPortable: true
         runTests: false
 
   - template: /eng/common/templates/jobs/source-build.yml
