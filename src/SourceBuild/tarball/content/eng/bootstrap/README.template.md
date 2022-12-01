@@ -111,7 +111,7 @@ In case you don't want to / cannot prepare your environment per the requirements
 
     ```bash
     mkdir -p $HOME/dotnet
-    tar zxf artifacts/[your-RID]/Release/dotnet-sdk-8.0.100-[your-RID].tar.gz -C $HOME/dotnet
+    tar zxf artifacts/[your-arch]/Release/dotnet-sdk-8.0.100-[your-RID].tar.gz -C $HOME/dotnet
     ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
     ```
     
@@ -127,11 +127,11 @@ You can also build the repository using a Docker image which has the required pr
 The example below creates a Docker volume named `vmr` and clones and builds the VMR there.
 
 ```sh
-docker run --rm -itv vmr:/vmr -w /vmr mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+docker run --rm -it -v vmr:/vmr -w /vmr mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
 git clone https://github.com/dotnet/dotnet .
 ./prep.sh && ./build.sh --online
 mkdir -p $HOME/.dotnet
-tar -zxf artifacts/[your-RID]/Release/dotnet-sdk-8.0.100-[your-RID].tar.gz -C $HOME/.dotnet
+tar -zxf artifacts/x64/Release/dotnet-sdk-8.0.100-centos.8-x64.tar.gz -C $HOME/.dotnet
 ln -s $HOME/.dotnet/dotnet /usr/bin/dotnet
 ```
 
