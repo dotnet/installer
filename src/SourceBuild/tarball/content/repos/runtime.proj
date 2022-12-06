@@ -23,6 +23,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:RuntimeOS=$(RuntimeOS)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BaseOS=$(BaseOS)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildNonPortable=true</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(UseNonPortableIlasmPackageOverride)' == 'true'">$(BuildCommandArgs) /p:UseNonPortableIlasmPackageOverride=true</BuildCommandArgs>
     <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
   </PropertyGroup>
 

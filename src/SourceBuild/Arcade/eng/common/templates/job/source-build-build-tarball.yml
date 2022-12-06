@@ -41,7 +41,7 @@ jobs:
     - group: AzureDevOps-Artifact-Feeds-Pats
   - ${{ if eq(parameters.usePreviousArtifacts, 'true') }}:
     - name: additionalBuildArgs
-      value: --with-sdk /tarball/.dotnet
+      value: --with-sdk /tarball/.dotnet -- /p:UseNonPortableIlasmPackageOverride=true
   - name: tarballDir
     ${{ if eq(parameters.installerBuildResourceId, '') }}:
       value: $(Build.SourcesDirectory)

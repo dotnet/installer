@@ -5,7 +5,7 @@
     <LocalNuGetPackageCacheDirectory>$(BaseIntermediatePath)source-build-reference-package-cache</LocalNuGetPackageCacheDirectory>
 
     <BuildCommandArgs>$(StandardSourceBuildArgs)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(UseNonPortableIlasmPackageOverride)' == 'true'">$(BuildCommandArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:LocalNuGetPackageCacheDirectory=$(LocalNuGetPackageCacheDirectory)</BuildCommandArgs>
 
     <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>

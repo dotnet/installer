@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Mon, 5 Dec 2022 15:59:59 -0800
+Subject: [PATCH] Look for portable runtime packages by default
+
+Change the default behavior to look for portable RID runtime packages (like
+ilasm). If previous source-built artifacts contain non-portable runtime
+packages, build .NET source-build with the
+` -- /p:UseNonPortableIlasmPackageOverride=true` argument.
+
+This patch should not be in the release of .NET Source-build 7.0.102.
+---
+ Directory.Build.targets | 2 +-
+ eng/SourceBuild.props   | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index ef9e5f5810c..c6469821345 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -16,7 +16,7 @@
+   When .NET gets built from source, make the SDK aware there are bootstrap packages
+   for Microsoft.NETCore.App.Runtime.<rid> and Microsoft.NETCore.App.Crossgen2.<rid>.
+   -->
+-  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true' and '$(UseNonPortableIlasmPackageOverride)' == 'true'">
+     <KnownFrameworkReference Update="@(KnownFrameworkReference->WithMetadataValue('Identity', 'Microsoft.NETCore.App')->WithMetadataValue('TargetFramework', '$(NetCoreAppCurrent)'))">
+       <RuntimePackRuntimeIdentifiers>$(PackageRID)</RuntimePackRuntimeIdentifiers>
+     </KnownFrameworkReference>
+diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+index 32e6d9c0bad..57b822d4ef1 100644
+--- a/eng/SourceBuild.props
++++ b/eng/SourceBuild.props
+@@ -51,6 +51,7 @@
+       <InnerBuildArgs>$(InnerBuildArgs) /p:DisableSourceLink=false</InnerBuildArgs>
+       <InnerBuildArgs>$(InnerBuildArgs) /p:AdditionalRuntimeIdentifierParent=$(BaseOS)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(InnerBuildArgs) /p:PrimaryRuntimeFlavor=Mono /p:RuntimeFlavor=Mono</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(UseNonPortableIlasmPackageOverride)' == 'true'">$(InnerBuildArgs) /p:UseNonPortableIlasmPackageOverride=true</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
+ 
