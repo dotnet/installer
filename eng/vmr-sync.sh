@@ -67,7 +67,7 @@ COLOR_RED=$(tput setaf 1 2>/dev/null || true)
 COLOR_CYAN=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
-FAILURE_PREFIX='\n> '
+FAILURE_PREFIX='> '
 
 function fail () {
   echo "${COLOR_RED}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}" >&2
@@ -139,9 +139,12 @@ if [[ ! -d "$vmr_dir" ]]; then
   highlight "Cloning 'dotnet/dotnet' into $vmr_dir.."
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
 else
-  # This makes sure we don't leave any local changes in the VMR
-  highlight "Resetting $vmr_dir"
-  git -C "$vmr_dir" reset --hard
+  if git diff --quiet; then
+    fail "There are changes in the working tree of $vmr_dir. Please commit or stash your changes"
+    exit 1
+  fi
+
+  highlight "Preparing $vmr_dir"
   git -C "$vmr_dir" checkout "$vmr_branch"
   git -C "$vmr_dir" pull
 fi
