@@ -37,11 +37,11 @@
 ### USAGE:
 ###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
 ### Options:
-###   --tmp-dir [PATH]
+###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
-###   --vmr-dir [PATH]
+###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
-###   --vmr-branch [NAME]
+###   -b, --branch, --vmr-branch BRANCH_NAME
 ###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize to
 ###       This should match the target branch of the PR, defaults to 'main'
 ###   --debug
@@ -88,26 +88,22 @@ INSTALLER_TMP_DIR_NAME='03298978DFFFCD23'
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
   case "$opt" in
-    --vmr-dir)
-      vmr_dir=$2
-      shift
-      ;;
-    --tmp-dir)
+    -t|--tmp|--tmp-dir)
       tmp_dir=$2
       shift
       ;;
-    --vmr-branch)
+    -v|--vmr|--vmr-dir)
+      vmr_dir=$2
+      shift
+      ;;
+    -b|--branch|--vmr-branch)
       vmr_branch=$2
       shift
       ;;
-    --debug)
+    -d|--debug)
       verbosity=debug
       ;;
-    --help)
-      print_help
-      exit 0
-      ;;
-    -h)
+    -h|--help)
       print_help
       exit 0
       ;;
