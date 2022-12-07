@@ -35,15 +35,17 @@
 ### This script will synchronize the 'dotnet/dotnet' repo locally and let you inspect the changes.
 ###
 ### USAGE:
-###     ./reproduce-vmr-sync.sh --installer-dir "$HOME/repos/installer" --tmp-dir "$HOME/repos/tmp"
+###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
 ### Options:
-###   --installer-dir
-###       Path to the 'dotnet/installer' repo which is checked out at the PR commit
-###   --tmp-dir
-###       Path to the temporary folder where the repositories will be cloned
-###   --vmr-branch
-###       Branch of the 'dotnet/dotnet' repo to synchronize to
-###       This should match the target branch of the PR, Defaults to 'main'
+###   --tmp-dir [PATH]
+###       Required. Path to the temporary folder where repositories will be cloned
+###   --vmr-dir [PATH]
+###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
+###   --vmr-branch [NAME]
+###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize to
+###       This should match the target branch of the PR, defaults to 'main'
+###   --debug
+###       Optional. Turns on the most verbose logging for the VMR tooling
 
 source="${BASH_SOURCE[0]}"
 
@@ -65,30 +67,27 @@ COLOR_RED=$(tput setaf 1 2>/dev/null || true)
 COLOR_CYAN=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
-FAILURE_PREFIX='> '
+FAILURE_PREFIX='\n> '
 
 function fail () {
   echo "${COLOR_RED}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}" >&2
 }
 
 function highlight () {
-  echo "\n${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
+  echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-installer_dir=''
+installer_dir="$scriptroot/../"
 tmp_dir=''
 vmr_dir=''
 vmr_branch='main'
+verbosity=verbose
 # hashed name coming from the VMR tooling
 INSTALLER_TMP_DIR_NAME='03298978DFFFCD23'
 
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
   case "$opt" in
-    --installer-dir)
-      installer_dir=$2
-      shift
-      ;;
     --vmr-dir)
       vmr_dir=$2
       shift
@@ -100,6 +99,9 @@ while [[ $# -gt 0 ]]; do
     --vmr-branch)
       vmr_branch=$2
       shift
+      ;;
+    --debug)
+      verbosity=debug
       ;;
     --help)
       print_help
@@ -118,11 +120,6 @@ while [[ $# -gt 0 ]]; do
 
   shift
 done
-
-if [[ -z "$installer_dir" ]]; then
-  fail "Missing --installer-dir argument. Please specify the path to the dotnet/installer repo"
-  exit 1
-fi
 
 if [[ ! -d "$installer_dir" ]]; then
   fail "Directory '$installer_dir' does not exist. Please specify the path to the dotnet/installer repo"
@@ -173,12 +170,12 @@ target_sha=$(git -C "$installer_dir" rev-parse HEAD)
 highlight "Starting the synchronization to $target_sha.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --debug --recursive installer:$target_sha; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive installer:$target_sha; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to $target_sha failed!"
   fail "$vmr_dir is left in its last state (re-run of this script will reset it)."
-  fail "Please inspect the logs which contain path to the failing patch file."
+  fail "Please inspect the logs which contain path to the failing patch file (use --debug to get all the details)."
   fail "Once you make changes to the conflicting VMR patch, commit it locally and re-run this script."
   exit 1
 fi
