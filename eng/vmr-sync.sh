@@ -139,7 +139,7 @@ if [[ ! -d "$vmr_dir" ]]; then
   highlight "Cloning 'dotnet/dotnet' into $vmr_dir.."
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
 else
-  if git diff --quiet; then
+  if ! git -C "$vmr_dir" diff --quiet; then
     fail "There are changes in the working tree of $vmr_dir. Please commit or stash your changes"
     exit 1
   fi
