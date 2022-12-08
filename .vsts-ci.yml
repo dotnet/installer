@@ -10,6 +10,19 @@ trigger:
     - internal/release/6.*
     - internal/release/7.*
 
+resources:
+  repositories:
+  - repository: vmr
+    type: github
+    name: dotnet/dotnet
+    endpoint: dotnet
+
+parameters:
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to push to
+  type: string
+  default: $(Build.SourceBranchName)
+
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -60,7 +73,7 @@ stages:
     
     ## Windows
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         jobName: Build_Debug_x64
@@ -71,7 +84,7 @@ stages:
 
     ## Linux
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Ubuntu_22_04_Debug_x64
@@ -80,7 +93,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: true
         runTests: true
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Fedora_36_Debug_x64
@@ -89,7 +102,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: true
         runTests: true
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_CentOS_7_Debug_x64
@@ -98,7 +111,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: false
         runTests: true
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Debian_Stretch_Debug_x64
@@ -108,7 +121,7 @@ stages:
         additionalBuildParameters: '/p:BuildSdkDeb=true'
         linuxPortable: false
         runTests: true
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Arm64_Debug
@@ -118,7 +131,7 @@ stages:
         linuxPortable: true
         # Never run tests on arm64
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_musl_Debug_x64
@@ -130,7 +143,7 @@ stages:
         additionalBuildParameters: '/p:HostOSName="linux-musl"'
         linuxPortable: false
         runTests: true
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_LinuxPortable_Release_x64
@@ -141,7 +154,7 @@ stages:
 
     # MacOS
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Darwin
         jobName: Build_Release_x64
@@ -155,7 +168,7 @@ stages:
     
     ## Windows
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         jobName: Build_Release_x64
@@ -163,14 +176,14 @@ stages:
         buildArchitecture: x64
         additionalBuildParameters: '/p:PublishInternalAsset=true'
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         jobName: Build_Release_x86
         buildConfiguration: Release
         buildArchitecture: x86
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         jobName: Build_Release_arm64
@@ -180,7 +193,7 @@ stages:
 
     ## Linux 
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Arm_Release
@@ -189,7 +202,7 @@ stages:
         runtimeIdentifier: 'linux-arm'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Arm64_Release
@@ -198,7 +211,7 @@ stages:
         runtimeIdentifier: 'linux-arm64'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_musl_Release_arm
@@ -209,7 +222,7 @@ stages:
         additionalBuildParameters: '/p:OSName="linux-musl"'
         linuxPortable: false
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_musl_Release_arm64
@@ -219,7 +232,7 @@ stages:
         additionalBuildParameters: '/p:OSName="linux-musl"'
         linuxPortable: false
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_musl_Release_x64
@@ -231,7 +244,7 @@ stages:
         additionalBuildParameters: '/p:HostOSName="linux-musl"'
         linuxPortable: false
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_Portable_Deb_Release_x64
@@ -243,7 +256,7 @@ stages:
         additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_Portable_Rpm_Release_x64
@@ -255,7 +268,7 @@ stages:
         additionalBuildParameters: '/p:PublishBinariesAndBadge=false'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_Portable_Rpm_Release_Arm64
@@ -268,7 +281,7 @@ stages:
         additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
         linuxPortable: true
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_LinuxPortable_Release_x64
@@ -279,14 +292,14 @@ stages:
 
     # MacOS
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Darwin
         jobName: Build_Release_x64
         buildConfiguration: Release
         buildArchitecture: x64
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Darwin
         jobName: Build_Release_arm64
@@ -297,7 +310,7 @@ stages:
 
     ## Windows PGO Instrumentation builds
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         pgoInstrument: true
@@ -306,7 +319,7 @@ stages:
         buildArchitecture: x64
         additionalBuildParameters: '/p:PublishInternalAsset=true'
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         pgoInstrument: true
@@ -314,7 +327,7 @@ stages:
         buildConfiguration: Release
         buildArchitecture: x86
         runTests: false
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Windows_NT
         pgoInstrument: true
@@ -325,7 +338,7 @@ stages:
 
     ## Linux PGO Instrumentation builds
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         pgoInstrument: true
@@ -335,7 +348,7 @@ stages:
         linuxPortable: true
         runTests: false
 
-    - template: /eng/build.yml
+    - template: eng/build.yml
       parameters:
         agentOs: Linux
         pgoInstrument: true
@@ -347,12 +360,24 @@ stages:
 
   - template: /eng/common/templates/jobs/source-build.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
-
-  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+- ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
+  - stage: Synchronize_VMR
+    displayName: Synchronize VMR
+    dependsOn: []
+    jobs:
+    - template: eng/pipelines/templates/jobs/vmr-synchronization.yml
       parameters:
-        dependsOn: Source_Build_Create_Tarball
+        vmrBranch: ${{ parameters.vmrBranch }}
+
+# In case the VMR Build stage needs to be temporarily disabled, please make sure that
+# the VMR synchronization step is run to validate that the PR can be merged and later
+# synchronized into the VMR without problems.
+# You can do this by allowing the Synchronize_VMR stage from above in PRs.
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - template: eng/pipelines/templates/stages/vmr-build.yml
+    parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
+      installerBuildResourceId: current
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish
