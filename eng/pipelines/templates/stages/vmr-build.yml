@@ -2,11 +2,13 @@
 ### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
 
 parameters:
-  # Resource id of the installer build to retrieve source/product tarball's from
-  installerBuildResourceId: current
+  dependsOn: []
 
   # Branch of the VMR to use (to push to for internal builds)
   vmrBranch: $(Build.SourceBranchName)
+
+  # True when build is running from dotnet/dotnet directly
+  isBuiltFromVmr:
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
@@ -34,7 +36,7 @@ parameters:
 stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
-  dependsOn: []
+  dependsOn: ${{ parameters.dependsOn }}
   variables:
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName
@@ -57,7 +59,7 @@ stages:
   - template: ../jobs/vmr-build.yml
     parameters:
       buildName: CentOSStream8_Online
-      installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ parameters.vmrBranch }}
       architecture: x64
       pool:
@@ -74,7 +76,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: CentOSStream8_Offline
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
@@ -90,7 +92,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: CentOSStream9_Offline
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
@@ -106,7 +108,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: Fedora36_Offline
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
@@ -122,7 +124,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: Ubuntu2004_Offline
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
@@ -138,7 +140,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: Debian11_Offline
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: arm64
         pool: ${{ parameters.poolInternalArm64 }}
@@ -152,7 +154,7 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: Fedora36_Offline_Using_Previous
-        installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ parameters.vmrBranch }}
         architecture: x64
         pool:
