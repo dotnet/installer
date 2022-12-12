@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MichaelSimons <msimons@microsoft.com>
+Date: Mon, 12 Dec 2022 19:30:59 +0000
+Subject: [PATCH] Define PackageVersion props to address prebuilts
+
+Backport: https://github.com/NuGet/Home/issues/12317
+---
+ Directory.Packages.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Packages.props b/Directory.Packages.props
+index e4b41a45f..72744f415 100644
+--- a/Directory.Packages.props
++++ b/Directory.Packages.props
+@@ -16,6 +16,8 @@
+     <MicrosoftBuildVersion Condition="'$(TargetFramework)' == 'netcoreapp5.0'">16.11.0</MicrosoftBuildVersion>
+     
+     <!-- Overridden by source build to ensure the same version is used across products, do not remove these properties -->
++    <MicrosoftExtensionsFileProvidersAbstractionsPackageVersion Condition="'$(MicrosoftExtensionsFileProvidersAbstractionsPackageVersion)' == ''">6.0.0</MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>
++    <MicrosoftExtensionsFileSystemGlobbingPackageVersion Condition="'$(MicrosoftExtensionsFileSystemGlobbingPackageVersion)' == ''">6.0.0</MicrosoftExtensionsFileSystemGlobbingPackageVersion>
+     <MicrosoftWebXdtPackageVersion Condition="'$(MicrosoftWebXdtPackageVersion)' == ''">3.0.0</MicrosoftWebXdtPackageVersion>
+     <SystemComponentModelCompositionPackageVersion Condition="'$(SystemComponentModelCompositionPackageVersion)' == ''">4.5.0</SystemComponentModelCompositionPackageVersion>
+   </PropertyGroup>
