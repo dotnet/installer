@@ -33,7 +33,7 @@
   <PropertyGroup>
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
-    <KeysDir>$(ProjectDir)keys/</KeysDir>
+    <KeysDir>$(ProjectDir)prereqs/keys/</KeysDir>
     <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == '' and '$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
     <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == '' and '$(DOTNET_INSTALL_DIR)' != ''">$([MSBuild]::NormalizeDirectory('$(DOTNET_INSTALL_DIR)'))</DotNetCliToolDir>
     <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == ''">$(ProjectDir).dotnet/</DotNetCliToolDir>
