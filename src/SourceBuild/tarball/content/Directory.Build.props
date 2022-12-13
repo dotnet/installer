@@ -85,10 +85,9 @@
   <PropertyGroup>
     <BaseOutputPath>$(ArtifactsDir)</BaseOutputPath>
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
-    <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
-    <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
-    <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
-    <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
+    <SourceBuiltSdksDir>$(ArtifactsDir)source-built-sdks/</SourceBuiltSdksDir>
+    <ToolsDir>$(ProjectDir)eng/tools/</ToolsDir>
+    <TaskDirectory>$(ToolsDir)tasks/</TaskDirectory>
 
     <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/$(Configuration)/</XPlatTasksBinDir>
     <XPlatSourceBuildTasksAssembly>$(XPlatTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.XPlat.dll</XPlatSourceBuildTasksAssembly>
@@ -149,14 +148,11 @@
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ArchiveArtifactsTextFileName>archiveArtifacts.txt</ArchiveArtifactsTextFileName>
     <ArchiveArtifactsTextFile>$(ExternalTarballsDir)$(ArchiveArtifactsTextFileName)</ArchiveArtifactsTextFile>
-    <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline.xml</BaselineDataFile>
+    <BaselineDataFile>$(ToolsDir)prebuilt-baseline.xml</BaselineDataFile>
     <!--Exclude tests that are failing for test enabled projects like - corefx -->
     <TestExclusionsDir>$(ProjectDir)test/exclusions/</TestExclusionsDir>
     <SmokeTestsDir>$(ProjectDir)test/Microsoft.DotNet.SourceBuild.SmokeTests/</SmokeTestsDir>
   </PropertyGroup>
-
-  <!-- Import Build tools common props file where repo-independent properties are found -->
-  <Import Project="$(ToolsDir)Build.Common.props" Condition="Exists('$(ToolsDir)Build.Common.props')" />
 
   <PropertyGroup>
     <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
