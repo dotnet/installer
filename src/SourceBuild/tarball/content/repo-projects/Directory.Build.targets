@@ -761,7 +761,7 @@
 
   <Target Name="GetAllProjectDirectories">
     <ItemGroup>
-      <AllRepoProjects Include="$(ProjectDir)repos\*.proj" />
+      <AllRepoProjects Include="$(RepoProjectsDir)*.proj" />
     </ItemGroup>
 
     <Message Importance="High" Text="Finding project directories..." />
