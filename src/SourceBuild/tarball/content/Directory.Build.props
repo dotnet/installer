@@ -83,10 +83,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <ArcadeOverridesDir>$(RepositoryEngineeringDir)arcade-overrides/</ArcadeOverridesDir>
     <BaseOutputPath>$(ArtifactsDir)</BaseOutputPath>
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <SourceBuiltSdksDir>$(ArtifactsDir)source-built-sdks/</SourceBuiltSdksDir>
-    <ToolsDir>$(ProjectDir)eng/tools/</ToolsDir>
+    <ToolsDir>$(RepositoryEngineeringDir)/tools/</ToolsDir>
     <TaskDirectory>$(ToolsDir)tasks/</TaskDirectory>
 
     <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/$(Configuration)/</XPlatTasksBinDir>

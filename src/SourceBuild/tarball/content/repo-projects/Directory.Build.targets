@@ -614,7 +614,7 @@
       <ArcadeSDKToolPackagePath Condition=" '%(_ToolPackage.Id)' == 'Microsoft.DotNet.Arcade.Sdk' ">$(SourceBuiltSdksDir)%(_ToolPackage.Id)/</ArcadeSDKToolPackagePath>
     </PropertyGroup>
     <ItemGroup>
-      <OverrideArcadeFiles Include="$(ProjectDir)ArcadeOverrides/**/*" />
+      <OverrideArcadeFiles Include="$(ArcadeOverridesDir)**/*" />
     </ItemGroup>
 
     <Copy
