@@ -3,6 +3,7 @@
 
 parameters:
   dependsOn: []
+  condition: always()
 
   # Branch of the VMR to use (to push to for internal builds)
   vmrBranch: $(Build.SourceBranchName)
@@ -37,6 +38,7 @@ stages:
 - stage: VMR_Source_Build
   displayName: VMR Source-Build
   dependsOn: ${{ parameters.dependsOn }}
+  condition: ${{ parameters.condition }}
   variables:
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - name: defaultPoolName

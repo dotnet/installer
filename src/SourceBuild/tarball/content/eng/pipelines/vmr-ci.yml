@@ -49,3 +49,4 @@ stages:
     isBuiltFromVmr: true
     ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
       dependsOn: Build_MSFT_SDK
+      condition: always()
