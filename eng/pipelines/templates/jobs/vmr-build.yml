@@ -166,8 +166,8 @@ jobs:
       poisonArg=''
 
       if [[ '${{ parameters.excludeSdkContentTests }}' != 'True' ]]; then
-        dockerVolumeArgs+=" -v $(Pipeline.Workspace)/current/BlobArtifacts/:/BlobArtifacts"
-        msftSdkTarballName=$(find "$(Pipeline.Workspace)/current/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+        dockerVolumeArgs+=" -v $(Pipeline.Workspace)/BlobArtifacts/:/BlobArtifacts"
+        msftSdkTarballName=$(find "$(Pipeline.Workspace)/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
         dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
       fi
 
