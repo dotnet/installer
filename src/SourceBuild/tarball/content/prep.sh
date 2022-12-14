@@ -39,12 +39,6 @@ while :; do
     shift
 done
 
-# Check for the archive text file which describes the location of the archive files to download
-if [ ! -f $SCRIPT_ROOT/packages/archive/archiveArtifacts.txt ]; then
-    echo "  ERROR: $SCRIPT_ROOT/packages/archive/archiveArtifacts.txt does not exist.  Cannot determine which archives to download.  Exiting..."
-    exit -1
-fi
-
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
@@ -57,13 +51,15 @@ then
 fi
 
 # Check if Private.SourceBuilt artifacts archive exists
-if [ -f $SCRIPT_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz ]; then
+artifactsBaseFileName="Private.SourceBuilt.Artifacts"
+if [ -f $SCRIPT_ROOT/packages/archive/$artifactsBaseFileName.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Artifacts.*.tar.gz exists...it will not be downloaded"
     downloadArtifacts=false
 fi
 
 # Check if Private.SourceBuilt prebuilts archive exists
-if [ -f $SCRIPT_ROOT/packages/archive/Private.SourceBuilt.Prebuilts.*.tar.gz ]; then
+prebuiltsBaseFileName="Private.SourceBuilt.Prebuilts"
+if [ -f $SCRIPT_ROOT/packages/archive/$prebuiltsBaseFileName.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Prebuilts.*.tar.gz exists...it will not be downloaded"
     downloadPrebuilts=false
 fi
@@ -75,20 +71,35 @@ if [ -d $SCRIPT_ROOT/.dotnet ]; then
 fi
 
 # Read the archive text file to get the archives to download and download them
-while read -r line; do
-    if [[ $line == *"Private.SourceBuilt.Artifacts"* ]]; then
-        if [ "$downloadArtifacts" == "true" ]; then
-            echo "  Downloading source-built artifacts from $line..."
-            (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $line)
-        fi
+sourceBuiltArtifactsTarballUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/"
+packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
+
+if [ "$downloadArtifacts" == "true" ]; then
+    echo "  Looking for source-built artifacts to download..."
+    artifactsVersionLine=`grep -m 1 '<PrivateSourceBuiltArtifactsPackageVersion>' "$packageVersionsPath" || :`
+    versionPattern="<PrivateSourceBuiltArtifactsPackageVersion>(.*)</PrivateSourceBuiltArtifactsPackageVersion>"
+    if [[ $artifactsVersionLine =~ $versionPattern ]]; then
+        artifactsUrl="${sourceBuiltArtifactsTarballUrl}${artifactsBaseFileName}.${BASH_REMATCH[1]}.tar.gz"
+        echo "  Downloading source-built artifacts from $artifactsUrl..."
+        (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $artifactsUrl)
+    else
+      echo "  ERROR: No source-built artifacts found to download..."
+      exit -1
     fi
-    if [[ $line == *"Private.SourceBuilt.Prebuilts"* ]]; then
-        if [ "$downloadPrebuilts" == "true" ]; then
-            echo "  Downloading source-built prebuilts from $line..."
-            (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $line)
-        fi
+fi
+
+if [ "$downloadPrebuilts" == "true" ]; then
+    echo "  Looking for source-built prebuilts to download..."
+    prebuiltsVersionLine=`grep -m 1 '<PrivateSourceBuiltPrebuiltsPackageVersion>' "$packageVersionsPath" || :`
+    versionPattern="<PrivateSourceBuiltPrebuiltsPackageVersion>(.*)</PrivateSourceBuiltPrebuiltsPackageVersion>"
+    if [[ $prebuiltsVersionLine =~ $versionPattern ]]; then
+        prebuiltsUrl="${sourceBuiltArtifactsTarballUrl}${prebuiltsBaseFileName}.${BASH_REMATCH[1]}.tar.gz"
+        echo "  Downloading source-built prebuilts from $prebuiltsUrl..."
+        (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $prebuiltsUrl)
+    else
+      echo "  No source-built prebuilts found to download..."
     fi
-done < $SCRIPT_ROOT/packages/archive/archiveArtifacts.txt
+fi
 
 # Check for the version of dotnet to install
 if [ "$installDotnet" == "true" ]; then
