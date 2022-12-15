@@ -70,35 +70,37 @@ if [ -d $SCRIPT_ROOT/.dotnet ]; then
     installDotnet=false;
 fi
 
-# Read the archive text file to get the archives to download and download them
-sourceBuiltArtifactsTarballUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/"
-packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
+function DownloadArchive {
+    archiveType="$1"
+    baseFileName="$2"
+    isRequired="$3"
 
-if [ "$downloadArtifacts" == "true" ]; then
-    echo "  Looking for source-built artifacts to download..."
-    artifactsVersionLine=`grep -m 1 '<PrivateSourceBuiltArtifactsPackageVersion>' "$packageVersionsPath" || :`
-    versionPattern="<PrivateSourceBuiltArtifactsPackageVersion>(.*)</PrivateSourceBuiltArtifactsPackageVersion>"
-    if [[ $artifactsVersionLine =~ $versionPattern ]]; then
-        artifactsUrl="${sourceBuiltArtifactsTarballUrl}${artifactsBaseFileName}.${BASH_REMATCH[1]}.tar.gz"
-        echo "  Downloading source-built artifacts from $artifactsUrl..."
-        (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $artifactsUrl)
-    else
-      echo "  ERROR: No source-built artifacts found to download..."
+    sourceBuiltArtifactsTarballUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/"
+    packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
+    notFoundMessage="No source-built $archiveType found to download..."
+
+    echo "  Looking for source-built $archiveType to download..."
+    archiveVersionLine=`grep -m 1 "<PrivateSourceBuilt${archiveType}PackageVersion>" "$packageVersionsPath" || :`
+    versionPattern="<PrivateSourceBuilt${archiveType}PackageVersion>(.*)</PrivateSourceBuilt${archiveType}PackageVersion>"
+    if [[ $archiveVersionLine =~ $versionPattern ]]; then
+        archiveUrl="${sourceBuiltArtifactsTarballUrl}${baseFileName}.${BASH_REMATCH[1]}.tar.gz"
+        echo "  Downloading source-built $archiveType from $archiveUrl..."
+        (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $archiveUrl)
+    elif [ "$isRequired" == "true" ]; then
+      echo "  ERROR: $notFoundMessage"
       exit -1
+    else
+      echo "  $notFoundMessage"
     fi
+}
+
+# Read the eng/Versions.props to get the archives to download and download them
+if [ "$downloadArtifacts" == "true" ]; then
+    DownloadArchive "Artifacts" $artifactsBaseFileName "true"
 fi
 
 if [ "$downloadPrebuilts" == "true" ]; then
-    echo "  Looking for source-built prebuilts to download..."
-    prebuiltsVersionLine=`grep -m 1 '<PrivateSourceBuiltPrebuiltsPackageVersion>' "$packageVersionsPath" || :`
-    versionPattern="<PrivateSourceBuiltPrebuiltsPackageVersion>(.*)</PrivateSourceBuiltPrebuiltsPackageVersion>"
-    if [[ $prebuiltsVersionLine =~ $versionPattern ]]; then
-        prebuiltsUrl="${sourceBuiltArtifactsTarballUrl}${prebuiltsBaseFileName}.${BASH_REMATCH[1]}.tar.gz"
-        echo "  Downloading source-built prebuilts from $prebuiltsUrl..."
-        (cd $SCRIPT_ROOT/packages/archive/ && curl --retry 5 -O $prebuiltsUrl)
-    else
-      echo "  No source-built prebuilts found to download..."
-    fi
+    DownloadArchive "Prebuilts" $prebuiltsBaseFileName "false"
 fi
 
 # Check for the version of dotnet to install
