@@ -52,7 +52,8 @@ jobs:
       targetRef: ${{ parameters.targetRef }}
 
   # For official builds, push the changes to the VMR
-  - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
+  # Push only main and release branches
+  - ${{ if and(not(parameters.noPush), or(eq(parameters.vmrBranch, 'main'), startswith(parameters.vmrBranch, 'refs/heads/release/'), startswith(parameters.vmrBranch, 'release/')), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |
         set -x
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
