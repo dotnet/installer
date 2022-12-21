@@ -1,6 +1,5 @@
 <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. -->
 <Project>
-
   <PropertyGroup>
     <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
     <VirtualMonoRepoTasksAssembly>$(ArtifactsDir)bin/VirtualMonoRepo.Tasks/$(Configuration)/net7.0/VirtualMonoRepo.Tasks.dll</VirtualMonoRepoTasksAssembly>
@@ -48,7 +47,6 @@
   </Target>
 
   <Target Name="InitializeRepoAndDependentsRecursive">
-
     <!-- Get installer's SHA if not passed in -->
     <Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" WorkingDirectory="$(RepoRoot)" Condition=" '$(TargetRevision)' == '' ">
       <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitSha" />
