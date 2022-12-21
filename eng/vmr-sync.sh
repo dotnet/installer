@@ -22,7 +22,7 @@
 ###
 ### The whole process can be reproduced locally easily by running this script.
 ### The patches are located in a folder in the 'dotnet/installer' repository.
-### At the moment of writing, the location is 'src/SourceBuild/tarball/patches' but to get
+### At the moment of writing, the location is 'src/SourceBuild/patches' but to get
 ### the up-to-date location, please see the 'patchesPath' property in
 ### https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json
 ###
