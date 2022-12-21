@@ -47,26 +47,25 @@
     <Exec WorkingDirectory="$(VmrDir)" Command="git commit -m 'Initial commit of the VMR%0D%0A%0D%0A[[ commit created by automation ]]'" />
   </Target>
 
-  <Target Name="InitializeRepoAndDependentsRecursive"
-    DependsOnTargets="GetSourceBuildIntermediateNupkgNameConvention">
+  <Target Name="InitializeRepoAndDependentsRecursive">
+
+    <!-- Get installer's SHA if not passed in -->
+    <Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" WorkingDirectory="$(RepoRoot)" Condition=" '$(TargetRevision)' == '' ">
+      <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitSha" />
+    </Exec>
 
     <PropertyGroup>
       <RootRepoName>$([System.IO.Path]::GetFileName("$(RepoRoot.TrimEnd('/').TrimEnd('\\'))"))</RootRepoName>
       <TargetRevision Condition=" '$(TargetRevision)' == '' ">@(RootRepoCommitSha)</TargetRevision>
     </PropertyGroup>
 
-    <!-- Get installer's sha -->
-    <Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" WorkingDirectory="$(RepoRoot)">
-      <Output TaskParameter="ConsoleOutput" ItemName="RootRepoCommitSha" />
-    </Exec>
-
-    <Message Text="--> Initializing individual repos recursively. Starting from $(RootRepoName) / $(TargetRevision)" Importance="High" />
+    <Message Text="--> Initializing individual repos recursively. Starting from installer / $(TargetRevision)" Importance="High" />
 
     <!-- We are hardcoding the package version for the root repo (installer), since there
          isn't a Version.Details.xml file to read it from.
          See https://github.com/dotnet/source-build/issues/2250 -->
     <VirtualMonoRepo_Initialize
-      Repository="$(RootRepoName)"
+      Repository="installer"
       Revision="$(TargetRevision)"
       PackageVersion="8.0.100"
       Recursive="true"
