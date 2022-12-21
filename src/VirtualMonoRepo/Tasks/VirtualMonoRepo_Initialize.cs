@@ -58,7 +58,7 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
     public void Cancel() => _cancellationToken.Cancel();
 
     private IServiceProvider CreateServiceProvider() => new ServiceCollection()
-        .AddLogging(b => b.AddProvider(new MSBuildLoggerProvider(Log)))
+        .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))
         .AddTransient<GitFileManagerFactory>()
         .AddVmrManagers(sp => sp.GetRequiredService<GitFileManagerFactory>(), "git", VmrPath, TmpPath, null, null)
         .BuildServiceProvider();
