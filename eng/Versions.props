@@ -204,6 +204,12 @@
     <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.22620.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest80100Version)</EmscriptenWorkloadManifestVersion>
   </PropertyGroup>
+  <!-- dependencies for VMR initialization -->
+  <PropertyGroup>
+    <!-- These two MicrosoftBuild versions are required to build VMR initialization tasks -->
+    <MicrosoftBuildFrameworkVersion>15.7.179</MicrosoftBuildFrameworkVersion>
+    <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
+  </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
