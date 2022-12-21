@@ -36,11 +36,7 @@ public class GitFileManagerFactory : IGitFileManagerFactory
 
     private IGitRepo CreateGitRepo(string repoUri) => GitRepoTypeParser.ParseFromUri(repoUri) switch
     {
-        GitRepoType.AzureDevOps => new AzureDevOpsClient(
-            _processManager.GitExecutable,
-            _remoteConfiguration.AzureDevOpsToken,
-            _loggerFactory.CreateLogger<AzureDevOpsClient>(),
-            _vmrInfo.TmpPath),
+        GitRepoType.AzureDevOps => throw new Exception("VMR initialization should not require Azure DevOps repositories"),
 
         GitRepoType.GitHub => new GitHubClient(
             _processManager.GitExecutable,
