@@ -1,5 +1,6 @@
 <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. -->
 <Project>
+
   <PropertyGroup>
     <ArtifactsDir>$(RepoRoot)artifacts/</ArtifactsDir>
     <VirtualMonoRepoTasksAssembly>$(ArtifactsDir)bin/VirtualMonoRepo.Tasks/$(Configuration)/net7.0/VirtualMonoRepo.Tasks.dll</VirtualMonoRepoTasksAssembly>
@@ -12,8 +13,6 @@
     <TarballDir>$(VmrDir)</TarballDir>
     <InitializeVMR>true</InitializeVMR>
   </PropertyGroup>
-
-  <Import Project="../SourceBuild/Arcade/tools/SourceBuildArcadeTarball.targets" />
 
   <!-- Pull back in some properties from the tarball defaults -->
   <PropertyGroup>
@@ -30,9 +29,7 @@
     Instead of cloning the repositories, we pull the sources via the `darc vmr initialize` command.
     Most of the targets are reused from the tarball generation process (SourceBuildArcadeTarball.targets).
   -->
-  <Target Name="InitializeVMR" DependsOnTargets="GenerateFullNuGetVersion;
-                                                 GenerateVersionFile;
-                                                 InitializeCleanVmr;
+  <Target Name="InitializeVMR" DependsOnTargets="InitializeCleanVmr;
                                                  InitializeRepoAndDependentsRecursive">
     <Message Text="VMR was successfully initialized in '$(VmrDir)'" Importance="High" />
   </Target>
@@ -77,7 +74,6 @@
       TmpPath="$(TmpDir)" />
 
     <Message Text=" -> Done initializing individual repositories recursively" Importance="High" />
-
   </Target>
 
 </Project>
