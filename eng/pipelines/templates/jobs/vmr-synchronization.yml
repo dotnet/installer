@@ -64,4 +64,4 @@ jobs:
         git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
-      condition: and(succeeded(), or(eq('${{ parameters.vmrBranch }}', 'main'), startsWith('${{ parameters.vmrBranch }}', 'release/')))
+      condition: and(succeeded(), or(eq(variables['vmrBranch'], 'main'), startsWith(variables['vmrBranch'], 'release/')))
