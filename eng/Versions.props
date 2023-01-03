@@ -30,7 +30,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade-services -->
-    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.22615.1</MicrosoftDotNetDarcLibVersion>
+    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.23053.1</MicrosoftDotNetDarcLibVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -200,9 +200,15 @@
     <XamarinMacOSWorkloadManifestVersion>12.3.2372</XamarinMacOSWorkloadManifestVersion>
     <XamarinTvOSWorkloadManifestVersion>16.0.1478</XamarinTvOSWorkloadManifestVersion>
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
-    <MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>8.0.0-alpha.1.22612.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.22612.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
+    <MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>8.0.0-alpha.1.22620.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.22620.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest80100Version)</EmscriptenWorkloadManifestVersion>
+  </PropertyGroup>
+  <!-- dependencies for VMR initialization -->
+  <PropertyGroup>
+    <!-- These two MicrosoftBuild versions are required to build VMR initialization tasks -->
+    <MicrosoftBuildFrameworkVersion>15.7.179</MicrosoftBuildFrameworkVersion>
+    <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- pinned dependency. This package is not being produced outside of the 2.0 branch of corefx and should not change. -->
