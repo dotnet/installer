@@ -1,6 +1,6 @@
-// Container contains a pre-built SDK
+// Container contains checked-out source code only
 {
-    "name": "Pre-built .NET SDK",
+    "name": "Default",
     "image": "mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36",
     "hostRequirements": {
         // A completely built .NET source-tarball is >64 GB
@@ -13,6 +13,5 @@
                 "eamodio.gitlens"
             ]
         }
-    },
-    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/prebuilt-sdk/build.sh"
+    }
 }

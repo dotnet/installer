@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-./prep.sh
+source="${BASH_SOURCE[0]}"
+scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
-# GitHub Codespaces automatically sets RepositoryName, which conflicts with source-build scripts.
+"$scriptroot"/../../prep.sh
+
+# GitHub Codespaces sets this and it conflicts with source-build scripts.
 unset RepositoryName
 
-./build.sh --online --clean-while-building || true
+"$scriptroot"/../../build.sh --online --clean-while-building || exit 0
