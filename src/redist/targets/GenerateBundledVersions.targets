@@ -45,15 +45,22 @@
     </GetDependencyInfo>
 
     <!-- Format for productCommits-%rid%.txt:
-       installer:%commit%, %version%
-       runtime:%commit%, %version%
-       aspnetcore:%commit%, %version%
-       windowsdesktop:%commit%, %version%
-       sdk:%commit%, %version%
+       installer_commit="%commit%" installer_version="%version%"
+       runtime_commit="%commit%" runtime_version="%version%"
+       aspnetcore_commit="%commit%" aspnetcore_version="%version%"
+       windowsdesktop_commit="%commit%" windowsdesktop_version="%version%"
+       sdk_commit="%commit%" sdk_version="%version%"
     -->
+    <ItemGroup>
+      <Line Include="installer" Version="$(PackageVersion)" Commit="$(BUILD_SOURCEVERSION)" />
+      <Line Include="runtime" Version="$(DepRuntimeVersion)" Commit="$(DepRuntimeCommit)" />
+      <Line Include="aspnetcore" Version="$(DepAspNetCoreVersion)" Commit="$(DepAspNetCoreCommit)" />
+      <Line Include="windowsdesktop" Version="$(DepWindowsDesktopVersion)" Commit="$(DepWindowsDesktopCommit)" />
+      <Line Include="sdk" Version="$(DepDotNetSdkVersion)" Commit="$(DepDotNetSdkCommit)" />
+    </ItemGroup>
     <WriteLinesToFile
       File="$(ArtifactsShippingPackagesDir)productCommit-$(Rid).txt"
-      Lines="installer%3A$(BUILD_SOURCEVERSION)%2C%20$(PackageVersion)%0Aruntime%3A$(DepRuntimeCommit)%2C%20$(DepRuntimeVersion)%0Aaspnetcore%3A$(DepAspNetCoreCommit)%2C%20$(DepAspNetCoreVersion)%0Awindowsdesktop%3A$(DepWindowsDesktopCommit)%2C%20$(DepWindowsDesktopVersion)%0Asdk%3A$(DepDotNetSdkCommit)%2C%20$(DepDotNetSdkVersion)%0A"
+      Lines="@(Line->'%(Identity)_commit=&quot;%(Commit)&quot; %(Identity)_version=&quot;%(Version)&quot;', '%0A')"
       Overwrite="true"
       Encoding="ASCII"/>
 
@@ -61,9 +68,10 @@
 
   <PropertyGroup>
       <VersionFeature21>30</VersionFeature21>
-      <VersionFeature31>30</VersionFeature31>
+      <VersionFeature31>31</VersionFeature31>
       <VersionFeature50>17</VersionFeature50>
-      <VersionFeature60>10</VersionFeature60>
+      <VersionFeature60>11</VersionFeature60>
+      <VersionFeature70>0</VersionFeature70>
   </PropertyGroup>
 
   <Target Name="GenerateBundledVersionsProps" DependsOnTargets="SetupBundledComponents">
@@ -76,13 +84,13 @@
       <_NETStandardLibraryPackageVersion>$(NETStandardLibraryRefPackageVersion)</_NETStandardLibraryPackageVersion>
       <_NETCorePlatformsPackageVersion>$(MicrosoftNETCorePlatformsPackageVersion)</_NETCorePlatformsPackageVersion>
 
-      <!-- TODO: Once .NET 7.0 has released, update these version numbers to 7.0.0 -->
-      <_NET70RuntimePackVersion>7.0.0-rc.1.22426.10</_NET70RuntimePackVersion>
-      <_NET70TargetingPackVersion>7.0.0-rc.1.22426.10</_NET70TargetingPackVersion>
-      <_WindowsDesktop70RuntimePackVersion>7.0.0-rc.1.22427.1</_WindowsDesktop70RuntimePackVersion>
-      <_WindowsDesktop70TargetingPackVersion>7.0.0-rc.1.22427.1</_WindowsDesktop70TargetingPackVersion>
-      <_AspNet70RuntimePackVersion>7.0.0-rc.1.22427.2</_AspNet70RuntimePackVersion>
-      <_AspNet70TargetingPackVersion>7.0.0-rc.1.22427.2</_AspNet70TargetingPackVersion>
+      <_NET70RuntimePackVersion>7.0.$(VersionFeature70)</_NET70RuntimePackVersion>
+      <_NET70TargetingPackVersion>7.0.$(VersionFeature70)</_NET70TargetingPackVersion>
+      <_NET70ILLinkPackVersion>7.0.100-1.22579.2</_NET70ILLinkPackVersion>
+      <_WindowsDesktop70RuntimePackVersion>7.0.$(VersionFeature70)</_WindowsDesktop70RuntimePackVersion>
+      <_WindowsDesktop70TargetingPackVersion>7.0.$(VersionFeature70)</_WindowsDesktop70TargetingPackVersion>
+      <_AspNet70RuntimePackVersion>7.0.$(VersionFeature70)</_AspNet70RuntimePackVersion>
+      <_AspNet70TargetingPackVersion>7.0.$(VersionFeature70)</_AspNet70TargetingPackVersion>
 
       <_NET60RuntimePackVersion>6.0.$(VersionFeature60)</_NET60RuntimePackVersion>
       <_NET60TargetingPackVersion>6.0.$(VersionFeature60)</_NET60TargetingPackVersion>
@@ -401,6 +409,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                          ILCompilerRuntimeIdentifiers="@(ILCompilerSupportedRids, '%3B')"
                          />
 
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="net8.0"
+                     ILLinkPackVersion="8.0.100-1.22619.1" />
+
     <KnownRuntimePack Include="Microsoft.NETCore.App"
                       TargetFramework="net8.0"
                       RuntimeFrameworkName="Microsoft.NETCore.App"
@@ -533,6 +545,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                          ILCompilerRuntimeIdentifiers="@(ILCompilerSupportedRids, '%3B')"
                          />
 
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="net7.0"
+                     ILLinkPackVersion="$(_NET70ILLinkPackVersion)" />
+
     <KnownRuntimePack Include="Microsoft.NETCore.App"
                       TargetFramework="net7.0"
                       RuntimeFrameworkName="Microsoft.NETCore.App"
@@ -658,6 +674,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                         Crossgen2RuntimeIdentifiers="@(Crossgen2SupportedRids, '%3B')"
                         />
 
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="net6.0"
+                     ILLinkPackVersion="$(_NET70ILLinkPackVersion)" />
+
     <KnownRuntimePack Include="Microsoft.NETCore.App"
                       TargetFramework="net6.0"
                       RuntimeFrameworkName="Microsoft.NETCore.App"
@@ -782,6 +802,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                         Crossgen2RuntimeIdentifiers="@(Net50Crossgen2SupportedRids, '%3B')"
                         />
 
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="net5.0"
+                     ILLinkPackVersion="$(_NET70ILLinkPackVersion)" />
+
     <KnownFrameworkReference Include="Microsoft.WindowsDesktop.App"
                               TargetFramework="net5.0"
                               RuntimeFrameworkName="Microsoft.WindowsDesktop.App"
@@ -890,6 +914,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                       AppHostRuntimeIdentifiers="@(NetCore31RuntimePackRids, '%3B')"
                       />
 
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="netcoreapp3.1"
+                     ILLinkPackVersion="$(_NET70ILLinkPackVersion)" />
+
     <KnownFrameworkReference Include="Microsoft.WindowsDesktop.App"
                               TargetFramework="netcoreapp3.1"
                               RuntimeFrameworkName="Microsoft.WindowsDesktop.App"
@@ -959,6 +987,10 @@ Copyright (c) .NET Foundation. All rights reserved.
                       AppHostPackVersion="$(_NETCoreApp30RuntimePackVersion)"
                       AppHostRuntimeIdentifiers="@(NetCore30RuntimePackRids, '%3B')"
                       />
+
+    <KnownILLinkPack Include="Microsoft.NET.ILLink.Tasks"
+                     TargetFramework="netcoreapp3.0"
+                     ILLinkPackVersion="$(_NET70ILLinkPackVersion)" />
 
     <KnownFrameworkReference Include="Microsoft.WindowsDesktop.App"
                               TargetFramework="netcoreapp3.0"
