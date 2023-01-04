@@ -18,6 +18,15 @@ parameters:
   enablePublishUsingPipelines: true
 
 phases:
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release/7.0.1xx')))) }}:
+  - template: /eng/common/templates/job/onelocbuild.yml
+    parameters:
+      CreatePr: true
+      LclSource: lclFilesfromPackage
+      LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
+      MirrorBranch: release/7.0.1xx
+      MirrorRepo: sdk
+
 - template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
@@ -168,13 +177,3 @@ phases:
         publishLocation: Container
       continueOnError: true
       condition: always()
-
-jobs:
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release/7.0.1xx')))) }}:
-  - template: /eng/common/templates/job/onelocbuild.yml
-    parameters:
-      CreatePr: true
-      LclSource: lclFilesfromPackage
-      LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
-      MirrorBranch: release/7.0.1xx
-      MirrorRepo: sdk
