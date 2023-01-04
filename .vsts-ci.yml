@@ -387,3 +387,12 @@ stages:
         -TsaRepositoryName "dotnet-installer"
         -TsaCodebaseName "dotnet-installer"
         -TsaPublish $True'
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/marcpopMSFT-enablelocbuild')) }}:
+  - template: /eng/common/templates/job/onelocbuild.yml
+    parameters:
+      CreatePr: true
+      LclSource: lclFilesfromPackage
+      LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
+      MirrorBranch: main
+      MirrorRepo: sdk

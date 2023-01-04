@@ -17,16 +17,7 @@ parameters:
   # Publish using pipelines
   enablePublishUsingPipelines: true
 
-jobs:
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/marcpopMSFT-enablelocbuild')) }}:
-  - template: /eng/common/templates/job/onelocbuild.yml
-    parameters:
-      CreatePr: true
-      LclSource: lclFilesfromPackage
-      LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
-      MirrorBranch: main
-      MirrorRepo: sdk
-
+phases:
 - template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
