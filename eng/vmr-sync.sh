@@ -53,8 +53,6 @@
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
 
-echo "$@" # TODO REMOVE
-
 source="${BASH_SOURCE[0]}"
 
 # resolve $source until the file is no longer a symlink
@@ -161,7 +159,6 @@ else
 fi
 
 set -e
-set -x # TODO REMOVE
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
@@ -178,7 +175,7 @@ fi
 highlight "Starting the synchronization to $target_ref.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --add-remote installer:$installer_dir installer:$target_ref; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes installer:$installer_dir installer:$target_ref; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to $target_ref failed!"
