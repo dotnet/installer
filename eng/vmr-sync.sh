@@ -53,6 +53,8 @@
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
 
+echo "$@" # TODO REMOVE
+
 source="${BASH_SOURCE[0]}"
 
 # resolve $source until the file is no longer a symlink
@@ -159,6 +161,7 @@ else
 fi
 
 set -e
+set -x # TODO REMOVE
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
