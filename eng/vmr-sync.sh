@@ -82,8 +82,6 @@ tmp_dir=''
 vmr_dir=''
 vmr_branch='main'
 verbosity=verbose
-# hashed name coming from the VMR tooling
-INSTALLER_TMP_DIR_NAME='03298978DFFFCD23'
 
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
@@ -151,12 +149,6 @@ fi
 
 set -e
 
-# These lines makes sure the temp dir (which the tooling would clone)
-# has the synchronized commit inside as well
-highlight 'Preparing the temporary directory..'
-rm -rf "${tmp_dir:?}/$INSTALLER_TMP_DIR_NAME"
-git clone "$installer_dir" "${tmp_dir:?}/$INSTALLER_TMP_DIR_NAME"
-
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
 source "$scriptroot/common/tools.sh"
@@ -169,7 +161,7 @@ target_sha=$(git -C "$installer_dir" rev-parse HEAD)
 highlight "Starting the synchronization to $target_sha.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive installer:$target_sha; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --add-remote "installer:$installer_dir" installer:$target_sha; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to $target_sha failed!"
