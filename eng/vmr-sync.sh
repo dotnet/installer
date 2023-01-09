@@ -180,6 +180,7 @@ highlight "Starting the synchronization to '$target_ref'.."
 set +e
 
 # Temporary workaround while we fix fetching commits
+rm -rf "$tmp_dir/installer"
 cp -r "$installer_dir" "$tmp_dir/installer"
 
 if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
