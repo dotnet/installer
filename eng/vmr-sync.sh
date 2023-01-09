@@ -144,6 +144,10 @@ if [[ ! -d "$tmp_dir" ]]; then
   mkdir -p "$tmp_dir"
 fi
 
+if [[ "$verbosity" == "debug" ]]; then
+  set -x
+fi
+
 if [[ ! -d "$vmr_dir" ]]; then
   highlight "Cloning 'dotnet/dotnet' into $vmr_dir.."
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
@@ -158,7 +162,7 @@ else
   git -C "$vmr_dir" pull
 fi
 
-set -ex
+set -e
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
