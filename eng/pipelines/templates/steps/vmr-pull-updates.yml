@@ -34,6 +34,5 @@ steps:
     --tmp $(Agent.TempDirectory)
     --branch ${{ parameters.vmrBranch }}
     --target-ref ${{ parameters.targetRef }}
-    --debug
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
