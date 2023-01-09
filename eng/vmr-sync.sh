@@ -158,7 +158,7 @@ else
   git -C "$vmr_dir" pull
 fi
 
-set -e
+set -ex
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
@@ -172,14 +172,14 @@ if [[ -z "$target_ref" ]]; then
   target_ref=$(git -C "$installer_dir" rev-parse HEAD)
 fi
 
-highlight "Starting the synchronization to $target_ref.."
+highlight "Starting the synchronization to '$target_ref'.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes installer:$installer_dir installer:$target_ref; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
 else
-  fail "Synchronization of dotnet/dotnet to $target_ref failed!"
-  fail "$vmr_dir is left in its last state (re-run of this script will reset it)."
+  fail "Synchronization of dotnet/dotnet to '$target_ref' failed!"
+  fail "'$vmr_dir' is left in its last state (re-run of this script will reset it)."
   fail "Please inspect the logs which contain path to the failing patch file (use --debug to get all the details)."
   fail "Once you make changes to the conflicting VMR patch, commit it locally and re-run this script."
   exit 1
