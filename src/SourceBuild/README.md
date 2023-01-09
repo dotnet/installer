@@ -1,6 +1,6 @@
 # Source-Build
 
-This directory contains the .NET source build infrstructure.
+This directory contains the .NET source build infrastructure.
 
 _content_ - source build infrastructure mirrored to [dotnet/dotnet](https://github.com/dotnet/dotnet)
     [VMR](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md).
@@ -13,7 +13,7 @@ For more information, see [dotnet/source-build](https://github.com/dotnet/source
 
 ## Local development workflow
 
-When making changes to the source build insfrastructure, devs would typically make and test the
+When making changes to the source build infrastructure, devs would typically make and test the
 changes in a local clone of [dotnet/dotnet](https://github.com/dotnet/dotnet). Once complete
 you would copy the changed files here and make a PR. To validate the end to end experience, you
 can synchronize the VMR with any changes made here by running [eng/vmr-sync.sh](https://github.com/dotnet/installer/blob/main/eng/vmr-sync.sh).
@@ -58,5 +58,5 @@ There is a method to create a series of patches based on a range of Git commits,
 but this is not usually useful for 6.0 main development. It is used in servicing
 to "freshen up" the sequence of patches (resolve conflicts) all at once.
 
-Note: The VMR has all of the `src/SourceBuild/patches` applied. This is done as part of the
-[synchronization process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Code-And-Build-Workflow.md).
+> Note: The VMR has all of the `src/SourceBuild/patches` applied. This is done as part of the
+[synchronization process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#source-build-patches).
