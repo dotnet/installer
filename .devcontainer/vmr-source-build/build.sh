@@ -15,4 +15,5 @@ git -C "$installer_root" fetch --all
 "$script_root"/../../eng/vmr-sync.sh \
     --vmr "$vmr_dir" \
     --tmp "$tmp_dir" \
-    --branch main
+    --branch main    \
+    --debug
