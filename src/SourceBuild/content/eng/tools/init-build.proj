@@ -23,7 +23,6 @@
     <CallTarget Targets="
       UnpackTarballs;
       BuildXPlatTasks;
-      PatchPackageVersions;
       BuildLeakDetection;
       ExtractToolPackage;
       GenerateRootFs;
@@ -117,16 +116,6 @@
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
 
     <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
-  </Target>
-
-  <!-- TODO: Remove this when the .NET 8 artifacts tarball no longer includes MicrosoftAspNetCoreAppRuntimePackageVersion -->
-  <Target Name="PatchPackageVersions">
-    <!-- Rename MicrosoftAspNetCoreAppRuntimePackageVersion so it isn't used
-         Fixes https://github.com/dotnet/installer/issues/14492 -->
-    <ReplaceRegexInFiles
-      InputFiles="$(IntermediatePath)PreviouslySourceBuiltPackageVersions.props"
-      OldTextRegex="\bMicrosoftAspNetCoreAppRuntimePackageVersion\b"
-      NewText="__unused" />
   </Target>
 
   <Target Name="BuildLeakDetection"
