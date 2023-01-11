@@ -182,6 +182,26 @@ set +e
 if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
 else
+
+  set +x
+  short_sha=$(git -C "$installer_dir" rev-parse --short HEAD)
+
+  echo '##################################################'
+  echo '##################################################'
+  echo '##################################################'
+
+  git -C "$installer_dir" reflog | awk '{ print $1 }' | grep "$short_sha"
+
+  echo '##################################################'
+  echo '##################################################'
+  echo '##################################################'
+
+  git -C "$tmp_dir/installer" reflog | awk '{ print $1 }' | grep "$short_sha"
+
+  echo '##################################################'
+  echo '##################################################'
+  echo '##################################################'
+
   fail "Synchronization of dotnet/dotnet to '$target_ref' failed!"
   fail "'$vmr_dir' is left in its last state (re-run of this script will reset it)."
   fail "Please inspect the logs which contain path to the failing patch file (use --debug to get all the details)."
