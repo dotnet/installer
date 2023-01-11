@@ -61,7 +61,7 @@ fi
 
 set -e
 
-echo "Packing sources of $revision to $output.."
+echo "Packing sources of $revision to $output..."
 mkdir -p "$(dirname "$output")"
 rm -f "$output"
 
