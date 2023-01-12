@@ -177,7 +177,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 return !Log.HasLoggedErrors;
             }
 
-            if (VersionPropsFlowType == AllPackagesVersionPropsFlowType && !File.Exists(VersionDetails))
+            if (VersionPropsFlowType == DependenciesOnlyVersionPropsFlowType && !File.Exists(VersionDetails))
             {
                 Log.LogError("When version flow type is DependenciesOnly, VersionDetails must point to a valid path to the Version.Details.xml file for the repo.");
                 return !Log.HasLoggedErrors;
