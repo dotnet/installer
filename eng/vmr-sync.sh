@@ -57,13 +57,13 @@ source="${BASH_SOURCE[0]}"
 
 # resolve $source until the file is no longer a symlink
 while [[ -h "$source" ]]; do
-  script_root="$( cd -P "$( dirname "$source" )" && pwd )"
+  scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
   source="$(readlink "$source")"
   # if $source was a relative symlink, we need to resolve it relative to the path where the
   # symlink file was located
-  [[ $source != /* ]] && source="$script_root/$source"
+  [[ $source != /* ]] && source="$scriptroot/$source"
 done
-script_root="$( cd -P "$( dirname "$source" )" && pwd )"
+scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
 function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
@@ -83,7 +83,7 @@ function highlight () {
   echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-installer_dir=$(realpath "$script_root/../")
+installer_dir=$(realpath "$scriptroot/../")
 tmp_dir=''
 vmr_dir=''
 vmr_branch='main'
@@ -166,9 +166,9 @@ set -e
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
-source "$script_root/common/tools.sh"
+source "$scriptroot/common/tools.sh"
 InitializeDotNetCli true
-dotnet="$script_root/../.dotnet/dotnet"
+dotnet="$scriptroot/../.dotnet/dotnet"
 "$dotnet" tool restore
 
 # Run the sync
@@ -182,26 +182,6 @@ set +e
 if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
 else
-
-  set +x
-  short_sha=$(git -C "$installer_dir" rev-parse --short HEAD)
-
-  echo '##################################################'
-  echo '##################################################'
-  echo '##################################################'
-
-  git -C "$installer_dir" reflog | awk '{ print $1 }' | grep "$short_sha"
-
-  echo '##################################################'
-  echo '##################################################'
-  echo '##################################################'
-
-  git -C "$tmp_dir/installer" reflog | awk '{ print $1 }' | grep "$short_sha"
-
-  echo '##################################################'
-  echo '##################################################'
-  echo '##################################################'
-
   fail "Synchronization of dotnet/dotnet to '$target_ref' failed!"
   fail "'$vmr_dir' is left in its last state (re-run of this script will reset it)."
   fail "Please inspect the logs which contain path to the failing patch file (use --debug to get all the details)."
