@@ -1,0 +1,152 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 12 Jan 2023 14:01:31 -0600
+Subject: [PATCH] Patch sourcelink for new System.CommandLine API.
+
+Issue to actually fix this is
+https://github.com/dotnet/command-line-api/issues/2017.
+---
+ eng/Versions.props                            |  5 +-
+ src/Directory.Build.props                     |  1 +
+ src/dotnet-sourcelink/Program.cs              | 55 ++++---------------
+ .../dotnet-sourcelink.csproj                  |  3 +-
+ 4 files changed, 18 insertions(+), 46 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 635cfc0..5d72a67 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -15,8 +15,9 @@
+     <MicrosoftDotNetPlatformAbstractionsVersion>3.1.6</MicrosoftDotNetPlatformAbstractionsVersion>
+     <NuGetVersioningVersion>5.7.0</NuGetVersioningVersion>
+     <NuGetPackagingVersion>5.7.0</NuGetPackagingVersion>
+-    <SystemCommandLineVersion>2.0.0-beta1.20371.2</SystemCommandLineVersion>
+-    <SystemCommandLineRenderingVersion>0.3.0-alpha.20371.2</SystemCommandLineRenderingVersion>
++    <SystemCommandLineVersion>2.0.0-beta4.22272.1</SystemCommandLineVersion>
++    <SystemCommandLineNamingConventionBinderVersion>2.0.0-beta4.22272.1</SystemCommandLineNamingConventionBinderVersion>
++    <SystemCommandLineRenderingVersion>0.4.0-alpha.22272.1</SystemCommandLineRenderingVersion>
+     <SystemReflectionMetadataVersion>1.8.1</SystemReflectionMetadataVersion>
+     <SystemValueTupleVersion>4.5.0</SystemValueTupleVersion>
+     <SystemTextJsonVersion>4.7.2</SystemTextJsonVersion>
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 5283e91..067dd3f 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -13,6 +13,7 @@
+     <!-- Produce snupkg in official builds (when not embedding PDBs to dlls) -->
+     <IncludeSymbols Condition="'$(DebugType)' != 'embedded'">true</IncludeSymbols>
+     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
++    <NoWarn>$(NoWarn);CS8030</NoWarn>
+   </PropertyGroup>
+   
+   <!--
+diff --git a/src/dotnet-sourcelink/Program.cs b/src/dotnet-sourcelink/Program.cs
+index 4a130f6..0803734 100644
+--- a/src/dotnet-sourcelink/Program.cs
++++ b/src/dotnet-sourcelink/Program.cs
+@@ -5,6 +5,7 @@
+ using System.Collections.Immutable;
+ using System.CommandLine;
+ using System.CommandLine.Invocation;
++using System.CommandLine.NamingConventionBinder;
+ using System.CommandLine.Parsing;
+ using System.IO;
+ using System.Linq;
+@@ -63,47 +64,17 @@ private static string GetSourceLinkVersion()
+ 
+         private static RootCommand GetRootCommand()
+         {
+-            var authEncodingArg = new Argument<Encoding>(
+-                name: "encoding-name",
+-                parse: arg => Encoding.GetEncoding(arg.Tokens.Single().Value))
+-            {
+-                Arity = ArgumentArity.ExactlyOne
+-            };
+-            
+-            authEncodingArg.AddValidator(arg =>
+-            {
+-                var name = arg.Tokens.Single().Value;
+-
+-                try
+-                {
+-                    _ = Encoding.GetEncoding(name);
+-                    return null;
+-                }
+-                catch
+-                {
+-                    return $"Encoding '{name}' not supported";
+-                }
+-            });
++            var authArg = new Option<string>(new[] { "--auth", "-a" }, "Authentication method").FromAmong(AuthenticationMethod.Basic);
++            var userArg = new Option<string>(new[] { "--user", "-u" }, "Username to use to authenticate") { Arity = ArgumentArity.ExactlyOne };
++            var passwordArg = new Option<string>(new[] { "--password", "-p" }, "Password to use to authenticate") { Arity = ArgumentArity.ExactlyOne };
+ 
+             var test = new Command("test", "TODO")
+             {
+                 new Argument<string>("path", "Path to an assembly or .pdb"),
+-                new Option(new[] { "--auth", "-a" }, "Authentication method")
+-                {
+-                    Argument = new Argument<string>(name: "method", () => AuthenticationMethod.Basic) { Arity = ArgumentArity.ExactlyOne }.FromAmong(AuthenticationMethod.Basic)
+-                },
+-                new Option(new[] { "--auth-encoding", "-e" }, "Encoding to use for authentication value")
+-                {
+-                    Argument = authEncodingArg,
+-                },
+-                new Option(new[] { "--user", "-u" }, "Username to use to authenticate")
+-                {
+-                    Argument = new Argument<string?>(name: "user-name") { Arity = ArgumentArity.ExactlyOne }
+-                },
+-                new Option(new[] { "--password", "-p" }, "Password to use to authenticate")
+-                {
+-                    Argument = new Argument<string?>() { Arity = ArgumentArity.ExactlyOne }
+-                },
++                authArg,
++                new Option<Encoding>(new[] { "--auth-encoding", "-e" }, (arg) => Encoding.GetEncoding(arg.Tokens.Single().Value), false, "Encoding to use for authentication value"),
++                userArg,
++                passwordArg,
+             };
+             test.Handler = CommandHandler.Create<string, string?, Encoding?, string?, string?, IConsole>(TestAsync);
+             
+@@ -137,15 +108,13 @@ private static RootCommand GetRootCommand()
+ 
+             root.AddValidator(commandResult =>
+             {
+-                if (commandResult.OptionResult("--auth") != null)
++                if (commandResult.FindResultFor(authArg) != null)
+                 {
+-                    if (commandResult.OptionResult("--user") == null || commandResult.OptionResult("--password") == null)
++                    if (commandResult.FindResultFor(userArg) == null || commandResult.FindResultFor(passwordArg) == null)
+                     {
+-                        return "Specify --user and --password options";
++                        commandResult.ErrorMessage = "Specify --user and --password options";
+                     }
+                 }
+-
+-                return null;
+             });
+ 
+             return root;
+@@ -530,4 +499,4 @@ private static AuthenticationHeaderValue GetAuthenticationHeader(string method,
+             };
+         }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/src/dotnet-sourcelink/dotnet-sourcelink.csproj b/src/dotnet-sourcelink/dotnet-sourcelink.csproj
+index 9a604a7..b6c5e9b 100644
+--- a/src/dotnet-sourcelink/dotnet-sourcelink.csproj
++++ b/src/dotnet-sourcelink/dotnet-sourcelink.csproj
+@@ -13,9 +13,10 @@
+   </PropertyGroup>
+   <ItemGroup>
+     <PackageReference Include="System.CommandLine" Version="$(SystemCommandLineVersion)" />
++    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="$(SystemCommandLineNamingConventionBinderVersion)" />
+     <PackageReference Include="System.CommandLine.Rendering" Version="$(SystemCommandLineRenderingVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
+   </ItemGroup>
+   <Import Project="..\SourceLink.Tools\Microsoft.SourceLink.Tools.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
