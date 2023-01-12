@@ -158,6 +158,8 @@
                       '$(MsiVersion)' ^
                       '$(SDKBundleVersion)' ^
                       '$(Version)' ^
+                      '$(VersionMajor)' ^
+                      '$(VersionMinor)' ^
                       '$(SdkInstallerUpgradeCode)' ^
                       '$(SdkDependencyKeyName)' ^
                       '$(Architecture)' ^
@@ -196,6 +198,8 @@
                       '$(MsiVersion)' ^
                       '$(SDKBundleVersion)' ^
                       '$(Version)' ^
+                      '$(VersionMajor)' ^
+                      '$(VersionMinor)' ^
                       '$(SdkPlaceholderInstallerUpgradeCode)' ^
                       '$(SdkPlaceholderDependencyKeyName)' ^
                       '$(Architecture)' ^
@@ -231,6 +235,8 @@
                       '%(TemplatesMsiComponent.MsiVersion)' ^
                       '%(TemplatesMsiComponent.MsiVersion)' ^
                       '$(FullNugetVersion)' ^
+                      '$(VersionMajor)' ^
+                      '$(VersionMinor)' ^
                       '%(TemplatesMsiComponent.UpgradeCode)' ^
                       '%(TemplatesMsiComponent.DependencyKeyName)' ^
                       '$(Architecture)' ^
@@ -341,6 +347,8 @@
                       -DotnetMSIVersion '$(MsiVersion)' ^
                       -SDKBundleVersion '$(SDKBundleVersion)' ^
                       -DotnetCLINugetVersion '$(Version)' ^
+                      -VersionMajor '$(VersionMajor)' ^
+                      -VersionMinor '$(VersionMinor)' ^
                       -WindowsDesktopVersion '$(MicrosoftWindowsDesktopAppRuntimePackageVersion)' ^
                       -UpgradeCode '$(CombinedFrameworkSDKHostInstallerUpgradeCode)' ^
                       -DependencyKeyName '$(SdkDependencyKeyName)' ^
