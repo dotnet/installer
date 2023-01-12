@@ -57,13 +57,13 @@ source="${BASH_SOURCE[0]}"
 
 # resolve $source until the file is no longer a symlink
 while [[ -h "$source" ]]; do
-  scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+  script_root="$( cd -P "$( dirname "$source" )" && pwd )"
   source="$(readlink "$source")"
   # if $source was a relative symlink, we need to resolve it relative to the path where the
   # symlink file was located
-  [[ $source != /* ]] && source="$scriptroot/$source"
+  [[ $source != /* ]] && source="$script_root/$source"
 done
-scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+script_root="$( cd -P "$( dirname "$source" )" && pwd )"
 
 function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
@@ -83,7 +83,7 @@ function highlight () {
   echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-installer_dir="$scriptroot/../"
+installer_dir=$(realpath "$script_root/../")
 tmp_dir=''
 vmr_dir=''
 vmr_branch='main'
@@ -166,9 +166,9 @@ set -e
 
 # Prepare darc
 highlight 'Installing .NET, preparing the tooling..'
-source "$scriptroot/common/tools.sh"
+source "$script_root/common/tools.sh"
 InitializeDotNetCli true
-dotnet="$scriptroot/../.dotnet/dotnet"
+dotnet="$script_root/../.dotnet/dotnet"
 "$dotnet" tool restore
 
 # Run the sync
