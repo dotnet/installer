@@ -81,7 +81,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         /// <summary>
         /// Indicates which properties will be written into the Version props file.
-        /// If AllPackages (Default), all packages from previous builds will be written.
+        /// If AllPackages (Default), all packages from previously built repos will be written.
         /// If DependenciesOnly, then only those packages appearing as dependencies in
         /// Version.Details.xml will show up. If DependenciesOnly is used, requires setting
         /// the VersionDetails task property to the valid Version.Details.xml path.
