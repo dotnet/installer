@@ -49,9 +49,15 @@ namespace Microsoft.DotNet.Build.Tasks
         private const string DependenciesOnlyVersionPropsFlowType = "DependenciesOnly";
         private const string DefaultVersionPropsFlowType = AllPackagesVersionPropsFlowType;
 
+        /// <summary>
+        /// Set of input nuget package files to generate version properties for.
+        /// </summary>
         [Required]
         public ITaskItem[] NuGetPackages { get; set; }
 
+        /// <summary>
+        /// File where the version properties should be written.
+        /// </summary>
         [Required]
         public string OutputPath { get; set; }
 
@@ -116,11 +122,6 @@ namespace Microsoft.DotNet.Build.Tasks
             // Load the nodes, filter those that are not pinned, and 
             XmlNodeList dependencyNodes = document.DocumentElement.SelectNodes($"//{DependencyAttributeName}");
 
-            if (dependencyNodes == null)
-            {
-                return dependencyNames;
-            }
-
             foreach (XmlNode dependency in dependencyNodes)
             {
                 if (dependency.NodeType == XmlNodeType.Comment || dependency.NodeType == XmlNodeType.Whitespace)
@@ -176,9 +177,10 @@ namespace Microsoft.DotNet.Build.Tasks
                 return !Log.HasLoggedErrors;
             }
 
-            if (VersionPropsFlowType == DependenciesOnlyVersionPropsFlowType && !File.Exists(VersionDetails))
+            if (VersionPropsFlowType == DependenciesOnlyVersionPropsFlowType && (string.IsNullOrEmpty(VersionDetails) || !File.Exists(VersionDetails)))
             {
-                Log.LogError("When version flow type is DependenciesOnly, VersionDetails must point to a valid path to the Version.Details.xml file for the repo.");
+                Log.LogError($"When version flow type is DependenciesOnly, the VersionDetails task parameter must point to a valid path to the Version.Details.xml file for the repo. " +
+                    "Provided file path '{VersionDetails}' does not exist.");
                 return !Log.HasLoggedErrors;
             }
 
@@ -210,12 +212,11 @@ namespace Microsoft.DotNet.Build.Tasks
                     Version = new DirectoryInfo(Directory.EnumerateDirectories(dir).OrderBy(s => s).Last()).Name
                 });
 
-            // Then, if version flow type is "DependenciesOnly", filter those
-            // dependencies that do not appear in the version.details.xml file.
-
             var packageElementsToWrite = latestPackages;
             var additionalAssetElementsToWrite = additionalAssets;
 
+            // Then, if version flow type is "DependenciesOnly", filter those
+            // dependencies that do not appear in the version.details.xml file.
             if (VersionPropsFlowType == DependenciesOnlyVersionPropsFlowType)
             {
                 var dependencies = GetDependences();
