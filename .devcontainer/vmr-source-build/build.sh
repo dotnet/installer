@@ -18,13 +18,16 @@ installer_sha=$(git -C "$installer_dir" rev-parse HEAD)
 cp "$installer_dir/.git/config" "$tmp_dir/git_config"
 rm -rf "$installer_dir"
 mkdir -p "$installer_dir"
-git -C "$installer_dir" init
-mv "$tmp_dir/git_config" "$installer_dir/.git/config"
-git -C "$installer_dir" fetch --all
-git -C "$installer_dir" checkout "$installer_sha"
+pushd "$installer_dir"
+git init
+mv "$tmp_dir/git_config" ./.git/config
+git fetch --all
+git checkout "$installer_sha"
 
-"$script_root"/../../eng/vmr-sync.sh \
+./eng/vmr-sync.sh    \
     --vmr "$vmr_dir" \
     --tmp "$tmp_dir" \
     --branch main    \
     --debug
+
+popd
