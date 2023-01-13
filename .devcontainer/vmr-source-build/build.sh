@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 source="${BASH_SOURCE[0]}"
 script_root="$( cd -P "$( dirname "$source" )" && pwd )"
 
