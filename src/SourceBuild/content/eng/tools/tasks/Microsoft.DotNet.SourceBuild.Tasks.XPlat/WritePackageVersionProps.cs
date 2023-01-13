@@ -91,7 +91,6 @@ namespace Microsoft.DotNet.Build.Tasks
         /// If DependenciesOnly, then only those packages appearing as dependencies in
         /// Version.Details.xml will show up. The VersionsDetails property must be set to a 
         /// valid Version.Details.xml path when DependenciesOnly is used.
-        /// the VersionDetails task property to the valid Version.Details.xml path.
         /// </summary>
         public string VersionPropsFlowType { get; set; } = DefaultVersionPropsFlowType;
 
