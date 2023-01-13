@@ -90,7 +90,6 @@ namespace Microsoft.DotNet.Build.Tasks
 
         /// <summary>
         /// If VersionPropsFlowType is set to DependenciesOnly, should be the path to the Version.Detail.xml file for the repo.
-        /// receiving the Version props file.
         /// </summary>
         public string VersionDetails { get; set; }
 
