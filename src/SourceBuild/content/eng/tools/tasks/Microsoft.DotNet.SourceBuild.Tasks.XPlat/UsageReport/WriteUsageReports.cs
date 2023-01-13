@@ -114,7 +114,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                     string id = usage.PackageIdentity.Id;
                     string version = usage.PackageIdentity.Version.OriginalVersion;
 
-                    string pvpIdent = WriteBuildInputProps.GetPropertyName(id, WriteBuildInputProps.VersionPropertySuffix);
+                    string pvpIdent = WritePackageVersionsProps.GetPropertyName(id, WritePackageVersionsProps.VersionPropertySuffix);
 
                     var sourceBuildCreator = new StringBuilder();
                     foreach (RepoOutput output in sourceBuildRepoOutputs)
@@ -200,7 +200,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                         // Get the creation time element.
                         ?.Element(snapshot.Xml
                             .GetDefaultNamespace()
-                            .GetName(WriteBuildInputProps.CreationTimePropertyName))
+                            .GetName(WritePackageVersionsProps.CreationTimePropertyName))
                         ?.Value;
 
                     if (string.IsNullOrEmpty(creationTime))

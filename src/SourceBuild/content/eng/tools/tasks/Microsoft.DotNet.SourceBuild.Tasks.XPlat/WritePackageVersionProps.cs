@@ -34,7 +34,7 @@ namespace Microsoft.DotNet.Build.Tasks
     /// The former represents the current way that source build works for most repos. The latter represents the desired
     /// methodology (PVP Flow). PVP flow closely matches how the product is built in non-source-build mode.
     /// </summary>
-    public class WriteBuildInputProps : Microsoft.Build.Utilities.Task
+    public class WritePackageVersionsProps : Microsoft.Build.Utilities.Task
     {
         private static readonly Regex InvalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
 

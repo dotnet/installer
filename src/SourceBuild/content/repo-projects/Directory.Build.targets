@@ -13,7 +13,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateNuGetConfigPackageSourcesMappings" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ValidateUsageAgainstBaseline" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteBuildInputProps" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageVersionsProps" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteVersionsFile" />
@@ -255,7 +255,7 @@
     </PropertyGroup>
 
     <!-- Write the build input properties, then save off a copy that will be used for generating usage reports later -->
-    <WriteBuildInputProps NuGetPackages="@(_CurrentSourceBuiltPackages)"
+    <WritePackageVersionsProps NuGetPackages="@(_CurrentSourceBuiltPackages)"
                            ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                            VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                            VersionDetails="$(_VersionDetailsXml)"
@@ -263,7 +263,7 @@
                            OutputPath="$(CurrentSourceBuiltPackageVersionPropsPath)" />
 
     <!-- Create previously source-built inputs info -->
-    <WriteBuildInputProps NuGetPackages="@(_PreviouslyBuiltSourceBuiltPackages)"
+    <WritePackageVersionsProps NuGetPackages="@(_PreviouslyBuiltSourceBuiltPackages)"
                           VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                           VersionDetails="$(_VersionDetailsXml)"
                           OutputPath="$(PreviouslySourceBuiltPackageVersionPropsPath)" />
