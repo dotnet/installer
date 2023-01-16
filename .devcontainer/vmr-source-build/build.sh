@@ -16,7 +16,7 @@ vmr_dir=$(realpath "$workspace_dir/dotnet")
 mkdir -p "$tmp_dir"
 
 # Codespaces performs a shallow fetch only
-git -C "$installer_dir" fetch --all
+git -C "$installer_dir" fetch --all --unshallow
 
 ./eng/vmr-sync.sh    \
     --vmr "$vmr_dir" \
