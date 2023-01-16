@@ -6,7 +6,7 @@ source="${BASH_SOURCE[0]}"
 script_root="$( cd -P "$( dirname "$source" )" && pwd )"
 
 # TODO: Remove once we have a new version of the image
-dnf -y install openssl1.1.x86_64
+dnf -y install openssl1.1
 
 installer_dir=$(realpath "$script_root/../..")
 workspace_dir=$(realpath "$installer_dir/../")
