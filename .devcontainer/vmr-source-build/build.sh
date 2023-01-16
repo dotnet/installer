@@ -15,15 +15,8 @@ vmr_dir=$(realpath "$workspace_dir/dotnet")
 
 mkdir -p "$tmp_dir"
 
-# installer_sha=$(git -C "$installer_dir" rev-parse HEAD)
-# cp "$installer_dir/.git/config" "$tmp_dir/git_config"
-# rm -rf "$installer_dir"
-# mkdir -p "$installer_dir"
-# pushd "$installer_dir"
-# git init
-# mv "$tmp_dir/git_config" ./.git/config
-# git fetch --all
-# git checkout "$installer_sha"
+# Codespaces performs a shallow fetch only
+git -C "$installer_dir" fetch --all
 
 ./eng/vmr-sync.sh    \
     --vmr "$vmr_dir" \
