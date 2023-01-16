@@ -18,10 +18,12 @@ mkdir -p "$tmp_dir"
 # Codespaces performs a shallow fetch only
 git -C "$installer_dir" fetch --all --unshallow
 
-./eng/vmr-sync.sh    \
-    --vmr "$vmr_dir" \
-    --tmp "$tmp_dir" \
-    --branch main    \
-    --debug
+# We will try to figure out, which branch is the current (PR) branch based off of
+# We need this to figure out, which VMR branch to use
+vmr_branch=$(git log --pretty=format:'%D' HEAD^ | grep 'origin/' | head -n1 | sed 's@origin/@@' | sed 's@,.*@@')
 
-popd
+"$installer_dir/eng/vmr-sync.sh" \
+    --vmr "$vmr_dir"             \
+    --tmp "$tmp_dir"             \
+    --branch "$vmr_branch"       \
+    --debug
