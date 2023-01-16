@@ -248,6 +248,29 @@ namespace EndToEnd.Tests
             Assert.True(directory.EnumerateFileSystemInfos().Any());
         }
 
+        [Theory]
+        // microsoft.dotnet.common.itemtemplates templates
+        [InlineData("class")]
+        [InlineData("struct")]
+        [InlineData("enum")]
+        [InlineData("record")]
+        [InlineData("interface")]
+        public void ItCanCreateItemTemplateWithProjectRestriction(string templateName, string language = "C#")
+        {
+            DirectoryInfo directory = InstantiateProjectTemplate("classlib", language, withNoRestore: false);
+            string projectDirectory = directory.FullName;
+            string newArgs = $"{templateName} --language {language} --debug:ephemeral-hive";
+
+            new NewCommandShim()
+                .WithWorkingDirectory(projectDirectory)
+                .Execute(newArgs)
+                .Should().Pass();
+
+            //check if the template created files
+            Assert.True(directory.Exists);
+            Assert.True(directory.EnumerateFileSystemInfos().Any());
+        }
+
         [WindowsOnlyTheory]
         [InlineData("wpf", Skip = "https://github.com/dotnet/wpf/issues/2363")]
         [InlineData("winforms", Skip = "https://github.com/dotnet/wpf/issues/2363")]
@@ -402,19 +425,8 @@ namespace EndToEnd.Tests
 
         private static void TestTemplateCreateAndBuild(string templateName, bool build = true, bool selfContained = false, string language = "", string framework = "")
         {
-            DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
+            DirectoryInfo directory = InstantiateProjectTemplate(templateName, language);
             string projectDirectory = directory.FullName;
-
-            string newArgs = $"{templateName} --debug:ephemeral-hive --no-restore";
-            if (!string.IsNullOrWhiteSpace(language))
-            {
-                newArgs += $" --language {language}";
-            }
-
-            new NewCommandShim()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute(newArgs)
-                .Should().Pass();
 
             if (!string.IsNullOrWhiteSpace(framework))
             {
@@ -453,6 +465,25 @@ namespace EndToEnd.Tests
                      .Execute(buildArgs)
                      .Should().Pass();
             }
+        }
+
+        private static DirectoryInfo InstantiateProjectTemplate(string templateName, string language = "", bool withNoRestore = true)
+        {
+            DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
+            string projectDirectory = directory.FullName;
+
+            string newArgs = $"{templateName} --debug:ephemeral-hive {(withNoRestore ? "--no-restore" : "")}";
+            if (!string.IsNullOrWhiteSpace(language))
+            {
+                newArgs += $" --language {language}";
+            }
+
+            new NewCommandShim()
+                .WithWorkingDirectory(projectDirectory)
+                .Execute(newArgs)
+                .Should().Pass();
+
+            return directory;
         }
     }
 }
