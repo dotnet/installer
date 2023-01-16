@@ -27,3 +27,9 @@ vmr_branch=$(git log --pretty=format:'%D' HEAD^ | grep 'origin/' | head -n1 | se
     --tmp "$tmp_dir"             \
     --branch "$vmr_branch"       \
     --debug
+
+# Run prep.sh
+unset RepositoryName
+pushd "$vmr_dir"
+./prep.sh
+popd
