@@ -83,8 +83,8 @@
     </ReadLinesFromFile>
 
     <ItemGroup>
-      <OriginalPackageVersionLines Remove="</Project>" />
-      <BootstrapPackageVersionLines Remove="<Project>" />
+      <OriginalPackageVersionLines Remove="&lt;/Project&gt;" />
+      <BootstrapPackageVersionLines Remove="&lt;Project&gt;" />
     </ItemGroup>
 
     <WriteLinesToFile File="$(UnpackedTarPath)/PackageVersions.props"
