@@ -259,7 +259,8 @@ namespace EndToEnd.Tests
         {
             DirectoryInfo directory = InstantiateProjectTemplate("classlib", language, withNoRestore: false);
             string projectDirectory = directory.FullName;
-            string newArgs = $"{templateName} --language {language} --debug:ephemeral-hive";
+            string expectedItemName = $"TestItem_{templateName}";
+            string newArgs = $"{templateName} --name {expectedItemName} --language {language} --debug:ephemeral-hive";
 
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
@@ -269,6 +270,7 @@ namespace EndToEnd.Tests
             //check if the template created files
             Assert.True(directory.Exists);
             Assert.True(directory.EnumerateFileSystemInfos().Any());
+            Assert.True(directory.GetFile($"{expectedItemName}.cs") != null);
         }
 
         [WindowsOnlyTheory]
@@ -469,7 +471,10 @@ namespace EndToEnd.Tests
 
         private static DirectoryInfo InstantiateProjectTemplate(string templateName, string language = "", bool withNoRestore = true)
         {
-            DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
+            DirectoryInfo directory = TestAssets.CreateTestDirectory(
+                identifier: string.IsNullOrWhiteSpace(language) 
+                ? templateName 
+                : $"{templateName}[{language}]");
             string projectDirectory = directory.FullName;
 
             string newArgs = $"{templateName} --debug:ephemeral-hive {(withNoRestore ? "--no-restore" : "")}";
