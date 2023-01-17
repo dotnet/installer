@@ -58,21 +58,24 @@ stages:
         value: ${{ parameters.poolInternalAmd64.demands }}
 
   jobs:
-  - template: ../jobs/vmr-build.yml
-    parameters:
-      buildName: CentOSStream8_Online
-      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-      vmrBranch: ${{ parameters.vmrBranch }}
-      architecture: x64
-      pool:
-        name: ${{ variables.defaultPoolName }}
-        demands: ${{ variables.defaultPoolDemands }}
-      container: ${{ parameters.centOSStream8Container }}
-      bootstrapPrep: false            # 🚫
-      enablePoison: false             # 🚫
-      excludeSdkContentTests: true    # ✅
-      excludeOmniSharpTests: true     # ✅
-      runOnline: true                 # ✅
+  # TODO: Disable PR validation until source-build is more sustainable
+  # https://github.com/dotnet/source-build/issues/3214
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: CentOSStream8_Online
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ parameters.vmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream8Container }}
+        bootstrapPrep: false            # 🚫
+        enablePoison: false             # 🚫
+        excludeSdkContentTests: true    # ✅
+        excludeOmniSharpTests: true     # ✅
+        runOnline: true                 # ✅
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
