@@ -105,6 +105,7 @@ stages:
         container: ${{ parameters.centOSStream9Container }}
         bootstrapPrep: false          # 🚫
         enablePoison: false           # 🚫
+        enableSha1Signing: true       # ✅
         excludeSdkContentTests: false # 🚫
         excludeOmniSharpTests: false  # 🚫
         runOnline: false              # 🚫

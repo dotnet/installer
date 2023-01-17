@@ -55,6 +55,10 @@ parameters:
 - name: buildFromArchive
   type: boolean
 
+- name: enableSha1Signing
+  type: boolean
+  default: false
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -165,19 +169,24 @@ jobs:
       set -x
       df -h
 
-      networkArgs=
+      customRunArgs=
       customBuildArgs=
       if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
         customBuildArgs='--online'
       else
-        networkArgs='--network none'
+        customRunArgs='--network none'
+      fi
+
+      # See https://github.com/dotnet/source-build/issues/3202
+      if [[ '${{ parameters.enableSha1Signing }}' == 'True' ]]; then
+        customRunArgs="$customRunArgs -e OPENSSL_ENABLE_SHA1_SIGNATURES=1"
       fi
 
       if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
         customBuildArgs="$customBuildArgs --poison"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${networkArgs} ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) ${customBuildArgs}
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${customRunArgs} ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) ${customBuildArgs}
     displayName: Build
 
   - script: |
