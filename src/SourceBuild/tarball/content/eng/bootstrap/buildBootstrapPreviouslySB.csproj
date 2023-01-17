@@ -73,6 +73,30 @@
       Targets="CopyDownloadedPackage"
       Properties="SourcePath=$(RestorePackagesPath);DestinationPath=$(UnpackedTarPath);PackageName=%(PackageDownload.Identity);PackageVersion=%(PackageDownload.Version)" />
 
+    <!-- override PVP with bootstrap-override package versions -->
+    <Message Text="  Overriding previously-source-built package versions with $(BootstrapOverrideVersionsProps)" Importance="High" />
+    <ReadLinesFromFile File="$(UnpackedTarPath)/PackageVersions.props">
+      <Output TaskParameter="Lines" ItemName="OriginalPackageVersionLines" />
+    </ReadLinesFromFile>
+    <ReadLinesFromFile File="$(BootstrapOverrideVersionsProps)">
+      <Output TaskParameter="Lines" ItemName="BootstrapPackageVersionLines" />
+    </ReadLinesFromFile>
+
+    <ItemGroup>
+      <OriginalPackageVersionLines Remove="</Project>" />
+      <BootstrapPackageVersionLines Remove="<Project>" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(UnpackedTarPath)/PackageVersions.props"
+                      Lines="@(OriginalPackageVersionLines)"
+                      Overwrite="true"
+    />
+    <WriteLinesToFile File="$(UnpackedTarPath)/PackageVersions.props"
+                      Lines="@(BootstrapPackageVersionLines)"
+                      Overwrite="false"
+    />
+
+
     <!-- Repack tarball with new bootstrap name -->
     <Message Text="  Repacking tarball to $(NewTarballName)" Importance="High" />
     <Exec Command="tar --numeric-owner -czf $(NewTarballName) *.nupkg *.props SourceBuildReferencePackages/" WorkingDirectory="$(UnpackedTarPath)" />
