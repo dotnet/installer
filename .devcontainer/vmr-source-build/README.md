@@ -18,7 +18,7 @@ To build the VMR, run following:
 ```bash
 cd /workspaces/dotnet
 unset RepositoryName
-./build.sh --online --clean-while-building
+./build.sh --online
 ```
 
 > Please note that, at this time, the build modifies some of the checked-in sources so it might

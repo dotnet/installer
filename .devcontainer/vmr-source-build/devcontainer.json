@@ -5,14 +5,13 @@
     "name": "VMR with PR changes",
     "image": "mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36",
     "hostRequirements": {
-        // A completely built .NET source-tarball is >64 GB
+        // A completely source built .NET is >64 GB with all the repos/artifacts
         "storage": "128gb"
     },
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-dotnettools.csharp",
-                "eamodio.gitlens"
+                "ms-dotnettools.csharp"
             ]
         },
         "codespaces": {
@@ -21,5 +20,5 @@
             ]
         }
     },
-    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/vmr-source-build/build.sh"
+    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/vmr-source-build/init.sh"
 }
