@@ -18,16 +18,6 @@ pr:
 stages:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: templates/stages/vmr-scan.yml
-    parameters:
-      name: binaries
-      type: binaries
-      command: scan-binary-files
-
-  - template: templates/stages/vmr-scan.yml
-    parameters:
-      name: cloaked files
-      type: cloaked_files
-      command: scan-cloaked-files
 
 # For rolling builds we want to build the MSFT SDK first so that we can
 # compare the contents with the source-built one later.

@@ -1,22 +1,18 @@
-parameters:
-- name: name
-  type: string
-
-- name: type
-  type: string
-
-- name: command
-  type: string
-
 stages:
-- stage: VMR_Scan_${{ parameters.type }}
-  displayName: Scan ${{ parameters.name }}
+- stage: VMR_Scan
+  displayName: VMR Scan
   dependsOn: []
   jobs:
   - job: Scan
-    displayName: Scan ${{ parameters.name }}
+    displayName: VMR Scan
     pool:
-      vmImage: 'ubuntu-latest'
+      ${{ if eq(variables['System.TeamProject'], 'public') }}:
+        name: $(DncEngPublicBuildPool)
+        demands: ImageOverride -equals Build.Ubuntu.2004.Amd64.Open
+      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+        name: $(DncEngInternalBuildPool)
+        demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
+
     steps:
     - checkout: self
 
@@ -29,10 +25,19 @@ stages:
       workingDirectory: $(Build.SourcesDirectory)/src/installer
 
     - script: >
-        ./.dotnet/dotnet darc vmr ${{ parameters.command }}
+        ./.dotnet/dotnet darc vmr scan-binary-files
         --vmr "$(Build.SourcesDirectory)"
         --tmp "$(Agent.TempDirectory)"
-        || (echo '##[error]Found ${{ parameters.name }} in the VMR' && exit 1)
-      displayName: Scan ${{ parameters.name }}
+        || (echo '##[error]Found binaries in the VMR' && exit 1)
+      displayName: Scan for binaries
+      workingDirectory: $(Build.SourcesDirectory)/src/installer
+      continueOnError: true
+
+    - script: >
+        ./.dotnet/dotnet darc vmr scan-cloaked-files
+        --vmr "$(Build.SourcesDirectory)"
+        --tmp "$(Agent.TempDirectory)"
+        || (echo '##[error]Found cloaked files in the VMR' && exit 1)
+      displayName: Scan for cloaked files
       workingDirectory: $(Build.SourcesDirectory)/src/installer
       continueOnError: true
