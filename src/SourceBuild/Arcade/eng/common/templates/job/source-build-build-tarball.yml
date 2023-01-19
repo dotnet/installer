@@ -116,15 +116,15 @@ jobs:
         downloadDir=$(mktemp -d)
         (cd $downloadDir && curl --retry 5 -O $archiveUrl)
 
-        mkdir $SCRIPT_ROOT/.dotnet
-        tar -xzf $downloadDir/$filename -C $SCRIPT_ROOT/.dotnet
+        mkdir $(tarballDir)/.dotnet
+        tar -xzf $downloadDir/$filename -C $(tarballDir)/.dotnet
         rm -rf $downloadDir
       else
         echo "$notFoundMessage"
       fi
 
-      echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk $(tarballDir)/.dotnet"
-    displayName: Download Previous SDK Tarball
+      echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /tarball/.dotnet"
+    displayName: Download Previously Source-Built SDK
     condition: eq(variables._WithPreviousSDK, 'true')
 
   - script: |
