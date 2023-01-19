@@ -360,14 +360,15 @@ stages:
 
   - template: /eng/common/templates/jobs/source-build.yml
 
-- ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
-  - stage: Synchronize_VMR
-    displayName: Synchronize VMR
-    dependsOn: []
-    jobs:
-    - template: eng/pipelines/templates/jobs/vmr-synchronization.yml
-      parameters:
-        vmrBranch: ${{ parameters.vmrBranch }}
+# TODO: Re-enable condition with issue: https://github.com/dotnet/source-build/issues/3214
+# - ${{ if and(eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
+- stage: Synchronize_VMR
+  displayName: Synchronize VMR
+  dependsOn: []
+  jobs:
+  - template: eng/pipelines/templates/jobs/vmr-synchronization.yml
+    parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
 
 # TODO: Disable source-build builds in PR validation until source-build is more sustainable
 # Tracking issue: https://github.com/dotnet/source-build/issues/3214
