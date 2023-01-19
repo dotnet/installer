@@ -2,6 +2,8 @@ stages:
 - stage: VMR_Scan
   displayName: VMR Scan
   dependsOn: []
+  variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
   jobs:
   - job: Scan
     displayName: VMR Scan
