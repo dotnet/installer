@@ -52,7 +52,7 @@ jobs:
       #   _WithPreviousSDK: false
       # Putting this here to test in CI
       CentOSStream8-WithPreviousSDK:
-        _BootstrapPrep: true
+        _BootstrapPrep: false
         _Container: ${{ parameters.centOSStream8Container }}
         _EnablePoison: false
         _ExcludeOmniSharpTests: true
