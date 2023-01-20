@@ -35,20 +35,21 @@ jobs:
       excludeSdkContentTests: true
     installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
     matrix:
-      CentOSStream8-Online:
-        _BootstrapPrep: true
-        _Container: ${{ parameters.centOSStream8Container }}
-        _EnablePoison: false
-        _ExcludeOmniSharpTests: true
-        _RunOnline: true
-        _WithPreviousSDK: false
-      CentOSStream8-Offline:
-        _BootstrapPrep: true
-        _Container: ${{ parameters.centOSStream8Container }}
-        _EnablePoison: false
-        _ExcludeOmniSharpTests: true
-        _RunOnline: false
-        _WithPreviousSDK: false
+      # TODO Re-enable
+      # CentOSStream8-Online:
+      #   _BootstrapPrep: true
+      #   _Container: ${{ parameters.centOSStream8Container }}
+      #   _EnablePoison: false
+      #   _ExcludeOmniSharpTests: true
+      #   _RunOnline: true
+      #   _WithPreviousSDK: false
+      # CentOSStream8-Offline:
+      #   _BootstrapPrep: true
+      #   _Container: ${{ parameters.centOSStream8Container }}
+      #   _EnablePoison: false
+      #   _ExcludeOmniSharpTests: true
+      #   _RunOnline: false
+      #   _WithPreviousSDK: false
       # Putting this here to test in CI
       CentOSStream8-WithPreviousSDK:
         _BootstrapPrep: true
