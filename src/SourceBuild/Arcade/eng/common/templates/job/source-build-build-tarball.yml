@@ -102,7 +102,7 @@ jobs:
         TargetFolder: $(tarballDir)/packages/archive/
 
   - script: |
-      set -euxo pipefail
+      set -euo pipefail
 
       sourceBuiltSDKUrl="https://dotnetcli.azureedge.net/source-built-artifacts/sdks/"
       packageVersionsPath="$(Build.SourcesDirectory)/eng/Versions.props"
