@@ -68,7 +68,7 @@
     <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="_DotNetInstallDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="_InitializeToolset=$(SourceBuiltSdksDir)Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(UseBootstrapArcade)' != 'true'" />
-    <EnvironmentVariables Include="_OverrideArcadeInitializeBuildToolFramework=net7.0" />
+    <EnvironmentVariables Include="_OverrideArcadeInitializeBuildToolFramework=net8.0" />
 
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
 
