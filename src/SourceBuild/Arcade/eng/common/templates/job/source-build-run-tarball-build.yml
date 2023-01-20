@@ -35,30 +35,28 @@ jobs:
       excludeSdkContentTests: true
     installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
     matrix:
-      # TODO Re-enable
-      # CentOSStream8-Online:
-      #   _BootstrapPrep: true
-      #   _Container: ${{ parameters.centOSStream8Container }}
-      #   _EnablePoison: false
-      #   _ExcludeOmniSharpTests: true
-      #   _RunOnline: true
-      #   _WithPreviousSDK: false
-      # CentOSStream8-Offline:
-      #   _BootstrapPrep: true
-      #   _Container: ${{ parameters.centOSStream8Container }}
-      #   _EnablePoison: false
-      #   _ExcludeOmniSharpTests: true
-      #   _RunOnline: false
-      #   _WithPreviousSDK: false
-      # Putting this here to test in CI
-      CentOSStream8-WithPreviousSDK:
-        _BootstrapPrep: false
+      CentOSStream8-Online:
+        _BootstrapPrep: true
+        _Container: ${{ parameters.centOSStream8Container }}
+        _EnablePoison: false
+        _ExcludeOmniSharpTests: true
+        _RunOnline: true
+        _WithPreviousSDK: false
+      CentOSStream8-Offline:
+        _BootstrapPrep: true
         _Container: ${{ parameters.centOSStream8Container }}
         _EnablePoison: false
         _ExcludeOmniSharpTests: true
         _RunOnline: false
-        _WithPreviousSDK: true
+        _WithPreviousSDK: false
       ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+        CentOSStream8-WithPreviousSDK:
+          _BootstrapPrep: false
+          _Container: ${{ parameters.centOSStream8Container }}
+          _EnablePoison: false
+          _ExcludeOmniSharpTests: true
+          _RunOnline: false
+          _WithPreviousSDK: true
         CentOSStream9-Offline:
           _BootstrapPrep: true
           _Container: ${{ parameters.centOSStream9Container }}
