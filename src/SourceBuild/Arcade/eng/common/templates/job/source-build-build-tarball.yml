@@ -102,7 +102,9 @@ jobs:
         TargetFolder: $(tarballDir)/packages/archive/
 
   - script: |
-      sourceBuiltSDKUrl="https://dotnetcli.azureedge.net/source-built-artifacts/sdks"
+      set -euxo pipefail
+
+      sourceBuiltSDKUrl="https://dotnetcli.azureedge.net/source-built-artifacts/sdks/"
       packageVersionsPath="$(Build.SourcesDirectory)/eng/Versions.props"
       notFoundMessage="No source-built SDK found to download..."
 
