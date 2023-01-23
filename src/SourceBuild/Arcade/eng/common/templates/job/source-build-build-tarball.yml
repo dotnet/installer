@@ -123,10 +123,11 @@ jobs:
         rm -rf $downloadDir
       else
         echo "$notFoundMessage"
+        exit 1
       fi
 
       echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /tarball/.dotnet"
-    displayName: Download Previously Source-Built SDK
+    displayName: Setup Previously Source-Built SDK
     condition: eq(variables._WithPreviousSDK, 'true')
 
   - script: |
