@@ -23,6 +23,11 @@ parameters:
   type: string
   default: $(Build.SourceBranchName)
 
+- name: disableVmrBuild
+  displayName: Skip source-building the VMR
+  type: boolean
+  default: false
+
 variables:
 - name: _PublishUsingPipelines
   value: false
@@ -361,7 +366,7 @@ stages:
   - template: /eng/common/templates/jobs/source-build.yml
 
 # You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable on the installer pipeline
-- ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), not(variables['disableVmrBuild'])) }}:
+- ${{ if and(eq(variables['Build.Reason'], 'PullRequest'), not(parameters.disableVmrBuild)) }}:
   - template: eng/pipelines/templates/stages/vmr-build.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
