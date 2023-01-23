@@ -192,24 +192,15 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 })
                 .OrderBy(snapshot =>
                 {
-                    // Get the embedded creation time if possible: the file's original metadata may
-                    // have been destroyed by copying, zipping, etc.
-                    string creationTime = snapshot.Xml
-                        // Get the second PropertyGroup.
-                        .Elements().Skip(1).FirstOrDefault()
-                        // Get the creation time element.
-                        ?.Element(snapshot.Xml
-                            .GetDefaultNamespace()
-                            .GetName(WritePackageVersionsProps.CreationTimePropertyName))
-                        ?.Value;
+                    XmlNodeList creationtimePropertyNodes = snapshot.Xml.SelectNodes($"//{WritePackageVersionsProps.CreationTimePropertyName}");
 
-                    if (string.IsNullOrEmpty(creationTime))
+                    if (creationtimePropertyNodes.Count() != 1 || string.IsNullOrEmpty(creationtimePropertyNodes.Single().Value))
                     {
                         Log.LogError($"No creation time property found in snapshot {snapshot.Path}");
                         return default(DateTime);
                     }
 
-                    return new DateTime(long.Parse(creationTime));
+                    return new DateTime(long.Parse(creationtimePropertyNodes.Single().Value));
                 })
                 .Select(snapshot =>
                 {
