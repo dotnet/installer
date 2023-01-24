@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
@@ -193,15 +192,25 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 })
                 .OrderBy(snapshot =>
                 {
-                    XmlNodeList creationtimePropertyNodes = snapshot.Xml.SelectNodes($"//{WritePackageVersionsProps.CreationTimePropertyName}");
+                    // Get the embedded creation time if possible: the file's original metadata may
+                    // have been destroyed by copying, zipping, etc.
+                    string creationTime = snapshot.Xml
+                        // Get all elements
+                        .Elements()
+                        // Select all the subelements
+                        .SelectMany(e => e.Elements())
+                        // Find all that match the creation time property name
+                        .Where(e => e.Name == xml.GetDefaultNamespace().GetName(WritePackageVersionsProps.CreationTimePropertyName))
+                        // There should be only one or zero
+                        .SingleOrDefault()?.Value;
 
-                    if (creationtimePropertyNodes.Count() != 1 || string.IsNullOrEmpty(creationtimePropertyNodes.Single().Value))
+                    if (string.IsNullOrEmpty(creationTime))
                     {
                         Log.LogError($"No creation time property found in snapshot {snapshot.Path}");
                         return default(DateTime);
                     }
 
-                    return new DateTime(long.Parse(creationtimePropertyNodes.Single().Value));
+                    return new DateTime(long.Parse(creationTime));
                 })
                 .Select(snapshot =>
                 {
@@ -271,7 +280,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             public static PackageVersionPropsElement[] Parse(XElement xml)
             {
                 return xml
-                    // Get the single PropertyGroup
+                    // Get the first PropertyGroup. The second PropertyGroup is 'extra properties', and the third group is the creation time.
+                    // Only select the first because the extra properties are not built packages.
                     .Elements()
                     .First()
                     // Get all *PackageVersion property elements.
