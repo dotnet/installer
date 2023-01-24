@@ -200,7 +200,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                         // Select all the subelements
                         .SelectMany(e => e.Elements())
                         // Find all that match the creation time property name
-                        .Where(e => e.Name == xml.GetDefaultNamespace().GetName(WritePackageVersionsProps.CreationTimePropertyName))
+                        .Where(e => e.Name == snapshot.Xml.GetDefaultNamespace().GetName(WritePackageVersionsProps.CreationTimePropertyName))
                         // There should be only one or zero
                         .SingleOrDefault()?.Value;
 
