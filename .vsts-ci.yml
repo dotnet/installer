@@ -53,14 +53,6 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-    - template: /eng/common/templates/job/onelocbuild.yml
-      parameters:
-        CreatePr: true
-        LclSource: lclFilesfromPackage
-        LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
-        MirrorBranch: main
-        MirrorRepo: installer
   # This job is for build retry configuration.
   - job: Publish_Build_Configuration
     pool:
