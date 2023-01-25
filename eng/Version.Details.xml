@@ -186,6 +186,12 @@
       <Sha>7b9791daa3a3477eb22ec805946c9fff8b42d8ca</Sha>
       <SourceBuild RepoName="symreader" ManagedOnly="true" />
     </Dependency>
+    <!-- temporary workaround for the wrong version of dotnet-format flowing into dotnet/sdk -->
+    <Dependency Name="dotnet-format" Version="7.0.352001">
+      <Uri>https://github.com/dotnet/format</Uri>
+      <Sha>6a22157622e5da71ba0c43d23269352210bdb277</Sha>
+      <SourceBuildTarball RepoName="format" ManagedOnly="true" />
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="7.0.0-beta.23060.4">
@@ -201,7 +207,7 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>ac5977ebf05451c1adcf24a15d16263e4d25fd0c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.22608.2">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.23063.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
       <Sha>9964206e0dd215eee4ed199b9041a94e16ba4c45</Sha>
       <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
