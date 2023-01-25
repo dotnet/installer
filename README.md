@@ -361,3 +361,5 @@ License
 -------
 
 The .NET project uses the [MIT license](LICENSE).
+
+The LICENSE and ThirdPartyNotices in any downloaded archives are authoritative.
