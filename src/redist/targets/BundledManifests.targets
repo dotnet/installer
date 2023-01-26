@@ -25,8 +25,6 @@
       <MsiNupkgId>%(Identity).Manifest-%(FeatureBand).Msi.$(MsiArchitectureForWorkloadManifests)</MsiNupkgId>
       <RestoredNupkgContentPath>$(NuGetPackageRoot)$([MSBuild]::ValueOrDefault('%(NupkgId)', '').ToLower())/$([MSBuild]::ValueOrDefault('%(Version)', '').ToLower())</RestoredNupkgContentPath>
       <RestoredMsiNupkgContentPath>$(NuGetPackageRoot)$([MSBuild]::ValueOrDefault('%(MsiNupkgId)', '').ToLower())/$([MSBuild]::ValueOrDefault('%(Version)', '').ToLower())</RestoredMsiNupkgContentPath>
-<!--      <RestoredMsiPathInNupkg>$([MSBuild]::NormalizePath('%(RestoredMsiNupkgContentPath)/data/%(NupkgId).%(Version)-$(MsiArchitectureForWorkloadManifests).msi'))</RestoredMsiPathInNupkg> -->
-      
       <RestoredMsiPathInNupkg>$([MSBuild]::NormalizePath($([System.IO.Directory]::GetFiles('%(RestoredMsiNupkgContentPath)/data/', '*$(MsiArchitectureForWorkloadManifests).msi'))))</RestoredMsiPathInNupkg>
     </BundledManifests>
   </ItemGroup>
