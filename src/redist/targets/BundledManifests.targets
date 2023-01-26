@@ -1,4 +1,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NetFeatureBand>8.0.100</NetFeatureBand>
+  </PropertyGroup>
   <ItemGroup>
     <BundledManifests Include="Microsoft.NET.Sdk.Android" FeatureBand="$(MauiFeatureBand)" Version="$(XamarinAndroidWorkloadManifestVersion)" />
     <BundledManifests Include="Microsoft.NET.Sdk.iOS" FeatureBand="$(MauiFeatureBand)" Version="$(XamarinIOSWorkloadManifestVersion)" />
@@ -6,11 +9,11 @@
     <BundledManifests Include="Microsoft.NET.Sdk.macOS" FeatureBand="$(MauiFeatureBand)" Version="$(XamarinMacOSWorkloadManifestVersion)" />
     <BundledManifests Include="Microsoft.NET.Sdk.Maui" FeatureBand="$(MauiFeatureBand)" Version="$(MauiWorkloadManifestVersion)" />
     <BundledManifests Include="Microsoft.NET.Sdk.tvOS" FeatureBand="$(MauiFeatureBand)" Version="$(XamarinTvOSWorkloadManifestVersion)" />
-    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain" FeatureBand="8.0.100" Version="$(MonoWorkloadManifestVersion)" />
-    <BundledManifests Include="Microsoft.NET.Workload.Emscripten.net6" FeatureBand="8.0.100" Version="$(EmscriptenWorkloadManifestVersion)" />
-    <BundledManifests Include="Microsoft.NET.Workload.Emscripten.net7" FeatureBand="8.0.100" Version="$(EmscriptenWorkloadManifestVersion)" />
-    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain.net6" FeatureBand="8.0.100" Version="$(MonoWorkloadManifestVersion)" />
-    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain.net7" FeatureBand="8.0.100" Version="$(MonoWorkloadManifestVersion)" />
+    <BundledManifests Include="Microsoft.NET.Workload.Emscripten.net6" FeatureBand="$(NetFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
+    <BundledManifests Include="Microsoft.NET.Workload.Emscripten.net7" FeatureBand="$(NetFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
+    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain" FeatureBand="$(NetFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
+    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain.net6" FeatureBand="$(NetFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
+    <BundledManifests Include="Microsoft.NET.Workload.Mono.ToolChain.net7" FeatureBand="$(NetFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
   </ItemGroup>
 
   <!-- Calculate NuGet package IDs for bundled manifests -->
@@ -22,8 +25,12 @@
   <ItemGroup>
     <BundledManifests Update="@(BundledManifests)">
       <NupkgId>%(Identity).Manifest-%(FeatureBand)</NupkgId>
-      <MsiNupkgId>%(Identity).Manifest-%(FeatureBand).Msi.$(MsiArchitectureForWorkloadManifests)</MsiNupkgId>
       <RestoredNupkgContentPath>$(NuGetPackageRoot)$([MSBuild]::ValueOrDefault('%(NupkgId)', '').ToLower())/$([MSBuild]::ValueOrDefault('%(Version)', '').ToLower())</RestoredNupkgContentPath>
+    </BundledManifests>
+
+    <!-- Add additional metadata for MSI manifest packages on Windows -->
+    <BundledManifests Update="@(BundledManifests)" Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' != 'arm'">
+      <MsiNupkgId>%(Identity).Manifest-%(FeatureBand).Msi.$(MsiArchitectureForWorkloadManifests)</MsiNupkgId>
       <RestoredMsiNupkgContentPath>$(NuGetPackageRoot)$([MSBuild]::ValueOrDefault('%(MsiNupkgId)', '').ToLower())/$([MSBuild]::ValueOrDefault('%(Version)', '').ToLower())</RestoredMsiNupkgContentPath>
       <RestoredMsiPathInNupkg>$([MSBuild]::NormalizePath($([System.IO.Directory]::GetFiles('%(RestoredMsiNupkgContentPath)/data/', '*$(MsiArchitectureForWorkloadManifests).msi'))))</RestoredMsiPathInNupkg>
     </BundledManifests>
