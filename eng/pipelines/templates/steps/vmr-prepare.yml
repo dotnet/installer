@@ -27,6 +27,11 @@ steps:
     displayName: Clone dotnet/dotnet
     path: vmr
     clean: true
+  
+  # Allows the vmr to have git commands run on it from a container that has the vmr directory mounted into it.
+  # Without this, git commands in that context would get this error: "fatal: detected dubious ownership in repository at '/vmr'"
+  - script: git config --global --add safe.directory /vmr
+    displayName: Add /vmr to safe directories
 
 - ${{ if or(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal')) }}:
   - script: |
