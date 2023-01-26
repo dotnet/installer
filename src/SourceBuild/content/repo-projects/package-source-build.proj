@@ -1,5 +1,6 @@
 <Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="$(GitInfoAllRepoPropsFile)" />
 
   <PropertyGroup>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -48,9 +49,26 @@
 
     <PropertyGroup>
       <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(installerOutputPackageVersion).$(TargetRid).tar.gz</SourceBuiltTarballName>
+      <SourceBuiltVersionFileName>.version</SourceBuiltVersionFileName>
     </PropertyGroup>
 
-    <Exec Command="tar --numeric-owner --exclude='Microsoft.SourceBuild.Intermediate.*.nupkg' -czf $(SourceBuiltTarballName) *.nupkg *.props SourceBuildReferencePackages/"
+    <Exec
+      Command="git rev-parse HEAD"
+      ConsoleToMSBuild="true"
+      Condition=" '$(GitCommitHash)' == '' ">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
+    </Exec>
+
+    <ItemGroup>
+      <VersionFileContent Include="$(GitCommitHash);$(sdkOutputPackageVersion)" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      File="$(SourceBuiltPackagesPath)$(SourceBuiltVersionFileName)"
+      Lines="@(VersionFileContent)"
+      Overwrite="true" />
+
+    <Exec Command="tar --numeric-owner --exclude='Microsoft.SourceBuild.Intermediate.*.nupkg' -czf $(SourceBuiltTarballName) $(SourceBuiltVersionFileName) *.nupkg *.props SourceBuildReferencePackages/"
           WorkingDirectory="$(SourceBuiltPackagesPath)" />
 
     <Message Importance="High" Text="Packaged source-built artifacts to $(SourceBuiltTarballName)" />
