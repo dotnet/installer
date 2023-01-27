@@ -51,15 +51,8 @@
       <SourceBuiltVersionFileName>.version</SourceBuiltVersionFileName>
     </PropertyGroup>
 
-    <Exec
-      Command="git rev-parse HEAD"
-      ConsoleToMSBuild="true"
-      Condition=" '$(GitCommitHash)' == '' ">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
-    </Exec>
-
     <ItemGroup>
-      <VersionFileContent Include="$(GitCommitHash);$(sdkOutputPackageVersion)" />
+      <VersionFileContent Include="$(RepositoryCommit);$(sdkOutputPackageVersion)" />
     </ItemGroup>
 
     <WriteLinesToFile
