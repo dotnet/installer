@@ -4,7 +4,6 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Mono.Cecil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -56,6 +56,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// Intended for Linux systems with limited /tmp space, like Azure VMs.
         /// </summary>
         public string OverrideTempPath { get; set; }
+
+        /// <summary>
+        /// Array of files containing lists of non-shipping packages
+        /// </summary>
+        public ITaskItem[] NonShippingPackagesListFiles { get; set; }
 
         private static readonly string[] ZipFileExtensions =
         {
@@ -173,6 +178,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
         internal IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
+            IEnumerable<string> nonShippingPackages = GetAllNonShippingPackages();
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<string>(initialCandidates);
@@ -191,6 +197,14 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 // add its contents to the list to be checked.
                 if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
                 {
+                    Log.LogMessage($"Zip or NuPkg file to check: {checking}");
+
+                    // Skip non-shipping packages
+                    if (nonShippingPackages.Contains(Path.GetFileName(checking), StringComparer.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
                     var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(checking));
                     PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
@@ -211,6 +225,21 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             tempDir.Delete(true);
 
             return poisons;
+        }
+
+        private IEnumerable<string> GetAllNonShippingPackages()
+        {
+            if (NonShippingPackagesListFiles != null)
+            {
+                return NonShippingPackagesListFiles
+                    .SelectMany(item => File.ReadAllLines(item.ItemSpec))
+                    .Distinct()
+                    .ToList();
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
         }
 
         private static PoisonedFileEntry CheckSingleFile(IEnumerable<CatalogPackageEntry> catalogedPackages, string rootPath, string fileToCheck)
@@ -261,22 +290,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             try
             {
-                memStream.Seek(0, SeekOrigin.Begin);
-                using (var asm = AssemblyDefinition.ReadAssembly(memStream))
+                AssemblyName asm = AssemblyName.GetAssemblyName(fileToCheck);
+                if (IsAssemblyPoisoned(fileToCheck))
                 {
-                    foreach (var a in asm.CustomAttributes)
-                    {
-                        foreach (var ca in a.ConstructorArguments)
-                        {
-                            if (ca.Type.Name == asm.MainModule.TypeSystem.String.Name)
-                            {
-                                if (ca.Value.ToString().Contains(PoisonMarker))
-                                {
-                                    poisonEntry.Type |= PoisonType.AssemblyAttribute;
-                                }
-                            }
-                        }
-                    }
+                    poisonEntry.Type |= PoisonType.AssemblyAttribute;
                 }
             }
             catch
@@ -285,6 +302,27 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             return poisonEntry.Type != PoisonType.None ? poisonEntry : null;
+        }
+
+        private static bool IsAssemblyPoisoned(string path)
+        {
+            byte[] buffer = File.ReadAllBytes(path);
+            byte[] marker = Encoding.UTF8.GetBytes(PoisonMarker);
+
+            // Start at end of file and go backwards
+            // Marker is likely at the end and this saves time when
+            // we encounter a poisoned file.
+            for (int j = buffer.Length - marker.Length; j >= 0; j--)
+            {
+                int i;
+                for (i = 0; i < marker.Length && buffer[j + i] == marker[i]; i++) ;
+                if (i == marker.Length)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static PoisonedFileEntry ExtractAndCheckZipFileOnly(IEnumerable<CatalogPackageEntry> catalogedPackages, string zipToCheck, string markerFileName, string tempDir, Queue<string> futureFilesToCheck)

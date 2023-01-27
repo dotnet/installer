@@ -16,8 +16,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
     public class WriteUsageReports : Task
     {
-        private const string SnapshotPrefix = "PackageVersions.props.pre.";
-        private const string SnapshotSuffix = ".xml";
+        private const string SnapshotPrefix = "PackageVersions.";
+        private const string SnapshotSuffix = ".Current.props";
 
         /// <summary>
         /// Source usage data JSON file.
@@ -26,7 +26,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public string DataFile { get; set; }
 
         /// <summary>
-        /// A set of "PackageVersions.props.pre.{repo}.xml" files. They are analyzed to find
+        /// A set of "PackageVersions.{repo}.Current.props" files. They are analyzed to find
         /// packages built during source-build, and which repo built them. This info is added to the
         /// report. New packages are associated to a repo by going through each PVP in ascending
         /// file modification order.
@@ -114,7 +114,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                     string id = usage.PackageIdentity.Id;
                     string version = usage.PackageIdentity.Version.OriginalVersion;
 
-                    string pvpIdent = WriteBuildOutputProps.GetPropertyName(id);
+                    string pvpIdent = WritePackageVersionsProps.GetPropertyName(id, WritePackageVersionsProps.VersionPropertySuffix);
 
                     var sourceBuildCreator = new StringBuilder();
                     foreach (RepoOutput output in sourceBuildRepoOutputs)
@@ -195,13 +195,14 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                     // Get the embedded creation time if possible: the file's original metadata may
                     // have been destroyed by copying, zipping, etc.
                     string creationTime = snapshot.Xml
-                        // Get the second PropertyGroup.
-                        .Elements().Skip(1).FirstOrDefault()
-                        // Get the creation time element.
-                        ?.Element(snapshot.Xml
-                            .GetDefaultNamespace()
-                            .GetName(WriteBuildOutputProps.CreationTimePropertyName))
-                        ?.Value;
+                        // Get all elements
+                        .Elements()
+                        // Select all the subelements
+                        .SelectMany(e => e.Elements())
+                        // Find all that match the creation time property name
+                        .Where(e => e.Name == snapshot.Xml.GetDefaultNamespace().GetName(WritePackageVersionsProps.CreationTimePropertyName))
+                        // There should be only one or zero
+                        .SingleOrDefault()?.Value;
 
                     if (string.IsNullOrEmpty(creationTime))
                     {
@@ -279,7 +280,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             public static PackageVersionPropsElement[] Parse(XElement xml)
             {
                 return xml
-                    // Get the single PropertyGroup
+                    // Get the first PropertyGroup. The second PropertyGroup is 'extra properties', and the third group is the creation time.
+                    // Only select the first because the extra properties are not built packages.
                     .Elements()
                     .First()
                     // Get all *PackageVersion property elements.

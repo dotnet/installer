@@ -83,7 +83,7 @@ function highlight () {
   echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-installer_dir="$scriptroot/../"
+installer_dir=$(realpath "$scriptroot/../")
 tmp_dir=''
 vmr_dir=''
 vmr_branch='main'
@@ -151,6 +151,7 @@ fi
 if [[ ! -d "$vmr_dir" ]]; then
   highlight "Cloning 'dotnet/dotnet' into $vmr_dir.."
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
+  git switch -c "$vmr_branch"
 else
   if ! git -C "$vmr_dir" diff --quiet; then
     fail "There are changes in the working tree of $vmr_dir. Please commit or stash your changes"
@@ -178,10 +179,6 @@ fi
 
 highlight "Starting the synchronization to '$target_ref'.."
 set +e
-
-# Temporary workaround while we fix fetching commits
-rm -rf "$tmp_dir/installer"
-cp -r "$installer_dir" "$tmp_dir/installer"
 
 if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
