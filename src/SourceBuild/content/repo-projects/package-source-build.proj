@@ -1,5 +1,6 @@
 <Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="$(PackageVersionPropsPath)" />
 
   <PropertyGroup>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -52,7 +53,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <VersionFileContent Include="$(RepositoryCommit);$(sdkOutputPackageVersion)" />
+      <VersionFileContent Include="$(RepositoryCommit);$(MicrosoftSourceBuildIntermediateInstallerVersion)" />
     </ItemGroup>
 
     <WriteLinesToFile
