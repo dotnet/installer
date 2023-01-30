@@ -8,6 +8,7 @@
 *.png
 *.PNG
 *.rtf
+*.snk
 *.vsd
 *.vsdx
 *.xlsx
@@ -28,10 +29,13 @@ src/aspnetcore/src/*.otf
 src/aspnetcore/src/*.ttf
 src/aspnetcore/src/*.woff
 src/aspnetcore/src/*.woff2
+src/aspnetcore/src/Components/Web.JS/dist/Release/blazor.server.js # JavaScript file with a null byte
+src/aspnetcore/src/Components/Web.JS/dist/Release/blazor.webview.js # JavaScript file with a null byte
 src/aspnetcore/src/ProjectTemplates/Web.ProjectTemplates/**/app.db
 src/aspnetcore/src/submodules/spa-templates/**/app.db
 
 src/fsharp/**/signedtests/*
+src/fsharp/src/fsi/fsi.res # Icon
 src/fsharp/tests/fsharp/core/resources/*.wav
 
 src/msbuild/src/Tasks.UnitTests/**/*.bin
@@ -49,5 +53,7 @@ src/runtime/src/native/external/brotli/common/dictionary.bin.br
 
 src/sdk/src/Assets/TestProjects/*
 
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/build/strongNameBypass.reg # UTF16-LE text file
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/build/strongNameBypass2.reg # UTF16-LE text file
 src/source-build-externals/src/humanizer/src/Humanizer.Tests*
 src/source-build-externals/src/newtonsoft-json/Src/Newtonsoft.Json.Tests/SpaceShipV2.bson
