@@ -11,12 +11,37 @@
 *.gif
 *.vsd
 *.vsdx
+
+**/test/*
+**/Test/*
+**/Test/*
+**/tests/*
+**/testCert*.pfx
+**/TestCert*.pfx
+
+src/arcade/src/Microsoft.DotNet.SignTool.Tests/*
+
 src/aspnetcore/src/*.woff
 src/aspnetcore/src/*.woff2
 src/aspnetcore/src/*.eot
 src/aspnetcore/src/*.otf
 src/aspnetcore/src/*.ttf
+src/aspnetcore/**/TestCertificates/*
+src/aspnetcore/**/samples/*
+
 src/fsharp/tests/fsharp/core/resources/*.wav
+src/fsharp/**/signedtests/*
+
+src/msbuild/src/Tasks.UnitTests/**/CacheFileSamples/*.cache
+
+src/razor/**/SampleApp/**/fonts/*
+
+src/roslyn/**/CodeAnalysisTest/*
+
 src/runtime/src/mono/mono/eglib/test/*.txt # Some non UTF8 text files
 src/runtime/src/mono/mono/tests/exiting/*.out # Text test files with a NULL char at the end
 src/runtime/src/native/external/brotli/common/dictionary.bin.br
+
+src/sdk/src/Assets/TestProjects/*
+
+src/source-build-externals/src/humanizer/src/Humanizer.Tests*
