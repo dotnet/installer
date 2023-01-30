@@ -1,36 +1,36 @@
-*.png
-*.PNG
+*.bmp
+*.docx
+*.gif
+*.ico
 *.jpg
 *.JPG
-*.ico
-*.bmp
 *.pdf
-*.docx
-*.xlsx
+*.png
+*.PNG
 *.rtf
-*.gif
 *.vsd
 *.vsdx
+*.xlsx
 
 **/test/*
 **/Test/*
 **/Test/*
-**/tests/*
 **/testCert*.pfx
 **/TestCert*.pfx
+**/tests/*
 
 src/arcade/src/Microsoft.DotNet.SignTool.Tests/*
 
-src/aspnetcore/src/*.woff
-src/aspnetcore/src/*.woff2
+src/aspnetcore/**/samples/*
+src/aspnetcore/**/TestCertificates/*
 src/aspnetcore/src/*.eot
 src/aspnetcore/src/*.otf
 src/aspnetcore/src/*.ttf
-src/aspnetcore/**/TestCertificates/*
-src/aspnetcore/**/samples/*
+src/aspnetcore/src/*.woff
+src/aspnetcore/src/*.woff2
 
-src/fsharp/tests/fsharp/core/resources/*.wav
 src/fsharp/**/signedtests/*
+src/fsharp/tests/fsharp/core/resources/*.wav
 
 src/msbuild/src/Tasks.UnitTests/**/CacheFileSamples/*.cache
 
@@ -40,6 +40,8 @@ src/roslyn/**/CodeAnalysisTest/*
 
 src/runtime/src/mono/mono/eglib/test/*.txt # Some non UTF8 text files
 src/runtime/src/mono/mono/tests/exiting/*.out # Text test files with a NULL char at the end
+src/runtime/src/mono/wasm/testassets/**/*.dat
+src/runtime/src/mono/wasm/testassets/**/*.o
 src/runtime/src/native/external/brotli/common/dictionary.bin.br
 
 src/sdk/src/Assets/TestProjects/*
