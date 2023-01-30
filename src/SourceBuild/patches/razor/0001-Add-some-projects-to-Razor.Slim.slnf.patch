@@ -5,8 +5,9 @@ Subject: [PATCH] Add some projects to Razor.Slim.slnf
 
 Backport: https://github.com/dotnet/razor/pull/8188
 ---
- Razor.Slim.slnf | 3 +++
- 1 file changed, 3 insertions(+)
+ Razor.Slim.slnf                                                | 3 +++
+ .../Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj  | 2 ++
+ 2 files changed, 5 insertions(+)
 
 diff --git a/Razor.Slim.slnf b/Razor.Slim.slnf
 index 6e76d40f1..8328075c4 100644
@@ -22,3 +23,16 @@ index 6e76d40f1..8328075c4 100644
        "src\\Shared\\Microsoft.AspNetCore.Razor.LanguageSupport\\Microsoft.AspNetCore.Razor.LanguageSupport.csproj",
        "src\\Razor\\src\\Microsoft.AspNetCore.Razor.Common\\Microsoft.AspNetCore.Razor.Common.csproj",
        "src\\Razor\\src\\Microsoft.CodeAnalysis.Razor.Workspaces\\Microsoft.CodeAnalysis.Razor.Workspaces.csproj",
+diff --git a/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj b/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
+index 278e35a42..745645fc9 100644
+--- a/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
++++ b/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
+@@ -8,6 +8,8 @@
+     <NoPackageAnalysis>true</NoPackageAnalysis>
+     <GenerateDependencyFile>false</GenerateDependencyFile>
+     <IsPackable>true</IsPackable>
++    <!-- Need to build this project in source build -->
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
