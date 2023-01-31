@@ -9,7 +9,7 @@ parameters:
 - name: vmrBranch
   displayName: dotnet/dotnet branch to use
   type: string
-  default: $(Build.SourceBranchName)
+  default: $(Build.SourceBranch)
 
 - name: skipComponentGovernanceDetection
   type: boolean
@@ -30,7 +30,8 @@ steps:
 
 - ${{ if or(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal')) }}:
   - script: |
-      git switch -c ${{ parameters.vmrBranch }}
+      branch_name=$(echo '${{ parameters.vmrBranch }}' | sed -e "s#^/refs/heads/##")
+      git switch -c "$branch_name"
     displayName: Checkout ${{ parameters.vmrBranch }}
     workingDirectory: $(Agent.BuildDirectory)/vmr
 

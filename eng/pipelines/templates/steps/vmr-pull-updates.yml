@@ -23,8 +23,9 @@ steps:
   path: installer
 
 - script: |
-    git checkout -B ${{ parameters.vmrBranch }}
-    echo "##vso[task.setvariable variable=vmrBranch]${{ parameters.vmrBranch }}"
+    branch_name=$(echo '${{ parameters.vmrBranch }}' | sed -e "s#^/refs/heads/##")
+    git checkout -B "$branch_name"
+    echo "##vso[task.setvariable variable=vmrBranch]$branch_name"
   displayName: Prepare branch ${{ parameters.vmrBranch }}
   workingDirectory: ${{ parameters.vmrPath }}
 
@@ -32,7 +33,7 @@ steps:
     ./eng/vmr-sync.sh
     --vmr ${{ parameters.vmrPath }}
     --tmp $(Agent.TempDirectory)
-    --branch ${{ parameters.vmrBranch }}
+    --branch $(echo '${{ parameters.vmrBranch }}' | sed -e "s#^/refs/heads/##")
     --target-ref ${{ parameters.targetRef }}
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
