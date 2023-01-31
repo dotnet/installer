@@ -115,6 +115,12 @@ function BootstrapArtifacts {
     rm -rf $workingDir
 }
 
+# Check for the version of dotnet to install
+if [ "$installDotnet" == "true" ]; then
+    echo "  Installing dotnet..."
+    (source ./eng/common/tools.sh && InitializeDotNetCli true)
+fi
+
 # Read the eng/Versions.props to get the archives to download and download them
 if [ "$downloadArtifacts" == "true" ]; then
     DownloadArchive "Artifacts" $artifactsBaseFileName "true"
@@ -123,10 +129,4 @@ fi
 
 if [ "$downloadPrebuilts" == "true" ]; then
     DownloadArchive "Prebuilts" $prebuiltsBaseFileName "false"
-fi
-
-# Check for the version of dotnet to install
-if [ "$installDotnet" == "true" ]; then
-    echo "  Installing dotnet..."
-    (source ./eng/common/tools.sh && InitializeDotNetCli true)
 fi
