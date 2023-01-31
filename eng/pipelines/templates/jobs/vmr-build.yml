@@ -159,10 +159,7 @@ jobs:
           customPrepArgs='--bootstrap'
         fi
 
-        # Allows Arcade to have access to the commit for the build
-        envVars="-e BUILD_SOURCEVERSION"
-
-        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${envVars} ${{ parameters.container }} ./prep.sh ${customPrepArgs}
+        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh ${customPrepArgs}
       else
         mkdir $(sourcesPath)/.dotnet
         previousSdkPath="$(sourcesPath)/packages/archive/dotnet-sdk-*.tar.gz"
@@ -175,12 +172,13 @@ jobs:
       set -x
       df -h
 
-      customRunArgs=
+      # Allows Arcade to have access to the commit for the build
+      customRunArgs="-e BUILD_SOURCEVERSION"
       customBuildArgs=
       if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
         customBuildArgs='--online'
       else
-        customRunArgs='--network none'
+        customRunArgs="$customRunArgs --network none"
       fi
 
       # See https://github.com/dotnet/source-build/issues/3202
