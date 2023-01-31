@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WixLocalization Culture="en-us" Language="1033" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-  <String Id="Caption">[WixBundleName] Installer</String>
+  <String Id="Caption">Instalační program pro [WixBundleName]</String>
   <String Id="Title">[BUNDLEMONIKER]</String>
   <String Id="ConfirmCancelMessage">Opravdu chcete akci zrušit?</String>
   <String Id="ExecuteUpgradeRelatedBundleMessage">Předchozí verze</String>
   <String Id="HelpHeader">Nápověda nastavení</String>
-  <String Id="HelpText">/install | /repair | /uninstall | /layout [\[]"directory"[\]] - installs, repairs, uninstalls
-   or creates a complete local copy of the bundle in directory. '/install' is the default.
+  <String Id="HelpText">/install | /repair | /uninstall | /layout [\[]"directory"[\]] – nainstaluje, opraví, odinstaluje
+ nebo vytvoří úplnou místní kopii sady prostředků v adresáři. /install je výchozí hodnota.
 
-/passive | /quiet - displays minimal UI with no prompts or displays no UI and
-   no prompts. By default, UI and all prompts are displayed.
+/passive | /quiet – zobrazí minimální uživatelské rozhraní bez výzev nebo nezobrazí žádné uživatelské rozhraní a
+   žádné výzvy. Ve výchozím nastavení se zobrazí uživatelské rozhraní a všechny výzvy.
 
-/norestart - suppress any attempts to restart. By default, UI will prompt before restart.
-/log [\[]"log.txt"[\]] - logs to a specific file. By default, a log file is created in %TEMP%.</String>
+/norestart – potlačí všechny pokusy o restartování. Ve výchozím nastavení uživatelské rozhraní zobrazí před restartováním výzvu.
+/log [\[]"log.txt"[\]] – zaznamená do konkrétního souboru. Ve výchozím nastavení se v %TEMP% vytvoří soubor protokolu.</String>
   <String Id="HelpCloseButton">&amp;Zavřít</String>
   <String Id="InstallAcceptCheckbox">Souhl&amp;asím s licenčními podmínkami</String>
   <String Id="InstallOptionsButton">M&amp;ožnosti</String>
@@ -37,7 +37,7 @@
   <String Id="FailureInstallHeader">Instalace se nepovedla</String>
   <String Id="FailureUninstallHeader">Odinstalace se nepovedla</String>
   <String Id="FailureRepairHeader">Oprava se nepovedla</String>
-  <String Id="FailureHyperlinkLogText">One or more issues caused the setup to fail. Please fix the issues and then retry setup. For more information, see the &lt;a href="#"&gt;log file&lt;/a&gt;.</String>
+  <String Id="FailureHyperlinkLogText">Nejméně jeden problém způsobil selhání instalace. Opravte prosím tyto problémy a zkuste instalaci zopakovat. Další informace najdete v &lt;a href="#"&gt;log file&lt;/a&gt;.</String>
   <String Id="FailureRestartText">Pro dokončení vrácení změn tohoto softwaru je potřeba restartovat počítač.</String>
   <String Id="FailureRestartButton">&amp;Restartovat</String>
   <String Id="FailureCloseButton">&amp;Zavřít</String>
@@ -47,39 +47,39 @@
   <String Id="FilesInUseDontCloseRadioButton">A&amp;plikace nezavírejte. Bude potřeba provést restart.</String>
   <String Id="FilesInUseOkButton">&amp;OK</String>
   <String Id="FilesInUseCancelButton">&amp;Zrušit</String>
-  <String Id="FirstTimeWelcomeMessage">The installation was successful.
+  <String Id="FirstTimeWelcomeMessage">Instalace byla úspěšná. 
 
-The following products were installed:
+Byly nainstalovány následující produkty:
     • .NET SDK [DOTNETSDKVERSION]
     • .NET Runtime [DOTNETRUNTIMEVERSION]
     • ASP.NET Core Runtime [ASPNETCOREVERSION]
     • .NET Windows Desktop Runtime [WINFORMSANDWPFVERSION]
 
-This product collects usage data
-    • More information and opt-out https://aka.ms/dotnet-cli-telemetry
+Tento produkt shromažďuje data o využití
+      • Další informace a odhlášení https://aka.ms/dotnet-cli-telemetry
 
-Resources
-    • .NET Documentation https://aka.ms/dotnet-docs
-    • SDK Documentation https://aka.ms/dotnet-sdk-docs
-    • Release Notes https://aka.ms/dotnet[VERSIONMAJOR]-release-notes
-    • Tutorials https://aka.ms/dotnet-tutorials</String>
-  <String Id="WelcomeHeaderMessage">.NET SDK</String>
+Prostředky
+    • Dokumentace .NET https://aka.ms/dotnet-docs
+    • Dokumentace SDK https://aka.ms/dotnet-sdk-docs
+    • Poznámky k verzi https://aka.ms/dotnet[VERSIONMAJOR]-release-notes
+    • Kurzy https://aka.ms/dotnet-tutorials</String>
+  <String Id="WelcomeHeaderMessage">Sada .NET SDK</String>
   <String Id="WelcomeDescription">
-    The .NET SDK is used to build, run, and test .NET applications. You can choose from multiple languages, editors, and developer tools, and take advantage of a large ecosystem of libraries to build apps for web, mobile, desktop, gaming, and IoT. We hope you enjoy it!</String>
+    Sada .NET SDK slouží k sestavování, spouštění a testování aplikací .NET. Můžete si vybrat z několika jazyků, editorů a vývojářských nástrojů a využít rozsáhlého ekosystému knihoven k vytváření aplikací pro web, mobilní zařízení, stolní počítače, hry a IoT. Doufáme, že se vám bude líbit!</String>
   <String Id="LearnMoreTitle">Další informace o .NET</String>
-  <String Id="ResourcesHeader">Resources</String>
+  <String Id="ResourcesHeader">Prostředky</String>
   <String Id="CoreDocumentationLink">&lt;A HREF="https://aka.ms/dotnet-docs"&gt;Dokumentace k architektuře .NET&lt;/A&gt;</String>
   <String Id="SDKDocumentation">&lt;A HREF="https://aka.ms/dotnet-cli-docs"&gt;Dokumentace k sadě SDK&lt;/A&gt;</String>
   <String Id="PrivacyStatementLink">&lt;A HREF="https://aka.ms/dev-privacy"&gt;Prohlášení o zásadách ochrany osobních údajů&lt;/A&gt;</String>
   <String Id="DotNetEulaLink">&lt;A HREF="https://aka.ms/dotnet-license-windows"&gt;Informace o licencování pro .NET&lt;/A&gt;</String>
   <String Id="DotNetCLITelemetryLink">&lt;A HREF="https://aka.ms/dotnet-cli-telemetry"&gt;Kolekce telemetrie a výslovný nesouhlas&lt;/A&gt;</String>
-  <String Id="InstallationNoteTitle">Installation note</String>
+  <String Id="InstallationNoteTitle">Poznámka k instalaci</String>
   <String Id="InstallationNote">Během procesu instalace se spustí příkaz, který zlepší rychlost obnovení projektu a povolí offline přístup. Akce se dokončí přibližně za minutu.
   </String>
-  <String Id="VisualStudioWarning">If you plan to use .NET [VERSIONMAJOR].[VERSIONMINOR] with Visual Studio, Visual Studio 2022 17.4 or newer is required. &lt;A HREF="https://aka.ms/dotnet[VERSIONMAJOR]-release-notes"&gt;Learn more&lt;/A&gt;.
+  <String Id="VisualStudioWarning">Pokud plánujete používat .NET [VERSIONMAJOR].[VERSIONMINOR] s Visual Studio, vyžaduje se Visual Studio 2022 17.4 nebo novější. &lt;A HREF="https://aka.ms/dotnet[VERSIONMAJOR]-release-notes"&gt;Další informace&lt;/A&gt;.
   </String>
-  <String Id="LicenseAssent">By clicking Install, you agree to the following terms:</String>
-  <String Id="InstallPathx64x86">The installation path for x64 SDK installations: "[DOTNETHOME_X64]" cannot be the same as for x86 SDK installations: "[DOTNETHOME_X86]"</String>
-  <String Id="InstallPathARM64x86">The installation path for ARM64 SDK installations: "[DOTNETHOME_ARM64]" cannot be the same as for x86 SDK installations: "[DOTNETHOME_X86]"</String>
-  <String Id="InstallPathARM64x64">The installation path for ARM64 SDK installations: "[DOTNETHOME_ARM64]" cannot be the same as for x64 SDK installations: "[DOTNETHOME_X64]"</String>
+  <String Id="LicenseAssent">Kliknutím na Nainstalovat vyjadřujete souhlas s následujícími podmínkami:</String>
+  <String Id="InstallPathx64x86">Instalační cesta pro instalace sady x64 SDK[ DOTNETHOME_X64] nemůže být stejná jako u instalací sady x86 SDK: [DOTNETHOME_X86].</String>
+  <String Id="InstallPathARM64x86">Instalační cesta pro instalace sady ARM64 SDK[ DOTNETHOME_ARM64] nemůže být stejná jako u instalací sady x86 SDK: [DOTNETHOME_X86]</String>
+  <String Id="InstallPathARM64x64">Instalační cesta pro instalace sady ARM64 SDK[ DOTNETHOME_ARM64] nemůže být stejná jako u instalací sady x64 SDK: [DOTNETHOME_X64]</String>
 </WixLocalization>
