@@ -26,7 +26,7 @@ jobs:
   - name: vmrPath
     value: $(Agent.BuildDirectory)/vmr
   - name: vmrBranchName
-    value: $[replace(parameters.vmrBranch, 'refs/heads/', '')]
+    value: ${{ replace(parameters.vmrBranch, 'refs/heads/', '') }}
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: DotNetBot-GitHub
   - ${{ else }}:
