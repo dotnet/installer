@@ -6,7 +6,7 @@ parameters:
   condition: always()
 
   # Branch of the VMR to use (to push to for internal builds)
-  vmrBranch: $(Build.SourceBranchName)
+  vmrBranch: $(Build.SourceBranch)
 
   # True when build is running from dotnet/dotnet directly
   isBuiltFromVmr:
