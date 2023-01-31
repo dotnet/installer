@@ -199,10 +199,16 @@
     <XamarinMacCatalystWorkloadManifestVersion>15.4.2372</XamarinMacCatalystWorkloadManifestVersion>
     <XamarinMacOSWorkloadManifestVersion>12.3.2372</XamarinMacOSWorkloadManifestVersion>
     <XamarinTvOSWorkloadManifestVersion>16.0.1478</XamarinTvOSWorkloadManifestVersion>
-    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
-    <MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>8.0.0-alpha.1.23073.2</MicrosoftNETWorkloadEmscriptennet6Manifest80100Version>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.23073.2</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest80100Version)</EmscriptenWorkloadManifestVersion>
+    <!-- Workloads from dotnet/emsdk -->
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100alpha1Version>8.0.0-alpha.1.23077.4</MicrosoftNETWorkloadEmscriptenCurrentManifest80100alpha1Version>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest80100alpha1Version>8.0.0-alpha.1.23077.4</MicrosoftNETWorkloadEmscriptennet7Manifest80100alpha1Version>
+    <MicrosoftNETWorkloadEmscriptennet6Manifest80100alpha1Version>8.0.0-alpha.1.23077.4</MicrosoftNETWorkloadEmscriptennet6Manifest80100alpha1Version>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100alpha1Version)</EmscriptenWorkloadManifestVersion>
+    <!-- Workloads from dotnet/runtime -->
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest80100alpha1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainCurrentManifest80100alpha1Version>
+    <MicrosoftNETWorkloadMonoToolchainnet7Manifest80100alpha1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet7Manifest80100alpha1Version>
+    <MicrosoftNETWorkloadMonoToolchainnet6Manifest80100alpha1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet6Manifest80100alpha1Version>
+    <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest80100alpha1Version)</MonoWorkloadManifestVersion>
   </PropertyGroup>
   <!-- dependencies for VMR initialization -->
   <PropertyGroup>
