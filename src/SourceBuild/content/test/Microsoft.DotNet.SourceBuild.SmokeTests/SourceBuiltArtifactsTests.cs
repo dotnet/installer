@@ -13,7 +13,7 @@ public class SourceBuiltArtifactsTests : SmokeTests
 {
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [SkippableFact(Config.RunningInCIEnv, skipOnNullOrWhiteSpace: true, skipOnFalse: true)]
+    [Fact]
     public void VerifyVersionFile()
     {
         string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "sourcebuilt-artifacts");
@@ -33,8 +33,14 @@ public class SourceBuiltArtifactsTests : SmokeTests
             Assert.Equal(40, commitSha.Length);
             Assert.True(commitSha.All(c => char.IsLetterOrDigit(c)));
 
-            // If no commit SHA is available, the value will contain only zeros.
-            Assert.False(commitSha.All(c => c == '0'));
+            // When running in CI, we should ensure that the commit SHA is not all zeros, which is the default
+            // value when no commit SHA is available. In a dev environment this will likely be all zeros but it's
+            // possible that it could be a valid commit SHA depending on the environment's configuration, so we
+            // only verify this in CI.
+            if (Config.RunningInCI)
+            {
+                Assert.False(commitSha.All(c => c == '0'));
+            }
 
             // Verify the SDK version
 
