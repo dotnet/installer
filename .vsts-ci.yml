@@ -48,7 +48,7 @@ variables:
 - name: _InternalRuntimeDownloadArgs
   value: ''
 
-- ${{ if eq(parameters.vmrBranch, '') }}:
+- ${{ if ne(parameters.vmrBranch, '') }}:
   - name: VmrBranch
     value: ${{ parameters.vmrBranch }}
 - ${{ else }}:
