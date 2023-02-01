@@ -200,19 +200,20 @@
     <XamarinMacOSWorkloadManifestVersion>12.3.2372</XamarinMacOSWorkloadManifestVersion>
     <XamarinTvOSWorkloadManifestVersion>16.0.1478</XamarinTvOSWorkloadManifestVersion>
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1Version>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1Version>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1Version>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1Version>
-    <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1Version>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1Version>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1Version)</EmscriptenWorkloadManifestVersion>
+    <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</EmscriptenWorkloadFeatureBand>
     <!-- Workloads from dotnet/runtime -->
     <!--
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1Version>
-    <MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1Version>
-    <MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1Version>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1Version>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1PackageVersion>
     -->
-    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefVersion)</MonoWorkloadManifestVersion>
-    <!-- dotnet workload prerelease version band must match the emsdk and runtime feature band -->
+    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRePackageVersion)</MonoWorkloadManifestVersion>
+    <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
   <!-- dependencies for VMR initialization -->
