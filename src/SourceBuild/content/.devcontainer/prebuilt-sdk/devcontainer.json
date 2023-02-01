@@ -1,0 +1,17 @@
+// Container contains a pre-built SDK
+{
+    "name": "Pre-built .NET SDK",
+    "image": "mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36",
+    "hostRequirements": {
+        // A completely source built .NET is >64 GB with all the repos/artifacts
+        "storage": "128gb"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp"
+            ]
+        }
+    },
+    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/prebuilt-sdk/build.sh"
+}

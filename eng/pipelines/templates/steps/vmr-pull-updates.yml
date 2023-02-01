@@ -1,0 +1,38 @@
+### These steps synchronize new code from product repositories into the VMR (https://github.com/dotnet/dotnet).
+### They initialize the darc CLI and pull the new updates.
+### Changes are applied locally onto the already cloned VMR (located in $vmrPath).
+
+parameters:
+- name: vmrBranch
+  displayName: dotnet/dotnet branch to use
+  type: string
+
+- name: targetRef
+  displayName: Target revision in dotnet/installer to synchronize
+  type: string
+  default: $(Build.SourceVersion)
+
+- name: vmrPath
+  displayName: Path where the dotnet/dotnet is checked out to
+  type: string
+  default: $(Agent.BuildDirectory)/vmr
+
+steps:
+- checkout: self
+  displayName: Clone dotnet/installer
+  path: installer
+
+- script: |
+    git checkout -B ${{ parameters.vmrBranch }}
+    echo "##vso[task.setvariable variable=vmrBranch]${{ parameters.vmrBranch }}"
+  displayName: Prepare branch ${{ parameters.vmrBranch }}
+  workingDirectory: ${{ parameters.vmrPath }}
+
+- script: >
+    ./eng/vmr-sync.sh
+    --vmr ${{ parameters.vmrPath }}
+    --tmp $(Agent.TempDirectory)
+    --branch ${{ parameters.vmrBranch }}
+    --target-ref ${{ parameters.targetRef }}
+  displayName: Synchronize dotnet/dotnet
+  workingDirectory: $(Agent.BuildDirectory)/installer
