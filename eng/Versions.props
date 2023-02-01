@@ -212,7 +212,7 @@
     <MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>
     <MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet6Manifest80100preview1PackageVersion>
     -->
-    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRePackageVersion)</MonoWorkloadManifestVersion>
+    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
