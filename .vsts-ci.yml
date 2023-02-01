@@ -21,7 +21,7 @@ parameters:
 - name: vmrBranch
   displayName: dotnet/dotnet branch to push to
   type: string
-  default: ${{ variables['Build.SourceBranch'] }}
+  default: ''
 
 - name: disableVmrBuild
   displayName: Skip source-building the VMR
@@ -48,8 +48,12 @@ variables:
 - name: _InternalRuntimeDownloadArgs
   value: ''
 
-- name: VmrBranch
-  value: ${{ replace(replace(parameters.vmrBranch, 'refs/heads/', ''), 'refs/pull/', '') }}
+- ${{ if eq(parameters.vmrBranch, '') }}:
+  - name: VmrBranch
+    value: ${{ parameters.vmrBranch }}
+- ${{ else }}:
+  - name: VmrBranch
+    value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
 
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
