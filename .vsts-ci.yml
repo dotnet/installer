@@ -49,7 +49,7 @@ variables:
   value: ''
 
 - name: VmrBranch
-  value: ${{ replace(parameters.vmrBranch, 'refs/heads/', '') }}
+  value: ${{ replace(replace(parameters.vmrBranch, 'refs/heads/', ''), 'refs/pull/', '') }}
 
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
