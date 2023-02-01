@@ -29,6 +29,7 @@ public class SourceBuiltArtifactsTests : SmokeTests
             // Verify the commit SHA
 
             string commitSha = versionLines[0];
+            OutputHelper.WriteLine($"Commit SHA: {commitSha}");
             Assert.Equal(40, commitSha.Length);
             Assert.True(commitSha.All(c => char.IsLetterOrDigit(c)));
 
