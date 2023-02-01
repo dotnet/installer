@@ -200,13 +200,13 @@
     <XamarinMacOSWorkloadManifestVersion>12.3.2372</XamarinMacOSWorkloadManifestVersion>
     <XamarinTvOSWorkloadManifestVersion>16.0.1478</XamarinTvOSWorkloadManifestVersion>
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>
-    <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>8.0.0-preview.2.23081.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>8.0.0-preview.1.23081.2</MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>8.0.0-preview.1.23081.2</MicrosoftNETWorkloadEmscriptennet7Manifest80100preview1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>8.0.0-preview.1.23081.2</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</EmscriptenWorkloadFeatureBand>
-    <!-- Workloads from dotnet/runtime -->
+    <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <!--
     <MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>
     <MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainnet7Manifest80100preview1PackageVersion>
