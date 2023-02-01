@@ -30,8 +30,7 @@ steps:
 
 - ${{ if or(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal')) }}:
   - script: |
-      branch_name=$(echo '${{ parameters.vmrBranch }}' | sed -e "s#^/refs/heads/##")
-      git switch -c "$branch_name"
+      git switch -c ${{ parameters.vmrBranch }}
     displayName: Checkout ${{ parameters.vmrBranch }}
     workingDirectory: $(Agent.BuildDirectory)/vmr
 
