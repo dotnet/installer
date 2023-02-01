@@ -205,7 +205,7 @@
     <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>8.0.0-preview.1.23081.2</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview1PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview1PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
-    <EmscriptenWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</EmscriptenWorkloadFeatureBand>
+    <EmscriptenWorkloadFeatureBand>8.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <!--
     <MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>8.0.0-alpha.1.23078.5</MicrosoftNETWorkloadMonoToolchainCurrentManifest80100preview1PackageVersion>
@@ -214,7 +214,7 @@
     -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
-    <MonoWorkloadFeatureBand>$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `^\d*[\.]\d*[\.]\d*(-[A-z]*[\.]*\d*)?`))</MonoWorkloadFeatureBand>
+    <MonoWorkloadFeatureBand>8.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
   <!-- dependencies for VMR initialization -->
   <PropertyGroup>
