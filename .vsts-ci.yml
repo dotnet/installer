@@ -37,7 +37,7 @@ variables:
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if and(eq(variables['System.TeamProject'], 'public'), eq(variables['Build.Reason'], 'PullRequest')) }}:
   - name: VmrRef
     value: $(System.PullRequest.TargetBranch)
 - ${{ else }}:
