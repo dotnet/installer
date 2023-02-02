@@ -13,6 +13,7 @@ resources:
     type: github
     name: dotnet/dotnet
     endpoint: dotnet
+    ref: $(Build.SourceBranch)
 
 parameters:
 - name: vmrBranch
