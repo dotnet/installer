@@ -25,8 +25,6 @@ jobs:
   - template: /eng/common/templates/variables/pool-providers.yml
   - name: vmrPath
     value: $(Agent.BuildDirectory)/vmr
-  - name: vmrBranchName
-    value: ${{ replace(parameters.vmrBranch, 'refs/heads/', '') }}
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: DotNetBot-GitHub
   - ${{ else }}:
@@ -61,9 +59,9 @@ jobs:
         git config --global user.email 'dotnet-maestro[bot]@users.noreply.github.com' && git config --global user.name 'dotnet-maestro[bot]'
         git remote add dotnet 'https://$(BotAccount-dotnet-bot-repo-PAT)@github.com/dotnet/dotnet.git'
         git fetch dotnet
-        git branch $(vmrBranchName)
-        git branch --set-upstream-to=dotnet/$(vmrBranchName) $(vmrBranchName) || echo 'Branch $(vmrBranchName) not found in remote'
-        git push dotnet $(vmrBranchName)
+        git branch ${{ parameters.vmrBranch }}
+        git branch --set-upstream-to=dotnet/${{ parameters.vmrBranch }} ${{ parameters.vmrBranch }} || echo 'Branch ${{ parameters.vmrBranch }} not found in remote'
+        git push dotnet ${{ parameters.vmrBranch }}
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)
-      condition: and(succeeded(), or(eq(variables['vmrBranchName'], 'main'), startsWith(variables['vmrBranchName'], 'release/')))
+      condition: and(succeeded(), or(eq(variables['vmrBranch'], 'main'), startsWith(variables['vmrBranch'], 'release/')))
