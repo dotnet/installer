@@ -56,7 +56,7 @@ jobs:
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |
         set -x
-        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --commit-verification-pat "$(BotAccount-dotnet-maestro-bot-no-scopes-PAT)" --branch "${{ parameters.vmrBranch }}" --remote-url https://github.com/dotnet/dotnet.git --github-pat "$(BotAccount-dotnet-bot-repo-PAT)" --verbose
+        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --commit-verification-pat '$(BotAccount-dotnet-maestro-bot-no-scopes-PAT)' --branch '${{ parameters.vmrBranch }}' --remote-url https://github.com/dotnet/dotnet --github-pat '$(BotAccount-dotnet-bot-repo-PAT)' --verbose
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)/src/installer
       condition: and(succeeded(), or(eq(variables['vmrBranch'], 'main'), startsWith(variables['vmrBranch'], 'release/')))
