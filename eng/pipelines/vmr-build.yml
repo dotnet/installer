@@ -5,13 +5,6 @@ pr:
     - main
     - release/*
 
-resources:
-  repositories:
-  - repository: vmr
-    type: github
-    name: dotnet/dotnet
-    endpoint: dotnet
-
 parameters:
 - name: vmrBranch
   displayName: dotnet/dotnet branch to push to
@@ -29,7 +22,15 @@ variables:
     value: ${{ parameters.vmrBranch }}
 - ${{ else }}:
   - name: VmrBranch
-    value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
+    value: ${{ replace(replace(variables['System.PullRequest.TargetBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
+
+resources:
+  repositories:
+  - repository: vmr
+    type: github
+    name: dotnet/dotnet
+    endpoint: dotnet
+    ref: ${{ variables.VmrBranch }}
 
 stages:
 # You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable on the installer pipeline
