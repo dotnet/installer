@@ -42,7 +42,7 @@ variables:
     value: $(System.PullRequest.TargetBranch)
 - ${{ else }}:
   - name: VmrRef
-    value: 'refs/heads/main'
+    value: refs/heads/main
 
 resources:
   repositories:

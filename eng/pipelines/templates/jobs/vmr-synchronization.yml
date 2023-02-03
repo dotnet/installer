@@ -28,7 +28,7 @@ jobs:
   - ${{ if and( eq(variables['System.TeamProject'], 'internal'), or(startswith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))) }}:
     - group: DotNetBot-GitHub
     - group: DotNetBot-GitHub-No-Scopes
-  - ${{ if and( eq(variables['System.TeamProject'], 'internal'), or(startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/'), startswith(variables['Build.SourceBranch'], 'refs/heads/dev/'))) }}:
+  - ${{ if and( eq(variables['System.TeamProject'], 'internal'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/')) }}:
     - group: DotNetBot-AzDO-PAT
     
   pool:
@@ -52,20 +52,20 @@ jobs:
       targetRef: ${{ parameters.targetRef }}
 
   # For official builds, push the changes to the VMR
-  # Push main and release branches to the public vmr
+  # Push main and release branches to the public VMR
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |
         set -x
-        ./.dotnet/dotnet darc vmr push --vmr $(vmrPath) --commit-verification-pat $(BotAccount-dotnet-maestro-bot-no-scopes-PAT) --branch ${{ parameters.vmrBranch }} --remote-url https://github.com/dotnet/dotnet.git --github-pat $(BotAccount-dotnet-bot-repo-PAT)
+        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --commit-verification-pat "$(BotAccount-dotnet-maestro-bot-no-scopes-PAT)" --branch "${{ parameters.vmrBranch }}" --remote-url https://github.com/dotnet/dotnet.git --github-pat "$(BotAccount-dotnet-bot-repo-PAT)" --verbose
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)/src/installer
       condition: and(succeeded(), or(eq(variables['vmrBranch'], 'main'), startsWith(variables['vmrBranch'], 'release/')))
   
-  # Push internal/release branches to the internal vmr
+  # Push internal/release branches to the internal VMR
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     - script: |
         set -x
-        ./.dotnet/dotnet darc vmr push --vmr $(vmrPath) --skip-commit-verification --branch ${{ parameters.vmrBranch }} --remote-url https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet --azdev-pat $(dn-bot-dnceng-build-rw-code-rw)
+        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --skip-commit-verification --branch "${{ parameters.vmrBranch }}" --remote-url https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet --azdev-pat "$(dn-bot-dnceng-build-rw-code-rw)" --verbose
       displayName: Push changes to dotnet/dotnet
       workingDirectory: $(vmrPath)/src/installer
-      condition: and(succeeded(), or(startsWith(variables['vmrBranch'], 'internal/release/'), startsWith(variables['vmrBranch'], 'dev/'))
+      condition: and(succeeded(), startsWith(variables['vmrBranch'], 'internal/release/'))
