@@ -34,7 +34,7 @@ variables:
 stages:
 # You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable on the installer pipeline
 - ${{ if not(parameters.disableVmrBuild) }}:
-  - template: eng/pipelines/templates/stages/vmr-build.yml
+  - template: templates/stages/vmr-build.yml
     parameters:
       vmrBranch: ${{ variables.VmrBranch }}
       isBuiltFromVmr: false
@@ -46,6 +46,6 @@ stages:
     displayName: Synchronize VMR
     dependsOn: []
     jobs:
-    - template: eng/pipelines/templates/jobs/vmr-synchronization.yml
+    - template: templates/jobs/vmr-synchronization.yml
       parameters:
         vmrBranch: ${{ variables.VmrBranch }}
