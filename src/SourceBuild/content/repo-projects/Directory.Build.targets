@@ -457,12 +457,12 @@
     <Exec Command="df -h $(ProjectDir)" />
   </Target>
 
-  <Target Name="CleanupRepo" 
+  <!-- <Target Name="CleanupRepo" 
           AfterTargets="RemoveBuiltPackagesFromCache"
-          Condition=" '$(CleanWhileBuilding)' == 'true' ">
+          Condition=" '$(CleanWhileBuilding)' == 'true' "> -->
 
-    <!-- Make a copy of the build logs & project.assets.json files-->
-    <PropertyGroup>
+    <!-- Make a copy of the build logs & project.assets.json files -->
+    <!-- <PropertyGroup>
       <BuildLogsDir>$(ProjectDirectory)artifacts/buildLogs</BuildLogsDir>
       <BuildObjDir>$(ProjectDirectory)artifacts/buildObj</BuildObjDir>
     </PropertyGroup>
@@ -474,17 +474,17 @@
     <MakeDir Directories="$(BuildLogsDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
     <MakeDir Directories="$(BuildObjDir)" Condition="Exists('$(ProjectDirectory)artifacts')"/>
     <Copy SourceFiles="@(LogFilesToCopy)" DestinationFolder="$(BuildLogsDir)/%(RecursiveDir)" Condition="Exists('$(BuildLogsDir)') AND '@(LogFilesToCopy)' != '' " />
-    <Copy SourceFiles="@(ObjFilesToCopy)" DestinationFolder="$(BuildObjDir)/%(RecursiveDir)" Condition="Exists('$(BuildObjDir)') AND '@(ObjFilesToCopy)' != '' " />
+    <Copy SourceFiles="@(ObjFilesToCopy)" DestinationFolder="$(BuildObjDir)/%(RecursiveDir)" Condition="Exists('$(BuildObjDir)') AND '@(ObjFilesToCopy)' != '' " /> -->
 
     <!-- Cleanup everything else -->
-    <ItemGroup>
+    <!-- <ItemGroup>
       <DirsToDelete Include="$([System.IO.Directory]::GetDirectories(&quot;$(ProjectDirectory)artifacts/&quot;))" Condition="Exists('$(ProjectDirectory)artifacts')" />
       <DirsToDelete Remove="$(BuildLogsDir)" />
       <DirsToDelete Remove="$(BuildObjDir)" />
     </ItemGroup>
 
     <RemoveDir Directories="@(DirsToDelete)" />
-  </Target>
+  </Target> -->
 
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
