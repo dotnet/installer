@@ -168,6 +168,8 @@ jobs:
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
                   $(_PgoInstrument)
 
+    - template: /eng/common/templates/variables/pool-providers.yml
+
     steps:
     - checkout: self
       clean: true
