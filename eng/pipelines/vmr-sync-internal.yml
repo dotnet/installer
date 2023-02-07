@@ -28,6 +28,6 @@ variables:
     value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
     
 jobs:
-  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+  - template: templates/jobs/vmr-synchronization.yml
     parameters:
       vmrBranch: ${{ variables.VmrBranch }}
