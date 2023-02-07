@@ -68,7 +68,7 @@ jobs:
           --github-pat '$(BotAccount-dotnet-bot-repo-PAT)'
           --verbose
         displayName: Push changes to dotnet/dotnet (public)
-        workingDirectory: $(vmrPath)/src/installer
+        workingDirectory: $(Agent.BuildDirectory)/installer
   
     # Push internal/release branches to the internal VMR
     - ${{ if startsWith(parameters.vmrBranch, 'internal/release/') }}:
@@ -81,4 +81,4 @@ jobs:
           --azdev-pat '$(dn-bot-dnceng-build-rw-code-rw)'
           --verbose
         displayName: Push changes to dotnet-dotnet (internal)
-        workingDirectory: $(vmrPath)/src/installer
+        workingDirectory: $(Agent.BuildDirectory)/installer
