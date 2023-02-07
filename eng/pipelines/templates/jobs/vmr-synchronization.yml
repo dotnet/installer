@@ -55,21 +55,30 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: ${{ parameters.targetRef }}
 
-  # For official builds, push the changes to the VMR
   # Push main and release branches to the public VMR
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
-    - script: |
-        set -x
-        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --commit-verification-pat '$(BotAccount-dotnet-maestro-bot-no-scopes-PAT)' --branch '${{ parameters.vmrBranch }}' --remote-url '$(vmrPublicUrl)' --github-pat '$(BotAccount-dotnet-bot-repo-PAT)' --verbose
+    - script: >
+        ./.dotnet/dotnet darc vmr push
+        --vmr '$(vmrPath)'
+        --commit-verification-pat '$(BotAccount-dotnet-maestro-bot-no-scopes-PAT)'
+        --branch '${{ parameters.vmrBranch }}'
+        --remote-url '$(vmrPublicUrl)'
+        --github-pat '$(BotAccount-dotnet-bot-repo-PAT)'
+        --verbose
       displayName: Push changes to dotnet/dotnet (public)
       workingDirectory: $(vmrPath)/src/installer
       condition: and(succeeded(), or(eq(variables['vmrBranch'], 'main'), startsWith(variables['vmrBranch'], 'release/')))
   
   # Push internal/release branches to the internal VMR
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
-    - script: |
-        set -x
-        ./.dotnet/dotnet darc vmr push --vmr "$(vmrPath)" --skip-commit-verification --branch '${{ parameters.vmrBranch }}' --remote-url '$(vmrPrivateUrl)' --azdev-pat '$(dn-bot-dnceng-build-rw-code-rw)' --verbose
+    - script: >
+        ./.dotnet/dotnet darc vmr push
+        --vmr '$(vmrPath)'
+        --skip-commit-verification
+        --branch '${{ parameters.vmrBranch }}'
+        --remote-url '$(vmrPrivateUrl)'
+        --azdev-pat '$(dn-bot-dnceng-build-rw-code-rw)'
+        --verbose
       displayName: Push changes to dotnet-dotnet (internal)
       workingDirectory: $(vmrPath)/src/installer
       condition: and(succeeded(), startsWith(variables['vmrBranch'], 'internal/release/'))
