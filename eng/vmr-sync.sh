@@ -141,6 +141,16 @@ if [[ ! -d "$installer_dir" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$readme_template" ]]; then
+  fail "File '$readme_template' does not exist. Please specify the path to the README template"
+  exit 1
+fi
+
+if [[ ! -f "$tpn_template" ]]; then
+  fail "File '$tpn_template' does not exist. Please specify the path to the THIRD-PARTY-NOTICES template"
+  exit 1
+fi
+
 if [[ -z "$tmp_dir" ]]; then
   fail "Missing --tmp-dir argument. Please specify the path to the temporary folder where the repositories will be cloned"
   exit 1
