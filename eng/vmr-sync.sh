@@ -42,6 +42,10 @@
 ### Options:
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
+###   --readme-template
+###       Required. Template for VMRs README.md used for regenerating the file to list the newest versions of components.
+###   --tpn-template
+###       Required. Template for the header of VMRs THIRD-PARTY-NOTICES file.
 ###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
 ###   -b, --branch, --vmr-branch BRANCH_NAME
