@@ -6,10 +6,17 @@
 
     <NuGetConfigFile>$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+
+    <PackageVersionPropsFlowType>DependenciesOnly</PackageVersionPropsFlowType>
   </PropertyGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <!-- Workaround missing source link version until arcade bootstrap version is updated -->
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkGitHubVersion)" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
