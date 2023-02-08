@@ -38,7 +38,7 @@
 ### This script will synchronize the 'dotnet/dotnet' repo locally and let you inspect the changes.
 ###
 ### USAGE:
-###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
+###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp" --readme-template "$HOME/README.template.md" --tpn-template "$HOME/THIRD-PARTY-NOTICES.template.txt"
 ### Options:
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
