@@ -200,7 +200,7 @@ fi
 highlight "Starting the synchronization to '$target_ref'.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --readme-template $readme_template --tpn-template $tpn_template --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --readme-template "$readme_template" --tpn-template "$tpn_template" --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to '$target_ref' failed!"
