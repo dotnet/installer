@@ -89,6 +89,8 @@ vmr_dir=''
 vmr_branch='main'
 target_ref=''
 verbosity=verbose
+tpn_template=''
+readme_template=''
 
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
@@ -110,6 +112,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --target-ref)
       target_ref=$2
+      shift
+      ;;
+    --readme-template)
+      readme_template=$2
+      shift
+      ;;
+    --tpn-template)
+      tpn_template=$2
       shift
       ;;
     -h|--help)
@@ -180,7 +190,7 @@ fi
 highlight "Starting the synchronization to '$target_ref'.."
 set +e
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --recursive --readme-template $readme_template --tpn-template $tpn_template --additional-remotes "installer:$installer_dir" "installer:$target_ref"; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to '$target_ref' failed!"
