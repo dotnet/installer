@@ -24,11 +24,6 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
   </ItemGroup>
 
-  <!-- Workaround missing source link version until arcade bootstrap version is updated -->
-  <ItemGroup>
-    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkGitHubVersion)" />
-  </ItemGroup>
-
   <Target Name="AddLocalNuGetPackageCacheDirectory" BeforeTargets="Build">
     <MakeDir Condition="'$(LocalNuGetPackageCacheDirectory)' != ''"
              Directories="$(LocalNuGetPackageCacheDirectory)" />

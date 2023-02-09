@@ -16,11 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Workaround missing source link version until arcade bootstrap version is updated -->
-    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkGitHubVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
