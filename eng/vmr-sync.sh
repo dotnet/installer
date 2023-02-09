@@ -148,11 +148,11 @@ if [[ ! -d "$installer_dir" ]]; then
 fi
 
 if [[ -z "$readme_template" ]]; then
-  $readme_template = "$installer_dir/src/VirtualMonoRepo/README.template.md"
+  readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
 fi
 
 if [[ -z "$tpn_template" ]]; then
-  $tpn_template = "$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
+  tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
 fi
 
 if [[ -z "$tmp_dir" ]]; then
