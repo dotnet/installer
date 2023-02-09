@@ -24,8 +24,6 @@ pushd "$installer_dir"
     --vmr "$vmr_dir"       \
     --tmp "$tmp_dir"       \
     --branch "$vmr_branch" \
-    --readme-template $installer_dir/src/VirtualMonoRepo/README.template.md \
-    --tpn-template $installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt \
     --debug
 popd
 

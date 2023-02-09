@@ -38,14 +38,10 @@
 ### This script will synchronize the 'dotnet/dotnet' repo locally and let you inspect the changes.
 ###
 ### USAGE:
-###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp" --readme-template "$HOME/README.template.md" --tpn-template "$HOME/THIRD-PARTY-NOTICES.template.txt"
+###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
 ### Options:
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
-###   --readme-template
-###       Required. Template for VMRs README.md used for regenerating the file to list the newest versions of components.
-###   --tpn-template
-###       Required. Template for the header of VMRs THIRD-PARTY-NOTICES file.
 ###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
 ###   -b, --branch, --vmr-branch BRANCH_NAME
@@ -56,6 +52,12 @@
 ###       Defaults to the revision of the parent installer repo
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
+###   --readme-template
+###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of components. 
+###       Defaults to src/VirtualMonoRepo/README.template.md
+###   --tpn-template
+###       Optional. Template for the header of VMRs THIRD-PARTY-NOTICES file.
+###       Defaults to src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
 
 source="${BASH_SOURCE[0]}"
 
@@ -145,18 +147,26 @@ if [[ ! -d "$installer_dir" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$readme_template" ]]; then
-  fail "File '$readme_template' does not exist. Please specify the path to the README template"
-  exit 1
+if [[ -z "$readme_template" ]]; then
+  $readme_template = "$installer_dir/src/VirtualMonoRepo/README.template.md"
 fi
 
-if [[ ! -f "$tpn_template" ]]; then
-  fail "File '$tpn_template' does not exist. Please specify the path to the THIRD-PARTY-NOTICES template"
-  exit 1
+if [[ -z "$tpn_template" ]]; then
+  $tpn_template = "$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
 fi
 
 if [[ -z "$tmp_dir" ]]; then
   fail "Missing --tmp-dir argument. Please specify the path to the temporary folder where the repositories will be cloned"
+  exit 1
+fi
+
+if [[ ! -f "$readme_template" ]]; then
+  fail "File '$readme_template' does not exist. Please specify a valid path to the README template"
+  exit 1
+fi
+
+if [[ ! -f "$tpn_template" ]]; then
+  fail "File '$tpn_template' does not exist. Please specify a valid path to the THIRD-PARTY-NOTICES template"
   exit 1
 fi
 
