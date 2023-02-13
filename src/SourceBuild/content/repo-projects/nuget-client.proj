@@ -3,8 +3,6 @@
 
   <PropertyGroup>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <RepoApiImplemented>false</RepoApiImplemented>
-    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
     <RepoNoWarns>CS9057</RepoNoWarns>
   </PropertyGroup>
@@ -24,5 +22,4 @@
   </PropertyGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-
 </Project>
