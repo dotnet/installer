@@ -30,9 +30,10 @@ steps:
 
 - script: >
     ./eng/vmr-sync.sh
-    --vmr ${{ parameters.vmrPath }}
-    --tmp $(Agent.TempDirectory)
-    --branch ${{ parameters.vmrBranch }}
-    --target-ref ${{ parameters.targetRef }}
+      --vmr ${{ parameters.vmrPath }}
+      --tmp $(Agent.TempDirectory)
+      --branch ${{ parameters.vmrBranch }}
+      --target-ref ${{ parameters.targetRef }}
+      --debug
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
