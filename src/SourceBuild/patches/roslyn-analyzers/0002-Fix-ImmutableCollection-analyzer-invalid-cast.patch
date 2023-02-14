@@ -3,7 +3,7 @@ From: Matt Thalman <mthalman@microsoft.com>
 Date: Tue, 14 Feb 2023 10:59:29 -0600
 Subject: [PATCH] Fix ImmutableCollection analyzer invalid cast
 
-Applies fix from https://github.com/dotnet/roslyn-analyzers/pull/6476
+Backport: https://github.com/dotnet/roslyn-analyzers/pull/6476
 ---
  ...tCallToImmutableCollectionOnAnImmutableCollectionValue.cs | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
