@@ -4,13 +4,13 @@ Date: Tue, 14 Feb 2023 10:55:15 -0600
 Subject: [PATCH] Remove Roslyn's IdeBenchmarks tool from being source-built
 
 ---
- src/roslyn/Roslyn.sln | 7 -------
+ Roslyn.sln | 7 -------
  1 file changed, 7 deletions(-)
 
-diff --git a/src/roslyn/Roslyn.sln b/src/roslyn/Roslyn.sln
+diff --git a/Roslyn.sln b/Roslyn.sln
 index 4070ee47d9..3764ff5772 100644
---- a/src/roslyn/Roslyn.sln
-+++ b/src/roslyn/Roslyn.sln
+--- a/Roslyn.sln
++++ b/Roslyn.sln
 @@ -386,8 +386,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.VisualStudio.Lang
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.VisualStudio.LanguageServices.LiveShare.UnitTests", "src\VisualStudio\LiveShare\Test\Microsoft.VisualStudio.LanguageServices.LiveShare.UnitTests.csproj", "{CE7F7553-DB2D-4839-92E3-F042E4261B4E}"

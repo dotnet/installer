@@ -8,10 +8,10 @@ Backport: https://github.com/dotnet/roslyn-analyzers/pull/6476
  ...tCallToImmutableCollectionOnAnImmutableCollectionValue.cs | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/src/roslyn-analyzers/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs b/src/roslyn-analyzers/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
+diff --git a/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs b/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
 index 9e6cc03404..ee1151a1fa 100644
---- a/src/roslyn-analyzers/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
-+++ b/src/roslyn-analyzers/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
+--- a/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
++++ b/src/NetAnalyzers/Core/Microsoft.NetCore.Analyzers/ImmutableCollections/DoNotCallToImmutableCollectionOnAnImmutableCollectionValue.cs
 @@ -91,9 +91,8 @@ public override void Initialize(AnalysisContext context)
                          return;
                      }
