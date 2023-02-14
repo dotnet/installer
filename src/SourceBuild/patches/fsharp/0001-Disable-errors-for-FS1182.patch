@@ -1,0 +1,22 @@
+From 909c664c5f1fe08a86176731296ffeebdf5c718a Mon Sep 17 00:00:00 2001
+From: Matt Thalman <mthalman@microsoft.com>
+Date: Tue, 14 Feb 2023 10:57:06 -0600
+Subject: [PATCH] Disable errors for FS1182
+
+---
+ src/fsharp/src/Compiler/FSharp.Compiler.Service.fsproj | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/fsharp/src/Compiler/FSharp.Compiler.Service.fsproj b/src/fsharp/src/Compiler/FSharp.Compiler.Service.fsproj
+index 2558f69a43..8bd10a78a4 100644
+--- a/src/fsharp/src/Compiler/FSharp.Compiler.Service.fsproj
++++ b/src/fsharp/src/Compiler/FSharp.Compiler.Service.fsproj
+@@ -15,8 +15,6 @@
+     <DefineConstants>$(DefineConstants);COMPILER</DefineConstants>
+     <DefineConstants Condition="'$(FSHARPCORE_USE_PACKAGE)' == 'true'">$(DefineConstants);FSHARPCORE_USE_PACKAGE</DefineConstants>
+     <OtherFlags>$(OtherFlags) --extraoptimizationloops:1</OtherFlags>
+-    <!-- 1182: Unused variables -->
+-    <OtherFlags>$(OtherFlags) --warnon:1182</OtherFlags>
+     <!-- 3218: ArgumentsInSigAndImplMismatch -->
+     <OtherFlags>$(OtherFlags) --warnon:3218</OtherFlags>
+     <!-- 3390: xmlDocBadlyFormed -->
