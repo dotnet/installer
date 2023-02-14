@@ -22,10 +22,6 @@
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-  </ItemGroup>
-
   <Target Name="SetArcadeSdkDir"
           BeforeTargets="Build">
     <ItemGroup>

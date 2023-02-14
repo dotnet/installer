@@ -173,4 +173,9 @@
     <MsBuildTraversalSdkOverride Include="Microsoft.Build.Traversal" Group="MSBUILD_TRAVERSAL" Version="2.0.2"/>
     <WindowsDesktopSdkOverride Include="Microsoft.Net.Sdk.WindowsDesktop" Group="WINDOWS_DESKTOP" Location="$(ToolsDir)EmptySdk"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Condition="'$(UseBootstrapArcade)' != 'true'" Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Condition="'$(UseBootstrapArcade)' == 'true'" Include="@(ArcadeBootstrapSdkOverride)" />
+  </ItemGroup>
 </Project>

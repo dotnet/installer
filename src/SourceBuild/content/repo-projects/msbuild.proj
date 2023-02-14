@@ -35,7 +35,6 @@
   -->
   <ItemGroup>
     <CentralPackageVersionsSdkOverride Include="Microsoft.Build.CentralPackageVersions" Group="CENTRAL_PACKAGE_VERSIONS" />
-    <UseSourceBuiltSdkOverride Include="@(CentralPackageVersionsSdkOverride)" />
   </ItemGroup>
 
   <Target Name="ExtractCentralPackageVersionsSdkPackage"

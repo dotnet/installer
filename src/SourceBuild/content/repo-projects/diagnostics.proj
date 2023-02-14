@@ -6,9 +6,5 @@
     <BuildCommand>$(ProjectDirectory)eng\common\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
   </PropertyGroup>
 
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-  </ItemGroup>
-
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

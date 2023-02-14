@@ -14,10 +14,6 @@
     <UseBootstrapArcade>true</UseBootstrapArcade>
   </PropertyGroup>
 
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
-  </ItemGroup>
-
   <Target Name="AddLocalNuGetPackageCacheDirectory" BeforeTargets="Build">
     <MakeDir Condition="'$(LocalNuGetPackageCacheDirectory)' != ''"
              Directories="$(LocalNuGetPackageCacheDirectory)" />
