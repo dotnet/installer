@@ -58,17 +58,11 @@
       NewText="$(NewText)" />
   </Target>
 
-
   <Target Name="UpdateBuildToolFramework"
           BeforeTargets="Build"
           Condition="'$(EngCommonToolsShFile)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" >
-
-    <PropertyGroup>
-      <EngCommonToolsShFile Condition="Exists('$(ProjectDirectory)/eng/common/tools.sh')">$(ProjectDirectory)/eng/common/tools.sh</EngCommonToolsShFile>
-      <EngCommonBuildShFile Condition="Exists('$(ProjectDirectory)/eng/common/build.sh')">$(ProjectDirectory)/eng/common/build.sh</EngCommonBuildShFile>
-    </PropertyGroup>
 
     <!-- Update the BuildToolFramework for repos that have not adopted the current version of Arcade-->
     <ReplaceTextInFile InputFile="$(EngCommonToolsShFile)"
