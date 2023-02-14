@@ -34,6 +34,7 @@
     <EngCommonBuildShFile Condition="Exists('$(ProjectDirectory)eng/common/build.sh')">$(ProjectDirectory)eng/common/build.sh</EngCommonBuildShFile>
     <GlobalJsonFile Condition="'$(GlobalJsonFile)' == '' and Exists('$(ProjectDirectory)global.json')">$(ProjectDirectory)global.json</GlobalJsonFile>
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.config')">$(ProjectDirectory)NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.Config')">$(ProjectDirectory)NuGet.Config</NuGetConfigFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
