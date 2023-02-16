@@ -207,12 +207,12 @@ highlight "Starting the synchronization to '$repository'.."
 set +e
 
 if [[ "$recursive" == "true" ]]; then
-  additional_mappings+=("--recursive")
+  additional_remotes+=("--recursive")
 fi
 
 # Synchronize the VMR
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --readme-template "$readme_template" --tpn-template "$tpn_template" "${additional_mappings[@]}" "$repository"; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --readme-template "$readme_template" --tpn-template "$tpn_template" "${additional_remotes[@]}" "$repository"; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to '$repository' failed!"
