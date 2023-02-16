@@ -9,6 +9,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="NuGetPack" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceRegexInFiles" />
 
   <ItemGroup>
     <BuildTasksTarget Include="Restore;Build;InstallResolver" />
@@ -22,6 +23,7 @@
     <CallTarget Targets="
       UnpackTarballs;
       BuildXPlatTasks;
+      PatchPackageVersions;
       BuildLeakDetection;
       ExtractToolPackage;
       GenerateRootFs;
@@ -118,6 +120,16 @@
     <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
   </Target>
 
+  <!-- TODO: Remove this when the .NET 8 artifacts tarball no longer includes MicrosoftAspNetCoreAppRuntimePackageVersion -->
+  <Target Name="PatchPackageVersions">
+    <!-- Rename MicrosoftAspNetCoreAppRuntimePackageVersion so it isn't used
+         Fixes https://github.com/dotnet/installer/issues/14492 -->
+    <ReplaceRegexInFiles
+      InputFiles="$(IntermediatePath)PreviouslySourceBuiltPackageVersions.props"
+      OldTextRegex="\bMicrosoftAspNetCoreAppRuntimePackageVersion\b"
+      NewText="__unused" />
+  </Target>
+
   <Target Name="BuildLeakDetection"
           DependsOnTargets="ExtractToolPackage"
           Inputs="$(MSBuildProjectFullPath)"
@@ -138,7 +150,7 @@
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
-     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel' AND '$(BuildArchitecture)' != 'arm64'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
+     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel' AND '$(BuildArchitecture)' != 'arm64' AND '$(BuildArchitecture)' != 'arm'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
