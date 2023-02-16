@@ -52,5 +52,5 @@ cd /workspaces/installer
   --repository runtime:abcdef \
   --vmr /workspaces/dotnet    \
   --tmp /workspaces/tmp       \
-  --remote remote:https://github.com/billg/runtime
+  --remote runtime:https://github.com/billg/runtime
 ```

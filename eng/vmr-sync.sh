@@ -80,7 +80,7 @@ vmr_branch='main'
 repository=''
 recursive=false
 verbosity=verbose
-additional_remotes=("--additional-remotes" "installer:$installer_dir")
+additional_remotes="installer:$installer_dir"
 readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
 tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
 
@@ -107,7 +107,7 @@ while [[ $# -gt 0 ]]; do
       recursive=true
       ;;
     --remote)
-      additional_remotes+=("--additional-remotes" "$2")
+      additional_remotes="$additional_remotes,$2"
       shift
       ;;
     --readme-template)
@@ -206,13 +206,24 @@ dotnet="$scriptroot/../.dotnet/dotnet"
 highlight "Starting the synchronization to '$repository'.."
 set +e
 
+recursive_arg=''
 if [[ "$recursive" == "true" ]]; then
-  additional_remotes+=("--recursive")
+  recursive_arg="--recursive"
 fi
 
 # Synchronize the VMR
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --readme-template "$readme_template" --tpn-template "$tpn_template" "${additional_remotes[@]}" "$repository"; then
+"$dotnet" darc vmr update                    \
+  --vmr "$vmr_dir"                           \
+  --tmp "$tmp_dir"                           \
+  --$verbosity                               \
+  $recursive_arg                             \
+  --readme-template "$readme_template"       \
+  --tpn-template "$tpn_template"             \
+  --additional-remotes "$additional_remotes" \
+  "$repository"
+
+if [[ $? == 0 ]]; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to '$repository' failed!"
