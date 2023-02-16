@@ -81,6 +81,8 @@ repository=''
 recursive=false
 verbosity=verbose
 additional_remotes=("--additional-remotes" "installer:$installer_dir")
+readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
+tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
 
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
@@ -162,14 +164,6 @@ fi
 
 # Sanitize the input
 
-if [[ -z "$readme_template" ]]; then
-  readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
-fi
-
-if [[ -z "$tpn_template" ]]; then
-  tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
-fi
-
 if [[ -z "$vmr_dir" ]]; then
   vmr_dir="$tmp_dir/dotnet"
 fi
@@ -218,7 +212,7 @@ fi
 
 # Synchronize the VMR
 
-if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --readme-template "$readme_template" --tpn-template "$tpn_template" "${additional_mappings[@]}"; then
+if "$dotnet" darc vmr update --vmr "$vmr_dir" --tmp "$tmp_dir" --$verbosity --readme-template "$readme_template" --tpn-template "$tpn_template" "${additional_mappings[@]}" "$repository"; then
   highlight "Synchronization succeeded"
 else
   fail "Synchronization of dotnet/dotnet to '$repository' failed!"
