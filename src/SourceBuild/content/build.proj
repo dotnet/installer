@@ -4,7 +4,6 @@
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="DownloadFileSB" />
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
@@ -12,13 +11,6 @@
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
     <MSBuild Projects="$(RepoProjectsDir)$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
-  </Target>
-
-  <Target Name="RunRepoTests" DependsOnTargets="PrepareOutput;InitBuild">
-    <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
-
-    <MSBuild Projects="$(RepoProjectsDir)$(RootRepoTests).proj" Targets="Build" Properties="PrepForTests=true;SkipEnsurePackagesCreated=true" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
-    <MSBuild Projects="$(RepoProjectsDir)$(RootRepoTests).proj" Targets="Build" Properties="RunTests=true;SkipEnsurePackagesCreated=true" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="PrepareOutput">
