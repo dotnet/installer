@@ -54,3 +54,8 @@ cd /workspaces/installer
   --tmp /workspaces/tmp       \
   --remote runtime:https://github.com/billg/runtime
 ```
+
+You can now proceed building the VMR in the Codespace using instructions above. You can repeat
+this process and sync a new commit from your fork. Only note that, at this time, Source-Build
+modifies some of the checked-in sources so you'll need to revert the working tree changes
+between attempts.
