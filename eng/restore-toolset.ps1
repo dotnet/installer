@@ -29,6 +29,8 @@ set DOTNET_MULTILEVEL_LOOKUP=0
 
 set PATH=$env:DOTNET_INSTALL_DIR;%PATH%
 set NUGET_PACKAGES=$env:NUGET_PACKAGES
+
+set DOTNET_ROOT=$env:DOTNET_INSTALL_DIR
 "@
 
   Out-File -FilePath $scriptPath -InputObject $scriptContents -Encoding ASCII
