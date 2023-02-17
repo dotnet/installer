@@ -43,7 +43,7 @@ You can also make a fix in the individual source repository (e.g. `dotnet/runtim
 fix into a branch (can be in your fork too). Once you have the commit pushed, you can pull this
 version of the repository into the VMR locally.
 
-Let's consider you pushed a commit with SHA `abcdef` into your fork at `github.com/billg/runtime`.
+Let's consider you pushed a commit with SHA `abcdef` into your fork at `github.com/yourfork/runtime`.
 You can now bring this version of runtime into the local VMR in this Codespace by running:
 
 ```bash
@@ -52,7 +52,7 @@ cd /workspaces/installer
   --repository runtime:abcdef \
   --vmr /workspaces/dotnet    \
   --tmp /workspaces/tmp       \
-  --remote runtime:https://github.com/billg/runtime
+  --remote runtime:https://github.com/yourfork/runtime
 ```
 
 You can now proceed building the VMR in the Codespace using instructions above. You can repeat

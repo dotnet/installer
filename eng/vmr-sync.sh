@@ -14,13 +14,23 @@
 ### folder to this to speed up your re-runs.
 ###
 ### USAGE:
-###   ./vmr-sync.sh --repository runtime:e7e71da303af8dc97df99b098f21f526398c3943 --tmp-dir "$HOME/repos/tmp"
+###   Synchronize the VMR to the commit of dotnet/installer that is currently being built:
+###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
+###
+###   Synchronize the VMR to a specific commit of dotnet/runtime using custom fork:
+###     ./vmr-sync.sh \
+###        --repository runtime:e7e71da303af8dc97df99b098f21f526398c3943 \
+###        --remote runtime:https://github.com/yourfork/runtime \
+###        --tmp-dir "$HOME/repos/tmp"\
+###
 ### Options:
-###   --repository name:GIT_REF
-###       Required. Repository + git ref separated by colon to synchronize to.
-###       This can be a specific commit, branch, tag..
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
+###   --repository name:GIT_REF
+###       Optional. Repository + git ref separated by colon to synchronize to.
+###       This can be a specific commit, branch, tag..
+###       When omitted, the script will synchronize the installer commit based on the version of the parent
+###       where this script is stored.
 ###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
 ###   -b, --branch, --vmr-branch BRANCH_NAME
@@ -29,7 +39,7 @@
 ###   --remote name:URI
 ###       Optional. Additional remote to use during the synchronization
 ###       This can be used to synchronize to a commit from a fork of the repository
-###       Example: 'runtime:https://github.com/billg/runtime'
+###       Example: 'runtime:https://github.com/yourfork/runtime'
 ###   --recursive
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
 ###       This is used when performing the full synchronization during installer's CI and the final VMR sync.
@@ -147,11 +157,6 @@ if [[ -z "$tmp_dir" ]]; then
   exit 1
 fi
 
-if [[ -z "$repository" ]]; then
-  fail "Missing --repository argument. Please specify which repository is to be synchronized"
-  exit 1
-fi
-
 if [[ ! -f "$readme_template" ]]; then
   fail "File '$readme_template' does not exist. Please specify a valid path to the README template"
   exit 1
@@ -163,6 +168,13 @@ if [[ ! -f "$tpn_template" ]]; then
 fi
 
 # Sanitize the input
+
+if [[ -z "$repository" ]]; then
+  current_sha=$(git -C "$installer_dir" rev-parse HEAD)
+  echo "No repository specified, will synchronize installer:$current_sha"
+  repository="installer:$current_sha"
+  recursive=true
+fi
 
 if [[ -z "$vmr_dir" ]]; then
   vmr_dir="$tmp_dir/dotnet"

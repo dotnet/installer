@@ -33,7 +33,7 @@ steps:
     --vmr ${{ parameters.vmrPath }}
     --tmp $(Agent.TempDirectory)
     --branch ${{ parameters.vmrBranch }}
-    --repository "${{ parameters.targetRef }}:$(git rev-parse HEAD)"
+    --repository "installer:${{ parameters.targetRef }}"
     --recursive
     --readme-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/README.template.md
     --tpn-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt

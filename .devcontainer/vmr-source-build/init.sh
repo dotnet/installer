@@ -25,11 +25,9 @@ vmr_branch=$(git -C "$installer_dir" log --pretty=format:'%D' HEAD^ \
 
 pushd "$installer_dir"
   "./eng/vmr-sync.sh"      \
-    --repository "installer:$(git -C "$installer_dir" rev-parse HEAD)" \
     --vmr "$vmr_dir"       \
     --tmp "$tmp_dir"       \
     --branch "$vmr_branch" \
-    --recursive            \
     --debug
 popd
 
