@@ -43,6 +43,7 @@
 ###   --recursive
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
 ###       This is used when performing the full synchronization during installer's CI and the final VMR sync.
+###       Defaults to false unless no repository is supplied in which case a recursive sync of installer is performed.
 ###   --readme-template
 ###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
 ###       components.
