@@ -49,9 +49,9 @@ You can now bring this version of runtime into the local VMR in this Codespace b
 ```bash
 cd /workspaces/installer
 ./eng/vmr-sync.sh             \
-  --repository runtime:abcdef \
   --vmr /workspaces/dotnet    \
   --tmp /workspaces/tmp       \
+  --repository runtime:abcdef \
   --remote runtime:https://github.com/yourfork/runtime
 ```
 
