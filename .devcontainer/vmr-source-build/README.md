@@ -53,6 +53,8 @@ cd /workspaces/installer
   --tmp /workspaces/tmp       \
   --repository runtime:abcdef \
   --remote runtime:https://github.com/yourfork/runtime
+  
+# Note: you could also use a branch name or tag instead of the SHA
 ```
 
 You can now proceed building the VMR in the Codespace using instructions above. You can repeat
