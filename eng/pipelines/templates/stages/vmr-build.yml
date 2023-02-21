@@ -81,7 +81,7 @@ stages:
       excludeSdkContentTests: true       # ✅
       overrideDistroDisablingSha1: false # 🚫
       runOnline: true                    # ✅
-      withPreviousSDK: false             # ✅
+      withPreviousSDK: false             # 🚫
 
   # Temporarily move this to PR build just to test the N-1 CI
   - template: ../jobs/vmr-build.yml
@@ -120,6 +120,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: CentOSStream9_Offline

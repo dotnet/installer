@@ -9,6 +9,8 @@ usage() {
     echo ""
     echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
     echo "  installing the version of dotnet referenced in global.json"
+    echo "options:"
+    echo "  --no-bootstrap Don't replace portable packages in the download source-built artifacts"
     echo ""
 }
 
@@ -23,6 +25,9 @@ while :; do
         "-?"|-h|--help)
             usage
             exit 0
+            ;;
+        --no-bootstrap)
+            buildBootstrap=false
             ;;
         *)
             positional_args+=("$1")
@@ -124,7 +129,9 @@ fi
 # Read the eng/Versions.props to get the archives to download and download them
 if [ "$downloadArtifacts" == "true" ]; then
     DownloadArchive "Artifacts" $artifactsBaseFileName "true"
-    BootstrapArtifacts
+    if [ "$buildBootstrap" == "true" ]; then
+        BootstrapArtifacts
+    fi
 fi
 
 if [ "$downloadPrebuilts" == "true" ]; then
