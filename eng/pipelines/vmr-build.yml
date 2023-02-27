@@ -50,3 +50,4 @@ stages:
     - template: templates/jobs/vmr-synchronization.yml
       parameters:
         vmrBranch: ${{ variables.VmrBranch }}
+        noPush: true
