@@ -1,0 +1,79 @@
+trigger: none
+
+parameters:
+- name: vmrBuildId
+  displayName: dotnet-dotnet build id, defaults to latest build
+  type: string
+  default: ' '
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+jobs:
+- job: Get_Build_Information
+  displayName: Get installer and VMR build ids
+  variables:
+  - template: /eng/common/templates/variables/pipelines.yml
+  - group: Publish-Build-Assets
+  
+  steps:
+  - script: |
+      last_vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
+      if [[ -z "$last_vmr_build" ]]; then
+        fail "Could not find a completed vmr build"
+        exit 1
+      fi
+      echo "Vmr build id: '$last_vmr_build'"
+
+      last_vmr_build=2108850
+
+      installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $last_vmr_build --output tsv | sed "s,installer-,,g")
+      installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
+      if [[ -z "$installer_build" ]]; then
+        fail "Could not find a build of installer for commit '$installer_sha'"
+        exit 1
+      fi
+
+      echo "Installer build id: '$installer_build'"
+      
+      echo "##vso[task.setvariable variable=InstallerBuildId;isoutput=true]$installer_build"
+      echo "##vso[task.setvariable variable=VmrBuildId;isoutput=true]$last_vmr_build"
+    name: Get Build IDs
+    env:
+      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+
+- template: templates/jobs/sdk-comparison-tests.yml
+  parameters:
+    buildName: CentOSStream8_Offline
+    targetRid: centos.8-x64
+    architecture: x64
+    enablePoison: true
+
+- template: templates/jobs/sdk-comparison-tests.yml
+  parameters:
+    buildName: CentOSStream9_Offline
+    targetRid: centos.9-x64
+    architecture: x64
+    enablePoison: true
+
+- template: templates/jobs/sdk-comparison-tests.yml
+  parameters:
+    buildName: Fedora36_Offline
+    targetRid: fedora.36-x64
+    architecture: x64
+    enablePoison: true
+
+- template: templates/jobs/sdk-comparison-tests.yml
+  parameters:
+    buildName: Ubuntu2004_Offline
+    targetRid: ubuntu.2004-x64
+    architecture: x64
+    enablePoison: true
+
+- template: templates/jobs/sdk-comparison-tests.yml
+  parameters:
+    buildName: Debian11_Offline
+    targetRid: debian.11-x64
+    architecture: x64
+    enablePoison: true

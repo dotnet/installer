@@ -1,0 +1,106 @@
+parameters:
+- name: buildName
+  type: string
+
+- name: targetRid
+  type: string
+
+- name: architecture
+  type: string
+
+- name: enablePoison
+  type: boolean
+
+jobs:
+- job: ${{ parameters.buildName }}_${{ parameters.architecture }}
+  dependsOn: Get_Build_Information
+  timeoutInMinutes: 150
+  pool:
+    name: NetCore1ESPool-Svc-Internal
+    demands: ImageOverride -equals 1es-ubuntu-2004
+  variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
+  - template: /eng/common/templates/variables/pipelines.yml
+  - name: InstallerBuildId
+    value: $[ dependencies.Get_Build_Information.outputs['ids.InstallerBuildId'] ]  
+  - name: VmrBuildId
+    value: $[ dependencies.Get_Build_Information.outputs['ids.VmrBuildId'] ] 
+  - name: TestResultsFileName
+    value: ${{ parameters.buildName }}_${{ parameters.architecture }}_SDKComparisonTests.trx
+
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download MSFT SDK
+    inputs:
+      buildType: specific
+      buildVersionToDownload: specific
+      project: internal
+      pipeline: $(INSTALLER_OFFICIAL_CI_PIPELINE_ID)
+      buildId: $(InstallerBuildId)
+      artifact: BlobArtifacts
+      patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz' 
+      allowPartiallySucceededBuilds: true
+      allowFailedBuilds: true
+      downloadPath: $(Pipeline.Workspace)/Artifacts
+      checkDownloadedFiles: true
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Source Build SDK
+    inputs:
+      buildType: specific
+      buildVersionToDownload: specific
+      project: internal
+      pipeline: $(DOTNET_DOTNET_CI_PIPELINE_ID)
+      buildId: $(VmrBuildId)
+      artifact: ${{ parameters.buildName }}_${{ parameters.architecture }}_Artifacts
+      patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-${{ parameters.targetRid }}.tar.gz' 
+      allowPartiallySucceededBuilds: true
+      allowFailedBuilds: true
+      downloadPath: $(Pipeline.Workspace)/Artifacts
+      checkDownloadedFiles: true
+    
+  - script: |
+      set -x
+
+      msftSdkTarballName=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
+
+      if [[ -z $msftSdkTarballName ]]; then
+        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
+        exit 1
+      fi
+
+      sdkTarballName=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-${{ parameters.targetRid }}.tar.gz" -exec basename {} \;)
+
+      if [[ -z $sdkTarballName ]]; then
+        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
+        exit 1
+      fi
+
+      eng/common/build.sh --projects $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --restore
+
+      envArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$msftSdkTarballName"
+      envArgs+=" -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$sdkTarballName"
+      envArgs+=" -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= "
+      envArgs+=" -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }} -e SMOKE_TESTS_PORTABLE_RID=linux-x64 -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= -e SMOKE_TESTS_INCLUDE=CompareMsftToSb"
+      poisonArg=''
+
+      if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
+        poisonArg='--poison'
+        dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
+      fi
+       
+      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj $envArgs --logger:'trx;LogFileName=$(TestResultsFileName)' --logger:'console;verbosity=detailed'
+    displayName: Run Tests
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    condition: succeededOrFailed()
+    continueOnError: true
+    inputs:
+      testRunner: vSTest
+      testResultsFiles: '*.trx'
+      searchFolder: $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/TestResults
+      mergeTestResults: true
+      publishRunAttachments: true
+      testRunTitle: SourceBuild_SdkComparisonTests_$(Agent.JobName)
