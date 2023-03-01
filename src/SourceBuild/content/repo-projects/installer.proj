@@ -16,6 +16,8 @@
     <_platformIndex>$(NETCoreSdkPortableRuntimeIdentifier.LastIndexOf('-'))</_platformIndex>
     <PortableOS>$(NETCoreSdkPortableRuntimeIdentifier.Substring(0, $(_platformIndex)))</PortableOS>
 
+    <TrimTargetFrameworks>true</TrimTargetFrameworks>
+
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
 
     <BuildCommandArgs>$(StandardSourceBuildArgs)</BuildCommandArgs>
