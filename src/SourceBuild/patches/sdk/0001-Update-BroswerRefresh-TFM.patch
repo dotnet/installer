@@ -16,7 +16,7 @@ index fc35c0ec3d..63a380855a 100644
    <PropertyGroup>
      <!-- Intentionally pinned. This feature is supported in projects targeting 6.0 or newer.-->
      <TargetFramework>net6.0</TargetFramework>
-+    <TargetFramework Condition="'$(DotNetBuildFromSource)' != 'true'">$(NetCurrent)</TargetFramework>
++    <TargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">$(NetCurrent)</TargetFramework>
      <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
  
      <IsPackable>false</IsPackable>
