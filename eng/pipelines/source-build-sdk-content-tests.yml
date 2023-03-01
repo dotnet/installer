@@ -1,11 +1,5 @@
 trigger: none
 
-parameters:
-- name: vmrBuildId
-  displayName: dotnet-dotnet build id, defaults to latest build
-  type: string
-  default: ' '
-
 pool:
   name: NetCore1ESPool-Svc-Internal
   demands: ImageOverride -equals 1es-ubuntu-2004
@@ -20,6 +14,7 @@ jobs:
   steps:
   - script: |
       last_vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
+      
       if [[ -z "$last_vmr_build" ]]; then
         fail "Could not find a completed vmr build"
         exit 1
