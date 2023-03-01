@@ -22,9 +22,9 @@ jobs:
   - template: /eng/common/templates/variables/pool-providers.yml
   - template: /eng/common/templates/variables/pipelines.yml
   - name: InstallerBuildId
-    value: $[ dependencies.Get_Build_Information.outputs['ids.InstallerBuildId'] ]  
+    value: $[ dependencies.Get_Build_Information.outputs['Get_Build_Ids.InstallerBuildId'] ]  
   - name: VmrBuildId
-    value: $[ dependencies.Get_Build_Information.outputs['ids.VmrBuildId'] ] 
+    value: $[ dependencies.Get_Build_Information.outputs['Get_Build_Ids.VmrBuildId'] ] 
   - name: TestResultsFileName
     value: ${{ parameters.buildName }}_${{ parameters.architecture }}_SDKComparisonTests.trx
 
