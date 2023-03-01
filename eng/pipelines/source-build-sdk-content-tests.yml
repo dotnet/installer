@@ -34,7 +34,7 @@ jobs:
       
       echo "##vso[task.setvariable variable=InstallerBuildId;isoutput=true]$installer_build"
       echo "##vso[task.setvariable variable=VmrBuildId;isoutput=true]$last_vmr_build"
-    name: Get Build IDs
+    displayName: Get Build IDs
     env:
       AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
