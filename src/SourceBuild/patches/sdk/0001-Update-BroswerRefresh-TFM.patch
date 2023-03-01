@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Wed, 1 Mar 2023 01:12:26 +0000
+Subject: [PATCH] Update BroswerRefresh TFM
+
+Backport: https://github.com/dotnet/sdk/issues/30272
+---
+ .../Microsoft.AspNetCore.Watch.BrowserRefresh.csproj             | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/BuiltInTools/BrowserRefresh/Microsoft.AspNetCore.Watch.BrowserRefresh.csproj b/src/BuiltInTools/BrowserRefresh/Microsoft.AspNetCore.Watch.BrowserRefresh.csproj
+index fc35c0ec3d..63a380855a 100644
+--- a/src/BuiltInTools/BrowserRefresh/Microsoft.AspNetCore.Watch.BrowserRefresh.csproj
++++ b/src/BuiltInTools/BrowserRefresh/Microsoft.AspNetCore.Watch.BrowserRefresh.csproj
+@@ -2,6 +2,7 @@
+   <PropertyGroup>
+     <!-- Intentionally pinned. This feature is supported in projects targeting 6.0 or newer.-->
+     <TargetFramework>net6.0</TargetFramework>
++    <TargetFramework Condition="'$(DotNetBuildFromSource)' != 'true'">$(NetCurrent)</TargetFramework>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+ 
+     <IsPackable>false</IsPackable>
