@@ -26,6 +26,7 @@ jobs:
     targetRid: centos.8-x64
     architecture: x64
     enablePoison: false
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
@@ -33,6 +34,7 @@ jobs:
     targetRid: centos.9-x64
     architecture: x64
     enablePoison: false
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
@@ -40,6 +42,7 @@ jobs:
     targetRid: fedora.36-x64
     architecture: x64
     enablePoison: true
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
@@ -47,6 +50,7 @@ jobs:
     targetRid: ubuntu.2004-x64
     architecture: x64
     enablePoison: false
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
@@ -54,3 +58,4 @@ jobs:
     targetRid: debian.11-arm64
     architecture: arm64
     enablePoison: false
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}

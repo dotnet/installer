@@ -11,6 +11,9 @@ parameters:
 - name: enablePoison
   type: boolean
 
+- name: dotnetDotnetRunID
+  type: string
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
