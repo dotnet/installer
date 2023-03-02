@@ -20,42 +20,6 @@ parameters:
   default: ' '
 
 jobs:
-- job: Get_Build_Information
-  displayName: Get installer and VMR build ids
-  variables:
-  - template: /eng/common/templates/variables/pipelines.yml
-  
-  steps:
-  - script: |
-      vmr_build=${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}
-
-      if [[ -z "$vmr_build" ]]; then
-        vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
-      fi
-
-      if [[ -z "$vmr_build" ]]; then
-        fail "Could not find a completed vmr build"
-        exit 1
-      fi
-      
-      echo "Vmr build id: '$vmr_build'"
-
-      installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $vmr_build --output tsv | sed "s,installer-,,g")
-      installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
-      if [[ -z "$installer_build" ]]; then
-        fail "Could not find a build of installer for commit '$installer_sha'"
-        exit 1
-      fi
-
-      echo "Installer build id: '$installer_build'"
-      
-      echo "##vso[task.setvariable variable=InstallerBuildId;isoutput=true]$installer_build"
-      echo "##vso[task.setvariable variable=VmrBuildId;isoutput=true]$vmr_build"
-    displayName: Get Build IDs
-    name: Get_Build_Ids
-    env:
-      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
     buildName: CentOSStream8_Offline

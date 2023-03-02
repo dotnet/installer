@@ -13,22 +13,43 @@ parameters:
 
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
-  dependsOn: Get_Build_Information
   timeoutInMinutes: 150
   pool:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals 1es-ubuntu-2004
   variables:
-  - template: /eng/common/templates/variables/pool-providers.yml
   - template: /eng/common/templates/variables/pipelines.yml
-  - name: InstallerBuildId
-    value: $[ dependencies.Get_Build_Information.outputs['Get_Build_Ids.InstallerBuildId'] ]  
-  - name: VmrBuildId
-    value: $[ dependencies.Get_Build_Information.outputs['Get_Build_Ids.VmrBuildId'] ] 
-  - name: TestResultsFileName
-    value: ${{ parameters.buildName }}_${{ parameters.architecture }}_SDKComparisonTests.trx
-
   steps:
+  - script: |
+      vmr_build=${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}
+
+      if [[ -z "$vmr_build" ]]; then
+        vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
+      fi
+
+      if [[ -z "$vmr_build" ]]; then
+        fail "Could not find a completed vmr build"
+        exit 1
+      fi
+      
+      echo "Vmr build id: '$vmr_build'"
+
+      installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $vmr_build --output tsv | sed "s,installer-,,g")
+      installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
+      if [[ -z "$installer_build" ]]; then
+        fail "Could not find a build of installer for commit '$installer_sha'"
+        exit 1
+      fi
+
+      echo "Installer build id: '$installer_build'"
+      
+      echo "##vso[task.setvariable variable=InstallerBuildId]$installer_build"
+      echo "##vso[task.setvariable variable=VmrBuildId]$vmr_build"
+    displayName: Get Build IDs
+    name: Get_Build_Ids
+    env:
+      AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+
   - task: DownloadPipelineArtifact@2
     displayName: Download MSFT SDK
     inputs:
@@ -89,7 +110,7 @@ jobs:
         dockerEnvArgs+=" -e SMOKE_TESTS_WARN_POISON_DIFFS=true"
       fi
        
-      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj $envArgs --logger:'trx;LogFileName=$(TestResultsFileName)' --logger:'console;verbosity=detailed'
+      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKComparisonTests.trx' --logger:'console;verbosity=detailed'
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
