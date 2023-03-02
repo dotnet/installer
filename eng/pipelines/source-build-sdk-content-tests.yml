@@ -1,3 +1,12 @@
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily midnight run
+  branches:
+    include:
+    - main
+    - release/*
+
+pr: none
 trigger: none
 
 pool:
@@ -52,14 +61,14 @@ jobs:
     buildName: CentOSStream8_Offline
     targetRid: centos.8-x64
     architecture: x64
-    enablePoison: true
+    enablePoison: false
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
     buildName: CentOSStream9_Offline
     targetRid: centos.9-x64
     architecture: x64
-    enablePoison: true
+    enablePoison: false
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
@@ -73,11 +82,11 @@ jobs:
     buildName: Ubuntu2004_Offline
     targetRid: ubuntu.2004-x64
     architecture: x64
-    enablePoison: true
+    enablePoison: false
 
 - template: templates/jobs/sdk-comparison-tests.yml
   parameters:
     buildName: Debian11_Offline
     targetRid: debian.11-arm64
     architecture: arm64
-    enablePoison: true
+    enablePoison: false
