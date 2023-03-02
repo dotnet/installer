@@ -25,7 +25,6 @@ jobs:
     buildName: CentOSStream8_Offline
     targetRid: centos.8-x64
     architecture: x64
-    enablePoison: false
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
@@ -33,7 +32,6 @@ jobs:
     buildName: CentOSStream9_Offline
     targetRid: centos.9-x64
     architecture: x64
-    enablePoison: false
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
@@ -41,7 +39,6 @@ jobs:
     buildName: Fedora36_Offline
     targetRid: fedora.36-x64
     architecture: x64
-    enablePoison: true
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
@@ -49,7 +46,6 @@ jobs:
     buildName: Ubuntu2004_Offline
     targetRid: ubuntu.2004-x64
     architecture: x64
-    enablePoison: false
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
 - template: templates/jobs/sdk-comparison-tests.yml
@@ -57,5 +53,4 @@ jobs:
     buildName: Debian11_Offline
     targetRid: debian.11-arm64
     architecture: arm64
-    enablePoison: false
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
