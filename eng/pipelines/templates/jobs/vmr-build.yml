@@ -171,7 +171,7 @@ jobs:
   - script: |
       set -x
 
-      if [[ -z '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
+      if [[ -z '${{ parameters.reuseBuildArtifactsFrom }}' && '${{ parameters.withPreviousSDK }}' != 'True' ]]; then
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh
       else
         mkdir $(sourcesPath)/.dotnet

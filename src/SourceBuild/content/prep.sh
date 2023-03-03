@@ -74,7 +74,6 @@ function DownloadArchive {
     baseFileName="$2"
     isRequired="$3"
 
-    sourceBuiltArtifactsTarballUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/"
     packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
     notFoundMessage="No source-built $archiveType found to download..."
 
