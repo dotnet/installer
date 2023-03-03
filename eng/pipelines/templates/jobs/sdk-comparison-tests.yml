@@ -46,7 +46,8 @@ jobs:
       
       echo "##vso[task.setvariable variable=InstallerBuildId]$installer_build"
       echo "##vso[task.setvariable variable=VmrBuildId]$vmr_build"
-    displayName: Get Build IDs
+    displayName: Find associated builds
+
     name: Get_Build_Ids
     env:
       AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
