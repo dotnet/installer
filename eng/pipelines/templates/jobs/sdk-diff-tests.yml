@@ -21,7 +21,8 @@ jobs:
   - template: ../variables/pipelines.yml
   steps:
   - script: |
-      vmr_build=${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}
+      vmr_build='${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}'
+
 
       if [[ -z "$vmr_build" ]]; then
         vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
@@ -45,7 +46,8 @@ jobs:
       
       echo "##vso[task.setvariable variable=InstallerBuildId]$installer_build"
       echo "##vso[task.setvariable variable=VmrBuildId]$vmr_build"
-    displayName: Get Build IDs
+    displayName: Find associated builds
+
     name: Get_Build_Ids
     env:
       AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
