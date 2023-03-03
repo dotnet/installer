@@ -67,7 +67,7 @@ stages:
   jobs:
   - template: ../jobs/vmr-build.yml
     parameters:
-      buildName: CentOSStream8_Online
+      buildName: CentOSStream8_Online_MsftSdk
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
@@ -86,7 +86,7 @@ stages:
   # Temporarily move this to PR build just to test the N-1 CI
   - template: ../jobs/vmr-build.yml
     parameters:
-      buildName: CentOSStream8_WithPreviousSDK
+      buildName: CentOSStream8_Online_PreviousSourceBuiltSdk
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
@@ -105,7 +105,7 @@ stages:
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: CentOSStream8_Offline
+        buildName: CentOSStream8_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
@@ -123,7 +123,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: CentOSStream9_Offline
+        buildName: CentOSStream9_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
@@ -141,7 +141,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Fedora36_Offline
+        buildName: Fedora36_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
@@ -159,7 +159,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Ubuntu2004_Offline
+        buildName: Ubuntu2004_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
@@ -177,7 +177,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Debian11_Offline
+        buildName: Debian11_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: arm64
@@ -193,7 +193,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Fedora36_Offline_Using_Previous
+        buildName: Fedora36_Offline_CurrentSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64

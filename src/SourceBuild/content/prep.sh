@@ -79,10 +79,10 @@ function DownloadArchive {
     notFoundMessage="No source-built $archiveType found to download..."
 
     echo "  Looking for source-built $archiveType to download..."
-    archiveVersionLine=`grep -m 1 "<PrivateSourceBuilt${archiveType}PackageVersion>" "$packageVersionsPath" || :`
-    versionPattern="<PrivateSourceBuilt${archiveType}PackageVersion>(.*)</PrivateSourceBuilt${archiveType}PackageVersion>"
+    archiveVersionLine=`grep -m 1 "<PrivateSourceBuilt${archiveType}Url>" "$packageVersionsPath" || :`
+    versionPattern="<PrivateSourceBuilt${archiveType}Url>(.*)</PrivateSourceBuilt${archiveType}Url>"
     if [[ $archiveVersionLine =~ $versionPattern ]]; then
-        archiveUrl="${sourceBuiltArtifactsTarballUrl}${baseFileName}.${BASH_REMATCH[1]}.tar.gz"
+        archiveUrl="${BASH_REMATCH[1]}"
         echo "  Downloading source-built $archiveType from $archiveUrl..."
         (cd $packagesArchiveDir && curl --retry 5 -O $archiveUrl)
     elif [ "$isRequired" == "true" ]; then
