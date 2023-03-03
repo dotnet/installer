@@ -21,20 +21,20 @@ jobs:
   - template: ../variables/pipelines.yml
   steps:
   - script: |
-      vmr_build='${{ replace(parameters.dotnetDotnetRunId, ' ', '') }}'
+      dotnet_dotnet_build='${{ replace(parameters.dotnetDotnetRunId, ' ', '') }}'
 
-      if [[ -z "$vmr_build" ]]; then
-        vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
+      if [[ -z "$dotnet_dotnet_build" ]]; then
+        dotnet_dotnet_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
       fi
 
-      if [[ -z "$vmr_build" ]]; then
+      if [[ -z "$dotnet_dotnet_build" ]]; then
         fail "Could not find a completed vmr build"
         exit 1
       fi
       
-      echo "Vmr build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$vmr_build&view=results"
+      echo "Vmr build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$dotnet_dotnet_build&view=results"
 
-      installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $vmr_build --output tsv | sed "s,installer-,,g")
+      installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $dotnet_dotnet_build --output tsv | sed "s,installer-,,g")
       installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
       if [[ -z "$installer_build" ]]; then
         fail "Could not find a build of installer for commit '$installer_sha'"
@@ -44,7 +44,7 @@ jobs:
       echo "Installer build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$installer_build&view=results"
       
       echo "##vso[task.setvariable variable=InstallerBuildId]$installer_build"
-      echo "##vso[task.setvariable variable=VmrBuildId]$vmr_build"
+      echo "##vso[task.setvariable variable=VmrBuildId]$dotnet_dotnet_build"
     displayName: Find associated builds
     name: Get_Build_Ids
     env:
@@ -108,7 +108,7 @@ jobs:
       envArgs+=" -e SMOKE_TESTS_PORTABLE_RID=linux-x64"
       envArgs+=" -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= "
  
-      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb" $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKComparisonTests.trx' --logger:'console;verbosity=detailed'
+      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb" $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKDiffTests.trx' --logger:'console;verbosity=detailed'
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
