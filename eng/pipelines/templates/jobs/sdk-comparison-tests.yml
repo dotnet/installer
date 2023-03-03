@@ -18,7 +18,7 @@ jobs:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals 1es-ubuntu-2004
   variables:
-  - template: /eng/common/templates/variables/pipelines.yml
+  - template: ../variables/pipelines.yml
   steps:
   - script: |
       vmr_build=${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}
