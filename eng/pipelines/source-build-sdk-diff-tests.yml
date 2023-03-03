@@ -1,6 +1,6 @@
 schedules:
 - cron: "0 7 * * 1-5"
-  displayName: Daily midnight run
+  displayName: Run on weekdays at 7am UTC
   branches:
     include:
     - main
@@ -15,7 +15,7 @@ pool:
 
 parameters:
 - name: dotnetDotnetRunId
-  displayName: 'Specific dotnet-dotnet run ID'
+  displayName: 'Specific dotnet-dotnet run ID number (e.g `2108850`)'
   type: string
   default: ' '
 
