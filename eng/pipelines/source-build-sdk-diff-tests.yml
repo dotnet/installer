@@ -20,35 +20,35 @@ parameters:
   default: ' '
 
 jobs:
-- template: templates/jobs/sdk-comparison-tests.yml
+- template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: CentOSStream8_Offline
     targetRid: centos.8-x64
     architecture: x64
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
-- template: templates/jobs/sdk-comparison-tests.yml
+- template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: CentOSStream9_Offline
     targetRid: centos.9-x64
     architecture: x64
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
-- template: templates/jobs/sdk-comparison-tests.yml
+- template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Fedora36_Offline
     targetRid: fedora.36-x64
     architecture: x64
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
-- template: templates/jobs/sdk-comparison-tests.yml
+- template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Ubuntu2004_Offline
     targetRid: ubuntu.2004-x64
     architecture: x64
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
 
-- template: templates/jobs/sdk-comparison-tests.yml
+- template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Debian11_Offline
     targetRid: debian.11-arm64
