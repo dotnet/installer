@@ -21,7 +21,8 @@ jobs:
   - template: ../variables/pipelines.yml
   steps:
   - script: |
-      vmr_build=${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}
+      vmr_build='${{ replace(parameters.dotnetDotnetRunID, ' ', '') }}'
+
 
       if [[ -z "$vmr_build" ]]; then
         vmr_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
