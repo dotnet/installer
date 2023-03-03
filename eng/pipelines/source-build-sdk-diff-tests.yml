@@ -14,7 +14,7 @@ pool:
   demands: ImageOverride -equals 1es-ubuntu-2004
 
 parameters:
-- name: dotnetDotnetBuild
+- name: dotnetDotnetRunId
   displayName: 'Specific dotnet-dotnet run ID'
   type: string
   default: ' '
@@ -25,32 +25,32 @@ jobs:
     buildName: CentOSStream8_Offline
     targetRid: centos.8-x64
     architecture: x64
-    dotnetDotnetBuild: ${{ parameters.dotnetDotnetBuild }}
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: CentOSStream9_Offline
     targetRid: centos.9-x64
     architecture: x64
-    dotnetDotnetBuild: ${{ parameters.dotnetDotnetBuild }}
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Fedora36_Offline
     targetRid: fedora.36-x64
     architecture: x64
-    dotnetDotnetBuild: ${{ parameters.dotnetDotnetBuild }}
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Ubuntu2004_Offline
     targetRid: ubuntu.2004-x64
     architecture: x64
-    dotnetDotnetBuild: ${{ parameters.dotnetDotnetBuild }}
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
     buildName: Debian11_Offline
     targetRid: debian.11-arm64
     architecture: arm64
-    dotnetDotnetBuild: ${{ parameters.dotnetDotnetBuild }}
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
