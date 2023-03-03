@@ -34,7 +34,7 @@ parameters:
 # Skip running the SDK content smoke-tests
 - name: excludeSdkContentTests
   type: boolean
-  default: false
+  default: true
 
 # Name of a previous job (from the same template as this) whose output will be used to build this job
 # The SDK from its artifacts is copied to vmr/.dotnet

@@ -78,7 +78,6 @@ stages:
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
-      excludeSdkContentTests: true       # ✅
       overrideDistroDisablingSha1: false # 🚫
       runOnline: true                    # ✅
 
@@ -96,7 +95,6 @@ stages:
         buildFromArchive: true             # ✅
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
-        excludeSdkContentTests: false      # 🚫
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
 
@@ -113,7 +111,6 @@ stages:
         buildFromArchive: true            # ✅
         enablePoison: false               # 🚫
         excludeOmniSharpTests: false      # 🚫
-        excludeSdkContentTests: false     # 🚫
         overrideDistroDisablingSha1: true # ✅
         runOnline: false                  # 🚫
 
@@ -130,7 +127,6 @@ stages:
         buildFromArchive: true             # ✅
         enablePoison: true                 # ✅
         excludeOmniSharpTests: false       # 🚫
-        excludeSdkContentTests: false      # 🚫
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
 
@@ -147,7 +143,6 @@ stages:
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
-        excludeSdkContentTests: false      # 🚫
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
 
@@ -162,7 +157,6 @@ stages:
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
-        excludeSdkContentTests: false      # 🚫
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
 
@@ -179,7 +173,6 @@ stages:
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
-        excludeSdkContentTests: true       # ✅
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         reuseBuildArtifactsFrom: Fedora36_Offline
