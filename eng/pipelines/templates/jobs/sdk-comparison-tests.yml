@@ -102,9 +102,9 @@ jobs:
       envArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$msftSdkTarballName"
       envArgs+=" -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$sdkTarballName"
       envArgs+=" -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= "
-      envArgs+=" -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }} -e SMOKE_TESTS_PORTABLE_RID=linux-x64 -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= -e SMOKE_TESTS_INCLUDE=CompareMsftToSb"
+      envArgs+=" -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }} -e SMOKE_TESTS_PORTABLE_RID=linux-x64 -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= "
  
-      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKComparisonTests.trx' --logger:'console;verbosity=detailed'
+      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb" $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKComparisonTests.trx' --logger:'console;verbosity=detailed'
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
