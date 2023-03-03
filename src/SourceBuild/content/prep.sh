@@ -14,7 +14,7 @@ usage() {
     echo ""
 }
 
-buildBootstrap=false
+buildBootstrap=true
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
