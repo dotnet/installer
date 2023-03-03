@@ -99,8 +99,8 @@ jobs:
 
       eng/common/build.sh --projects $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --restore
 
-      envArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$msftSdkTarballName"
-      envArgs+=" -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$sdkTarballName"
+      envArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$msft_sdk_tarball_name"
+      envArgs+=" -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$sdk_tarball_name"
       envArgs+=" -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= "
       envArgs+=" -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true"
       envArgs+=" -e SMOKE_TESTS_RUNNING_IN_CI=true"
