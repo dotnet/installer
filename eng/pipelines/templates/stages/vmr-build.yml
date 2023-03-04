@@ -83,26 +83,25 @@ stages:
       runOnline: true                    # ✅
       withPreviousSDK: false             # 🚫
 
-  # Temporarily move this to PR build just to test the N-1 CI
-  - template: ../jobs/vmr-build.yml
-    parameters:
-      buildName: CentOSStream8_Online_PreviousSourceBuiltSdk
-      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-      vmrBranch: ${{ variables.VmrBranch }}
-      architecture: x64
-      pool:
-        name: ${{ variables.defaultPoolName }}
-        demands: ${{ variables.defaultPoolDemands }}
-      container: ${{ parameters.centOSStream8Container }}
-      buildFromArchive: false            # 🚫
-      enablePoison: false                # 🚫
-      excludeOmniSharpTests: true        # ✅
-      excludeSdkContentTests: true       # ✅
-      overrideDistroDisablingSha1: false # 🚫
-      runOnline: true                    # ✅
-      withPreviousSDK: true              # ✅
-
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: CentOSStream8_Online_PreviousSourceBuiltSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream8Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        excludeSdkContentTests: true       # ✅
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: true                    # ✅
+        withPreviousSDK: true              # ✅
+
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: CentOSStream8_Offline_MsftSdk
