@@ -106,8 +106,8 @@ jobs:
     workingDirectory: $(Build.SourcesDirectory)
 
   - script: >
-      .dotnet/dotnet 
-      test
+      .dotnet/dotnet test
+
       $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj
       --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb"
       --logger:'trx;LogFileName=$(Agent.JobName)_SDKDiffTests.trx'
