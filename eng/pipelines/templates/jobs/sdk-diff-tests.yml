@@ -24,15 +24,15 @@ jobs:
       dotnet_dotnet_build='${{ replace(parameters.dotnetDotnetRunId, ' ', '') }}'
 
       if [[ -z "$dotnet_dotnet_build" ]]; then
-        dotnet_dotnet_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
+        dotnet_dotnet_build=$(az pipelines runs list --branch '$(Build.SourceBranch)' --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(DOTNET_DOTNET_CI_PIPELINE_ID)' --status completed --top 1 --query "[].id" --output tsv)
       fi
 
       if [[ -z "$dotnet_dotnet_build" ]]; then
-        fail "Could not find a completed vmr build"
+        fail "Could not find a completed dotnet-dotnet build for branch '$(Build.SourceBranch)'"
         exit 1
       fi
       
-      echo "Vmr build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$dotnet_dotnet_build&view=results"
+      echo "Dotnet-dotnet build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$dotnet_dotnet_build&view=results"
 
       installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $dotnet_dotnet_build --output tsv | sed "s,installer-,,g")
       installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
