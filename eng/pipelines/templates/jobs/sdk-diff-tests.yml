@@ -86,7 +86,7 @@ jobs:
 
       if [[ -z "$msft_sdk_tarball_name" ]]; then
 
-        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
+        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$installer_build&view=results' might have failed."
         exit 1
       fi
 
@@ -94,7 +94,7 @@ jobs:
 
       if [[ -z "$sdk_tarball_name" ]]; then
 
-        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
+        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$dotnet_dotnet_build&view=results' might have failed"
         exit 1
       fi
 
