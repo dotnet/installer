@@ -135,4 +135,4 @@ jobs:
       searchFolder: $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/TestResults
       mergeTestResults: true
       publishRunAttachments: true
-      testRunTitle: SourceBuild_SdkComparisonTests_$(Agent.JobName)
+      testRunTitle: $(Agent.JobName)
