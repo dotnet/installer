@@ -86,29 +86,39 @@ jobs:
       msft_sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
 
       if [[ -z $msft_sdk_tarball_name ]]; then
-        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$installer_build&view=results' might have failed."
+        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
         exit 1
       fi
 
       sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-${{ parameters.targetRid }}.tar.gz" -exec basename {} \;)
 
       if [[ -z $sdk_tarball_name ]]; then
-        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$dotnet_dotnet_build&view=results' might have failed"
+        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'"
         exit 1
       fi
 
       eng/common/build.sh --projects $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --restore
 
-      envArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$msft_sdk_tarball_name"
-      envArgs+=" -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$sdk_tarball_name"
-      envArgs+=" -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= "
-      envArgs+=" -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=false"
-      envArgs+=" -e SMOKE_TESTS_RUNNING_IN_CI=true"
-      envArgs+=" -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }}"
-      envArgs+=" -e SMOKE_TESTS_PORTABLE_RID=linux-x64"
-      envArgs+=" -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= "
- 
-      .dotnet/dotnet test $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb" $envArgs --logger:'trx;LogFileName=$(Agent.JobName)_SDKDiffTests.trx' --logger:'console;verbosity=detailed'
+      echo "##vso[task.setvariable variable=MsftSdkTarballName]$msft_sdk_tarball_name"
+      echo "##vso[task.setvariable variable=SdkTarballName]$sdk_tarball_name"
+    displayName: Prepare Tests
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: >
+      .dotnet/dotnet 
+      test
+      $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj
+      --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.SdkContentTests.CompareMsftToSb"
+      --logger:'trx;LogFileName=$(Agent.JobName)_SDKDiffTests.trx'
+      --logger:'console;verbosity=detailed'
+      -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$(MsftSdkTarballName)
+      -e SMOKE_TESTS_SDK_TARBALL_PATH=$(Pipeline.Workspace)/Artifacts/$(SdkTarballName)
+      -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= 
+      -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=false
+      -e SMOKE_TESTS_RUNNING_IN_CI=true
+      -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }}
+      -e SMOKE_TESTS_PORTABLE_RID=linux-x64
+      -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH= 
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
