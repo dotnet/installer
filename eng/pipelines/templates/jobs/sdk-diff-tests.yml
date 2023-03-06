@@ -42,7 +42,8 @@ jobs:
       fi
 
       echo "Installer build: https://dev.azure.com/dnceng/internal/_build/results?buildId=$installer_build&view=results"
-      
+
+      echo "##vso[build.addbuildtag]installer-$installer_sha"
       echo "##vso[task.setvariable variable=InstallerBuildId]$installer_build"
       echo "##vso[task.setvariable variable=DotnetDotnetBuildId]$dotnet_dotnet_build"
     displayName: Find associated builds
