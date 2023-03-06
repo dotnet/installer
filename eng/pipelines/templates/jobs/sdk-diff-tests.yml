@@ -28,7 +28,7 @@ jobs:
       fi
 
       if [[ -z "$dotnet_dotnet_build" ]]; then
-        fail "Could not find a completed dotnet-dotnet build for branch '$(Build.SourceBranch)'"
+        echo "Could not find a completed dotnet-dotnet build for branch '$(Build.SourceBranch)'"
         exit 1
       fi
       
@@ -37,7 +37,7 @@ jobs:
       installer_sha=$(az pipelines build tag list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --build-id $dotnet_dotnet_build --output tsv | sed "s,installer-,,g")
       installer_build=$(az pipelines runs list --organization '$(AZDO_ORG)' --project '$(AZDO_PROJECT)' --pipeline-ids '$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)' --query "[?sourceVersion == '$installer_sha'].id" --output tsv)
       if [[ -z "$installer_build" ]]; then
-        fail "Could not find a build of installer for commit '$installer_sha'"
+        echo "Could not find a build of installer for commit '$installer_sha'"
         exit 1
       fi
 
@@ -85,14 +85,14 @@ jobs:
       msft_sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
 
       if [[ -z "$msft_sdk_tarball_name" ]]; then
-        fail "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$InstallerBuildId&view=results' might have failed."
+        echo "Microsoft SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$(InstallerBuildId)&view=results' might have failed."
         exit 1
       fi
 
       sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-${{ parameters.targetRid }}.tar.gz" -exec basename {} \;)
 
       if [[ -z "$sdk_tarball_name" ]]; then
-        fail "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$DotnetDotnetBuildId&view=results' might have failed"
+        echo "Source-build SDK tarball does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build 'https://dev.azure.com/dnceng/internal/_build/results?buildId=$(DotnetDotnetBuildId)&view=results' might have failed"
         exit 1
       fi
 
