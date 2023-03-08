@@ -106,16 +106,16 @@
   <PropertyGroup>
     <!-- Automated versions for asp.net templates -->
     <!-- Grab just the patch version from MicrosoftNETSdkPackageVersion (7.0.103-servicing becomes 03) -->
-    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkPactchVersion>
-    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPactchVersion.Split('-')[0])</MicrosoftNETSdkPactchVersion>
-    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPactchVersion.Substring(1))</MicrosoftNETSdkPactchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkPatchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPactchVersion.Split('-')[0])</MicrosoftNETSdkPatchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPactchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
     <!-- 
       Between branding and shipping, the templates should stay at last month's version.
       If the incoming SDK version is 2 versions behind us, we know we just branded but haven't done the internal -> public merge yet.
       Therefore we stay at last month's version.
     -->
     <AspNetCoreTemplateFeature60>$([MSBuild]::Add($(VersionFeature), 9))</AspNetCoreTemplateFeature60>
-    <AspNetCoreTemplateFeature60 Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPactchVersion))) &lt; 2">$([MSBuild]::Add($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
+    <AspNetCoreTemplateFeature60 Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) &lt; 2">$([MSBuild]::Add($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Cross-release dependency versions -->
