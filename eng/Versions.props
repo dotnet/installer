@@ -107,8 +107,8 @@
     <!-- Automated versions for asp.net templates -->
     <!-- Grab just the patch version from MicrosoftNETSdkPackageVersion (7.0.103-servicing becomes 03) -->
     <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkPatchVersion>
-    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPactchVersion.Split('-')[0])</MicrosoftNETSdkPatchVersion>
-    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPactchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPatchVersion.Split('-')[0])</MicrosoftNETSdkPatchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPatchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
     <!-- 
       Between branding and shipping, the templates should stay at last month's version.
       If the incoming SDK version is 2 versions behind us, we know we just branded but haven't done the internal -> public merge yet.
