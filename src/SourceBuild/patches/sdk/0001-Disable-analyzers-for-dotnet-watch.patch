@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 8 Mar 2023 14:51:59 -0600
+Subject: [PATCH] Disable analyzers for dotnet-watch.
+
+---
+ src/BuiltInTools/dotnet-watch/dotnet-watch.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/BuiltInTools/dotnet-watch/dotnet-watch.csproj b/src/BuiltInTools/dotnet-watch/dotnet-watch.csproj
+index 0e8811a7b0..18fda3a81f 100644
+--- a/src/BuiltInTools/dotnet-watch/dotnet-watch.csproj
++++ b/src/BuiltInTools/dotnet-watch/dotnet-watch.csproj
+@@ -9,6 +9,7 @@
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+     <UseAppHost>false</UseAppHost>
+     <RuntimeIdentifier />
++    <RunAnalyzers>false</RunAnalyzers>
+   </PropertyGroup>
+ 
+   <ItemGroup>
