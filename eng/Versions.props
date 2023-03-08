@@ -104,6 +104,19 @@
     <NuGetVersioningPackageVersion>5.8.0</NuGetVersioningPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Automated versions for asp.net templates -->
+    <!-- Grab just the patch version from MicrosoftNETSdkPackageVersion (7.0.103-servicing becomes 03) -->
+    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkPactchVersion>
+    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPactchVersion.Split('-')[0])</MicrosoftNETSdkPactchVersion>
+    <MicrosoftNETSdkPactchVersion>$(MicrosoftNETSdkPactchVersion.Substring(1))</MicrosoftNETSdkPactchVersion>
+    <!-- 
+      Between branding and shipping, the templates should stay at last month's version.
+      If the incoming SDK version is 2 versions behind us, we know we just branded but haven't done the internal -> public merge yet.
+      Therefore we stay at last month's version.
+    -->
+    <AspNetCoreTemplateFeature60>$([MSBuild]::Add($(VersionFeature), 9))</AspNetCoreTemplateFeature60>
+    <AspNetCoreTemplateFeature60 Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPactchVersion))) &lt; 2">$([MSBuild]::Add($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
+  <PropertyGroup>
     <!-- Cross-release dependency versions -->
     <MicrosoftDotNetCommonItemTemplates50PackageVersion>5.0.403</MicrosoftDotNetCommonItemTemplates50PackageVersion>
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>6.0.302</MicrosoftDotNetCommonItemTemplates60PackageVersion>
@@ -135,7 +148,7 @@
     <NUnit3Templates60PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates60PackageVersion>
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
-    <AspNetCorePackageVersionFor60Templates>6.0.14</AspNetCorePackageVersionFor60Templates>
+    <AspNetCorePackageVersionFor60Templates>6.0.$(AspNetCoreTemplateFeature60)</AspNetCorePackageVersionFor60Templates>
     <!-- 5.0 Template versions -->
     <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftWinFormsProjectTemplates50PackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
     <MicrosoftDotNetWpfProjectTemplates50PackageVersion>$(MicrosoftWPFProjectTemplates50PackageVersion)</MicrosoftDotNetWpfProjectTemplates50PackageVersion>
