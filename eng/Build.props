@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup Condition=" '$(ArcadeBuildTarball)' != 'true' ">
     <ProjectToBuild Include="$(RepoRoot)Microsoft.DotNet.Cli.sln" />
-    <ProjectToBuild Condition="'$(OS)' == 'Windows_NT' And ('$(Architecture)' == 'x86' Or '$(Architecture)' == 'x64' Or '$(Architecture)' == 'arm64')" 
+    <ProjectToBuild Condition="'$(OS)' == 'Windows_NT' And ('$(Architecture)' == 'x86' Or '$(Architecture)' == 'x64' Or '$(Architecture)' == 'arm64')"
                     Include="$(RepoRoot)eng\version.csproj;
                              $(RepoRoot)eng\native.proj" />
   </ItemGroup>
