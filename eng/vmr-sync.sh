@@ -26,13 +26,14 @@
 ###       This can be a specific commit, branch, tag..
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
-###   -v, --vmr, --vmr-dir PATH
-###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
-###   --no-vmr-prepare
-###       Optional. Leave an already existing VMR intact. Otherwise checks out the target branch first
 ###   -b, --branch, --vmr-branch BRANCH_NAME
-###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize to
-###       This should match the target branch of the PR; defaults to 'main'
+###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize. The VMR will be checked out to this branch
+###   --debug
+###       Optional. Turns on the most verbose logging for the VMR tooling
+###   --readme-template
+###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
+###       components.
+###       Defaults to src/VirtualMonoRepo/README.template.md
 ###   --recursive
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
 ###       This is used when performing the full synchronization during installer's CI and the final VMR sync.
@@ -41,15 +42,11 @@
 ###       Optional. Additional remote to use during the synchronization
 ###       This can be used to synchronize to a commit from a fork of the repository
 ###       Example: 'runtime:https://github.com/yourfork/runtime'
-###   --readme-template
-###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
-###       components.
-###       Defaults to src/VirtualMonoRepo/README.template.md
 ###   --tpn-template
 ###       Optional. Template for the header of VMRs THIRD-PARTY-NOTICES file.
 ###       Defaults to src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
-###   --debug
-###       Optional. Turns on the most verbose logging for the VMR tooling
+###   -v, --vmr, --vmr-dir PATH
+###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
 
 source="${BASH_SOURCE[0]}"
 
@@ -85,14 +82,13 @@ installer_dir=$(realpath "$scriptroot/../")
 
 tmp_dir=''
 vmr_dir=''
-vmr_branch='main'
+vmr_branch=''
 repository=''
 additional_remotes=''
 recursive=false
 verbosity=verbose
 readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
 tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
-no_vmr_prepare=false
 
 # If installer is a repo, we're in an installer and not in the dotnet/dotnet repo
 if [[ -d "$installer_dir/.git" ]]; then
@@ -132,9 +128,6 @@ while [[ $# -gt 0 ]]; do
     --tpn-template)
       tpn_template=$2
       shift
-      ;;
-    --no-vmr-prepare)
-      no_vmr_prepare=true
       ;;
     -d|--debug)
       verbosity=debug
@@ -199,14 +192,17 @@ fi
 if [[ ! -d "$vmr_dir" ]]; then
   highlight "Cloning 'dotnet/dotnet' into $vmr_dir.."
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
-  git switch -c "$vmr_branch"
+
+  if [[ -n "$vmr_branch" ]]; then
+    git switch -c "$vmr_branch"
+  fi
 else
   if ! git -C "$vmr_dir" diff --quiet; then
     fail "There are changes in the working tree of $vmr_dir. Please commit or stash your changes"
     exit 1
   fi
 
-  if [[ "$no_vmr_prepare" == "false" ]]; then
+  if [[ -n "$vmr_branch" ]]; then
     highlight "Preparing $vmr_dir"
     git -C "$vmr_dir" checkout "$vmr_branch"
     git -C "$vmr_dir" pull
