@@ -145,7 +145,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       fail "Invalid argument: $1"
-      usage
+      print_help
       exit 1
       ;;
   esac
