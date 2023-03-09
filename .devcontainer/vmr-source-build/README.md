@@ -41,16 +41,13 @@ can then try to build the VMR and see if the change works for you.
 ### Pull changes into the Codespace from your fork
 
 You can also make a fix in the individual source repository (e.g. `dotnet/runtime`) and push the
-fix into a branch (can be in your fork too). Once you have the commit pushed, you can pull this
-version of the repository into the VMR locally.
+fix into a branch; can be in your fork too. Once you have the commit pushed, you can pull this
+version of the repository into the Codespace by running:
 
-Let's consider you pushed a commit with SHA `abcdef` into your fork at `github.com/yourfork/runtime`.
-You can now bring this version of runtime into the local VMR in this Codespace by running:
-
-```bash
-/workspaces/synchronize-vmr.sh \
-  --repository runtime:abcdef  \
-  --remote runtime:https://github.com/yourfork/runtime
+```
+/workspaces/synchronize-vmr.sh                \
+  --repository <repo>:<commit, tag or branch> \
+  --remote <repo>:<fork URI>
 ```
 
 You can now proceed building the VMR in the Codespace using instructions above. You can repeat
