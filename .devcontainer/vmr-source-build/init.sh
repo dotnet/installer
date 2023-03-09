@@ -29,4 +29,4 @@ vmr_branch=$(git -C "$installer_dir" log --pretty=format:'%D' HEAD^ \
 
 # Run prep.sh
 unset RepositoryName
-sh -c "cd \"$vmr_dir\" && ./prep.sh"
+(cd "$vmr_dir" && ./prep.sh)

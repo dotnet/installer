@@ -1,3 +1,4 @@
 #!/bin/bash
 
-sh -c "cd /workspaces/installer && ./eng/vmr-sync.sh --vmr /workspaces/dotnet --tmp /workspaces/tmp $*"
+(cd /workspaces/installer \
+    && ./eng/vmr-sync.sh --vmr /workspaces/dotnet --tmp /workspaces/tmp "$*")
