@@ -25,16 +25,8 @@ vmr_branch=$(git -C "$installer_dir" log --pretty=format:'%D' HEAD^ \
   | sed 's@origin/@@' \
   | sed 's@,.*@@')
 
-pushd "$installer_dir"
-  "./eng/vmr-sync.sh"      \
-    --vmr "$vmr_dir"       \
-    --tmp "$tmp_dir"       \
-    --branch "$vmr_branch" \
-    --debug
-popd
+"$workspace_dir/synchronize-vmr.sh" --branch "$vmr_branch" --debug
 
 # Run prep.sh
 unset RepositoryName
-pushd "$vmr_dir"
-./prep.sh
-popd
+sh -c "cd \"$vmr_dir\" && ./prep.sh"
