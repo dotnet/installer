@@ -24,27 +24,35 @@
 ###   -r, --repository name:GIT_REF
 ###       Required. Repository + git ref separated by colon to synchronize to.
 ###       This can be a specific commit, branch, tag..
+###
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
+###
 ###   -b, --branch, --vmr-branch BRANCH_NAME
 ###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize. The VMR will be checked out to this branch
+###
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
+###
 ###   --readme-template
 ###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
 ###       components.
 ###       Defaults to src/VirtualMonoRepo/README.template.md
+###
 ###   --recursive
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
 ###       This is used when performing the full synchronization during installer's CI and the final VMR sync.
 ###       Defaults to false unless no repository is supplied in which case a recursive sync of installer is performed.
+###
 ###   --remote name:URI
 ###       Optional. Additional remote to use during the synchronization
 ###       This can be used to synchronize to a commit from a fork of the repository
 ###       Example: 'runtime:https://github.com/yourfork/runtime'
+###
 ###   --tpn-template
 ###       Optional. Template for the header of VMRs THIRD-PARTY-NOTICES file.
 ###       Defaults to src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
+###
 ###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
 
