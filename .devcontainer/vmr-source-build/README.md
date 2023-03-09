@@ -47,11 +47,8 @@ Let's consider you pushed a commit with SHA `abcdef` into your fork at `github.c
 You can now bring this version of runtime into the local VMR in this Codespace by running:
 
 ```bash
-cd /workspaces/installer
-./eng/vmr-sync.sh             \
-  --vmr /workspaces/dotnet    \
-  --tmp /workspaces/tmp       \
-  --repository runtime:abcdef \
+/workspaces/synchronize-vmr.sh \
+  --repository runtime:abcdef  \
   --remote runtime:https://github.com/yourfork/runtime
 ```
 

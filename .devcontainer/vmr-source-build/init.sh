@@ -10,6 +10,8 @@ workspace_dir=$(realpath "$installer_dir/../")
 tmp_dir=$(realpath "$workspace_dir/tmp")
 vmr_dir=$(realpath "$workspace_dir/dotnet")
 
+cp "$installer_dir/.devcontainer/vmr-source-build/synchronize-vmr.sh" "$workspace_dir"
+
 mkdir -p "$tmp_dir"
 
 # Codespaces performs a shallow fetch only
