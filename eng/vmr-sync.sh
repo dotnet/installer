@@ -202,7 +202,7 @@ if [[ ! -d "$vmr_dir" ]]; then
   git clone https://github.com/dotnet/dotnet "$vmr_dir"
 
   if [[ -n "$vmr_branch" ]]; then
-    git switch -c "$vmr_branch"
+    git -C "$vmr_dir" switch -c "$vmr_branch"
   fi
 else
   if ! git -C "$vmr_dir" diff --quiet; then
