@@ -11,7 +11,12 @@
             "extensions": [
                 "ms-dotnettools.csharp"
             ]
+        },
+        "codespaces": {
+            "openFiles": [
+                "dotnet/.devcontainer/README.md"
+            ]
         }
     },
-    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/prebuilt-sdk/build.sh"
+    "onCreateCommand": "${containerWorkspaceFolder}/.devcontainer/prebuilt-sdk/init.sh"
 }

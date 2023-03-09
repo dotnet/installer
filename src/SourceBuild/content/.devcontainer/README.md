@@ -8,11 +8,8 @@
 ##     ## ######## ##     ## ########        ##    ##     ## ####  ######
 -->
 
-This Codespace can help you debug the source build of .NET. In case you have run this from a
-`dotnet/installer` PR branch, it will contain the VMR (`dotnet/dotnet`) checked out into
-`/workspaces/dotnet` with the PR changes pulled into it. You can then attempt to source-build
-the VMR which is what the VMR leg in the installer PR build doing. This build takes about 45
-minutes and, after completion, produces an archived .NET SDK located in
+This Codespace can help you debug the source build of .NET. This build takes about
+45 minutes and, after completion, produces an archived .NET SDK located in
 `/workspaces/dotnet/artifacts/x64/Release`.
 
 ## Build the SDK
@@ -41,11 +38,12 @@ can then try to build the VMR and see if the change works for you.
 ### Pull changes into the Codespace from your fork
 
 You can also make a fix in the individual source repository (e.g. `dotnet/runtime`) and push the
-fix into a branch (can be in your fork too). Once you have the commit pushed, you can pull this
-version of the repository into the VMR locally.
+fix into a branch; can be in your fork too. Once you have the commit pushed, you can pull this
+version of the repository into the Codespace.
 
-Let's consider you pushed a commit with SHA `abcdef` into your fork at `github.com/yourfork/runtime`.
-You can now bring this version of runtime into the local VMR in this Codespace by running:
+Let's consider you pushed a commit with SHA `abcdef` (you can also use the branch name)
+into your fork at `github.com/yourfork/runtime`. You can now bring this version of runtime into
+the local VMR in this Codespace by running:
 
 ```bash
 /workspaces/synchronize-vmr.sh \
