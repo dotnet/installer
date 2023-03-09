@@ -14,9 +14,6 @@
 ### folder to this to speed up your re-runs.
 ###
 ### USAGE:
-###   Synchronize the VMR to the commit of dotnet/installer that is currently being built:
-###     ./vmr-sync.sh --tmp-dir "$HOME/repos/tmp"
-###
 ###   Synchronize the VMR to a specific commit of dotnet/runtime using custom fork:
 ###     ./vmr-sync.sh \
 ###        --repository runtime:e7e71da303af8dc97df99b098f21f526398c3943 \
@@ -24,19 +21,15 @@
 ###        --tmp-dir "$HOME/repos/tmp"
 ###
 ### Options:
+###   -r, --repository name:GIT_REF
+###       Required. Repository + git ref separated by colon to synchronize to.
+###       This can be a specific commit, branch, tag..
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
-###   -r name:GIT_REF, --repository name:GIT_REF
-###       Optional. Repository + git ref separated by colon to synchronize to.
-###       This can be a specific commit, branch, tag..
-###       When omitted, the script will synchronize the installer commit based on the version of the parent
-###       where this script is stored.
-###   --remote name:URI
-###       Optional. Additional remote to use during the synchronization
-###       This can be used to synchronize to a commit from a fork of the repository
-###       Example: 'runtime:https://github.com/yourfork/runtime'
 ###   -v, --vmr, --vmr-dir PATH
 ###       Optional. Path to the dotnet/dotnet repository. When null, gets cloned to the temporary folder
+###   --no-vmr-prepare
+###       Optional. Leave an already existing VMR intact. Otherwise checks out the target branch first
 ###   -b, --branch, --vmr-branch BRANCH_NAME
 ###       Optional. Branch of the 'dotnet/dotnet' repo to synchronize to
 ###       This should match the target branch of the PR; defaults to 'main'
@@ -44,6 +37,10 @@
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
 ###       This is used when performing the full synchronization during installer's CI and the final VMR sync.
 ###       Defaults to false unless no repository is supplied in which case a recursive sync of installer is performed.
+###   --remote name:URI
+###       Optional. Additional remote to use during the synchronization
+###       This can be used to synchronize to a commit from a fork of the repository
+###       Example: 'runtime:https://github.com/yourfork/runtime'
 ###   --readme-template
 ###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
 ###       components.
@@ -51,8 +48,6 @@
 ###   --tpn-template
 ###       Optional. Template for the header of VMRs THIRD-PARTY-NOTICES file.
 ###       Defaults to src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
-###   --no-vmr-prepare
-###       Optional. Leave the VMR intact (otherwise checks out the target branch first)
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
 
@@ -183,10 +178,8 @@ fi
 # Sanitize the input
 
 if [[ -z "$repository" ]]; then
-  current_sha=$(git -C "$installer_dir" rev-parse HEAD)
-  echo "No repository specified, will synchronize installer:$current_sha"
-  repository="installer:$current_sha"
-  recursive=true
+  fail "No repository to synchronize specified"
+  exit 1
 fi
 
 if [[ -z "$vmr_dir" ]]; then
