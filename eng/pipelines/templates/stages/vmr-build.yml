@@ -67,7 +67,26 @@ stages:
   jobs:
   - template: ../jobs/vmr-build.yml
     parameters:
-      buildName: CentOSStream8_Online
+      buildName: CentOSStream8_Offline
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.centOSStream8Container }}
+      buildFromArchive: false            # ✅
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      excludeSdkContentTests: true       # 🚫
+      overrideDistroDisablingSha1: false # 🚫
+      runOnline: false                   # 🚫
+      prepNoArtifacts: false             # ✅
+      prepNoSdk: false                   # ✅
+
+  - template: ../jobs/vmr-build.yml
+    parameters:
+      buildName: CentOSStream8_Offline_Using_Previous
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
@@ -77,12 +96,13 @@ stages:
       container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
-      excludeOmniSharpTests: true        # ✅
+      excludeOmniSharpTests: true        # 🚫
       excludeSdkContentTests: true       # ✅
       overrideDistroDisablingSha1: false # 🚫
-      runOnline: true                    # ✅
-      prepNoArtifacts: false             # 🚫
-      prepNoSdk: false                   # 🚫
+      prepNoArtifacts: true              # ✅
+      prepNoSdk: true                    # ✅
+      runOnline: false                   # 🚫
+      reuseBuildArtifactsFrom: CentOSStream8_Offline
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
