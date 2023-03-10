@@ -17,10 +17,7 @@ Codespace, the SDK will already be there.
 
 To build the VMR, run following:
 ```bash
-cd /workspaces/dotnet
-unset RepositoryName
-./prep.sh
-./build.sh --online
+./prep.sh && ./build.sh --online
 ```
 
 > Please note that, at this time, the build modifies some of the checked-in sources so it might

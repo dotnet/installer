@@ -32,6 +32,4 @@ vmr_branch=$(git -C "$installer_dir" log --pretty=format:'%D' HEAD^ \
   --remote "installer:$installer_dir" \
   --debug
 
-# Run prep.sh
-unset RepositoryName
 (cd "$vmr_dir" && ./prep.sh)

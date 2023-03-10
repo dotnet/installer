@@ -18,6 +18,9 @@ usage() {
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
+# This env variable must not be set as it will conflict with repo-project's default settings
+unset RepositoryName
+
 MSBUILD_ARGUMENTS=("-flp:v=detailed")
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PACKAGES_DIR=''

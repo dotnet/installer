@@ -20,7 +20,6 @@ minutes and, after completion, produces an archived .NET SDK located in
 To build the VMR, run following:
 ```bash
 cd /workspaces/dotnet
-unset RepositoryName
 ./build.sh --online
 ```
 
