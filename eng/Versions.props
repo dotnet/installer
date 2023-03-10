@@ -114,7 +114,7 @@
     <!-- Grab just the patch version from MicrosoftNETSdkPackageVersion (7.0.103-servicing becomes 03) -->
     <MicrosoftNETSdkFeatureAndPatchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkFeatureAndPatchVersion>
     <MicrosoftNETSdkFeatureAndPatchVersion>$(MicrosoftNETSdkFeatureAndPatchVersion.Split('-')[0])</MicrosoftNETSdkFeatureAndPatchVersion>
-    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkPatchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
+    <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkFeatureAndPatchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
     <!-- 
       Between branding and shipping, the templates should stay at last month's version.
       If the incoming SDK version is 2 versions behind us, we know we just branded but haven't done the internal -> public merge yet.
