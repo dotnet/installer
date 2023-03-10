@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +25,7 @@ public class SourceBuiltArtifactsTests : SmokeTests
         try
         {
             // Extract the .version file
-            ExtractFileFromTarball(Config.SourceBuiltArtifactsPath, ".version", outputDir);
+            Utilities.ExtractFileFromTarball(Config.SourceBuiltArtifactsPath, ".version", outputDir);
 
             string[] versionLines = File.ReadAllLines(Path.Combine(outputDir, ".version"));
             Assert.Equal(2, versionLines.Length);
@@ -47,7 +51,7 @@ public class SourceBuiltArtifactsTests : SmokeTests
             string sdkVersion = versionLines[1];
 
             // Find the expected SDK version by getting it from the SDK tarball
-            ExtractFileFromTarball(Config.SdkTarballPath, "./sdk/*/.version", outputDir);
+            Utilities.ExtractFileFromTarball(Config.SdkTarballPath, "./sdk/*/.version", outputDir);
             DirectoryInfo sdkDir = new DirectoryInfo(Path.Combine(outputDir, "sdk"));
             string sdkVersionPath = sdkDir.GetFiles(".version", SearchOption.AllDirectories).Single().FullName;
             string[] sdkVersionLines = File.ReadAllLines(Path.Combine(outputDir, sdkVersionPath));
@@ -59,10 +63,5 @@ public class SourceBuiltArtifactsTests : SmokeTests
         {
             Directory.Delete(outputDir, recursive: true);
         }
-    }
-
-    private void ExtractFileFromTarball(string tarballPath, string filePath, string outputDir)
-    {
-        ExecuteHelper.ExecuteProcessValidateExitCode("tar", $"--wildcards -xzf {tarballPath} -C {outputDir} {filePath}", OutputHelper);
     }
 }

@@ -2,7 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Extensions.FileSystemGlobbing;
 using System;
+using System.Formats.Tar;
+using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -11,6 +15,30 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public static class Utilities
 {
+    public static void ExtractFileFromTarball(string tarballPath, string filePath, string outputDir)
+    {
+        Matcher matcher = new();
+        matcher.AddInclude(filePath);
+
+        using FileStream fileStream = File.OpenRead(tarballPath);
+        using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
+        using TarReader reader = new(decompressorStream);
+
+        TarEntry entry;
+        while ((entry = reader.GetNextEntry()) is not null)
+        {
+            if (matcher.Match(entry.Name).HasMatches)
+            {
+                string outputPath = Path.Join(outputDir, entry.Name);
+                Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+
+                using FileStream outputFileStream = File.Create(outputPath);
+                entry.DataStream.CopyTo(outputFileStream);
+                break;
+            }
+        }
+    }
+
     public static async Task RetryAsync(Func<Task> executor, ITestOutputHelper outputHelper)
     {
         await Utilities.RetryAsync(

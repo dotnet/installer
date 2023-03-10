@@ -13,6 +13,7 @@ parameters:
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
+  alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
   centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
   debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
@@ -80,6 +81,24 @@ stages:
       excludeOmniSharpTests: true        # ✅
       overrideDistroDisablingSha1: false # 🚫
       runOnline: true                    # ✅
+      withPreviousSDK: false             # 🚫
+
+  # TODO:  Move within ne(variables['Build.Reason'], 'PullRequest') block after tested in PR validation
+  - template: ../jobs/vmr-build.yml
+    parameters:
+      buildName: Alpine317_Offline_MsftSdk
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.alpine317Container }}
+      buildFromArchive: false            # ✅
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      overrideDistroDisablingSha1: false # 🚫
+      runOnline: false                   # 🚫
       withPreviousSDK: false             # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
