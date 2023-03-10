@@ -19,6 +19,7 @@ To build the VMR, run following:
 ```bash
 cd /workspaces/dotnet
 unset RepositoryName
+./prep.sh
 ./build.sh --online
 ```
 
