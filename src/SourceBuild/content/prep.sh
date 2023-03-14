@@ -10,8 +10,8 @@ usage() {
     echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
     echo "  installing the version of dotnet referenced in global.json"
     echo "options:"
-    echo "  --no-bootstrap    Don't replace portable packages in the download source-built artifacts"
     echo "  --no-artifacts    Exclude the download of the previously source-built artifacts archive."
+    echo "  --no-bootstrap    Don't replace portable packages in the download source-built artifacts"
     echo "  --no-prebuilts    Exclude the download of the prebuilts archive."
     echo "  --no-sdk          Exclude the download of the .NET SDK."
     echo ""
@@ -51,6 +51,13 @@ while :; do
 
     shift
 done
+
+# Attempting to bootstrap without an SDK will fail. So either the --no-sdk flag must be passed
+# or a pre-existing .dotnet SDK directory must exist.
+if [[ "$buildBootstrap" == "true" && "$installDotnet" == "false" && ! -d $SCRIPT_ROOT/.dotnet ]]; then
+    echo "  ERROR: --no-sdk requires --no-bootstrap or a pre-existing .dotnet SDK directory.  Exiting..."
+    exit -1
+fi
 
 # Check to make sure curl exists to download the archive files
 if ! command -v curl &> /dev/null
