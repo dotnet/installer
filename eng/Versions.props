@@ -33,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
-    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.23114.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.23164.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -122,8 +122,8 @@
       We also need to special case the 1st patch release, because the incoming SDK version will never be 2 versions behind us in that case.
       Instead the indicator is that the incoming SDK version is not RTM or greater yet.
     -->
-    <SubtractOneFromTemplateVersions Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) >= 2">true</SubtractOneFromTemplateVersions>
-    <SubtractOneFromTemplateVersions Condition="$(VersionFeature) >= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
+    <SubtractOneFromTemplateVersions Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) &gt;= 2">true</SubtractOneFromTemplateVersions>
+    <SubtractOneFromTemplateVersions Condition="$(VersionFeature) &gt;= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
     <AspNetCoreTemplateFeature60>$([MSBuild]::Subtract($(VersionFeature60), 1))</AspNetCoreTemplateFeature60>
     <AspNetCoreTemplateFeature60 Condition="'$(SubtractOneFromTemplateVersions)' == 'true'">$([MSBuild]::Subtract($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
   </PropertyGroup>
