@@ -43,7 +43,9 @@
     <PortablePackage Include="System.IO.Ports" Version="[$(RuntimeNativeSystemIOPortsVersion)]" IsNative="true" />
   </ItemGroup>
 
-  <Target Name="GetPackagesToDownload">
+  <Target Name="GetPackagesToDownload"
+          AfterTargets="CollectPackageDownloads"
+          Returns="@(PackageDownload)">
     <ItemGroup>
       <!-- Generate a cross-product between runtime packs and Linux RIDs -->
       <RuntimePackWithLinuxRid Include="@(RuntimePack)">
