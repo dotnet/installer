@@ -33,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade -->
-    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.23122.4</MicrosoftDotNetBuildTasksInstallersPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersPackageVersion>7.0.0-beta.23164.3</MicrosoftDotNetBuildTasksInstallersPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -46,9 +46,9 @@
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
     <MicrosoftDotNetTestProjectTemplates30PackageVersion>1.0.2-beta4.22406.1</MicrosoftDotNetTestProjectTemplates30PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.1.0-rc.23115.1</MicrosoftDotNetTestProjectTemplates50PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.1.0-rc.23115.1</MicrosoftDotNetTestProjectTemplates60PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates70PackageVersion>1.1.0-rc.23115.1</MicrosoftDotNetTestProjectTemplates70PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.1.0-rc.23166.1</MicrosoftDotNetTestProjectTemplates50PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.1.0-rc.23166.1</MicrosoftDotNetTestProjectTemplates60PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates70PackageVersion>1.1.0-rc.23166.1</MicrosoftDotNetTestProjectTemplates70PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
@@ -122,8 +122,8 @@
       We also need to special case the 1st patch release, because the incoming SDK version will never be 2 versions behind us in that case.
       Instead the indicator is that the incoming SDK version is not RTM or greater yet.
     -->
-    <SubtractOneFromTemplateVersions Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) >= 2">true</SubtractOneFromTemplateVersions>
-    <SubtractOneFromTemplateVersions Condition="$(VersionFeature) >= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
+    <SubtractOneFromTemplateVersions Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) &gt;= 2">true</SubtractOneFromTemplateVersions>
+    <SubtractOneFromTemplateVersions Condition="$(VersionFeature) &gt;= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
     <AspNetCoreTemplateFeature60>$([MSBuild]::Subtract($(VersionFeature60), 1))</AspNetCoreTemplateFeature60>
     <AspNetCoreTemplateFeature60 Condition="'$(SubtractOneFromTemplateVersions)' == 'true'">$([MSBuild]::Subtract($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
   </PropertyGroup>
@@ -215,8 +215,8 @@
       or minor release, prebuilts may be needed. When the release is mature, prebuilts are not
       necessary, and this property is removed from the file.
     -->
-    <PrivateSourceBuiltSDKVersion>7.0.103</PrivateSourceBuiltSDKVersion>
-    <PrivateSourceBuiltArtifactsPackageVersion>7.0.103</PrivateSourceBuiltArtifactsPackageVersion>
+    <PrivateSourceBuiltSDKVersion>7.0.104</PrivateSourceBuiltSDKVersion>
+    <PrivateSourceBuiltArtifactsPackageVersion>7.0.104</PrivateSourceBuiltArtifactsPackageVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>
