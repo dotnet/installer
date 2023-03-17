@@ -14,11 +14,14 @@
 ### folder to this to speed up your re-runs.
 ###
 ### USAGE:
+###   Synchronize current installer and all dependencies into a local VMR:
+###     ./vmr-sync.sh --vmr "$HOME/repos/dotnet" --tmp "$HOME/repos/tmp"
+###
 ###   Synchronize the VMR to a specific commit of dotnet/runtime using custom fork:
 ###     ./vmr-sync.sh \
 ###        --repository runtime:e7e71da303af8dc97df99b098f21f526398c3943 \
 ###        --remote runtime:https://github.com/yourfork/runtime          \
-###        --tmp-dir "$HOME/repos/tmp"
+###        --tmp "$HOME/repos/tmp"
 ###
 ### Options:
 ###   -r, --repository name:GIT_REF
@@ -178,9 +181,10 @@ fi
 
 # Sanitize the input
 
+# Default when no repository is provided
 if [[ -z "$repository" ]]; then
-  fail "No repository to synchronize specified"
-  exit 1
+  repository="installer:$(git -C "$installer_dir" rev-parse HEAD)"
+  recursive=true
 fi
 
 if [[ -z "$vmr_dir" ]]; then
