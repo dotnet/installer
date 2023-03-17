@@ -40,7 +40,11 @@
     <PortablePackage Include="Microsoft.NETCore.ILAsm" Version="[$(MicrosoftNETCoreILAsmVersion)]" />
     <PortablePackage Include="Microsoft.NETCore.ILDAsm" Version="[$(MicrosoftNETCoreILDAsmVersion)]" />
     <PortablePackage Include="Microsoft.NETCore.TestHost" Version="[$(MicrosoftNETCoreTestHostVersion)]" />
+
     <PortablePackage Include="System.IO.Ports" Version="[$(RuntimeNativeSystemIOPortsVersion)]" IsNative="true" />
+    <!-- These packages don't actually exist -->
+    <ExcludedPackage Include="runtime.linux-musl-x64.runtime.native.System.IO.Ports" />
+    <ExcludedPackage Include="runtime.linux-musl-arm64.runtime.native.System.IO.Ports" />
   </ItemGroup>
 
   <Target Name="GetPackagesToDownload"
@@ -90,10 +94,7 @@
 
     <ItemGroup>
       <PackageDownload Include="@(PackageWithName -> '%(PackageName)')" />
-
-      <!-- Exclude any generated package names for packages that don't actually exist -->
-      <PackageDownload Remove="runtime.linux-musl-x64.runtime.native.System.IO.Ports" />
-      <PackageDownload Remove="runtime.linux-musl-arm64.runtime.native.System.IO.Ports" />
+      <PackageDownload Remove="@(ExcludedPackage)" />
     </ItemGroup>
   </Target>
 
