@@ -35,6 +35,7 @@
     <GlobalJsonFile Condition="'$(GlobalJsonFile)' == '' and Exists('$(ProjectDirectory)global.json')">$(ProjectDirectory)global.json</GlobalJsonFile>
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.config')">$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.Config')">$(ProjectDirectory)NuGet.Config</NuGetConfigFile>
+    <FullAssemblySigningSupported Condition="'$(FullAssemblySigningSupported)' == ''">false</FullAssemblySigningSupported>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -114,6 +115,8 @@
 
     <!-- https://github.com/dotnet/source-build/issues/3081 -->
     <EnvironmentVariables Include="CheckEolTargetFramework=false" />
+
+    <EnvironmentVariables Include="FullAssemblySigningSupported=$(FullAssemblySigningSupported)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(EnableExtraDebugging)' == 'true'">
