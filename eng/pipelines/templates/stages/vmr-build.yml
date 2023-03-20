@@ -82,6 +82,25 @@ stages:
       runOnline: true                    # ✅
       withPreviousSDK: false             # 🚫
 
+  # TODO:  Only run in internal CI after validating in PR validation
+  - template: ../jobs/vmr-build.yml
+    parameters:
+      buildName: CentOSStream8_Online_CurrentSourceBuiltSdk
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.centOSStream8Container }}
+      buildFromArchive: false            # 🚫
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      overrideDistroDisablingSha1: false # 🚫
+      runOnline: true                    # ✅
+      withPreviousSDK: false             # 🚫
+      reuseBuildArtifactsFrom: CentOSStream8_Online_MsftSdk
+
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
       parameters:
