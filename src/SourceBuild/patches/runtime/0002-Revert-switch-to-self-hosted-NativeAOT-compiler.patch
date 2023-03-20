@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matt Thalman <mthalman@microsoft.com>
+Date: Mon, 20 Mar 2023 15:35:53 -0500
+Subject: [PATCH] Revert switch to self-hosted NativeAOT compiler
+
+Backport: https://github.com/dotnet/runtime/issues/83695
+---
+ src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj b/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
+index db48433db73..fb49fd1a3f2 100644
+--- a/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
++++ b/src/coreclr/tools/aot/ILCompiler/ILCompiler.csproj
+@@ -10,12 +10,10 @@
+   <!-- BEGIN: Workaround for https://github.com/dotnet/runtime/issues/67742 -->
+   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+     <PublishDir>$(RuntimeBinDir)ilc-published/</PublishDir>
+-    <NativeAotSupported Condition="'$(TargetOS)' != 'windows' and '$(TargetOS)' != 'linux' and '$(TargetOS)' != 'osx'">false</NativeAotSupported>
+-    <NativeAotSupported Condition="'$(TargetArchitecture)' != 'x64'">false</NativeAotSupported>
+-    <PublishAot Condition="'$(NativeAotSupported)' == 'true'">true</PublishAot>
+-    <PublishReadyToRun Condition="'$(NativeAotSupported)' != 'true'">true</PublishReadyToRun>
+-    <PublishSingleFile Condition="'$(NativeAotSupported)' != 'true'">true</PublishSingleFile>
+-    <PublishTrimmed Condition="'$(NativeAotSupported)' != 'true'">true</PublishTrimmed>
++    <PublishTrimmed>true</PublishTrimmed>
++    <!-- Don't R2R on ARM64 machines because ARM64 crossgen2 that comes with .NET SDK <= 7.0 Preview 7 crashes.-->
++    <PublishReadyToRun Condition="'$(BuildArchitecture)' != 'arm64'">true</PublishReadyToRun>
++    <PublishSingleFile>true</PublishSingleFile>
+   </PropertyGroup>
+ 
+   <Target Name="PublishCompiler"
