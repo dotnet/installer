@@ -11,7 +11,7 @@
     <VersionFeature>00</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration>3</PreReleaseVersionIteration>
+    <PreReleaseVersionIteration>4</PreReleaseVersionIteration>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <!-- Enable to remove prerelease label. -->
@@ -128,7 +128,7 @@
     <MicrosoftNETSdkFeatureAndPatchVersion>$(MicrosoftNETSdkPackageVersion.Split('.')[2])</MicrosoftNETSdkFeatureAndPatchVersion>
     <MicrosoftNETSdkFeatureAndPatchVersion>$(MicrosoftNETSdkFeatureAndPatchVersion.Split('-')[0])</MicrosoftNETSdkFeatureAndPatchVersion>
     <MicrosoftNETSdkPatchVersion>$(MicrosoftNETSdkFeatureAndPatchVersion.Substring(1))</MicrosoftNETSdkPatchVersion>
-    <!-- 
+    <!--
       Between branding and shipping, the templates should stay at last month's version.
       If the incoming SDK version is 2 versions behind us, we know we just branded but haven't done the internal -> public merge yet.
       Therefore we stay at last month's version.
