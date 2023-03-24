@@ -103,14 +103,14 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-templating</Uri>
       <Sha>76f9cf41a0925eee8c85b78a0cb8aaaedab162cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.311-servicing.23172.25">
+    <Dependency Name="Microsoft.NET.Sdk" Version="6.0.311-servicing.23173.16">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>15bb2db263380e84bf4e69703b32edcc6331fc2c</Sha>
+      <Sha>1d7a15ab5d9e76a668d41e69b183c3b905566f24</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.311-servicing.23172.25">
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="6.0.311-servicing.23173.16">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>15bb2db263380e84bf4e69703b32edcc6331fc2c</Sha>
+      <Sha>1d7a15ab5d9e76a668d41e69b183c3b905566f24</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="6.0.16-servicing.23171.2" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -130,9 +130,9 @@
       <Sha>702b8e77f5fbfe21e6743324c1750503e02f182d</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.2.0" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.2.1-release-20230323-13" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/microsoft/vstest</Uri>
-      <Sha>717d0cf94925e9cf67466dbee46c1019930eb212</Sha>
+      <Sha>0c34747ff62ec59acb1579dfea5377acaf54027d</Sha>
       <SourceBuildTarball RepoName="vstest" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22219.3" CoherentParentDependency="Microsoft.NET.Sdk">
