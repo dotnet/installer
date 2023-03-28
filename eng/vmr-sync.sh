@@ -24,10 +24,6 @@
 ###        --tmp "$HOME/repos/tmp"
 ###
 ### Options:
-###   -r, --repository name:GIT_REF
-###       Required. Repository + git ref separated by colon to synchronize to.
-###       This can be a specific commit, branch, tag..
-###
 ###   -t, --tmp, --tmp-dir PATH
 ###       Required. Path to the temporary folder where repositories will be cloned
 ###
@@ -51,6 +47,12 @@
 ###       Optional. Additional remote to use during the synchronization
 ###       This can be used to synchronize to a commit from a fork of the repository
 ###       Example: 'runtime:https://github.com/yourfork/runtime'
+###
+###   -r, --repository name:GIT_REF
+###       Optional. Repository + git ref separated by colon to synchronize to.
+###       This can be a specific commit, branch, tag.
+###       If not supplied, the revision of the parent installer repository of this script will be used (recursively).
+###       Example: 'runtime:my-branch-name'
 ###
 ###   --tpn-template
 ###       Optional. Template for the header of VMRs THIRD-PARTY-NOTICES file.
