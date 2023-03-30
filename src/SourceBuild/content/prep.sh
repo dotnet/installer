@@ -9,6 +9,11 @@ usage() {
     echo ""
     echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
     echo "  installing the version of dotnet referenced in global.json"
+    echo "options:"
+    echo "  --no-artifacts    Exclude the download of the previously source-built artifacts archive."
+    echo "  --no-bootstrap    Don't replace portable packages in the download source-built artifacts"
+    echo "  --no-prebuilts    Exclude the download of the prebuilts archive."
+    echo "  --no-sdk          Exclude the download of the .NET SDK."
     echo ""
     echo "options:"
     echo "  --runtime-source-feed        URL of a remote server or a local directory, from which SDKs and"
@@ -17,9 +22,13 @@ usage() {
     echo ""
 }
 
-buildBootstrap=false
+buildBootstrap=true
+downloadArtifacts=true
+downloadPrebuilts=true
+installDotnet=true
 runtime_source_feed=''
 runtime_source_feed_key=''
+
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
@@ -30,6 +39,18 @@ while :; do
         "-?"|-h|--help)
             usage
             exit 0
+            ;;
+        --no-bootstrap)
+            buildBootstrap=false
+            ;;
+        --no-artifacts)
+            downloadArtifacts=false
+            ;;
+        --no-prebuilts)
+            downloadPrebuilts=false
+            ;;
+        --no-sdk)
+            installDotnet=false
             ;;
         --runtime-source-feed)
             runtime_source_feed=$2
@@ -47,9 +68,12 @@ while :; do
     shift
 done
 
-downloadArtifacts=true
-downloadPrebuilts=true
-installDotnet=true
+# Attempting to bootstrap without an SDK will fail. So either the --no-sdk flag must be passed
+# or a pre-existing .dotnet SDK directory must exist.
+if [[ "$buildBootstrap" == "true" && "$installDotnet" == "false" && ! -d $SCRIPT_ROOT/.dotnet ]]; then
+    echo "  ERROR: --no-sdk requires --no-bootstrap or a pre-existing .dotnet SDK directory.  Exiting..."
+    exit -1
+fi
 
 # Check to make sure curl exists to download the archive files
 if ! command -v curl &> /dev/null
@@ -61,20 +85,20 @@ fi
 # Check if Private.SourceBuilt artifacts archive exists
 artifactsBaseFileName="Private.SourceBuilt.Artifacts"
 packagesArchiveDir="$SCRIPT_ROOT/prereqs/packages/archive/"
-if [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
+if [ "$downloadArtifacts" == "true" ] && [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Artifacts.*.tar.gz exists...it will not be downloaded"
     downloadArtifacts=false
 fi
 
 # Check if Private.SourceBuilt prebuilts archive exists
 prebuiltsBaseFileName="Private.SourceBuilt.Prebuilts"
-if [ -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]; then
+if [ "$downloadPrebuilts" == "true" ] && [ -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Prebuilts.*.tar.gz exists...it will not be downloaded"
     downloadPrebuilts=false
 fi
 
 # Check if dotnet is installed
-if [ -d $SCRIPT_ROOT/.dotnet ]; then
+if [[ "$installDotnet" == "true" && -d $SCRIPT_ROOT/.dotnet ]]; then
     echo "  ./.dotnet SDK directory exists...it will not be installed"
     installDotnet=false;
 fi
@@ -84,15 +108,14 @@ function DownloadArchive {
     baseFileName="$2"
     isRequired="$3"
 
-    sourceBuiltArtifactsTarballUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/"
     packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
     notFoundMessage="No source-built $archiveType found to download..."
 
     echo "  Looking for source-built $archiveType to download..."
-    archiveVersionLine=`grep -m 1 "<PrivateSourceBuilt${archiveType}PackageVersion>" "$packageVersionsPath" || :`
-    versionPattern="<PrivateSourceBuilt${archiveType}PackageVersion>(.*)</PrivateSourceBuilt${archiveType}PackageVersion>"
+    archiveVersionLine=`grep -m 1 "<PrivateSourceBuilt${archiveType}Url>" "$packageVersionsPath" || :`
+    versionPattern="<PrivateSourceBuilt${archiveType}Url>(.*)</PrivateSourceBuilt${archiveType}Url>"
     if [[ $archiveVersionLine =~ $versionPattern ]]; then
-        archiveUrl="${sourceBuiltArtifactsTarballUrl}${baseFileName}.${BASH_REMATCH[1]}.tar.gz"
+        archiveUrl="${BASH_REMATCH[1]}"
         echo "  Downloading source-built $archiveType from $archiveUrl..."
         (cd $packagesArchiveDir && curl --retry 5 -O $archiveUrl)
     elif [ "$isRequired" == "true" ]; then
@@ -139,7 +162,9 @@ fi
 # Read the eng/Versions.props to get the archives to download and download them
 if [ "$downloadArtifacts" == "true" ]; then
     DownloadArchive "Artifacts" $artifactsBaseFileName "true"
-    BootstrapArtifacts
+    if [ "$buildBootstrap" == "true" ]; then
+        BootstrapArtifacts
+    fi
 fi
 
 if [ "$downloadPrebuilts" == "true" ]; then
