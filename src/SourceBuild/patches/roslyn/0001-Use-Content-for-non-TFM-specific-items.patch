@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 30 Mar 2023 22:30:25 +0000
+Subject: [PATCH] Use Content for non-TFM specific items
+
+---
+ .../AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
+index 2ff9bc9edd3..690c01ea4ef 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/AnyCpu/Microsoft.Net.Compilers.Toolset.Package.csproj
+@@ -42,6 +42,11 @@
+                       SetTargetFramework="TargetFramework=net6.0" />
+   </ItemGroup>
+ 
++  <ItemGroup>
++    <Content Include="build\**\*.*" PackagePath="build\" />
++    <Content Include="buildMultiTargeting\**\*.*" PackagePath="buildMultiTargeting\" />
++  </ItemGroup>
++
+   <Target Name="_GetFilesToPackage" DependsOnTargets="$(_DependsOn)">
+     <ItemGroup>
+       <_File Include="@(DesktopCompilerArtifact)" TargetDir="tasks/net472"/>
+@@ -51,9 +56,6 @@
+       <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/net6.0/bincore"/>
+       <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/net6.0/bincore/runtimes"/>
+      
+-      <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="build" />
+-      <_File Include="$(MSBuildProjectDirectory)\buildMultiTargeting\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="buildMultiTargeting" />
+-     
+       <TfmSpecificPackageFile Include="@(_File)" PackagePath="%(_File.TargetDir)/%(_File.RecursiveDir)%(_File.FileName)%(_File.Extension)" />
+     </ItemGroup>
+   </Target>
