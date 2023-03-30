@@ -14,8 +14,6 @@ usage() {
     echo "  --no-bootstrap    Don't replace portable packages in the download source-built artifacts"
     echo "  --no-prebuilts    Exclude the download of the prebuilts archive."
     echo "  --no-sdk          Exclude the download of the .NET SDK."
-    echo ""
-    echo "options:"
     echo "  --runtime-source-feed        URL of a remote server or a local directory, from which SDKs and"
     echo "                               runtimes can be downloaded"
     echo "  --runtime-source-feed-key    Key for accessing the above server, if necessary"
@@ -28,7 +26,6 @@ downloadPrebuilts=true
 installDotnet=true
 runtime_source_feed=''
 runtime_source_feed_key=''
-
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
