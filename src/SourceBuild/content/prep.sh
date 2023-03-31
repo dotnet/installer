@@ -14,7 +14,7 @@ usage() {
     echo "  --no-bootstrap              Don't replace portable packages in the download source-built artifacts"
     echo "  --no-prebuilts              Exclude the download of the prebuilts archive."
     echo "  --no-sdk                    Exclude the download of the .NET SDK."
-    echo "  --source-repository <url>   Ehen not building from a git repo, specify URL of the source"
+    echo "  --source-repository <url>   When not building from a git repo, specify URL of the source"
     echo "                              which is used for source lookup during debugging"
     echo "                              Example: https://github.com/dotnet/dotnet"
     echo "  --source-version <sha>      When not built from a git repository, specifies the original commit hash"
