@@ -75,7 +75,7 @@ stages:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
       container: ${{ parameters.centOSStream8Container }}
-      buildFromArchive: true             # ✅ TODO - Revert before checking in
+      buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
       overrideDistroDisablingSha1: false # 🚫
