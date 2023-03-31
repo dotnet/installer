@@ -107,6 +107,7 @@ jobs:
     - script: |
         set -ex
         cp -r "${{ parameters.vmrPath }}" "$(sourcesPath)"
+        rm -rf "$(sourcesPath)/.git"
       displayName: Export VMR sources
       workingDirectory: $(Build.StagingDirectory)
 
