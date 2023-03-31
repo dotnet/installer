@@ -182,7 +182,8 @@ jobs:
       fi
 
       if [[ '${{ parameters.buildFromArchive }}' == 'True' ]]; then
-        customPrepArgs="$customPrepArgs --source-repository 'https://github.com/dotnet/dotnet' --source-version $(git -C "${{ parameters.vmrPath }}" rev-parse HEAD)"
+        customPrepArgs="$customPrepArgs --source-repository https://github.com/dotnet/dotnet"
+        customPrepArgs="$customPrepArgs --source-version $(git -C "${{ parameters.vmrPath }}" rev-parse HEAD)"
       fi
 
       docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
