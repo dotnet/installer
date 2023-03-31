@@ -141,9 +141,8 @@ You can also utilize [GitHub Codespaces](https://github.com/features/codespaces)
 
 ### Building outside of git
 
-In case you'd like to export the sources only, leaving the `.git` directory behind, you'll need to provide information to the `prep.sh` script about the origins of the code.
 .NET uses git metadata so that it can link assemblies to their original source code when debugging (think "Step into.." functionality) and for that it needs information about the original place the code comes from.
-You can either specify this repository or any fork that the SDK you're using is coming from via the `--source-repository` and `--source-version` arguments.
+When you're building source code only, taken outside of context of a git repository (e.g. you download it from the release page), you will need to specify the source repository to the `prep.sh` script via the `--source-repository` and `--source-version` arguments. This can be your fork of the repository and should match the origin where your SDK was built from.
 
 ## List of components
 
