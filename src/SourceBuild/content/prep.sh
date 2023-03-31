@@ -95,8 +95,9 @@ else
 
   # We need to add "fake" .git/ files when not building from a git repository
   mkdir -p "$GIT_DIR"
-  printf '[remote "origin"]\nurl="%s"' "$sourceUrl" > "$GIT_DIR/config"
-  echo "$sourceUrl" > "$GIT_DIR/HEAD"
+  echo '[remote "origin"]' > "$GIT_DIR/config"
+  echo "url=\"$sourceUrl\"" >> "$GIT_DIR/config"
+  echo "$sourceVersion" > "$GIT_DIR/HEAD"
 fi
 
 # Check if Private.SourceBuilt artifacts archive exists
