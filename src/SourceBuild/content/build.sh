@@ -5,13 +5,17 @@ IFS=$'\n\t'
 usage() {
     echo "usage: $0 [options]"
     echo "options:"
-    echo "  --clean-while-building             cleans each repo after building (reduces disk space usage)"
-    echo "  --online                           build using online sources"
-    echo "  --poison                           build with poisoning checks"
-    echo "  --run-smoke-test                   don't build; run smoke tests"
-    echo "  --use-mono-runtime                 output uses the mono runtime"
-    echo "  --with-packages <dir>              use the specified directory of previously-built packages"
-    echo "  --with-sdk <dir>                   use the SDK in the specified directory for bootstrapping"
+    echo "  --clean-while-building       cleans each repo after building (reduces disk space usage)"
+    echo "  --online                     build using online sources"
+    echo "  --poison                     build with poisoning checks"
+    echo "  --run-smoke-test             don't build; run smoke tests"
+    echo "  --source-repository <url>    when not building from a git repo, specify URL of the source"
+    echo "                               this is used for source lookup during debugging"
+    echo "                               example: https://github.com/dotnet/dotnet"
+    echo "  --source-version <sha>       when not built from a git repository, specifies the original commit hash"
+    echo "  --use-mono-runtime           output uses the mono runtime"
+    echo "  --with-packages <dir>        use the specified directory of previously-built packages"
+    echo "  --with-sdk <dir>             use the SDK in the specified directory for bootstrapping"
     echo "use -- to send the remaining arguments to MSBuild"
     echo ""
 }
@@ -22,6 +26,8 @@ MSBUILD_ARGUMENTS=("-flp:v=detailed")
 CUSTOM_PACKAGES_DIR=''
 alternateTarget=false
 runningSmokeTests=false
+sourceUrl=''
+sourceVersion=''
 packagesDir="$SCRIPT_ROOT/prereqs/packages/"
 packagesArchiveDir="${packagesDir}archive/"
 packagesRestoredDir="${packagesDir}restored/"
@@ -48,6 +54,14 @@ while :; do
             alternateTarget=true
             runningSmokeTests=true
             MSBUILD_ARGUMENTS+=( "-t:RunSmokeTest" )
+            ;;
+        --source-repository)
+            sourceUrl="$2"
+            shift
+            ;;
+        --source-version)
+            sourceVersion="$2"
+            shift
             ;;
         --use-mono-runtime)
             MSBUILD_ARGUMENTS+=( "/p:SourceBuildUseMonoRuntime=true" )
@@ -96,6 +110,25 @@ if [ "$CUSTOM_PACKAGES_DIR" != "" ]; then
   else
     MSBUILD_ARGUMENTS+=( "-p:CustomPrebuiltSourceBuiltPackagesPath=$CUSTOM_PACKAGES_DIR" )
   fi
+fi
+
+GIT_DIR="$SCRIPT_ROOT/.git"
+
+if [ -f "$GIT_DIR/config" ]; then
+  if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
+    echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
+    exit 1
+  fi
+else
+  if [ -z "$sourceUrl" ] || [ -z "$sourceVersion" ]; then
+    echo "ERROR: $SCRIPT_ROOT is not a git repository, --source-repository and --source-version must be specified."
+    exit 1
+  fi
+
+  # We need to add "fake" .git/ files when not building from a git repository
+  mkdir -p "$GIT_DIR"
+  printf '[remote "origin"]\nurl="%s"' "$sourceUrl" > "$GIT_DIR/config"
+  echo "$sourceUrl" > "$GIT_DIR/HEAD"
 fi
 
 if [ -f "${packagesArchiveDir}archiveArtifacts.txt" ]; then
