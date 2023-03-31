@@ -68,7 +68,7 @@ done
 
 # Attempting to bootstrap without an SDK will fail. So either the --no-sdk flag must be passed
 # or a pre-existing .dotnet SDK directory must exist.
-if [[ "$buildBootstrap" == 'true' && "$installDotnet" == "false" && ! -d $SCRIPT_ROOT/.dotnet ]]; then
+if [[ "$buildBootstrap" == true && "$installDotnet" == false && ! -d $SCRIPT_ROOT/.dotnet ]]; then
     echo "  ERROR: --no-sdk requires --no-bootstrap or a pre-existing .dotnet SDK directory.  Exiting..."
     exit 1
 fi
@@ -102,20 +102,20 @@ fi
 # Check if Private.SourceBuilt artifacts archive exists
 artifactsBaseFileName="Private.SourceBuilt.Artifacts"
 packagesArchiveDir="$SCRIPT_ROOT/prereqs/packages/archive/"
-if [ "$downloadArtifacts" == 'true' ] && [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
+if [ "$downloadArtifacts" == true ] && [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Artifacts.*.tar.gz exists...it will not be downloaded"
     downloadArtifacts=false
 fi
 
 # Check if Private.SourceBuilt prebuilts archive exists
 prebuiltsBaseFileName="Private.SourceBuilt.Prebuilts"
-if [ "$downloadPrebuilts" == 'true' ] && [ -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]; then
+if [ "$downloadPrebuilts" == true ] && [ -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Prebuilts.*.tar.gz exists...it will not be downloaded"
     downloadPrebuilts=false
 fi
 
 # Check if dotnet is installed
-if [[ "$installDotnet" == 'true' && -d $SCRIPT_ROOT/.dotnet ]]; then
+if [[ "$installDotnet" == true && -d $SCRIPT_ROOT/.dotnet ]]; then
     echo "  ./.dotnet SDK directory exists...it will not be installed"
     installDotnet=false;
 fi
@@ -134,7 +134,7 @@ function DownloadArchive {
         archiveUrl="${BASH_REMATCH[1]}"
         echo "  Downloading source-built $archiveType from $archiveUrl..."
         (cd "$packagesArchiveDir" && curl --retry 5 -O "$archiveUrl")
-    elif [ "$isRequired" == 'true' ]; then
+    elif [ "$isRequired" == true ]; then
       echo "  ERROR: $notFoundMessage"
       exit 1
     else
@@ -170,19 +170,19 @@ function BootstrapArtifacts {
 }
 
 # Check for the version of dotnet to install
-if [ "$installDotnet" == 'true' ]; then
+if [ "$installDotnet" == true ]; then
     echo "  Installing dotnet..."
     (source ./eng/common/tools.sh && InitializeDotNetCli true)
 fi
 
 # Read the eng/Versions.props to get the archives to download and download them
-if [ "$downloadArtifacts" == 'true' ]; then
+if [ "$downloadArtifacts" == true ]; then
     DownloadArchive Artifacts true
-    if [ "$buildBootstrap" == 'true' ]; then
+    if [ "$buildBootstrap" == true ]; then
         BootstrapArtifacts
     fi
 fi
 
-if [ "$downloadPrebuilts" == 'true' ]; then
+if [ "$downloadPrebuilts" == true ]; then
     DownloadArchive Prebuilts false
 fi
