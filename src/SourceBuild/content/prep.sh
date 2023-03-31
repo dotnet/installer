@@ -10,10 +10,13 @@ usage() {
     echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
     echo "  installing the version of dotnet referenced in global.json"
     echo "options:"
-    echo "  --no-artifacts    Exclude the download of the previously source-built artifacts archive."
-    echo "  --no-bootstrap    Don't replace portable packages in the download source-built artifacts"
-    echo "  --no-prebuilts    Exclude the download of the prebuilts archive."
-    echo "  --no-sdk          Exclude the download of the .NET SDK."
+    echo "  --no-artifacts              Exclude the download of the previously source-built artifacts archive."
+    echo "  --no-bootstrap              Don't replace portable packages in the download source-built artifacts"
+    echo "  --no-prebuilts              Exclude the download of the prebuilts archive."
+    echo "  --no-sdk                    Exclude the download of the .NET SDK."
+    echo "  --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and"
+    echo "                              runtimes can be downloaded"
+    echo "  --runtime-source-feed-key   Key for accessing the above server, if necessary"
     echo ""
 }
 
@@ -21,6 +24,8 @@ buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
+runtime_source_feed=''
+runtime_source_feed_key=''
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
@@ -43,6 +48,14 @@ while :; do
             ;;
         --no-sdk)
             installDotnet=false
+            ;;
+        --runtime-source-feed)
+            runtime_source_feed=$2
+            shift
+            ;;
+        --runtime-source-feed-key)
+            runtime_source_feed_key=$2
+            shift
             ;;
         *)
             positional_args+=("$1")
@@ -69,14 +82,14 @@ fi
 # Check if Private.SourceBuilt artifacts archive exists
 artifactsBaseFileName="Private.SourceBuilt.Artifacts"
 packagesArchiveDir="$SCRIPT_ROOT/prereqs/packages/archive/"
-if [[ "$downloadArtifacts" == "true" && -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]]; then
+if [ "$downloadArtifacts" == "true" ] && [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Artifacts.*.tar.gz exists...it will not be downloaded"
     downloadArtifacts=false
 fi
 
 # Check if Private.SourceBuilt prebuilts archive exists
 prebuiltsBaseFileName="Private.SourceBuilt.Prebuilts"
-if [[ "$downloadPrebuilts" == "true" && -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]]; then
+if [ "$downloadPrebuilts" == "true" ] && [ -f ${packagesArchiveDir}${prebuiltsBaseFileName}.*.tar.gz ]; then
     echo "  Private.SourceBuilt.Prebuilts.*.tar.gz exists...it will not be downloaded"
     downloadPrebuilts=false
 fi
