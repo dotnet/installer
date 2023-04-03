@@ -18,6 +18,9 @@ usage() {
     echo "                              which is used for source lookup during debugging"
     echo "                              Example: https://github.com/dotnet/dotnet"
     echo "  --source-version <sha>      When not built from a git repository, specifies the original commit hash"
+    echo "  --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and"
+    echo "                              runtimes can be downloaded"
+    echo "  --runtime-source-feed-key   Key for accessing the above server, if necessary"
     echo ""
 }
 
@@ -27,6 +30,8 @@ downloadPrebuilts=true
 installDotnet=true
 sourceUrl=''
 sourceVersion=''
+runtime_source_feed='' # IBM requested these to support s390x scenarios
+runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 positional_args=()
 while :; do
     if [ $# -le 0 ]; then
@@ -56,6 +61,14 @@ while :; do
             ;;
         --source-version)
             sourceVersion="$2"
+            shift
+            ;;
+        --runtime-source-feed)
+            runtime_source_feed=$2
+            shift
+            ;;
+        --runtime-source-feed-key)
+            runtime_source_feed_key=$2
             shift
             ;;
         *)
