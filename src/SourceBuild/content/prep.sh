@@ -92,6 +92,7 @@ then
 fi
 
 GIT_DIR="$SCRIPT_ROOT/.git"
+git config --global --add safe.directory "$SCRIPT_ROOT"
 
 if git -C "$SCRIPT_ROOT" rev-parse --is-inside-work-tree; then
     if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
