@@ -91,16 +91,8 @@ then
     exit 1
 fi
 
-set -x
 GIT_DIR="$SCRIPT_ROOT/.git"
-echo "###########"
-ls -la "$SCRIPT_ROOT"
-echo "###########"
-ls -la "$SCRIPT_ROOT/.git"
-echo "###########"
-git config --global --add safe.directory "$SCRIPT_ROOT"
-
-if git -C "$SCRIPT_ROOT" rev-parse --is-inside-work-tree; then
+if [ -f "$GIT_DIR/index" ]; then # We check for index because if outside of git, we create config and HEAD manually
     if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
         echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
         exit 1
