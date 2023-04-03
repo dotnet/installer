@@ -93,7 +93,7 @@ fi
 
 GIT_DIR="$SCRIPT_ROOT/.git"
 
-if [ -f "$GIT_DIR/config" ]; then
+if git rev-parse --is-inside-work-tree; then
   if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
     echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
     exit 1
