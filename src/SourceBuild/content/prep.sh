@@ -91,7 +91,13 @@ then
     exit 1
 fi
 
+set -x
 GIT_DIR="$SCRIPT_ROOT/.git"
+echo "###########"
+ls -la "$SCRIPT_ROOT"
+echo "###########"
+ls -la "$SCRIPT_ROOT/.git"
+echo "###########"
 git config --global --add safe.directory "$SCRIPT_ROOT"
 
 if git -C "$SCRIPT_ROOT" rev-parse --is-inside-work-tree; then
