@@ -91,24 +91,23 @@ then
     exit 1
 fi
 
-GIT_DIR="$SCRIPT_ROOT/.git"
-
 if git rev-parse --is-inside-work-tree; then
-  if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
-    echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
-    exit 1
-  fi
+    if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
+        echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
+        exit 1
+    fi
 else
-  if [ -z "$sourceUrl" ] || [ -z "$sourceVersion" ]; then
-    echo "ERROR: $SCRIPT_ROOT is not a git repository, --source-repository and --source-version must be specified."
-    exit 1
-  fi
+    if [ -z "$sourceUrl" ] || [ -z "$sourceVersion" ]; then
+      echo "ERROR: $SCRIPT_ROOT is not a git repository, --source-repository and --source-version must be specified."
+        exit 1
+    fi
 
-  # We need to add "fake" .git/ files when not building from a git repository
-  mkdir -p "$GIT_DIR"
-  echo '[remote "origin"]' > "$GIT_DIR/config"
-  echo "url=\"$sourceUrl\"" >> "$GIT_DIR/config"
-  echo "$sourceVersion" > "$GIT_DIR/HEAD"
+    # We need to add "fake" .git/ files when not building from a git repository
+    GIT_DIR="$SCRIPT_ROOT/.git"
+    mkdir -p "$GIT_DIR"
+    echo '[remote "origin"]' > "$GIT_DIR/config"
+    echo "url=\"$sourceUrl\"" >> "$GIT_DIR/config"
+    echo "$sourceVersion" > "$GIT_DIR/HEAD"
 fi
 
 # Check if Private.SourceBuilt artifacts archive exists
