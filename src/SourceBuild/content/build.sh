@@ -113,8 +113,7 @@ if [ -f "${packagesArchiveDir}archiveArtifacts.txt" ]; then
   fi
 fi
 
-GIT_DIR="$SCRIPT_ROOT/.git"
-if [ ! -d "$GIT_DIR" ]; then
+if [ ! -d "$SCRIPT_ROOT/.git" ]; then
   echo "ERROR: $SCRIPT_ROOT is not a git repository. Please run prep.sh add initialize Source Link metadata."
   exit 1
 fi

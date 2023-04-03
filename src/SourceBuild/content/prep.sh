@@ -91,7 +91,9 @@ then
     exit 1
 fi
 
-if git rev-parse --is-inside-work-tree; then
+GIT_DIR="$SCRIPT_ROOT/.git"
+
+if git -C "$GIT_DIR" rev-parse --is-inside-work-tree; then
     if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
         echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
         exit 1
@@ -103,7 +105,6 @@ else
     fi
 
     # We need to add "fake" .git/ files when not building from a git repository
-    GIT_DIR="$SCRIPT_ROOT/.git"
     mkdir -p "$GIT_DIR"
     echo '[remote "origin"]' > "$GIT_DIR/config"
     echo "url=\"$sourceUrl\"" >> "$GIT_DIR/config"
