@@ -127,12 +127,10 @@ jobs:
   - ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     - download: current
       artifact: ${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
-      patterns: '*.tar.gz'
+      patterns: |
+        **/Private.SourceBuilt.Artifacts.*.tar.gz
+        **/dotnet-sdk-*.tar.gz
       displayName: Download Previous Build
-
-    # Exclude the prebuilts tarball from the copy. We don't want to reuse it.
-    - script: rm -f $(Pipeline.Workspace)/${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts/*.Prebuilts.*.tar.gz
-      displayName: Remove Prebuilts Tarball
 
     - task: CopyFiles@2
       displayName: Copy Previous Build
