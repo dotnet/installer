@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matt Thalman <mthalman@microsoft.com>
+Date: Mon, 17 Apr 2023 13:43:08 -0500
+Subject: [PATCH] Add packages to Version.Details
+
+---
+ eng/Version.Details.xml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/eng/Version.Details.xml b/eng/Version.Details.xml
+index c0f06f69..2fc9ced7 100644
+--- a/eng/Version.Details.xml
++++ b/eng/Version.Details.xml
+@@ -106,6 +106,17 @@
+       <Uri>https://github.com/dotnet/sdk</Uri>
+       <Sha>39aef81ec6cffa06da9964b46d4b9e3bf2fc9979</Sha>
+       <SourceBuild RepoName="sdk" ManagedOnly="true" />
++    <!-- Necessary for source-build. This allows the package to be retrieved from previously-source-build artifacts
++         and flow in as dependencies of the packages produced by arcade.  -->
++    <Dependency Name="System.IO.Packaging" Version="4.5.0">
++      <Uri>https://github.com/dotnet/corefx</Uri>
++      <Sha>30ab651fcb4354552bd4891619a0bdd81e0ebdbf</Sha>
++    </Dependency>
++    <!-- Necessary for source-build. This allows the package to be retrieved from previously-source-build artifacts
++         and flow in as dependencies of the packages produced by arcade.  -->
++    <Dependency Name="Microsoft.Extensions.DependencyModel" Version="6.0.0">
++      <Uri>https://github.com/dotnet/runtime</Uri>
++      <Sha>8470979eb44c2218025515234d3e01138bd74afb</Sha>
+     </Dependency>
+   </ToolsetDependencies>
+ </Dependencies>

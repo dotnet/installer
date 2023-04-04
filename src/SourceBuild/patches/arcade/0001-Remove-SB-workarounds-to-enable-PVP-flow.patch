@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matt Thalman <mthalman@microsoft.com>
+Date: Mon, 3 Apr 2023 08:14:22 -0500
+Subject: [PATCH] Remove SB workarounds to enable PVP flow
+
+Backport: https://github.com/dotnet/arcade/pull/13009
+
+---
+ .../Microsoft.DotNet.CodeAnalysis.csproj               | 10 ----------
+ .../Microsoft.DotNet.GenFacades.csproj                 |  5 -----
+ 2 files changed, 15 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj b/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
+index d1ac5ccb..5cdfd539 100644
+--- a/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
++++ b/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
+@@ -12,16 +12,6 @@
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpVersion)" ExcludeAssets="analyzers" />
+   </ItemGroup>
+ 
+-  <!--
+-    In the source-build tarball build, Microsoft.CodeAnalysis.CSharp has dependencies on old
+-    versions of these packages due to repo build order. Override to lift them to the versions passed
+-    in via DotNetPackageVersionPropsPath.
+-  -->
+-  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+-  </ItemGroup>
+-
+   <ItemGroup>
+     <Content Include="build/*.*" PackagePath="build" />
+     <Content Include="content/*.*" PackagePath="content" />
+diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+index d73f6abd..20c0c33b 100644
+--- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
++++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+@@ -14,11 +14,6 @@
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MsbuildTaskMicrosoftCodeAnalysisCSharpVersion)" ExcludeAssets="analyzers" Publish="false" />
+   </ItemGroup>
+ 
+-  <!-- When building offline we need to bump the version of System.Reflection.Metadata that CodeAnalysis package depends on to match what the source build tarball expects. -->
+-  <ItemGroup Condition="'$(DotNetBuildOffline)' == 'true'">
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+-  </ItemGroup>
+-
+   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+     <Compile Include="..\Common\Internal\AssemblyResolver.cs" />
+     <Compile Include="..\Common\Internal\BuildTask.Desktop.cs" />
