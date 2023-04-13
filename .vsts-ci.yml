@@ -94,8 +94,8 @@ stages:
     - template: eng/build.yml
       parameters:
         agentOs: Linux
-        jobName: Build_CentOS_7_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7'
+        jobName: Build_CentOS_8_Stream_Debug_x64
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8'
         buildConfiguration: Debug
         buildArchitecture: x64
         linuxPortable: false
