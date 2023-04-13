@@ -17,7 +17,7 @@ index 185b68bfa..7f285870d 100644
      <MinimalTargetFrameworksExeSigning>$(NETFXTargetFramework);netcoreapp5.0</MinimalTargetFrameworksExeSigning>
      <MinimalTargetFrameworksExeSigning Condition=" '$(IsXPlat)' == 'true' ">netcoreapp5.0</MinimalTargetFrameworksExeSigning>
 -    <MinimalTargetFrameworksExeSigning Condition="'$(DotNetBuildFromSource)' == 'true'">$(MinimalTargetFrameworksExeSigning);net7.0</MinimalTargetFrameworksExeSigning>
-+    <MinimalTargetFrameworksExeSigning Condition="'$(DotNetBuildFromSource)' == 'true'">$(NETFXTargetFramework);net7.0</MinimalTargetFrameworksExeSigning>
++    <MinimalTargetFrameworksExeSigning Condition="'$(DotNetBuildFromSource)' == 'true'">net7.0</MinimalTargetFrameworksExeSigning>
      <TargetFrameworksLibrary>$(NETFXTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
      <TargetFrameworksLibrary Condition="'$(DotNetBuildFromSource)' == 'true'">$(NETCoreTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
      <TargetFrameworksLibraryForSigning>$(TargetFrameworksLibrary);netcoreapp5.0</TargetFrameworksLibraryForSigning>
