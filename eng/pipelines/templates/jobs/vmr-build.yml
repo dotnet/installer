@@ -31,11 +31,6 @@ parameters:
 - name: runOnline
   type: boolean
 
-# Skip running the SDK content smoke-tests
-- name: excludeSdkContentTests
-  type: boolean
-  default: false
-
 # Name of a previous job (from the same template as this) whose output will be used to build this job
 # The SDK from its artifacts is copied to vmr/.dotnet
 - name: reuseBuildArtifactsFrom
@@ -58,6 +53,11 @@ parameters:
   type: boolean
   default: false
 
+# Use the previous version's SDK to build the current one
+- name: withPreviousSDK
+  type: boolean
+  default: false
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -71,17 +71,13 @@ jobs:
   - template: /eng/common/templates/variables/pool-providers.yml
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: AzureDevOps-Artifact-Feeds-Pats
-  - ${{ if and(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal')) }}:
+  - ${{ if and(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal'), not(startswith(parameters.vmrBranch, 'internal/release/'))) }}:
     - group: DotNetBot-GitHub
   - ${{ else }}:
     - name: BotAccount-dotnet-bot-repo-PAT
       value: N/A
-  - ${{ if eq(parameters.reuseBuildArtifactsFrom, '') }}:
-    - name: additionalBuildArgs
-      value: ''
-  - ${{ else }}:
-    - name: additionalBuildArgs
-      value: ' --with-sdk /vmr/.dotnet'
+  - name: additionalBuildArgs
+    value: ''
 
   # Location of the VMR sources
   # We either build the repo directly, or we extract them outside (which is what partners do)
@@ -110,9 +106,8 @@ jobs:
   - ${{ if parameters.buildFromArchive }}:
     - script: |
         set -ex
-        "${{ parameters.vmrPath }}/eng/pack-sources.sh" -o "$(Build.StagingDirectory)/dotnet-sources.tar.gz"
-        tar -xf dotnet-sources.tar.gz
-        mv "dotnet-$(Build.SourceVersion)" "$(sourcesPath)"
+        cp -r "${{ parameters.vmrPath }}" "$(sourcesPath)"
+        rm -rf "$(sourcesPath)/.git"
       displayName: Export VMR sources
       workingDirectory: $(Build.StagingDirectory)
 
@@ -128,16 +123,12 @@ jobs:
       env:
         Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
-  - ${{ if ne(parameters.excludeSdkContentTests, 'true') }}:
-    - download: current
-      artifact: BlobArtifacts
-      patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
-      displayName: Download MSFT SDK
-
   - ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     - download: current
       artifact: ${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
-      patterns: '*.tar.gz'
+      patterns: |
+        **/Private.SourceBuilt.Artifacts.*.tar.gz
+        **/dotnet-sdk-*.tar.gz
       displayName: Download Previous Build
 
     - task: CopyFiles@2
@@ -147,17 +138,57 @@ jobs:
         Contents: '*.tar.gz'
         TargetFolder: ${{ variables.sourcesPath }}/prereqs/packages/archive/
 
+  - ${{ if eq(parameters.withPreviousSDK, 'true') }}:
+    - script: |
+        set -euo pipefail
+
+        packageVersionsPath="${{ variables.sourcesPath }}/eng/Versions.props"
+        notFoundMessage="No source-built SDK found to download..."
+
+        echo "Looking for source-built SDK to download..."
+        archiveUrlLine=`grep -m 1 "<PrivateSourceBuiltSdkUrl_CentOS8Stream>" "$packageVersionsPath" || :`
+        urlPattern="<PrivateSourceBuiltSdkUrl_CentOS8Stream>(.*)</PrivateSourceBuiltSdkUrl_CentOS8Stream>"
+
+        if [[ $archiveUrlLine =~ $urlPattern ]]; then
+          archiveUrl="${BASH_REMATCH[1]}"
+          downloadDir="$(sourcesPath)/prereqs/packages/archive/"
+          (cd $downloadDir && curl --retry 5 -O $archiveUrl)
+        else
+          echo "$notFoundMessage"
+          exit 1
+        fi
+      displayName: Setup Previously Source-Built SDK
+
   - script: |
       set -x
 
-      if [[ -z '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
-        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh
-      else
+      customPrepArgs=""
+      prepSdk=true
+      if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
+        # Source-built artifacts are from CentOS 8 Stream. We want to download them without
+        # downloading portable versions from the internet.
+        customPrepArgs="${customPrepArgs} --no-sdk --no-bootstrap"
+        prepSdk=false
+      elif [[ -n '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
+        customPrepArgs="${customPrepArgs} --no-sdk --no-artifacts"
+        prepSdk=false
+      fi
+      
+      if [[ "$prepSdk" == "false" ]]; then
         mkdir $(sourcesPath)/.dotnet
         previousSdkPath="$(sourcesPath)/prereqs/packages/archive/dotnet-sdk-*.tar.gz"
         eval tar -ozxf "$previousSdkPath" -C "$(sourcesPath)/.dotnet"
         eval rm -f "$previousSdkPath"
+
+        echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
       fi
+
+      if [[ '${{ parameters.buildFromArchive }}' == 'True' ]]; then
+        customPrepArgs="$customPrepArgs --source-repository https://github.com/dotnet/dotnet"
+        customPrepArgs="$customPrepArgs --source-version $(git -C "${{ parameters.vmrPath }}" rev-parse HEAD)"
+      fi
+
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
     displayName: Prep the Build
 
   - script: |
@@ -182,7 +213,7 @@ jobs:
         customBuildArgs="$customBuildArgs --poison"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${customRunArgs} ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) ${customBuildArgs}
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs
     displayName: Build
 
   - script: |
@@ -191,12 +222,6 @@ jobs:
       dockerVolumeArgs="-v $(sourcesPath):/vmr"
       dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
       poisonArg=''
-
-      if [[ '${{ parameters.excludeSdkContentTests }}' != 'True' ]]; then
-        dockerVolumeArgs+=" -v $(Pipeline.Workspace)/BlobArtifacts/:/BlobArtifacts"
-        msftSdkTarballName=$(find "$(Pipeline.Workspace)/BlobArtifacts/" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
-        dockerEnvArgs+=" -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=/BlobArtifacts/$msftSdkTarballName"
-      fi
 
       if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
         poisonArg='--poison'
