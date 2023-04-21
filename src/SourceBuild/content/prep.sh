@@ -1,33 +1,34 @@
 #!/usr/bin/env bash
+
+### Usage: $0
+###
+###   Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and
+###   installing the version of dotnet referenced in global.json
+###
+### Options:
+###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
+###   --no-bootstrap              Don't replace portable packages in the download source-built artifacts
+###   --no-prebuilts              Exclude the download of the prebuilts archive
+###   --no-sdk                    Exclude the download of the .NET SDK
+###   --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and
+###                               runtimes can be downloaded
+###   --runtime-source-feed-key   Key for accessing the above server, if necessary
+###
+
 set -euo pipefail
 IFS=$'\n\t'
 
+source="${BASH_SOURCE[0]}"
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
-usage() {
-    echo "usage: $0"
-    echo ""
-    echo "  Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and"
-    echo "  installing the version of dotnet referenced in global.json"
-    echo "options:"
-    echo "  --no-artifacts              Exclude the download of the previously source-built artifacts archive"
-    echo "  --no-bootstrap              Don't replace portable packages in the download source-built artifacts"
-    echo "  --no-prebuilts              Exclude the download of the prebuilts archive"
-    echo "  --no-sdk                    Exclude the download of the .NET SDK"
-    echo "  --source-repository <url>   Source Link repository URL, required when building from tarball"
-    echo "  --source-version <sha>      Source Link revision, required when building from tarball"
-    echo "  --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and"
-    echo "                              runtimes can be downloaded"
-    echo "  --runtime-source-feed-key   Key for accessing the above server, if necessary"
-    echo ""
+function print_help () {
+    sed -n '/^### /,/^$/p' "$source" | cut -b 5-
 }
 
 buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
-sourceUrl=''
-sourceVersion=''
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 positional_args=()
@@ -38,7 +39,7 @@ while :; do
     lowerI="$(echo "$1" | awk '{print tolower($0)}')"
     case $lowerI in
         "-?"|-h|--help)
-            usage
+            print_help
             exit 0
             ;;
         --no-bootstrap)
@@ -52,14 +53,6 @@ while :; do
             ;;
         --no-sdk)
             installDotnet=false
-            ;;
-        --source-repository)
-            sourceUrl="$2"
-            shift
-            ;;
-        --source-version)
-            sourceVersion="$2"
-            shift
             ;;
         --runtime-source-feed)
             runtime_source_feed=$2
@@ -89,25 +82,6 @@ if ! command -v curl &> /dev/null
 then
     echo "  ERROR: curl not found.  Exiting..."
     exit 1
-fi
-
-GIT_DIR="$SCRIPT_ROOT/.git"
-if [ -f "$GIT_DIR/index" ]; then # We check for index because if outside of git, we create config and HEAD manually
-    if [ -n "$sourceUrl" ] || [ -n "$sourceVersion" ]; then
-        echo "ERROR: $SCRIPT_ROOT is a git repository, --source-repository and --source-version cannot be used."
-        exit 1
-    fi
-else
-    if [ -z "$sourceUrl" ] || [ -z "$sourceVersion" ]; then
-      echo "ERROR: $SCRIPT_ROOT is not a git repository, --source-repository and --source-version must be specified."
-        exit 1
-    fi
-
-    # We need to add "fake" .git/ files when not building from a git repository
-    mkdir -p "$GIT_DIR"
-    echo '[remote "origin"]' > "$GIT_DIR/config"
-    echo "url=\"$sourceUrl\"" >> "$GIT_DIR/config"
-    echo "$sourceVersion" > "$GIT_DIR/HEAD"
 fi
 
 # Check if Private.SourceBuilt artifacts archive exists
