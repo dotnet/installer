@@ -119,7 +119,7 @@ done
 GIT_DIR="$SCRIPT_ROOT/.git"
 if [ -f "$GIT_DIR/index" ]; then # We check for index because if outside of git, we create config and HEAD manually
   if [ -n "$sourceRepository" ] || [ -n "$sourceVersion" ] || [ -n "$releaseManifest" ]; then
-    echo "ERROR: $SCRIPT_ROOT Source Link arguments cannot be used in a git repository"
+    echo "ERROR: Source Link arguments cannot be used in a git repository"
     exit 1
   fi
 else
@@ -130,7 +130,7 @@ else
     fi
   else
     if [ -n "$sourceRepository" ] || [ -n "$sourceVersion" ]; then
-      echo "ERROR: $SCRIPT_ROOT --release-manifest cannot be specified together with --source-repository and --source-version"
+      echo "ERROR: --release-manifest cannot be specified together with --source-repository and --source-version"
       exit 1
     fi
 
@@ -140,8 +140,15 @@ else
       grep -oP '(?<="'$property_name'": ")[^"]*' "$json_file_path"
     }
 
-    sourceRepository=$(get_property "$releaseManifest" sourceRepository)
-    sourceVersion=$(get_property "$releaseManifest" sourceVersion)
+    sourceRepository=$(get_property "$releaseManifest" sourceRepository) \
+      || (echo "ERROR: Failed to find sourceRepository in $releaseManifest" && exit 1)
+    sourceVersion=$(get_property "$releaseManifest" sourceVersion) \
+      || (echo "ERROR: Failed to find sourceVersion in $releaseManifest" && exit 1)
+
+    if [ -z "$sourceRepository" ] || [ -z "$sourceVersion" ]; then
+      echo "ERROR: sourceRepository and sourceVersion must be specified in $releaseManifest"
+      exit 1
+    fi
   fi
 
   # We need to add "fake" .git/ files when not building from a git repository
