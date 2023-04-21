@@ -12,8 +12,8 @@
 ###   --release-manifest <FILE>    A JSON file, an alternative source of Source Link metadata,
 ###                                Required when building from tarball
 ###   --use-mono-runtime           Output uses the mono runtime
-###   --with-packages <dir>        Use the specified directory of previously-built packages
-###   --with-sdk <dir>             Use the SDK in the specified directory for bootstrapping
+###   --with-packages <DIR>        Use the specified directory of previously-built packages
+###   --with-sdk <DIR>             Use the SDK in the specified directory for bootstrapping
 ###
 ### Use -- to send the remaining arguments to MSBuild
 ###
