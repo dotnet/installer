@@ -5,6 +5,7 @@ schedules:
     include:
     - main
     - release/*
+  always: false # Do not run if there have been no changes
 
 pr: none
 trigger: none
