@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Mon, 24 Apr 2023 16:06:18 +0000
+Subject: [PATCH] Eliminate source-build prebuilts
+
+Backport: https://github.com/microsoft/vstest/issues/4403
+---
+ .../Microsoft.TestPlatform.CLI.csproj                          | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/package/Microsoft.TestPlatform.CLI/Microsoft.TestPlatform.CLI.csproj b/src/package/Microsoft.TestPlatform.CLI/Microsoft.TestPlatform.CLI.csproj
+index 6b5ea83bc..151007af8 100644
+--- a/src/package/Microsoft.TestPlatform.CLI/Microsoft.TestPlatform.CLI.csproj
++++ b/src/package/Microsoft.TestPlatform.CLI/Microsoft.TestPlatform.CLI.csproj
+@@ -64,6 +64,8 @@
+     <ProjectReference Include="..\..\DataCollectors\DumpMinitool\DumpMinitool.csproj" />
+     <ProjectReference Include="..\..\DataCollectors\DumpMinitool.arm64\DumpMinitool.arm64.csproj" />
+     <ProjectReference Include="..\..\DataCollectors\DumpMinitool.x86\DumpMinitool.x86.csproj" />
++
++    <PackageReference Include="Microsoft.Internal.TestPlatform.Remote" Version="$(TestPlatformRemoteExternalsVersion)" PrivateAssets="All" GeneratePathProperty="true" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+@@ -72,7 +74,6 @@
+     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="$(MicrosoftExtensionsFileSystemGlobbingVersion)" GeneratePathProperty="true" />
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" GeneratePathProperty="true" />
+     <PackageReference Include="NuGet.Frameworks" Version="$(NuGetFrameworksVersion)" GeneratePathProperty="true" />
+-    <PackageReference Include="Microsoft.Internal.TestPlatform.Remote" Version="$(TestPlatformRemoteExternalsVersion)" PrivateAssets="All" GeneratePathProperty="true" />
+     <PackageReference Include="Microsoft.Diagnostics.NETCore.Client" Version="$(MicrosoftDiagnosticsNETCoreClientVersion)" PrivateAssets="All" GeneratePathProperty="true" />
+     <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryVersion)" PrivateAssets="All" GeneratePathProperty="true" Condition="'$(TargetFramework)'=='net472'" />
+     <PackageReference Include="Microsoft.Internal.Dia" Version="$(TestPlatformMSDiaVersion)" PrivateAssets="All" GeneratePathProperty="true" Condition="'$(TargetFramework)'=='net472'" />
