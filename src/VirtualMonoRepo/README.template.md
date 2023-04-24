@@ -147,7 +147,6 @@ Usually, this means the [dotnet/dotnet repository](https://github.com/dotnet/dot
 
 In practice, this means that when calling the main build script, you need to provide additional arguments when building outside of a context of a git repository.  
 Alternatively, you can also provide a manifest file where this information can be read from. This file can be found attached with the [dotnet/dotnet release](https://github.com/dotnet/dotnet/releases).
-Another options is to provide the release tag as an input for the build script in which case it will download the release manifest file from the release assets and use the metadata from there.
 
 ## List of components
 
