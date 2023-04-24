@@ -146,7 +146,7 @@ In this case, you need to provide additional information which includes the orig
 Usually, this means the [dotnet/dotnet repository](https://github.com/dotnet/dotnet) together with the commit the release tag is connected to.
 
 In practice, this means that when calling the main build script, you need to provide additional arguments when building outside of a context of a git repository.  
-Alternatively, you can also provide a manifest file where this information can be read from. This file can be found attached with the [dotnet/dotnet release](https://github.com/dotnet/dotnet/releases).
+Alternatively, you can also provide a manifest file where this information can be read from. This file (`release.json`) can be found attached with the [dotnet/dotnet release](https://github.com/dotnet/dotnet/releases).
 
 ## List of components
 
