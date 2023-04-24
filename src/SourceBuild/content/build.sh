@@ -15,7 +15,6 @@
 ###   --with-sdk <DIR>             Use the SDK in the specified directory for bootstrapping
 ###
 ### Use -- to send the remaining arguments to MSBuild
-###
 
 set -euo pipefail
 IFS=$'\n\t'
