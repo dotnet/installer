@@ -1,0 +1,202 @@
+### This stage source-builds https://github.com/dotnet/dotnet with varying parameters
+### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
+
+parameters:
+  dependsOn: []
+  condition: always()
+
+  # Branch of the VMR to use (to push to for internal builds)
+  vmrBranch: $(Build.SourceBranch)
+
+  # True when build is running from dotnet/dotnet directly
+  isBuiltFromVmr:
+
+  # The following parameters aren't expected to be passed in rather they are used for encapsulation
+  # -----------------------------------------------------------------------------------------------
+  centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+  centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
+  debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
+  fedora36Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36
+  ubuntu2004Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
+
+  # Internal builds
+  poolInternalAmd64:
+    name: NetCore1ESPool-Svc-Internal
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+  poolInternalAmd64PR:
+    name: NetCore1ESPool-Internal-XL
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+  poolInternalArm64:
+    name: Docker-Linux-Arm-Internal
+
+  # Public builds / PRs
+  poolPublicAmd64:
+    name: NetCore-Public-XL
+    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
+
+stages:
+- stage: VMR_Source_Build
+  displayName: VMR Source-Build
+  dependsOn: ${{ parameters.dependsOn }}
+  condition: ${{ parameters.condition }}
+  variables:
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - name: defaultPoolName
+      value: ${{ parameters.poolPublicAmd64.name }}
+    - name: defaultPoolDemands
+      value: ${{ parameters.poolPublicAmd64.demands }}
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+      - name: defaultPoolName
+        value: ${{ parameters.poolInternalAmd64PR.name }}
+      - name: defaultPoolDemands
+        value: ${{ parameters.poolInternalAmd64PR.demands }}
+    - ${{ else }}:
+      - name: defaultPoolName
+        value: ${{ parameters.poolInternalAmd64.name }}
+      - name: defaultPoolDemands
+        value: ${{ parameters.poolInternalAmd64.demands }}
+
+  - ${{ if ne(parameters.vmrBranch, '') }}:
+    - name: VmrBranch
+      value: ${{ parameters.vmrBranch }}
+  - ${{ else }}:
+    - name: VmrBranch
+      value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
+
+  jobs:
+  - template: ../jobs/vmr-build.yml
+    parameters:
+      buildName: CentOSStream8_Online_MsftSdk
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.centOSStream8Container }}
+      buildFromArchive: false            # 🚫
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      overrideDistroDisablingSha1: false # 🚫
+      runOnline: true                    # ✅
+      withPreviousSDK: false             # 🚫
+
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: CentOSStream8_Online_PreviousSourceBuiltSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream8Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: true                    # ✅
+        withPreviousSDK: true              # ✅
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: CentOSStream8_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream8Container }}
+        buildFromArchive: true             # ✅
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: CentOSStream9_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.centOSStream9Container }}
+        buildFromArchive: true            # ✅
+        enablePoison: false               # 🚫
+        excludeOmniSharpTests: false      # 🚫
+        overrideDistroDisablingSha1: true # ✅
+        runOnline: false                  # 🚫
+        withPreviousSDK: false            # 🚫
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Fedora36_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.fedora36Container }}
+        buildFromArchive: true             # ✅
+        enablePoison: true                 # ✅
+        excludeOmniSharpTests: false       # 🚫
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Ubuntu2004_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.ubuntu2004Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Debian11_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: arm64
+        pool: ${{ parameters.poolInternalArm64 }}
+        container: ${{ parameters.debian11Arm64Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Fedora36_Offline_CurrentSourceBuiltSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.fedora36Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        overrideDistroDisablingSha1: false # 🚫
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+        reuseBuildArtifactsFrom: Fedora36_Offline_MsftSdk
