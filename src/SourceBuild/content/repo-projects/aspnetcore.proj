@@ -26,8 +26,8 @@
 
     <!-- CA1512 - Use 'ArgumentOutOfRangeException.ThrowIfEqual'
                   Requires https://github.com/dotnet/aspnetcore/issues/47673 -->
-    <!-- IDE0005 - Using directive is unnecessary -->
-    <!-- IDE0059 - Unnecessary assignment of a value -->
+    <!-- IDE0005 - Using directive is unnecessary: https://github.com/dotnet/aspnetcore/issues/47932 -->
+    <!-- IDE0059 - Unnecessary assignment of a value: https://github.com/dotnet/aspnetcore/pull/47931 -->
     <RepoNoWarns>CA1512;IDE0005;IDE0059</RepoNoWarns>
   </PropertyGroup>
 
