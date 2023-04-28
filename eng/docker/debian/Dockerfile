@@ -17,7 +17,7 @@ RUN apt-get update \
 
 # liblldb is needed so deb package build does not throw missing library info errors
 RUN apt-get update \
-    && apt-get -y install liblldb-3.9 \
+    && apt-get -y install liblldb-9 \
     && rm -rf /var/lib/apt/lists/*
 
 # Misc Dependencies for build
