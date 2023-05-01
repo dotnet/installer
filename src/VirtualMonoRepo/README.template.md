@@ -5,7 +5,6 @@ This repository is a **Virtual Monolithic Repository (VMR)** which includes all 
 What this means:
 - **Monolithic** - a join of multiple repositories that make up the whole product, such as [dotnet/runtime](https://github.com/dotnet/runtime) or [dotnet/sdk](https://github.com/dotnet/sdk).
 - **Virtual** - a mirror (not replacement) of product repos where sources from those repositories are synchronized into.
-- **Experimental** - not to be depended on as we reserve the right to delete the current instance and create a new, different one in its stead. See [Limitations](#limitations).
 
 In the VMR, you can find:
 - source files of [each product repository](#list-of-components) which are mirrored inside of their respective directories under [`src/`](https://github.com/dotnet/dotnet/tree/main/src),
@@ -32,12 +31,8 @@ See also [dotnet/source-build](https://github.com/dotnet/source-build) for more 
 
 ## Limitations
 
-**This is a work-in-progress and an experiment.**
-There are considerable limitations to what is possible at the moment. For an extensive list of current limitations, please see [Temporary Mechanics](src/arcade/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#temporary-mechanics).
-
-The VMR is expected to become non-experimental by .NET 8 Preview 1 (Februrary, 2023).
-This means it won't be short-lived anymore and we won't be reserving the right to delete and re-create it anymore.
-Other limitations might apply until the .NET 9 timeframe.
+**This is a work-in-progress.**
+There are considerable limitations to what is possible at the moment. For an extensive list of current limitations, please see [Temporary Mechanics](src/arcade/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#temporary-mechanics).  
 See the [Unified Build roadmap](src/arcade/Documentation/UnifiedBuild/Roadmap.md) for more details.
 
 ### Supported platforms
@@ -139,10 +134,14 @@ ln -s $HOME/.dotnet/dotnet /usr/bin/dotnet
 
 You can also utilize [GitHub Codespaces](https://github.com/features/codespaces) where you can find preset containers in this repository.
 
-### Building outside of git
+### Building from released sources
 
-.NET uses git metadata so that it can link assemblies to their original source code when debugging (think "Step into.." functionality) and for that it needs information about the original place the code comes from.
-When you're building source code only, taken outside of context of a git repository (e.g. you download it from the release page), you will need to specify the source repository to the `prep.sh` script via the `--source-repository` and `--source-version` arguments. This can be your fork of the repository and should match the origin where your SDK was built from.
+You can also build from sources (and not from a context of a git repository), such as the ones you can acquire from a [dotnet/dotnet release](https://github.com/dotnet/dotnet/releases).
+In this case, you need to provide additional information which includes the original repository and commit hash the code was built from so that the SDK can provide a better debugging experience (think the `Step into..` functionality).
+Usually, this means the [dotnet/dotnet repository](https://github.com/dotnet/dotnet) together with the commit the release tag is connected to.
+
+In practice, this means that when calling the main build script, you need to provide additional arguments when building outside of a context of a git repository.  
+Alternatively, you can also provide a manifest file where this information can be read from. This file (`release.json`) can be found attached with the [dotnet/dotnet release](https://github.com/dotnet/dotnet/releases).
 
 ## List of components
 
