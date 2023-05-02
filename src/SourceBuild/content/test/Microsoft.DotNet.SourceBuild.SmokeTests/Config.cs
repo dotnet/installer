@@ -22,6 +22,7 @@ internal static class Config
     public const string WarnPoisonDiffsEnv = "SMOKE_TESTS_WARN_POISON_DIFFS";
     public const string WarnSdkContentDiffsEnv = "SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS";
     public const string RunningInCIEnv = "SMOKE_TESTS_RUNNING_IN_CI";
+    public const string FSharpPackageVersionEnv = "FSHARP_PACKAGE_VERSION";
 
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
@@ -45,4 +46,7 @@ internal static class Config
     // Indicates whether the tests are being run in the context of a CI pipeline
     public static bool RunningInCI { get; } =
         bool.TryParse(Environment.GetEnvironmentVariable(RunningInCIEnv), out bool runningInCI) && runningInCI;
+
+    public static string FSharpPackageVersion { get; } = Environment.GetEnvironmentVariable(FSharpPackageVersionEnv) ??
+        throw new InvalidOperationException($"'{FSharpPackageVersionEnv}' must be specified");
 }

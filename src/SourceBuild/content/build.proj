@@ -97,17 +97,28 @@
       <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
       <SourceBuiltArtifactsPath>%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
       <SmokeTestConsoleVerbosity Condition="'$(SmokeTestConsoleVerbosity)' == ''">normal</SmokeTestConsoleVerbosity>
+      <AllTestEnvVars>
+        SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath);
+        SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH=$(SourceBuiltArtifactsPath);
+        SMOKE_TESTS_TARGET_RID=$(TargetRid);
+        SMOKE_TESTS_PORTABLE_RID=$(PortableRid);
+        SMOKE_TESTS_CUSTOM_PACKAGES_PATH=$(CustomSourceBuiltPackagesPath);
+        FSHARP_PACKAGE_VERSION=$(fsharpOutputPackageVersion);
+        $(CustomTestEnvVars)
+      </AllTestEnvVars>
+      <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings -->
+      <TestArgs>$(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)</TestArgs>
     </PropertyGroup>
 
-    <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings -->
-    <Exec Command="$(DotnetToolCommand) test $(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)"
-          EnvironmentVariables="
-            SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath);
-            SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH=$(SourceBuiltArtifactsPath);
-            SMOKE_TESTS_TARGET_RID=$(TargetRid);
-            SMOKE_TESTS_PORTABLE_RID=$(PortableRid);
-            SMOKE_TESTS_CUSTOM_PACKAGES_PATH=$(CustomSourceBuiltPackagesPath);
-            $(CustomTestEnvVars)" />
+    <Exec Command="$(DotnetToolCommand) test $(TestArgs) --filter Category=Default"
+          EnvironmentVariables="$(AllTestEnvVars)" />
+
+    <!-- A second run of the tests is made for the prereqs tests. The prereqs tests require that all the other smoke tests
+         have been run first in order to collect the packages that are required by those tests. The prereqs tests then uses
+         those packages to run some validation. -->
+    <Exec Command="$(DotnetToolCommand) test $(TestArgs) --filter Category=Prereqs"
+          EnvironmentVariables="$(AllTestEnvVars)" />
+
   </Target>
 
   <Target Name="CreateSmokeTestPrereqsTarball"

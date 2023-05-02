@@ -1,0 +1,208 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Target Name="DownloadPrereqs">
+    <ItemGroup>
+      <PackageDownload Include="coverlet.collector" Version="3.2.0" />
+      <PackageDownload Include="FSharp.Core" Version="$(FsharpVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.App.Runtime.linux-$(Arch)" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Authorization" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components.Analyzers" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components.Forms" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components.Web" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Metadata" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="6.0.0" />
+      <PackageDownload Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.OpenAPI" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.0" />
+      <PackageDownload Include="Microsoft.AspNetCore.SpaProxy" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" />
+      <PackageDownload Include="Microsoft.CodeAnalysis.Common" Version="4.0.0" />
+      <PackageDownload Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.0" />
+      <PackageDownload Include="Microsoft.CodeAnalysis.Razor" Version="6.0.0" />
+      <PackageDownload Include="Microsoft.CodeCoverage" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.CSharp" Version="4.3.0" />
+      <PackageDownload Include="Microsoft.Extensions.ApiDescription.Server" Version="6.0.5" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.Binder" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.CommandLine" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.FileExtensions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.Json" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.DependencyInjection" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.DependencyModel" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.FileProviders.Abstractions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.FileProviders.Physical" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.FileSystemGlobbing" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Hosting" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.Abstractions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.Configuration" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.Console" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.Debug" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.EventLog" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Logging.EventSource" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Options" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.Extensions.Primitives" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.JSInterop" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.JSInterop.WebAssembly" Version="$(AspnetCoreVersion)" />
+      <PackageDownload Include="Microsoft.NET.ILLink.Tasks" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.NETCore.App.Crossgen2.linux-$(Arch)" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NETCore.App.Host.linux-$(Arch)" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NETCore.App.Runtime.linux-$(Arch)" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NETCore.App.Runtime.Mono.browser-wasm" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
+      <PackageDownload Include="Microsoft.NETCore.Platforms" Version="2.1.2" />
+      <PackageDownload Include="Microsoft.NETCore.Targets" Version="1.1.0" />
+      <PackageDownload Include="Microsoft.OpenAPI" Version="1.2.3" />
+      <PackageDownload Include="Microsoft.OpenAPI" Version="1.4.3" />
+      <PackageDownload Include="Microsoft.TestPlatform.ObjectModel" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.TestPlatform.TestHost" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+      <PackageDownload Include="MSTest.TestAdapter" Version="2.2.10" />
+      <PackageDownload Include="MSTest.TestFramework" Version="2.2.10" />
+      <PackageDownload Include="NETStandard.Library" Version="1.6.1" />
+      <PackageDownload Include="NETStandard.Library" Version="2.0.0" />
+      <PackageDownload Include="Newtonsoft.Json" Version="10.0.3" />
+      <PackageDownload Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageDownload Include="NuGet.Frameworks" Version="5.11.0" />
+      <PackageDownload Include="NUnit" Version="3.13.3" />
+      <PackageDownload Include="NUnit.Analyzers" Version="3.3.0" />
+      <PackageDownload Include="NUnit3TestAdapter" Version="4.2.1" />
+      <PackageDownload Include="runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.native.System" Version="4.3.0" />
+      <PackageDownload Include="runtime.native.System.IO.Compression" Version="4.3.0" />
+      <PackageDownload Include="runtime.native.System.NET.Http" Version="4.3.0" />
+      <PackageDownload Include="runtime.native.System.Security.Cryptography.Apple" Version="4.3.0" />
+      <PackageDownload Include="runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.Opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.Opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple" Version="4.3.0" />
+      <PackageDownload Include="runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+      <PackageDownload Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
+      <PackageDownload Include="Swashbuckle.AspNetCore.Swaggergen" Version="6.4.0" />
+      <PackageDownload Include="Swashbuckle.AspNetCore.Swaggerui" Version="6.4.0" />
+      <PackageDownload Include="System.AppContext" Version="4.3.0" />
+      <PackageDownload Include="System.Buffers" Version="4.3.0" />
+      <PackageDownload Include="System.Collections" Version="4.3.0" />
+      <PackageDownload Include="System.Collections.Concurrent" Version="4.3.0" />
+      <PackageDownload Include="System.Collections.Immutable" Version="5.0.0" />
+      <PackageDownload Include="System.Collections.Nongeneric" Version="4.3.0" />
+      <PackageDownload Include="System.Collections.Specialized" Version="4.3.0" />
+      <PackageDownload Include="System.ComponentModel" Version="4.3.0" />
+      <PackageDownload Include="System.ComponentModel.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+      <PackageDownload Include="System.Console" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.Debug" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.EventLog" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="System.Diagnostics.TextWriterTraceListener" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.Tools" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+      <PackageDownload Include="System.Diagnostics.Tracing" Version="4.3.0" />
+      <PackageDownload Include="System.Dynamic.Runtime" Version="4.3.0" />
+      <PackageDownload Include="System.Globalization" Version="4.3.0" />
+      <PackageDownload Include="System.Globalization.Calendars" Version="4.3.0" />
+      <PackageDownload Include="System.Globalization.Extensions" Version="4.3.0" />
+      <PackageDownload Include="System.IO" Version="4.3.0" />
+      <PackageDownload Include="System.IO.Compression" Version="4.3.0" />
+      <PackageDownload Include="System.IO.Compression.zipfile" Version="4.3.0" />
+      <PackageDownload Include="System.IO.FileSystem" Version="4.3.0" />
+      <PackageDownload Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.IO.Pipelines" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="System.Linq" Version="4.3.0" />
+      <PackageDownload Include="System.Linq.Expressions" Version="4.3.0" />
+      <PackageDownload Include="System.Memory" Version="4.5.4" />
+      <PackageDownload Include="System.Net.Http" Version="4.3.0" />
+      <PackageDownload Include="System.Net.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.Net.Sockets" Version="4.3.0" />
+      <PackageDownload Include="System.ObjectModel" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.Emit" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.Extensions" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.Metadata" Version="1.6.0" />
+      <PackageDownload Include="System.Reflection.Metadata" Version="5.0.0" />
+      <PackageDownload Include="System.Reflection.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+      <PackageDownload Include="System.Resources.ResourceManager" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+      <PackageDownload Include="System.Runtime.Extensions" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.Handles" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.InteropServices" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.Numerics" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+      <PackageDownload Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.Cng" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.Csp" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.OpenSsl" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
+      <PackageDownload Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+      <PackageDownload Include="System.Text.Encoding" Version="4.3.0" />
+      <PackageDownload Include="System.Text.Encoding.Codepages" Version="4.5.1" />
+      <PackageDownload Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+      <PackageDownload Include="System.Text.Encodings.Web" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="System.Text.Json" Version="$(RuntimeVersion)" />
+      <PackageDownload Include="System.Text.RegularExpressions" Version="4.3.0" />
+      <PackageDownload Include="System.Threading" Version="4.3.0" />
+      <PackageDownload Include="System.Threading.Tasks" Version="4.3.0" />
+      <PackageDownload Include="System.Threading.Tasks.Extensions" Version="4.3.0" />
+      <PackageDownload Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+      <PackageDownload Include="System.Threading.Timer" Version="4.3.0" />
+      <PackageDownload Include="System.Xml.ReaderWriter" Version="4.3.0" />
+      <PackageDownload Include="System.Xml.Xdocument" Version="4.3.0" />
+      <PackageDownload Include="System.Xml.XmlDocument" Version="4.3.0" />
+      <PackageDownload Include="xunit" Version="2.4.2" />
+      <PackageDownload Include="xunit.Abstractions" Version="2.0.3" />
+      <PackageDownload Include="xunit.Analyzers" Version="1.0.0" />
+      <PackageDownload Include="xunit.Assert" Version="2.4.2" />
+      <PackageDownload Include="xunit.Core" Version="2.4.2" />
+      <PackageDownload Include="xunit.Extensibility.Core" Version="2.4.2" />
+      <PackageDownload Include="xunit.Extensibility.Execution" Version="2.4.2" />
+      <PackageDownload Include="xunit.runner.visualstudio" Version="2.4.5" />
+    </ItemGroup>
+
+    <!--
+      It's necessary to restore the packages in multiple passes because the NuGet logic is only capable of downloading
+      one version of a given package name. But in some cases, we need multiple versions of a package. So for each package,
+      we execute a separate restore.
+     -->
+    <MSBuild Projects="$(MSBuildThisFileFullPath)"
+             Targets="Restore"
+             Properties="PackageName=%(PackageDownload.Identity);PackageVersion=%(PackageDownload.Version)" />
+  </Target>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Arch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</Arch>
+  </PropertyGroup>
+
+  <Target Name="BeforeCollectPackageDownloads" BeforeTargets="CollectPackageDownloads">
+    <Message Text="Restoring package $(PackageName).$(PackageVersion)..." Importance="high" />
+    <ItemGroup>
+      <PackageDownload Include="$(PackageName)" Version="[$(PackageVersion)]" />
+    </ItemGroup>
+  </Target>
+
+</Project>
