@@ -27,6 +27,10 @@ RUN rm -rf /var/lib/apt/lists/* && \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get -y install python-is-python3 \
+    && rm -rf /var/lib/apt/lists/*
     
 RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8
 
