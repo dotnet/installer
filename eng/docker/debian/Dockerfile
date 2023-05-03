@@ -29,7 +29,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
-    && apt-get -y install python-is-python3 \
+    && apt-get -y install python-is-python2 \
     && rm -rf /var/lib/apt/lists/*
     
 RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8
