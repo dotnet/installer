@@ -238,7 +238,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)Build.complete">
 
-    <Exec Command="$(DOTNET_HOST_PATH) build-server shutdown" />
+    <Exec Command="$(DotnetToolCommand) build-server shutdown" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
@@ -331,6 +331,12 @@
 
     <!-- Copy lists of NonShipping packages to prebuilt-report dir -->
     <Copy SourceFiles="@(NonShippingPackageLists)" DestinationFolder="$(PackageReportDir)packagelists/" />
+
+    <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
+         clear it before moving the current SBRPs.  This ensures n-1 SBRPs aren't required to build the product repos. -->
+    <RemoveDir
+      Condition="'$(_NupkgDestinationPath)' == '$(ReferencePackagesDir)'"
+      Directories="$(ReferencePackagesDir)" />
 
     <Move
       Condition="'@(SourceBuiltNupkgFiles)' != ''"
