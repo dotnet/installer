@@ -1,11 +1,16 @@
 <Project>
 
   <ItemGroup>
-    <!-- Do not sign non-shipping packages when doing in-build signing -->
-    <ItemsToSign Remove="$(ArtifactsNonShippingPackagesDir)**\*.nupkg" Condition="'$(PostBuildSign)' != 'true'" />
     <!-- Remove the wixpacks from items to sign post build. These will be added explicitly by the
          custom publishing target. And should not be picked up by arcade's default publishing logic. -->
     <ItemsToSignPostBuild Remove="*.wixpack.zip" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(PostBuildSign)' != 'true'">
+    <ItemsToSign Remove="@(ItemsToSign)" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.exe" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.zip" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.msi" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
   </ItemGroup>
 
   <PropertyGroup>
