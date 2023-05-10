@@ -83,6 +83,24 @@ stages:
       withPreviousSDK: false             # 🚫
       useMonoRuntime: false              # 🚫
 
+  - template: ../jobs/vmr-build.yml
+    parameters:
+      buildName: CentOSStream8_Mono_Online_PreviousSourceBuiltSdk
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool:
+        name: ${{ variables.defaultPoolName }}
+        demands: ${{ variables.defaultPoolDemands }}
+      container: ${{ parameters.centOSStream8Container }}
+      buildFromArchive: false            # 🚫
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      overrideDistroDisablingSha1: false # 🚫
+      runOnline: true                    # ✅
+      withPreviousSDK: true              # ✅
+      useMonoRuntime: true               # ✅
+
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -101,24 +119,6 @@ stages:
         runOnline: true                    # ✅
         withPreviousSDK: true              # ✅
         useMonoRuntime: false              # 🚫
-
-    - template: ../jobs/vmr-build.yml
-      parameters:
-        buildName: CentOSStream8_Mono_Online_PreviousSourceBuiltSdk
-        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-        vmrBranch: ${{ variables.VmrBranch }}
-        architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.centOSStream8Container }}
-        buildFromArchive: false            # 🚫
-        enablePoison: false                # 🚫
-        excludeOmniSharpTests: true        # ✅
-        overrideDistroDisablingSha1: false # 🚫
-        runOnline: true                    # ✅
-        withPreviousSDK: true              # ✅
-        useMonoRuntime: true               # ✅
 
     - template: ../jobs/vmr-build.yml
       parameters:
