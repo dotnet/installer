@@ -81,6 +81,7 @@ stages:
       overrideDistroDisablingSha1: false # 🚫
       runOnline: true                    # ✅
       withPreviousSDK: false             # 🚫
+      useMonoRuntime: false              # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     - template: ../jobs/vmr-build.yml
@@ -99,6 +100,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: true                    # ✅
         withPreviousSDK: true              # ✅
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -134,6 +136,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -145,12 +148,13 @@ stages:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
         container: ${{ parameters.centOSStream9Container }}
-        buildFromArchive: true            # ✅
-        enablePoison: false               # 🚫
-        excludeOmniSharpTests: false      # 🚫
-        overrideDistroDisablingSha1: true # ✅
-        runOnline: false                  # 🚫
-        withPreviousSDK: false            # 🚫
+        buildFromArchive: true             # ✅
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        overrideDistroDisablingSha1: true  # ✅
+        runOnline: false                   # 🚫
+        withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -168,6 +172,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -185,6 +190,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -200,6 +206,7 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -217,4 +224,5 @@ stages:
         overrideDistroDisablingSha1: false # 🚫
         runOnline: false                   # 🚫
         withPreviousSDK: false             # 🚫
+        useMonoRuntime: false              # 🚫
         reuseBuildArtifactsFrom: Fedora36_Offline_MsftSdk
