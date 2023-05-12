@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Target Name="DownloadPrereqs">
+  <Import Project="$(RepoRoot)/prereqs/git-info/AllRepoVersions.props" />
+
+  <Target Name="DownloadPrereqs" DependsOnTargets="SetPackageVersionProperties">
     <ItemGroup>
       <PackageDownload Include="coverlet.collector" Version="3.2.0" />
       <PackageDownload Include="FSharp.Core" Version="$(FsharpVersion)" />
@@ -192,6 +194,18 @@
              Properties="PackageName=%(PackageDownload.Identity);PackageVersion=%(PackageDownload.Version)" />
   </Target>
 
+  <Target Name="SetPackageVersionProperties">
+    <TrimVersion Version="$(runtimeOutputPackageVersion)">
+      <Output TaskParameter="Result" PropertyName="RuntimeVersion" />
+    </TrimVersion>
+    <TrimVersion Version="$(aspnetcoreOutputPackageVersion)">
+      <Output TaskParameter="Result" PropertyName="AspnetCoreVersion" />
+    </TrimVersion>
+    <TrimVersion Version="$(fsharpOutputPackageVersion)">
+      <Output TaskParameter="Result" PropertyName="FsharpVersion" />
+    </TrimVersion>
+  </Target>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -204,5 +218,21 @@
       <PackageDownload Include="$(PackageName)" Version="[$(PackageVersion)]" />
     </ItemGroup>
   </Target>
+
+  <UsingTask TaskName="TrimVersion" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Version ParameterType="System.String" Required="true" />
+      <Result ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        var servicingLabelIndex = Version.IndexOf("-servicing.");
+        Result = (servicingLabelIndex >= 0) ? Version.Substring(0, servicingLabelIndex) : Version;
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
 
 </Project>

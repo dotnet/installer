@@ -236,18 +236,9 @@ if [ -n "$smokeTestPrereqsPath" ] ; then
   fi
 
   echo "</configuration>" >> "$smokeTestsNuGetConfigPath"
+
+  repoRoot="$( cd -P "$( dirname "${BASH_SOURCE}" )" && pwd )"
   
-  # Gather the versions of various components so they can be passed as MSBuild properties
-
-  function getPackageVersion() {
-    # Extract the package version from the props XML file and trim the servicing label suffix if it exists
-    sed -n 's:.*<OutputPackageVersion>\(.*\)</OutputPackageVersion>.*:\1:p' $1 | sed 's/-servicing.*//'
-  }
-
-  runtimeVersion=$(getPackageVersion prereqs/git-info/runtime.props)
-  aspnetCoreVersion=$(getPackageVersion prereqs/git-info/aspnetcore.props)
-  fsharpVersion=$(getPackageVersion prereqs/git-info/fsharp.props)
-
   SMOKE_TEST_PREREQS_FEED=$smokeTestPrereqsFeed \
   SMOKE_TEST_PREREQS_FEED_KEY=$smokeTestPrereqsFeedKey \
   "$DOTNET_SDK_PATH/dotnet" msbuild \
@@ -256,9 +247,7 @@ if [ -n "$smokeTestPrereqsPath" ] ; then
     /bl:artifacts/prep/smokeTestPrereqs.binlog \
     /fileLoggerParameters:LogFile=artifacts/prep/smokeTestPrereqs.log \
     /p:RestorePackagesPath="$smokeTestPrereqsPath" \
-    /p:RuntimeVersion=$runtimeVersion \
-    /p:AspnetCoreVersion=$aspnetCoreVersion \
-    /p:FsharpVersion=$fsharpVersion \
+    /p:RepoRoot=$repoRoot \
     /p:RestoreConfigFile=$smokeTestsNuGetConfigPath
 
 fi
