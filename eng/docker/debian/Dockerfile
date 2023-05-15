@@ -4,7 +4,7 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20211001171226-047508b
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
 
 # Install the deb packaging toolchain we need to build debs
 RUN apt-get update \
@@ -17,7 +17,7 @@ RUN apt-get update \
 
 # liblldb is needed so deb package build does not throw missing library info errors
 RUN apt-get update \
-    && apt-get -y install liblldb-3.9 \
+    && apt-get -y install liblldb-9 \
     && rm -rf /var/lib/apt/lists/*
 
 # Misc Dependencies for build
@@ -27,6 +27,10 @@ RUN rm -rf /var/lib/apt/lists/* && \
         sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get -y install python-is-python2 \
+    && rm -rf /var/lib/apt/lists/*
     
 RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8
 
