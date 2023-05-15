@@ -7,14 +7,10 @@ resources:
     trigger:
       branches:
         include:
-        - main
-        - release/*
-        - internal/release/*
-        exclude:
-        - release/6.0.3xx
-        - internal/release/6.0.3xx
-        - release/6.0.4xx
-        - internal/release/6.0.4xx
+        - release/6.0.1xx
+        - internal/release/6.0.1xx
+        - release/7.0.1xx
+        - internal/release/7.0.1xx
       stages:
       - build
 
