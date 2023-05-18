@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -57,6 +56,180 @@ public partial class PrereqsTests : IDisposable
         Directory.Delete(_tmpDir, recursive: true);
     }
 
+    /// <summary>
+    /// Compares the restored packages from the smoke tests with the expected packages.
+    /// </summary>
+    [Fact]
+    public void ComparePackages()
+    {
+        string prereqsProjPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "prereqs.csproj");
+
+        IEnumerable<PackageInfo> expectedPackages = GetExpectedPackages(prereqsProjPath);
+        _outputHelper.WriteLine($"Expected packages from '{prereqsProjPath}':");
+        OutputPackageInfo(expectedPackages);
+
+        IEnumerable<PackageInfo> actualPackages = GetActualPackages();
+        Assert.NotEmpty(actualPackages);
+        _outputHelper.WriteLine($"Actual packages from '{DotNetHelper.PackagesDirectory}':");
+        OutputPackageInfo(actualPackages);
+
+        IEnumerable<string> expectedPackageNames = GetPackageNames(expectedPackages);
+        IEnumerable<string> actualPackageNames = GetPackageNames(actualPackages);
+
+        IEnumerable<string> packageNamesNotInOutputDir = expectedPackageNames.Except(actualPackageNames);
+        _outputHelper.WriteLine($"Checking if there are any expected package names that did not show up in the output. If this fails, these packages should be cleaned up from the prereqs project at '{prereqsProjPath}'.");
+        Assert.Empty(packageNamesNotInOutputDir);
+
+        IEnumerable<string> packagesInOutputDirNotInExpected = actualPackageNames.Except(expectedPackageNames);
+        _outputHelper.WriteLine($"Checking if there are any package names in the output dir that are not in the prereqs project. If this fails, those packages should be added to the prereqs project at '{prereqsProjPath}'.");
+        Assert.Empty(packagesInOutputDirNotInExpected);
+
+        // Up to this point, we've only verified that package names are consistent between the prereqs project
+        // and the smoke test package output. Now we need to compare package versions.
+
+        ComponentVersions componentVersions = GetComponentVersions();
+        foreach (PackageInfo expectedPackage in expectedPackages)
+        {
+            PackageInfo actualPackage =
+                actualPackages.First(pkg => pkg.PackageName == expectedPackage.PackageName);
+
+            VerifyPackage(expectedPackage, actualPackage, componentVersions, prereqsProjPath);
+        }
+    }
+
+    private void VerifyPackage(PackageInfo expectedPackage, PackageInfo actualPackage, ComponentVersions componentVersions, string prereqsProjPath)
+    {
+        IEnumerable<string> expectedVersionDuplicates = expectedPackage.Versions
+            .GroupBy(ver => ver)
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key);
+
+        _outputHelper.WriteLine($"Verifying the versions for package '{expectedPackage.PackageName}' do not have duplicates. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to remove duplicate versions for this package.");
+        Assert.Empty(expectedVersionDuplicates);
+
+        // During the development cycle, there can be incoherency leading to package versions which aren't consistent across packages.
+        // For that reason, we can only compare package versions whose values are statically defined in the prereqs project. Package
+        // versions which use a variable are considered to be dynamic and ignored.
+
+        IEnumerable<string> expectedDynamicVersions = expectedPackage.Versions
+            .Where(ver => _dynamicVersionRegex.IsMatch(ver))
+            .ToList();
+
+        Assert.True(expectedDynamicVersions.Count() <= 1,
+            $"Package '{expectedPackage.PackageName}' should not have more than 1 dynamic version in the prereqs project at '{prereqsProjPath}'. Dynamic versions defined: {string.Join(',', expectedDynamicVersions)}");
+
+        // Due to the potential for build incoherency, there can be multiple dynamic package versions in the output for a given package
+        // (the incoherency can lead to dependencies on different versions of the same package). But in the expected prereqs project,
+        // that package would only be listed once. So it's not possible to do a comparison of the number of versions between the expected
+        // and actual results when dynamic versions are present.
+        if (!expectedDynamicVersions.Any())
+        {
+            _outputHelper.WriteLine($"Verifying the actual number of versions associated with package '{expectedPackage.PackageName}' are the same as the expected. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to reflect the actual version numbers being outputted by the smoke tests.");
+            Assert.Equal(expectedPackage.Versions.Count(), actualPackage.Versions.Count());
+        }
+
+        IEnumerable<string> expectedStaticVersions = expectedPackage.Versions
+            .Except(expectedDynamicVersions)
+            .OrderBy(ver => ver)
+            .ToList();
+
+        // Use the following heuristic for determining whether an outputted package's version represents a dynamic version:
+        //  - Package name begins with "Microsoft" or "System"
+        //      * Major/Minor version matches the version of the SDK
+        //      * Contains a preview version label
+        //  OR
+        //  - Package name beings with "FSharp"
+        //      * Contains a preview version label
+        IEnumerable<string> actualDynamicVersions = Enumerable.Empty<string>();
+        if (actualPackage.PackageName.StartsWith("microsoft.") || actualPackage.PackageName.StartsWith("system."))
+        {
+            actualDynamicVersions = actualPackage.Versions
+                .Where(ver =>
+                    (ver.StartsWith($"{componentVersions.SdkVersion}.") && IsSdkPreviewVersion(ver, componentVersions.SdkVersion)) ||
+                    ver == componentVersions.RuntimeVersion ||
+                    ver == componentVersions.AspnetVersion);
+        }
+        else if (actualPackage.PackageName.StartsWith("fsharp."))
+        {
+            actualDynamicVersions = actualPackage.Versions
+                .Where(ver => IsSdkPreviewVersion(ver, componentVersions.SdkVersion) || ver == componentVersions.FsharpVersion);
+        }
+
+        IEnumerable<string> actualStaticVersions = actualPackage.Versions
+            .Except(actualDynamicVersions)
+            .OrderBy(ver => ver)
+            .ToList();
+
+        _outputHelper.WriteLine($"Verifying the expected statically-defined versions for package '{expectedPackage.PackageName}' exist in the outputted packages of the smoke tests. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to reflect the actual version numbers being outputted.");
+        Assert.Equal(expectedStaticVersions, actualStaticVersions);
+    }
+
+    private static IEnumerable<PackageInfo> GetActualPackages() =>
+        // Get all the packages that were output by smoke tests. There may be packages that have multiple versions.
+        new DirectoryInfo(DotNetHelper.PackagesDirectory).GetDirectories()
+            .Select(dir =>
+                new PackageInfo(
+                    packageName: dir.Name.ToLowerInvariant(),
+                    versions: dir.GetDirectories()
+                        .Select(verDir => verDir.Name.ToLowerInvariant())
+                        .OrderBy(ver => ver)
+                        .ToList()))
+            .OrderBy(pkg => pkg.PackageName)
+            .ToList();
+
+    private static IEnumerable<PackageInfo> GetExpectedPackages(string prereqsProjPath)
+    {
+        // Get all of the packages defined in prereqs project. There may be packages that have multiple versions
+        // listed.
+        XDocument doc = XDocument.Load(prereqsProjPath);
+        return doc.Root!.Elements()
+            .Where(element => element.Name == "Target" && element.Attribute("Name")!.Value == "DownloadPrereqs")
+            .Descendants()
+            .Where(element => element.Name.LocalName == "PackageDownload")
+            .Select(element =>
+                new
+                {
+                    PackageName = element.Attribute("Include")!.Value
+                        .Replace("$(Arch)", RuntimeInformation.OSArchitecture.ToString())
+                        .ToLowerInvariant(),
+                    Version = element.Attribute("Version")!.Value
+                        .ToLowerInvariant()
+                        .TrimStart('[')
+                        .TrimEnd(']')
+                })
+            .GroupBy(value => value.PackageName, value => value.Version)
+            .Select(group =>
+                new PackageInfo(
+                    packageName: group.Key,
+                    versions: group
+                        .OrderBy(ver => ver)
+                        .ToList()))
+            .OrderBy(pkg => pkg.PackageName)
+            .ToList();
+    }
+
+    private IEnumerable<string> GetPackageNames(IEnumerable<PackageInfo> packages) =>
+        packages
+            .Select(val => val.PackageName)
+            .ToList();
+
+    private static bool IsSdkPreviewVersion(string version, Version sdkVersion) =>
+        (version.Contains("-preview.") || version.Contains("-rc.") || version.Contains("-beta."));
+
+    private void OutputPackageInfo(IEnumerable<PackageInfo> packages)
+    {
+        foreach (PackageInfo package in packages)
+        {
+            _outputHelper.WriteLine(package.PackageName);
+            foreach (string version in package.Versions)
+            {
+                _outputHelper.WriteLine($"- {version}");
+            }
+        }
+
+        _outputHelper.WriteLine(string.Empty);
+    }
+
     private static string GetSharedRuntimeVersion(string sharedRuntimeName)
     {
         string? version = null;
@@ -78,167 +251,18 @@ public partial class PrereqsTests : IDisposable
         return version!;
     }
 
-    /// <summary>
-    /// Compares the restored packages from the smoke tests with the expected packages.
-    /// </summary>
-    [Fact]
-    public void ComparePackages()
+    private static ComponentVersions GetComponentVersions()
     {
         string aspnetVersion = GetSharedRuntimeVersion("Microsoft.AspNetCore.App");
         string runtimeVersion = GetSharedRuntimeVersion("Microsoft.NETCore.App");
         string fsharpVersion = Config.FSharpPackageVersion;
 
-        string prereqsProjPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "prereqs.csproj");
-        XDocument doc = XDocument.Load(prereqsProjPath);
-
-        // Get all of the packages defined in prereqs project. There may be packages that have multiple versions
-        // listed.
-        IEnumerable<(string PackageName, IEnumerable<string> Versions)> expectedPackages = doc.Root!.Elements()
-            .Where(element => element.Name == "Target" && element.Attribute("Name")!.Value == "DownloadPrereqs")
-            .Descendants()
-            .Where(element => element.Name.LocalName == "PackageDownload")
-            .Select(element =>
-                new
-                {
-                    PackageName = element.Attribute("Include")!.Value
-                        .Replace("$(Arch)", RuntimeInformation.OSArchitecture.ToString())
-                        .ToLowerInvariant(),
-                    Version = element.Attribute("Version")!.Value
-                        .ToLowerInvariant()
-                        .TrimStart('[')
-                        .TrimEnd(']')
-                })
-            .GroupBy(value => value.PackageName, value => value.Version)
-            .Select(group => (group.Key, group.OrderBy(ver => ver).AsEnumerable()))
-            .OrderBy(pkg => pkg.Key);
-
-        _outputHelper.WriteLine($"Expected packages from '{prereqsProjPath}':");
-        OutputPackageInfo(expectedPackages);
-
-        // Get all the packages that were output by smoke tests. There may be packages that have multiple versions.
-        IEnumerable<(string PackageName, IEnumerable<string> Versions)> actualPackages =
-            new DirectoryInfo(DotNetHelper.PackagesDirectory).GetDirectories()
-                .Select(dir =>
-                    (
-                        PackageName: dir.Name.ToLowerInvariant(),
-                        Versions: dir.GetDirectories()
-                            .Select(verDir => verDir.Name.ToLowerInvariant())
-                            .OrderBy(ver => ver)
-                            .AsEnumerable()
-                    ))
-                .OrderBy(pkg => pkg.PackageName);
-
-        Assert.NotEmpty(actualPackages);
-
-        _outputHelper.WriteLine($"Actual packages from '{DotNetHelper.PackagesDirectory}':");
-        OutputPackageInfo(actualPackages);
-
-        IEnumerable<string> expectedPackageNames = expectedPackages.Select(val => val.PackageName);
-        IEnumerable<string> actualPackageNames = actualPackages.Select(val => val.PackageName);
-
-        IEnumerable<string> packageNamesNotInOutputDir = expectedPackageNames.Except(actualPackageNames);
-        _outputHelper.WriteLine($"Checking if there are any expected package names that did not show up in the output. If this fails, these packages should be cleaned up from the prereqs project at '{prereqsProjPath}'.");
-        Assert.Empty(packageNamesNotInOutputDir);
-
-        IEnumerable<string> packagesInOutputDirNotInExpected = actualPackageNames.Except(expectedPackageNames);
-        _outputHelper.WriteLine($"Checking if there are any package names in the output dir that are not in the prereqs project. If this fails, those packages should be added to the prereqs project at '{prereqsProjPath}'.");
-        Assert.Empty(packagesInOutputDirNotInExpected);
-
         // Get the major/minor version of .NET to help determine which packages that are outputted have dynamic versions
         Match sdkVersionMatch = _dotNetSdkMajorMinorVersionRegex.Match(Path.GetFileName(Config.SdkTarballPath)!);
         Assert.True(sdkVersionMatch.Success);
-
         Version sdkVersion = Version.Parse(sdkVersionMatch.Groups[1].Value);
 
-        // Up to this point, we've only verified that package names are consistent between the prereqs project
-        // and the smoke test package output. Now we need to compare package versions.
-
-        foreach ((string PackageName, IEnumerable<string> Versions) expectedPackage in expectedPackages)
-        {
-            (string PackageName, IEnumerable<string> Versions) actualPackage =
-                actualPackages.First(pkg => pkg.PackageName == expectedPackage.PackageName);
-
-            IEnumerable<string> expectedVersionDuplicates = expectedPackage.Versions
-                .GroupBy(ver => ver)
-                .Where(group => group.Count() > 1)
-                .Select(group => group.Key);
-
-            _outputHelper.WriteLine($"Verifying the versions for package '{expectedPackage.PackageName}' do not have duplicates. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to remove duplicate versions for this package.");
-            Assert.Empty(expectedVersionDuplicates);
-
-            // During the development cycle, there can be incoherency leading to package versions which aren't consistent across packages.
-            // For that reason, we can only compare package versions whose values are statically defined in the prereqs project. Package
-            // versions which use a variable are considered to be dynamic and ignored.
-
-            IEnumerable<string> expectedDynamicVersions = expectedPackage.Versions
-                .Where(ver => _dynamicVersionRegex.IsMatch(ver))
-                .ToList();
-
-            Assert.True(expectedDynamicVersions.Count() <= 1,
-                $"Package '{expectedPackage.PackageName}' should not have more than 1 dynamic version in the prereqs project at '{prereqsProjPath}'. Dynamic versions defined: {string.Join(',', expectedDynamicVersions)}");
-
-            // Due to the potential for build incoherency, there can be multiple dynamic package versions in the output for a given package
-            // (the incoherency can lead to dependencies on different versions of the same package). But in the expected prereqs project,
-            // that package would only be listed once. So it's not possible to do a comparison of the number of versions between the expected
-            // and actual results when dynamic versions are present.
-            if (!expectedDynamicVersions.Any())
-            {
-                _outputHelper.WriteLine($"Verifying the actual number of versions associated with package '{expectedPackage.PackageName}' are the same as the expected. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to reflect the actual version numbers being outputted by the smoke tests.");
-                Assert.Equal(expectedPackage.Versions.Count(), actualPackage.Versions.Count());
-            }
-
-            IEnumerable<string> expectedStaticVersions = expectedPackage.Versions
-                .Except(expectedDynamicVersions)
-                .OrderBy(ver => ver)
-                .ToList();
-
-            // Use the following heuristic for determining whether an outputted package's version represents a dynamic version:
-            //  - Package name begins with "Microsoft" or "System"
-            //      * Major/Minor version matches the version of the SDK
-            //      * Contains a preview version label
-            //  OR
-            //  - Package name beings with "FSharp"
-            //      * Contains a preview version label
-            IEnumerable<string> actualDynamicVersions = Enumerable.Empty<string>();
-            if (actualPackage.PackageName.StartsWith("microsoft.") || actualPackage.PackageName.StartsWith("system."))
-            {
-                actualDynamicVersions = actualPackage.Versions
-                    .Where(ver =>
-                        (ver.StartsWith($"{sdkVersion}.") && IsSdkPreviewVersion(ver, sdkVersion)) ||
-                        ver == runtimeVersion ||
-                        ver == aspnetVersion);
-            }
-            else if (actualPackage.PackageName.StartsWith("fsharp."))
-            {
-                actualDynamicVersions = actualPackage.Versions
-                    .Where(ver => IsSdkPreviewVersion(ver, sdkVersion) || ver == fsharpVersion);
-            }
-
-            IEnumerable<string> actualStaticVersions = actualPackage.Versions
-                .Except(actualDynamicVersions)
-                .OrderBy(ver => ver)
-                .ToList();
-
-            _outputHelper.WriteLine($"Verifying the expected statically-defined versions for package '{expectedPackage.PackageName}' exist in the outputted packages of the smoke tests. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to reflect the actual version numbers being outputted.");
-            Assert.Equal(expectedStaticVersions, actualStaticVersions);
-        }
-    }
-
-    private static bool IsSdkPreviewVersion(string version, Version sdkVersion) =>
-        (version.Contains("-preview.") || version.Contains("-rc.") || version.Contains("-beta."));
-
-    private void OutputPackageInfo(IEnumerable<(string PackageName, IEnumerable<string> Versions)> packages)
-    {
-        foreach ((string packageName, IEnumerable<string> versions) in packages)
-        {
-            _outputHelper.WriteLine(packageName);
-            foreach (string version in versions)
-            {
-                _outputHelper.WriteLine($"- {version}");
-            }
-        }
-
-        _outputHelper.WriteLine(string.Empty);
+        return new ComponentVersions(sdkVersion, aspnetVersion, runtimeVersion, fsharpVersion);
     }
 
     [GeneratedRegex(@"\$\(\S*Version\)", RegexOptions.IgnoreCase)]
@@ -246,4 +270,31 @@ public partial class PrereqsTests : IDisposable
 
     [GeneratedRegex(@"dotnet-sdk-(\d+\.\d+)", RegexOptions.IgnoreCase)]
     private static partial Regex DotNetSdkMajorMinorVersionRegex();
+
+    private class PackageInfo
+    {
+        public PackageInfo(string packageName, IEnumerable<string> versions)
+        {
+            PackageName = packageName;
+            Versions = versions;
+        }
+        public string PackageName { get; }
+        public IEnumerable<string> Versions { get; }
+    }
+
+    private class ComponentVersions
+    {
+        public ComponentVersions(Version sdkVersion, string aspnetVersion, string runtimeVersion, string fsharpVersion)
+        {
+            SdkVersion = sdkVersion;
+            AspnetVersion = aspnetVersion;
+            RuntimeVersion = runtimeVersion;
+            FsharpVersion = fsharpVersion;
+        }
+
+        public Version SdkVersion { get; }
+        public string AspnetVersion { get; }
+        public string RuntimeVersion { get; }
+        public string FsharpVersion { get; }
+    }
 }
