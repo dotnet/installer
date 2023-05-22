@@ -131,7 +131,10 @@
         },
         {
             "name": "runtime",
-            "defaultRemote": "https://github.com/dotnet/runtime"
+            "defaultRemote": "https://github.com/dotnet/runtime",
+            "exclude": [
+                "src/mono/wasm/runtime/wasm-simd-feature-detect.wasm"
+            ]
         },
         {
             "name": "sdk",
