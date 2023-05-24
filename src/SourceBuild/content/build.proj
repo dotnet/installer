@@ -106,8 +106,10 @@
         FSHARP_PACKAGE_VERSION=$(fsharpOutputPackageVersion);
         $(CustomTestEnvVars)
       </AllTestEnvVars>
+      <AllTestEnvVars Condition=" '$(SMOKE_TESTS_PREREQS_PATH)' != '' ">$(AllTestEnvVars);NUGET_PACKAGES=$(SMOKE_TESTS_PREREQS_PATH)</AllTestEnvVars>
       <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings -->
       <TestArgs>$(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)</TestArgs>
+      <TestArgs Condition=" '$(SMOKE_TESTS_PREREQS_PATH)' != '' ">$(TestArgs) --no-restore</TestArgs>
     </PropertyGroup>
 
     <Exec Command="$(DotnetToolCommand) test $(TestArgs) --filter Category=Default"

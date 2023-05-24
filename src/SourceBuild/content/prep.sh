@@ -91,6 +91,11 @@ done
 
 DOTNET_SDK_PATH="$SCRIPT_ROOT/.dotnet"
 
+if [ -n "$smokeTestPrereqsPath" ]; then
+  # Get the absolute directory path
+  smokeTestPrereqsPath=$(realpath -m "$smokeTestPrereqsPath")
+fi
+
 # Attempting to bootstrap without an SDK will fail. So either the --no-sdk flag must be passed
 # or a pre-existing .dotnet SDK directory must exist.
 if [ "$buildBootstrap" == true ] && [ "$installDotnet" == false ] && [ ! -d $DOTNET_SDK_PATH ]; then
@@ -204,7 +209,8 @@ if [ "$downloadPrebuilts" == true ]; then
 fi
 
 if [ -n "$smokeTestPrereqsPath" ] ; then
-  smokeTestPrereqsProjPath="test/Microsoft.DotNet.SourceBuild.SmokeTests/assets"
+  smokeTestPath="test/Microsoft.DotNet.SourceBuild.SmokeTests"
+  smokeTestAssetsPath="$smokeTestPath/assets"
   smokeTestPrereqsTmp="/tmp/smoke-test-prereqs"
   smokeTestsNuGetConfigPath="$smokeTestPrereqsTmp/nuget.config"
   smokeTestsFeedName="smoke-test-prereqs"
@@ -242,7 +248,7 @@ if [ -n "$smokeTestPrereqsPath" ] ; then
   SMOKE_TEST_PREREQS_FEED=$smokeTestPrereqsFeed \
   SMOKE_TEST_PREREQS_FEED_KEY=$smokeTestPrereqsFeedKey \
   "$DOTNET_SDK_PATH/dotnet" msbuild \
-    "$smokeTestPrereqsProjPath/prereqs.csproj" \
+    "$smokeTestAssetsPath/prereqs.csproj" \
     /t:DownloadPrereqs \
     /bl:artifacts/prep/smokeTestPrereqs.binlog \
     /fileLoggerParameters:LogFile=artifacts/prep/smokeTestPrereqs.log \
@@ -250,4 +256,6 @@ if [ -n "$smokeTestPrereqsPath" ] ; then
     /p:RepoRoot=$repoRoot \
     /p:RestoreConfigFile=$smokeTestsNuGetConfigPath
 
+  # Restore the smoke test project's dependencies into the prereqs location
+  NUGET_PACKAGES="$smokeTestPrereqsPath" "$DOTNET_SDK_PATH/dotnet" restore $smokeTestPath
 fi

@@ -21,7 +21,8 @@ public class OmniSharpTests : SmokeTests
 
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrue: true)]
+    // Disable the test when run offline because it requires downloading the OmniSharp tarball.
+    [SkippableTheory(new string[] { Config.ExcludeOmniSharpEnv, Config.OfflineEnv }, skipOnTrue: true)]
     [InlineData(DotNetTemplate.BlazorWasm)]
     [InlineData(DotNetTemplate.BlazorServer)]
     [InlineData(DotNetTemplate.ClassLib)]

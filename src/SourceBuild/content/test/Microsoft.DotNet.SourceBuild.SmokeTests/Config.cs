@@ -23,6 +23,7 @@ internal static class Config
     public const string WarnSdkContentDiffsEnv = "SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS";
     public const string RunningInCIEnv = "SMOKE_TESTS_RUNNING_IN_CI";
     public const string FSharpPackageVersionEnv = "FSHARP_PACKAGE_VERSION";
+    public const string OfflineEnv = "SMOKE_TESTS_OFFLINE";
 
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
@@ -49,4 +50,6 @@ internal static class Config
 
     public static string FSharpPackageVersion { get; } = Environment.GetEnvironmentVariable(FSharpPackageVersionEnv) ??
         throw new InvalidOperationException($"'{FSharpPackageVersionEnv}' must be specified");
+    public static bool IsOffline { get; } =
+        bool.TryParse(Environment.GetEnvironmentVariable(OfflineEnv), out bool isOffline) && isOffline;
 }
