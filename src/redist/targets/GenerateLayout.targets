@@ -185,7 +185,7 @@
 
       <BundledLayoutPackage Include="MicrosoftNetCoreAppRuntimePackNupkg" Condition="'$(DotNetBuildFromSource)' == 'true'">
         <PackageName>Microsoft.NETCore.App.Runtime.$(SharedFrameworkRid)</PackageName>
-        <PackageVersion>$(MicrosoftNETCoreAppRuntimeVersion)</PackageVersion>
+        <PackageVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</PackageVersion>
         <TargetFramework>$(TargetFramework)</TargetFramework>
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
