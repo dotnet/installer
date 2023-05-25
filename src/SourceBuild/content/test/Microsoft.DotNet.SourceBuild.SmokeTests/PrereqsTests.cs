@@ -134,12 +134,17 @@ public partial class PrereqsTests : IDisposable
             .ToList();
 
         // Use the following heuristic for determining whether an outputted package's version represents a dynamic version:
-        //  - Package name begins with "Microsoft" or "System"
-        //      * Major/Minor version matches the version of the SDK
-        //      * Contains a preview version label
-        //  OR
-        //  - Package name beings with "FSharp"
-        //      * Contains a preview version label
+        //  - When package name begins with "Microsoft" or "System":
+        //      (
+        //        Major/Minor version matches the version of the SDK
+        //        AND
+        //        Contains a preview version label
+        //      )
+        //      OR version exactly matches the runtime or aspnet version from the Microsoft SDK
+        //  - When package name beings with "FSharp":
+        //      Contains a preview version label
+        //      OR
+        //      Version exactly matches the provided FSharp version
         IEnumerable<string> actualDynamicVersions = Enumerable.Empty<string>();
         if (actualPackage.PackageName.StartsWith("microsoft.") || actualPackage.PackageName.StartsWith("system."))
         {
