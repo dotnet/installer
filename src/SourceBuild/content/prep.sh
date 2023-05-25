@@ -217,31 +217,20 @@ if [ -n "$smokeTestPrereqsPath" ] ; then
 
   # Generate a nuget.config file. If a feed was provided, include that first. Also include nuget.org feed by default.
 
-  mkdir -p $smokeTestPrereqsTmp
+  mkdir -p "$smokeTestPrereqsTmp"
 
-  echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<configuration>
-  <packageSources>
-    <clear />" > "$smokeTestsNuGetConfigPath"
+  cp "$smokeTestPrereqsProjPath/prereqs.NuGet.Config" "$smokeTestsNuGetConfigPath"
 
   if [ -n "$smokeTestPrereqsFeed" ] ; then
-    echo "<add key=\"$smokeTestsFeedName\" value=\"%SMOKE_TEST_PREREQS_FEED%\" />" >> "$smokeTestsNuGetConfigPath"
+    # Insert the smoke test prereqs feed to be first in the list of feeds
+    sed -i "/<clear \/>/a <add key=\"$smokeTestsFeedName\" value=\"%SMOKE_TEST_PREREQS_FEED%\" />" "$smokeTestsNuGetConfigPath"
   fi
-
-  echo "<add key=\"nuget\" value=\"https://api.nuget.org/v3/index.json\" />
-  </packageSources>" >> "$smokeTestsNuGetConfigPath"
 
   # If the caller specified a PAT for accessing the feed, generate a credentials section
   if [ -n "$smokeTestPrereqsFeedKey" ] ; then
-    echo "<packageSourceCredentials>
-        <$smokeTestsFeedName>
-        <add key=\"Username\" value=\"smoke-test-prereqs\" />
-        <add key=\"ClearTextPassword\" value=\"%SMOKE_TEST_PREREQS_FEED_KEY%\" />
-        </$smokeTestsFeedName>
-    </packageSourceCredentials>" >> "$smokeTestsNuGetConfigPath"
+    credsText="<packageSourceCredentials><$smokeTestsFeedName><add key=\"Username\" value=\"smoke-test-prereqs\" /><add key=\"ClearTextPassword\" value=\"%SMOKE_TEST_PREREQS_FEED_KEY%\" /></$smokeTestsFeedName></packageSourceCredentials>"
+    sed -i "/<\/packageSources>/a $credsText" "$smokeTestsNuGetConfigPath"
   fi
-
-  echo "</configuration>" >> "$smokeTestsNuGetConfigPath"
 
   repoRoot="$( cd -P "$( dirname "${BASH_SOURCE}" )" && pwd )"
   
