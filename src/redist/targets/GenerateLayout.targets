@@ -183,6 +183,20 @@
         <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
       </BundledLayoutPackage>
 
+      <BundledLayoutPackage Include="MicrosoftNetCoreAppRuntimePackNupkg" Condition="'$(DotNetBuildFromSource)' == 'true'">
+        <PackageName>Microsoft.NETCore.App.Runtime.$(SharedFrameworkRid)</PackageName>
+        <PackageVersion>$(MicrosoftNETCoreAppRuntimeVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+
+      <BundledLayoutPackage Include="MicrosoftAspNetCoreAppRuntimePackNupkg" Condition="'$(DotNetBuildFromSource)' == 'true'">
+        <PackageName>Microsoft.AspNetCore.App.Runtime.$(SharedFrameworkRid)</PackageName>
+        <PackageVersion>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</PackageVersion>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
+        <RelativeLayoutPath>packs/%(PackageName)/%(PackageVersion)</RelativeLayoutPath>
+      </BundledLayoutPackage>
+
       <BundledInstallerComponent Include="DownloadedRuntimeDepsInstallerFile"
                                  Condition="('$(IsDebianBaseDistro)' == 'true' OR '$(IsRPMBasedDistro)' == 'true') And '$(SkipBuildingInstallers)' != 'true' And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
         <BaseUrl>$(CoreSetupRootUrl)$(CoreSetupBlobVersion)</BaseUrl>
