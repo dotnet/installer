@@ -13,11 +13,11 @@
 ###   --runtime-source-feed         URL of a remote server or a local directory, from which SDKs and
 ###                                 runtimes can be downloaded
 ###   --runtime-source-feed-key     Key for accessing the above server, if necessary
-###   --smoke-test-prereqs-path     Directory where the smoke test prereqs packages should be downloaded to
+###   --smoke-test-prereqs-path     Directory where the smoke test prereqs packages should be downloaded to.
+###                                 If not specified, the smoke test prereqs packages will not be downloaded.
 ###   --smoke-test-prereqs-feed     Additional NuGet package feed URL from which to download the smoke test
 ###                                 prereqs
-###   --smoke-test-prereqs-feed-key Access token for the smoke test preqreqs NuGet package feed. If not
-###                                 specified, an interactive restore will be used.
+###   --smoke-test-prereqs-feed-key Access token for the smoke test preqreqs NuGet package feed.
 
 set -euo pipefail
 IFS=$'\n\t'
