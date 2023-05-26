@@ -3,7 +3,7 @@
 
   <Target Name="DownloadPrereqs" DependsOnTargets="SetPackageVersionProperties">
     <ItemGroup>
-      <PackageDownload Include="coverlet.collector" Version="3.2.0" />
+      <PackageDownload Include="coverlet.collector" Version="6.0.0" />
       <PackageDownload Include="FSharp.Core" Version="$(FsharpVersion)" />
       <PackageDownload Include="Microsoft.AspNetCore.App.Runtime.linux-$(Arch)" Version="$(AspnetCoreVersion)" />
       <PackageDownload Include="Microsoft.AspNetCore.Authorization" Version="$(AspnetCoreVersion)" />
@@ -23,7 +23,7 @@
       <PackageDownload Include="Microsoft.CodeAnalysis.Common" Version="4.0.0" />
       <PackageDownload Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.0" />
       <PackageDownload Include="Microsoft.CodeAnalysis.Razor" Version="6.0.0" />
-      <PackageDownload Include="Microsoft.CodeCoverage" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.CodeCoverage" Version="17.6.0" />
       <PackageDownload Include="Microsoft.Extensions.ApiDescription.Server" Version="6.0.5" />
       <PackageDownload Include="Microsoft.Extensions.Configuration" Version="$(RuntimeVersion)" />
       <PackageDownload Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(RuntimeVersion)" />
@@ -55,7 +55,7 @@
       <PackageDownload Include="Microsoft.JSInterop.WebAssembly" Version="$(AspnetCoreVersion)" />
       <PackageDownload Include="Microsoft.NET.ILLink.Tasks" Version="$(RuntimeVersion)" />
       <PackageDownload Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="$(RuntimeVersion)" />
-      <PackageDownload Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
       <PackageDownload Include="Microsoft.NETCore.App.Crossgen2.linux-$(Arch)" Version="$(RuntimeVersion)" />
       <PackageDownload Include="Microsoft.NETCore.App.Host.linux-$(Arch)" Version="$(RuntimeVersion)" />
       <PackageDownload Include="Microsoft.NETCore.App.Runtime.linux-$(Arch)" Version="$(RuntimeVersion)" />
@@ -65,18 +65,17 @@
       <PackageDownload Include="Microsoft.NETCore.Targets" Version="1.1.0" />
       <PackageDownload Include="Microsoft.OpenAPI" Version="1.2.3" />
       <PackageDownload Include="Microsoft.OpenAPI" Version="1.4.3" />
-      <PackageDownload Include="Microsoft.TestPlatform.ObjectModel" Version="17.5.0" />
-      <PackageDownload Include="Microsoft.TestPlatform.TestHost" Version="17.5.0" />
+      <PackageDownload Include="Microsoft.TestPlatform.ObjectModel" Version="17.6.0" />
+      <PackageDownload Include="Microsoft.TestPlatform.TestHost" Version="17.6.0" />
       <PackageDownload Include="Microsoft.Win32.Primitives" Version="4.3.0" />
-      <PackageDownload Include="MSTest.TestAdapter" Version="2.2.10" />
-      <PackageDownload Include="MSTest.TestFramework" Version="2.2.10" />
+      <PackageDownload Include="MSTest.TestAdapter" Version="3.0.2" />
+      <PackageDownload Include="MSTest.TestFramework" Version="3.0.2" />
       <PackageDownload Include="NETStandard.Library" Version="1.6.1" />
       <PackageDownload Include="NETStandard.Library" Version="2.0.0" />
-      <PackageDownload Include="Newtonsoft.Json" Version="10.0.3" />
       <PackageDownload Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageDownload Include="NuGet.Frameworks" Version="5.11.0" />
       <PackageDownload Include="NUnit" Version="3.13.3" />
-      <PackageDownload Include="NUnit.Analyzers" Version="3.3.0" />
+      <PackageDownload Include="NUnit.Analyzers" Version="3.6.1" />
       <PackageDownload Include="NUnit3TestAdapter" Version="4.2.1" />
       <PackageDownload Include="runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
       <PackageDownload Include="runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
