@@ -564,6 +564,13 @@
     <ResolveAssemblyReference AssemblyFiles="@(AssembliesToResolve)" Silent="$(ResolveAssemblyReferencesSilent)" AssemblyInformationCacheOutputPath="$(RedistLayoutPath)sdk\$(Version)\SDKPrecomputedAssemblyReferences.cache" SearchPaths="{RawFileName}" WarnOrErrorOnTargetArchitectureMismatch="$(ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch)" />
   </Target>
 
+  <!-- Replace duplicate files with hard links so that when the same files from a runtime pack
+       and the corresponding shared frameworks are included in a distro package their data is shared instead of duplicated. -->
+  <Target Name="ReplaceDuplicateFilesWithHardLinks" DependsOnTargets="LayoutBundledComponents"
+                                                    Condition="'$(BundleRuntimePacks)' == 'true'">
+    <Exec Command="rdfind -makehardlinks true -makeresultsfile false '$(RedistLayoutPath)'" />
+  </Target>
+
   <Target Name="GenerateLayout"
           DependsOnTargets="DownloadBundledComponents;
                             CleanLayoutPath;
@@ -580,7 +587,8 @@
                             RetargetTools;
                             CrossgenLayout;
                             LayoutAppHostTemplate;
-                            GeneratePrecomputedRarCache"
+                            GeneratePrecomputedRarCache;
+                            ReplaceDuplicateFilesWithHardLinks"
           BeforeTargets="AfterBuild">
 
   </Target>
