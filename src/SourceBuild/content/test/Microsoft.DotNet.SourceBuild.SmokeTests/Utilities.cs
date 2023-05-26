@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Formats.Tar;
+using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -11,6 +14,18 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public static class Utilities
 {
+    public static void EnumerateTarball(string tarballPath, Func<TarEntry, bool> continueEnumeration)
+    {
+        using FileStream fileStream = File.OpenRead(tarballPath);
+        using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
+        using TarReader reader = new(decompressorStream);
+        TarEntry? entry = null;
+        while ((entry = reader.GetNextEntry()) is not null && continueEnumeration(entry))
+        {
+            // Do nothing
+        }
+    }
+
     public static async Task RetryAsync(Func<Task> executor, ITestOutputHelper outputHelper)
     {
         await Utilities.RetryAsync(

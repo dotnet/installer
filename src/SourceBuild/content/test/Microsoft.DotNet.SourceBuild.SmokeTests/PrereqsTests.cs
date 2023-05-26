@@ -54,6 +54,7 @@ public partial class PrereqsTests : IDisposable
     public void Dispose()
     {
         Directory.Delete(_tmpDir, recursive: true);
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -239,7 +240,11 @@ public partial class PrereqsTests : IDisposable
     {
         string? version = null;
         string path = $"./shared/{sharedRuntimeName}/";
-        SmokeTests.EnumerateTarball(Config.SdkTarballPath,
+        if (!File.Exists(Config.SdkTarballPath))
+        {
+            throw new InvalidOperationException($"Tarball path '{Config.SdkTarballPath}' specified in {Config.SdkTarballPath} does not exist.");
+        }
+        Utilities.EnumerateTarball(Config.SdkTarballPath,
             tarEntry =>
             {
                 if (tarEntry.Name.StartsWith(path) && tarEntry.Name.Length > path.Length)

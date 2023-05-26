@@ -251,7 +251,8 @@ jobs:
         customBuildArgs='--online'
       else
         customRunArgs+=" --network none"
-        dockerEnvArgs+=" -e SMOKE_TESTS_PREREQS_PATH=$containerWorkDir/$(smokeTestPrereqsPath) -e SMOKE_TESTS_OFFLINE=true"
+        # Exclude OmniSharp tests when running offline because they require downloading the OmniSharp tarball
+        dockerEnvArgs+=" -e SMOKE_TESTS_PREREQS_PATH=$containerWorkDir/$(smokeTestPrereqsPath) -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true"
       fi
 
       docker run --rm $dockerVolumeArgs -w $containerWorkDir $customRunArgs $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) $customBuildArgs -- -p:SmokeTestConsoleVerbosity=detailed
