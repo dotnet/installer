@@ -70,8 +70,8 @@ public partial class PrereqsTests : IDisposable
         OutputPackageInfo(expectedPackages);
 
         IEnumerable<PackageInfo> actualPackages = GetActualPackages();
-        Assert.NotEmpty(actualPackages);
         _outputHelper.WriteLine($"Actual packages from '{DotNetHelper.PackagesDirectory}':");
+        Assert.NotEmpty(actualPackages);
         OutputPackageInfo(actualPackages);
 
         IEnumerable<string> expectedPackageNames = GetPackageNames(expectedPackages);
@@ -79,10 +79,12 @@ public partial class PrereqsTests : IDisposable
 
         IEnumerable<string> packageNamesNotInOutputDir = expectedPackageNames.Except(actualPackageNames);
         _outputHelper.WriteLine($"Checking if there are any expected package names that did not show up in the output. If this fails, these packages should be cleaned up from the prereqs project at '{prereqsProjPath}'.");
+        OutputPackageNames("Packages not in output:", packageNamesNotInOutputDir);
         Assert.Empty(packageNamesNotInOutputDir);
 
         IEnumerable<string> packagesInOutputDirNotInExpected = actualPackageNames.Except(expectedPackageNames);
         _outputHelper.WriteLine($"Checking if there are any package names in the output dir that are not in the prereqs project. If this fails, those packages should be added to the prereqs project at '{prereqsProjPath}'.");
+        OutputPackageNames("Packages not expected:", packagesInOutputDirNotInExpected);
         Assert.Empty(packagesInOutputDirNotInExpected);
 
         // Up to this point, we've only verified that package names are consistent between the prereqs project
@@ -106,6 +108,7 @@ public partial class PrereqsTests : IDisposable
             .Select(group => group.Key);
 
         _outputHelper.WriteLine($"Verifying the versions for package '{expectedPackage.PackageName}' do not have duplicates. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to remove duplicate versions for this package.");
+        OutputPackageNames("Packages with duplicate versions:", expectedVersionDuplicates);
         Assert.Empty(expectedVersionDuplicates);
 
         // During the development cycle, there can be incoherency leading to package versions which aren't consistent across packages.
@@ -167,6 +170,8 @@ public partial class PrereqsTests : IDisposable
             .ToList();
 
         _outputHelper.WriteLine($"Verifying the expected statically-defined versions for package '{expectedPackage.PackageName}' exist in the outputted packages of the smoke tests. If this fails, the prereqs project at '{prereqsProjPath}' needs to be updated to reflect the actual version numbers being outputted.");
+        OutputPackageNames("Expected static versions:", expectedStaticVersions);
+        OutputPackageNames("Actual static versions:", actualStaticVersions);
         Assert.Equal(expectedStaticVersions, actualStaticVersions);
     }
 
@@ -222,15 +227,29 @@ public partial class PrereqsTests : IDisposable
     private static bool IsSdkPreviewVersion(string version, Version sdkVersion) =>
         (version.Contains("-preview.") || version.Contains("-rc.") || version.Contains("-beta."));
 
+    private void OutputPackageNames(string label, IEnumerable<string> packageNames)
+    {
+        const string Indent = "  ";
+        _outputHelper.WriteLine(label);
+        if (packageNames.Any())
+        {
+            foreach (string pkgName in packageNames)
+            {
+                _outputHelper.WriteLine($"{Indent}{pkgName}");
+            }
+        }
+        else
+        {
+            _outputHelper.WriteLine($"{Indent}<none>");
+        }
+    }
+
     private void OutputPackageInfo(IEnumerable<PackageInfo> packages)
     {
-        foreach (PackageInfo package in packages)
+        IEnumerable<string> packageVersions = packages.SelectMany(pkg => pkg.Versions.Select(version => $"{pkg.PackageName}.{version}"));
+        foreach (string packageVersion in packageVersions)
         {
-            _outputHelper.WriteLine(package.PackageName);
-            foreach (string version in package.Versions)
-            {
-                _outputHelper.WriteLine($"- {version}");
-            }
+            _outputHelper.WriteLine(packageVersion);
         }
 
         _outputHelper.WriteLine(string.Empty);
