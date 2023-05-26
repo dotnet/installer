@@ -568,7 +568,13 @@
        and the corresponding shared frameworks are included in a distro package their data is shared instead of duplicated. -->
   <Target Name="ReplaceDuplicateFilesWithHardLinks" DependsOnTargets="LayoutBundledComponents"
                                                     Condition="'$(BundleRuntimePacks)' == 'true'">
-    <Exec Command="rdfind -makehardlinks true -makeresultsfile false '$(RedistLayoutPath)'" />
+    <Exec Command="rdfind --help" StandardOutputImportance="low" StandardErrorImportance="low" IgnoreExitCode="True">
+      <Output TaskParameter="ExitCode" PropertyName="RdFindInfoExitCode" />
+    </Exec>
+
+    <Message Text="rdfind is not available to make hard links." Condition="'$(RdFindInfoExitCode)' != '0'" Importance="high" />
+
+    <Exec Command="rdfind -makehardlinks true -makeresultsfile false '$(RedistLayoutPath)'" Condition="'$(RdFindInfoExitCode)' == '0'" />
   </Target>
 
   <Target Name="GenerateLayout"
