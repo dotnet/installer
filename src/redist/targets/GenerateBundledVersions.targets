@@ -268,6 +268,7 @@
 
       <Net70ILCompilerSupportedRids Include="
         linux-arm64;
+        linux-musl-arm64;
         linux-musl-x64;
         linux-x64;
         win-arm64;
@@ -278,8 +279,6 @@
            https://github.com/dotnet/runtime/blob/main/src/installer/pkg/projects/Microsoft.DotNet.ILCompiler/ILCompilerRIDs.props -->
       <ILCompilerSupportedRids Include="
         @(Net70ILCompilerSupportedRids);
-        linux-arm;
-        linux-musl-arm64;
         osx-x64;
         osx-arm64;
         " />
