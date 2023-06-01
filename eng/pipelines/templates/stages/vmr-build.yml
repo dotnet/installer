@@ -100,6 +100,7 @@ stages:
       excludeOmniSharpTests: true        # ✅
       overrideDistroDisablingSha1: false # 🚫
       runOnline: false                   # 🚫
+      useMonoRuntime: false              # 🚫
       withPreviousSDK: false             # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
