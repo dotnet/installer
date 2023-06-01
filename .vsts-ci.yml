@@ -94,8 +94,8 @@ stages:
     - template: eng/build.yml
       parameters:
         agentOs: Linux
-        jobName: Build_CentOS_7_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7'
+        jobName: Build_CentOS_8_Stream_Debug_x64
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8'
         buildConfiguration: Debug
         buildArchitecture: x64
         linuxPortable: false
@@ -249,25 +249,25 @@ stages:
       parameters:
         agentOs: Linux
         jobName: Build_Linux_Portable_Rpm_Release_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-rpmpkg'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm'
         buildConfiguration: Release
         buildArchitecture: x64
         # Do not publish zips and tarballs. The linux-x64 binaries are
         # already published by Build_LinuxPortable_Release_x64
-        additionalBuildParameters: '/p:PublishBinariesAndBadge=false'
+        additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:IsRPMBasedDistro=true'
         linuxPortable: true
         runTests: false
     - template: eng/build.yml
       parameters:
         agentOs: Linux
         jobName: Build_Linux_Portable_Rpm_Release_Arm64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-rpmpkg'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm'
         buildConfiguration: Release
         buildArchitecture: arm64
         runtimeIdentifier: 'linux-arm64'
         # Do not publish zips and tarballs. The linux-x64 binaries are
         # already published by Build_LinuxPortable_Release_x64
-        additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
+        additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true  /p:IsRPMBasedDistro=true'
         linuxPortable: true
         runTests: false
     - template: eng/build.yml

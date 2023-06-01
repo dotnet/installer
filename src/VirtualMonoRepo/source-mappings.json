@@ -52,7 +52,12 @@
     "mappings": [
         {
             "name": "arcade",
-            "defaultRemote": "https://github.com/dotnet/arcade"
+            "defaultRemote": "https://github.com/dotnet/arcade",
+            "exclude": [
+                "src/Microsoft.DotNet.SignTool.Tests/*.mpack",
+                "src/Microsoft.DotNet.SignTool.Tests/*.msi",
+                "src/Microsoft.DotNet.SignTool.Tests/*.vsix"
+            ]
         },
         {
             "name": "aspnetcore",
@@ -139,7 +144,9 @@
                 "src/humanizer/samples/**/*.js",
                 "src/application-insights/**/*.exe",
                 "src/application-insights/**/*.dll",
-                "src/application-insights/**/*.zip"
+                "src/application-insights/**/*.zip",
+                "src/application-insights/**/NuGet.config",
+                "src/newtonsoft-json/**/NuGet.Config"
             ]
         },
         {

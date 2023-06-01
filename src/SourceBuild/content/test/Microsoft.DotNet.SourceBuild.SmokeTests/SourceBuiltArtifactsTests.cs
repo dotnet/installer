@@ -17,7 +17,8 @@ public class SourceBuiltArtifactsTests : SmokeTests
 {
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [Fact]
+    // Disabling due to https://github.com/dotnet/source-build/issues/3426
+    //[Fact]
     public void VerifyVersionFile()
     {
         string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "sourcebuilt-artifacts");
@@ -51,7 +52,7 @@ public class SourceBuiltArtifactsTests : SmokeTests
             string sdkVersion = versionLines[1];
 
             // Find the expected SDK version by getting it from the SDK tarball
-            Utilities.ExtractFileFromTarball(Config.SdkTarballPath, "./sdk/*/.version", outputDir);
+            Utilities.ExtractFileFromTarball(Config.SdkTarballPath ?? string.Empty, "./sdk/*/.version", outputDir);
             DirectoryInfo sdkDir = new DirectoryInfo(Path.Combine(outputDir, "sdk"));
             string sdkVersionPath = sdkDir.GetFiles(".version", SearchOption.AllDirectories).Single().FullName;
             string[] sdkVersionLines = File.ReadAllLines(Path.Combine(outputDir, sdkVersionPath));

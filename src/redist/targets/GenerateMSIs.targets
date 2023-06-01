@@ -309,6 +309,20 @@
                       Overwrite="true" />
   </Target>
 
+  <Target Name="GetMinimumVSVersion"
+          BeforeTargets="GenerateSdkBundle"
+          Condition=" '$(OS)' == 'Windows_NT' "
+          Outputs="$(MinimumVSVersion)">
+
+          <PropertyGroup>
+            <MinimumMSBuildVersionFile Condition="$([System.Text.RegularExpressions.Regex]::Match(%(SDKInternalFiles.Identity),'.*minimumMSBuildVersion').Success) ">%(SDKInternalFiles.Identity)</MinimumMSBuildVersionFile>
+          </PropertyGroup>
+
+          <ReadLinesFromFile File="$(MinimumMSBuildVersionFile)">
+            <Output TaskParameter="Lines" PropertyName="MinimumVSVersion"/>
+          </ReadLinesFromFile>
+  </Target>
+
   <Target Name="GenerateSdkBundle"
           DependsOnTargets="GenerateLayout;AcquireWix;MsiTargetsSetupInputOutputs;GenerateSdkMsi;GenerateTemplatesMsis;GenerateWorkloadManifestsWxs"
           Condition=" '$(OS)' == 'Windows_NT' "
@@ -340,7 +354,6 @@
                       -NetStandardTargetingPackMSIFile '$(DownloadsFolder)$(DownloadedNetStandardTargetingPackInstallerFileName)' ^
                       -NetCoreAppHostPackMSIFile '$(DownloadsFolder)$(DownloadedNetCoreAppHostPackInstallerFileName)' ^
                       -AlternateNetCoreAppHostPackMSIFile '$(DownloadsFolder)$(DownloadedAlternateNetCoreAppHostPackInstallerFileName)' ^
-                      -ArmNetCoreAppHostPackMSIFile '$(DownloadsFolder)$(DownloadedArmNetCoreAppHostPackInstallerFileName)' ^
                       -Arm64NetCoreAppHostPackMSIFile '$(DownloadsFolder)$(DownloadedArm64NetCoreAppHostPackInstallerFileName)' ^
                       -AspNetTargetingPackMSIFile '$(DownloadsFolder)$(DownloadedAspNetTargetingPackInstallerFileName)' ^
                       -WindowsDesktopTargetingPackMSIFile '$(DownloadsFolder)$(DownloadedWindowsDesktopTargetingPackInstallerFileName)' ^
@@ -354,6 +367,7 @@
                       -DotnetCLINugetVersion '$(Version)' ^
                       -VersionMajor '$(VersionMajor)' ^
                       -VersionMinor '$(VersionMinor)' ^
+                      -MinimumVSVersion '$(MinimumVSVersion)' ^
                       -WindowsDesktopVersion '$(MicrosoftWindowsDesktopAppRuntimePackageVersion)' ^
                       -UpgradeCode '$(CombinedFrameworkSDKHostInstallerUpgradeCode)' ^
                       -DependencyKeyName '$(SdkDependencyKeyName)' ^
@@ -489,15 +503,18 @@
                     $(GenerateNupkgPowershellScript)"
           Outputs="$(SdkMSBuildExtensionsNupkgFile);$(SdkMSBuildExtensionsSwrFile)">
 
+    <GenerateMSBuildExtensionsSWR MSBuildExtensionsLayoutDirectory="$(MSBuildExtensionsLayoutDirectory)"
+                                  OutputFile="$(SdkMSBuildExtensionsSwrFile)"/>
+
+    <!-- Include the swr file in the nuget package for VS authoring -->
+    <Copy SourceFiles="$(SdkMSBuildExtensionsSwrFile)" DestinationFolder="$(MSBuildExtensionsLayoutDirectory)" />
+
     <Exec Command="powershell -NoProfile -NoLogo $(GenerateNupkgPowershellScript) ^
                       '$(ArtifactsDir)' ^
                       '$(MSBuildExtensionsLayoutDirectory.TrimEnd('\'))' ^
                       '$(FullNugetVersion)' ^
                       '$(SdkMSBuildExtensionsNuspecFile)' ^
                       '$(SdkMSBuildExtensionsNupkgFile)'" />
-      
-      <GenerateMSBuildExtensionsSWR MSBuildExtensionsLayoutDirectory="$(MSBuildExtensionsLayoutDirectory)"
-                                    OutputFile="$(SdkMSBuildExtensionsSwrFile)"/>
 
   </Target>
 
