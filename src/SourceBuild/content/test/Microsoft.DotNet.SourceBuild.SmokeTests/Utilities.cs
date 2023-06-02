@@ -4,6 +4,7 @@
 
 using Microsoft.Extensions.FileSystemGlobbing;
 using System;
+using System.Collections.Generic;
 using System.Formats.Tar;
 using System.IO;
 using System.IO.Compression;
@@ -15,7 +16,14 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public static class Utilities
 {
-    public static void ExtractFileFromTarball(string tarballPath, string filePath, string outputDir)
+    public static void ExtractTarball(string tarballPath, string outputDir)
+    {
+        using FileStream fileStream = File.OpenRead(tarballPath);
+        using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
+        TarFile.ExtractToDirectory(decompressorStream, outputDir, true);
+    }
+
+    public static void ExtractTarball(string tarballPath, string outputDir, string filePath)
     {
         Matcher matcher = new();
         matcher.AddInclude(filePath);
@@ -36,6 +44,19 @@ public static class Utilities
                 entry.DataStream.CopyTo(outputFileStream);
                 break;
             }
+        }
+    }
+
+    public static IEnumerable<string> GetTarballContentNames(string tarballPath)
+    {
+        using FileStream fileStream = File.OpenRead(tarballPath);
+        using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
+        using TarReader reader = new(decompressorStream);
+
+        TarEntry entry;
+        while ((entry = reader.GetNextEntry()) is not null)
+        {
+            yield return entry.Name;
         }
     }
 
