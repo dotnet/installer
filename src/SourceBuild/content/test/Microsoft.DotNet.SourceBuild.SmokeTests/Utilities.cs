@@ -23,10 +23,10 @@ public static class Utilities
         TarFile.ExtractToDirectory(decompressorStream, outputDir, true);
     }
 
-    public static void ExtractTarball(string tarballPath, string outputDir, string filePath)
+    public static void ExtractTarball(string tarballPath, string outputDir, string targetFilePath)
     {
         Matcher matcher = new();
-        matcher.AddInclude(filePath);
+        matcher.AddInclude(targetFilePath);
 
         using FileStream fileStream = File.OpenRead(tarballPath);
         using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
