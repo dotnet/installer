@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
@@ -57,11 +58,31 @@ public partial class PrereqsTests : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    [Fact]
+    public void ComparePackages()
+    {
+        try
+        {
+            ComparePackagesImpl();
+        }
+        catch (XunitException ex)
+        {
+            if (Config.WarnOnPrereqsDiffs)
+            {
+                _outputHelper.WriteLine($"##vso[task.logissue type=warning;]{ex}");
+                _outputHelper.WriteLine("##vso[task.complete result=SucceededWithIssues;]");
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
     /// <summary>
     /// Compares the restored packages from the smoke tests with the expected packages.
     /// </summary>
-    [Fact]
-    public void ComparePackages()
+    private void ComparePackagesImpl()
     {
         string prereqsProjPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "prereqs.csproj");
 
@@ -84,7 +105,7 @@ public partial class PrereqsTests : IDisposable
 
         IEnumerable<string> packagesInOutputDirNotInExpected = actualPackageNames.Except(expectedPackageNames);
         _outputHelper.WriteLine($"Checking if there are any package names in the output dir that are not in the prereqs project. If this fails, those packages should be added to the prereqs project at '{prereqsProjPath}'.");
-        OutputPackageNames("Packages not expected:", packagesInOutputDirNotInExpected);
+        OutputPackageNames("Packages expected:", packagesInOutputDirNotInExpected);
         Assert.Empty(packagesInOutputDirNotInExpected);
 
         // Up to this point, we've only verified that package names are consistent between the prereqs project

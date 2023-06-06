@@ -108,17 +108,24 @@
       </AllTestEnvVars>
       <AllTestEnvVars Condition=" '$(SMOKE_TESTS_PREREQS_PATH)' != '' ">$(AllTestEnvVars);NUGET_PACKAGES=$(SMOKE_TESTS_PREREQS_PATH)</AllTestEnvVars>
       <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings -->
-      <TestArgs>$(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)</TestArgs>
-      <TestArgs Condition=" '$(SMOKE_TESTS_PREREQS_PATH)' != '' ">$(TestArgs) --no-restore</TestArgs>
+      <CommonTestArgs>$(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)</CommonTestArgs>
+      <CommonTestArgs Condition=" '$(SMOKE_TESTS_PREREQS_PATH)' != '' ">$(CommonTestArgs) --no-restore</CommonTestArgs>
+      <SmokeTestsNuGetConfigPath>$(SmokeTestsDir)/NuGet.config</SmokeTestsNuGetConfigPath>
+      <SmokeTestsNuGetConfigPath Condition=" '$(BuildWithOnlineSources)' != 'true' ">$(SmokeTestsDir)/NuGet.local.config</SmokeTestsNuGetConfigPath>
     </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) test $(TestArgs) --filter Category=Default"
+    <!-- Restore the test project before running tests. This is needed because a different NuGet.config file is used for
+         restore depending on whether the tests are to be run in an online or offline environment. -->
+    <Exec Command="$(DotnetToolCommand) restore $(SmokeTestsDir) --configfile $(SmokeTestsNuGetConfigPath)"
+          EnvironmentVariables="SMOKE_TESTS_PREREQS_PATH=$(SMOKE_TESTS_PREREQS_PATH)" />
+
+    <Exec Command="$(DotnetToolCommand) test $(CommonTestArgs) --filter Category=Default"
           EnvironmentVariables="$(AllTestEnvVars)" />
 
     <!-- A second run of the tests is made for the prereqs tests. The prereqs tests require that all the other smoke tests
          have been run first in order to collect the packages that are required by those tests. The prereqs tests then uses
          those packages to run some validation. -->
-    <Exec Command="$(DotnetToolCommand) test $(TestArgs) --filter Category=Prereqs"
+    <Exec Command="$(DotnetToolCommand) test $(CommonTestArgs) --filter Category=Prereqs"
           EnvironmentVariables="$(AllTestEnvVars)" />
 
   </Target>

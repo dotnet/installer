@@ -21,6 +21,7 @@ internal static class Config
     public const string TargetRidEnv = "SMOKE_TESTS_TARGET_RID";
     public const string WarnPoisonDiffsEnv = "SMOKE_TESTS_WARN_POISON_DIFFS";
     public const string WarnSdkContentDiffsEnv = "SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS";
+    public const string WarnPrereqsDiffsEnv = "SMOKE_TESTS_WARN_PREREQS_DIFFS";
     public const string RunningInCIEnv = "SMOKE_TESTS_RUNNING_IN_CI";
     public const string FSharpPackageVersionEnv = "FSHARP_PACKAGE_VERSION";
 
@@ -42,6 +43,8 @@ internal static class Config
         bool.TryParse(Environment.GetEnvironmentVariable(WarnPoisonDiffsEnv), out bool excludeOnlineTests) && excludeOnlineTests;
     public static bool WarnOnSdkContentDiffs { get; } =
         bool.TryParse(Environment.GetEnvironmentVariable(WarnSdkContentDiffsEnv), out bool excludeOnlineTests) && excludeOnlineTests;
+    public static bool WarnOnPrereqsDiffs { get; } =
+        bool.TryParse(Environment.GetEnvironmentVariable(WarnPrereqsDiffsEnv), out bool warn) && warn;
 
     // Indicates whether the tests are being run in the context of a CI pipeline
     public static bool RunningInCI { get; } =

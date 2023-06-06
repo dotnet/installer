@@ -185,7 +185,7 @@ jobs:
         #   smokeTestFeed="https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet8-internal/nuget/v3/index.json"
         # fi
         customPrepArgs="${customPrepArgs}
-          --smoke-test-prereqs-path $(smokeTestPrereqsPath)
+          --get-smoke-test-prereqs
           --smoke-test-prereqs-feed ${smokeTestFeed}
           ${smokeTestFeedKeyArg}"
       fi
@@ -236,7 +236,8 @@ jobs:
       set -x
 
       dockerVolumeArgs="-v $(sourcesPath):/vmr"
-      dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
+      smokeTestsWarnPrereqsDiffs=true
+      dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_WARN_PREREQS_DIFFS=$smokeTestsWarnPrereqsDiffs -e SMOKE_TESTS_RUNNING_IN_CI=true"
       poisonArg=''
 
       if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
@@ -247,13 +248,23 @@ jobs:
       customBuildArgs=''
       customRunArgs=''
       containerWorkDir='/vmr'
-      if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
+      # When diffs for the smoke test prereqs are treated as warnings, it means the prereqs baseline cannot be
+      # relied upon to be accurate. This baseline determines which packages are restored for the prep of running
+      # smoke tests in an offline environment. When the baseline is not accurate, the smoke tests may fail because
+      # the required packages are not there. Having failing tests defeats the purpose fo treating the diffs as
+      # warnings. For that reason, we run the smoke tests in an online environment instead for that scenario.
+      if [[ '${{ parameters.runOnline }}' == 'True' ]] || [[ $smokeTestsWarnPrereqsDiffs == 'true' ]]; then
         customBuildArgs='--online'
       else
         customRunArgs+=" --network none"
         # Exclude OmniSharp tests when running offline because they require downloading the OmniSharp tarball
-        dockerEnvArgs+=" -e SMOKE_TESTS_PREREQS_PATH=$containerWorkDir/$(smokeTestPrereqsPath) -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true"
+        dockerEnvArgs+=" -e SMOKE_TESTS_PREREQS_PATH=$containerWorkDir/prereqs/packages/smoke-test-prereqs -e SMOKE_TESTS_EXCLUDE_OMNISHARP=true"
       fi
+
+      # The prep script causes the contents of the smoke tests directory to be mutated because of the restore. But we want
+      # to ensure the smoke tests are run from a clean environment to simulate a UX where the prep script is not used.
+      # This scenario would involve explicit downloading/production of the necessary tarballs instead of the prep script doing it.
+      dotnet clean $(sourcesPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests
 
       docker run --rm $dockerVolumeArgs -w $containerWorkDir $customRunArgs $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) $customBuildArgs -- -p:SmokeTestConsoleVerbosity=detailed
     displayName: Run Tests

@@ -82,7 +82,7 @@ internal class DotNetHelper
 
             // This package feed is optional.  You can use an additional feed of source-built packages to run the
             // smoke-tests as offline as possible.
-            if (Config.CustomPackagesPath != null)
+            if (!string.IsNullOrEmpty(Config.CustomPackagesPath))
             {
                 if (!Directory.Exists(Config.CustomPackagesPath))
                 {
