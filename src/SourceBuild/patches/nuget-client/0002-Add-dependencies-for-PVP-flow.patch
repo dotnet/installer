@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Tue, 6 Jun 2023 15:02:21 +0000
+Subject: [PATCH] Add dependencies for PVP flow
+
+Backport: https://github.com/NuGet/NuGet.Client/pull/5207
+---
+ eng/Version.Details.xml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/eng/Version.Details.xml b/eng/Version.Details.xml
+index ff6bc71b5..55695654a 100644
+--- a/eng/Version.Details.xml
++++ b/eng/Version.Details.xml
+@@ -5,4 +5,15 @@
+     See https://github.com/dotnet/arcade/issues/2396 for details.
+     See https://github.com/dotnet/arcade/blob/master/Documentation/DependencyDescriptionFormat.md#details-file for schema.
+   -->
++
++  <!--
++    Following dependencies are required for PVP flow.
++    PVP flow infra will automatically bump the version to the latest live one.
++  -->
++  <ProductDependencies>
++    <Dependency Name="Microsoft.Build" Version="17.3.1">
++      <Uri>https://github.com/dotnet/msbuild</Uri>
++      <Sha>80f618ad45d38475773fd1a6eaa059f118a0ad5a</Sha>
++    </Dependency>
++  </ProductDependencies>
+ </Dependencies>
+\ No newline at end of file
