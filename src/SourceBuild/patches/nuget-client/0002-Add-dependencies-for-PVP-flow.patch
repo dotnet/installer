@@ -5,22 +5,9 @@ Subject: [PATCH] Add dependencies for PVP flow
 
 Backport: https://github.com/NuGet/NuGet.Client/pull/5207
 ---
- Directory.Packages.props |  1 +
- eng/Version.Details.xml  | 27 +++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ eng/Version.Details.xml | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Directory.Packages.props b/Directory.Packages.props
-index baec21914..2461e41f0 100644
---- a/Directory.Packages.props
-+++ b/Directory.Packages.props
-@@ -16,6 +16,7 @@
-     <MicrosoftBuildVersion Condition="'$(TargetFramework)' == 'netcoreapp5.0'">16.11.0</MicrosoftBuildVersion>
- 
-     <!-- Overridden by source build to ensure the same version is used across products, do not remove these properties -->
-+    <!-- For each property here, there is an appropriate package dependency in eng/Version.Details.xml -->
-     <MicrosoftExtensionsFileProvidersAbstractionsPackageVersion Condition="'$(MicrosoftExtensionsFileProvidersAbstractionsPackageVersion)' == ''">6.0.0</MicrosoftExtensionsFileProvidersAbstractionsPackageVersion>
-     <MicrosoftExtensionsFileSystemGlobbingPackageVersion Condition="'$(MicrosoftExtensionsFileSystemGlobbingPackageVersion)' == ''">6.0.0</MicrosoftExtensionsFileSystemGlobbingPackageVersion>
-     <MicrosoftWebXdtPackageVersion Condition="'$(MicrosoftWebXdtPackageVersion)' == ''">3.0.0</MicrosoftWebXdtPackageVersion>
 diff --git a/eng/Version.Details.xml b/eng/Version.Details.xml
 index ff6bc71b5..bbadad4c0 100644
 --- a/eng/Version.Details.xml
