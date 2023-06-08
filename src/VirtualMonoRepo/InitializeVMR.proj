@@ -31,6 +31,7 @@
 
     <Exec WorkingDirectory="$(VmrDir)" Command="git init -b $(VmrDefaultBranch)" />
     <Exec WorkingDirectory="$(VmrDir)" Command="git commit --allow-empty -m 'Initial commit of the VMR%0D%0A%0D%0A[[ commit created by automation ]]'" />
+    <Exec WorkingDirectory="$(VmrDir)" Command="git remote add origin https://github.com/dotnet/dotnet" /> <!-- source link needs this -->
   </Target>
 
   <Target Name="InitializeRepoAndDependentsRecursive">
