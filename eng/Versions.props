@@ -8,7 +8,7 @@
     <VersionMajor>7</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionFeature>07</VersionFeature>
+    <VersionFeature>08</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
     <PreReleaseVersionIteration>
@@ -124,7 +124,7 @@
     -->
     <SubtractOneFromTemplateVersions Condition="$([MSBuild]::Subtract($(VersionFeature), $(MicrosoftNETSdkPatchVersion))) &gt;= 2">true</SubtractOneFromTemplateVersions>
     <SubtractOneFromTemplateVersions Condition="$(VersionFeature) &gt;= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
-    <AspNetCoreTemplateFeature60>$([MSBuild]::Subtract($(VersionFeature60), 2))</AspNetCoreTemplateFeature60>
+    <AspNetCoreTemplateFeature60>$([MSBuild]::Subtract($(VersionFeature60), 1))</AspNetCoreTemplateFeature60>
     <AspNetCoreTemplateFeature60 Condition="'$(SubtractOneFromTemplateVersions)' == 'true'">$([MSBuild]::Subtract($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
   </PropertyGroup>
   <PropertyGroup>
@@ -215,8 +215,8 @@
       or minor release, prebuilts may be needed. When the release is mature, prebuilts are not
       necessary, and this property is removed from the file.
     -->
-    <PrivateSourceBuiltSDKVersion>7.0.105</PrivateSourceBuiltSDKVersion>
-    <PrivateSourceBuiltArtifactsPackageVersion>7.0.105</PrivateSourceBuiltArtifactsPackageVersion>
+    <PrivateSourceBuiltSDKVersion>7.0.107</PrivateSourceBuiltSDKVersion>
+    <PrivateSourceBuiltArtifactsPackageVersion>7.0.107</PrivateSourceBuiltArtifactsPackageVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>
