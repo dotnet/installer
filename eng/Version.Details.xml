@@ -85,35 +85,35 @@
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>0385265f4d0b6413d64aea0223172366a9b9858c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.5.0" Version="1.1.0-rc.23213.1">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.5.0" Version="1.1.0-rc.23305.2">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>45a41b353d078e4d1e5918246fddbacb452eb210</Sha>
+      <Sha>98b55256c6cdfc0ed98c52d7d39127fa55971330</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.6.0" Version="1.1.0-rc.23213.1">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.6.0" Version="1.1.0-rc.23305.2">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>45a41b353d078e4d1e5918246fddbacb452eb210</Sha>
+      <Sha>98b55256c6cdfc0ed98c52d7d39127fa55971330</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.7.0" Version="1.1.0-rc.23213.1">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.7.0" Version="1.1.0-rc.23305.2">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>45a41b353d078e4d1e5918246fddbacb452eb210</Sha>
+      <Sha>98b55256c6cdfc0ed98c52d7d39127fa55971330</Sha>
       <SourceBuild RepoName="test-templates" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="7.0.304">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>9abb6bda1703918c0172e5170b66af31867fdeeb</Sha>
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="7.0.400-preview.23313.39">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>0c315a2c61c52bf2804ab5b5c28d3289c24cd588</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="7.0.304-servicing.23275.9">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>9abb6bda1703918c0172e5170b66af31867fdeeb</Sha>
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="7.0.400-preview.23313.39">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>0c315a2c61c52bf2804ab5b5c28d3289c24cd588</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.304-servicing.23275.9">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>9abb6bda1703918c0172e5170b66af31867fdeeb</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="7.0.400-preview.23313.39">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>0c315a2c61c52bf2804ab5b5c28d3289c24cd588</Sha>
       <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.304-servicing.23275.9">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>9abb6bda1703918c0172e5170b66af31867fdeeb</Sha>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="7.0.400-preview.23313.39">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>0c315a2c61c52bf2804ab5b5c28d3289c24cd588</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="7.0.7-servicing.23274.5" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -124,18 +124,18 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-wpf</Uri>
       <Sha>512eac4b458953da405f51ec0ae7766bcb7b32e5</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.5.0-beta.23203.7" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.FSharp.Compiler" Version="12.7.0-beta.23313.7" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>5b37dd5fea143baefbef2bd83836188af0815a30</Sha>
+      <Sha>fbab5feade1e7426dc715b772ea59a287adf2165</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="7.0.300-beta.23203.7" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="7.0.400-beta.23313.7" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>5b37dd5fea143baefbef2bd83836188af0815a30</Sha>
+      <Sha>fbab5feade1e7426dc715b772ea59a287adf2165</Sha>
       <SourceBuild RepoName="fsharp" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.6.0-release-20230405-08" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.7.0-preview-23313-04" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/microsoft/vstest</Uri>
-      <Sha>7933ee32f416745e48ff33cb6a3e82fd1ca38b87</Sha>
+      <Sha>a006b59a7af55448b69ea835f0037437f363c25f</Sha>
       <SourceBuild RepoName="vstest" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23211.1" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -144,23 +144,23 @@
       <SourceBuild RepoName="linker" ManagedOnly="true" />
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.6.0-3.23259.8" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.7.0-3.23312.16" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>c3cc1d0ceeab1a65da0217e403851a1e8a30086a</Sha>
+      <Sha>f93b9a42ff7b6e92ff5d0d9d3d70f466ca3ed450</Sha>
       <SourceBuild RepoName="roslyn" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.Build" Version="17.6.3" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.Build" Version="17.7.0-preview-23312-02" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>07e2947214f1a9f28a3517762c939d5bebb5f525</Sha>
+      <Sha>df97a4b69224643b4af407f41b33f8c9762af3c0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.msbuild" Version="17.6.3-preview-23226-01" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.msbuild" Version="17.7.0-preview-23312-02" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>07e2947214f1a9f28a3517762c939d5bebb5f525</Sha>
+      <Sha>df97a4b69224643b4af407f41b33f8c9762af3c0</Sha>
       <SourceBuild RepoName="msbuild" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="NuGet.Build.Tasks" Version="6.6.0-rc.66" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://dev.azure.com/devdiv/DevDiv/_git/NuGet-NuGet.Client-Trusted</Uri>
-      <Sha>a36edf3a2bf891d6aabfc83cc0b21d24a870ea1a</Sha>
+    <Dependency Name="NuGet.Build.Tasks" Version="6.7.0-preview.3.71" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/nuget/nuget.client</Uri>
+      <Sha>566ced13280613f419b8b057583c0dd8f6ced724</Sha>
       <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.ApplicationInsights" Version="2.0.0">
@@ -192,22 +192,22 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="7.0.0-beta.23211.2">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="7.0.0-beta.23281.4">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>7c5e5a782c67460b123c8e41d484ebcca8002c93</Sha>
+      <Sha>6a71ed4ba6a70e66abe9f9bdc4009fa1de35132f</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.CMake.Sdk" Version="7.0.0-beta.23211.2">
+    <Dependency Name="Microsoft.DotNet.CMake.Sdk" Version="7.0.0-beta.23281.4">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>7c5e5a782c67460b123c8e41d484ebcca8002c93</Sha>
+      <Sha>6a71ed4ba6a70e66abe9f9bdc4009fa1de35132f</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="7.0.0-beta.23211.2">
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="7.0.0-beta.23281.4">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>7c5e5a782c67460b123c8e41d484ebcca8002c93</Sha>
+      <Sha>6a71ed4ba6a70e66abe9f9bdc4009fa1de35132f</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.23063.1">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="7.0.0-alpha.1.23219.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>9964206e0dd215eee4ed199b9041a94e16ba4c45</Sha>
+      <Sha>525b6c35cc5c5c9b80b47044be2e4e77858d505a</Sha>
       <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.SourceLink.GitHub" Version="1.2.0-beta-22429-01" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
