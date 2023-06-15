@@ -14,7 +14,7 @@
 msft,./sdk/x.y.z/TestHostNetFramework/?*   # Intentional - MSFT build includes test-host that targets netcoreapp3.1
 msft,./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.WindowsDesktop/?*   # Intentional - explicitly excluded from source-build
 
-# netfx tooling and tasks, not building in source-build
+# netfx tooling and tasks, not building in source-build - https://github.com/dotnet/source-build/issues/3514
 msft,./sdk/x.y.z/Sdks/Microsoft.Build.Tasks.Git/tools/net472/*
 msft,./sdk/x.y.z/Sdks/Microsoft.NET.Sdk/tools/net472/*
 msft,./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.BlazorWebAssembly/tools/net472/*
