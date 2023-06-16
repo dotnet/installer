@@ -31,7 +31,7 @@ msft,./sdk/x.y.z/Sdks/Microsoft.SourceLink.Common/tools/net472/*
 msft,./sdk/x.y.z/Sdks/Microsoft.SourceLink.GitHub/tools/net472/*
 msft,./sdk/x.y.z/Sdks/Microsoft.SourceLink.GitLab/tools/net472/*
 
-# vstest localization is disabled in Linux builds - https://github.com/microsoft/vstest/issues/4305
+# vstest localization is disabled in Linux builds - https://github.com/dotnet/source-build/issues/3517
 msft,./sdk/x.y.z/*?/Microsoft.CodeCoverage.IO.resources.dll
 msft,./sdk/x.y.z/*?/Microsoft.TestPlatform.*?.resources.dll
 msft,./sdk/x.y.z/*?/Microsoft.VisualStudio.TestPlatform.*?.resources.dll
@@ -82,13 +82,3 @@ msft,./sdk/x.y.z/DotnetTools/dotnet-format/System.Drawing.Common.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-format/System.Security.Cryptography.ProtectedData.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-format/System.Security.Permissions.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-format/System.Windows.Extensions.dll
-
-# netfx runtimes for containers - https://github.com/dotnet/source-build/issues/3510
-msft,./sdk/x.y.z/containerize.deps.json
-msft,./sdk/x.y.z/containerize.exe
-msft,./sdk/x.y.z/containerize.runtimeconfig.json
-msft,./sdk/x.y.z/Containers/containerize/*
-msft,./sdk/x.y.z/Containers/tasks/net472/*
-msft,./sdk/x.y.z/Containers/tasks/netx.y/Microsoft.VisualStudio.Setup.Configuration.Interop.dll
-msft,./sdk/x.y.z/Containers/tasks/netx.y/runtimes/*   # msft (netfx) runtimes
-sb,./sdk/x.y.z/Containers/tasks/netx.y/runtimes/*   # sb (.net) runtimes
