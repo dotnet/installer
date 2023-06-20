@@ -571,6 +571,32 @@
     <ReplaceDuplicateFilesWithHardLinks Directory="$(RedistLayoutPath)" />
   </Target>
 
+  <Target Name="RemoveNetFrameworkContainerizationTools" DependsOnTargets="LayoutBundledComponents" Condition="'$(OSName)' != 'win' and '$(DisableSdkNetFrameworkContainerToolsRemoval)' != 'true' ">
+    <!-- Removes the .NET Framework binaries from the SDK toolset layout for non-Windows SDKs.
+         These binaries are only used for Visual Studio support, and therefore cannot be effectively used by non-Windows SDKs.
+         To skip this, set DisableSdkNetFrameworkContainerToolsRemoval to true. -->
+    <ItemGroup>
+      <!-- Grab the SDK toolset component  -->
+      <_ToolsetBundledComponent Include="@(BundledLayoutComponent)" Condition="%(BundledLayoutComponent.Identity) == 'ToolsetArchive'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <!-- Use it to find the base path to the SDK -->
+      <_ToolsetBasePath>$(RedistLayoutPath)\%(_ToolsetBundledComponent.RelativeLayoutPath)</_ToolsetBasePath>
+      <_ToolsetBasePath>$([MSBuild]::NormalizePath($(_ToolsetBasePath)))</_ToolsetBasePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <!-- Identify the paths containing the NET Framework binaries -->
+      <_NetFrameworkContainerRelativePath Include="Containers\containerize" />
+      <_NetFrameworkContainerRelativePath Include="Containers\tasks\net472" />
+      <!-- Create the list of files -->
+      <_NetFrameworkContainerFiles Include="$(_ToolsetBasePath)/%(_NetFrameworkContainerRelativePath.Identity)/**/*" />
+    </ItemGroup>
+    <!-- Sanity check - if the layout changes upstream we probably need to react to it here -->
+    <Warning Text="No .NET Framework containerization tools found at $(_ToolsetBasePath)/%(_NetFrameworkContainerRelativePath.Identity), is this intentional?"
+             Condition="!Exists('$(_ToolsetBasePath)/%(_NetFrameworkContainerRelativePath.Identity)')"/>
+    <Delete Files="@(_NetFrameworkContainerFiles)" />
+  </Target>
+
   <Target Name="GenerateLayout"
           DependsOnTargets="DownloadBundledComponents;
                             CleanLayoutPath;
@@ -588,7 +614,8 @@
                             CrossgenLayout;
                             LayoutAppHostTemplate;
                             GeneratePrecomputedRarCache;
-                            ReplaceDuplicateFilesWithHardLinks"
+                            ReplaceDuplicateFilesWithHardLinks;
+                            RemoveNetFrameworkContainerizationTools"
           BeforeTargets="AfterBuild">
 
   </Target>
