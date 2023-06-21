@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -65,7 +66,10 @@ public class OmniSharpTests : SmokeTests
             await client.DownloadFileAsync(omniSharpTarballUrl, omniSharpTarballFile, OutputHelper);
 
             Directory.CreateDirectory(OmniSharpDirectory);
-            Utilities.ExtractTarball(omniSharpTarballFile, OmniSharpDirectory);
+            Utilities.ExtractTarball(omniSharpTarballFile, OmniSharpDirectory, OutputHelper);
+
+            // Ensure the run script is executable (see https://github.com/OmniSharp/omnisharp-roslyn/issues/2547)
+            File.SetUnixFileMode($"{OmniSharpDirectory}/run", UnixFileMode.UserRead | UnixFileMode.UserExecute);
         }
     }
 }
