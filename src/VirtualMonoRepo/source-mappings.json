@@ -107,7 +107,22 @@
         },
         {
             "name": "llvm-project",
-            "defaultRemote": "https://github.com/dotnet/llvm-project"
+            "defaultRemote": "https://github.com/dotnet/llvm-project",
+            "exclude": [
+                "bolt",
+                "clang/docs",
+                "clang/www",
+                "flang",
+                "libclc",
+                "lldb",
+                "llvm/docs",
+                "mlir",
+                "openmp",
+                "polly",
+                "pstl",
+                "third-party",
+                "**/tests/**"
+            ]
         },
         {
             "name": "msbuild",
