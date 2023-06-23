@@ -221,7 +221,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Ubuntu2004_Offline_MsftSdk
+        buildName: Ubuntu2204Arm64_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: arm64
