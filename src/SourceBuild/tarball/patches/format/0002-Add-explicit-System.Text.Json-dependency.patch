@@ -6,7 +6,7 @@ Subject: [PATCH] Add explicit System.Text.Json dependency
 Adding an excplicit System.Text.Json dependency to prevent transitive dependency to be picked up
 from PSB, via Microsoft.Build package.
 
-Backport: https://github.com/dotnet/source-build/issues/3540
+Backport: https://github.com/dotnet/format/pull/1887
 ---
  Directory.Packages.props | 1 +
  eng/Version.Details.xml  | 4 ++++
