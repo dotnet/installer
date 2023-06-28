@@ -17,7 +17,8 @@ internal static class ExecuteHelper
         string args,
         ITestOutputHelper outputHelper,
         bool logOutput = false,
-        Action<Process>? configure = null,
+        Action<Process>? configureCallback = null,
+        Action<Process>? startCallback = null,
         int millisecondTimeout = -1)
     {
         outputHelper.WriteLine($"Executing: {fileName} {args}");
@@ -41,7 +42,7 @@ internal static class ExecuteHelper
             process.StartInfo.Environment.Remove(key);
         }
 
-        configure?.Invoke(process);
+        configureCallback?.Invoke(process);
 
         StringBuilder stdOutput = new();
         process.OutputDataReceived += new DataReceivedEventHandler(
@@ -64,6 +65,9 @@ internal static class ExecuteHelper
             });
 
         process.Start();
+
+        startCallback?.Invoke(process);
+
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
         process.WaitForExit(millisecondTimeout);
