@@ -26,6 +26,9 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildNonPortable=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UsingToolMicrosoftNetCompilers=false</BuildCommandArgs>
     <BuildCommand>$(StandardSourceBuildCommand) $(BuildCommandArgs)</BuildCommand>
+
+    <!-- CS9169 - Invalid inline array fields (https://github.com/dotnet/runtime/issues/88141) -->
+    <RepoNoWarns>CS9169</RepoNoWarns>
   </PropertyGroup>
 
   <!-- SDK Overrides -->
