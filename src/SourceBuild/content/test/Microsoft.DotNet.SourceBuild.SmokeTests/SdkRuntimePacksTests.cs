@@ -27,8 +27,8 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 
             // Alter NuGet cache path to verify any packs being pulled
             // Existing cache is used by other tests and can contain packs from previous runs that also do self-contained publishes
-            string customProps = $"/p:RestorePackagesPath={_nuGetCacheFolder}";
-            DotNetHelper.ExecutePublish(testProjectName, selfContained: true, rid: Config.TargetRid, customProps: customProps);
+            string customOptions = $"/p:RestorePackagesPath={_nuGetCacheFolder}";
+            DotNetHelper.ExecutePublish(testProjectName, selfContained: true, rid: Config.TargetRid, customOptions: customOptions);
 
             string nuGetCachePath = Path.Combine(projectDirPath, _nuGetCacheFolder);
             string failMessage = "Runtime packs were retrieved from NuGet instead of the SDK";
