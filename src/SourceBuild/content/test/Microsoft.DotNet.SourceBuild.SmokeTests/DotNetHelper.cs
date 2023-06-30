@@ -105,14 +105,13 @@ internal class DotNetHelper
     }
 
     public void ExecuteCmd(string args, string? workingDirectory = null, Action<Process>? processConfigCallback = null,
-        Action<Process>? processStartCallback = null, int? expectedExitCode = 0, int millisecondTimeout = -1)
+        int? expectedExitCode = 0, int millisecondTimeout = -1)
     {
         (Process Process, string StdOut, string StdErr) executeResult = ExecuteHelper.ExecuteProcess(
             DotNetPath,
             args,
             OutputHelper,
             configureCallback: (process) => configureProcess(process, workingDirectory),
-            startCallback: processStartCallback,
             millisecondTimeout: millisecondTimeout);
         
         if (expectedExitCode != null) {

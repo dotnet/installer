@@ -18,7 +18,6 @@ internal static class ExecuteHelper
         ITestOutputHelper outputHelper,
         bool logOutput = false,
         Action<Process>? configureCallback = null,
-        Action<Process>? startCallback = null,
         int millisecondTimeout = -1)
     {
         outputHelper.WriteLine($"Executing: {fileName} {args}");
@@ -65,8 +64,6 @@ internal static class ExecuteHelper
             });
 
         process.Start();
-
-        startCallback?.Invoke(process);
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
