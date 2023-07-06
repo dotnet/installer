@@ -17,7 +17,7 @@ parameters:
   centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
   fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
-  ubuntu2004Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
+  ubuntu2204Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
   ubuntu2204ArmContainer: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
 
   # Internal builds
@@ -194,14 +194,14 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: Ubuntu2004_Offline_MsftSdk
+        buildName: Ubuntu2204_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.ubuntu2004Container }}
+        container: ${{ parameters.ubuntu2204Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
