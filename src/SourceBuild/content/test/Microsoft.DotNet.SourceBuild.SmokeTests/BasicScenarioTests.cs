@@ -29,7 +29,16 @@ public class BasicScenarioTests : SmokeTests
     {
         foreach (DotNetLanguage language in Enum.GetValues<DotNetLanguage>())
         {
-            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | DotNetActions.PublishR2R);
+            // Exclude R2R tests on Mono
+            // TODO: Remove this special case when https://github.com/dotnet/runtime/issues/88419 is fixed
+            if (Config.UsesMonoRuntime)
+            {
+                yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex);
+            }
+            else
+            {
+                yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | DotNetActions.PublishR2R);
+            }
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.ClassLib, DotNetActions.Build | DotNetActions.Publish);
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.XUnit,    DotNetActions.Test);
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.NUnit,    DotNetActions.Test);
