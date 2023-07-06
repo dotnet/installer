@@ -29,8 +29,7 @@ public class BasicScenarioTests : SmokeTests
     {
         foreach (DotNetLanguage language in Enum.GetValues<DotNetLanguage>())
         {
-            // Exclude R2R tests on Mono
-            // TODO: Remove this special case when https://github.com/dotnet/runtime/issues/88419 is fixed
+            // R2R is not supported on Mono (see https://github.com/dotnet/runtime/issues/88419#issuecomment-1623762676)
             if (Config.UsesMonoRuntime)
             {
                 yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex);
