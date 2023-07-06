@@ -39,7 +39,7 @@ variables:
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
   - name: _InternalRuntimeDownloadArgs
-    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal 
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 
@@ -377,10 +377,11 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
 
-  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-      parameters:
-        dependsOn: Source_Build_Create_Tarball
+  # For .NET 6.0, source-build only supports 6.0.1xx.  Disable tarball build validation in all other branches.
+  # - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
+  #   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+  #     parameters:
+  #       dependsOn: Source_Build_Create_Tarball
 
   # https://github.com/dotnet/core-sdk/issues/248
   # - template: /eng/build.yml
