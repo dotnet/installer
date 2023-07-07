@@ -29,15 +29,9 @@ public class BasicScenarioTests : SmokeTests
     {
         foreach (DotNetLanguage language in Enum.GetValues<DotNetLanguage>())
         {
-            // R2R is not supported on Mono (see https://github.com/dotnet/runtime/issues/88419#issuecomment-1623762676)
-            if (Config.UsesMonoRuntime)
-            {
-                yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex);
-            }
-            else
-            {
-                yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,  DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | DotNetActions.PublishR2R);
-            }
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.Console,
+                // R2R is not supported on Mono (see https://github.com/dotnet/runtime/issues/88419#issuecomment-1623762676)
+                DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | (Config.UsesMonoRuntime ? DotNetActions.None : DotNetActions.PublishR2R));
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.ClassLib, DotNetActions.Build | DotNetActions.Publish);
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.XUnit,    DotNetActions.Test);
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.NUnit,    DotNetActions.Test);
