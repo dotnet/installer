@@ -20,7 +20,6 @@ internal static class Config
     public const string TargetRidEnv = "SMOKE_TESTS_TARGET_RID";
     public const string WarnSdkContentDiffsEnv = "SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS";
     public const string RunningInCIEnv = "SMOKE_TESTS_RUNNING_IN_CI";
-    public const string UsesMonoRuntimeEnv = "SMOKE_TESTS_USES_MONO_RUNTIME";
 
     public static string DotNetDirectory { get; } =
         Environment.GetEnvironmentVariable(DotNetDirectoryEnv) ?? Path.Combine(Directory.GetCurrentDirectory(), ".dotnet");
@@ -37,8 +36,6 @@ internal static class Config
     public static string TargetArchitecture { get; } = TargetRid.Split('-')[1];
     public static bool WarnOnSdkContentDiffs { get; } =
         bool.TryParse(Environment.GetEnvironmentVariable(WarnSdkContentDiffsEnv), out bool excludeOnlineTests) && excludeOnlineTests;
-    public static bool UsesMonoRuntime { get; } =
-        bool.TryParse(Environment.GetEnvironmentVariable(UsesMonoRuntimeEnv), out bool usesMonoRuntime) && usesMonoRuntime;
 
     // Indicates whether the tests are being run in the context of a CI pipeline
     public static bool RunningInCI { get; } =
