@@ -38,6 +38,11 @@ internal static class ExecuteHelper
         // dotnet commands.  Clear these to avoid side effects.
         foreach (string key in process.StartInfo.Environment.Keys.Where(key => key != "HOME").ToList())
         {
+            Console.WriteLine($"Would have removed: {key}={process.StartInfo.Environment[key]}");
+        }
+        
+        foreach (string key in process.StartInfo.Environment.Keys.Where(key => key.StartsWith("DOTNET_")).ToList())
+        {
             process.StartInfo.Environment.Remove(key);
         }
 
