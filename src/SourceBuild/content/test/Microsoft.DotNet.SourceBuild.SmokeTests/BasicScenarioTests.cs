@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Text.Json.Nodes;
 using Xunit;
 using Xunit.Abstractions;
