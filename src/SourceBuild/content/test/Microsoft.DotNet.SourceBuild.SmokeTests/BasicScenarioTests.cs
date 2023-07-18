@@ -4,7 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Text.Json.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,9 +39,35 @@ public class BasicScenarioTests : SmokeTests
                 // R2R is not supported on Mono (see https://github.com/dotnet/runtime/issues/88419#issuecomment-1623762676)
                 DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex | (helper.IsMonoRuntime ? DotNetActions.None : DotNetActions.PublishR2R));
             yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.ClassLib, DotNetActions.Build | DotNetActions.Publish);
-            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.XUnit,    DotNetActions.Test);
-            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.NUnit,    DotNetActions.Test);
-            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.MSTest,   DotNetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.XUnit, DotNetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.NUnit, DotNetActions.Test);
+            yield return new(nameof(BasicScenarioTests), language, DotNetTemplate.MSTest, DotNetActions.Test);
         }
+
+        yield return new(nameof(BasicScenarioTests), DotNetLanguage.CSharp, DotNetTemplate.WebApp, DotNetActions.PublishSelfContained, VerifyRuntimePacksForSelfContained);
+    }
+
+    private static void VerifyRuntimePacksForSelfContained(string projectPath)
+    {   
+        string projNugetCachePath = Path.Combine(projectPath, "obj", "project.nuget.cache");
+        JsonNode? projNugetCache = JsonNode.Parse(File.ReadAllText(projNugetCachePath));
+
+        string failMessage = "Runtime packs were retrieved from NuGet instead of the SDK";
+        string? restoredPackageFiles = projNugetCache?["expectedPackageFiles"]?.ToString();
+
+        if ( restoredPackageFiles != null)
+        {
+            Assert.True("[]" == restoredPackageFiles, failMessage);
+        } else
+        {
+            throw new NugetCacheParseException();
+        }
+    }
+
+    private class NugetCacheParseException: Exception 
+    {
+        private static readonly string _errorMessage = "Failed to parse project.nuget.cache";
+
+        public NugetCacheParseException(): base(_errorMessage) { }
     }
 }

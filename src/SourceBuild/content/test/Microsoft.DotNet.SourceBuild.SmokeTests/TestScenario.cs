@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.IO;
+
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class TestScenario
@@ -12,12 +15,15 @@ public class TestScenario
     public string ScenarioName { get; }
     public DotNetTemplate Template { get; }
 
-    public TestScenario(string scenarioName, DotNetLanguage language, DotNetTemplate template, DotNetActions commands = DotNetActions.None)
+    private Action<string>? Validate;
+
+    public TestScenario(string scenarioName, DotNetLanguage language, DotNetTemplate template, DotNetActions commands = DotNetActions.None, Action<string>? validate = null)
     {
         ScenarioName = scenarioName;
         Template = template;
         Language = language;
         Commands = commands;
+        Validate = validate;
     }
 
     internal void Execute(DotNetHelper dotNetHelper)
@@ -46,6 +52,10 @@ public class TestScenario
         {
             dotNetHelper.ExecutePublish(projectName, Template);
         }
+        if (Commands.HasFlag(DotNetActions.PublishSelfContained))
+        {
+            dotNetHelper.ExecutePublish(projectName, Template, selfContained: true, rid: Config.TargetRid);
+        }
         if (Commands.HasFlag(DotNetActions.PublishComplex))
         {
             dotNetHelper.ExecutePublish(projectName, Template, selfContained: false);
@@ -60,5 +70,8 @@ public class TestScenario
         {
             dotNetHelper.ExecuteTest(projectName);
         }
+
+        string projectPath = Path.Combine(DotNetHelper.ProjectsDirectory, projectName);
+        Validate?.Invoke(projectPath);
     }
 }

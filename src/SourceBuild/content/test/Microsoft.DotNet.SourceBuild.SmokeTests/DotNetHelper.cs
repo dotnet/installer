@@ -168,7 +168,7 @@ internal class DotNetHelper
         return projectDirectory;
     }
 
-    public void ExecutePublish(string projectName, DotNetTemplate template, bool? selfContained = null, string? rid = null, bool trimmed = false, bool readyToRun = false, string customOptions = "")
+    public void ExecutePublish(string projectName, DotNetTemplate template, bool? selfContained = null, string? rid = null, bool trimmed = false, bool readyToRun = false)
     {
         string options = string.Empty;
         string binlogDifferentiator = string.Empty;
@@ -193,10 +193,6 @@ internal class DotNetHelper
                 {
                     options += " /p:PublishReadyToRun=true";
                     binlogDifferentiator += "-R2R";
-                }
-                if (!string.IsNullOrEmpty(customOptions))
-                {
-                    options += $" {customOptions}";
                 }
             }
         }
