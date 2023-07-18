@@ -14,8 +14,7 @@ public class TestScenario
     public bool NoHttps { get; set; } = Config.TargetRid.Contains("osx");
     public string ScenarioName { get; }
     public DotNetTemplate Template { get; }
-
-    private Action<string>? Validate;
+    public Action<string>? Validate { get; }
 
     public TestScenario(string scenarioName, DotNetLanguage language, DotNetTemplate template, DotNetActions commands = DotNetActions.None, Action<string>? validate = null)
     {
