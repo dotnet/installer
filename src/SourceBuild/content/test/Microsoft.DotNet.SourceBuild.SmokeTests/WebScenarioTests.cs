@@ -40,6 +40,7 @@ public class WebScenarioTests : SmokeTests
         // TODO: Remove once https://github.com/dotnet/runtime/pull/87518 flows to the public feeds.  Note, the smoke-tests pull Microsoft.Extensions.DependencyModel
         // from a public feed - not a source build feed.
         yield return new(nameof(WebScenarioTests), DotNetLanguage.CSharp, DotNetTemplate.Mvc,           DotNetActions.Build | DotNetActions.Run | DotNetActions.Publish) { NoHttps = true };
+
         yield return new(nameof(WebScenarioTests), DotNetLanguage.CSharp, DotNetTemplate.Razor,         DotNetActions.Build | DotNetActions.Run | DotNetActions.Publish);
         yield return new(nameof(WebScenarioTests), DotNetLanguage.CSharp, DotNetTemplate.BlazorWasm,    DotNetActions.Build | DotNetActions.Run | DotNetActions.Publish);
         yield return new(nameof(WebScenarioTests), DotNetLanguage.CSharp, DotNetTemplate.WebApp,        DotNetActions.PublishSelfContained, VerifyRuntimePacksForSelfContained);
