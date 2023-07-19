@@ -10,7 +10,8 @@ If the patch would be applied in source-build-externals directly, the change wou
 the inner source-build (i.e. the package produced), while the VMR entry for it would still be
 affected.
 
-This can be removed once a new release version of the package is available and used by the .NET repos.
+This can be removed once a new release version of the package is available and used by the .NET repos:
+https://github.com/microsoft/ApplicationInsights-dotnet/issues/2792
 ---
  src/application-insights/LOGGING/test/Shared/CustomTelemetryChannel.cs | 1 -
  1 file changed, 1 deletion(-)
