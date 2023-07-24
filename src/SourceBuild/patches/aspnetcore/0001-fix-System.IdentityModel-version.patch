@@ -1,4 +1,4 @@
-From ee7a37e0e470dc3e926d13d8532a56cfd66763b2 Mon Sep 17 00:00:00 2001
+From d61eb70f4364702f8eff969c708541734ae62603 Mon Sep 17 00:00:00 2001
 From: Oleksandr Didyk <odidyk@microsoft.com>
 Date: Mon, 24 Jul 2023 11:05:43 +0000
 Subject: [PATCH] fix System.IdentityModel version
@@ -9,7 +9,7 @@ Backport: https://github.com/dotnet/aspnetcore/issues/49596
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Baseline.Designer.props b/eng/Baseline.Designer.props
-index c9d8dfddfc..109cd4ec04 100644
+index c9d8dfddfc..e2ee9d0d1b 100644
 --- a/eng/Baseline.Designer.props
 +++ b/eng/Baseline.Designer.props
 @@ -137,7 +137,9 @@
@@ -17,8 +17,8 @@ index c9d8dfddfc..109cd4ec04 100644
    <ItemGroup Condition=" '$(PackageId)' == 'Microsoft.AspNetCore.Authentication.WsFederation' AND ('$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)' OR '$(TargetFramework)' == 'net7.0') ">
      <BaselinePackageReference Include="Microsoft.IdentityModel.Protocols.WsFederation" Version="[6.15.1, )" />
 -    <BaselinePackageReference Include="System.IdentityModel.Tokens.Jwt" Version="[6.21.0, )" />
-+    // In source-build context this version is coming from source-build-externals and must be set to 6.21.0
-+    // Any update that is not synced with source-build-externals can cause product build failures.
++    <!-- In source-build context this version is coming from source-build-externals and must be set to 6.21.0
++         Any update that is not synced with source-build-externals can cause product build failures -->
 +    <BaselinePackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
    </ItemGroup>
    <!-- Package: Microsoft.AspNetCore.Authorization-->
