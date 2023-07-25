@@ -43,7 +43,7 @@ namespace Microsoft.DotNet.Cli.Build
         {
             string sourceFolder = Path.Combine(MSBuildExtensionsLayoutDirectory, relativeSourcePath);
             var files = Directory.GetFiles(sourceFolder)
-                            .Where(f => !Path.GetExtension(f).Equals(".pdb", StringComparison.OrdinalIgnoreCase))
+                            .Where(f => !Path.GetExtension(f).Equals(".pdb", StringComparison.OrdinalIgnoreCase) && !Path.GetExtension(f).Equals(".swr", StringComparison.OrdinalIgnoreCase))
                             .ToList();
             if (files.Any(f => !Path.GetFileName(f).Equals("_._")))
             {
@@ -53,7 +53,7 @@ namespace Microsoft.DotNet.Cli.Build
 
                 foreach (var file in files)
                 {
-                    sb.Append(@"  file source=""!(bindpath.sources)\Redist\Common\NetCoreSDK\MSBuildExtensions\");
+                    sb.Append(@"  file source=""$(PkgVS_Redist_Common_Net_Core_SDK_MSBuildExtensions)\");
                     sb.Append(Path.Combine(relativeSourcePath, Path.GetFileName(file)));
                     sb.AppendLine("\"");
                 }

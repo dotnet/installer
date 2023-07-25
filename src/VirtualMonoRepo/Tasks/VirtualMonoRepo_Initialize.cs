@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Build.Framework;
-using Microsoft.DotNet.DarcLib;
 using Microsoft.DotNet.DarcLib.Helpers;
 using Microsoft.DotNet.DarcLib.VirtualMonoRepo;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +28,9 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
     public string Repository { get; set; }
 
     [Required]
+    public string SourceMappingsPath { get; set; }
+
+    [Required]
     public string VmrPath { get; set; }
 
     [Required]
@@ -37,6 +39,12 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
     public string Revision { get; set; }
 
     public string PackageVersion { get; set; }
+
+    public string InstallerPath { get; set; }
+
+    public string ReadmeTemplatePath { get; set; }
+
+    public string TpnTemplatePath { get; set; }
 
     public bool Recursive { get; set; }
 
@@ -52,8 +60,21 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
         VmrPath = Path.GetFullPath(VmrPath);
         TmpPath = Path.GetFullPath(TmpPath);
 
+        var additionalRemotes = InstallerPath == null
+            ? Array.Empty<AdditionalRemote>()
+            : new[] { new AdditionalRemote("installer", InstallerPath) };
+
         var vmrInitializer = _serviceProvider.Value.GetRequiredService<IVmrInitializer>();
-        await vmrInitializer.InitializeRepository(Repository, Revision, PackageVersion, Recursive, _cancellationToken.Token);
+        await vmrInitializer.InitializeRepository(
+            Repository,
+            Revision,
+            PackageVersion,
+            Recursive,
+            new NativePath(SourceMappingsPath),
+            additionalRemotes,
+            ReadmeTemplatePath,
+            TpnTemplatePath,
+            _cancellationToken.Token);
         return true;
     }
 
@@ -61,7 +82,7 @@ public class VirtualMonoRepo_Initialize : Build.Utilities.Task, ICancelableTask
 
     private IServiceProvider CreateServiceProvider() => new ServiceCollection()
         .AddLogging(b => b.AddConsole().AddFilter(l => l >= LogLevel.Information))
-        .AddSingleton<IRemoteFactory>(sp => ActivatorUtilities.CreateInstance<RemoteFactory>(sp, TmpPath))
-        .AddVmrManagers("git", sp => new VmrInfo(VmrPath, TmpPath))
+        .AddTransient<GitFileManagerFactory>()
+        .AddVmrManagers(sp => sp.GetRequiredService<GitFileManagerFactory>(), "git", VmrPath, TmpPath, null, null)
         .BuildServiceProvider();
 }

@@ -150,8 +150,35 @@
     <Variable Name="ASPNETCOREVERSION" Type="string" Value="$(var.AspNetCoreVersion)" bal:Overridable="no" />
     <Variable Name="WINFORMSANDWPFVERSION" Type="string" Value="$(var.WinFormsAndWpfVersion)" bal:Overridable="no" />
     <Variable Name="DOTNETHOMESIMILARITYCHECKOVERRIDE" Type="string" Value="" bal:Overridable="yes" />
+    <Variable Name="VERSIONMAJOR" Type="string" Value="$(var.VersionMajor)" bal:Overridable="no" />
+    <Variable Name="VERSIONMINOR" Type="string" Value="$(var.VersionMinor)" bal:Overridable="no" />
+    <Variable Name="MINIMUMVSVERSION" Type="string" Value="$(var.MinimumVSVersion)" bal:Overridable="no" />
       
-      <Chain DisableSystemRestore="yes" ParallelCache="yes">
+    <Chain DisableSystemRestore="yes" ParallelCache="yes">
+      
+      <!-- 
+        The finalizer is not an actual installation package. We "detect" the EXE
+        based on the action the bundle is performing to ensure that it runs the uninstall
+        command only when the bundle is being removed. The package is always installable because the bundle
+        will remove the package (execute its UninstallCommand) if it is not installable when then bundle is 
+        being installed.
+
+        The finalizer is first in the chain to ensure it executes last during an uninstall. When the 
+        SDK is upgraded, the old SDK will be removed before the finalizer executes. This ensures that the
+        finalizer detects the new SDK and does nothing because the feature band matches.
+
+        For an install+uninstall scenario, because the SDK MSI is removed prior to the finalizer, it will
+        detect that there are no matching feature bands and then clean up workloads associated with
+        the feature band.
+      -->
+      <ExePackage SourceFile="$(var.FinalizerExeSourcePath)"
+                  Cache="always"
+                  DetectCondition="WixBundleAction >= 3"
+                  Id="Finalizer"
+                  InstallCondition="WixBundleAction >= 4"
+                  UninstallCommand="&quot;[WixBundleLog_Finalizer]&quot; $(var.NugetVersion) $(var.Platform)"
+                  Vital="no" />
+
       <MsiPackage SourceFile="$(var.SharedFXMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
@@ -169,9 +196,6 @@
       </MsiPackage>
       <?if $(var.Platform)=x86 or $(var.Platform)=x64?>
       <MsiPackage SourceFile="$(var.AlternateNetCoreAppHostPackMsiSourcePath)">
-        <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
-      </MsiPackage>
-      <MsiPackage SourceFile="$(var.ArmNetCoreAppHostPackMsiSourcePath)">
         <MsiProperty Name="DOTNETHOME" Value="[DOTNETHOME]" />
       </MsiPackage>
       <MsiPackage SourceFile="$(var.Arm64NetCoreAppHostPackMsiSourcePath)">
@@ -208,20 +232,7 @@
         <PackageGroupRef Id="PG_AspNetCoreSharedFramework_arm64"/>
       <?endif?>
 
-      <!-- 
-        The finalizer is not an actual installation package. We "detect" the EXE
-        based on the action the bundle is performing to ensure that it runs the uninstall
-        command only when the bundle is being removed. The package is always installable because the bundle
-        will remove (execute the uninstall command) the package if it is not installable when then bundle is 
-        being installed.
-      -->
-      <ExePackage SourceFile="$(var.FinalizerExeSourcePath)"
-                  Cache="always"
-                  DetectCondition="WixBundleAction >= 3"
-                  Id="Finalizer"
-                  InstallCondition="WixBundleAction >= 4"
-                  UninstallCommand="&quot;[WixBundleLog_Finalizer]&quot; $(var.NugetVersion) $(var.Platform)"
-                  Vital="no" />
+      
     </Chain>
   </Bundle>
 

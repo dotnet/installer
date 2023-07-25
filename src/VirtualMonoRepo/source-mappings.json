@@ -10,18 +10,24 @@
 {
     // Location within the VMR where the source-build patches are stored
     // These patches are applied on top of the code synchronized into the VMR
-    "patchesPath": "src/installer/src/SourceBuild/tarball/patches",
+    "patchesPath": "src/installer/src/SourceBuild/patches",
+
+    "sourceMappingsPath": "src/installer/src/VirtualMonoRepo/source-mappings.json",
 
     // Some files are copied outside of the src/ directory into other locations
     // When files in the source paths are changed, they are automatically synchronized too
     "additionalMappings": [
         {
-            "source": "src/installer/src/SourceBuild/tarball/content",
+            "source": "src/installer/src/SourceBuild/content",
             "destination": ""
         },
         {
             "source": "src/installer/eng/common",
             "destination": "eng/common"
+        },
+        {
+            "source": "src/installer/src/VirtualMonoRepo/source-mappings.json",
+            "destination": "src"
         }
     ],
 
@@ -46,7 +52,12 @@
     "mappings": [
         {
             "name": "arcade",
-            "defaultRemote": "https://github.com/dotnet/arcade"
+            "defaultRemote": "https://github.com/dotnet/arcade",
+            "exclude": [
+                "src/Microsoft.DotNet.SignTool.Tests/*.mpack",
+                "src/Microsoft.DotNet.SignTool.Tests/*.msi",
+                "src/Microsoft.DotNet.SignTool.Tests/*.vsix"
+            ]
         },
         {
             "name": "aspnetcore",
@@ -54,8 +65,13 @@
             "exclude": [
                 "src/submodules/MessagePack-CSharp/**/*.dll",
                 "**/samples/**/jquery-validation-unobtrusive/.bower.json",
-                "**/samples/**/jquery-validation-unobtrusive/*.js"
+                "**/samples/**/jquery-validation-unobtrusive/*.js",
+                "src/SignalR/clients/java/signalr/gradle/wrapper/gradle-wrapper.jar"
             ]
+        },
+        {
+            "name": "cecil",
+            "defaultRemote": "https://github.com/dotnet/cecil"
         },
         {
             "name": "command-line-api",
@@ -70,6 +86,10 @@
             "defaultRemote": "https://github.com/dotnet/diagnostics"
         },
         {
+            "name": "emsdk",
+            "defaultRemote": "https://github.com/dotnet/emsdk"
+        },
+        {
             "name": "format",
             "defaultRemote": "https://github.com/dotnet/format"
         },
@@ -82,17 +102,7 @@
             "defaultRemote": "https://github.com/dotnet/installer",
             "exclude": [
                 // We don't need the tarball content in the VMR again, it's already copied in the root
-                "src/SourceBuild/tarball/content/**/*"
-            ]
-        },
-        {
-            "name": "linker",
-            "defaultRemote": "https://github.com/dotnet/linker",
-            "exclude": [
-                "external/cecil/**/*.dll",
-                "external/cecil/**/*.exe",
-                "external/cecil/**/*.pdb",
-                "external/cecil/**/*.mdb"
+                "src/SourceBuild/content/**/*"
             ]
         },
         {
@@ -102,11 +112,14 @@
         {
             "name": "nuget-client",
             "defaultRemote": "https://github.com/NuGet/NuGet.Client",
-            "defaultRef": "dev"
+            "defaultRef": "dev",
+            "exclude":[
+                "src/NuGet.Clients/NuGet.VisualStudio.Client"
+            ]
         },
         {
-            "name": "razor-compiler",
-            "defaultRemote": "https://github.com/dotnet/razor-compiler"
+            "name": "razor",
+            "defaultRemote": "https://github.com/dotnet/razor"
         },
         {
             "name": "roslyn",
@@ -131,7 +144,9 @@
                 "src/humanizer/samples/**/*.js",
                 "src/application-insights/**/*.exe",
                 "src/application-insights/**/*.dll",
-                "src/application-insights/**/*.zip"
+                "src/application-insights/**/*.zip",
+                "src/application-insights/**/NuGet.config",
+                "src/newtonsoft-json/**/NuGet.Config"
             ]
         },
         {

@@ -1,30 +1,28 @@
 name: dotnet-sdk
-version: 7.0.100-preview.1.22110.4
+version: 7.0.304
 summary: Cross-Platform .NET Core SDK
 description: |
   .NET Core SDK. https://dot.net/core.
 
+architectures:
+  - build-on: amd64
+    run-on: amd64
+
 grade: stable
 confinement: classic
-
-apps:
-  dotnet:
-    command: dotnet
-
-base: core18
+base: core20
 
 parts:
   dotnet-sdk:
       plugin: dump
-      source: https://download.visualstudio.microsoft.com/download/pr/1af9d3c3-a20e-400c-abe5-3d80dec7b63b/803f8dc5cf21fb28245aba71a7fdbc05/dotnet-sdk-7.0.100-preview.1.22110.4-linux-x64.tar.gz
-      source-checksum: sha512/54488a911172f059e3823d6bf52e1fa87305eb09e84d97f81a40e0815fc8a73a480b149023283f557a672ef0341f022b8ca16ebec92264ee16a56fac8f35e2e2
+      source: https://download.visualstudio.microsoft.com/download/pr/9c86d7b4-acb2-4be4-8a89-d13bc3c3f28f/1d044c7c29df018e8f2837bb343e8a84/dotnet-sdk-7.0.304-linux-x64.tar.gz
+      source-checksum: sha512/f4b7d0cde432bd37f445363b3937ad483e5006794886941e43124de051475925b3cd11313b73d2cae481ee9b8f131394df0873451f6088ffdbe73f150b1ed727
       stage-packages:
-      - libicu60
-      - libc6
+      - libicu66
       - libgcc1
       - libstdc++6
-      - libssl1.0.0
-      - libcurl3
+      - libssl1.1
+      - libcurl4
       - libgssapi-krb5-2
       - zlib1g
       - lldb
@@ -36,3 +34,9 @@ parts:
   runtime-wrapper:
       plugin: dump
       source: .
+
+apps:
+  dotnet:
+    command: dotnet
+
+
