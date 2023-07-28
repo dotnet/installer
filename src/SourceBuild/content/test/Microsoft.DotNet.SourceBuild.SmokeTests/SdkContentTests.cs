@@ -45,7 +45,7 @@ public class SdkContentTests : SmokeTests
     }
 
     [SkippableFact(new[] { Config.MsftSdkTarballPathEnv, Config.SdkTarballPathEnv }, skipOnNullOrWhiteSpace: true)]
-    public void CompareAssemblyVersions()
+    public void CompareMsftToSbAssemblyVersions()
     {
         Assert.NotNull(Config.MsftSdkTarballPath);
         Assert.NotNull(Config.SdkTarballPath);
@@ -178,22 +178,14 @@ public class SdkContentTests : SmokeTests
             if (fileExt.Equals(".dll", StringComparison.OrdinalIgnoreCase) ||
                 fileExt.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
-                try
-                {
-                    AssemblyName assemblyName = AssemblyName.GetAssemblyName(file);
-                    string relativePath = Path.GetRelativePath(sbSdkPath, file);
-                    string normalizedPath = BaselineHelper.RemoveVersions(relativePath);
+                AssemblyName assemblyName = AssemblyName.GetAssemblyName(file);
+                string relativePath = Path.GetRelativePath(sbSdkPath, file);
+                string normalizedPath = BaselineHelper.RemoveVersions(relativePath);
 
-                    if (!IsFileExcluded(normalizedPath, exclusionFilters))
-                    {
-                        sbSdkAssemblyVersions.Add(normalizedPath, GetVersion(assemblyName));
-                    }
-                }
-                catch (BadImageFormatException)
+                if (!IsFileExcluded(normalizedPath, exclusionFilters))
                 {
-                    // Ignore non-.NET files
+                    sbSdkAssemblyVersions.Add(normalizedPath, GetVersion(assemblyName));
                 }
-
             }
         }
         return sbSdkAssemblyVersions;
@@ -221,20 +213,15 @@ public class SdkContentTests : SmokeTests
     private static bool IsFileExcluded(string filePath, IEnumerable<string> exclusions) =>
         exclusions.Any(p => FileSystemName.MatchesSimpleExpression(p, filePath));
 
-    private static IEnumerable<string> GetSdkDiffExclusionFilters(string sdkType)
-    {
-        string exclusionsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), "SdkFileDiffExclusions.txt");
-        return ParseExclusionsFile(exclusionsFilePath, sdkType);
-    }
+    private static IEnumerable<string> GetSdkDiffExclusionFilters(string sdkType) =>
+        ParseExclusionsFile("SdkFileDiffExclusions.txt", sdkType);
 
-    private static IEnumerable<string> GetSdkAssemblyVersionDiffExclusionFilters()
-    {
-        string exclusionsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), "SdkAssemblyVersionDiffExclusions.txt");
-        return ParseExclusionsFile(exclusionsFilePath);
-    }
+    private static IEnumerable<string> GetSdkAssemblyVersionDiffExclusionFilters() =>
+        ParseExclusionsFile("SdkAssemblyVersionDiffExclusions.txt");
 
-    private static IEnumerable<string> ParseExclusionsFile(string exclusionsFilePath, string? prefix = null)
+    private static IEnumerable<string> ParseExclusionsFile(string exclusionsFileName, string? prefix = null)
     {
+        string exclusionsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), exclusionsFileName);
         int prefixSkip = prefix?.Length + 1 ?? 0;
         return File.ReadAllLines(exclusionsFilePath)
             // process only specific sdk exclusions if a prefix is provided
