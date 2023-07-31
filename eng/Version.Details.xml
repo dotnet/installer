@@ -81,6 +81,23 @@
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>f107566c2ef1c9dd648b04509249838d656ac72b</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.100-rc.1.23381.2">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="8.0.100-rc.1.23381.2">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk" Version="8.0.100-rc.1.23381.2">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
+      <SourceBuild RepoName="sdk" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.100-rc.1.23381.2">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
+    </Dependency>
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4.22406.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>0385265f4d0b6413d64aea0223172366a9b9858c</Sha>
@@ -101,23 +118,6 @@
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.8.0" Version="1.1.0-rc.23381.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>0b5cd2fb118d04da9b8719f681d215fab1bab7a5</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.100-rc.1.23381.2">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="8.0.100-rc.1.23381.2">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="8.0.100-rc.1.23381.2">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
-      <SourceBuild RepoName="sdk" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.100-rc.1.23381.2">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>dff005cfa5943f677858ec3d6e29b27574e25a12</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="8.0.0-rc.1.23379.1" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
