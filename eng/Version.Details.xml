@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
+    <!--
+      Source-build uses transitive dependency resolution to determine correct build SHA of all product contributing repos.
+      The order of dependencies is important and should not be modified without approval from dotnet/source-build-internal.
+    -->
     <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="8.0.0-rc.1.23380.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>641c98fca050b954af9aa9b5dc5dfd0ca7f81730</Sha>
