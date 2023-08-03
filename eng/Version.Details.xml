@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
+    <!--
+      Source-build uses transitive dependency resolution to determine correct build SHA of all product contributing repos.
+      The order of dependencies is important and should not be modified without approval from dotnet/source-build-internal.
+    -->
     <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="8.0.0-rc.1.23402.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>b296c066b7e0ff30bdcfa6d97710cbc8c52e0cde</Sha>
@@ -81,6 +85,23 @@
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>6a0dc6453864aecef674eb2dda5efb93237da8ab</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.100-rc.1.23402.45">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="8.0.100-rc.1.23402.45">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk" Version="8.0.100-rc.1.23402.45">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
+      <SourceBuild RepoName="sdk" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.100-rc.1.23402.45">
+      <Uri>https://github.com/dotnet/sdk</Uri>
+      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
+    </Dependency>
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4.22406.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>0385265f4d0b6413d64aea0223172366a9b9858c</Sha>
@@ -101,23 +122,6 @@
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.8.0" Version="1.1.0-rc.23381.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>0b5cd2fb118d04da9b8719f681d215fab1bab7a5</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.100-rc.1.23402.45">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="8.0.100-rc.1.23402.45">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="8.0.100-rc.1.23402.45">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
-      <SourceBuild RepoName="sdk" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.100-rc.1.23402.45">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>fbbf32eab378af668ca264cff6c8e0358d25d1d3</Sha>
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="8.0.0-rc.1.23401.3" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
@@ -231,11 +235,6 @@
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
       <Sha>b5368f118ae0b04a7ea1c08c41ba5df3494ff7c6</Sha>
       <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
-    </Dependency>
-    <Dependency Name="Microsoft.SourceLink.GitHub" Version="8.0.0-beta.23361.2" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
-      <Uri>https://github.com/dotnet/sourcelink</Uri>
-      <Sha>d2e046aec870a5a7601cc51c5607f34463cc2d42</Sha>
-      <SourceBuild RepoName="sourcelink" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.DotNet.XliffTasks" Version="1.0.0-beta.23374.1" CoherentParentDependency="Microsoft.DotNet.Arcade.Sdk">
       <Uri>https://github.com/dotnet/xliff-tasks</Uri>
