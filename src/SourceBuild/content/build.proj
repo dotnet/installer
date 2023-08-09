@@ -34,6 +34,27 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
+  <!-- Copies the output assets of the builds to the output path. -->
+  <Target Name="CopyBinariesToBinFolder"
+          AfterTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)CopyBinariesToBinFolder.complete">
+    <ItemGroup>
+      <_builtSymbolPackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
+      <_builtSymbolPackages>
+        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
+      </_builtSymbolPackages>
+      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
+      <BinariesToCopy Include="@(_builtSymbolPackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BinariesToCopy)"
+          DestinationFolder="$(OutputPath)"
+          Condition="'@(BinariesToCopy)'!=''" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)CopyBinariesToBinFolder.complete" Overwrite="true" />
+  </Target>
+
   <!-- After building, generate a prebuilt usage report. -->
   <Target Name="ReportPrebuiltUsage"
           AfterTargets="Build"
