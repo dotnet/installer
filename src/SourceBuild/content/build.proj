@@ -40,12 +40,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)CopyBinariesToBinFolder.complete">
     <ItemGroup>
-      <_builtSymbolPackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
-      <_builtSymbolPackages>
-        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
-      </_builtSymbolPackages>
       <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
-      <BinariesToCopy Include="@(_builtSymbolPackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
     </ItemGroup>
 
     <Copy SourceFiles="@(BinariesToCopy)"
