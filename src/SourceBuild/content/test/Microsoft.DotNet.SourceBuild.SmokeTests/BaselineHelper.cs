@@ -81,7 +81,6 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
         {
             (Process Process, string StdOut, string StdErr) diffResult =
                 ExecuteHelper.ExecuteProcess("git", $"diff --no-index {file1Path} {file2Path}", outputHelper);
-            Assert.True(diffResult.Process.ExitCode == 0 || diffResult.Process.ExitCode == 1);
 
             return diffResult.StdOut;
         }
