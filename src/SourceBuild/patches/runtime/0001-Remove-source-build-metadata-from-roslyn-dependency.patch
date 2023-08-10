@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Thu, 10 Aug 2023 19:20:49 +0000
+Subject: [PATCH] Remove source build metadata from roslyn dependency
+
+---
+ eng/Version.Details.xml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/eng/Version.Details.xml b/eng/Version.Details.xml
+index 47db2fc7ff2..e5cacca0c9f 100644
+--- a/eng/Version.Details.xml
++++ b/eng/Version.Details.xml
+@@ -365,7 +365,6 @@
+     <Dependency Name="Microsoft.CodeAnalysis" Version="4.8.0-1.23408.8">
+       <Uri>https://github.com/dotnet/roslyn</Uri>
+       <Sha>1fd4ff9d594b227baa3fc0962e2251323311ec19</Sha>
+-      <SourceBuild RepoName="roslyn" ManagedOnly="true" />
+     </Dependency>
+     <Dependency Name="Microsoft.CodeAnalysis.CSharp" Version="4.8.0-1.23408.8">
+       <Uri>https://github.com/dotnet/roslyn</Uri>
