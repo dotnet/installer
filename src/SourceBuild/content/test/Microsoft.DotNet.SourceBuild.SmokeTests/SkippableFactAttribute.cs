@@ -23,6 +23,7 @@ internal class SkippableFactAttribute : FactAttribute
         foreach (string envName in envNames)
         {
             string? envValue = Environment.GetEnvironmentVariable(envName);
+            string? rid = Config.TargetArchitecture;
 
             if (skipOnNullOrWhiteSpace && string.IsNullOrWhiteSpace(envValue))
             {
@@ -32,6 +33,12 @@ internal class SkippableFactAttribute : FactAttribute
             else if (skipOnTrue && bool.TryParse(envValue, out bool boolValue) && boolValue)
             {
                 setSkip($"Skipping because `{envName}` is set to True");
+                break;
+            }
+            // Skip OmniSharp tests for ppc64le and s390x
+            else if (string.Equals(rid,"ppc64le") || string.Equals(rid,"s390x"))
+            {
+                setSkip($"Skipping because arch is `{rid}`");
                 break;
             }
         }
