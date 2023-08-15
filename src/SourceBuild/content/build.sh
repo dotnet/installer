@@ -188,8 +188,18 @@ if [ ! -d "$SCRIPT_ROOT/.git" ]; then
 fi
 
 if [ -d "$CUSTOM_SDK_DIR" ]; then
-  export SDK_VERSION=$("$CUSTOM_SDK_DIR/dotnet" --version)
-  export CLI_ROOT="$CUSTOM_SDK_DIR"
+  # If using a custom SDK directory, we should copy it to a new location.
+  # Building a source-built SDK requires installing a general-use SDK resolver
+  # that will resolve non-source built SDKs (e.g. Windows desktop) as a no-op.
+  # This installation happens in the SdkResolvers directory of the SDK. Avoid
+  # mutating the custom input SDK.
+  # This is not necessary when not using a custom SDK, as we download the SDK to
+  # a custom location already.
+  tempSdkDir=$(mktemp -d)
+  echo "Copying '$CUSTOM_SDK_DIR/*' to '$tempSdkDir' to avoid unwanted mutation"
+  cp -r "$CUSTOM_SDK_DIR/"* "$tempSdkDir/"
+  export SDK_VERSION=$("$tempSdkDir/dotnet" --version)
+  export CLI_ROOT="$tempSdkDir"
   export _InitializeDotNetCli="$CLI_ROOT/dotnet"
   export CustomDotNetSdkDir="$CLI_ROOT"
   echo "Using custom bootstrap SDK from '$CLI_ROOT', version '$SDK_VERSION'"
@@ -260,4 +270,10 @@ else
   "$CLI_ROOT/dotnet" build-server shutdown
 
   "$CLI_ROOT/dotnet" msbuild "$SCRIPT_ROOT/build.proj" -bl:"$SCRIPT_ROOT/artifacts/log/Debug/Build_$LogDateStamp.binlog" -flp:"LogFile=$SCRIPT_ROOT/artifacts/logs/Build_$LogDateStamp.log" ${MSBUILD_ARGUMENTS[@]} "$@"
+fi
+
+# Clean up the temporary SDK if it was used
+if [ -d "$CustomDotNetSdkDir" ]; then
+  echo "Removing temporary bootstrap SDK dir '$CustomDotNetSdkDir'"
+  rm -rf $CustomDotNetSdkDir
 fi
