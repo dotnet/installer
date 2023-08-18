@@ -115,7 +115,7 @@ jobs:
       -clp:v=m
       -e SMOKE_TESTS_MSFT_SDK_TARBALL_PATH=$(MsftSdkTarballPath)
       -e SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath)
-      -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH= 
+      -e SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH=$(SourceBuiltArtifactsPath)
       -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=false
       -e SMOKE_TESTS_RUNNING_IN_CI=true
       -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }}
