@@ -30,7 +30,7 @@ resources:
     type: github
     name: dotnet/dotnet
     endpoint: dotnet
-    ref: $(VmrBranch)
+    ref: ${{ replace(replace(variables['System.PullRequest.TargetBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
 
 stages:
 # You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable
