@@ -37,7 +37,7 @@ stages:
 - ${{ if not(parameters.disableVmrBuild) }}:
   - template: templates/stages/vmr-build.yml
     parameters:
-      vmrBranch: $(VmrBranch)
+      vmrBranch: ${{ variables.VmrBranch }}
       isBuiltFromVmr: false
 
 # In case the VMR Build stage is temporarily disabled, the VMR synchronization step is run to validate
@@ -49,5 +49,5 @@ stages:
     jobs:
     - template: templates/jobs/vmr-synchronization.yml
       parameters:
-        vmrBranch: $(VmrBranch)
+        vmrBranch: ${{ variables.VmrBranch }}
         noPush: true
