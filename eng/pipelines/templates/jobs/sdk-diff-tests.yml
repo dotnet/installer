@@ -80,6 +80,21 @@ jobs:
       allowFailedBuilds: true
       downloadPath: $(Pipeline.Workspace)/Artifacts
       checkDownloadedFiles: true
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Artifacts
+    inputs:
+      buildType: specific
+      buildVersionToDownload: specific
+      project: internal
+      pipeline: $(DOTNET_DOTNET_CI_PIPELINE_ID)
+      buildId: $(DotnetDotnetBuildId)
+      artifact: ${{ parameters.buildName }}_${{ parameters.architecture }}_Artifacts
+      patterns: '**/Private.SourceBuilt.Artifacts.+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*).${{ parameters.targetRid }}.tar.gz' 
+      allowPartiallySucceededBuilds: true
+      allowFailedBuilds: true
+      downloadPath: $(Pipeline.Workspace)/Artifacts
+      checkDownloadedFiles: true
     
   - script: |
       msft_sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
@@ -96,10 +111,18 @@ jobs:
         exit 1
       fi
 
+      artifacts_path=$(find "$(Pipeline.Workspace)/Artifacts" -name "Private.SourceBuilt.Artifacts.*.${{ parameters.targetRid }}.tar.gz" -exec basename {} \;)
+
+      if [[ -z "$artifacts_path" ]]; then
+        echo "Source-build artifacts path does not exist in '$(Pipeline.Workspace)/Artifacts'. The associated build https://dev.azure.com/dnceng/internal/_build/results?buildId=$(DotnetDotnetBuildId) might have failed"
+        exit 1
+      fi
+
       eng/common/build.sh -bl --projects $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --restore
 
       echo "##vso[task.setvariable variable=MsftSdkTarballPath]$(Pipeline.Workspace)/Artifacts/$msft_sdk_tarball_name"
       echo "##vso[task.setvariable variable=SdkTarballPath]$(Pipeline.Workspace)/Artifacts/$sdk_tarball_name"
+      echo "##vso[task.setvariable variable=SourceBuiltArtifactsPath]$(Pipeline.Workspace)/Artifacts/$artifacts_path"
     displayName: Prepare Tests
     workingDirectory: $(Build.SourcesDirectory)
 
