@@ -30,14 +30,14 @@ resources:
     type: github
     name: dotnet/dotnet
     endpoint: dotnet
-    ref: ${{ variables.VmrBranch }}
+    ref: release/8.0.1xx-rc1
 
 stages:
 # You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable
 - ${{ if not(parameters.disableVmrBuild) }}:
   - template: templates/stages/vmr-build.yml
     parameters:
-      vmrBranch: ${{ variables.VmrBranch }}
+      vmrBranch: release/8.0.1xx-rc1
       isBuiltFromVmr: false
 
 # In case the VMR Build stage is temporarily disabled, the VMR synchronization step is run to validate
@@ -49,5 +49,5 @@ stages:
     jobs:
     - template: templates/jobs/vmr-synchronization.yml
       parameters:
-        vmrBranch: ${{ variables.VmrBranch }}
+        vmrBranch: release/8.0.1xx-rc1
         noPush: true
