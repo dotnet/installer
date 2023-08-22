@@ -126,7 +126,7 @@ internal class DotNetHelper
         }
     }
 
-    public static void ConfigureProcess(Process process, string? workingDirectory, bool setPath = false)
+    public static void ConfigureProcess(Process process, string? workingDirectory, bool setPath = true)
     {
         if (workingDirectory != null)
         {
