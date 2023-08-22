@@ -51,51 +51,25 @@ jobs:
     env:
       AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
 
-  - task: DownloadPipelineArtifact@2
-    displayName: Download MSFT SDK
-    inputs:
-      buildType: specific
-      buildVersionToDownload: specific
-      project: internal
-      pipeline: $(INSTALLER_OFFICIAL_CI_PIPELINE_ID)
-      buildId: $(InstallerBuildId)
-      artifact: BlobArtifacts
-      patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz' 
-      allowPartiallySucceededBuilds: true
-      allowFailedBuilds: true
-      downloadPath: $(Pipeline.Workspace)/Artifacts
-      checkDownloadedFiles: true
+  - template: ../steps/download-pipeline-artifact.yml
+    parameters:
+      patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-linux-${{ parameters.architecture }}.tar.gz'
+      displayName: Download MSFT SDK
 
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Source Build SDK
-    inputs:
-      buildType: specific
-      buildVersionToDownload: specific
-      project: internal
-      pipeline: $(DOTNET_DOTNET_CI_PIPELINE_ID)
-      buildId: $(DotnetDotnetBuildId)
-      artifact: ${{ parameters.buildName }}_${{ parameters.architecture }}_Artifacts
+  - template: ../steps/download-vmr-artifact.yml
+    parameters:
+      buildName: ${{ parameters.buildName }}
+      architecture: ${{ parameters.architecture }}
       patterns: '**/dotnet-sdk-+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*)-${{ parameters.targetRid }}.tar.gz' 
-      allowPartiallySucceededBuilds: true
-      allowFailedBuilds: true
-      downloadPath: $(Pipeline.Workspace)/Artifacts
-      checkDownloadedFiles: true
+      displayName: Download Source Build SDK
 
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Artifacts
-    inputs:
-      buildType: specific
-      buildVersionToDownload: specific
-      project: internal
-      pipeline: $(DOTNET_DOTNET_CI_PIPELINE_ID)
-      buildId: $(DotnetDotnetBuildId)
-      artifact: ${{ parameters.buildName }}_${{ parameters.architecture }}_Artifacts
+  - template: ../steps/download-vmr-artifact.yml
+    parameters:
+      buildName: ${{ parameters.buildName }}
+      architecture: ${{ parameters.architecture }}
       patterns: '**/Private.SourceBuilt.Artifacts.+([0-9]).+([0-9]).+([0-9])?(-@(alpha|preview|rc|rtm)*).${{ parameters.targetRid }}.tar.gz' 
-      allowPartiallySucceededBuilds: true
-      allowFailedBuilds: true
-      downloadPath: $(Pipeline.Workspace)/Artifacts
-      checkDownloadedFiles: true
-    
+      displayName: Download Source Built Artifacts
+
   - script: |
       msft_sdk_tarball_name=$(find "$(Pipeline.Workspace)/Artifacts" -name "dotnet-sdk-*-linux-${{ parameters.architecture }}.tar.gz" -exec basename {} \;)
 
