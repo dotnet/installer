@@ -25,7 +25,7 @@ public class OmniSharpTests : SmokeTests
 
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrue: true, skipArchitechtures: new[] { "ppc64le", "s390x" })]
+    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrue: true, skipArchitectures: new[] { "ppc64le", "s390x" })]
     [InlineData(DotNetTemplate.BlazorWasm)]
     [InlineData(DotNetTemplate.ClassLib)]
     [InlineData(DotNetTemplate.Console)]
