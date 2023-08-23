@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using Xunit;
 using System.Linq;
+using Xunit;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
@@ -24,7 +24,6 @@ internal class SkippableFactAttribute : FactAttribute
         foreach (string envName in envNames)
         {
             string? envValue = Environment.GetEnvironmentVariable(envName);
-            string? rid = Config.TargetArchitecture;
 
             if (skipOnNullOrWhiteSpace && string.IsNullOrWhiteSpace(envValue))
             {
@@ -37,12 +36,11 @@ internal class SkippableFactAttribute : FactAttribute
                 break;
             }
         }
-        // Skip OmniSharp tests for ppc64le and s390x
         if (skipArchitectures != null) {
-            string? rid = Config.TargetArchitecture;
-            if (skipArchitectures.Contains(rid))
+            string? arch = Config.TargetArchitecture;
+            if (skipArchitectures.Contains(arch))
             {
-                setSkip($"Skipping because arch is `{rid}`");
+                setSkip($"Skipping because arch is `{arch}`");
             }
         }
     }
