@@ -4,6 +4,7 @@
 
 using System;
 using Xunit;
+using System.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
@@ -12,13 +13,13 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 /// </summary>
 internal class SkippableFactAttribute : FactAttribute
 {
-    public SkippableFactAttribute(string envName, bool skipOnNullOrWhiteSpace = false, bool skipOnTrue = false) =>
-        CheckEnvs(skipOnNullOrWhiteSpace, skipOnTrue, (skip) => Skip = skip, envName);
+    public SkippableFactAttribute(string envName, bool skipOnNullOrWhiteSpace = false, bool skipOnTrue = false, string[] skipArchitectures = null) =>
+        CheckEnvs(skipOnNullOrWhiteSpace, skipOnTrue, skipArchitectures, (skip) => Skip = skip, envName);
 
-    public SkippableFactAttribute(string[] envNames, bool skipOnNullOrWhiteSpace = false, bool skipOnTrue = false) =>
-        CheckEnvs(skipOnNullOrWhiteSpace, skipOnTrue, (skip) => Skip = skip, envNames);
+    public SkippableFactAttribute(string[] envNames, bool skipOnNullOrWhiteSpace = false, bool skipOnTrue = false, string[] skipArchitectures = null) =>
+        CheckEnvs(skipOnNullOrWhiteSpace, skipOnTrue, skipArchitectures, (skip) => Skip = skip, envNames);
 
-    public static void CheckEnvs(bool skipOnNullOrWhiteSpace, bool skipOnTrue, Action<string> setSkip, params string[] envNames)
+    public static void CheckEnvs(bool skipOnNullOrWhiteSpace, bool skipOnTrue, string[] skipArchitectures, Action<string> setSkip, params string[] envNames)
     {
         foreach (string envName in envNames)
         {
@@ -35,11 +36,13 @@ internal class SkippableFactAttribute : FactAttribute
                 setSkip($"Skipping because `{envName}` is set to True");
                 break;
             }
-            // Skip OmniSharp tests for ppc64le and s390x
-            else if (string.Equals(rid,"ppc64le") || string.Equals(rid,"s390x"))
+        }
+        // Skip OmniSharp tests for ppc64le and s390x
+        if (skipArchitectures != null) {
+            string? rid = Config.TargetArchitecture;
+            if (skipArchitectures.Contains(rid))
             {
                 setSkip($"Skipping because arch is `{rid}`");
-                break;
             }
         }
     }
