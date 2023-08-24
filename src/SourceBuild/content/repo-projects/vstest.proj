@@ -6,6 +6,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:SemanticVersioningV1=true</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)\eng\common\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
+    <RepoNoWarns>IDE0090</RepoNoWarns>
   </PropertyGroup>
 
   <ItemGroup>
