@@ -20,7 +20,7 @@ public class DotNetWatchTests : SmokeTests
         bool outputChanged = false;
 
         DotNetHelper.ExecuteCmd(
-            "watch run",
+            "watch run --non-interactive",
             workingDirectory: projectDirectory,
             processConfigCallback: processConfigCallback,
             expectedExitCode: null, // The exit code does not reflect whether or not dotnet watch is working properly
@@ -37,6 +37,12 @@ public class DotNetWatchTests : SmokeTests
 
             process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
+                if (e.Data != null)
+                {
+                    // Emitting the output for diagnostic purposes
+                    OutputHelper.WriteLine("---> " + e.Data);
+                }
+
                 if (e.Data?.Contains(waitingString) ?? false)
                 {
                     if (!fileChanged) {
