@@ -36,6 +36,7 @@ internal class SkippableFactAttribute : FactAttribute
                 break;
             }
         }
+
         if (skipArchitectures != null) {
             string? arch = Config.TargetArchitecture;
             if (skipArchitectures.Contains(arch))
