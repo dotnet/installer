@@ -18,9 +18,6 @@ public class SourcelinkTests : SmokeTests
 {
     private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), "sourcelink");
 
-    private string sourcelinkToolPath;
-    private ConcurrentBag<string> failedFiles = new ConcurrentBag<string>();
-
     public SourcelinkTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     /// <summary>
@@ -35,9 +32,7 @@ public class SourcelinkTests : SmokeTests
         }
         Directory.CreateDirectory(SourcelinkRoot);
 
-        sourcelinkToolPath = GetSourcelinkToolPath();
-
-        ValidateAllFiles(ExtractPackages(GetAllSymbolsPackages()));
+        IList<string> failedFiles = ValidateAllFiles(ExtractPackages(GetAllSymbolsPackages()), GetSourcelinkToolPath());
 
         foreach (string file in failedFiles)
         {
@@ -54,19 +49,21 @@ public class SourcelinkTests : SmokeTests
     /// <returns>Path to sourcelink tool binary.</returns>
     private string GetSourcelinkToolPath()
     {
-        string sourcelinkToolPackageNamePattern = "dotnet-sourcelink*nupkg";
-        string sourcelinkToolBinaryFilenamePattern = "dotnet-sourcelink.dll";
+        const string SourcelinkToolPackageNamePattern = "dotnet-sourcelink*nupkg";
+        const string SourcelinkToolBinaryFilenamePattern = "dotnet-sourcelink.dll";
 
-        string sourcelinkRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "sourcelink-tool")).FullName;
-        Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, sourcelinkRoot, sourcelinkToolPackageNamePattern);
-        string[] files = Directory.GetFiles(sourcelinkRoot, sourcelinkToolPackageNamePattern, SearchOption.AllDirectories);
-        Assert.True(files.Length > 0, "Did not find sourcelink tool package in PSB Artifacts archive");
+        string toolPackageDir = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "sourcelink-tool")).FullName;
+        Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, toolPackageDir, SourcelinkToolPackageNamePattern);
+        string[] files = Directory.GetFiles(toolPackageDir, SourcelinkToolPackageNamePattern, SearchOption.AllDirectories);
+        Assert.False(files.Length > 1, "Unexpected - PSB Artifacts archive should contain only one sourcelink tool package.");
+        Assert.False(files.Length == 0, "Did not find sourcelink tool package in PSB Artifacts archive.");
 
-        string extractedToolPath = Directory.CreateDirectory(Path.Combine(sourcelinkRoot, "extracted")).FullName;
+        string extractedToolPath = Directory.CreateDirectory(Path.Combine(toolPackageDir, "extracted")).FullName;
         Utilities.ExtractNupkg(files[0], extractedToolPath);
 
-        files = Directory.GetFiles(extractedToolPath, sourcelinkToolBinaryFilenamePattern, SearchOption.AllDirectories);
-        Assert.True(files.Length > 0, $"Did not find sourcelink tool binary with expected filename pattern: {sourcelinkToolBinaryFilenamePattern}");
+        files = Directory.GetFiles(extractedToolPath, SourcelinkToolBinaryFilenamePattern, SearchOption.AllDirectories);
+        Assert.False(files.Length > 1, $"Unexpected - found more than one sourcelink tool binary with filename pattern: {SourcelinkToolBinaryFilenamePattern}");
+        Assert.False(files.Length == 0, $"Did not find sourcelink tool binary with expected filename pattern: {SourcelinkToolBinaryFilenamePattern}");
 
         return files[0];
     }
@@ -84,7 +81,8 @@ public class SourcelinkTests : SmokeTests
         // i.e. <repo-root>/artifacts/x64/Release/runtime/dotnet-runtime-symbols-fedora.36-x64-8.0.0-preview.7.23355.7.tar.gz
         string runtimeSymbolsPackageNamePattern = "dotnet-runtime-symbols-*.tar.gz";
         string[] files = Directory.GetFiles(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), runtimeSymbolsPackageNamePattern, SearchOption.AllDirectories);
-        Assert.True(files.Length > 0, "Did not find runtime symbols archive");
+        Assert.False(files.Length > 1, "Unexpected - found more than one runtime symbols archives.");
+        Assert.False(files.Length == 0, "Did not find runtime symbols archive.");
 
         yield return files[0];
     }
@@ -107,9 +105,11 @@ public class SourcelinkTests : SmokeTests
         return symbolsRoot;
     }
 
-    private void ValidateAllFiles(string path)
+    private IList<string> ValidateAllFiles(string path, string sourcelinkToolPath)
     {
         Assert.True(Directory.Exists(path), $"Path, with symbol files to validate, does not exist: {path}");
+
+        var failedFiles = new ConcurrentBag<string>();
 
         IEnumerable<string> allFiles = Directory.GetFiles(path, "*.pdb", SearchOption.AllDirectories);
         Parallel.ForEach(allFiles, file =>
@@ -130,5 +130,7 @@ public class SourcelinkTests : SmokeTests
         });
 
         Assert.True(allFiles.Count() > 0, $"Did not find any symbols for sourcelink verification in {path}");
+
+        return failedFiles.ToList();
     }
 }
