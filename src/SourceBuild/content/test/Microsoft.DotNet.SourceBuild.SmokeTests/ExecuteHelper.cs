@@ -17,11 +17,11 @@ internal static class ExecuteHelper
         string args,
         ITestOutputHelper outputHelper,
         bool logOutput = false,
-        bool logInfo = true,
+        bool excludeInfo = false,
         Action<Process>? configureCallback = null,
         int millisecondTimeout = -1)
     {
-        if (logInfo)
+        if (!excludeInfo)
         {
             outputHelper.WriteLine($"Executing: {fileName} {args}");
         }

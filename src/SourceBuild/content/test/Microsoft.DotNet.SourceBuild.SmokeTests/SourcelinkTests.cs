@@ -16,14 +16,14 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class SourcelinkTests : SmokeTests
 {
-    private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), "sourcelink");
+    private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(SourcelinkTests));
 
     public SourcelinkTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     /// <summary>
     /// Verifies that all symbols have valid sourcelinks.
     /// </summary>
-    [SkippableFact(Config.ExcludeSourcelinkEnv, skipOnTrueEnv: true)]
+    [Fact]
     public void VerifySourcelinks()
     {
         if (Directory.Exists(SourcelinkRoot))
@@ -32,25 +32,29 @@ public class SourcelinkTests : SmokeTests
         }
         Directory.CreateDirectory(SourcelinkRoot);
 
-        IList<string> failedFiles = ValidateAllFiles(ExtractPackages(GetAllSymbolsPackages()), GetSourcelinkToolPath());
+        IList<string> failedFiles = ValidateSymbols(ExtractSymbolsPackages(GetAllSymbolsPackages()), InitializeSourcelinkTool());
 
-        foreach (string file in failedFiles)
+        if (failedFiles.Count > 0)
         {
-            OutputHelper.WriteLine($"Failed sourcelink verification: {file}");
+            OutputHelper.WriteLine($"Sourcelink verification failed for the following files:");
+            foreach (string file in failedFiles)
+            {
+                OutputHelper.WriteLine(file);
+            }
         }
 
         Assert.True(failedFiles.Count == 0);
     }
 
     /// <summary>
-    /// Gets the path to sourcelink binary.
+    /// Initializes sourcelink tool.
     /// Extracts the dotnet-sourcelink tool package from PSB arhive.
     /// </summary>
     /// <returns>Path to sourcelink tool binary.</returns>
-    private string GetSourcelinkToolPath()
+    private string InitializeSourcelinkTool()
     {
         const string SourcelinkToolPackageNamePattern = "dotnet-sourcelink*nupkg";
-        const string SourcelinkToolBinaryFilenamePattern = "dotnet-sourcelink.dll";
+        const string SourcelinkToolBinaryFilename = "dotnet-sourcelink.dll";
 
         string toolPackageDir = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "sourcelink-tool")).FullName;
         Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, toolPackageDir, SourcelinkToolPackageNamePattern);
@@ -61,9 +65,9 @@ public class SourcelinkTests : SmokeTests
         string extractedToolPath = Directory.CreateDirectory(Path.Combine(toolPackageDir, "extracted")).FullName;
         Utilities.ExtractNupkg(files[0], extractedToolPath);
 
-        files = Directory.GetFiles(extractedToolPath, SourcelinkToolBinaryFilenamePattern, SearchOption.AllDirectories);
-        Assert.False(files.Length > 1, $"Unexpected - found more than one sourcelink tool binary with filename pattern: {SourcelinkToolBinaryFilenamePattern}");
-        Assert.False(files.Length == 0, $"Did not find sourcelink tool binary with expected filename pattern: {SourcelinkToolBinaryFilenamePattern}");
+        files = Directory.GetFiles(extractedToolPath, SourcelinkToolBinaryFilename, SearchOption.AllDirectories);
+        Assert.False(files.Length > 1, $"Unexpected - found more than one sourcelink tool binary: {SourcelinkToolBinaryFilename}");
+        Assert.False(files.Length == 0, $"Did not find sourcelink tool binary: {SourcelinkToolBinaryFilename}");
 
         return files[0];
     }
@@ -88,10 +92,10 @@ public class SourcelinkTests : SmokeTests
     }
 
     /// <summary>
-    /// Extracts packages to subdirectories of the common symbols root directory.
+    /// Extracts symbols packages to subdirectories of the common symbols root directory.
     /// </summary>
     /// <returns>Path to common symbols root directory.</returns>
-    private string ExtractPackages(IEnumerable<string> packages)
+    private string ExtractSymbolsPackages(IEnumerable<string> packages)
     {
         string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
 
@@ -105,7 +109,7 @@ public class SourcelinkTests : SmokeTests
         return symbolsRoot;
     }
 
-    private IList<string> ValidateAllFiles(string path, string sourcelinkToolPath)
+    private IList<string> ValidateSymbols(string path, string sourcelinkToolPath)
     {
         Assert.True(Directory.Exists(path), $"Path, with symbol files to validate, does not exist: {path}");
 
@@ -119,7 +123,7 @@ public class SourcelinkTests : SmokeTests
                 $"{sourcelinkToolPath} test --offline {file}",
                 OutputHelper,
                 logOutput: false,
-                logInfo: false, // Do not log process cmd line, as there can be 1,000+
+                excludeInfo: true, // Exclude info messages, as there can be 1,000+ processes
                 millisecondTimeout: 5000,
                 configureCallback: (process) => DotNetHelper.ConfigureProcess(process, null));
 
