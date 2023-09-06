@@ -58,18 +58,11 @@ public class SourcelinkTests : SmokeTests
 
         string toolPackageDir = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "sourcelink-tool")).FullName;
         Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, toolPackageDir, SourcelinkToolPackageNamePattern);
-        string[] files = Directory.GetFiles(toolPackageDir, SourcelinkToolPackageNamePattern, SearchOption.AllDirectories);
-        Assert.False(files.Length > 1, "Unexpected - PSB Artifacts archive should contain only one sourcelink tool package.");
-        Assert.False(files.Length == 0, "Did not find sourcelink tool package in PSB Artifacts archive.");
 
         string extractedToolPath = Directory.CreateDirectory(Path.Combine(toolPackageDir, "extracted")).FullName;
-        Utilities.ExtractNupkg(files[0], extractedToolPath);
+        Utilities.ExtractNupkg(Utilities.GetFile(toolPackageDir, SourcelinkToolPackageNamePattern), extractedToolPath);
 
-        files = Directory.GetFiles(extractedToolPath, SourcelinkToolBinaryFilename, SearchOption.AllDirectories);
-        Assert.False(files.Length > 1, $"Unexpected - found more than one sourcelink tool binary: {SourcelinkToolBinaryFilename}");
-        Assert.False(files.Length == 0, $"Did not find sourcelink tool binary: {SourcelinkToolBinaryFilename}");
-
-        return files[0];
+        return Utilities.GetFile(extractedToolPath, SourcelinkToolBinaryFilename);
     }
 
     private IEnumerable<string> GetAllSymbolsPackages()
@@ -83,12 +76,7 @@ public class SourcelinkTests : SmokeTests
 
         // Runtime symbols package lives in the same directory as PSB artifacts.
         // i.e. <repo-root>/artifacts/x64/Release/runtime/dotnet-runtime-symbols-fedora.36-x64-8.0.0-preview.7.23355.7.tar.gz
-        string runtimeSymbolsPackageNamePattern = "dotnet-runtime-symbols-*.tar.gz";
-        string[] files = Directory.GetFiles(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), runtimeSymbolsPackageNamePattern, SearchOption.AllDirectories);
-        Assert.False(files.Length > 1, "Unexpected - found more than one runtime symbols archives.");
-        Assert.False(files.Length == 0, "Did not find runtime symbols archive.");
-
-        yield return files[0];
+        yield return Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-runtime-symbols-*.tar.gz");
     }
 
     /// <summary>

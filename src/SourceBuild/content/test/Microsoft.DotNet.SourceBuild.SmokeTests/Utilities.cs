@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
@@ -116,5 +117,13 @@ public static class Utilities
             Thread.Sleep(TimeSpan.FromSeconds(waitTime));
             exception = await executor();
         }
+    }
+
+    public static string GetFile(string path, string pattern)
+    {
+        string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+        Assert.False(files.Length > 1, $"Found multiple files matching the pattern {pattern}: {Environment.NewLine}{string.Join(Environment.NewLine, files)}");
+        Assert.False(files.Length == 0, $"Did not find any files matching the pattern {pattern}");
+        return files[0];
     }
 }
