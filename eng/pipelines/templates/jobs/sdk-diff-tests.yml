@@ -11,9 +11,9 @@ parameters:
 - name: dotnetDotnetRunId
   type: string
 
-- name: excludeArtifactsSize
+- name: includeArtifactsSize
   type: boolean
-  default: true
+  default: false
 
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
@@ -122,7 +122,7 @@ jobs:
       -e SMOKE_TESTS_TARGET_RID=${{ parameters.targetRid }}
       -e SMOKE_TESTS_PORTABLE_RID=linux-${{ parameters.architecture }}
       -e SMOKE_TESTS_CUSTOM_PACKAGES_PATH=
-      -e SMOKE_TESTS_EXCLUDE_ARTIFACTSSIZE=${{ parameters.excludeArtifactsSize }}
+      -e SMOKE_TESTS_INCLUDE_ARTIFACTSSIZE=${{ parameters.includeArtifactsSize }}
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
