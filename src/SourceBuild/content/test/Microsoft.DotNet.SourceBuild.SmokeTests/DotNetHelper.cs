@@ -284,7 +284,7 @@ internal class DotNetHelper
         return File.Exists(Path.Combine(sharedFramework, "mono-gc.h"));
     }
 
-    public bool IsActionPublishComplex() {
+    public bool ShouldPublishComplex() {
         if (string.Equals(Config.TargetArchitecture,"ppc64le") || string.Equals(Config.TargetArchitecture,"s390x"))
         {
             return false;
