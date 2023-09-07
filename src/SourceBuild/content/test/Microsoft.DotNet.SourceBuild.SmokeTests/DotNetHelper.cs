@@ -284,6 +284,15 @@ internal class DotNetHelper
         return File.Exists(Path.Combine(sharedFramework, "mono-gc.h"));
     }
 
+    public bool IsActionPublishComplex() {
+        if (string.Equals(Config.TargetArchitecture,"ppc64le") || string.Equals(Config.TargetArchitecture,"s390x"))
+        {
+            return false;
+        }
+        else
+            return true;
+    }
+
     private static string GetProjectDirectory(string projectName) => Path.Combine(ProjectsDirectory, projectName);
 
     private class WebAppValidator
