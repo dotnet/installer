@@ -53,12 +53,12 @@
           AfterTargets="CollectPackageDownloads"
           Returns="@(PackageDownload)">
     <ItemGroup>
-      <!-- Generate a cross-product between runtime packs and Linux RIDs -->
+      <!-- Generate a cross-product between runtime packs and Unix RIDs -->
       <RuntimePackWithUnixRid Include="@(RuntimePack)">
         <UnixRid>%(UnixRid.Identity)</UnixRid>
       </RuntimePackWithUnixRid>
 
-      <!-- Generate a cross-product between portable packages and Linux RIDs -->
+      <!-- Generate a cross-product between portable packages and Unix RIDs -->
       <PortablePackageWithUnixRid Include="@(PortablePackage)">
         <UnixRid>%(UnixRid.Identity)</UnixRid>
       </PortablePackageWithUnixRid>
@@ -66,7 +66,7 @@
     </ItemGroup>
     <ItemGroup>
       <!--
-            Generate package names for runtime packs by concatenating the base name with the Linux RID
+            Generate package names for runtime packs by concatenating the base name with the Unix RID
             (e.g. Microsoft.Aspnetcore.App.Runtime.linux-x64)
         -->
       <PackageWithName Include="@(RuntimePackWithUnixRid)">
@@ -82,7 +82,7 @@
       </PackageWithName>
 
       <!--
-            Generate Linux RID package names for portable packages by concatenating the base name with the Linux RID
+            Generate Unix RID package names for portable packages by concatenating the base name with the Unix RID
             (e.g. runtime.linux-x64.Microsoft.NETCore.ILAsm)
             Do this for two groups: native and non-native packages. They have different naming conventions.
         -->
