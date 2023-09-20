@@ -173,6 +173,11 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>abfa03c97f4175d4d209435cd0e71f558e36c3fd</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.emsdk" Version="8.0.0-rc.1.23411.2" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>abfa03c97f4175d4d209435cd0e71f558e36c3fd</Sha>
+      <SourceBuild RepoName="emsdk" ManagedOnly="true" />
+    </Dependency>
     <Dependency Name="Microsoft.Deployment.DotNet.Releases" Version="1.0.0-preview.6.23407.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/deployment-tools</Uri>
       <Sha>850f61abed37b617a41fd59b63a37c284af6801d</Sha>
