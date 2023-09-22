@@ -37,12 +37,6 @@ public class DotNetWatchTests : SmokeTests
 
             process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
-                if (e.Data != null)
-                {
-                    // Emitting the output for diagnostic purposes
-                    OutputHelper.WriteLine("---> " + e.Data);
-                }
-
                 if (e.Data?.Contains(waitingString) ?? false)
                 {
                     if (!fileChanged) {
