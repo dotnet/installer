@@ -21,11 +21,11 @@ public class OmniSharpTests : SmokeTests
     // Update version as new releases become available: https://github.com/OmniSharp/omnisharp-roslyn/releases
     private const string OmniSharpReleaseVersion = "1.39.8";
 
-    private string OmniSharpDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "omnisharp");
+    private string OmniSharpDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(OmniSharpTests));
 
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrue: true)]
+    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrueEnv: true, skipArchitectures: new[] { "ppc64le", "s390x" })]
     [InlineData(DotNetTemplate.BlazorWasm)]
     [InlineData(DotNetTemplate.ClassLib)]
     [InlineData(DotNetTemplate.Console)]
