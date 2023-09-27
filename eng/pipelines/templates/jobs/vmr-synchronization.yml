@@ -72,7 +72,7 @@ jobs:
         workingDirectory: $(Agent.BuildDirectory)/installer
   
     # Push internal/release branches to the internal VMR
-    - ${{ if startsWith(parameters.vmrBranch, 'internal/release/') }}:
+    - ${{ if or(startsWith(parameters.vmrBranch, 'frameshift/internal/release/'), startsWith(parameters.vmrBranch, 'internal/release/')) }}:
       - script: >
           ./.dotnet/dotnet darc vmr push
           --vmr '$(vmrPath)'
