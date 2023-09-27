@@ -8,7 +8,7 @@ open TableGenerator.Table
 let inputBranches =
         [ { GitBranchName = "main"
             DisplayName = "main<br>(9.0.x&nbsp;Runtime)"
-            AkaMsChannel = Some("9.0.1xx/daily") }'
+            AkaMsChannel = Some("9.0.1xx/daily") }
           { GitBranchName = "release/8.0.2xx"
             DisplayName = "8.0.2xx<br>(8.0&nbsp;Runtime)"
             AkaMsChannel = Some("8.0.2xx/daily") }
