@@ -176,7 +176,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             IEnumerable<string> nonShippingPackages = GetAllNonShippingPackages();
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
-            var candidateQueue = new Queue<string>(initialCandidates);
+            var candidateQueue = new Queue<CandidateFileEntry>(initialCandidates.Select(candidate =>
+                new CandidateFileEntry{ ExtractedPath = candidate, FullPath = candidate, RootPath = Path.GetDirectoryName(candidate)}));
+
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
                 Directory.CreateDirectory(OverrideTempPath);
@@ -186,22 +188,22 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             while (candidateQueue.Any())
             {
-                var checking = candidateQueue.Dequeue();
+                var candidate = candidateQueue.Dequeue();
 
                 // if this is a zip or NuPkg, extract it, check for the poison marker, and
                 // add its contents to the list to be checked.
-                if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
+                if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => candidate.ExtractedPath.ToLowerInvariant().EndsWith(e)))
                 {
-                    Log.LogMessage($"Zip or NuPkg file to check: {checking}");
+                    Log.LogMessage($"Zip or NuPkg file to check: {candidate.ExtractedPath}");
 
                     // Skip non-shipping packages
-                    if (nonShippingPackages.Contains(Path.GetFileName(checking), StringComparer.OrdinalIgnoreCase))
+                    if (nonShippingPackages.Contains(Path.GetFileName(candidate.ExtractedPath), StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
                     }
 
-                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(checking));
-                    PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
+                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(candidate.ExtractedPath));
+                    PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, candidate, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
                     {
                         poisons.Add(result);
@@ -209,7 +211,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 }
                 else
                 {
-                    PoisonedFileEntry result = CheckSingleFile(catalogedPackages, tempDir.FullName, checking);
+                    PoisonedFileEntry result = CheckSingleFile(catalogedPackages, candidate);
                     if (result != null)
                     {
                         poisons.Add(result);
@@ -237,10 +239,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
         }
 
-        private static PoisonedFileEntry CheckSingleFile(IEnumerable<CatalogPackageEntry> catalogedPackages, string rootPath, string fileToCheck)
+        private static PoisonedFileEntry CheckSingleFile(IEnumerable<CatalogPackageEntry> catalogedPackages, CandidateFileEntry candidate)
         {
             // skip some common files that get copied verbatim from nupkgs - LICENSE, _._, etc as well as
             // file types that we never care about - text files, .gitconfig, etc.
+            var fileToCheck = candidate.ExtractedPath;
+
             if (FileNamesToSkip.Any(f => Path.GetFileName(fileToCheck).ToLowerInvariant() == f.ToLowerInvariant()) ||
                 FileExtensionsToSkip.Any(e => Path.GetExtension(fileToCheck).ToLowerInvariant() == e.ToLowerInvariant()) ||
                 (new FileInfo(fileToCheck).Length == 0))
@@ -249,7 +253,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             var poisonEntry = new PoisonedFileEntry();
-            poisonEntry.Path = Utility.MakeRelativePath(fileToCheck, rootPath);
+            poisonEntry.Path = Utility.MakeRelativePath(candidate.FullPath, candidate.RootPath);
 
             // There seems to be some weird issues with using file streams both for hashing and assembly loading.
             // Copy everything into a memory stream to avoid these problems.
@@ -320,9 +324,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             return false;
         }
 
-        private static PoisonedFileEntry ExtractAndCheckZipFileOnly(IEnumerable<CatalogPackageEntry> catalogedPackages, string zipToCheck, string markerFileName, string tempDir, Queue<string> futureFilesToCheck)
+        private static PoisonedFileEntry ExtractAndCheckZipFileOnly(IEnumerable<CatalogPackageEntry> catalogedPackages, CandidateFileEntry candidate, string markerFileName, string tempDir, Queue<CandidateFileEntry> futureFilesToCheck)
         {
             var poisonEntry = new PoisonedFileEntry();
+            var zipToCheck = candidate.ExtractedPath;
             poisonEntry.Path = zipToCheck;
 
             using (var sha = SHA256.Create())
@@ -375,8 +380,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             foreach (var child in Directory.EnumerateFiles(tempDir, "*", SearchOption.AllDirectories))
             {
-                // also add anything in this zip/package for checking
-                futureFilesToCheck.Enqueue(child);
+                string fullPath = $"{candidate.FullPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
+
+                futureFilesToCheck.Enqueue(new CandidateFileEntry{ ExtractedPath = child, FullPath = fullPath, RootPath = candidate.RootPath });
             }
 
             return poisonEntry.Type != PoisonType.None ? poisonEntry : null;
