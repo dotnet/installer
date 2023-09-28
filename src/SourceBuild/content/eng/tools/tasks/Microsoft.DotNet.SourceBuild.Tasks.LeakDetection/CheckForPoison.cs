@@ -30,6 +30,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         public ITaskItem[] FilesToCheck { get; set; }
 
         /// <summary>
+        /// The path of the project directory to the FilesToCheck.
+        /// </summary>
+        [Required]
+        public string ProjectDirPath { get; set; }
+
+        /// <summary>
         /// The output path for an XML poison report, if desired.
         /// </summary>
         public string PoisonReportOutputFilePath { get; set; }
@@ -179,7 +185,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<CandidateFileEntry>(initialCandidates.Select(candidate =>
-                new CandidateFileEntry(candidate, Utility.MakeRelativePath(candidate, Path.GetDirectoryName(candidate)))));
+                new CandidateFileEntry(candidate, Utility.MakeRelativePath(candidate, ProjectDirPath))));
 
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
