@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class SourceBuiltArtifactsTests : SmokeTests
+public class SourceBuiltArtifactsTests : SdkTests
 {
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 

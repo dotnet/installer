@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class SourcelinkTests : SmokeTests
+public class SourcelinkTests : SdkTests
 {
     private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(SourcelinkTests));
 
