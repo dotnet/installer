@@ -141,11 +141,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string PoisonMarker = "POISONED";
 
-        private class CandidateFileEntry
-        {
-            public string ExtractedPath { get; set; }
-            public string DisplayPath { get; set; }
-        }
+        private record CandidateFileEntry(string ExtractedPath, string DisplayPath);
 
         public override bool Execute()
         {
@@ -183,7 +179,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<CandidateFileEntry>(initialCandidates.Select(candidate =>
-                new CandidateFileEntry{ ExtractedPath = candidate, DisplayPath = Utility.MakeRelativePath(candidate, Path.GetDirectoryName(candidate)) }));
+                new CandidateFileEntry(candidate, Utility.MakeRelativePath(candidate, Path.GetDirectoryName(candidate)))));
 
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
@@ -386,9 +382,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             foreach (var child in Directory.EnumerateFiles(tempDir, "*", SearchOption.AllDirectories))
             {
-                string DisplayPath = $"{candidate.DisplayPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
+                string displayPath = $"{candidate.DisplayPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
 
-                futureFilesToCheck.Enqueue(new CandidateFileEntry{ ExtractedPath = child, DisplayPath = DisplayPath });
+                futureFilesToCheck.Enqueue(new CandidateFileEntry(child, displayPath));
             }
 
             return poisonEntry.Type != PoisonType.None ? poisonEntry : null;
