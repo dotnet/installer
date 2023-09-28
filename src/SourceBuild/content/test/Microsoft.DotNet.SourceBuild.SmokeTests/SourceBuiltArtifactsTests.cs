@@ -20,6 +20,7 @@ public class SourceBuiltArtifactsTests : SdkTests
     [Fact]
     public void VerifyVersionFile()
     {
+        Assert.NotNull(Config.SourceBuiltArtifactsPath);
         string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "sourcebuilt-artifacts");
         Directory.CreateDirectory(outputDir);
         try

@@ -53,6 +53,8 @@ public class SourcelinkTests : SdkTests
     /// <returns>Path to sourcelink tool binary.</returns>
     private string InitializeSourcelinkTool()
     {
+        Assert.NotNull(Config.SourceBuiltArtifactsPath);
+        
         const string SourcelinkToolPackageNamePattern = "dotnet-sourcelink*nupkg";
         const string SourcelinkToolBinaryFilename = "dotnet-sourcelink.dll";
 
