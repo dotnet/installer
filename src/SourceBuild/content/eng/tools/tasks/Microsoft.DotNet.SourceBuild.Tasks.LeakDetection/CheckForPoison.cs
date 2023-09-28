@@ -141,6 +141,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string PoisonMarker = "POISONED";
 
+        private class CandidateFileEntry
+        {
+            public string ExtractedPath { get; set; }
+            public string DisplayPath { get; set; }
+        }
+
         public override bool Execute()
         {
             IEnumerable<PoisonedFileEntry> poisons = GetPoisonedFiles(FilesToCheck.Select(f => f.ItemSpec), HashCatalogFilePath, MarkerFileName);
@@ -177,7 +183,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<CandidateFileEntry>(initialCandidates.Select(candidate =>
-                new CandidateFileEntry{ ExtractedPath = candidate, FullPath = candidate, RootPath = Path.GetDirectoryName(candidate)}));
+                new CandidateFileEntry{ ExtractedPath = candidate, DisplayPath = Utility.MakeRelativePath(candidate, Path.GetDirectoryName(candidate)) }));
 
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
@@ -253,7 +259,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             var poisonEntry = new PoisonedFileEntry();
-            poisonEntry.Path = Utility.MakeRelativePath(candidate.FullPath, candidate.RootPath);
+            poisonEntry.Path = candidate.DisplayPath;
 
             // There seems to be some weird issues with using file streams both for hashing and assembly loading.
             // Copy everything into a memory stream to avoid these problems.
@@ -380,9 +386,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             foreach (var child in Directory.EnumerateFiles(tempDir, "*", SearchOption.AllDirectories))
             {
-                string fullPath = $"{candidate.FullPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
+                string DisplayPath = $"{candidate.DisplayPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
 
-                futureFilesToCheck.Enqueue(new CandidateFileEntry{ ExtractedPath = child, FullPath = fullPath, RootPath = candidate.RootPath });
+                futureFilesToCheck.Enqueue(new CandidateFileEntry{ ExtractedPath = child, DisplayPath = DisplayPath });
             }
 
             return poisonEntry.Type != PoisonType.None ? poisonEntry : null;
