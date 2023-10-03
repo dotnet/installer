@@ -40,7 +40,6 @@ public class LicenseScanTests : TestBase
         "gpl-2.0-plus WITH autoconf-simple-exception-2.0", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/rules/gpl-2.0-plus_with_autoconf-simple-exception-2.0_8.RULE
         "gpl-2.0 WITH gcc-linking-exception-2.0", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/rules/gpl-2.0_with_gcc-linking-exception-2.0_6.RULE
         "isc", // https://opensource.org/license/isc-license-txt/
-        "json", // https://www.json.org/license.html
         "lgpl-2.0-plus", // https://opensource.org/license/lgpl-2-0/
         "lgpl-2.1", // https://opensource.org/license/lgpl-2-1/
         "lgpl-2.1-plus", // https://opensource.org/license/lgpl-2-1/
