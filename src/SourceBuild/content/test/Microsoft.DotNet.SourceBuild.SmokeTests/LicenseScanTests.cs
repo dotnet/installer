@@ -213,22 +213,19 @@ public class LicenseScanTests : TestBase
                 IEnumerable<LicenseExclusion> matchingExclusions =
                     Utilities.GetMatchingFileExclusions(file.Path, exclusions, exclusion => exclusion.Path);
 
-                if (matchingExclusions.Any())
+                IEnumerable<string> excludedLicenses = matchingExclusions.SelectMany(exclusion => exclusion.LicenseExpressions);
+                // If no licenses are explicitly specified, it means they're all excluded.
+                if (matchingExclusions.Any() && !excludedLicenses.Any())
                 {
-                    IEnumerable<string> excludedLicenses = matchingExclusions.SelectMany(exclusion => exclusion.LicenseExpressions);
-                    // If no licenses are explicitly specified, it means they're all excluded.
-                    if (!excludedLicenses.Any())
+                    scancodeResults.Files.Remove(file);
+                }
+                else
+                {
+                    IEnumerable<string> remainingLicenses = disallowedLicenses.Except(excludedLicenses);
+
+                    if (!remainingLicenses.Any())
                     {
                         scancodeResults.Files.Remove(file);
-                    }
-                    else
-                    {
-                        IEnumerable<string> remainingLicenses = disallowedLicenses.Except(excludedLicenses);
-
-                        if (!remainingLicenses.Any())
-                        {
-                            scancodeResults.Files.Remove(file);
-                        }
                     }
                 }
             }
