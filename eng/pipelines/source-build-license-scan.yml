@@ -80,7 +80,7 @@ jobs:
   - script: >
       $(Build.SourcesDirectory)/.dotnet/dotnet test
       $(Build.SourcesDirectory)/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj
-      --filter "Category=LicenseScan"
+      --filter "FullyQualifiedName=Microsoft.DotNet.SourceBuild.SmokeTests.LicenseScanTests.ScanForLicenses"
       --logger:'trx;LogFileName=$(Agent.JobName)_LicenseScan.trx'
       --logger:'console;verbosity=detailed'
       -c Release

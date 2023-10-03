@@ -13,7 +13,6 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-[Trait("Category", "LicenseScan")]
 public class LicenseScanTests : TestBase
 {
     private static readonly string[] s_allowedLicenseExpressions = new string[]
