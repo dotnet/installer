@@ -41,12 +41,12 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
             Assert.Null(message);
         }
 
-        public static void CompareBaselineContents(string baselineFileName, string actualContents, ITestOutputHelper outputHelper, bool warnOnDiffs = false)
+        public static void CompareBaselineContents(string baselineFileName, string actualContents, ITestOutputHelper outputHelper, bool warnOnDiffs = false, bool isLicenseBaseline = false)
         {
             string actualFilePath = Path.Combine(TestBase.LogsDirectory, $"Updated{baselineFileName}");
             File.WriteAllText(actualFilePath, actualContents);
 
-            CompareFiles(GetBaselineFilePath(baselineFileName), actualFilePath, outputHelper, warnOnDiffs);
+            CompareFiles(GetBaselineFilePath(baselineFileName, isLicenseBaseline), actualFilePath, outputHelper, warnOnDiffs);
         }
 
         public static void CompareFiles(string expectedFilePath, string actualFilePath, ITestOutputHelper outputHelper, bool warnOnDiffs = false)
@@ -87,7 +87,8 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 
         public static string GetAssetsDirectory() => Path.Combine(Directory.GetCurrentDirectory(), "assets");
 
-        public static string GetBaselineFilePath(string baselineFileName) => Path.Combine(GetAssetsDirectory(), "baselines", baselineFileName);
+        public static string GetBaselineFilePath(string baselineFileName, bool isLicenseBaseline = false) =>
+            Path.Combine(GetAssetsDirectory(), "baselines", isLicenseBaseline ? "licenses" : string.Empty, baselineFileName);
 
         public static string RemoveNetTfmPaths(string source)
         {

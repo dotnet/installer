@@ -129,13 +129,13 @@ public class LicenseScanTests : TestBase
 
         string baselineName = $"Licenses.{_targetRepo}.json";
 
-        string baselinePath = BaselineHelper.GetBaselineFilePath(baselineName);
+        string baselinePath = BaselineHelper.GetBaselineFilePath(baselineName, isLicenseBaseline: true);
         if (!File.Exists(baselinePath))
         {
             Assert.Fail($"No license baseline file exists for repo '{_targetRepo}'. Expected file: {baselinePath}");
         }
 
-        BaselineHelper.CompareBaselineContents(baselineName, json, OutputHelper, Config.WarnOnLicenseScanDiffs);
+        BaselineHelper.CompareBaselineContents(baselineName, json, OutputHelper, Config.WarnOnLicenseScanDiffs, isLicenseBaseline: true);
     }
 
     private LicenseExclusion ParseLicenseExclusion(string rawExclusion)
