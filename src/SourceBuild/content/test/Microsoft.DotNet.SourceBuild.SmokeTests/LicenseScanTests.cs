@@ -44,6 +44,7 @@ public class LicenseScanTests : TestBase
         "lgpl-2.1-plus", // https://opensource.org/license/lgpl-2-1/
         "mit", // https://opensource.org/license/mit/
         "mit-addition", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/mit-addition.LICENSE
+        "ms-patent-promise", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ms-patent-promise.LICENSE
         "ms-pl", // https://opensource.org/license/ms-pl-html/
         "ms-rl", // https://opensource.org/license/ms-rl-html/
         "newton-king-cla", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/newton-king-cla.LICENSE
