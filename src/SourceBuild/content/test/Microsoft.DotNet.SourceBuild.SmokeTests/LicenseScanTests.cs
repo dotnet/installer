@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Xunit;
 using Xunit.Abstractions;
@@ -233,4 +234,19 @@ public class LicenseScanTests : TestBase
     }
 
     private record LicenseExclusion(string Repo, string Path, IEnumerable<string> LicenseExpressions);
+
+    private class ScancodeResults
+    {
+        [JsonPropertyName("files")]
+        public List<ScancodeFileResult> Files { get; set; } = new();
+    }
+
+    private class ScancodeFileResult
+    {
+        [JsonPropertyName("path")]
+        public string Path { get; set; } = string.Empty;
+
+        [JsonPropertyName("detected_license_expression")]
+        public string? LicenseExpression { get; set; }
+    }
 }
