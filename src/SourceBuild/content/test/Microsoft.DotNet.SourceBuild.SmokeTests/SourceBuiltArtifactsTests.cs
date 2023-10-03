@@ -17,7 +17,7 @@ public class SourceBuiltArtifactsTests : SdkTests
 {
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [Fact]
+    [SkippableFact(Config.SourceBuiltArtifactsPathEnv, skipOnNullOrWhiteSpaceEnv: true)]
     public void VerifyVersionFile()
     {
         Assert.NotNull(Config.SourceBuiltArtifactsPath);

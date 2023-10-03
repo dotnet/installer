@@ -23,7 +23,7 @@ public class SourcelinkTests : SdkTests
     /// <summary>
     /// Verifies that all symbols have valid sourcelinks.
     /// </summary>
-    [Fact]
+    [SkippableFact(Config.SourceBuiltArtifactsPathEnv, skipOnNullOrWhiteSpaceEnv: true)]
     public void VerifySourcelinks()
     {
         if (Directory.Exists(SourcelinkRoot))
