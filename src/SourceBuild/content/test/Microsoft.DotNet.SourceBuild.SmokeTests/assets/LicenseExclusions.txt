@@ -15,6 +15,9 @@
 # False positive
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/src/BuildFPMToolPreReqs.cs|json
 
+# Applies to installer, not source
+src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/wix/eula.rtf
+
 #
 # aspnetcore
 #
@@ -45,6 +48,9 @@ src/command-line-api/System.CommandLine.sln|json
 src/fsharp/tests/EndToEndBuildTests/ProvidedTypes/ProvidedTypes.fs|unknown-license-reference
 src/fsharp/tests/service/data/TestTP/ProvidedTypes.fs|unknown-license-reference
 src/fsharp/vsintegration/tests/MockTypeProviders/DummyProviderForLanguageServiceTesting/ProvidedTypes.fs|unknown-license-reference
+
+# Applies to installer, not source
+src/fsharp/setup/resources/eula/*.rtf
 
 #
 # installer
@@ -104,6 +110,11 @@ src/roslyn/src/EditorFeatures/CSharpTest2/EmbeddedLanguages/RegularExpressions/R
 
 # False positive
 src/roslyn/src/Compilers/**/Portable/Symbols/NonMissingModuleSymbol.*|proprietary-license
+src/roslyn/src/NuGet/ThirdPartyNotices.rtf|json
+
+# Applicable to installer, not source
+src/roslyn/src/Setup/Roslyn.ThirdPartyNotices/ThirdPartyNotices.rtf
+src/roslyn/src/Setup/Roslyn.VsixLicense/EULA.rtf
 
 #
 # runtime
@@ -202,3 +213,4 @@ src/vstest/src/Microsoft.TestPlatform.Extensions.BlameDataCollector/ProcDumpArgs
 
 # Build asset, but not applying to code
 src/vstest/src/package/Microsoft.CodeCoverage/ThirdPartyNoticesCodeCoverage.txt
+src/vstest/src/package/Microsoft.VisualStudio.TestTools.TestPlatform.V2.CLI/License.rtf
