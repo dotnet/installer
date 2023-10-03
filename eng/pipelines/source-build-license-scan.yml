@@ -1,3 +1,22 @@
+# This pipeline runs the license scan test for the VMR (https://github.com/dotnet/dotnet).
+# Test location: https://github.com/dotnet/dotnet/blob/main/test/Microsoft.DotNet.SourceBuild.SmokeTests/LicenseScanTests.cs
+# AzDO pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1301 (internal only).
+# 
+# By default, the running the pipeline will scan all repos within the VMR which takes several hours to run.
+# The pipeline can be triggered manually to target a specific repo within the VMR by setting the specificRepoName parameter.
+# This value should be the name of the repo within the VMR (i.e. a name of a directory within https://github.com/dotnet/dotnet/tree/main/src).
+# To test source modifications intended to resolve a license issue, apply the change in an internal branch of the VMR. Run this pipeline,
+# targeting your branch, and set the specificRepoName parameter to the name of the repo containing the change.
+# 
+# The output of the pipeline is a set of test results and logs. The logs are published as an artifact and can be found at
+# test/Microsoft.DotNet/SourceBuild.SmokeTests/bin/Release/netX.0/logs. It consists of the following:
+#   * UpdatedLicenses.<repo-name>.json: This is the output of that gets compared to the stored baseline. If they're the same, the test passes;
+#     if not, it fails. By comparing this file to the baseline, one can determine which new license references have been introduced. If
+#     everything is deemed to be acceptable, the developer can either update the allowed licenses, update the exclusions file, update the
+#     baseline, or any combination.
+#   * scancode-results.json: This is the raw output that comes from scancode. This file is useful for diagnostic purposes because it tells you
+#     the exact line number of where a license has been detected in a file.
+
 schedules:
 - cron: "0 7 * * 1-5"
   displayName: Run on weekdays at 7am UTC
@@ -14,7 +33,7 @@ parameters:
 - name: specificRepoName
   type: string
   displayName: "Specific repo name to scan (e.g. runtime, sdk). If empty, scans all repos of the VMR."
-  default: " "
+  default: " " # Set it to an empty string to allow it be an optional parameter
 
 variables:
   installerRoot: '$(Build.SourcesDirectory)/src/installer'

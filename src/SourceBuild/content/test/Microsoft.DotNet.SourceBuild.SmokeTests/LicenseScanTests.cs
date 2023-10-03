@@ -14,6 +14,30 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
+/// <summary>
+/// Scans the VMR for licenses and compares them to a baseline. This ensures that only open-source licenses are used for relevant files.
+/// </summary>
+/// <remarks>
+/// Each sub-repo of the VMR is scanned separately because of the amount of time it takes.
+/// When scanning is run, the test provides a list of files for the scanner to ignore. These include binary file types. It also includes
+/// .il/.ildump file types which are massive, causing the scanner to choke and don't include license references anyway.
+/// Once the scanner returns the results, a filtering process occurs. First, any detected license that is in the allowed list of licenses
+/// is filtered out. The test defines a list of such licenses that all represent open-source licenses. Next, a license exclusions file is
+/// applied to the filtering. This file contains a set of paths for which certain detected licenses are to be ignored. Such a path can be
+/// defined to ignore all detected licenses or specific ones. These exclusions are useful for ignoring false positives where the scanning
+/// tool has detected something in the file that makes it think it's a license reference when that's not actually the intent. Other cases
+/// that are excluded are when the license is meant as configuration or test data and not actually applying to the code. These exclusions
+/// further filter down the set of the detected licenses for each file. Everything that's left at this point is reported. It gets compared
+/// to a baseline file (which is defined for each sub-repo). If the filtered results differ from what's defined in the baseline, the test fails.
+/// 
+/// Rules for determining how to resolve a detected license:
+///   1. If it's an allowed open-source license, add it to the list of allowed licenses in LicenseScanTests.cs.
+///   2. If the file shouldn't be scanned as a general rule because of its file type (e.g. image file), add it to the list of excluded file types in LicenseScanTests.cs.
+///   3. Add it to LicenseExclusions.txt if the referenced license is one of the following:
+///     a. Not applicable (e.g. test data)
+///     b. False positive
+///   4. If the license is not allowed for open-souce, the license needs to be fixed. Everything else should go in the baseline file.
+/// </remarks>
 public class LicenseScanTests : TestBase
 {
     private static readonly string[] s_allowedLicenseExpressions = new string[]
