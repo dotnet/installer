@@ -65,12 +65,8 @@ jobs:
     matrix: $[ dependencies.Setup.outputs['GetMatrix.matrix'] ]
   steps:
 
-  - task: UseDotNet@2
-    displayName: Install .NET
-    inputs:
-      packageType: 'sdk'
-      version: '8.0.x'
-      includePreviewVersions: true
+  - script: $(Build.SourcesDirectory)/prep.sh --no-artifacts --no-bootstrap --no-prebuilts
+    displayName: 'Install .NET SDK'
 
   - task: PipAuthenticate@1
     displayName: 'Pip Authenticate'
@@ -82,7 +78,7 @@ jobs:
     displayName: Install Scancode
 
   - script: >
-      dotnet test
+      $(Build.SourcesDirectory)/.dotnet/dotnet test
       $(Build.SourcesDirectory)/test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj
       --filter "Category=LicenseScan"
       --logger:'trx;LogFileName=$(Agent.JobName)_LicenseScan.trx'
