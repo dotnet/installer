@@ -9,6 +9,13 @@ schedules:
 pr: none
 trigger: none
 
+parameters:
+# Provides a way to scan a specific repo. If not provided, all repos of the VMR will be scanned.
+- name: specificRepoName
+  type: string
+  displayName: "Specific repo name to scan (e.g. runtime, sdk). If empty, scans all repos of the VMR."
+  default: " "
+
 variables:
   installerRoot: '$(Build.SourcesDirectory)/src/installer'
 
@@ -24,15 +31,23 @@ jobs:
       # Builds an Azure DevOps matrix definition. Each entry in the matrix is a path,
       # allowing a job to be run for each src repo.
       matrix=""
-      for dir in $vmrSrcDir/*/
-      do
-        if [ ! -z "$matrix" ]; then
-          matrix="$matrix,"
-        fi
-        repoName=$(basename $dir)
-        #matrix="$matrix{ \"$repoName\": { \"repoPath\": \"$dir\" } }"
-        matrix="$matrix \"$repoName\": { \"repoPath\": \"$dir\" }"
-      done
+
+      # Trim leading/trailing spaces from the repo name
+      specificRepoName=$(echo "${{ parameters.specificRepoName }}" | awk '{$1=$1};1')
+
+      # If the repo name is provided, only scan that repo.
+      if [ ! -z "$specificRepoName" ]; then
+        matrix="\"$specificRepoName\": { \"repoPath\": \"$vmrSrcDir/$specificRepoName\" }"
+      else
+        for dir in $vmrSrcDir/*/
+        do
+          if [ ! -z "$matrix" ]; then
+            matrix="$matrix,"
+          fi
+          repoName=$(basename $dir)
+          matrix="$matrix \"$repoName\": { \"repoPath\": \"$dir\" }"
+        done
+      fi
 
       matrix="{ $matrix }"
 
