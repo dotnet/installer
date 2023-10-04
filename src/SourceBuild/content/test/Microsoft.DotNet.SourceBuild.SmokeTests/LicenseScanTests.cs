@@ -53,6 +53,7 @@ public class LicenseScanTests : TestBase
         "bytemark", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/bytemark.LICENSE
         "bzip2-libbzip-2010", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/bzip2-libbzip-2010.LICENSE
         "cc0-1.0", // https://creativecommons.org/publicdomain/zero/1.0/legalcode
+        "cc-by-3.0", // https://creativecommons.org/licenses/by/3.0/legalcode
         "cc-by-sa-3.0", // https://creativecommons.org/licenses/by-sa/3.0/legalcode
         "cc-by-sa-4.0", // https://creativecommons.org/licenses/by-sa/4.0/legalcode
         "cc-pd", // https://creativecommons.org/publicdomain/mark/1.0/
@@ -60,9 +61,11 @@ public class LicenseScanTests : TestBase
         "generic-cla", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/generic-cla.LICENSE
         "gpl-1.0-plus", // https://opensource.org/license/gpl-1-0/
         "gpl-2.0", // https://opensource.org/license/gpl-2-0/
+        "ietf", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ietf.LICENSE
         "gpl-2.0-plus WITH autoconf-simple-exception-2.0", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/rules/gpl-2.0-plus_with_autoconf-simple-exception-2.0_8.RULE
         "gpl-2.0 WITH gcc-linking-exception-2.0", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/rules/gpl-2.0_with_gcc-linking-exception-2.0_6.RULE
         "isc", // https://opensource.org/license/isc-license-txt/
+        "iso-8879", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/iso-8879.LICENSE
         "lgpl-2.0-plus", // https://opensource.org/license/lgpl-2-0/
         "lgpl-2.1", // https://opensource.org/license/lgpl-2-1/
         "lgpl-2.1-plus", // https://opensource.org/license/lgpl-2-1/
@@ -73,6 +76,7 @@ public class LicenseScanTests : TestBase
         "ms-rl", // https://opensource.org/license/ms-rl-html/
         "newton-king-cla", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/newton-king-cla.LICENSE
         "ngpl", // https://opensource.org/license/nethack-php/
+        "object-form-exception-to-mit", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/object-form-exception-to-mit.LICENSE
         "ofl-1.1", // https://opensource.org/license/ofl-1-1/
         "osf-1990", // https://fedoraproject.org/wiki/Licensing:MIT?rd=Licensing/MIT#HP_Variant
         "public-domain", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/public-domain.LICENSE
@@ -80,6 +84,8 @@ public class LicenseScanTests : TestBase
         "rpl-1.5", // https://opensource.org/license/rpl-1-5/
         "unicode", // https://opensource.org/license/unicode-inc-license-agreement-data-files-and-software/
         "uoi-ncsa", // https://opensource.org/license/uoi-ncsa-php/
+        "w3c-software-19980720", // https://opensource.org/license/w3c/
+        "w3c-software-doc-20150513", // https://opensource.org/license/w3c/
         "warranty-disclaimer", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/warranty-disclaimer.LICENSE
         "zlib" // https://opensource.org/license/zlib/
     };
