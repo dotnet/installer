@@ -67,7 +67,9 @@
 
   <Target Name="ExtractSymbolsTarballs"
           AfterTargets="Build"
+          DependsOnTargets="DiscoverSymbolsTarballs"
           Outputs="%(SymbolsTarball.Identity)">
+
     <PropertyGroup>
       <Filename>$([System.IO.Path]::GetFileName('%(SymbolsTarball.Identity)'))</Filename>
       <RepositoryName>$(Filename.Split('.')[1])</RepositoryName>
@@ -90,7 +92,7 @@
             DiscoverSymbolsTarballs;
             ExtractSymbolsTarballs">
     <PropertyGroup>
-      <UnifiedSymbolsTarball>$(OutputPath)sourcebuilt-symbols-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</UnifiedSymbolsTarball>
+      <UnifiedSymbolsTarball>$(OutputPath)dotnet-sourcebuilt-symbols-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</UnifiedSymbolsTarball>
     </PropertyGroup>
 
     <Exec Command="tar --numeric-owner -czf $(UnifiedSymbolsTarball) *"
