@@ -17,5 +17,4 @@ STAGE2_DIR=$REPO_ROOT/artifacts/bin/redist/Debug/dotnet
 
 export PATH=$STAGE2_DIR:$PATH
 
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
