@@ -96,7 +96,7 @@ namespace Microsoft.DotNet.Build.Tasks
                         var codeViewData = peReader.ReadCodeViewDebugDirectoryData(debugDirectory);
                         guid = $"{codeViewData.Guid.ToString("N").Replace("-", string.Empty)}";
                     }
-                    catch (Exception)
+                    catch (Exception e) when (e is BadImageFormatException || e is InvalidOperationException)
                     {
                         // Ignore binaries without debug info
                         continue;
@@ -132,26 +132,19 @@ namespace Microsoft.DotNet.Build.Tasks
 
             foreach (string file in Directory.GetFiles(AllSymbolsPath, "*.pdb", SearchOption.AllDirectories))
             {
-                try
+                using var pdbFileStream = File.OpenRead(file);
+                var metadataProvider = MetadataReaderProvider.FromPortablePdbStream(pdbFileStream);
+                var metadataReader = metadataProvider.GetMetadataReader();
+                if (metadataReader.DebugMetadataHeader == null)
                 {
-                    using var pdbFileStream = File.OpenRead(file);
-                    var metadataProvider = MetadataReaderProvider.FromPortablePdbStream(pdbFileStream);
-                    var metadataReader = metadataProvider.GetMetadataReader();
-                    if (metadataReader.DebugMetadataHeader == null)
-                    {
-                        continue;
-                    }
-
-                    var id = new BlobContentId(metadataReader.DebugMetadataHeader.Id);
-                    string guid = $"{id.Guid:N}";
-                    if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(guid))
-                    {
-                        allPdbGuids.Add(guid, file);
-                    }
+                    continue;
                 }
-                catch (Exception)
+
+                var id = new BlobContentId(metadataReader.DebugMetadataHeader.Id);
+                string guid = $"{id.Guid:N}";
+                if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(guid))
                 {
-                    // ignore symbols that could not be indexed
+                    allPdbGuids.Add(guid, file);
                 }
             }
 
