@@ -149,7 +149,7 @@ namespace Microsoft.DotNet.Build.Tasks
                         allPdbGuids.Add(guid, file);
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     // ignore symbols that could not be indexed
                 }
