@@ -1,5 +1,17 @@
+<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build-internal as a reviewer. -->
+<!-- See aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
+
 <UsageData>
   <IgnorePatterns>
-    <UsagePattern IdentityGlob="*/*" />
+    <UsagePattern IdentityGlob="Microsoft.SourceBuild.Intermediate.*/*" />
+
+    <!--
+      Temporary exclusion for NuGet packages, since NuGet is not producing source-build intermediate package,
+      see: https://github.com/NuGet/Home/issues/11059
+    -->
+    <UsagePattern IdentityGlob="NuGet.*/*" />
+
+    <!-- These are coming in via runtime but the source-build infra isn't able to automatically pick up the right intermediate. -->
+    <UsagePattern IdentityGlob="Microsoft.NETCore.App.Crossgen2.linux-x64/*8.0.*" />
   </IgnorePatterns>
 </UsageData>
