@@ -13,8 +13,13 @@
 #
 
 # False positive
+src/arcade/Documentation/UnifiedBuild/Foundational-Concepts.md
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/src/BuildFPMToolPreReqs.cs|json
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/rpm_templates/copyright|cecill-c
+src/arcade/src/SignCheck/SignCheck/THIRD-PARTY-NOTICES.TXT
+
+# Doesn't apply to code
+src/arcade/src/Microsoft.DotNet.Arcade.Sdk/tools/Licenses/*
 
 # Applies to installer, not source
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/wix/eula.rtf
@@ -42,6 +47,27 @@ src/aspnetcore/src/submodules/MessagePack-CSharp/stylecop.json|unknown
 src/command-line-api/System.CommandLine.sln|json
 
 #
+# deployment-tools
+#
+
+# False positive
+src/deployment-tools/THIRD-PARTY-NOTICES.TXT|unknown-license-reference
+
+#
+# diagnostics
+#
+
+# False positive
+src/diagnostics/THIRD-PARTY-NOTICES.TXT|codesourcery-2004
+
+#
+# format
+#
+
+# False positive
+src/format/THIRD-PARTY-NOTICES.TXT|unknown-license-reference
+
+#
 # fsharp
 #
 
@@ -60,6 +86,11 @@ src/fsharp/setup/resources/eula/*.rtf
 # False positive
 src/installer/src/core-sdk-tasks/BuildFPMToolPreReqs.cs|json
 src/installer/src/redist/targets/packaging/osx/clisdk/resources/en.lproj/welcome.html|cecill-c
+src/installer/THIRD-PARTY-NOTICES|proprietary-license
+
+# Configuration, doesn't apply to source directly
+src/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
+src/installer/src/redist/targets/packaging/**/*.json
 
 #
 # msbuild
@@ -76,6 +107,7 @@ src/msbuild/src/Build/Instance/ProjectItemInstance.cs|generic-exception
 #
 
 # False positive
+src/nuget-client/build/NOTICES.txt|other-copyleft
 src/nuget-client/README.md|unknown-license-reference
 src/nuget-client/src/NuGet.Clients/NuGet.PackageManagement.UI/Resources.Designer.cs|unknown-license-reference
 src/nuget-client/src/NuGet.Clients/NuGet.PackageManagement.UI/Actions/UIActionEngine.cs|unknown-license-reference
@@ -175,7 +207,7 @@ src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-fo
 src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/src/Microsoft.IdentityModel.Tokens.Saml/Saml2/ClaimProperties.cs|proprietary-license
 src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/src/System.IdentityModel.Tokens.Jwt/JsonClaimValueTypes.cs|proprietary-license
 src/source-build-externals/src/humanizer/readme.md|free-unknown
-src/source-build-externals/src/humanizer/NuSpecs/*.nuspec
+src/source-build-externals/src/humanizer/NuSpecs/*.nuspec*
 src/source-build-externals/src/xunit/README.md|free-unknown
 src/source-build-externals/src/xunit/src/xunit.assert/Asserts/README.md|free-unknown
 src/source-build-externals/src/xunit/xunit.sln|json

@@ -44,8 +44,10 @@ public class LicenseScanTests : TestBase
     {
         "apache-1.1", // https://opensource.org/license/apache-1-1/
         "apache-2.0", // https://opensource.org/license/apache-2-0/
+        "apache-2.0 WITH apple-runtime-library-exception", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/apple-runtime-library-exception.LICENSE
         "apache-2.0 WITH llvm-exception", // https://foundation.llvm.org/relicensing/LICENSE.txt
         "apsl-2.0", // https://opensource.org/license/apsl-2-0-php/
+        "boost-1.0", // https://opensource.org/license/bsl-1-0/
         "bsd-new", // https://opensource.org/license/BSD-3-clause/
         "bsd-original", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/bsd-original.LICENSE
         "bsd-original-uc", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/bsd-original-uc.LICENSE
@@ -72,6 +74,7 @@ public class LicenseScanTests : TestBase
         "mit", // https://opensource.org/license/mit/
         "mit-addition", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/mit-addition.LICENSE
         "ms-patent-promise", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ms-patent-promise.LICENSE
+        "ms-lpl", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ms-lpl.LICENSE
         "ms-pl", // https://opensource.org/license/ms-pl-html/
         "ms-rl", // https://opensource.org/license/ms-rl-html/
         "newton-king-cla", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/newton-king-cla.LICENSE
@@ -81,12 +84,16 @@ public class LicenseScanTests : TestBase
         "osf-1990", // https://fedoraproject.org/wiki/Licensing:MIT?rd=Licensing/MIT#HP_Variant
         "public-domain", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/public-domain.LICENSE
         "public-domain-disclaimer", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/public-domain-disclaimer.LICENSE
+        "python", // https://opensource.org/license/python-2-0/
         "rpl-1.5", // https://opensource.org/license/rpl-1-5/
+        "sax-pd", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/sax-pd.LICENSE
         "unicode", // https://opensource.org/license/unicode-inc-license-agreement-data-files-and-software/
+        "unicode-mappings", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/unicode-mappings.LICENSE
         "uoi-ncsa", // https://opensource.org/license/uoi-ncsa-php/
         "w3c-software-19980720", // https://opensource.org/license/w3c/
         "w3c-software-doc-20150513", // https://opensource.org/license/w3c/
         "warranty-disclaimer", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/warranty-disclaimer.LICENSE
+        "x11", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/x11.LICENSE
         "zlib" // https://opensource.org/license/zlib/
     };
 
