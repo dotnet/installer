@@ -114,11 +114,11 @@
       <SdkSymbolsLayout>$(ArtifactsTmpDir)SdkSymbols</SdkSymbolsLayout>
       <SdkSymbolsTarball>$(OutputPath)dotnet-sdk-symbols-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</SdkSymbolsTarball>
       <SdkLayout>$(ArtifactsTmpDir)Sdk</SdkLayout>
-      <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
+      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
     </PropertyGroup>
 
     <MakeDir Directories="$(SdkLayout)" />
-    <Exec Command="tar -xzf $(SdkTarballPath) -C $(SdkLayout)"
+    <Exec Command="tar -xzf $(SdkTarball) -C $(SdkLayout)"
           WorkingDirectory="$(OutputPath)" />
 
     <CreateSdkSymbolsLayout SdkLayoutPath="$(SdkLayout)"

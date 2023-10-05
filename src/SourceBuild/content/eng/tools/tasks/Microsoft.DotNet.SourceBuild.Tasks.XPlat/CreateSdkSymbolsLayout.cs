@@ -17,8 +17,6 @@ namespace Microsoft.DotNet.Build.Tasks
     // Creates a symbols layout that matches the SDK layout
     public class CreateSdkSymbolsLayout : Task
     {
-        private Hashtable AllPdbGuids;
-
         /// <summary>
         /// Path to SDK layout.
         /// </summary>
@@ -44,8 +42,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
-            IndexAllSymbols(AllSymbolsPath);
-            IList<string> filesWithoutPDBs = GenerateSymbolsLayout(SdkLayoutPath, SdkSymbolsLayoutPath);
+            IList<string> filesWithoutPDBs = GenerateSymbolsLayout(IndexAllSymbols());
             if (filesWithoutPDBs.Count > 0)
             {
                 LogErrorOrWarning(FailOnMissingPDBs, $"Did not find PDBs for the following SDK files:");
@@ -70,16 +67,16 @@ namespace Microsoft.DotNet.Build.Tasks
             }
         }
 
-        private IList<string> GenerateSymbolsLayout(string sdkRoot, string destinationRoot)
+        private IList<string> GenerateSymbolsLayout(Hashtable allPdbGuids)
         {
             List<string> filesWithoutPDBs = new List<string>();
 
-            if (Directory.Exists(destinationRoot))
+            if (Directory.Exists(SdkSymbolsLayoutPath))
             {
-                Directory.Delete(destinationRoot, true);
+                Directory.Delete(SdkSymbolsLayoutPath, true);
             }
 
-            foreach (string file in Directory.GetFiles(sdkRoot, "*", SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(SdkLayoutPath, "*", SearchOption.AllDirectories))
             {
                 if (file.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase) &&
                     !file.EndsWith(".resources.dll", StringComparison.InvariantCultureIgnoreCase))
@@ -107,16 +104,16 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     if (guid != string.Empty)
                     {
-                        if (!AllPdbGuids.ContainsKey(guid))
+                        if (!allPdbGuids.ContainsKey(guid))
                         {
-                            filesWithoutPDBs.Add(file.Substring(sdkRoot.Length + 1));
+                            filesWithoutPDBs.Add(file.Substring(SdkLayoutPath.Length + 1));
                         }
                         else
                         {
                             // Copy matching pdb to symbols path, preserving sdk binary's hierarchy
-                            string sourcePath = (string)AllPdbGuids[guid]!;
+                            string sourcePath = (string)allPdbGuids[guid]!;
                             string destinationPath =
-                                file.Replace(sdkRoot, destinationRoot)
+                                file.Replace(SdkLayoutPath, SdkSymbolsLayoutPath)
                                     .Replace(Path.GetFileName(file), Path.GetFileName(sourcePath));
 
                             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
@@ -129,11 +126,11 @@ namespace Microsoft.DotNet.Build.Tasks
             return filesWithoutPDBs;
         }
 
-        public void IndexAllSymbols(string path)
+        public Hashtable IndexAllSymbols()
         {
-            AllPdbGuids = new Hashtable();
+            Hashtable allPdbGuids = new Hashtable();
 
-            foreach (string file in Directory.GetFiles(path, "*.pdb", SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(AllSymbolsPath, "*.pdb", SearchOption.AllDirectories))
             {
                 try
                 {
@@ -147,12 +144,9 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     var id = new BlobContentId(metadataReader.DebugMetadataHeader.Id);
                     string guid = $"{id.Guid:N}";
-                    if (!string.IsNullOrEmpty(guid))
+                    if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(guid))
                     {
-                        if (!AllPdbGuids.ContainsKey(guid))
-                        {
-                            AllPdbGuids.Add(guid, file);
-                        }
+                        allPdbGuids.Add(guid, file);
                     }
                 }
                 catch(Exception)
@@ -160,6 +154,8 @@ namespace Microsoft.DotNet.Build.Tasks
                     // ignore symbols that could not be indexed
                 }
             }
+
+            return allPdbGuids;
         }
     }
 }
