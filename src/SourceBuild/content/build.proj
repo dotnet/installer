@@ -92,7 +92,7 @@
             DiscoverSymbolsTarballs;
             ExtractSymbolsTarballs">
     <PropertyGroup>
-      <UnifiedSymbolsTarball>$(OutputPath)dotnet-sourcebuilt-symbols-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</UnifiedSymbolsTarball>
+      <UnifiedSymbolsTarball>$(OutputPath)dotnet-symbols-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</UnifiedSymbolsTarball>
     </PropertyGroup>
 
     <Exec Command="tar --numeric-owner -czf $(UnifiedSymbolsTarball) *"
