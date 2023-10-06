@@ -40,6 +40,8 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 /// </remarks>
 public class LicenseScanTests : TestBase
 {
+    private const string BaselineSubDir = "licenses";
+
     private static readonly string[] s_allowedLicenseExpressions = new string[]
     {
         "apache-1.1", // https://opensource.org/license/apache-1-1/
@@ -164,13 +166,13 @@ public class LicenseScanTests : TestBase
 
         string baselineName = $"Licenses.{_targetRepo}.json";
 
-        string baselinePath = BaselineHelper.GetBaselineFilePath(baselineName, isLicenseBaseline: true);
+        string baselinePath = BaselineHelper.GetBaselineFilePath(baselineName, BaselineSubDir);
         if (!File.Exists(baselinePath))
         {
             Assert.Fail($"No license baseline file exists for repo '{_targetRepo}'. Expected file: {baselinePath}");
         }
 
-        BaselineHelper.CompareBaselineContents(baselineName, json, OutputHelper, Config.WarnOnLicenseScanDiffs, isLicenseBaseline: true);
+        BaselineHelper.CompareBaselineContents(baselineName, json, OutputHelper, Config.WarnOnLicenseScanDiffs, BaselineSubDir);
     }
 
     private LicenseExclusion ParseLicenseExclusion(string rawExclusion)
