@@ -32,7 +32,13 @@ public class SourcelinkTests : SmokeTests
         }
         Directory.CreateDirectory(SourcelinkRoot);
 
-        IList<string> failedFiles = ValidateSymbols(ExtractSymbolsPackages(GetAllSymbolsPackages()), InitializeSourcelinkTool());
+        string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
+        Utilities.ExtractTarball(
+            Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-symbols-*.tar.gz"),
+            symbolsRoot,
+            OutputHelper);
+
+        IList<string> failedFiles = ValidateSymbols(symbolsRoot, InitializeSourcelinkTool());
 
         if (failedFiles.Count > 0)
         {
@@ -63,38 +69,6 @@ public class SourcelinkTests : SmokeTests
         Utilities.ExtractNupkg(Utilities.GetFile(toolPackageDir, SourcelinkToolPackageNamePattern), extractedToolPath);
 
         return Utilities.GetFile(extractedToolPath, SourcelinkToolBinaryFilename);
-    }
-
-    private IEnumerable<string> GetAllSymbolsPackages()
-    {
-        /*
-            At the moment we validate sourcelinks from runtime symbols package.
-            The plan is to make symbols, from all repos, available in source-build artifacts.
-            Once that's available, this code will be modified to validate all available symbols.
-            Tracking issue: https://github.com/dotnet/source-build/issues/3612
-        */
-
-        // Runtime symbols package lives in the same directory as PSB artifacts.
-        // i.e. <repo-root>/artifacts/x64/Release/runtime/dotnet-runtime-symbols-fedora.36-x64-8.0.0-preview.7.23355.7.tar.gz
-        yield return Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-runtime-symbols-*.tar.gz");
-    }
-
-    /// <summary>
-    /// Extracts symbols packages to subdirectories of the common symbols root directory.
-    /// </summary>
-    /// <returns>Path to common symbols root directory.</returns>
-    private string ExtractSymbolsPackages(IEnumerable<string> packages)
-    {
-        string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
-
-        foreach (string package in packages)
-        {
-            Assert.True(package.EndsWith(".tar.gz"), $"Package extension is not supported: {package}");
-            DirectoryInfo targetDirInfo = Directory.CreateDirectory(Path.Combine(symbolsRoot, Path.GetFileNameWithoutExtension(package)));
-            Utilities.ExtractTarball(package, targetDirInfo.FullName, OutputHelper);
-        }
-
-        return symbolsRoot;
     }
 
     private IList<string> ValidateSymbols(string path, string sourcelinkToolPath)
