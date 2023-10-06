@@ -26,30 +26,37 @@ public class SourcelinkTests : SmokeTests
     [Fact]
     public void VerifySourcelinks()
     {
-        if (Directory.Exists(SourcelinkRoot))
+        try
+        {
+            if (Directory.Exists(SourcelinkRoot))
+            {
+                Directory.Delete(SourcelinkRoot, true);
+            }
+            Directory.CreateDirectory(SourcelinkRoot);
+
+            string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
+            Utilities.ExtractTarball(
+                Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-symbols-*.tar.gz"),
+                symbolsRoot,
+                OutputHelper);
+
+            IList<string> failedFiles = ValidateSymbols(symbolsRoot, InitializeSourcelinkTool());
+
+            if (failedFiles.Count > 0)
+            {
+                OutputHelper.WriteLine($"Sourcelink verification failed for the following files:");
+                foreach (string file in failedFiles)
+                {
+                    OutputHelper.WriteLine(file);
+                }
+            }
+
+            Assert.True(failedFiles.Count == 0);
+        }
+        finally
         {
             Directory.Delete(SourcelinkRoot, true);
         }
-        Directory.CreateDirectory(SourcelinkRoot);
-
-        string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
-        Utilities.ExtractTarball(
-            Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-symbols-*.tar.gz"),
-            symbolsRoot,
-            OutputHelper);
-
-        IList<string> failedFiles = ValidateSymbols(symbolsRoot, InitializeSourcelinkTool());
-
-        if (failedFiles.Count > 0)
-        {
-            OutputHelper.WriteLine($"Sourcelink verification failed for the following files:");
-            foreach (string file in failedFiles)
-            {
-                OutputHelper.WriteLine(file);
-            }
-        }
-
-        Assert.True(failedFiles.Count == 0);
     }
 
     /// <summary>
