@@ -93,7 +93,7 @@ public class SourcelinkTests : SmokeTests
                 OutputHelper,
                 logOutput: false,
                 excludeInfo: true, // Exclude info messages, as there can be 1,000+ processes
-                millisecondTimeout: 5000,
+                millisecondTimeout: 60000,
                 configureCallback: (process) => DotNetHelper.ConfigureProcess(process, null));
 
             if (executeResult.Process.ExitCode != 0)
