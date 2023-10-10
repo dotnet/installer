@@ -35,6 +35,9 @@ public class SourcelinkTests : SmokeTests
             Directory.CreateDirectory(SourcelinkRoot);
 
             string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
+
+            // We are validating dotnet-symbols-*.tar.gz which contains all source-built symbols, including
+            // SDK-specific symbols that are also packaged in dotnet-sdk-symbols-*.tar.gz.
             Utilities.ExtractTarball(
                 Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-symbols-*.tar.gz"),
                 symbolsRoot,
