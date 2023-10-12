@@ -5,6 +5,13 @@ pr:
     - main
     - release/*
     - internal/release/*
+    exclude:
+    - release/8.0.2xx
+    - release/8.0.3xx
+    - release/8.0.4xx
+    - internal/release/8.0.2xx
+    - internal/release/8.0.3xx
+    - internal/release/8.0.4xx
 
 parameters:
 - name: vmrBranch
