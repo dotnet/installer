@@ -14,6 +14,15 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
+/// <summary>
+/// Separate test collection for Sourcelink tests. This is needed due to intra-test parallelization,
+/// which can cause less CPU time to be allocated to other tests.
+/// This would make other tests run too long and fail due to timeouts.
+/// </summary>
+[CollectionDefinition(nameof(SourcelinkTestCollectionDefinition), DisableParallelization = true)]
+public class SourcelinkTestCollectionDefinition { }
+
+[Collection(nameof(SourcelinkTestCollectionDefinition))]
 public class SourcelinkTests : SmokeTests
 {
     private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(SourcelinkTests));
