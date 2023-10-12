@@ -23,7 +23,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 public class SourcelinkTestCollectionDefinition { }
 
 [Collection(nameof(SourcelinkTestCollectionDefinition))]
-public class SourcelinkTests : SmokeTests
+public class SourcelinkTests : SdkTests
 {
     private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(SourcelinkTests));
 
@@ -32,7 +32,7 @@ public class SourcelinkTests : SmokeTests
     /// <summary>
     /// Verifies that all symbols have valid sourcelinks.
     /// </summary>
-    [Fact]
+    [SkippableFact(Config.SourceBuiltArtifactsPathEnv, skipOnNullOrWhiteSpaceEnv: true)]
     public void VerifySourcelinks()
     {
         try
@@ -78,6 +78,8 @@ public class SourcelinkTests : SmokeTests
     /// <returns>Path to sourcelink tool binary.</returns>
     private string InitializeSourcelinkTool()
     {
+        Assert.NotNull(Config.SourceBuiltArtifactsPath);
+        
         const string SourcelinkToolPackageNamePattern = "dotnet-sourcelink*nupkg";
         const string SourcelinkToolBinaryFilename = "dotnet-sourcelink.dll";
 
