@@ -6,6 +6,10 @@ trigger:
     include:
     - main
     - release/*
+    exclude:
+    - release/8.0.2xx
+    - release/8.0.3xx
+    - release/8.0.4xx
 
 resources:
   repositories:
