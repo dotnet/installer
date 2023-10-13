@@ -19,10 +19,10 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 /// which can cause less CPU time to be allocated to other tests.
 /// This would make other tests run too long and fail due to timeouts.
 /// </summary>
-[CollectionDefinition(nameof(SourcelinkTestCollectionDefinition), DisableParallelization = true)]
-public class SourcelinkTestCollectionDefinition { }
+[CollectionDefinition(nameof(SourcelinkTestCollection), DisableParallelization = true)]
+public class SourcelinkTestCollection { }
 
-[Collection(nameof(SourcelinkTestCollectionDefinition))]
+[Collection(nameof(SourcelinkTestCollection))]
 public class SourcelinkTests : SdkTests
 {
     private static string SourcelinkRoot { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(SourcelinkTests));
@@ -45,8 +45,8 @@ public class SourcelinkTests : SdkTests
 
             string symbolsRoot = Directory.CreateDirectory(Path.Combine(SourcelinkRoot, "symbols")).FullName;
 
-            // We are validating dotnet-symbols-*.tar.gz which contains all source-built symbols, including
-            // SDK-specific symbols that are also packaged in dotnet-sdk-symbols-*.tar.gz.
+            // We are validating dotnet-symbols-all-*.tar.gz which contains all source-built symbols, including
+            // SDK-specific symbols that are also packaged in dotnet-symbols-sdk-*.tar.gz.
             Utilities.ExtractTarball(
                 Utilities.GetFile(Path.GetDirectoryName(Config.SourceBuiltArtifactsPath), "dotnet-symbols-all-*.tar.gz"),
                 symbolsRoot,
