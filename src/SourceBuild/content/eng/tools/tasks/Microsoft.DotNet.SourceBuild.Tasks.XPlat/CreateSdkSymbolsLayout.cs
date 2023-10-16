@@ -57,7 +57,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         private void LogErrorOrWarning(bool isError, string message)
         {
-            if (FailOnMissingPDBs)
+            if (isError)
             {
                 Log.LogError(message);
             }
@@ -104,14 +104,14 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     if (guid != string.Empty)
                     {
-                        if (!allPdbGuids.ContainsKey(guid))
+                        if (!allPdbGuids.ContainsKey(GetKey(guid, file)))
                         {
                             filesWithoutPDBs.Add(file.Substring(SdkLayoutPath.Length + 1));
                         }
                         else
                         {
                             // Copy matching pdb to symbols path, preserving sdk binary's hierarchy
-                            string sourcePath = (string)allPdbGuids[guid]!;
+                            string sourcePath = (string)allPdbGuids[GetKey(guid, file)]!;
                             string destinationPath =
                                 file.Replace(SdkLayoutPath, SdkSymbolsLayoutPath)
                                     .Replace(Path.GetFileName(file), Path.GetFileName(sourcePath));
@@ -142,13 +142,18 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 var id = new BlobContentId(metadataReader.DebugMetadataHeader.Id);
                 string guid = $"{id.Guid:N}";
-                if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(guid))
+                if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(GetKey(guid, file)))
                 {
-                    allPdbGuids.Add(guid, file);
+                    allPdbGuids.Add(GetKey(guid, file), file);
                 }
             }
 
             return allPdbGuids;
+        }
+
+        private string GetKey(string guid, string file)
+        {
+            return $"{guid}.{Path.GetFileNameWithoutExtension(file)}".ToLower();
         }
     }
 }
