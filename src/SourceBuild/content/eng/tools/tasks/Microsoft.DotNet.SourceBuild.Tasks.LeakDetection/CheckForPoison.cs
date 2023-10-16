@@ -141,6 +141,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string PoisonMarker = "POISONED";
 
+        private const string SbrpAttributeType = "System.Reflection.AssemblyMetadataAttribute";
+
+        private const string SbrpAttributeValue = "source-build-reference-packages";
+
         public override bool Execute()
         {
             IEnumerable<PoisonedFileEntry> poisons = GetPoisonedFiles(FilesToCheck.Select(f => f.ItemSpec), HashCatalogFilePath, MarkerFileName);
@@ -286,7 +290,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             try
             {
                 AssemblyName asm = AssemblyName.GetAssemblyName(fileToCheck);
-                if (IsAssemblyPoisoned(fileToCheck))
+                if (IsAssemblyFromSbrp(fileToCheck))
+                {
+                    poisonEntry.Type |= PoisonType.ReferenceAssemblyAttribute;
+                }
+                else if (IsAssemblyPoisoned(fileToCheck))
                 {
                     poisonEntry.Type |= PoisonType.AssemblyAttribute;
                 }
@@ -317,6 +325,41 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 }
             }
 
+            return false;
+        }
+
+        private static bool IsAssemblyFromSbrp(string assemblyPath)
+        {
+            using var stream = new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var peReader = new PEReader(stream);
+
+            MetadataReader reader = peReader.GetMetadataReader();
+            return reader.CustomAttributes.Select(attrHandle => reader.GetCustomAttribute(attrHandle))
+                    .Any(attr => IsAttributeSbrp(reader, attr));
+        }
+
+        private static bool IsAttributeSbrp(MetadataReader reader, CustomAttribute attr)
+        {
+            string attributeType = string.Empty;
+
+            if (attr.Constructor.Kind == HandleKind.MemberReference)
+            {
+                MemberReference mref = reader.GetMemberReference((MemberReferenceHandle)attr.Constructor);
+
+                if (mref.Parent.Kind == HandleKind.TypeReference)
+                {
+                    TypeReference tref = reader.GetTypeReference((TypeReferenceHandle)mref.Parent);
+                    attributeType = $"{reader.GetString(tref.Namespace)}.{reader.GetString(tref.Name)}";
+                }
+            }
+
+            if (attributeType == SbrpAttributeType)
+            {
+                byte[] data = reader.GetBlobBytes(attr.Value);
+                string attributeValue = Encoding.UTF8.GetString(data);
+
+                return attributeValue.Contains(SbrpAttributeValue);
+            }
             return false;
         }
 
