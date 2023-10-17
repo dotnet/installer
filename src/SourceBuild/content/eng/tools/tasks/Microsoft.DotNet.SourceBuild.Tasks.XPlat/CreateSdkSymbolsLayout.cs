@@ -104,14 +104,15 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     if (guid != string.Empty)
                     {
-                        if (!allPdbGuids.ContainsKey(GetKey(guid, file)))
+                        string debugId = GetDebugId(guid, file);
+                        if (!allPdbGuids.ContainsKey(debugId))
                         {
                             filesWithoutPDBs.Add(file.Substring(SdkLayoutPath.Length + 1));
                         }
                         else
                         {
                             // Copy matching pdb to symbols path, preserving sdk binary's hierarchy
-                            string sourcePath = (string)allPdbGuids[GetKey(guid, file)]!;
+                            string sourcePath = (string)allPdbGuids[debugId]!;
                             string destinationPath =
                                 file.Replace(SdkLayoutPath, SdkSymbolsLayoutPath)
                                     .Replace(Path.GetFileName(file), Path.GetFileName(sourcePath));
@@ -142,16 +143,21 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 var id = new BlobContentId(metadataReader.DebugMetadataHeader.Id);
                 string guid = $"{id.Guid:N}";
-                if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(GetKey(guid, file)))
+                string debugId = GetDebugId(guid, file);
+                if (!string.IsNullOrEmpty(guid) && !allPdbGuids.ContainsKey(debugId))
                 {
-                    allPdbGuids.Add(GetKey(guid, file), file);
+                    allPdbGuids.Add(debugId, file);
                 }
             }
 
             return allPdbGuids;
         }
 
-        private string GetKey(string guid, string file)
+        /// <summary>
+        /// Calculates a debug Id from debug guid and filename. We use this as a key
+        /// in PDB hashtable. Guid is not enough due to collisions in several PDBs.
+        /// </summary>
+        private string GetDebugId(string guid, string file)
         {
             return $"{guid}.{Path.GetFileNameWithoutExtension(file)}".ToLower();
         }
