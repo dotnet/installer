@@ -4,7 +4,20 @@ schedules:
   branches:
     include:
     - main
-    - release/*
+    - release/*.0.1xx*
+    - internal/release/*.0.1xx*
+    exclude:
+    - release/3*
+    - internal/release/3*
+    - release/5*
+    - internal/release/5*
+    - release/6*
+    - internal/release/6*
+    - release/7*
+    - internal/release/7*
+    # These 8.0.1xx-* branches can be removed from the exclusions once they get deleted from the repo
+    - release/8.0.1xx-*
+    - internal/release/8.0.1xx-*
 
 pr: none
 trigger: none
