@@ -157,9 +157,7 @@ namespace Microsoft.DotNet.Build.Tasks
         /// Calculates a debug Id from debug guid and filename. We use this as a key
         /// in PDB hashtable. Guid is not enough due to collisions in several PDBs.
         /// </summary>
-        private string GetDebugId(string guid, string file)
-        {
-            return $"{guid}.{Path.GetFileNameWithoutExtension(file)}".ToLower();
-        }
+        private string GetDebugId(string guid, string file) =>
+            $"{guid}.{Path.GetFileNameWithoutExtension(file)}".ToLower();
     }
 }
