@@ -141,17 +141,16 @@ public class LicenseScanTests : TestBase
     {
         Assert.NotNull(Config.LicenseScanPath);
 
-        string OriginalScancodeResultsPath = Path.Combine(LogsDirectory, "scancode-results-original.json");
-        string FilteredScancodeResultsPath = Path.Combine(LogsDirectory, "scancode-results-filtered.json");
+        string scancodeResultsPath = Path.Combine(LogsDirectory, "scancode-results.json");
 
         // Scancode Doc: https://scancode-toolkit.readthedocs.io/en/latest/index.html
         string ignoreOptions = string.Join(" ", s_ignoredFilePatterns.Select(pattern => $"--ignore {pattern}"));
         ExecuteHelper.ExecuteProcessValidateExitCode(
             "scancode",
-            $"--license --strip-root --only-findings {ignoreOptions} --json-pp {OriginalScancodeResultsPath} {Config.LicenseScanPath}",
+            $"--license --strip-root --only-findings {ignoreOptions} --json-pp {scancodeResultsPath} {Config.LicenseScanPath}",
             OutputHelper);
 
-        JsonDocument doc = JsonDocument.Parse(File.ReadAllText(OriginalScancodeResultsPath));
+        JsonDocument doc = JsonDocument.Parse(File.ReadAllText(scancodeResultsPath));
         ScancodeResults? scancodeResults = doc.Deserialize<ScancodeResults>();
         Assert.NotNull(scancodeResults);
 
@@ -162,7 +161,6 @@ public class LicenseScanTests : TestBase
             WriteIndented = true
         };
         string json = JsonSerializer.Serialize(scancodeResults, options);
-        File.WriteAllText(FilteredScancodeResultsPath, json);
 
         string baselineName = $"Licenses.{_targetRepo}.json";
 
