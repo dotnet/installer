@@ -12,8 +12,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -149,7 +152,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string SbrpAttributeType = "System.Reflection.AssemblyMetadataAttribute";
 
-        private const string SbrpAttributeValue = "source-build-reference-packages";
+        private const string SbrpAttributeValuePattern = "source\\s?source\\-build\\-reference\\-packages";
 
         private record CandidateFileEntry(string ExtractedPath, string DisplayPath);
 
@@ -302,9 +305,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             try
             {
                 AssemblyName asm = AssemblyName.GetAssemblyName(fileToCheck);
-                if (IsAssemblyFromSbrp(fileToCheck))
+                if (!candidate.DisplayPath.Contains("SourceBuildReferencePackages") && IsAssemblyFromSbrp(fileToCheck))
                 {
-                    poisonEntry.Type |= PoisonType.ReferenceAssemblyAttribute;
+                    poisonEntry.Type |= PoisonType.SourceBuildReferenceAssembly;
                 }
                 else if (IsAssemblyPoisoned(fileToCheck))
                 {
@@ -340,7 +343,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             return false;
         }
 
-<<<<<<< HEAD
         private static bool IsAssemblyFromSbrp(string assemblyPath)
         {
             using var stream = new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -368,14 +370,13 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             if (attributeType == SbrpAttributeType)
             {
-                byte[] data = reader.GetBlobBytes(attr.Value);
-                string attributeValue = Encoding.UTF8.GetString(data);
-
-                return attributeValue.Contains(SbrpAttributeValue);
+                BlobReader blobReader = reader.GetBlobReader(attr.Value);
+                string attributeValue = Encoding.UTF8.GetString(blobReader.ReadBytes(blobReader.Length));
+                attributeValue = Regex.Replace(attributeValue, @"\p{C}+", string.Empty);
+                return Regex.IsMatch(attributeValue, SbrpAttributeValuePattern);
             }
             return false;
         }
-
 
         private static PoisonedFileEntry ExtractAndCheckZipFileOnly(IEnumerable<CatalogPackageEntry> catalogedPackages, CandidateFileEntry candidate, string markerFileName, string tempDir, Queue<CandidateFileEntry> futureFilesToCheck)
         {
