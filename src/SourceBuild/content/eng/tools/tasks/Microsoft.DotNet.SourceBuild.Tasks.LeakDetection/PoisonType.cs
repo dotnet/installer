@@ -11,6 +11,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         Hash = 1,
         AssemblyAttribute = 2,
         NupkgFile = 4,
-        ReferenceAssemblyAttribute = 8,
+        SourceBuildReferenceAssembly = 8,
     }
 }
