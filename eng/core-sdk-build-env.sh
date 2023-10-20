@@ -37,5 +37,4 @@ export PATH=$REPO_ROOT/.dotnet$arcade_partition_suffix:$PATH
 export DOTNET_INSTALL_DIR=$REPO_ROOT/.dotnet$arcade_partition_suffix
 export ArtifactsDir=$REPO_ROOT/artifacts$arcade_partition_suffix/
 
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
