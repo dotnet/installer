@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class DotNetFormatTests : SmokeTests
+public class DotNetFormatTests : SdkTests
 {
     private const string TestFileName = "FormatTest.cs";
     private const string UnformattedFileName = "FormatTestUnformatted.cs";
@@ -22,12 +22,6 @@ public class DotNetFormatTests : SmokeTests
     [Fact]
     public void FormatProject()
     {
-        if (Config.TargetRid.Contains("alpine"))
-        {
-            // Skipping this test on Alpine due to https://github.com/dotnet/format/issues/1945
-            return;
-        }
-
         string unformattedCsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), UnformattedFileName);
 
         string projectDirectory = DotNetHelper.ExecuteNew("console", nameof(FormatProject), "C#");
