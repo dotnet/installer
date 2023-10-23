@@ -152,8 +152,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string SbrpAttributeType = "System.Reflection.AssemblyMetadataAttribute";
 
-        private const string SbrpAttributeValue = "source source-build-reference-packages";
-
         private record CandidateFileEntry(string ExtractedPath, string DisplayPath);
 
         public override bool Execute()
@@ -374,8 +372,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 var decodedValue = attr.DecodeValue(provider);
                 try
                 {
-                    string attributeValue = decodedValue.FixedArguments[0].Value.ToString() + " " + decodedValue.FixedArguments[1].Value.ToString();
-                    return attributeValue == SbrpAttributeValue;
+                    return decodedValue.FixedArguments[0].Value.ToString() == "source" && decodedValue.FixedArguments[1].Value.ToString() == "source-build-reference-packages";
                 }
                 catch
                 {
