@@ -1,3 +1,5 @@
+TEST CHANGE - DO NOT MERGE
+
 # .NET SDK Installers
 
 [![GitHub release](https://img.shields.io/github/release/dotnet/installer.svg)](https://GitHub.com/dotnet/installer/releases/)
