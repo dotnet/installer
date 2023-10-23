@@ -152,7 +152,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string SbrpAttributeType = "System.Reflection.AssemblyMetadataAttribute";
 
-        private const string SbrpAttributeValuePattern = "source\\s?source\\-build\\-reference\\-packages";
+        private const string SbrpAttributeValue = "source source-build-reference-packages";
 
         private record CandidateFileEntry(string ExtractedPath, string DisplayPath);
 
@@ -370,11 +370,19 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             if (attributeType == SbrpAttributeType)
             {
-                BlobReader blobReader = reader.GetBlobReader(attr.Value);
-                string attributeValue = Encoding.UTF8.GetString(blobReader.ReadBytes(blobReader.Length));
-                attributeValue = Regex.Replace(attributeValue, @"\p{C}+", string.Empty);
-                return Regex.IsMatch(attributeValue, SbrpAttributeValuePattern);
+                var provider = new CustomAttributeTypeProvider(reader);
+                var decodedValue = attr.DecodeValue(provider);
+                try
+                {
+                    string attributeValue = decodedValue.FixedArguments[0].Value.ToString() + " " + decodedValue.FixedArguments[1].Value.ToString();
+                    return attributeValue == SbrpAttributeValue;
+                }
+                catch
+                {
+                    throw new Exception($"{SbrpAttributeType} is not formatted properly with a key, value pair.");
+                }
             }
+
             return false;
         }
 
