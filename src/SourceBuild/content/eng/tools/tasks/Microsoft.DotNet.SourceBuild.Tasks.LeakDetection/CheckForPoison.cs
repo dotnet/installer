@@ -368,8 +368,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             if (attributeType == SbrpAttributeType)
             {
-                var provider = new CustomAttributeTypeProvider(reader);
-                var decodedValue = attr.DecodeValue(provider);
+                var decodedValue = attr.DecodeValue(DummyAttributeTypeProvider.Instance);
                 try
                 {
                     return decodedValue.FixedArguments[0].Value.ToString() == "source" && decodedValue.FixedArguments[1].Value.ToString() == "source-build-reference-packages";

@@ -81,7 +81,7 @@ stages:
         demands: ${{ variables.defaultPoolDemands }}
       container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: false            # 🚫
-      enablePoison: false                # 🚫
+      enablePoison: true                 # 🚫
       excludeOmniSharpTests: true        # ✅
       runOnline: true                    # ✅
       useMonoRuntime: false              # 🚫
@@ -99,7 +99,7 @@ stages:
         demands: ${{ variables.defaultPoolDemands }}
       container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: true             # ✅
-      enablePoison: false                # 🚫
+      enablePoison: true                 # 🚫
       excludeOmniSharpTests: true        # ✅
       runOnline: false                   # 🚫
       useMonoRuntime: false              # 🚫
