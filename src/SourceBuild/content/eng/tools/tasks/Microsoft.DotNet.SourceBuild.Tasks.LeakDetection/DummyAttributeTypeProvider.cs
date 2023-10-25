@@ -9,6 +9,8 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 {
+
+    // An empty ICustomAttributeTypeProvider implementation is necessary to read metadata attribute values.
     internal class DummyAttributeTypeProvider : ICustomAttributeTypeProvider<Type>
     {
         public static readonly DummyAttributeTypeProvider Instance = new();
