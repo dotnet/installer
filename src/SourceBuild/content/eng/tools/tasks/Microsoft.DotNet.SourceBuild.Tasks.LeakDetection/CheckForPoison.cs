@@ -376,7 +376,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 }
                 catch
                 {
-                    throw new Exception($"{SbrpAttributeType} is not formatted properly with a key, value pair.");
+                    throw new InvalidOperationException($"{SbrpAttributeType} is not formatted properly with a key, value pair.");
                 }
             }
 

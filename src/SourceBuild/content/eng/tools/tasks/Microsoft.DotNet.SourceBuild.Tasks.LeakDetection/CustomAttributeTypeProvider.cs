@@ -91,6 +91,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
             throw new NotImplementedException();
         }
+        
         public bool IsSystemType(Type type) => type.FullName == "System.Type";
     }
 }
