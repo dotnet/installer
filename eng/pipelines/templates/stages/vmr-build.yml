@@ -8,6 +8,9 @@ parameters:
   # Branch of the VMR to use (to push to for internal builds)
   vmrBranch: $(Build.SourceBranch)
 
+  # True when the build is a full build (not a PR build or lite build)
+  isFullBuild:
+
   # True when build is running from dotnet/dotnet directly
   isBuiltFromVmr:
 
@@ -74,6 +77,7 @@ stages:
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
+      artifacts: centos.8-x64
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
@@ -94,6 +98,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
+        artifacts: centos.8-x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -101,7 +106,7 @@ stages:
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
-        runOnline: false                   # 🚫
+        runOnline: true                    # ✅
         useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
         reuseBuildArtifactsFrom: CentOSStream8_Online_MsftSdk
@@ -113,6 +118,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
+        artifacts: alpine.3.17-x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
@@ -124,7 +130,7 @@ stages:
         useMonoRuntime: false              # 🚫
         withPreviousSDK: true              # ✅
 
-    - ${{ if eq(variables['Build.DefinitionName'], 'dotnet-dotnet') }}:
+    - ${{ if eq(parameters.isFullBuild, true) }}:
 
       - template: ../jobs/vmr-build.yml
         parameters:
@@ -133,6 +139,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -151,6 +158,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -169,6 +177,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -187,6 +196,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -205,6 +215,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -223,6 +234,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -241,6 +253,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}
@@ -259,6 +272,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: arm64
+          artifacts: centos.8-x64
           pool: ${{ parameters.poolInternalArm64 }}
           container: ${{ parameters.ubuntu2204ArmContainer }}
           buildFromArchive: false            # 🚫
@@ -275,6 +289,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
+          artifacts: centos.8-x64
           pool:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemands }}

@@ -15,6 +15,10 @@ trigger:
     include:
     - release/*
     - internal/release/*
+    exclude:
+    - release/*.0.2xx
+    - release/*.0.3xx
+    - release/*.0.4xx
 
 stages:
 - template: templates/stages/vmr-scan.yml
@@ -22,4 +26,4 @@ stages:
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
     isBuiltFromVmr: true
-    
+    isFullBuild: true

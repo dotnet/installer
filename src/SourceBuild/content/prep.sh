@@ -28,6 +28,7 @@ buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
+artifacts='centos.8-x64'
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 positional_args=()
@@ -52,6 +53,9 @@ while :; do
       ;;
     --no-sdk)
       installDotnet=false
+      ;;
+    --artifacts)
+      artifacts=$2
       ;;
     --runtime-source-feed)
       runtime_source_feed=$2
@@ -107,22 +111,32 @@ fi
 function DownloadArchive {
   archiveType="$1"
   isRequired="$2"
+  artifacts="$3"
 
   packageVersionsPath="$SCRIPT_ROOT/eng/Versions.props"
   notFoundMessage="No source-built $archiveType found to download..."
 
   echo "  Looking for source-built $archiveType to download..."
-  archiveVersionLine=$(grep -m 1 "<PrivateSourceBuilt${archiveType}Url>" "$packageVersionsPath" || :)
-  versionPattern="<PrivateSourceBuilt${archiveType}Url>(.*)</PrivateSourceBuilt${archiveType}Url>"
+  archiveVersionLine=$(grep -m 1 "<SourceBuiltVersionNumber>" "$packageVersionsPath" || :)
+  versionPattern="<SourceBuiltVersionNumber>(.*)</SourceBuiltVersionNumber>"
   if [[ $archiveVersionLine =~ $versionPattern ]]; then
-      archiveUrl="${BASH_REMATCH[1]}"
+    archiveVersion="${BASH_REMATCH[1]}"
+    archiveUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.$archiveType.$archiveVersion.$artifacts.tar.gz"
+
+    status_code=$(curl -o /dev/null -s -w "%{http_code}\n" $archiveUrl)
+
+    if [[ $status_code -ge 200 && $status_code -lt 400 ]]; then
       echo "  Downloading source-built $archiveType from $archiveUrl..."
-      (cd "$packagesArchiveDir" && curl --retry 5 -O "$archiveUrl")
-  elif [ "$isRequired" == true ]; then
-    echo "  ERROR: $notFoundMessage"
-    exit 1
-  else
-    echo "  $notFoundMessage"
+      (cd $packagesArchiveDir && curl --retry 5 -O $archiveUrl)
+      notFoundMessage=""
+    fi
+  fi
+
+  if [[ -n "$notFoundMessage" ]]; then
+    echo "$notFoundMessage"
+    if [ "$isRequired" == true ]; then
+      exit 1
+    fi
   fi
 }
 
@@ -164,12 +178,12 @@ fi
 
 # Read the eng/Versions.props to get the archives to download and download them
 if [ "$downloadArtifacts" == true ]; then
-  DownloadArchive Artifacts true
+  DownloadArchive Artifacts true $artifacts
   if [ "$buildBootstrap" == true ]; then
       BootstrapArtifacts
   fi
 fi
 
 if [ "$downloadPrebuilts" == true ]; then
-  DownloadArchive Prebuilts false
+  DownloadArchive Prebuilts false $artifacts
 fi
