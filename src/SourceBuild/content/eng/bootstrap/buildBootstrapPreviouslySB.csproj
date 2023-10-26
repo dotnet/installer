@@ -32,7 +32,6 @@
     <RuntimePack Include="Microsoft.Aspnetcore.App.Runtime" Version="[$(MicrosoftAspNetCoreAppRuntimeVersion)]" />
     <RuntimePack Include="Microsoft.NETCore.App.Crossgen2" Version="[$(MicrosoftNETCoreAppCrossgen2Version)]" />
     <RuntimePack Include="Microsoft.NETCore.App.Host" Version="[$(MicrosoftNETCoreAppHostPackageVersion)]" />
-    <RuntimePack Include="Microsoft.NETCore.App.Ref" Version="[$(MicrosoftNETCoreAppRefVersion)]" />
     <RuntimePack Include="Microsoft.NETCore.App.Runtime" Version="[$(MicrosoftNETCoreAppRuntimeVersion)]" />
 
     <PortablePackage Include="Microsoft.DotNet.ILCompiler" Version="[$(MicrosoftDotNetILCompilerVersion)]" />
@@ -50,6 +49,7 @@
     <ExcludedPackage Include="runtime.linux-musl-arm64.runtime.native.System.IO.Ports" />
 
     <PackageDownload Include="Microsoft.NET.ILLink.Tasks" Version="[$(MicrosoftNETILLinkTasksVersion)]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(MicrosoftNETCoreAppRefVersion)]" />
   </ItemGroup>
 
   <Target Name="GetPackagesToDownload"
