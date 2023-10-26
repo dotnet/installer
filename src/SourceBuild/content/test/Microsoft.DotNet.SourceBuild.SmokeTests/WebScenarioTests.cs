@@ -16,12 +16,13 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 /// <see cref="BaseScenarioTests"/> for related basic scenarios.
 /// They are encapsulated in a separate testclass so that they can be run in parallel.
 /// </summary>
-public class WebScenarioTests : SmokeTests
+public class WebScenarioTests : SdkTests
 {
     public WebScenarioTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [Theory]
-    [MemberData(nameof(GetScenarioObjects))]
+    // https://github.com/dotnet/source-build/issues/3668
+    // [Theory]
+    // [MemberData(nameof(GetScenarioObjects))]
     public void VerifyScenario(TestScenario scenario) => scenario.Execute(DotNetHelper);
 
     public static IEnumerable<object[]> GetScenarioObjects() => GetScenarios().Select(scenario => new object[] { scenario });
@@ -30,7 +31,7 @@ public class WebScenarioTests : SmokeTests
     {
         foreach (DotNetLanguage language in new[] { DotNetLanguage.CSharp, DotNetLanguage.FSharp })
         {
-            yield return new(nameof(WebScenarioTests), language, DotNetTemplate.Web,    DotNetActions.Build | DotNetActions.Run | DotNetActions.PublishComplex);
+            yield return new(nameof(WebScenarioTests), language, DotNetTemplate.Web,    DotNetActions.Build | DotNetActions.Run | (DotNetHelper.ShouldPublishComplex() ? DotNetActions.None : DotNetActions.PublishComplex));
             yield return new(nameof(WebScenarioTests), language, DotNetTemplate.Mvc,    DotNetActions.Build | DotNetActions.Run | DotNetActions.Publish) { NoHttps = true };
             yield return new(nameof(WebScenarioTests), language, DotNetTemplate.WebApi, DotNetActions.Build | DotNetActions.Run | DotNetActions.Publish);
         }

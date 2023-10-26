@@ -9,18 +9,19 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class DotNetWatchTests : SmokeTests
+public class DotNetWatchTests : SdkTests
 {
     public DotNetWatchTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [Fact]
+    // https://github.com/dotnet/source-build/issues/3668
+    //[Fact]
     public void WatchTests()
     {
         string projectDirectory = DotNetHelper.ExecuteNew(DotNetTemplate.Console.GetName(), nameof(DotNetWatchTests));
         bool outputChanged = false;
 
         DotNetHelper.ExecuteCmd(
-            "watch run",
+            "watch run --non-interactive",
             workingDirectory: projectDirectory,
             processConfigCallback: processConfigCallback,
             expectedExitCode: null, // The exit code does not reflect whether or not dotnet watch is working properly

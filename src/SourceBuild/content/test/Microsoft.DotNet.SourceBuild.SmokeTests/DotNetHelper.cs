@@ -3,14 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +19,6 @@ internal class DotNetHelper
     private static readonly object s_lockObj = new();
 
     public static string DotNetPath { get; } = Path.Combine(Config.DotNetDirectory, "dotnet");
-    public static string LogsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "logs");
     public static string PackagesDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "packages");
     public static string ProjectsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), $"projects-{DateTime.Now:yyyyMMddHHmmssffff}");
 
@@ -55,11 +52,6 @@ internal class DotNetHelper
             if (!Directory.Exists(PackagesDirectory))
             {
                 Directory.CreateDirectory(PackagesDirectory);
-            }
-
-            if (!Directory.Exists(LogsDirectory))
-            {
-                Directory.CreateDirectory(LogsDirectory);
             }
         }
     }
@@ -126,7 +118,7 @@ internal class DotNetHelper
         }
     }
 
-    public static void ConfigureProcess(Process process, string? workingDirectory, bool setPath = false)
+    public static void ConfigureProcess(Process process, string? workingDirectory)
     {
         if (workingDirectory != null)
         {
@@ -137,11 +129,7 @@ internal class DotNetHelper
         process.StartInfo.EnvironmentVariables["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1";
         process.StartInfo.EnvironmentVariables["DOTNET_ROOT"] = Config.DotNetDirectory;
         process.StartInfo.EnvironmentVariables["NUGET_PACKAGES"] = PackagesDirectory;
-
-        if (setPath)
-        {
-            process.StartInfo.EnvironmentVariables["PATH"] = $"{Config.DotNetDirectory}:{Environment.GetEnvironmentVariable("PATH")}";
-        }
+        process.StartInfo.EnvironmentVariables["PATH"] = $"{Config.DotNetDirectory}:{Environment.GetEnvironmentVariable("PATH")}";
     }
 
     public void ExecuteBuild(string projectName) =>
@@ -265,7 +253,7 @@ internal class DotNetHelper
             fileName += $"-{differentiator}";
         }
 
-        return $"/bl:{Path.Combine(LogsDirectory, $"{fileName}.binlog")}";
+        return $"/bl:{Path.Combine(TestBase.LogsDirectory, $"{fileName}.binlog")}";
     }
 
     private static bool DetermineIsMonoRuntime(string dotnetRoot)
@@ -289,6 +277,9 @@ internal class DotNetHelper
     }
 
     private static string GetProjectDirectory(string projectName) => Path.Combine(ProjectsDirectory, projectName);
+
+    public static bool ShouldPublishComplex() =>
+        string.Equals(Config.TargetArchitecture,"ppc64le") || string.Equals(Config.TargetArchitecture,"s390x");
 
     private class WebAppValidator
     {
