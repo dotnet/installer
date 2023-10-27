@@ -259,7 +259,6 @@ fi
 
 # Synchronize the VMR
 
-# TODO https://github.com/dotnet/arcade-services/issues/3024: Re-enable TPN synchronization once the tooling is fixed
 "$dotnet" darc vmr update                    \
   --vmr "$vmr_dir"                           \
   --tmp "$tmp_dir"                           \
@@ -268,6 +267,7 @@ fi
   $recursive_arg                             \
   $additional_remotes                        \
   --readme-template "$readme_template"       \
+  --tpn-template "$tpn_template"             \
   "$repository"
 
 if [[ $? == 0 ]]; then
