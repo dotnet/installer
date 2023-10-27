@@ -15,21 +15,21 @@
       Building .NET from source depends on several archives, depending on the branch's current
       source-buildability status.
 
-      PrivateSourceBuiltSdkVersionNumber is the version number of a tar.gz of the source build .NET SDK
+      PrivateSourceBuiltSdkVersion is the version number of a tar.gz of the source build .NET SDK
       from the previous release for a particular OS. It is used by CI to validate that the current
       release can be built with it.
 
-      PrivateSourceBuiltArtifactsVersionNumber is the version number of a tar.gz of .NET build outputs
+      PrivateSourceBuiltArtifactsVersion is the version number of a tar.gz of .NET build outputs
       from a previous build needed to build the current version of .NET. This is always defined
       because .NET needs to be bootstrappable at any point in time.
 
-      PrivateSourceBuiltPrebuiltsVersionNumber is the version number of a tar.gz of assets downloaded
+      PrivateSourceBuiltPrebuiltsVersion is the version number of a tar.gz of assets downloaded
       from the internet that are needed to build the current version of .NET. Early in the lifecycle
       of a .NET major or minor release, prebuilts may be needed. When the release is mature, prebuilts
       are not necessary, and this property is removed from the file.
     -->
-    <PrivateSourceBuiltSdkVersionNumber>8.0.100-rc.2.23502.1</PrivateSourceBuiltSdkVersionNumber>
-    <PrivateSourceBuiltArtifactsVersionNumber>8.0.100-rc.2.23502.1</PrivateSourceBuiltArtifactsVersionNumber>
-    <PrivateSourceBuiltPrebuiltsVersionNumber>0.1.0-9.0.100-3</PrivateSourceBuiltPrebuiltsVersionNumber>
+    <PrivateSourceBuiltSdkVersion>8.0.100-rc.2.23502.1</PrivateSourceBuiltSdkVersion>
+    <PrivateSourceBuiltArtifactsVersion>8.0.100-rc.2.23502.1</PrivateSourceBuiltArtifactsVersion>
+    <PrivateSourceBuiltPrebuiltsVersion>0.1.0-9.0.100-3</PrivateSourceBuiltPrebuiltsVersion>
   </PropertyGroup>
 </Project>

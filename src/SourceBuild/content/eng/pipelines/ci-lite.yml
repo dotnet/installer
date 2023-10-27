@@ -1,28 +1,15 @@
-# This is the main build definition (PR+CI) for dotnet/dotnet-lite
-# This pipeline is triggered by PRs targetting and pushes to main, release/*, and internal/release/* branches
+# This is the dotnet/dotnet-lite pipeline that is triggered by all PRs and pushes to main.
 
 trigger:
   batch: true
   branches:
     include:
     - main
-    - release/*
-    - internal/release/*
-    exclude:
-    - release/*.0.2xx
-    - release/*.0.3xx
-    - release/*.0.4xx
 
 pr:
   branches:
     include:
-    - main
-    - release/*
-    - internal/release/*
-    exclude:
-    - release/*.0.2xx
-    - release/*.0.3xx
-    - release/*.0.4xx
+    - '*'
 
 stages:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:

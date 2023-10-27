@@ -1,5 +1,4 @@
-# This is the main build definition (CI) for dotnet/dotnet
-# This pipeline runs on a schedule every weekday at midnight (00:00 UTC) for "main" and when changes are pushed to "release/" and "internal/release/".
+# This is the dotnet/dotnet pipeline that is triggered every weekday at midnight (00:00 UTC) for "main" and when changes are pushed to all other branches.
 
 schedules:
 - cron: '0 0 * * Mon-Fri'
@@ -13,14 +12,16 @@ trigger:
   batch: true
   branches:
     include:
-    - release/*
-    - internal/release/*
+    - '*'
     exclude:
-    - release/*.0.2xx
-    - release/*.0.3xx
-    - release/*.0.4xx
+    - main
+
+pr: none
 
 stages:
+- ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  - template: templates/stages/vmr-scan.yml
+
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
     isBuiltFromVmr: true

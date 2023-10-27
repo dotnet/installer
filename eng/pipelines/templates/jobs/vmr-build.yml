@@ -148,8 +148,8 @@ jobs:
         notFoundMessage="No source-built SDK found to download..."
 
         echo "Looking for source-built SDK to download..."
-        archiveVersionLine=$(grep -m 1 "<PrivateSourceBuiltSdkVersionNumber>" "$packageVersionsPath" || :)
-        versionPattern="<PrivateSourceBuiltSdkVersionNumber>(.*)</PrivateSourceBuiltSdkVersionNumber>"
+        archiveVersionLine=$(grep -m 1 "<PrivateSourceBuiltSdkVersion>" "$packageVersionsPath" || :)
+        versionPattern="<PrivateSourceBuiltSdkVersion>(.*)</PrivateSourceBuiltSdkVersion>"
 
         if [[ $archiveVersionLine =~ $versionPattern ]]; then
           archiveVersion="${BASH_REMATCH[1]}"

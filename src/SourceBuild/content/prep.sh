@@ -26,11 +26,13 @@ function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
 }
 
+defaultArtifactsRid='centos.8-x64'
+
 buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
-artifactsRid='centos.8-x64'
+artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 positional_args=()
@@ -119,16 +121,18 @@ function DownloadArchive {
   notFoundMessage="No source-built $archiveType found to download..."
 
   echo "  Looking for source-built $archiveType to download..."
-  archiveVersionLine=$(grep -m 1 "<PrivateSourceBuilt${archiveType}VersionNumber>" "$packageVersionsPath" || :)
-  versionPattern="<PrivateSourceBuilt${archiveType}VersionNumber>(.*)</PrivateSourceBuilt${archiveType}VersionNumber>"
+  archiveVersionLine=$(grep -m 1 "<PrivateSourceBuilt${archiveType}Version>" "$packageVersionsPath" || :)
+  versionPattern="<PrivateSourceBuilt${archiveType}Version>(.*)</PrivateSourceBuilt${archiveType}Version>"
   if [[ $archiveVersionLine =~ $versionPattern ]]; then
     archiveVersion="${BASH_REMATCH[1]}"
 
     if [ "$archiveType" == "Prebuilts" ]; then
-      archiveUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.$archiveType.$archiveVersion.centos.8-x64.tar.gz"
+        archiveRid=$defaultArtifactsRid
     else
-      archiveUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.$archiveType.$archiveVersion.$artifactsRid.tar.gz"
+        archiveRid=$artifactsRid
     fi
+
+    archiveUrl="https://dotnetcli.azureedge.net/source-built-artifacts/assets/Private.SourceBuilt.$archiveType.$archiveVersion.$archiveRid .tar.gz"
 
     echo "  Downloading source-built $archiveType from $archiveUrl..."
     (cd "$packagesArchiveDir" && curl --retry 5 -O "$archiveUrl")
