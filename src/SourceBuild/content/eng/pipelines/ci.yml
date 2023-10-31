@@ -1,4 +1,4 @@
-# This is the dotnet/dotnet pipeline that is triggered every weekday at midnight (00:00 UTC) for "main" and when changes are pushed to all other branches.
+# This is the dotnet/dotnet pipeline that is triggered every weekday at midnight (00:00 UTC) for "main" and when changes are pushed to release/* and internal/release/* branches.
 
 schedules:
 - cron: '0 0 * * Mon-Fri'
@@ -11,15 +11,14 @@ schedules:
 trigger:
   batch: true
   branches:
-    include:
-    - '*'
-    exclude:
-    - main
+   include:
+   - release/*
+   - internal/release/*
 
 pr: none
 
 stages:
-- ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+- ${{ if ne(variables['Build.CronSchedule.DisplayName'], 'Daily midnight build') }}:
   - template: templates/stages/vmr-scan.yml
 
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
