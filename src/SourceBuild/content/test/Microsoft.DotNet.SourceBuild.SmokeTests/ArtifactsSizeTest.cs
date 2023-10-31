@@ -40,7 +40,6 @@ public class ArtifactsSizeTest : SdkTests
         }
     }
 
-
     // https://github.com/dotnet/source-build/issues/3668
     //[SkippableFact(Config.IncludeArtifactsSizeEnv, skipOnFalseEnv: true)]
     public void CompareArtifactsToBaseline()
