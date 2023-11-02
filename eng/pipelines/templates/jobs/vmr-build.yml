@@ -23,6 +23,7 @@ parameters:
 
 - name: artifactsRid
   type: string
+  default: centos.8-x64
 
 - name: container
   type: string
@@ -167,8 +168,13 @@ jobs:
   - script: |
       set -x
 
-      customPrepArgs="--artifacts-rid ${{ parameters.artifactsRid }}"
+      customPrepArgs=""
       prepSdk=true
+
+      if [[ '${{ parameters.artifactsRid }}' != 'centos.8-x64' ]]; then
+        customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
+      fi
+      
       if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
         # Source-built artifacts are from CentOS 8 Stream or Alpine 3.17. We want to download them without
         # downloading portable versions from the internet.

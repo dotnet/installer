@@ -1,4 +1,4 @@
-# This is the dotnet/dotnet-lite pipeline that is triggered by all PRs and pushes to main.
+# This is the dotnet/dotnet-lite pipeline that is triggered by pushes to main and PRs targetting main and release/*.
 
 trigger:
   batch: true
@@ -9,7 +9,8 @@ trigger:
 pr:
   branches:
     include:
-    - '*'
+    - main
+    - release/*
 
 stages:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -18,4 +19,4 @@ stages:
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
     isBuiltFromVmr: true
-    isFullBuild: false
+    isLiteBuild: true
