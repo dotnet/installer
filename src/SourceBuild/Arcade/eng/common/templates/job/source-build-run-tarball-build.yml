@@ -11,8 +11,7 @@ parameters:
   # -----------------------------------------------------------------------------------------------
   centOS7Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-source-build
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9-20220107135047-4cd394c
-  debian9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch
-  debian9Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-9-arm64v8
+  debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
   fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
   ubuntu1804Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04
   poolInternalAmd64:
@@ -84,9 +83,9 @@ jobs:
       dependsOn: ${{ parameters.dependsOn }}
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       matrix:
-        Debian9-Offline:
+        Debian11-Offline:
           _BootstrapPrep: true
-          _Container: ${{ parameters.debian9Arm64Container }}
+          _Container: ${{ parameters.debian11Arm64Container }}
           _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _RunOnline: false
