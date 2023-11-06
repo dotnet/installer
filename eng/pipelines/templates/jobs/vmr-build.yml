@@ -23,7 +23,7 @@ parameters:
 
 - name: artifactsRid
   type: string
-  default: centos.8-x64
+  default: ''
 
 - name: container
   type: string
@@ -145,6 +145,11 @@ jobs:
     - script: |
         set -euo pipefail
 
+        if [[ '${{ parameters.artifactsRid }}' == '' ]]; then
+           echo "'artifactsRid' is not specified. Cannot download source-built SDK."
+           exit 1
+        fi
+
         packageVersionsPath="${{ variables.sourcesPath }}/eng/Versions.props"
         notFoundMessage="No source-built SDK found to download..."
 
@@ -171,7 +176,7 @@ jobs:
       customPrepArgs=""
       prepSdk=true
 
-      if [[ '${{ parameters.artifactsRid }}' != 'centos.8-x64' ]]; then
+      if [[ -n '${{ parameters.artifactsRid }}' ]]; then
         customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
       fi
       
