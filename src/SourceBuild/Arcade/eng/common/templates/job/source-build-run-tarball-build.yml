@@ -9,6 +9,7 @@ parameters:
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
+  alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
   centOS7Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-source-build
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9-20220107135047-4cd394c
   debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
@@ -35,6 +36,11 @@ jobs:
       excludeSdkContentTests: true
     installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
     matrix:
+      Alpine317-Offline:
+        _BootstrapPrep: true
+        _Container: ${{ parameters.alpine317Container }}
+        _ExcludeOmniSharpTests: true
+        _RunOnline: false
       CentOS7-Online:
         _BootstrapPrep: false
         _Container: ${{ parameters.centOS7Container }}
