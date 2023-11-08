@@ -29,20 +29,18 @@ namespace Microsoft.DotNet.Cli.Build
 
             AddFolder(sb,
                       @"msbuildExtensions",
-                      @"MSBuild",
-                      ngenAssemblies: false);
+                      @"MSBuild");
 
             AddFolder(sb,
                       @"msbuildExtensions-ver",
-                      @"MSBuild\Current",
-                      ngenAssemblies: false);
+                      @"MSBuild\Current");
 
             File.WriteAllText(OutputFile, sb.ToString());
 
             return true;
         }
 
-        private void AddFolder(StringBuilder sb, string relativeSourcePath, string swrInstallDir, bool ngenAssemblies)
+        private void AddFolder(StringBuilder sb, string relativeSourcePath, string swrInstallDir, bool ngenAssemblies = false)
         {
             string sourceFolder = Path.Combine(MSBuildExtensionsLayoutDirectory, relativeSourcePath);
             var files = Directory.GetFiles(sourceFolder)
@@ -80,7 +78,7 @@ namespace Microsoft.DotNet.Cli.Build
                 string newSwrInstallDir = Path.Combine(swrInstallDir, subfolderName);
 
                 // Don't propagate ngenAssemblies to subdirectories.
-                AddFolder(sb, newRelativeSourcePath, newSwrInstallDir, ngenAssemblies: false);
+                AddFolder(sb, newRelativeSourcePath, newSwrInstallDir);
             }
         }
 
