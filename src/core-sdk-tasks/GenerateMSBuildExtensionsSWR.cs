@@ -24,22 +24,25 @@ namespace Microsoft.DotNet.Cli.Build
 
             AddFolder(sb,
                       @"MSBuildSdkResolver",
-                      @"MSBuild\Current\Bin\SdkResolvers\Microsoft.DotNet.MSBuildSdkResolver");
+                      @"MSBuild\Current\Bin\SdkResolvers\Microsoft.DotNet.MSBuildSdkResolver",
+                      ngenAssemblies: true);
 
             AddFolder(sb,
                       @"msbuildExtensions",
-                      @"MSBuild");
+                      @"MSBuild",
+                      ngenAssemblies: false);
 
             AddFolder(sb,
                       @"msbuildExtensions-ver",
-                      @"MSBuild\Current");
+                      @"MSBuild\Current",
+                      ngenAssemblies: false);
 
             File.WriteAllText(OutputFile, sb.ToString());
 
             return true;
         }
 
-        private void AddFolder(StringBuilder sb, string relativeSourcePath, string swrInstallDir)
+        private void AddFolder(StringBuilder sb, string relativeSourcePath, string swrInstallDir, bool ngenAssemblies)
         {
             string sourceFolder = Path.Combine(MSBuildExtensionsLayoutDirectory, relativeSourcePath);
             var files = Directory.GetFiles(sourceFolder)
@@ -55,7 +58,16 @@ namespace Microsoft.DotNet.Cli.Build
                 {
                     sb.Append(@"  file source=""$(PkgVS_Redist_Common_Net_Core_SDK_MSBuildExtensions)\");
                     sb.Append(Path.Combine(relativeSourcePath, Path.GetFileName(file)));
-                    sb.AppendLine("\"");
+                    sb.Append('"');
+
+                    if (ngenAssemblies && file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append(@" vs.file.ngenApplications=""[installDir]\Common7\IDE\vsn.exe""");
+                        sb.Append(@" vs.file.ngenApplications=""[installDir]\MSBuild\Current\Bin\MSBuild.exe""");
+                        sb.Append(" vs.file.ngenArchitecture=all");
+                    }
+
+                    sb.AppendLine();
                 }
 
                 sb.AppendLine();
@@ -67,7 +79,8 @@ namespace Microsoft.DotNet.Cli.Build
                 string newRelativeSourcePath = Path.Combine(relativeSourcePath, subfolderName);
                 string newSwrInstallDir = Path.Combine(swrInstallDir, subfolderName);
 
-                AddFolder(sb, newRelativeSourcePath, newSwrInstallDir);
+                // Don't propagate ngenAssemblies to subdirectories.
+                AddFolder(sb, newRelativeSourcePath, newSwrInstallDir, ngenAssemblies: false);
             }
         }
 
