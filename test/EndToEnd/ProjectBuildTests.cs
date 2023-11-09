@@ -443,7 +443,7 @@ namespace EndToEnd.Tests
                        || template.StartsWith("nunit")
                        || template.StartsWith("xunit"))
                 {
-                    return $"net8.0";
+                    return $"net9.0";
                 }
                 return $"net{latestMajorVersion}.0";
             }
