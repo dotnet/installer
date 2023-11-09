@@ -63,6 +63,8 @@
       <RuntimeVersionToInstall Include="3.1.0" />
       <RuntimeVersionToInstall Include="5.0.0" />
       <RuntimeVersionToInstall Include="6.0.0" />
+      <RuntimeVersionToInstall Include="7.0.0" />
+      <RuntimeVersionToInstall Include="8.0.0-rc.2.23479.6" />
     </ItemGroup>
     
   </Target>
@@ -223,6 +225,16 @@
     <PropertyGroup Condition=" '$(IslinuxPortable)' == 'true' ">
       <!-- Add list of tests to skip on Linux Portable -->
       <TestArgs>$(TestArgs) -testConfigFile "$(MSBuildThisFileDirectory)TestsToSkipPortableLinux.xml"</TestArgs>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('LINUX')) ">
+      <!-- Add list of tests to skip on Linux Portable -->
+      <TestArgs>$(TestArgs) -testConfigFile "$(MSBuildThisFileDirectory)TestsToSkipLinux.xml"</TestArgs>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" $([MSBuild]::IsOSPlatform('OSX')) ">
+      <!-- Add list of tests to skip on Linux Portable -->
+      <TestArgs>$(TestArgs) -testConfigFile "$(MSBuildThisFileDirectory)TestsToSkipOSX.xml"</TestArgs>
     </PropertyGroup>
 
     <Exec Command="$(ToolRunPrefix)$(RedistLayoutPath)dotnet tool run $(ToolCommandName) -- $(TestArgs)"

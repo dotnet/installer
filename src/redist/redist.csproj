@@ -4,6 +4,9 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <ResolveAssemblyReferencesSilent>true</ResolveAssemblyReferencesSilent>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>none</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <BundleRuntimePacks Condition="'$(BundleRuntimePacks)' == '' And '$(DotNetBuildFromSource)' == 'true'">true</BundleRuntimePacks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Installers" Version="$(MicrosoftDotNetBuildTasksInstallersPackageVersion)" GeneratePathProperty="True" />
+     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Installers" Version="$(MicrosoftDotNetBuildTasksInstallersPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,5 +50,4 @@
   <Import Project="targets\GeneratePKG.targets" />
   <Import Project="targets\GenerateInstallers.targets" />
   <Import Project="targets\Badge.targets" />
-  <Import Project="targets\Checksum.targets" />
 </Project>
