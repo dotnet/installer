@@ -52,25 +52,11 @@
       <RepositoryReference Include="source-build-externals" />
   </ItemGroup>
 
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddRidToRuntimeJson" />
-
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
     <ItemGroup>
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
       <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
     </ItemGroup>
-  </Target>
-
-  <Target Name="UpdateRuntimeGraph"
-          BeforeTargets="Build"
-          Condition="'$(_IsBootstrapping)' == 'true'">
-    <PropertyGroup>
-      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
-    <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
-                         Rid="$(TargetRid)-$(Platform)" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
