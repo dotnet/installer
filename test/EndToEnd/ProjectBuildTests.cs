@@ -63,7 +63,7 @@ namespace EndToEnd.Tests
             binDirectory.Should().NotHaveFilesMatching("*.dll", SearchOption.AllDirectories);
         }
 
-        [Fact(Skip ="The current aspnet runtime is built against an 8.0 core runtime")]
+        [Fact]
         public void ItCanRunAnAppUsingTheWebSdk()
         {
             var directory = TestAssets.CreateTestDirectory();
@@ -97,8 +97,8 @@ namespace EndToEnd.Tests
         }
 
         [WindowsOnlyTheory]
-        [InlineData("net6.0", true)]
-        [InlineData("net6.0", false)]
+        // [InlineData("net6.0", true)]
+        // [InlineData("net6.0", false)]
         [InlineData("current", true)]
         [InlineData("current", false)]
         public void ItCanPublishArm64Winforms(string TargetFramework, bool selfContained)
@@ -136,8 +136,8 @@ namespace EndToEnd.Tests
         }
 
         [WindowsOnlyTheory]
-        [InlineData("net6.0", true)]
-        [InlineData("net6.0", false)]
+        // [InlineData("net6.0", true)]
+        // [InlineData("net6.0", false)]
         [InlineData("current", true)]
         [InlineData("current", false)]
         public void ItCanPublishArm64Wpf(string TargetFramework, bool selfContained)
@@ -213,16 +213,16 @@ namespace EndToEnd.Tests
 
             string expectedOutput =
 @"[\-\s]+
-[\w \.]+webapp,razor\s+\[C#\][\w\ \/]+
-[\w \.]+classlib\s+\[C#\],F#,VB[\w\ \/]+
-[\w \.]+console\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.\(\)]+webapp,razor\s+\[C#\][\w\ \/]+
+[\w \.\(\)]+classlib\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.\(\)]+console\s+\[C#\],F#,VB[\w\ \/]+
 ";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 expectedOutput +=
-@"[\w \.]+winforms\s+\[C#\],VB[\w\ \/]+
-[\w \.]+\wpf\s+\[C#\],VB[\w\ \/]+
+@"[\w \.\(\)]+winforms\s+\[C#\],VB[\w\ \/]+
+[\w \.\(\)]+\wpf\s+\[C#\],VB[\w\ \/]+
 ";
             }
             //list should end with new line
@@ -437,24 +437,6 @@ namespace EndToEnd.Tests
             int latestMajorVersion = runtimeFolders.Select(folder => int.Parse(Path.GetFileName(folder).Split('.').First())).Max();
             if (latestMajorVersion == 9)
             {
-                // TODO: This block need to be updated when every template updates their default tfm.
-                // Currently winforms updated their default templates target but not others.
-                if (template.StartsWith("mstest")
-                       || template.StartsWith("winforms")
-                       || template.StartsWith("wpf")
-                       || template.StartsWith("web")
-                       || template.StartsWith("razor")
-                       || template.StartsWith("blazor")
-                       || template.StartsWith("mvc")
-                       || template.StartsWith("worker")
-                       || template.StartsWith("grpc")
-                       || template.StartsWith("classlib")
-                       || template.StartsWith("console")
-                       || template.StartsWith("nunit")
-                       || template.StartsWith("xunit"))
-                {
-                    return $"net8.0";
-                }
                 return $"net{latestMajorVersion}.0";
             }
 

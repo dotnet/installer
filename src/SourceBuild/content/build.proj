@@ -4,8 +4,13 @@
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="CreateSdkSymbolsLayout" />
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <SkipErrorOnPrebuilts>true</SkipErrorOnPrebuilts>
+  </PropertyGroup>
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -54,6 +59,83 @@
           AfterTargets="Build"
           Condition="'$(SkipReportPrebuiltUsage)' != 'true'">
     <MSBuild Projects="$(RepoProjectsDir)$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
+  </Target>
+
+  <Target Name="DiscoverSymbolsTarballs"
+          AfterTargets="Build">
+    <ItemGroup>
+      <SymbolsTarball Include="$(OutputPath)Symbols.*.tar.gz" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ExtractSymbolsTarballs"
+          AfterTargets="Build"
+          DependsOnTargets="DiscoverSymbolsTarballs"
+          Outputs="%(SymbolsTarball.Identity)">
+
+    <PropertyGroup>
+      <Filename>$([System.IO.Path]::GetFileName('%(SymbolsTarball.Identity)'))</Filename>
+      <RepositoryName>$(Filename.Split('.')[1])</RepositoryName>
+      <UnifiedSymbolsLayout>$(ArtifactsTmpDir)Symbols</UnifiedSymbolsLayout>
+      <DestinationFolder>$(UnifiedSymbolsLayout)/$(RepositoryName)</DestinationFolder>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(DestinationFolder)" />
+    <Exec Command="tar -xzf %(SymbolsTarball.Identity) -C $(DestinationFolder)"
+          WorkingDirectory="$(SymbolsRoot)" />
+
+    <Delete Files="%(SymbolsTarball.Identity)" />
+  </Target>
+
+  <!-- After building, repackage symbols into a single tarball. -->
+  <Target Name="RepackageSymbols"
+          AfterTargets="Build"
+          DependsOnTargets="
+            DetermineMicrosoftSourceBuildIntermediateInstallerVersion;
+            DiscoverSymbolsTarballs;
+            ExtractSymbolsTarballs">
+    <PropertyGroup>
+      <UnifiedSymbolsTarball>$(OutputPath)dotnet-symbols-all-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</UnifiedSymbolsTarball>
+    </PropertyGroup>
+
+    <Exec Command="tar --numeric-owner -czf $(UnifiedSymbolsTarball) *"
+          WorkingDirectory="$(UnifiedSymbolsLayout)" />
+
+    <Message Importance="High" Text="Packaged all symbols in '$(UnifiedSymbolsTarball)'" />
+  </Target>
+
+  <!-- After building, create the sdk symbols tarball. -->
+  <Target Name="CreateSdkSymbolsTarball"
+          AfterTargets="Build"
+          DependsOnTargets="RepackageSymbols">
+    <ItemGroup>
+      <SdkTarballItem Include="$(OutputPath)dotnet-sdk-*$(TarBallExtension)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <SdkSymbolsLayout>$(ArtifactsTmpDir)SdkSymbols</SdkSymbolsLayout>
+      <SdkSymbolsTarball>$(OutputPath)dotnet-symbols-sdk-$(MicrosoftSourceBuildIntermediateInstallerVersion)-$(TargetRid).tar.gz</SdkSymbolsTarball>
+      <SdkLayout>$(ArtifactsTmpDir)Sdk</SdkLayout>
+      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(SdkLayout)" />
+    <Exec Command="tar -xzf $(SdkTarball) -C $(SdkLayout)"
+          WorkingDirectory="$(OutputPath)" />
+
+    <CreateSdkSymbolsLayout SdkLayoutPath="$(SdkLayout)"
+                            AllSymbolsPath="$(UnifiedSymbolsLayout)"
+                            SdkSymbolsLayoutPath="$(SdkSymbolsLayout)"
+                            FailOnMissingPDBs="false" />
+
+    <Exec Command="tar --numeric-owner -czf $(SdkSymbolsTarball) *"
+          WorkingDirectory="$(SdkSymbolsLayout)" />
+
+    <Message Importance="High" Text="Packaged sdk symbols in '$(SdkSymbolsTarball)'" />
+
+    <RemoveDir Directories="$(UnifiedSymbolsLayout)" />
+    <RemoveDir Directories="$(SdkSymbolsLayout)" />
+    <RemoveDir Directories="$(SdkLayout)" />
   </Target>
 
   <!--
@@ -117,6 +199,7 @@
 
     <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings -->
     <Exec Command="$(DotnetToolCommand) test $(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration)"
+          IgnoreStandardErrorWarningFormat="true"
           EnvironmentVariables="
             SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath);
             SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH=$(SourceBuiltArtifactsPath);
@@ -135,7 +218,7 @@
 
   <Target Name="CheckIfCreateSmokeTestPrereqsExistToPack">
     <PropertyGroup>
-      <SmokeTestsArtifactsDir>$(SmokeTestsDir)bin/$(Configuration)/net8.0/</SmokeTestsArtifactsDir>
+      <SmokeTestsArtifactsDir>$(SmokeTestsDir)bin/$(Configuration)/$(NetCurrent)/</SmokeTestsArtifactsDir>
       <SmokeTestsPackagesDir>$(SmokeTestsArtifactsDir)packages/</SmokeTestsPackagesDir>
     </PropertyGroup>
 

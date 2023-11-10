@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class DotNetFormatTests : SmokeTests
+public class DotNetFormatTests : SdkTests
 {
     private const string TestFileName = "FormatTest.cs";
     private const string UnformattedFileName = "FormatTestUnformatted.cs";
@@ -19,7 +19,7 @@ public class DotNetFormatTests : SmokeTests
     /// <Summary>
     /// Format an unformatted project and verify that the output matches the pre-computed solution.
     /// </Summary>
-    //[Fact] - Re-enable once https://github.com/dotnet/sdk/issues/27332 is resolved.  Tracking - https://github.com/dotnet/source-build/issues/3004
+    [Fact]
     public void FormatProject()
     {
         string unformattedCsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), UnformattedFileName);

@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
-public class DotNetWatchTests : SmokeTests
+public class DotNetWatchTests : SdkTests
 {
     public DotNetWatchTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -20,7 +20,7 @@ public class DotNetWatchTests : SmokeTests
         bool outputChanged = false;
 
         DotNetHelper.ExecuteCmd(
-            "watch run",
+            "watch run --non-interactive",
             workingDirectory: projectDirectory,
             processConfigCallback: processConfigCallback,
             expectedExitCode: null, // The exit code does not reflect whether or not dotnet watch is working properly
