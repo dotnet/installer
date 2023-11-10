@@ -56,7 +56,7 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: ${{ parameters.targetRef }}
 
-  - script: >
+  - script: |
       git config --global user.name "dotnet-maestro[bot]"
       git config --global user.email "dotnet-maestro[bot]@users.noreply.github.com"
     displayName: Set git author to dotnet-maestro[bot]
