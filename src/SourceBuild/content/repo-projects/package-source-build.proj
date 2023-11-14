@@ -20,8 +20,39 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
+  <Target Name="DetermineSdkVersion">
+    <ItemGroup>
+      <SdkTarballItem Include="$(SourceBuiltAssetsDir)dotnet-sdk-*$(TarBallExtension)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
+      <SdkLayout>$(ArtifactsTmpDir)Sdk</SdkLayout>
+      <BundledVersionsPropsRelativePath>sdk/*/Microsoft.NETCoreSdk.BundledVersions.props</BundledVersionsPropsRelativePath>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(SdkLayout)" />
+    <Exec Command="tar -xzf $(SdkTarball) -C $(SdkLayout)"
+          WorkingDirectory="$(SdkLayout)" />
+
+    <ItemGroup>
+      <BundledVersionsPropsFile Include="$(SdkLayout)/$(BundledVersionsPropsRelativePath)" />
+    </ItemGroup>
+
+    <XmlPeek XmlInputPath="@(BundledVersionsPropsFile)"
+             Query="Project/PropertyGroup/NETCoreSdkVersion/text()">
+        <Output TaskParameter="Result" ItemName="SdkVersionItem" />
+    </XmlPeek>
+    <PropertyGroup>
+      <SdkVersion>@(SdkVersionItem)</SdkVersion>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(SdkLayout)" />
+  </Target>
+
   <Target Name="RepoBuild"
-          DependsOnTargets="DetermineMicrosoftSourceBuildIntermediateInstallerVersion">
+          DependsOnTargets="
+            DetermineMicrosoftSourceBuildIntermediateInstallerVersion;
+            DetermineSdkVersion">
     <!-- Copy PVP to packages dir in order to package them together -->
     <Copy SourceFiles="$(IncludedPackageVersionPropsFile)" DestinationFiles="$(SourceBuiltPackagesPath)PackageVersions.props" />
 
@@ -60,7 +91,7 @@
 
     <!-- Content of the .version file to include in the tarball -->
     <ItemGroup>
-      <VersionFileContent Include="$(RepositoryCommit);$(MicrosoftSourceBuildIntermediateInstallerVersion)" />
+      <VersionFileContent Include="$(RepositoryCommit);$(SdkVersion)" />
     </ItemGroup>
 
     <WriteLinesToFile
