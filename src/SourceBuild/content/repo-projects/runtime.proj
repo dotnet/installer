@@ -16,7 +16,7 @@
     <RuntimeOS>$(NETCoreSdkRuntimeIdentifier.Substring(0, $(_platformIndex)))</RuntimeOS>
 
     <_platformIndex>$(NETCoreSdkPortableRuntimeIdentifier.LastIndexOf('-'))</_platformIndex>
-    <BaseOS>$(NETCoreSdkPortableRuntimeIdentifier.Substring(0, $(_platformIndex)))</BaseOS>
+    <BaseOS>$(NETCoreSdkPortableRuntimeIdentifier.Substring(0, $(_platformIndex)))-$(Platform)</BaseOS>
 
     <BuildNonPortable>true</BuildNonPortable>
     <BuildNonPortable Condition="'$(PortableBuild)' == 'true'">false</BuildNonPortable>
