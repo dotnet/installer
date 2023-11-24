@@ -4,14 +4,14 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36-20220716171953-531d246
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38-20231107041221-75bbd6b
 
 RUN dnf install -y nss
 
 RUN dnf clean all
 
 # Override RID set by the dotnet-buildtools-prereqs docker image
-ENV __PUBLISH_RID=fedora.36-x64
+ENV __PUBLISH_RID=fedora.38-x64
 
 # Setup User to match Host User, and give superuser permissions 
 ARG USER_ID=0 
