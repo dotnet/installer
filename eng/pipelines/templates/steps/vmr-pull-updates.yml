@@ -61,12 +61,10 @@ steps:
     --readme-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/README.template.md
     --tpn-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
     --debug
-    2>&1
     ||
-    echo "##vso[task.logissue type=error]Failed to synchronize the VMR" 1>&2
+    (echo "##vso[task.logissue type=error]Failed to synchronize the VMR" && exit 1)
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
-  failOnStderr: true
 
 - publish: $(Agent.TempDirectory)
   artifact: $(System.JobDisplayName)_FailedPatches
