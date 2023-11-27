@@ -56,3 +56,8 @@ steps:
     --debug
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
+
+- publish: $(Agent.TempDirectory)/*.patch
+  artifact: FailedVMRPatches
+  displayName: Upload failed patches
+  condition: failed()
