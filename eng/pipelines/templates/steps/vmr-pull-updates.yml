@@ -42,6 +42,12 @@ steps:
   displayName: Set git author to dotnet-maestro[bot]
   workingDirectory: ${{ parameters.vmrPath }}
 
+- script: |
+    echo '**/*' > .artifactignore
+    echo '!*.patch' >> .artifactignore
+  displayName: Prepare .artifactignore
+  workingDirectory: $(Agent.TempDirectory)
+
 - script: >
     ./eng/vmr-sync.sh
     --vmr ${{ parameters.vmrPath }}
@@ -57,7 +63,7 @@ steps:
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
 
-- publish: $(Agent.TempDirectory)/*.patch
-  artifact: FailedVMRPatches
+- publish: $(Agent.TempDirectory)/patches
+  artifact: $(System.JobName)_FailedPatches
   displayName: Upload failed patches
   condition: failed()
