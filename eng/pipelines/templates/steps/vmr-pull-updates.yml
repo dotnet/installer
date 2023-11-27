@@ -62,7 +62,7 @@ steps:
     --tpn-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
     --debug
     ||
-    (echo "##vso[task.logissue type=error]Failed to synchronize the VMR" && exit 1)
+    echo "##vso[task.logissue type=error]Failed to synchronize the VMR"
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
 
