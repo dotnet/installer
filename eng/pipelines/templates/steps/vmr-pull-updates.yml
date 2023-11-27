@@ -51,16 +51,18 @@ steps:
 
 - script: >
     ./eng/vmr-sync.sh
-    --vmr ${{ parameters.vmrPath }}
-    --tmp $(Agent.TempDirectory)
-    --azdev-pat '$(System.AccessToken)'
-    --branch ${{ parameters.vmrBranch }}
-    --repository "installer:${{ parameters.targetRef }}"
-    --recursive
-    --remote "installer:$(pwd)"
-    --readme-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/README.template.md
-    --tpn-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
-    --debug
+      --vmr ${{ parameters.vmrPath }}
+      --tmp $(Agent.TempDirectory)
+      --azdev-pat '$(System.AccessToken)'
+      --branch ${{ parameters.vmrBranch }}
+      --repository "installer:${{ parameters.targetRef }}"
+      --recursive
+      --remote "installer:$(pwd)"
+      --readme-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/README.template.md
+      --tpn-template $(Agent.BuildDirectory)/installer/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt
+      --debug
+    ||
+    (echo "##vso[task.logissue type=error]Failed to synchronize the VMR" && exit 1)
   displayName: Synchronize dotnet/dotnet
   workingDirectory: $(Agent.BuildDirectory)/installer
 
