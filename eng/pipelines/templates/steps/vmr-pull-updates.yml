@@ -45,7 +45,7 @@ steps:
 
 - script: |
     echo '**/*' > .artifactignore
-    echo '!*.patch' >> .artifactignore
+    echo '!./*.patch' >> .artifactignore
   displayName: Prepare .artifactignore
   workingDirectory: $(Agent.TempDirectory)
 
