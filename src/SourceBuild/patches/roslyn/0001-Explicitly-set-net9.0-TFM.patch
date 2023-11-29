@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matt Thalman <mthalman@microsoft.com>
+Date: Wed, 29 Nov 2023 14:50:39 -0600
+Subject: [PATCH] Explicitly set net9.0 TFM
+
+---
+ eng/targets/Settings.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index e59fb67a8d7..ccc5c67fc27 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -80,9 +80,9 @@
+     -->
+     <When Condition="'$(DotNetBuildFromSource)' == 'true' AND '$(DotNetBuildFromSourceFlavor)' == 'Product'">
+       <PropertyGroup>
+-        <SourceBuildToolsetTargetFramework>$(NetCurrent)</SourceBuildToolsetTargetFramework>
++        <SourceBuildToolsetTargetFramework>net9.0</SourceBuildToolsetTargetFramework>
+         <SourceBuildToolsetTargetFrameworks>$(SourceBuildToolsetTargetFramework)</SourceBuildToolsetTargetFrameworks>
+-        <SourceBuildTargetFrameworks>$(NetCurrent)</SourceBuildTargetFrameworks>
++        <SourceBuildTargetFrameworks>net9.0</SourceBuildTargetFrameworks>
+       </PropertyGroup>
+     </When>
+ 
