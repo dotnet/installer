@@ -61,6 +61,14 @@ parameters:
   type: boolean
   default: false
 
+- name: crossRootFS
+  type: string
+  default: ''
+
+- name: overrideRid
+  type: string
+  default: ''
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -231,7 +239,20 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs
+      if [[ ! -z '${{ parameters.crossRootFs }}' || -! -z '${{ parameters.overrideRid }}' ]]; then
+        extraBuildProperties="--"
+      fi
+
+      if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
+        customRunArgs="$customRunArgs -e CROSSCOMPILE=1 -e ROOTFS_DIR=${{ parameters.crossRootFs}}"
+        extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true"
+      fi
+
+      if [[ ! -z '${{ parameters.overrideRid }}' ]]; then
+        extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.overrideRid }}"
+      fi
+
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
     displayName: Build
 
   - script: |
