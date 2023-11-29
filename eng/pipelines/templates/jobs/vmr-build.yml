@@ -239,7 +239,7 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      if [[ ! -z '${{ parameters.crossRootFs }}' || -! -z '${{ parameters.overrideRid }}' ]]; then
+      if [[ ! -z '${{ parameters.crossRootFs }}' || ! -z '${{ parameters.overrideRid }}' ]]; then
         extraBuildProperties="--"
       fi
 
