@@ -22,8 +22,6 @@ parameters:
   fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
   ubuntu2204Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
   ubuntu2204ArmContainer: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
-  marinerX64CrossContainer: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-cross-amd64
-  marinerArm64CrossContainer: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-cross-arm64
 
   # Internal builds
   poolInternalAmd64:
@@ -89,46 +87,6 @@ stages:
       runOnline: true                    # ✅
       useMonoRuntime: false              # 🚫
       withPreviousSDK: false             # 🚫
-
-  - template: ../jobs/vmr-build.yml
-    parameters:
-      # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-      buildName: MarinerCrossX64_Online_MsftSdk
-      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-      vmrBranch: ${{ variables.VmrBranch }}
-      architecture: x64
-      pool:
-        name: ${{ variables.defaultPoolName }}
-        demands: ${{ variables.defaultPoolDemands }}
-      container: ${{ parameters.marinerx64CrossContainer }}
-      buildFromArchive: false            # 🚫
-      enablePoison: false                # 🚫
-      excludeOmniSharpTests: true        # ✅
-      runOnline: true                    # ✅
-      useMonoRuntime: true               # ✅
-      withPreviousSDK: false             # 🚫
-      crossRootFs: '/crossrootfs/x64'    # 📝
-      targetRid: 'linux-x64'             # 📝
-
-  - template: ../jobs/vmr-build.yml
-    parameters:
-      # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-      buildName: MarinerCrossArm64_Online_MsftSdk
-      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-      vmrBranch: ${{ variables.VmrBranch }}
-      architecture: x64
-      pool:
-        name: ${{ variables.defaultPoolName }}
-        demands: ${{ variables.defaultPoolDemands }}
-      container: ${{ parameters.marinerArm64CrossContainer }}
-      buildFromArchive: false            # 🚫
-      enablePoison: false                # 🚫
-      excludeOmniSharpTests: true        # ✅
-      runOnline: true                    # ✅
-      useMonoRuntime: true               # ✅
-      withPreviousSDK: false             # 🚫
-      crossRootFs: '/crossrootfs/arm64'  # 📝
-      targetRid: 'linux-arm64'           # 📝
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
 
