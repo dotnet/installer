@@ -65,7 +65,7 @@ parameters:
   type: string
   default: ''
 
-- name: overrideRid
+- name: targetRid
   type: string
   default: ''
 
@@ -239,7 +239,7 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      if [[ ! -z '${{ parameters.crossRootFs }}' || ! -z '${{ parameters.overrideRid }}' ]]; then
+      if [[ ! -z '${{ parameters.crossRootFs }}' || ! -z '${{ parameters.targetRid }}' ]]; then
         extraBuildProperties="--"
       fi
 
@@ -248,15 +248,15 @@ jobs:
         extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true"
       fi
 
-      if [[ ! -z '${{ parameters.overrideRid }}' ]]; then
-        extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.overrideRid }}"
+      if [[ ! -z '${{ parameters.targetRid }}' ]]; then
+        extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.targetRid }}"
       fi
 
       docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
     displayName: Build
 
   # Don't run tests if overriding RID, we don't support that for now
-  - ${{ if eq(parameters.overrideRid, '') }}:
+  - ${{ if eq(parameters.targetRid, '') }}:
     - script: |
         set -x
 

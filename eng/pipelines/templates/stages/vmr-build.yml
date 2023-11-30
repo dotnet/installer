@@ -108,7 +108,7 @@ stages:
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
       crossRootFs: '/crossrootfs/x64'    # 📝
-      overrideRid: 'linux-x64'           # 📝
+      targetRid: 'linux-x64'             # 📝
 
   - template: ../jobs/vmr-build.yml
     parameters:
@@ -128,7 +128,7 @@ stages:
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
       crossRootFs: '/crossrootfs/arm64'  # 📝
-      overrideRid: 'linux-arm64'         # 📝
+      targetRid: 'linux-arm64'           # 📝
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
 
