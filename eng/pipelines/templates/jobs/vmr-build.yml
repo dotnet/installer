@@ -212,12 +212,10 @@ jobs:
 
       # Only use Docker stuff on Linux
       if [[ "`uname -s`" == "Linux" ]]; then
-        dockerPrefix='docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }}'
+        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
       else
-        dockerPrefix=''
+        ./prep.sh $customPrepArgs
       fi
-
-      $dockerPrefix ./prep.sh $customPrepArgs
     displayName: Prep the Build
 
   - script: |
@@ -261,12 +259,10 @@ jobs:
 
       # Only use Docker stuff on Linux
       if [[ "`uname -s`" == "Linux" ]]; then
-        dockerPrefix='docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }}'
+        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       else
-        dockerPrefix=''
+        ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
-
-      ${dockerPrefix} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
     displayName: Build
 
   # Don't run tests if overriding RID, we don't support that for now
