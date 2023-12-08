@@ -214,6 +214,7 @@ jobs:
       if [[ "`uname -s`" == "Linux" ]]; then
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
       else
+        cd $(sourcesPath)
         ./prep.sh $customPrepArgs
       fi
     displayName: Prep the Build
@@ -261,6 +262,7 @@ jobs:
       if [[ "`uname -s`" == "Linux" ]]; then
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       else
+        cd $(sourcesPath)
         ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
     displayName: Build
