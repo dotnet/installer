@@ -66,15 +66,20 @@
 
 source="${BASH_SOURCE[0]}"
 
+echo "*** DEBUG source=$source"
+
 # resolve $source until the file is no longer a symlink
 while [[ -h "$source" ]]; do
   scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+echo "*** DEBUG scriptroot=$scriptroot"
   source="$(readlink "$source")"
+echo "*** DEBUG source=$source"
   # if $source was a relative symlink, we need to resolve it relative to the path where the
   # symlink file was located
   [[ $source != /* ]] && source="$scriptroot/$source"
 done
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+echo "*** DEBUG scriptroot=$scriptroot"
 
 function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
@@ -95,6 +100,7 @@ function highlight () {
 }
 
 installer_dir=$(realpath "$scriptroot/../")
+echo "*** DEBUG installer_dir=$installer_dir"
 
 tmp_dir=''
 vmr_dir=''
