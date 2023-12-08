@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 
+#nullable enable
+
 namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 {
 
@@ -32,3 +34,4 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         public bool IsSystemType(Type? type) => default(bool);
     }
 }
+
