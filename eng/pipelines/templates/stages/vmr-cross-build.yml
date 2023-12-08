@@ -36,7 +36,7 @@ parameters:
 
   # Mac
   poolMac:
-    vmImage: macos-12
+    vmImage: 'macos-12'
 
 stages:
 - stage: VMR_PoC_Build
@@ -118,7 +118,7 @@ stages:
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
       pool:
-        vmImage: ${{ parameters.poolMac }}
+        vmImage: ${{ parameters.poolMac.vmImage }}
       container: ''
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
@@ -136,7 +136,7 @@ stages:
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
       pool:
-        vmImage: ${{ parameters.poolMac }}
+        vmImage: ${{ parameters.poolMac.vmImage }}
       container: ''
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
