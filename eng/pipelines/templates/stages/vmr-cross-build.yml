@@ -119,6 +119,7 @@ stages:
       architecture: x64
       pool:
         vmImage: ${{ parameters.poolMac }}
+      container: ''
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
@@ -136,6 +137,7 @@ stages:
       architecture: x64
       pool:
         vmImage: ${{ parameters.poolMac }}
+      container: ''
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
