@@ -210,7 +210,14 @@ jobs:
         echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
+      # Only use Docker stuff on Linux
+      if [[ "`uname -s`" == "Linux" ]]; then
+        dockerPrefix='docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }}'
+      else
+        dockerPrefix=''
+      fi
+
+      $dockerPrefix ./prep.sh $customPrepArgs
     displayName: Prep the Build
 
   - script: |
@@ -252,7 +259,14 @@ jobs:
         extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.targetRid }}"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+      # Only use Docker stuff on Linux
+      if [[ "`uname -s`" == "Linux" ]]; then
+        dockerPrefix='docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }}'
+      else
+        dockerPrefix=''
+      fi
+
+      ${dockerPrefix} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
     displayName: Build
 
   # Don't run tests if overriding RID, we don't support that for now
