@@ -94,7 +94,7 @@ function highlight () {
   echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-which realpath
+echo "*** DEBUG $(which realpath)"
 installer_dir=$(realpath "$scriptroot/../")
 
 tmp_dir=''
