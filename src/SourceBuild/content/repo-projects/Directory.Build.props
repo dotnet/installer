@@ -65,7 +65,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DotNetBuildFromSource=true" />
+    <!-- But WHY? -->
+    <!-- <EnvironmentVariables Include="DotNetBuildFromSource=true" /> -->
     <EnvironmentVariables Include="DotNetBuildFromSourceFlavor=Product" />
     <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
