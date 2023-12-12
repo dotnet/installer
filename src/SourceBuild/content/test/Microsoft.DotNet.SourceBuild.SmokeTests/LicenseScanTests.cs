@@ -174,7 +174,7 @@ public class LicenseScanTests : TestBase
         else
         {
             // If there is no license baseline, generate a default empty one.
-            ScancodeResults defaultResults = new()};
+            ScancodeResults defaultResults = new();
             string defaultResultsJson = JsonSerializer.Serialize(defaultResults, options);
             File.WriteAllText(expectedFilePath, defaultResultsJson);
         }
