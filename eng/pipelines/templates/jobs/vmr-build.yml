@@ -263,7 +263,7 @@ jobs:
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       else
         cd $(sourcesPath)
-        ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+        CROSSCOMPILE=1 ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
     displayName: Build
 
