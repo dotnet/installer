@@ -244,7 +244,7 @@ jobs:
       fi
 
       if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
-        customRunArgs="$customRunArgs -e CROSSCOMPILE=1 -e ROOTFS_DIR=${{ parameters.crossRootFs}}"
+        customRunArgs="$customRunArgs -e ROOTFS_DIR=${{ parameters.crossRootFs}}"
         extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true"
       fi
 
