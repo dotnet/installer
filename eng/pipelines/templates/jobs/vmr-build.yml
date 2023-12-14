@@ -246,6 +246,9 @@ jobs:
       if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
         customRunArgs="$customRunArgs -e ROOTFS_DIR=${{ parameters.crossRootFs}}"
         extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true"
+        if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
+          customBuildArgs="$customRunArgs -e CROSSCOMPILE=1"
+        fi
       fi
 
       if [[ ! -z '${{ parameters.targetRid }}' ]]; then
