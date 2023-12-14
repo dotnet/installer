@@ -211,7 +211,7 @@ jobs:
       fi
 
       # Only use Docker stuff on Linux
-      if [[ "`uname -s`" == "Linux" ]]; then
+      if [[ -n "${{ parameters.container }}" ]]; then
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
       else
         cd $(sourcesPath)
