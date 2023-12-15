@@ -274,7 +274,8 @@ jobs:
           customEnvVarsWithBashSyntax="$customEnvVarsWithBashSyntax export $envVar;"
         done
         cd $(sourcesPath)
-        $customEnvVarsWithBashSyntax ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+        eval $customEnvVarsWithBashSyntax
+        ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
     displayName: Build
 
