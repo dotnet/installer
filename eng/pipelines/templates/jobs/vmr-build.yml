@@ -270,8 +270,11 @@ jobs:
         done
         docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customEnvVarsWithDockerSyntax ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       else
+        for envVar in $customEnvVars; do
+          customEnvVarsWithBashSyntax="$customEnvVarsWithBashSyntax export $envVar;"
+        done
         cd $(sourcesPath)
-        $customEnvVars ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+        $customEnvVarsWithBashSyntax ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
     displayName: Build
 
