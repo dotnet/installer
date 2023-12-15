@@ -92,7 +92,7 @@ stages:
       buildName: MarinerCrossArm64_Online_MsftSdk_Mono
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
-      architecture: x64
+      architecture: arm64
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
@@ -112,7 +112,7 @@ stages:
       buildName: MarinerCrossArm64_Online_MsftSdk_CoreCLR
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
-      architecture: x64
+      architecture: arm64
       pool:
         name: ${{ variables.defaultPoolName }}
         demands: ${{ variables.defaultPoolDemands }}
