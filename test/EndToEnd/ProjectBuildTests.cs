@@ -82,7 +82,7 @@ namespace EndToEnd.Tests
             var runCommand = new RunCommand()
                 .WithWorkingDirectory(projectDirectory)
                 .ExecuteWithCapturedOutput()
-                .Should().Pass().And.HaveStdOutContaining("Hello, World!");
+                .Should().Pass().And.HaveStdOutContaining("Hello, World!ds");
         }
 
         [WindowsOnlyTheory]
