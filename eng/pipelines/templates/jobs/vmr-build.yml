@@ -245,13 +245,18 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      if [[ ! -z '${{ parameters.crossRootFs }}' || ! -z '${{ parameters.targetRid }}' ]]; then
+      if [[ -n "${{ parameters.container }}" ]]; then
+        useDocker=true
+      fi
+
+      if [[ ! -z '${{ parameters.targetRid }}' ]]; then
         extraBuildProperties="--"
+        customEnvVars="$customEnvVars CROSSCOMPILE=1"
+        extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true"
       fi
 
       if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
-        customRunArgs="$customRunArgs -e CROSSCOMPILE=1 -e ROOTFS_DIR=${{ parameters.crossRootFs}}"
-        extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true"
+        customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
       fi
 
       if [[ ! -z '${{ parameters.targetRid }}' ]]; then
@@ -259,11 +264,14 @@ jobs:
       fi
 
       # Only use Docker stuff on Linux
-      if [[ "`uname -s`" == "Linux" ]]; then
-        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+      if [[ "$useDocker" == "true" ]]; then
+        for envVar in $customEnvVars; do
+          customEnvVarsWithDockerSyntax="$customEnvVarsWithDockerSyntax -e $envVar"
+        done
+        docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customEnvVarsWithDockerSyntax ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       else
         cd $(sourcesPath)
-        CROSSCOMPILE=1 ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+        $customEnvVars ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
       fi
     displayName: Build
 
