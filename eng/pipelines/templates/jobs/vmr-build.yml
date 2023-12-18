@@ -224,7 +224,7 @@ jobs:
       df -h
 
       # Allows Arcade to have access to the commit for the build
-      customRunArgs="-e BUILD_SOURCEVERSION"
+      customEnvVars="BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
       customBuildArgs=
       if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
         customBuildArgs='--online'
