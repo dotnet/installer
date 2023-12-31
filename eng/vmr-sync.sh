@@ -33,10 +33,10 @@
 ###   --debug
 ###       Optional. Turns on the most verbose logging for the VMR tooling
 ###
-###   --readme-template
-###       Optional. Template for VMRs README.md used for regenerating the file to list the newest versions of
+###   --component-template
+###       Optional. Template for VMRs Component.md used for regenerating the file to list the newest versions of
 ###       components.
-###       Defaults to src/VirtualMonoRepo/README.template.md
+###       Defaults to src/VirtualMonoRepo/Component.template.md
 ###
 ###   --recursive
 ###       Optional. Recursively synchronize all the source build dependencies (declared in Version.Details.xml)
@@ -94,7 +94,8 @@ function highlight () {
   echo "${COLOR_CYAN}$FAILURE_PREFIX${1//${COLOR_RESET}/${COLOR_CYAN}}${COLOR_CLEAR}"
 }
 
-installer_dir=$(realpath "$scriptroot/../")
+# realpath is not available in macOS 12, try horrible-but-portable workaround
+installer_dir=$(cd "$scriptroot/../"; pwd -P)
 
 tmp_dir=''
 vmr_dir=''
@@ -103,7 +104,7 @@ repository=''
 additional_remotes=''
 recursive=false
 verbosity=verbose
-readme_template="$installer_dir/src/VirtualMonoRepo/README.template.md"
+readme_template="$installer_dir/src/VirtualMonoRepo/Component.template.md"
 tpn_template="$installer_dir/src/VirtualMonoRepo/THIRD-PARTY-NOTICES.template.txt"
 azdev_pat=''
 
@@ -138,8 +139,8 @@ while [[ $# -gt 0 ]]; do
       additional_remotes="$additional_remotes $2"
       shift
       ;;
-    --readme-template)
-      readme_template=$2
+    --component-template)
+      component_template=$2
       shift
       ;;
     --tpn-template)
@@ -238,7 +239,8 @@ set -e
 highlight 'Installing .NET, preparing the tooling..'
 source "$scriptroot/common/tools.sh"
 InitializeDotNetCli true
-dotnet=$(realpath "$scriptroot/../.dotnet/dotnet")
+dotnetDir=$( cd $scriptroot/../.dotnet/; pwd -P )
+dotnet=$dotnetDir/dotnet
 "$dotnet" tool restore
 
 highlight "Starting the synchronization of '$repository'.."
@@ -266,7 +268,7 @@ fi
   --$verbosity                               \
   $recursive_arg                             \
   $additional_remotes                        \
-  --readme-template "$readme_template"       \
+  --component-template "$component_template" \
   --tpn-template "$tpn_template"             \
   --discard-patches                          \
   "$repository"
