@@ -26,7 +26,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<DirectoryInfoAssertions> Exist()
         {
             Execute.Assertion.ForCondition(_dirInfo.Exists)
-                .FailWith("Expected directory {0} does not exist.", _dirInfo.FullName);
+                .FailWithPreformatted("Expected directory {0} does not exist.", _dirInfo.FullName);
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(file != null)
                 .BecauseOf(because, reasonArgs)
-                .FailWith($"Expected File {expectedFile} cannot be found in directory {_dirInfo.FullName}.");
+                .FailWithPreformatted($"Expected File {expectedFile} cannot be found in directory {_dirInfo.FullName}.");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -57,7 +57,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(contents.Equals(expectedContents))
                 .BecauseOf(because, reasonArgs)
-                .FailWith($"Expected file {expectedFile} to contain \n\n{expectedContents}\n\nbut it contains\n\n{contents}\n");
+                .FailWithPreformatted($"Expected file {expectedFile} to contain \n\n{expectedContents}\n\nbut it contains\n\n{contents}\n");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -71,7 +71,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(file == null)
                 .BecauseOf(because, reasonArgs)
-                .FailWith("File {0} should not be found in directory {1}.", expectedFile, _dirInfo.FullName);
+                .FailWithPreformatted("File {0} should not be found in directory {1}.", expectedFile, _dirInfo.FullName);
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
 
@@ -109,7 +109,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(matchingFileExists == true)
                 .BecauseOf(because, reasonArgs)
-                .FailWith("Expected directory {0} to contain files matching {1}, but no matching file exists.",
+                .FailWithPreformatted("Expected directory {0} to contain files matching {1}, but no matching file exists.",
                     _dirInfo.FullName, expectedFilesSearchPattern);
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
@@ -132,7 +132,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         {
             var matchingFileCount = _dirInfo.EnumerateFiles(expectedFilesSearchPattern, searchOption).Count();
             Execute.Assertion.ForCondition(matchingFileCount == 0)
-                .FailWith("Found {0} files that should not exist in directory {1}. No file matching {2} should exist.",
+                .FailWithPreformatted("Found {0} files that should not exist in directory {1}. No file matching {2} should exist.",
                     matchingFileCount, _dirInfo.FullName, expectedFilesSearchPattern);
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -141,7 +141,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         {
             var dir = _dirInfo.EnumerateDirectories(expectedDir, SearchOption.TopDirectoryOnly).SingleOrDefault();
             Execute.Assertion.ForCondition(dir != null)
-                .FailWith("Expected directory {0} cannot be found inside directory {1}.", expectedDir, _dirInfo.FullName);
+                .FailWithPreformatted("Expected directory {0} cannot be found inside directory {1}.", expectedDir, _dirInfo.FullName);
 
             return new AndConstraint<DirectoryInfoAssertions>(new DirectoryInfoAssertions(dir));
         }
@@ -160,7 +160,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         {
             var dir = _dirInfo.EnumerateDirectories(unexpectedDir, SearchOption.TopDirectoryOnly).SingleOrDefault();
             Execute.Assertion.ForCondition(dir == null)
-                .FailWith("Directory {0} should not be found in directory {1}.", unexpectedDir, _dirInfo.FullName);
+                .FailWithPreformatted("Directory {0} should not be found in directory {1}.", unexpectedDir, _dirInfo.FullName);
 
             return new AndConstraint<DirectoryInfoAssertions>(new DirectoryInfoAssertions(dir));
         }
@@ -183,10 +183,10 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             var nl = Environment.NewLine;
 
             Execute.Assertion.ForCondition(!missingFiles.Any())
-                .FailWith($"Following files cannot be found inside directory {_dirInfo.FullName} {nl} {string.Join(nl, missingFiles)}");
+                .FailWithPreformatted($"Following files cannot be found inside directory {_dirInfo.FullName} {nl} {string.Join(nl, missingFiles)}");
 
             Execute.Assertion.ForCondition(!extraFiles.Any())
-                .FailWith($"Following extra files are found inside directory {_dirInfo.FullName} {nl} {string.Join(nl, extraFiles)}");
+                .FailWithPreformatted($"Following extra files are found inside directory {_dirInfo.FullName} {nl} {string.Join(nl, extraFiles)}");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -194,7 +194,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<DirectoryInfoAssertions> BeEmpty()
         {
             Execute.Assertion.ForCondition(!_dirInfo.EnumerateFileSystemInfos().Any())
-                .FailWith($"The directory {_dirInfo.FullName} is not empty.");
+                .FailWithPreformatted($"The directory {_dirInfo.FullName} is not empty.");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -202,7 +202,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<DirectoryInfoAssertions> NotBeEmpty()
         {
             Execute.Assertion.ForCondition(_dirInfo.EnumerateFileSystemInfos().Any())
-                .FailWith($"The directory {_dirInfo.FullName} is empty.");
+                .FailWithPreformatted($"The directory {_dirInfo.FullName} is empty.");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
@@ -212,7 +212,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(_dirInfo.Exists == false)
                 .BecauseOf(because, reasonArgs)
-                .FailWith($"Expected directory {_dirInfo.FullName} to not exist, but it does.");
+                .FailWithPreformatted($"Expected directory {_dirInfo.FullName} to not exist, but it does.");
 
             return new AndConstraint<DirectoryInfoAssertions>(this);
         }
