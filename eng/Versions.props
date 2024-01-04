@@ -7,16 +7,16 @@
   <PropertyGroup>
     <VersionMajor>8</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionFeature>02</VersionFeature>
+    <VersionSDKMinor>2</VersionSDKMinor>
+    <VersionFeature>00</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <!-- Enable to remove prerelease label. -->
-    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">rtm</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
     <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
@@ -26,8 +26,8 @@
     <VersionFeature21>30</VersionFeature21>
     <VersionFeature31>32</VersionFeature31>
     <VersionFeature50>17</VersionFeature50>
-    <VersionFeature60>$([MSBuild]::Add($(VersionFeature), 25))</VersionFeature60>
-    <VersionFeature70>$([MSBuild]::Add($(VersionFeature), 14))</VersionFeature70>
+    <VersionFeature60>25</VersionFeature60>
+    <VersionFeature70>14</VersionFeature70>
     <!-- Should be kept in sync with VersionFeature70. It should match the version of Microsoft.NET.ILLink.Tasks
          referenced by the same 7.0 SDK that references the 7.0.VersionFeature70 runtime pack. -->
     <_NET70ILLinkPackVersion>7.0.100-1.23211.1</_NET70ILLinkPackVersion>
@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade-services -->
-    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.23578.2</MicrosoftDotNetDarcLibVersion>
+    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.23551.2</MicrosoftDotNetDarcLibVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -62,9 +62,9 @@
     <!-- Supported versions -->
     <MicrosoftDotNetTestProjectTemplates31PackageVersion>1.1.0-rc.22558.1</MicrosoftDotNetTestProjectTemplates31PackageVersion>
     <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates50PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates60PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates70PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates70PackageVersion>
-    <MicrosoftDotNetTestProjectTemplates80PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates80PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.1.0-rc.23612.1</MicrosoftDotNetTestProjectTemplates60PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates70PackageVersion>1.1.0-rc.23612.1</MicrosoftDotNetTestProjectTemplates70PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates80PackageVersion>1.1.0-rc.23612.1</MicrosoftDotNetTestProjectTemplates80PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
@@ -85,16 +85,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>8.0.100</MicrosoftDotNetCommonItemTemplatesPackageVersion>
-    <MicrosoftNETSdkPackageVersion>8.0.100-rtm.23551.6</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>8.0.100-rtm.23551.6</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>8.0.200-preview.24054.4</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftNETSdkPackageVersion>8.0.200-preview.24054.4</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>8.0.200-preview.24054.4</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/roslyn -->
-    <MicrosoftNetCompilersToolsetPackageVersion>4.8.0-3.23524.11</MicrosoftNetCompilersToolsetPackageVersion>
+    <MicrosoftNetCompilersToolsetPackageVersion>4.9.0-3.24052.3</MicrosoftNetCompilersToolsetPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/corefx -->
@@ -127,7 +127,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/NuGet/NuGet.Client -->
-    <NuGetBuildTasksPackageVersion>6.8.0-rc.122</NuGetBuildTasksPackageVersion>
+    <NuGetBuildTasksPackageVersion>6.9.0-preview.1.70</NuGetBuildTasksPackageVersion>
   </PropertyGroup>
   <!-- Dependencies from https://github.com/dotnet/deployment-tools -->
   <PropertyGroup>
@@ -234,23 +234,23 @@
   <PropertyGroup>
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
-    <MicrosoftNETTestSdkVersion>17.8.0-release-23523-03</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>17.9.0-release-23627-01</MicrosoftNETTestSdkVersion>
     <MicrosoftExtensionsLoggingConsoleVersion>8.0.0-alpha.1.22557.12</MicrosoftExtensionsLoggingConsoleVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
   <PropertyGroup>
     <AspireFeatureBand>8.0.100</AspireFeatureBand>
     <AspireWorkloadManifestVersion>8.0.0-preview.1.23557.2</AspireWorkloadManifestVersion>
-    <MauiFeatureBand>8.0.100</MauiFeatureBand>
-    <MauiWorkloadManifestVersion>8.0.3</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>34.0.43</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>17.0.8478</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>17.0.8478</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>14.0.8478</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>17.0.8478</XamarinTvOSWorkloadManifestVersion>
+    <MauiFeatureBand>8.0.100-rc.1</MauiFeatureBand>
+    <MauiWorkloadManifestVersion>8.0.0-rc.1.9171</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>34.0.0-rc.1.432</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>16.4.8825-net8-rc1</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>16.4.8825-net8-rc1</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>13.3.8825-net8-rc1</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>16.4.8825-net8-rc1</XamarinTvOSWorkloadManifestVersion>
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>8.0.0</MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion)</EmscriptenWorkloadManifestVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportPackageVersion>8.0.0</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportPackageVersion>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>8.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-rtm|-[A-z]*\.*\d*`))</EmscriptenWorkloadFeatureBand>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
