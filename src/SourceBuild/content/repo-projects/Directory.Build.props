@@ -69,10 +69,6 @@
     <EnvironmentVariables Include="DotNetBuildFromSourceFlavor=Product" />
     <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
-    <EnvironmentVariables Include="DotNetBuildOffline=true" />
-
-    <!-- Ensure the SDK (Core-SDK/Installer) doesn't add an online source. -->
-    <EnvironmentVariables Include="AddDotnetfeedProjectSource=false" />
 
     <!-- Arcade tools.sh picks up DotNetCoreSdkDir, but we can pass DOTNET_INSTALL_DIR directly. -->
     <EnvironmentVariables Include="DOTNET_INSTALL_DIR=$(DotNetCliToolDir)" />
