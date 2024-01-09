@@ -10,6 +10,16 @@ RUN dnf install -y nss
 
 RUN dnf clean all
 
+# Install ICU
+RUN mkdir /icu && cd /icu \
+ && curl -sL https://github.com/unicode-org/icu/releases/download/release-62-1/icu4c-62_1-src.tgz -o icu4c.tgz \
+ && tar xf icu4c.tgz \
+ && ls && cd icu \
+ && ./source/runConfigureICU Linux \
+ && make -j \
+ && make install \
+ && cd / && rm -r /icu
+
 # Override RID set by the dotnet-buildtools-prereqs docker image
 ENV __PUBLISH_RID=fedora.39-x64
 
