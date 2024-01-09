@@ -286,6 +286,11 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    This target can be removed after source-build picks up version of Arcade that has
+    source-build infra changes for removal od inner-clone in VMR build. Until then the target
+    is needed for building source-build-reference-packages and arcade repos.
+  -->
   <Target Name="ExtractIntermediatePackages"
           AfterTargets="Package"
           Inputs="$(MSBuildProjectFullPath)"

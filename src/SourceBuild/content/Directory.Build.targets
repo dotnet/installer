@@ -2,18 +2,33 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
-  <Target Name="DetermineMicrosoftSourceBuildIntermediateInstallerVersion"
-          Condition="'$(DotNetBuildFromSource)' == 'true'">
-    <!-- Manually load the installer version from the PVP. -->
-    <XmlPeek XmlInputPath="$(SharedIntermediateOutputPath)PackageVersions.package-source-build.Current.props"
-             Query="msb:Project/msb:PropertyGroup/msb:MicrosoftSourceBuildIntermediateInstallerVersion/text()"
-             Namespaces="&lt;Namespace Prefix='msb' Uri='http://schemas.microsoft.com/developer/msbuild/2003'/&gt;">
-        <Output TaskParameter="Result" ItemName="MicrosoftSourceBuildIntermediateInstallerVersionItem" />
+  <Target Name="DetermineSourceBuiltSdkVersion">
+    <ItemGroup>
+      <SdkTarballItem Include="$(SourceBuiltAssetsDir)dotnet-sdk-*$(TarBallExtension)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
+      <SdkLayout>$(ArtifactsTmpDir)Sdk</SdkLayout>
+      <BundledVersionsPropsRelativePath>sdk/*/Microsoft.NETCoreSdk.BundledVersions.props</BundledVersionsPropsRelativePath>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(SdkLayout)" />
+    <Exec Command="tar -xzf $(SdkTarball) -C $(SdkLayout)"
+          WorkingDirectory="$(SdkLayout)" />
+
+    <ItemGroup>
+      <BundledVersionsPropsFile Include="$(SdkLayout)/$(BundledVersionsPropsRelativePath)" />
+    </ItemGroup>
+
+    <XmlPeek XmlInputPath="@(BundledVersionsPropsFile)"
+             Query="Project/PropertyGroup/NETCoreSdkVersion/text()">
+        <Output TaskParameter="Result" ItemName="SourceBuiltSdkVersionItem" />
     </XmlPeek>
     <PropertyGroup>
-      <MicrosoftSourceBuildIntermediateInstallerVersion>@(MicrosoftSourceBuildIntermediateInstallerVersionItem)</MicrosoftSourceBuildIntermediateInstallerVersion>
-      <MicrosoftSourceBuildIntermediateInstallerVersion Condition="'$(MicrosoftSourceBuildIntermediateInstallerVersion)' == ''">$(installerOutputPackageVersion)</MicrosoftSourceBuildIntermediateInstallerVersion>
+      <SourceBuiltSdkVersion>@(SourceBuiltSdkVersionItem)</SourceBuiltSdkVersion>
     </PropertyGroup>
+
+    <RemoveDir Directories="$(SdkLayout)" />
   </Target>
 
 </Project>
