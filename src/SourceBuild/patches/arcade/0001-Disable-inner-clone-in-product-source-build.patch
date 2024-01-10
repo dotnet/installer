@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Tue, 9 Jan 2024 02:15:49 +0000
+Date: Wed, 10 Jan 2024 18:12:05 +0000
 Subject: [PATCH] Disable inner-clone in product source-build
 
 ---
  .../tools/SourceBuild/AfterSourceBuild.proj   | 48 +++++++++++-
- .../SourceBuild/SourceBuildArcade.targets     | 75 ++++++++++++++++++-
+ .../SourceBuild/SourceBuildArcade.targets     | 73 ++++++++++++++++++-
  .../SourceBuildArcadeBuild.targets            |  5 +-
  .../SourceBuild/SourceBuildIntermediate.proj  | 51 +------------
- 4 files changed, 127 insertions(+), 52 deletions(-)
+ 4 files changed, 125 insertions(+), 52 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 index 31f544e6..3fed45fc 100644
@@ -82,10 +82,10 @@ index 31f544e6..3fed45fc 100644
              CopyIntermediateNupkgProjToProjectDirectory;
              GetLicenseFileForIntermediateNupkgPack;
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-index 2d1a20d5..df7bfde8 100644
+index 2d1a20d5..4ccb159a 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-@@ -24,12 +24,26 @@
+@@ -24,12 +24,24 @@
      <CurrentRepoSourceBuildPackageCache>$([MSBuild]::NormalizeDirectory('$(SourceBuildOutputDir)', 'package-cache'))</CurrentRepoSourceBuildPackageCache>
      <SourceBuildSelfPrebuiltReportDir>$([MSBuild]::NormalizeDirectory('$(SourceBuildOutputDir)', 'prebuilt-report'))</SourceBuildSelfPrebuiltReportDir>
  
@@ -94,11 +94,9 @@ index 2d1a20d5..df7bfde8 100644
 +      i.e. for specific repos, like source-build-externals.
 +    -->
 +    <UseInnerClone Condition="'$(UseInnerClone)' == '' and '$(DotNetBuildFromSourceFlavor)' != 'Product'">true</UseInnerClone>
-+    <UseInnerClone Condition="'$(UseInnerClone)' == '' and '$(DotNetBuildFromSourceFlavor)' == 'Product'">false</UseInnerClone>
 +
 +    <!-- Do not create intermediate package in full product source-build. -->
 +    <CreateIntermediatePackage Condition="'$(DotNetBuildFromSourceFlavor)' != 'Product'">true</CreateIntermediatePackage>
-+    <CreateIntermediatePackage Condition="'$(DotNetBuildFromSourceFlavor)' == 'Product'">false</CreateIntermediatePackage>
 +
      <!--
        Keep artifacts/ inside source dir so that ancestor-based file lookups find the inner repo, not
@@ -108,11 +106,11 @@ index 2d1a20d5..df7bfde8 100644
 +      Inner-clone removal - in VMR use regular artifacts dir.
      -->
      <CurrentRepoSourceBuildArtifactsDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildSourceDir)', 'artifacts'))</CurrentRepoSourceBuildArtifactsDir>
-+    <CurrentRepoSourceBuildArtifactsDir Condition="'$(UseInnerClone)' == 'false'">$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)'))</CurrentRepoSourceBuildArtifactsDir>
++    <CurrentRepoSourceBuildArtifactsDir Condition="'$(UseInnerClone)' != 'true'">$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)'))</CurrentRepoSourceBuildArtifactsDir>
      <CurrentRepoSourceBuildArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildArtifactsDir)', 'packages', '$(Configuration)'))</CurrentRepoSourceBuildArtifactsPackagesDir>
  
      <CurrentRepoSourceBuildNuGetSourceName>source-build-int-nupkg-cache</CurrentRepoSourceBuildNuGetSourceName>
-@@ -106,8 +120,8 @@
+@@ -106,8 +118,8 @@
      <ItemGroup>
        <IntermediateNupkgFile Include="@(IntermediateNupkgArtifactFile)" PackagePath="artifacts" />
  
@@ -123,7 +121,7 @@ index 2d1a20d5..df7bfde8 100644
      </ItemGroup>
  
      <RemoveDuplicates Inputs="@(IntermediateNupkgFile)">
-@@ -118,6 +132,63 @@
+@@ -118,6 +130,63 @@
        <IntermediateNonShippingNupkgFile Include="@(IntermediatePackageFile)" Condition="$([System.Text.RegularExpressions.Regex]::Match(%(Identity),'[\\\\/]NonShipping[\\\\/]').Success)"/>
        <SupplementalIntermediateNupkgCategory Include="%(IntermediatePackageFile.Category)" />
      </ItemGroup>
