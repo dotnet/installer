@@ -11,7 +11,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         {
             if (!assertionScope.Succeeded)
             {
-                assertionScope.AddFailure(message);
+                assertionScope.AddPreFormattedFailure(message);
             }
 
             return new Continuation(assertionScope, assertionScope.Succeeded);
