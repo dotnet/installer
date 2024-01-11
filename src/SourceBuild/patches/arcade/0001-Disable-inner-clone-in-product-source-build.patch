@@ -1,17 +1,17 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Wed, 10 Jan 2024 18:12:05 +0000
+Date: Thu, 11 Jan 2024 21:12:12 +0000
 Subject: [PATCH] Disable inner-clone in product source-build
 
 ---
- .../tools/SourceBuild/AfterSourceBuild.proj   | 48 +++++++++++-
+ .../tools/SourceBuild/AfterSourceBuild.proj   | 46 +++++++++++-
  .../SourceBuild/SourceBuildArcade.targets     | 73 ++++++++++++++++++-
  .../SourceBuildArcadeBuild.targets            |  5 +-
  .../SourceBuild/SourceBuildIntermediate.proj  | 51 +------------
- 4 files changed, 125 insertions(+), 52 deletions(-)
+ 4 files changed, 123 insertions(+), 52 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
-index 31f544e6..3fed45fc 100644
+index 31f544e6..2de4e955 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 @@ -15,7 +15,8 @@
@@ -24,7 +24,7 @@ index 31f544e6..3fed45fc 100644
  
    <Target Name="WritePrebuiltUsageData">
      <ItemGroup>
-@@ -117,11 +118,56 @@
+@@ -117,11 +118,54 @@
        DestinationFiles="$(SourceBuildIntermediateNupkgLicenseFile)" />
    </Target>
  
@@ -73,11 +73,9 @@ index 31f544e6..3fed45fc 100644
    <!--
      Create source-build intermediate NuGet package and supplemental intermediate NuGet packages (if
      necessary) for dependency transport to downstream repos.
-+
-+    In VMR build we do not use the intermediate nupkgs, so we skip this step.
    -->
    <Target Name="PackSourceBuildIntermediateNupkgs"
-+          Condition="'$(DotNetBuildFromSourceFlavor)' != 'Product'"
++          Condition="'$(CreateIntermediatePackage)' == 'true'"
            DependsOnTargets="
              CopyIntermediateNupkgProjToProjectDirectory;
              GetLicenseFileForIntermediateNupkgPack;
