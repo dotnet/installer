@@ -20,7 +20,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(NormalizeLineEndings(assertions.Subject) == NormalizeLineEndings(expected))
                 .BecauseOf(because, becauseArgs)
-                .FailWithPreformatted($"String \"{assertions.Subject}\" is not visually equivalent to expected string \"{expected}\".");
+                .FailWith($"String \"{assertions.Subject}\" is not visually equivalent to expected string \"{expected}\".");
 
             return new AndConstraint<StringAssertions>(assertions);
         }
@@ -30,7 +30,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(NormalizeLineEndings(assertions.Subject).Contains(NormalizeLineEndings(expected)))
                 .BecauseOf(because, becauseArgs)
-                .FailWithPreformatted($"String \"{assertions.Subject}\" does not contain visually same fragment string \"{expected}\".");
+                .FailWith($"String \"{assertions.Subject}\" does not contain visually same fragment string \"{expected}\".");
 
             return new AndConstraint<StringAssertions>(assertions);
         }

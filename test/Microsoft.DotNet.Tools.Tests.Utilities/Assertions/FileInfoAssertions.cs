@@ -28,7 +28,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(_fileInfo.Exists)
                 .BecauseOf(because, reasonArgs) 
-                .FailWithPreformatted($"Expected File {_fileInfo.FullName} to exist, but it does not.");
+                .FailWith($"Expected File {_fileInfo.FullName} to exist, but it does not.");
             return new AndConstraint<FileInfoAssertions>(this);
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
             Execute.Assertion
                 .ForCondition(!_fileInfo.Exists)
                 .BecauseOf(because, reasonArgs) 
-                .FailWithPreformatted($"Expected File {_fileInfo.FullName} to not exist, but it does.");
+                .FailWith($"Expected File {_fileInfo.FullName} to not exist, but it does.");
             return new AndConstraint<FileInfoAssertions>(this);
         }
     }
