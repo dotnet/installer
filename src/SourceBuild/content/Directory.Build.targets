@@ -3,32 +3,24 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
   <Target Name="DetermineSourceBuiltSdkVersion">
-    <ItemGroup>
-      <SdkTarballItem Include="$(SourceBuiltAssetsDir)dotnet-sdk-*$(TarBallExtension)" />
-    </ItemGroup>
     <PropertyGroup>
-      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
-      <SdkLayout>$(ArtifactsTmpDir)Sdk</SdkLayout>
-      <BundledVersionsPropsRelativePath>sdk/*/Microsoft.NETCoreSdk.BundledVersions.props</BundledVersionsPropsRelativePath>
+      <SdkFilenamePrefix>dotnet-sdk-</SdkFilenamePrefix>
     </PropertyGroup>
-
-    <MakeDir Directories="$(SdkLayout)" />
-    <Exec Command="tar -xzf $(SdkTarball) -C $(SdkLayout)"
-          WorkingDirectory="$(SdkLayout)" />
-
     <ItemGroup>
-      <BundledVersionsPropsFile Include="$(SdkLayout)/$(BundledVersionsPropsRelativePath)" />
+      <SdkTarballItem Include="$(SourceBuiltAssetsDir)$(SdkFilenamePrefix)*$(TarBallExtension)" />
     </ItemGroup>
 
-    <XmlPeek XmlInputPath="@(BundledVersionsPropsFile)"
-             Query="Project/PropertyGroup/NETCoreSdkVersion/text()">
-        <Output TaskParameter="Result" ItemName="SourceBuiltSdkVersionItem" />
-    </XmlPeek>
-    <PropertyGroup>
-      <SourceBuiltSdkVersion>@(SourceBuiltSdkVersionItem)</SourceBuiltSdkVersion>
-    </PropertyGroup>
+    <!--
+      Extract SDK version from SDK tarball filename.
 
-    <RemoveDir Directories="$(SdkLayout)" />
+      Example:
+      dotnet-sdk-9.0.100-alpha.1.24057.1-fedora.38-x64.tar.gz
+      dotnet-sdk-<SdkVersion>-<TargetRid><TarBallExtension>
+    -->
+    <PropertyGroup>
+      <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
+      <SourceBuiltSdkVersion>$(SdkFilename.Replace("$(SdkFilenamePrefix)",).Replace("-$(TargetRid)$(TarBallExtension)",))</SourceBuiltSdkVersion>
+    </PropertyGroup>
   </Target>
 
 </Project>
