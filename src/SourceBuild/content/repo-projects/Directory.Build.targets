@@ -286,6 +286,57 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="CopyRepoArtifacts"
+          AfterTargets="Package"
+          Condition="Exists($(RepoManifestFile))">
+
+    <XmlPeek XmlInputPath="$(RepoManifestFile)"
+             Query="Build/Artifact/@Path">
+        <Output TaskParameter="Result" ItemName="ArtifactPath" />
+    </XmlPeek>
+
+    <ItemGroup>
+      <_Asset Include="@(ArtifactPath)" Condition="'%(Extension)' != '.nupkg'"/>
+      <_Package Include="@(ArtifactPath)" Condition="'%(Extension)' == '.nupkg'"/>
+      <_NonShippingPackage Include="@(_Package)" Condition="$([System.Text.RegularExpressions.Regex]::Match(%(Identity),'[\\\\/]NonShipping[\\\\/]').Success)"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_NupkgsDestination>$(SourceBuiltPackagesPath)</_NupkgsDestination>
+      <_NupkgsDestination Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</_NupkgsDestination>
+    </PropertyGroup>
+
+    <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
+         clear it before copying the current SBRPs.  This ensures n-1 SBRPs aren't required to build the product repos. -->
+    <RemoveDir
+      Condition="'$(RepositoryName)' == 'source-build-reference-packages'"
+      Directories="$(ReferencePackagesDir)" />
+
+    <!-- Copy nupkgs -->
+    <Copy
+      Condition="'@(_Package)' != ''"
+      SourceFiles="@(_Package)"
+      DestinationFolder="$(_NupkgsDestination)" />
+
+    <!-- Copy assets -->
+    <Copy
+      Condition="'@(_Asset)' != ''"
+      SourceFiles="@(_Asset)"
+      DestinationFolder="$(SourceBuiltAssetsDir)" />
+
+    <!-- Generate non-shipping package list -->
+    <PropertyGroup>
+      <NonShippingPackagesList Condition="'@(_NonShippingPackage)' != ''">$(PackageListsDir)$(NonShippingPackagesListPrefix)$(RepositoryName).lst</NonShippingPackagesList>
+    </PropertyGroup>
+
+    <WriteLinesToFile
+      Condition="'$(NonShippingPackagesList)' != ''"
+      File="$(NonShippingPackagesList)"
+      Lines="@(_NonShippingPackage->'%(Filename)%(Extension)')"
+      Overwrite="true" />
+
+  </Target>
+
   <!--
     This target can be removed after source-build picks up version of Arcade that has
     source-build infra changes for removal od inner-clone in VMR build. Until then the target

@@ -1,17 +1,17 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Thu, 11 Jan 2024 21:12:12 +0000
+Date: Sat, 13 Jan 2024 20:01:24 +0000
 Subject: [PATCH] Disable inner-clone in product source-build
 
 ---
- .../tools/SourceBuild/AfterSourceBuild.proj   | 46 +++++++++++-
- .../SourceBuild/SourceBuildArcade.targets     | 73 ++++++++++++++++++-
+ .../tools/SourceBuild/AfterSourceBuild.proj   | 32 ++++++++-
+ .../SourceBuild/SourceBuildArcade.targets     | 72 ++++++++++++++++++-
  .../SourceBuildArcadeBuild.targets            |  5 +-
- .../SourceBuild/SourceBuildIntermediate.proj  | 51 +------------
- 4 files changed, 123 insertions(+), 52 deletions(-)
+ .../SourceBuild/SourceBuildIntermediate.proj  | 51 ++-----------
+ 4 files changed, 108 insertions(+), 52 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
-index 31f544e6..2de4e955 100644
+index 31f544e6..1b33e23f 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 @@ -15,7 +15,8 @@
@@ -20,54 +20,40 @@ index 31f544e6..2de4e955 100644
              ReportPrebuiltUsage;
 -            PackSourceBuildIntermediateNupkgs" />
 +            PackSourceBuildIntermediateNupkgs;
-+            CopyRepoArtifacts" />
++            CreateRepoManifest" />
  
    <Target Name="WritePrebuiltUsageData">
      <ItemGroup>
-@@ -117,11 +118,54 @@
+@@ -117,11 +118,40 @@
        DestinationFiles="$(SourceBuildIntermediateNupkgLicenseFile)" />
    </Target>
  
-+  <!-- In VMR build we copy repo artifacts directly, without using the intermediate nupkgs. -->
-+  <Target Name="CopyRepoArtifacts"
++  <!--
++    In VMR build we create repo manifest.
++    SB orchestrator will parse the manifest and copy the artifacts to the right locations.
++  -->
++  <Target Name="CreateRepoManifest"
 +          Condition="'$(DotNetBuildFromSourceFlavor)' == 'Product'"
 +          DependsOnTargets="
 +            GetCategorizedIntermediateNupkgContents;
 +            CreateRepoSymbolsArchive">
 +
 +    <PropertyGroup>
-+      <_NupkgsDestination>$(CurrentSourceBuiltPackagesDir)</_NupkgsDestination>
-+      <_NupkgsDestination Condition="'$(GitHubRepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</_NupkgsDestination>
++      <RepoManifestFile>$(ArtifactsDir)RepoManifest.xml</RepoManifestFile>
 +    </PropertyGroup>
 +
 +    <ItemGroup>
-+      <_AssetsToCopy Include="@(IntermediateNupkgFile)" Condition="'%(Extension)' != '.nupkg'" />
-+      <_NugetPackagesToCopy Include="@(IntermediateNupkgFile)" Condition="'%(Extension)' == '.nupkg'"/>
++      <Line Include='&lt;Build&gt;' />
++      <Line Include='&lt;Artifact Path="%(IntermediateNupkgFile.Identity)" /&gt;' />
++      <Line Include='&lt;/Build&gt;' />
 +    </ItemGroup>
 +
-+    <!-- Copy non-shipping package list -->
-+    <Copy
-+      Condition="'$(NonShippingPackagesList)' != ''"
-+      SourceFiles="$(NonShippingPackagesList)"
-+      DestinationFolder="$(PackageListsDir)" />
++    <WriteLinesToFile
++      File="$(RepoManifestFile)"
++      Lines="@(Line)"
++      Overwrite="true"
++      />
 +
-+    <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
-+         clear it before copying the current SBRPs.  This ensures n-1 SBRPs aren't required to build the product repos. -->
-+    <RemoveDir
-+      Condition="'$(GitHubRepositoryName)' == 'source-build-reference-packages'"
-+      Directories="$(ReferencePackagesDir)" />
-+
-+    <!-- Copy nupkgs -->
-+    <Copy
-+      Condition="'@(_NugetPackagesToCopy)' != ''"
-+      SourceFiles="@(_NugetPackagesToCopy)"
-+      DestinationFolder="$(_NupkgsDestination)" />
-+
-+    <!-- Copy assets -->
-+    <Copy
-+      Condition="'@(_AssetsToCopy)' != ''"
-+      SourceFiles="@(_AssetsToCopy)"
-+      DestinationFolder="$(SourceBuiltAssetsDir)" />
 +  </Target>
 +
    <!--
@@ -80,7 +66,7 @@ index 31f544e6..2de4e955 100644
              CopyIntermediateNupkgProjToProjectDirectory;
              GetLicenseFileForIntermediateNupkgPack;
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-index 2d1a20d5..4ccb159a 100644
+index 2d1a20d5..afbef0d6 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 @@ -24,12 +24,24 @@
@@ -119,7 +105,7 @@ index 2d1a20d5..4ccb159a 100644
      </ItemGroup>
  
      <RemoveDuplicates Inputs="@(IntermediateNupkgFile)">
-@@ -118,6 +130,63 @@
+@@ -118,6 +130,62 @@
        <IntermediateNonShippingNupkgFile Include="@(IntermediatePackageFile)" Condition="$([System.Text.RegularExpressions.Regex]::Match(%(Identity),'[\\\\/]NonShipping[\\\\/]').Success)"/>
        <SupplementalIntermediateNupkgCategory Include="%(IntermediatePackageFile.Category)" />
      </ItemGroup>
@@ -149,12 +135,7 @@ index 2d1a20d5..4ccb159a 100644
 +      <!-- Fall back to repo root for source-build-externals or repos that don't have the regular SymbolsRoot as defined above -->
 +      <SymbolsRoot Condition="!Exists('$(SymbolsRoot)') or '$(GitHubRepositoryName)' == 'source-build-externals'">$(RepoRoot)</SymbolsRoot>
 +      <SymbolsArchiveLocation>$(CurrentRepoSourceBuildArtifactsPackagesDir)</SymbolsArchiveLocation>
-+      <SymbolsArchiveLocation Condition="'$(GitHubRepositoryName)' == 'nuget-client'">$(PackageOutputPath)</SymbolsArchiveLocation>
-+      <!--
-+        If we're doing full product source-build, we do not have intermediate package to carry this archive.
-+        Instead, we create it in blob-feed assets folder, directly.
-+      -->
-+      <SymbolsArchiveLocation Condition="'$(DotNetBuildFromSourceFlavor)' == 'Product'">$(SourceBuiltAssetsDir)</SymbolsArchiveLocation>
++      <SymbolsArchiveLocation Condition="'$(GitHubRepositoryName)' == 'nuget-client' and '$(PackageOutputPath)' != ''">$(PackageOutputPath)</SymbolsArchiveLocation>
 +      <SymbolsList>$(SymbolsArchiveLocation)\symbols.lst</SymbolsList>
 +      <SymbolsArchivePrefix>Symbols.</SymbolsArchivePrefix>
 +      <!-- $(Version) and $(TargetRid) are only available when target is executed as part of intermediate package creation. -->
@@ -178,6 +159,10 @@ index 2d1a20d5..4ccb159a 100644
 +    <Exec Command="tar --numeric-owner -czf $(SymbolsArchiveName) --files-from=$(SymbolsList)"
 +          WorkingDirectory="$(SymbolsRoot)" Condition="Exists($(SymbolsList))" />
 +    <Message Importance="High" Text="Packaged symbols to $(SymbolsArchiveName)" Condition="Exists($(SymbolsArchiveName))" />
++
++    <ItemGroup>
++      <IntermediateNupkgFile Include="$(SymbolsArchiveName)" PackagePath="artifacts" Condition="Exists($(SymbolsArchiveName)) and '$(CreateIntermediatePackage)' != 'true'" />
++    </ItemGroup>
 +
 +    <Delete Files="$(SymbolsList)" Condition="Exists($(SymbolsList))" />
    </Target>
