@@ -226,12 +226,16 @@
 
       <NetCoreAppHostRids Include="
           @(Net80AppHostRids);
+          linux-riscv64;
+          linux-musl-riscv64;
           " />
 
       <Net80RuntimePackRids Remove="win-arm" />
 
       <NetCoreRuntimePackRids Include="
           @(Net80RuntimePackRids);
+          linux-riscv64;
+          linux-musl-riscv64;
           " />
       <!--
         In source-build, we build the current RID from source, which may be
@@ -285,6 +289,8 @@
 
       <MonoRuntimePackRids Include="
       @(Net80MonoRuntimePackRids);
+      linux-riscv64;
+      linux-musl-riscv64;
       " />
 
       <MonoRuntimePackRids Remove="win-arm" />
@@ -378,7 +384,7 @@
       <AspNetCore70RuntimePackRids Include="@(AspNetCore60RuntimePackRids);linux-ppc64le" />
       <AspNetCore80RuntimePackRids Include="@(AspNetCore70RuntimePackRids)" />
       <AspNetCore80RuntimePackRids Remove="win-arm" />
-      <AspNetCoreRuntimePackRids Include="@(AspNetCore80RuntimePackRids)" />
+      <AspNetCoreRuntimePackRids Include="@(AspNetCore80RuntimePackRids);linux-riscv64;linux-musl-riscv64" />
 
       <WindowsDesktop30RuntimePackRids Include="win-x64;win-x86" />
       <WindowsDesktop31RuntimePackRids Include="@(WindowsDesktop30RuntimePackRids)" />
