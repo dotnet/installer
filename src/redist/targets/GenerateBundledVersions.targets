@@ -320,7 +320,7 @@
 
       <Net80Crossgen2SupportedRids Include="@(Net70Crossgen2SupportedRids)" />
 
-      <Crossgen2SupportedRids Include="@(Net80Crossgen2SupportedRids)" />
+      <Crossgen2SupportedRids Include="@(Net80Crossgen2SupportedRids);linux-riscv64;linux-musl-riscv64" />
 
       <Crossgen2SupportedRids Remove="win-arm" />
 

@@ -120,7 +120,7 @@
     </PropertyGroup>
 
     <Exec Command="$(ArmEnvironmentVariables) $(RepoRoot)cross/build-rootfs.sh"
-          Condition="$(TargetArchitecture.Contains('arm')) and '$(TargetArchitecture)' != 'armel' and '$(BuildArchitecture)' != 'arm64' and '$(BuildArchitecture)' != 'arm'" />
+          Condition="'$(TargetArchitecture)' != 'armel' and '$(BuildArchitecture)' != '$(TargetArchitecture)'" />
     <Exec Command="$(ArmEnvironmentVariables) $(RepoRoot)cross/armel/tizen-build-rootfs.sh"
           Condition="'$(TargetArchitecture)' == 'armel'" />
   </Target>
