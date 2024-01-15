@@ -7,7 +7,7 @@
       <SdkFilenamePrefix>dotnet-sdk-</SdkFilenamePrefix>
     </PropertyGroup>
     <ItemGroup>
-      <SdkTarballItem Include="$(SourceBuiltAssetsDir)$(SdkFilenamePrefix)*$(TarBallExtension)" />
+      <SdkTarballItem Include="$(SourceBuiltAssetsDir)$(SdkFilenamePrefix)*$(ArchiveExtension)" />
     </ItemGroup>
 
     <!--
@@ -15,11 +15,11 @@
 
       Example:
       dotnet-sdk-9.0.100-alpha.1.24057.1-fedora.38-x64.tar.gz
-      dotnet-sdk-<SdkVersion>-<TargetRid><TarBallExtension>
+      dotnet-sdk-<SdkVersion>-<TargetRid><ArchiveExtension>
     -->
     <PropertyGroup>
       <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
-      <SourceBuiltSdkVersion>$(SdkFilename.Replace("$(SdkFilenamePrefix)",).Replace("-$(TargetRid)$(TarBallExtension)",))</SourceBuiltSdkVersion>
+      <SourceBuiltSdkVersion>$(SdkFilename.Replace("$(SdkFilenamePrefix)",).Replace("-$(TargetRid)$(ArchiveExtension)",))</SourceBuiltSdkVersion>
     </PropertyGroup>
   </Target>
 
