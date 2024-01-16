@@ -27,12 +27,17 @@ variables:
 - name: _InternalRuntimeDownloadArgs
   value: ''
 
+- name: _internalBranchTesting
+  value: ''
+
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
   - name: _InternalRuntimeDownloadArgs
     value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
+  - name: InternalBranchTesting
+    value: true
 
 - template: /eng/common/templates/variables/pool-providers.yml
 
@@ -65,7 +70,7 @@ stages:
         jobName: Build_Debug_x64
         buildConfiguration: Debug
         buildArchitecture: x64
-        additionalBuildParameters: '/p:PublishInternalAsset=true'
+        additionalBuildParameters: '/p:PublishInternalAsset=true /p:InternalBranchTesting=$(_internalBranchTesting)'
         runTests: true
 
     ## Linux
@@ -79,6 +84,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: true
         runTests: true
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
     - template: eng/build.yml
       parameters:
         agentOs: Linux
@@ -88,6 +94,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: true
         runTests: true
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
     - template: eng/build.yml
       parameters:
         agentOs: Linux
@@ -97,6 +104,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: false
         runTests: true
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
     - template: eng/build.yml
       parameters:
         agentOs: Linux
@@ -104,7 +112,7 @@ stages:
         container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch'
         buildConfiguration: Debug
         buildArchitecture: x64
-        additionalBuildParameters: '/p:BuildSdkDeb=true'
+        additionalBuildParameters: '/p:BuildSdkDeb=true /p:InternalBranchTesting=$(_internalBranchTesting)'
         linuxPortable: false
         runTests: true
     - template: eng/build.yml
@@ -117,6 +125,7 @@ stages:
         linuxPortable: true
         # Never run tests on arm64
         runTests: false
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
     - template: eng/build.yml
       parameters:
         agentOs: Linux
@@ -126,7 +135,7 @@ stages:
         buildArchitecture: x64
         runtimeIdentifier: 'linux-musl-x64'
         # Pass in HostOSName when running on alpine
-        additionalBuildParameters: '/p:HostOSName="linux-musl"'
+        additionalBuildParameters: '/p:HostOSName="linux-musl" /p:InternalBranchTesting=$(_internalBranchTesting)'
         linuxPortable: false
         runTests: true
     - template: eng/build.yml
@@ -137,6 +146,7 @@ stages:
         buildArchitecture: x64
         linuxPortable: true
         runTests: true
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
 
     # MacOS
 
@@ -147,6 +157,7 @@ stages:
         buildConfiguration: Release
         buildArchitecture: x64
         runTests: true
+        additionalBuildParameters: '/p:InternalBranchTesting=$(_internalBranchTesting)'
 
   ## Official/PGO instrumentation Builds
   
