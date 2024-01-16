@@ -305,9 +305,9 @@
     </XmlPeek>
 
     <ItemGroup>
-      <_Asset Include="@(RepoManifestArtifact)" Condition="'%(Extension)' != '.nupkg'"/>
-      <_Package Include="@(RepoManifestArtifact)" Condition="'%(Extension)' == '.nupkg'"/>
-      <_NonShippingPackage Include="@(_Package)" Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))"/>
+      <RepoManifestAsset Include="@(RepoManifestArtifact)" Condition="'%(Extension)' != '.nupkg'"/>
+      <RepoManifestPackage Include="@(RepoManifestArtifact)" Condition="'%(Extension)' == '.nupkg'"/>
+      <RepoManifestNonShippingPackage Include="@(RepoManifestPackage)" Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -323,25 +323,25 @@
 
     <!-- Copy nupkgs -->
     <Copy
-      Condition="'@(_Package)' != ''"
-      SourceFiles="@(_Package)"
+      Condition="'@(RepoManifestPackage)' != ''"
+      SourceFiles="@(RepoManifestPackage)"
       DestinationFolder="$(_NupkgsDestination)" />
 
     <!-- Copy assets -->
     <Copy
-      Condition="'@(_Asset)' != ''"
-      SourceFiles="@(_Asset)"
+      Condition="'@(RepoManifestAsset)' != ''"
+      SourceFiles="@(RepoManifestAsset)"
       DestinationFolder="$(SourceBuiltAssetsDir)" />
 
     <!-- Generate non-shipping package list -->
     <PropertyGroup>
-      <NonShippingPackagesList Condition="'@(_NonShippingPackage)' != ''">$(PackageListsDir)$(NonShippingPackagesListPrefix)$(RepositoryName).lst</NonShippingPackagesList>
+      <NonShippingPackagesList Condition="'@(RepoManifestNonShippingPackage)' != ''">$(PackageListsDir)$(NonShippingPackagesListPrefix)$(RepositoryName).lst</NonShippingPackagesList>
     </PropertyGroup>
 
     <WriteLinesToFile
       Condition="'$(NonShippingPackagesList)' != ''"
       File="$(NonShippingPackagesList)"
-      Lines="@(_NonShippingPackage->'%(Filename)%(Extension)')"
+      Lines="@(RepoManifestNonShippingPackage->'%(Filename)%(Extension)')"
       Overwrite="true" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
