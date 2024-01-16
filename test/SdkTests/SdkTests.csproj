@@ -215,6 +215,10 @@
       <TestArgs>$(TestArgs) -testList SdkIntegrationTests</TestArgs>
     </PropertyGroup>
 
+    <PropertyGroup Condition="('$(InternalBranchTesting)' != 'true') And ('$(StabilizePackageVersion)' == 'true')">
+      <!-- Add list of tests to skip on public builds -->
+      <TestArgs>$(TestArgs) -testConfigFile "$(MSBuildThisFileDirectory)TestsToSkipPublic.xml"</TestArgs>
+    </PropertyGroup>
 
     <PropertyGroup Condition="('$(OS)' == 'Windows_NT') And ('$(Architecture)' == 'x86')">
       <!-- Add list of tests to skip on x86 -->
