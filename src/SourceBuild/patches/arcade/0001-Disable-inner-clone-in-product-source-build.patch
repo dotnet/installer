@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Tue, 16 Jan 2024 20:38:54 +0000
+Date: Tue, 16 Jan 2024 21:26:06 +0000
 Subject: [PATCH] Disable inner-clone in product source-build
 
 ---
  .../tools/SourceBuild/AfterSourceBuild.proj   | 34 ++++++++-
- .../SourceBuild/SourceBuildArcade.targets     | 72 ++++++++++++++++++-
+ .../SourceBuild/SourceBuildArcade.targets     | 71 ++++++++++++++++++-
  .../SourceBuildArcadeBuild.targets            |  5 +-
  .../SourceBuild/SourceBuildIntermediate.proj  | 56 ++-------------
- 4 files changed, 112 insertions(+), 55 deletions(-)
+ 4 files changed, 111 insertions(+), 55 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 index 31f544e6..0b56b22f 100644
@@ -75,7 +75,7 @@ index 31f544e6..0b56b22f 100644
              CopyIntermediateNupkgProjToProjectDirectory;
              GetLicenseFileForIntermediateNupkgPack;
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-index 2d1a20d5..c80243d9 100644
+index 2d1a20d5..5d91b110 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 @@ -18,9 +18,19 @@
@@ -98,7 +98,7 @@ index 2d1a20d5..c80243d9 100644
      <CurrentRepoSourceBuildPackageCache>$([MSBuild]::NormalizeDirectory('$(SourceBuildOutputDir)', 'package-cache'))</CurrentRepoSourceBuildPackageCache>
      <SourceBuildSelfPrebuiltReportDir>$([MSBuild]::NormalizeDirectory('$(SourceBuildOutputDir)', 'prebuilt-report'))</SourceBuildSelfPrebuiltReportDir>
  
-@@ -28,8 +38,11 @@
+@@ -28,6 +38,8 @@
        Keep artifacts/ inside source dir so that ancestor-based file lookups find the inner repo, not
        the outer repo. The inner repo global.json and NuGet.config files may have been modified by
        source-build, and we want projects inside the artifacts/ dir to respect that.
@@ -106,11 +106,8 @@ index 2d1a20d5..c80243d9 100644
 +      Inner-clone removal - in VMR use regular artifacts dir.
      -->
      <CurrentRepoSourceBuildArtifactsDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildSourceDir)', 'artifacts'))</CurrentRepoSourceBuildArtifactsDir>
-+    <CurrentRepoSourceBuildArtifactsDir Condition="'$(UseInnerClone)' != 'true'">$(ArtifactsDir)</CurrentRepoSourceBuildArtifactsDir>
      <CurrentRepoSourceBuildArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildArtifactsDir)', 'packages', '$(Configuration)'))</CurrentRepoSourceBuildArtifactsPackagesDir>
- 
-     <CurrentRepoSourceBuildNuGetSourceName>source-build-int-nupkg-cache</CurrentRepoSourceBuildNuGetSourceName>
-@@ -106,8 +119,8 @@
+@@ -106,8 +118,8 @@
      <ItemGroup>
        <IntermediateNupkgFile Include="@(IntermediateNupkgArtifactFile)" PackagePath="artifacts" />
  
@@ -121,7 +118,7 @@ index 2d1a20d5..c80243d9 100644
      </ItemGroup>
  
      <RemoveDuplicates Inputs="@(IntermediateNupkgFile)">
-@@ -118,6 +131,61 @@
+@@ -118,6 +130,61 @@
        <IntermediateNonShippingNupkgFile Include="@(IntermediatePackageFile)" Condition="$([System.Text.RegularExpressions.Regex]::Match(%(Identity),'[\\\\/]NonShipping[\\\\/]').Success)"/>
        <SupplementalIntermediateNupkgCategory Include="%(IntermediatePackageFile.Category)" />
      </ItemGroup>
