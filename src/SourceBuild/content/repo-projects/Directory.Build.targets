@@ -16,6 +16,7 @@
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <ProjectAssetsJsonArchiveFile>$(PackageReportDir)all-project-assets-json-files.zip</ProjectAssetsJsonArchiveFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
+    <RepoManifestFile>$([MSBuild]::NormalizePath('$(ProjectDirectory)', 'artifacts', 'RepoManifest.xml'))</RepoManifestFile>
   </PropertyGroup>
 
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
@@ -286,19 +287,27 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    Condition should be removed after source-build picks up version of Arcade that has
+    source-build infra changes for removal od inner-clone in VMR build. Until then some
+    repos will produce intermediate packages instead of repo manifest file.
+
+    https://github.com/dotnet/source-build/issues/3930
+  -->
   <Target Name="CopyRepoArtifacts"
           AfterTargets="Package"
-          Condition="Exists($(RepoManifestFile))">
-
+          Condition="Exists($(RepoManifestFile))"
+          Inputs="$(RepoManifestFile)"
+          Outputs="$(BaseIntermediateOutputPath)ArtifactsCopy.complete">
     <XmlPeek XmlInputPath="$(RepoManifestFile)"
              Query="Build/Artifact/@Path">
-        <Output TaskParameter="Result" ItemName="ArtifactPath" />
+        <Output TaskParameter="Result" ItemName="RepoManifestArtifact" />
     </XmlPeek>
 
     <ItemGroup>
-      <_Asset Include="@(ArtifactPath)" Condition="'%(Extension)' != '.nupkg'"/>
-      <_Package Include="@(ArtifactPath)" Condition="'%(Extension)' == '.nupkg'"/>
-      <_NonShippingPackage Include="@(_Package)" Condition="$([System.Text.RegularExpressions.Regex]::Match(%(Identity),'[\\\\/]NonShipping[\\\\/]').Success)"/>
+      <_Asset Include="@(RepoManifestArtifact)" Condition="'%(Extension)' != '.nupkg'"/>
+      <_Package Include="@(RepoManifestArtifact)" Condition="'%(Extension)' == '.nupkg'"/>
+      <_NonShippingPackage Include="@(_Package)" Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -335,6 +344,10 @@
       Lines="@(_NonShippingPackage->'%(Filename)%(Extension)')"
       Overwrite="true" />
 
+    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
+    <Touch Files="$(BaseIntermediateOutputPath)ArtifactsCopy.complete" AlwaysCreate="true">
+      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+    </Touch>
   </Target>
 
   <!--

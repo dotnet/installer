@@ -19,7 +19,7 @@
     -->
     <PropertyGroup>
       <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
-      <SourceBuiltSdkVersion>$(SdkFilename.Replace("$(SdkFilenamePrefix)",).Replace("-$(TargetRid)$(ArchiveExtension)",))</SourceBuiltSdkVersion>
+      <SourceBuiltSdkVersion>$(SdkFilename.Replace('$(SdkFilenamePrefix)','').Replace('-$(TargetRid)$(ArchiveExtension)',''))</SourceBuiltSdkVersion>
     </PropertyGroup>
   </Target>
 
