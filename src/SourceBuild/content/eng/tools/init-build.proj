@@ -113,7 +113,7 @@
   </Target>
 
   <Target Name="GenerateRootFs"
-          Condition=" '$(BuildOS)' != 'windows' AND '$(CrossBuild)' == 'true' AND $(ROOTFS_DIR) == '' ">
+          Condition="'$(BuildOS)' != 'windows' and '$(CrossBuild)' == 'true' and '$(ROOTFS_DIR)' == ''">
     <PropertyGroup>
       <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(ArtifactsObjDir)crossrootfs/arm</ArmEnvironmentVariables>
       <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(ArtifactsObjDir)crossrootfs/armel</ArmEnvironmentVariables>
