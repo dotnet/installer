@@ -141,7 +141,6 @@
   <!-- VBPOC - I'm not sure about this. Some of this may be needed for VB, but I'm not sure why some pieces like
        DotNetBuildFromSource are in there for source-build at all. -->
   <ItemGroup>
-    <EnvironmentVariables Include="DotNetBuildFromSource=true" Condition="'$(DotNetBuildFromSource)' == 'true'" />
     <EnvironmentVariables Include="DotNetBuildVertical=true" Condition="'$(DotNetBuildVertical)' == 'true'" />
   </ItemGroup>
 
