@@ -3,6 +3,7 @@
   <PropertyGroup>
     <_SuppressSdkImports Condition="'$(DotNetBuildFromSource)' == 'true'">true</_SuppressSdkImports>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    <DotNetBuildOrchestrator>true</DotNetBuildOrchestrator>
   </PropertyGroup>
 
   <PropertyGroup Label="CalculateTargetOS">

@@ -16,8 +16,7 @@
                        $(RepoProjectsDir)$(RootRepo).proj"
              Targets="Build"
              BuildInParallel="false"
-             StopOnFirstFailure="true"
-             Properties="DotNetBuildOrchestrator=true" />
+             StopOnFirstFailure="true" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildFromSource)' == 'true'" />
