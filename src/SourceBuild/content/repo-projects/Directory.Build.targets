@@ -220,6 +220,16 @@
              StopOnFirstFailure="true" />
   </Target>
 
+  <!-- Update build command with repo-conditioned arguments. -->
+  <Target Name="UpdateBuildCommandWithRepoConditionedArguments"
+          BeforeTargets="Build">
+    <PropertyGroup Condition="'$(UseInnerClone)' == 'true'">
+      <BuildCommand>$(BuildCommand) /p:UseInnerClone=true</BuildCommand>
+      <BuildCommand>$(BuildCommand) /p:CopySrcInsteadOfClone=true</BuildCommand>
+      <BuildCommand>$(BuildCommand) /p:CopyWipIntoInnerSourceBuildRepo=true</BuildCommand>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="Build"
           DependsOnTargets="BuildRepoReferences"
           Inputs="$(MSBuildProjectFullPath)"
