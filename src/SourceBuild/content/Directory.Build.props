@@ -99,6 +99,11 @@
 
     <!-- TargetFrameworkDefaults.props -->
     <NetCurrent>net9.0</NetCurrent>
+
+    <!-- Set up the build phase since the orchestrator switch is passed.
+         From RepoDefaults.props. -->
+    <DotNetBuild>true</DotNetBuild>
+    <DotNetBuildPhase>Orchestrator</DotNetBuildPhase>
   </PropertyGroup>
 
   <!-- Manually import the Versions.props file when the Arcade SDK isn't used. -->
