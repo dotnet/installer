@@ -2,6 +2,12 @@
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
 
+  <PropertyGroup Condition="'$(UseInnerClone)' == 'true'">
+    <BuildArgs>$(BuildArgs) /p:UseInnerClone=true</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:CopySrcInsteadOfClone=true</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:CopyWipIntoInnerSourceBuildRepo=true</BuildArgs>
+  </PropertyGroup>
+
   <PropertyGroup>
     <BuildCommand Condition="'$(BuildCommand)' == '' and '$(IsUtilityProject)' != 'true'">$(BuildScript) $(BuildActions) $(BuildArgs)</BuildCommand>
 
@@ -218,16 +224,6 @@
              Targets="Build"
              BuildInParallel="$(BuildInParallel)"
              StopOnFirstFailure="true" />
-  </Target>
-
-  <!-- Update build command with repo-conditioned arguments. -->
-  <Target Name="UpdateBuildCommandWithRepoConditionedArguments"
-          BeforeTargets="Build">
-    <PropertyGroup Condition="'$(UseInnerClone)' == 'true'">
-      <BuildCommand>$(BuildCommand) /p:UseInnerClone=true</BuildCommand>
-      <BuildCommand>$(BuildCommand) /p:CopySrcInsteadOfClone=true</BuildCommand>
-      <BuildCommand>$(BuildCommand) /p:CopyWipIntoInnerSourceBuildRepo=true</BuildCommand>
-    </PropertyGroup>
   </Target>
 
   <Target Name="Build"
