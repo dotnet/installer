@@ -84,7 +84,9 @@ sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/System.IO.Pipelin
 sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/System.Security.Cryptography.ProtectedData.dll
 
 # netfx runtimes for dotnet-watch - https://github.com/dotnet/source-build/issues/4035
-sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/BuildHost-netcore/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.deps.json
+sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/BuildHost-netcore/runtimes/*
+sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/BuildHost-netcore/System.Text.Encodings.Web.dll
+sb,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/BuildHost-netcore/System.Text.Json.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/Microsoft.Extensions.DependencyInjection.Abstractions.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/Microsoft.Extensions.Logging.Abstractions.dll
 msft,./sdk/x.y.z/DotnetTools/dotnet-watch/x.y.z/tools/netx.y/any/System.Security.Cryptography.Pkcs.dll
@@ -120,3 +122,7 @@ msft,./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/System.Security.Cryptography.Pro
 # windows components - https://github.com/dotnet/source-build/issues/3526
 msft,./sdk/x.y.z/runtimes/win/lib/netx.y/Microsoft.Win32.SystemEvents.dll
 msft,./sdk/x.y.z/runtimes/win/lib/netx.y/System.Drawing.Common.dll
+
+# runtime components in roslyn layout - (https://github.com/dotnet/source-build/issues/4016)
+sb,./sdk/x.y.z/Roslyn/bincore/System.Collections.Immutable.dll
+sb,./sdk/x.y.z/Roslyn/bincore/System.Reflection.Metadata.dll
