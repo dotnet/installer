@@ -1,3 +1,9 @@
+parameters:
+- name: isSourceOnlyBuild
+  displayName: Build the VMR in source-only mode
+  type: boolean
+  default: false
+
 stages:
 - stage: Tag_n_Scan
   displayName: Tag & Scan
@@ -41,6 +47,7 @@ stages:
       displayName: Scan for binaries
       workingDirectory: $(Build.SourcesDirectory)/src/installer
       continueOnError: true
+      condition: {{ parameters.isSourceOnlyBuild }}
 
     - script: >
         ./.dotnet/dotnet darc vmr scan-cloaked-files
@@ -50,3 +57,4 @@ stages:
       displayName: Scan for cloaked files
       workingDirectory: $(Build.SourcesDirectory)/src/installer
       continueOnError: true
+      condition: {{ parameters.isSourceOnlyBuild }}

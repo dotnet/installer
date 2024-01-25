@@ -16,7 +16,7 @@ parameters:
   default: ' '
 
 - name: disableVmrBuild
-  displayName: Skip source-building the VMR
+  displayName: Skip building the VMR
   type: boolean
   default: false
 
@@ -27,6 +27,10 @@ variables:
 - ${{ else }}:
   - name: VmrBranch
     value: ${{ replace(replace(variables['System.PullRequest.TargetBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
+
+# enable source-only build for pipelines with the -source-build suffix
+- name: isSourceOnlyBuild
+  value: ${{ in(variables['Build.DefinitionName'], '-source-build') }}
 
 resources:
   repositories:
@@ -43,6 +47,8 @@ stages:
     parameters:
       vmrBranch: ${{ variables.VmrBranch }}
       isBuiltFromVmr: false
+      isLiteBuild: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+      isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
 
 # In case the VMR Build stage is temporarily disabled, the VMR synchronization step is run to validate
 # that the PR can be merged and later synchronized into the VMR without problems.

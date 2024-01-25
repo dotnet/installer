@@ -1,4 +1,6 @@
-# This is the dotnet/dotnet pipeline that is triggered every weekday at midnight PST (08:00 UTC) for "main" and when changes are pushed to release/* and internal/release/* branches.
+# This is the dotnet/dotnet pipeline that is triggered:
+# - Full build every weekday at midnight PST (08:00 UTC) for "main"
+# - Lite build for PRs and when changes are pushed to release/* and internal/release/* branches.
 
 schedules:
 - cron: '0 8 * * Mon-Fri'
@@ -11,16 +13,30 @@ schedules:
 trigger:
   batch: true
   branches:
-   include:
-   - release/*
-   - internal/release/*
+    include:
+    - main
+    - release/*
+    - internal/release/*
 
-pr: none
+pr:
+  branches:
+    include:
+    - main
+    - release/*
+
+variables:
+# enable source-only build for pipelines with the -source-build suffix
+- name: isSourceOnlyBuild
+  value: ${{ in(variables['Build.DefinitionName'], '-source-build') }}
 
 stages:
-- template: templates/stages/vmr-scan.yml
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(variables['Build.Reason'], 'Schedule')) }}:
+  - template: templates/stages/vmr-scan.yml
+    parameters:
+      isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
 
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
     isBuiltFromVmr: true
-    isLiteBuild: false
+    isLiteBuild: ${{ ne(variables['Build.Reason'], 'Schedule') }}
+    isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
