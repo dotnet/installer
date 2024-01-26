@@ -66,6 +66,7 @@
       <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
       <SourceBuildSources>$(SourceBuiltNuGetSourceName)</SourceBuildSources>
       <SourceBuildSources Condition="'$(ExtraRestoreSourcePath)' != ''">$(SourceBuildSources);$(ExtraSourcesNuGetSourceName)</SourceBuildSources>
+      <NetSdkSupportingFeedName>net-sdk-supporting-feed</NetSdkSupportingFeedName>
     </PropertyGroup>
   
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -109,6 +110,12 @@
                             SourceName="$(ExtraSourcesNuGetSourceName)"
                             SourcePath="$(ExtraRestoreSourcePath)"
                             Condition="'$(ExtraRestoreSourcePath)' != ''" />
+
+    <!-- See root Directory.Build.props for value. -->
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="$(NetSdkSupportingFeedName)"
+                            SourcePath="$(NetSdkSupportingFeed)"
+                            Condition="'$(AddNetSdkSupportingFeed)' == 'true' and '$(DotNetBuildSourceOnly)' != 'true'" />
 
     <UpdateNuGetConfigPackageSourcesMappings
       NuGetConfigFile="%(NuGetConfigFiles.Identity)"
