@@ -16,10 +16,10 @@ parameters:
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
-  alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
+  alpine319Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
   centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
-  fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
+  fedora39Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
   ubuntu2204Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
   ubuntu2204ArmContainer: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
 
@@ -112,15 +112,15 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: Alpine317_Offline_PreviousSourceBuiltSdk
+        buildName: Alpine319_Offline_PreviousSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        artifactsRid: alpine.3.17-x64
+        artifactsRid: alpine.3.19-x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.alpine317Container }}
+        container: ${{ parameters.alpine319Container }}
         buildFromArchive: false            # 🚫
         enablePoison: true                 # ✅
         excludeOmniSharpTests: true        # ✅
@@ -129,6 +129,24 @@ stages:
         withPreviousSDK: true              # ✅
 
   - ${{ if eq(parameters.isLiteBuild, false) }}:
+
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: Alpine319_Online_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemands }}
+        container: ${{ parameters.alpine319Container }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: true                    # ✅
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -225,14 +243,14 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: Fedora38_Offline_MsftSdk
+        buildName: Fedora39_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.fedora38Container }}
+        container: ${{ parameters.fedora39Container }}
         buildFromArchive: true             # ✅
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
@@ -277,18 +295,18 @@ stages:
     - template: ../jobs/vmr-build.yml
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: Fedora38_Offline_CurrentSourceBuiltSdk
+        buildName: Fedora39_Offline_CurrentSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.fedora38Container }}
+        container: ${{ parameters.fedora39Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
-        reuseBuildArtifactsFrom: Fedora38_Offline_MsftSdk
+        reuseBuildArtifactsFrom: Fedora39_Offline_MsftSdk
