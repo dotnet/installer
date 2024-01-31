@@ -296,7 +296,7 @@ stages:
 
     - template: ../jobs/vmr-build.yml
       parameters:
-        buildName: MarinerCrossX64_Online_MsftSdk
+        buildName: MarinerCrossX64
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
@@ -313,7 +313,7 @@ stages:
 
       - template: ../jobs/vmr-build.yml
         parameters:
-          buildName: OSXCrossX64_Online_MsftSdk
+          buildName: OSXCrossX64
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
@@ -325,7 +325,7 @@ stages:
 
       - template: ../jobs/vmr-build.yml
         parameters:
-          buildName: WindowsX64_Online_MsftSdk
+          buildName: WindowsX64
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
@@ -341,7 +341,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: MarinerCrossArm64_Online_MsftSdk
+            buildName: MarinerCrossArm64
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
@@ -355,7 +355,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: OSXCrossArm64_Online_MsftSdk
+            buildName: OSXCrossArm64
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
