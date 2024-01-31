@@ -268,10 +268,6 @@ jobs:
           customBuildArgs="$customBuildArgs --use-mono-runtime"
         fi
 
-        if [[ -n "${{ parameters.container }}" ]]; then
-          useDocker=true
-        fi
-
         if [[ ! -z '${{ parameters.targetRid }}' ]]; then
           extraBuildProperties="--"
           if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
@@ -288,8 +284,10 @@ jobs:
           extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.targetRid }}"
         fi
 
-        # Only use Docker stuff on Linux
-        if [[ "$useDocker" == "true" ]]; then
+        buildArgs="--source-only --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
+
+        # Only use Docker when a container is specified
+        if [[ -n "${{ parameters.container }}" ]]; then
           customDockerRunArgs=""
           for envVar in $customEnvVars; do
             customDockerRunArgs="$customDockerRunArgs -e $envVar"
@@ -299,14 +297,14 @@ jobs:
             customDockerRunArgs="$customDockerRunArgs --network none"
           fi
 
-          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customDockerRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customDockerRunArgs ${{ parameters.container }} ./build.sh $buildArgs
         else
           for envVar in $customEnvVars; do
             customEnvVarsWithBashSyntax="$customEnvVarsWithBashSyntax export $envVar;"
           done
           cd $(sourcesPath)
           eval $customEnvVarsWithBashSyntax
-          ./build.sh --source-only --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties
+          ./build.sh $buildArgs
         fi
       displayName: Build
 
