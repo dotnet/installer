@@ -1,8 +1,9 @@
 <Project>
 
   <PropertyGroup>
-    <_SuppressSdkImports Condition="'$(DotNetBuildFromSource)' == 'true'">true</_SuppressSdkImports>
+    <_SuppressSdkImports Condition="'$(DotNetBuildSourceOnly)' == 'true'">true</_SuppressSdkImports>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    <DotNetBuildOrchestrator>true</DotNetBuildOrchestrator>
   </PropertyGroup>
 
   <PropertyGroup Label="CalculateTargetOS">
@@ -27,6 +28,7 @@
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'armv6'">armv6</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'armel'">armel</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'arm64'">arm64</TargetArchitecture>
+    <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'riscv64'">riscv64</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'loongarch64'">loongarch64</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 's390x'">s390x</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(BuildArchitecture)' == 'ppc64le'">ppc64le</TargetArchitecture>
@@ -34,7 +36,6 @@
     <TargetArchitecture Condition="'$(OverrideTargetRid)' != ''">$(OverrideTargetRid.Substring($(OverrideTargetRid.LastIndexOf('-'))).TrimStart('-'))</TargetArchitecture>
     <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
 
-    <Platform Condition="'$(Platform)' == '' and '$(InferPlatformFromTargetArchitecture)' == 'true'">$(TargetArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
   </PropertyGroup>
 
@@ -45,6 +46,9 @@
 
     <HostRid Condition="'$(HostRid)' == ''">$(BuildRid)</HostRid>
     <TargetRid Condition="'$(TargetRid)' == ''">$(BuildRid)</TargetRid>
+
+    <!-- Source-only builds are non portable. -->
+    <PortableBuild Condition="'$(PortableBuild)' == '' and '$(DotNetBuildSourceOnly)' != 'true'">true</PortableBuild>
 
     <PortableRid Condition="'$(__PortableTargetOS)' != ''">$(__PortableTargetOS)-$(TargetArchitecture)</PortableRid>
     <PortableRid Condition="'$(PortableRid)' == '' and '$(TargetOS)' == 'freebsd'">freebsd-$(TargetArchitecture)</PortableRid>
@@ -81,8 +85,8 @@
     <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts'))</ArtifactsDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
     <ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
-    <RepositoryEngineeringDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'eng'))</RepositoryEngineeringDir>
     <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log', '$(Configuration)'))</ArtifactsLogDir>
+    <RepositoryEngineeringDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'eng'))</RepositoryEngineeringDir>
 
     <!-- ProjectLayout.props -->
     <PlatformName Condition="'$(PlatformName)' == ''">$(Platform)</PlatformName>
@@ -98,6 +102,11 @@
 
     <!-- TargetFrameworkDefaults.props -->
     <NetCurrent>net9.0</NetCurrent>
+
+    <!-- Set up the build phase since the orchestrator switch is passed.
+         From RepoDefaults.props. -->
+    <DotNetBuild>true</DotNetBuild>
+    <DotNetBuildPhase>Orchestrator</DotNetBuildPhase>
   </PropertyGroup>
 
   <!-- Manually import the Versions.props file when the Arcade SDK isn't used. -->
@@ -111,10 +120,10 @@
     <IsShipping>false</IsShipping>
     <!-- It's not unusual to build with a preview SDK -->
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <!-- Builds from the VMR are by definition vertical builds. -->
-    <DotNetBuildVertical Condition="'$(DotNetBuildVertical)' == ''">true</DotNetBuildVertical>
-    <!-- By default, the VMR builds with online sources. -->
-    <BuildWithOnlineSources Condition="'$(BuildWithOnlineSources)' == '' and '$(DotNetBuildVertical)' == 'true'">true</BuildWithOnlineSources>
+    <!-- By default, the VMR builds with online sources when not building source-only. -->
+    <DotNetBuildWithOnlineFeeds Condition="'$(DotNetBuildWithOnlineFeeds)' == '' and '$(DotNetBuildSourceOnly)' != 'true'">true</DotNetBuildWithOnlineFeeds>
+    <!-- By default, skip building tests when building the VMR. -->
+    <DotNetBuildSkipTests Condition="'$(DotNetBuildSkipTests)' == ''">true</DotNetBuildSkipTests>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -150,14 +159,14 @@
 
     <!-- When SB mode, the initial arcade is unzipped to a the "ArcadeBootStrap" dir.
          When running in VBPOC, the bootstrap package is the arcade restored at the beginning of the build. -->
-    <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildFromSource)' == 'true'">$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'ArcadeBootstrapPackage'))</ArcadeBootstrapPackageDir>
-    <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildFromSource)' != 'true'">$(NuGetPackageRoot)</ArcadeBootstrapPackageDir>
+    <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildSourceOnly)' == 'true'">$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'ArcadeBootstrapPackage'))</ArcadeBootstrapPackageDir>
+    <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildSourceOnly)' != 'true'">$(NuGetPackageRoot)</ArcadeBootstrapPackageDir>
 
-    <!-- Collapsed output and intermediate path folders that are architecture and configuration specific. -->
-    <CollapsedOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', '$(TargetArchitecture)', '$(Configuration)'))</CollapsedOutputPath>
-    <CollapsedIntermediatePath>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', '$(TargetArchitecture)', '$(Configuration)'))</CollapsedIntermediatePath>
+    <!-- Shared output and intermediate output path folders that are architecture and configuration specific. -->
+    <SharedOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', '$(TargetArchitecture)', '$(Configuration)'))</SharedOutputPath>
+    <SharedIntermediateOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', '$(TargetArchitecture)', '$(Configuration)'))</SharedIntermediateOutputPath>
 
-    <SourceBuiltBlobFeedDir>$([MSBuild]::NormalizeDirectory('$(CollapsedIntermediatePath)', 'blob-feed'))</SourceBuiltBlobFeedDir>
+    <SourceBuiltBlobFeedDir>$([MSBuild]::NormalizeDirectory('$(SharedIntermediateOutputPath)', 'blob-feed'))</SourceBuiltBlobFeedDir>
     <SourceBuiltPackagesPath>$([MSBuild]::NormalizeDirectory('$(SourceBuiltBlobFeedDir)', 'packages'))</SourceBuiltPackagesPath>
     <SourceBuiltAssetsDir>$([MSBuild]::NormalizeDirectory('$(SourceBuiltBlobFeedDir)', 'assets'))</SourceBuiltAssetsDir>
 

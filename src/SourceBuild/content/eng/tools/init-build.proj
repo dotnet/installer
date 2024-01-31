@@ -21,7 +21,7 @@
       PoisonPrebuiltPackages" />
 
   <Target Name="UnpackTarballs"
-          Condition="'$(DotNetBuildFromSource)' == 'true'"
+          Condition="'$(DotNetBuildSourceOnly)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UnpackTarballs.complete" >
     <PropertyGroup>
@@ -113,21 +113,21 @@
   </Target>
 
   <Target Name="GenerateRootFs"
-          Condition="'$(BuildOS)' != 'windows'">
+          Condition="'$(BuildOS)' != 'windows' and '$(CrossBuild)' == 'true' and '$(ROOTFS_DIR)' == ''">
     <PropertyGroup>
       <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(ArtifactsObjDir)crossrootfs/arm</ArmEnvironmentVariables>
       <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(ArtifactsObjDir)crossrootfs/armel</ArmEnvironmentVariables>
     </PropertyGroup>
 
-    <Exec Command="$(ArmEnvironmentVariables) $(RepoRoot)cross/build-rootfs.sh"
-          Condition="$(TargetArchitecture.Contains('arm')) and '$(TargetArchitecture)' != 'armel' and '$(BuildArchitecture)' != 'arm64' and '$(BuildArchitecture)' != 'arm'" />
-    <Exec Command="$(ArmEnvironmentVariables) $(RepoRoot)cross/armel/tizen-build-rootfs.sh"
+    <Exec Command="$(ArmEnvironmentVariables) $(RepositoryEngineeringDir)common/cross/build-rootfs.sh"
+          Condition="'$(TargetArchitecture)' != 'armel' and '$(BuildArchitecture)' != '$(TargetArchitecture)'" />
+    <Exec Command="$(ArmEnvironmentVariables) $(RepositoryEngineeringDir)common/cross/armel/tizen-build-rootfs.sh"
           Condition="'$(TargetArchitecture)' == 'armel'" />
   </Target>
 
   <!-- Extract Arcade prebuilt package into the bootstrap folder and prepare it. -->
   <Target Name="ExtractToolPackage"
-          Condition="'$(DotNetBuildFromSource)' == 'true'"
+          Condition="'$(DotNetBuildSourceOnly)' == 'true'"
           DependsOnTargets="UnpackTarballs"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
