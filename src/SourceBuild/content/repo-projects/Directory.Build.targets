@@ -696,6 +696,12 @@
     except source-build-reference-packages repo, that builds these packages.
 
     Also skip if building utility projects.
+
+    We need to override all SDK packages that are used by repos, to prevent NuGet SDK Resolver from trying to
+    restore these packages from online feeds. In offline build we only want to use local source-build feeds.
+    Therefore, we create a copy of repo's NuGet.config file, modify it, and pass it into repo build using
+    RestoreConfigFile property. MSBuild uses NuGetSdkResolver to restore missing SDKs, which doesn't honor
+    RestoreConfigFile property and uses NuGet.config file from repo's root which has online feeds.
   -->
   <Target Name="AddSdkOverrides"
           BeforeTargets="SetSourceBuiltSdkOverrides"
