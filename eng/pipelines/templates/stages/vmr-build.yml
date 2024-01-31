@@ -26,6 +26,8 @@ stages:
     condition: ${{ parameters.condition }}
     variables:
     - template: ../variables/vmr-stage.yml
+      parameters:
+        vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
 
     - template: ../jobs/vmr-build.yml
@@ -292,6 +294,8 @@ stages:
     condition: ${{ parameters.condition }}
     variables:
     - template: ../variables/vmr-stage.yml
+      parameters:
+        vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
 
     - template: ../jobs/vmr-build.yml

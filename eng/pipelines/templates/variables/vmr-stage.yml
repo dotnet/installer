@@ -1,3 +1,7 @@
+parameters:
+- name: vmrBranch 
+  type: string
+
 variables:
 - ${{ if ne(parameters.vmrBranch, '') }}:
   - name: VmrBranch
