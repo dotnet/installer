@@ -9,8 +9,7 @@
     <!-- On Windows, build all for the VB PoC -->
     <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true' and '$(BuildOS)' == 'windows'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack</BuildActions>
 
-    <BuildArgs Condition="'$(OverrideTargetArch)' == ''">$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
-    <BuildArgs Condition="'$(OverrideTargetArch)' != ''">$(BuildArgs) $(FlagParameterPrefix)arch $(OverrideTargetArch)</BuildArgs>
+    <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildArgs Condition="'$(DotNetBuildSourceOnly)' == 'true' or '$(BuildOS)' != 'windows'">$(BuildArgs) $(FlagParameterPrefix)no-build-repo-tasks</BuildArgs>
     <BuildArgs Condition="'$(DotNetBuildSourceOnly)' == 'true' or '$(BuildOS)' != 'windows'">$(BuildArgs) $(FlagParameterPrefix)no-build-nodejs</BuildArgs>
 

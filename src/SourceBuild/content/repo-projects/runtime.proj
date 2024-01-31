@@ -17,8 +17,8 @@
     <!-- Use the repo root build script -->
     <BuildScript>$(ProjectDirectory)build$(ShellExtension)</BuildScript>
 
-    <BuildArgs Condition="'$(OverrideTargetArch)' != ''">$(BuildArgs) $(FlagParameterPrefix)arch $(OverrideTargetArch)</BuildArgs>
-    <BuildArgs Condition="'$(OverrideTargetOS)' != ''">$(BuildArgs) $(FlagParameterPrefix)os $(OverrideTargetOS)</BuildArgs>
+    <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
+    <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)os $(TargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRid=$(OverrideTargetRid)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:BaseOS=$(BaseOS)</BuildArgs>

@@ -69,6 +69,14 @@ parameters:
   type: string
   default: ''
 
+- name: targetOS
+  type: string
+  default: ''
+
+- name: targetArch
+  type: string
+  default: ''
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -247,20 +255,20 @@ jobs:
         useDocker=true
       fi
 
-      if [[ ! -z '${{ parameters.targetRid }}' ]]; then
-        extraBuildProperties="--"
-        if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
-            customEnvVars="$customEnvVars CROSSCOMPILE=1"
-        fi
-        extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true"
+      if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
+        customEnvVars="$customEnvVars CROSSCOMPILE=1"
       fi
 
       if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
         customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
       fi
 
-      if [[ ! -z '${{ parameters.targetRid }}' ]]; then
-        extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.targetRid }}"
+      if [[ ! -z '${{ parameters.targetOS }}' ]]; then
+        extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
+      fi
+
+      if [[ ! -z '${{ parameters.targetArch }}' ]]; then
+        extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArch }}"
       fi
 
       # Only use Docker stuff on Linux
