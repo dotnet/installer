@@ -65,9 +65,9 @@ parameters:
   type: string
   default: ''
 
-- name: targetRid
-  type: string
-  default: ''
+- name: runTests
+  type: boolean
+  default: false
 
 - name: targetOS
   type: string
@@ -294,7 +294,7 @@ jobs:
     displayName: Build
 
   # Don't run tests if overriding RID, we don't support that for now
-  - ${{ if eq(parameters.targetRid, '') }}:
+  - ${{ if eq(parameters.runTests, 'True') }}:
     - script: |
         set -x
 

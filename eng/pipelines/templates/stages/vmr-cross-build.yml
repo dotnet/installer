@@ -88,7 +88,7 @@ stages:
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
       crossRootFs: '/crossrootfs/x64'    # 📝
-      targetRid: 'linux-x64'             # 📝
+      runTests: false                    # 🚫
       targetOS: 'linux'                  # 📝
       targetArchitecture: 'x64'          # 📝
 
@@ -110,7 +110,7 @@ stages:
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
       crossRootFs: '/crossrootfs/arm64'  # 📝
-      targetRid: 'linux-arm64'           # 📝
+      runTests: false                    # 🚫
       targetOS: 'linux'                  # 📝
       targetArchitecture: 'arm64'        # 📝
 
@@ -130,7 +130,7 @@ stages:
       runOnline: true                    # ✅
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
-      targetRid: 'osx-x64'               # 📝
+      runTests: false                    # 🚫
       targetOS: 'osx'                    # 📝
       targetArchitecture: 'x64'          # 📝
 
@@ -150,7 +150,7 @@ stages:
       runOnline: true                    # ✅
       useMonoRuntime: true               # ✅
       withPreviousSDK: false             # 🚫
-      targetRid: 'osx-arm64'             # 📝
+      runTests: false                    # 🚫
       targetOS: 'osx'                    # 📝
       targetArchitecture: 'arm64'        # 📝
 
@@ -172,6 +172,6 @@ stages:
       useMonoRuntime: false              # 🚫
       withPreviousSDK: false             # 🚫
       crossRootFs: '/crossrootfs/arm64'  # 📝
-      targetRid: 'linux-arm64'           # 📝
+      runTests: false                    # 🚫
       targetOS: 'linux'                  # 📝
       targetArchitecture: 'arm64'        # 📝
