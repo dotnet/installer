@@ -175,6 +175,13 @@
 
     <ArcadeSharedFrameworkSdkOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Group="ARCADE_SHARED_FX_SDK" Version="$(arcadeOutputPackageVersion)" />
     <WindowsDesktopSdkOverride Include="Microsoft.Net.Sdk.WindowsDesktop" Group="WINDOWS_DESKTOP" Location="$(ToolsDir)EmptySdk" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+    <!-- Discover all versions of Microsoft.Build.Traversal and Microsoft.Build.NoTargets built in SBRP. -->
+    <NoTargetsSdkProject Include="$(SrcDir)source-build-reference-packages/**/microsoft.build.notargets.*.csproj"/>
+    <NoTargetsSdkProject Update="@(NoTargetsSdkProject)" Version="$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName('%(Identity)'))))" />
+    <NoTargetsSdkOverride Include="@(NoTargetsSdkProject->'Microsoft.Build.NoTargets')" Group="NOTARGETS" SupportMultipleVersions="true" />
+    <TraversalSdkProject Include="$(SrcDir)source-build-reference-packages/**/microsoft.build.traversal.*.csproj"/>
+    <TraversalSdkProject Update="@(TraversalSdkProject)" Version="$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName('%(Identity)'))))" />
+    <TraversalSdkOverride Include="@(TraversalSdkProject->'Microsoft.Build.Traversal')" Group="TRAVERSAL" SupportMultipleVersions="true" />
   </ItemGroup>
 
     <!-- CLI internal version is statically set by us to a version that will never show up in the wild.

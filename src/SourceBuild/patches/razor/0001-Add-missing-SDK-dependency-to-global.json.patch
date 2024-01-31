@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Wed, 31 Jan 2024 16:46:03 +0000
+Subject: [PATCH] Add missing SDK dependency to global.json
+
+---
+ global.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/global.json b/global.json
+index ada577e39..c3c7a902c 100644
+--- a/global.json
++++ b/global.json
+@@ -21,6 +21,7 @@
+     "rollForward": "latestPatch"
+   },
+   "msbuild-sdks": {
+-    "Microsoft.DotNet.Arcade.Sdk": "8.0.0-beta.24075.5"
++    "Microsoft.DotNet.Arcade.Sdk": "8.0.0-beta.24075.5",
++    "Microsoft.Build.NoTargets": "2.0.1"
+   }
+ }
