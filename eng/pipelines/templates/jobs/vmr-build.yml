@@ -273,15 +273,11 @@ jobs:
           if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
               customEnvVars="$customEnvVars CROSSCOMPILE=1"
           fi
-          extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true"
+          extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true /p:OverrideTargetRid=${{ parameters.targetRid }}"
         fi
 
         if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
-        fi
-
-        if [[ ! -z '${{ parameters.targetRid }}' ]]; then
-          extraBuildProperties="$extraBuildProperties /p:OverrideTargetRid=${{ parameters.targetRid }}"
         fi
 
         buildArgs="--source-only --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
