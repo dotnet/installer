@@ -30,10 +30,7 @@ variables:
   value: ${{ in(variables['Build.DefinitionName'], '-source-build') }}
 
 stages:
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(variables['Build.Reason'], 'Schedule')) }}:
-  - template: templates/stages/vmr-scan.yml
-    parameters:
-      isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
+- template: templates/stages/vmr-scan.yml
 
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
