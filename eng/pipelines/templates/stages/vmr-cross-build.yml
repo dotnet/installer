@@ -90,7 +90,7 @@ stages:
       crossRootFs: '/crossrootfs/x64'    # 📝
       targetRid: 'linux-x64'             # 📝
       targetOS: 'linux'                  # 📝
-      targetArch: 'x64'                  # 📝
+      targetArchitecture: 'x64'          # 📝
 
   - template: ../jobs/vmr-build.yml
     parameters:
@@ -112,7 +112,7 @@ stages:
       crossRootFs: '/crossrootfs/arm64'  # 📝
       targetRid: 'linux-arm64'           # 📝
       targetOS: 'linux'                  # 📝
-      targetArch: 'arm64'                # 📝
+      targetArchitecture: 'arm64'        # 📝
 
   - template: ../jobs/vmr-build.yml
     parameters:
@@ -132,7 +132,7 @@ stages:
       withPreviousSDK: false             # 🚫
       targetRid: 'osx-x64'               # 📝
       targetOS: 'osx'                    # 📝
-      targetArch: 'x64'                  # 📝
+      targetArchitecture: 'x64'          # 📝
 
   - template: ../jobs/vmr-build.yml
     parameters:
@@ -152,7 +152,7 @@ stages:
       withPreviousSDK: false             # 🚫
       targetRid: 'osx-arm64'             # 📝
       targetOS: 'osx'                    # 📝
-      targetArch: 'arm64'                # 📝
+      targetArchitecture: 'arm64'        # 📝
 
   - template: ../jobs/vmr-build.yml
     parameters:
@@ -174,4 +174,4 @@ stages:
       crossRootFs: '/crossrootfs/arm64'  # 📝
       targetRid: 'linux-arm64'           # 📝
       targetOS: 'linux'                  # 📝
-      targetArch: 'arm64'                # 📝
+      targetArchitecture: 'arm64'        # 📝

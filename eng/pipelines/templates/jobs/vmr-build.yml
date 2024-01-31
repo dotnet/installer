@@ -73,7 +73,7 @@ parameters:
   type: string
   default: ''
 
-- name: targetArch
+- name: targetArchitecture
   type: string
   default: ''
 
@@ -267,8 +267,8 @@ jobs:
         extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
       fi
 
-      if [[ ! -z '${{ parameters.targetArch }}' ]]; then
-        extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArch }}"
+      if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
+        extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
       fi
 
       # Only use Docker stuff on Linux
