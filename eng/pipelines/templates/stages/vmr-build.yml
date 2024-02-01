@@ -339,42 +339,42 @@ stages:
         container: ''
         targetRid: 'win-x64'               # 📝 # TODO: remove this once https://github.com/dotnet/installer/pull/18476 lands 
 
-      ### Additional jobs for full build ###
-      - ${{ if in(parameters.scope, 'full') }}:
+    ### Additional jobs for full build ###
+    - ${{ if in(parameters.scope, 'full') }}:
 
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            buildName: MarinerCross
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.marinerX64CrossContainer }}
-            crossRootFs: '/crossrootfs/x64'    # 📝
-            targetRid: 'linux-x64'             # 📝
+      - template: ../jobs/vmr-build.yml
+        parameters:
+          buildName: MarinerCross
+          isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+          vmrBranch: ${{ variables.VmrBranch }}
+          architecture: x64
+          pool:
+            name: ${{ variables.defaultPoolName }}
+            demands: ${{ variables.defaultPoolDemandsLinux }}
+          container: ${{ variables.marinerX64CrossContainer }}
+          crossRootFs: '/crossrootfs/x64'    # 📝
+          targetRid: 'linux-x64'             # 📝
 
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            buildName: MarinerCross
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: arm64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.marinerArm64CrossContainer }}
-            crossRootFs: '/crossrootfs/arm64'  # 📝
-            targetRid: 'linux-arm64'           # 📝
+      - template: ../jobs/vmr-build.yml
+        parameters:
+          buildName: MarinerCross
+          isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+          vmrBranch: ${{ variables.VmrBranch }}
+          architecture: arm64
+          pool:
+            name: ${{ variables.defaultPoolName }}
+            demands: ${{ variables.defaultPoolDemandsLinux }}
+          container: ${{ variables.marinerArm64CrossContainer }}
+          crossRootFs: '/crossrootfs/arm64'  # 📝
+          targetRid: 'linux-arm64'           # 📝
 
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            buildName: OSXCross
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
-            container: ''
-            targetRid: 'osx-arm64'             # 📝
+      - template: ../jobs/vmr-build.yml
+        parameters:
+          buildName: OSXCross
+          isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+          vmrBranch: ${{ variables.VmrBranch }}
+          architecture: arm64
+          pool:
+            vmImage: ${{ variables.defaultPoolNameMac }}
+          container: ''
+          targetRid: 'osx-arm64'             # 📝
