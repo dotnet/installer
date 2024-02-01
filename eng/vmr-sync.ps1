@@ -76,8 +76,7 @@ param (
   [string][Alias('v', 'vmr')]$vmrDir
 )
 
-$scriptPath = $MyInvocation.MyCommand.Path
-$scriptRoot = Split-Path -Parent $scriptPath
+$scriptRoot = $PSScriptRoot
 
 function Fail {
   Write-Host "> $($args[0])" -ForegroundColor 'Red'
@@ -168,14 +167,15 @@ Set-StrictMode -Version Latest
 # Prepare darc
 
 Highlight 'Installing .NET, preparing the tooling..'
-$dotnetDir = Join-Path $scriptRoot '..\.dotnet'
-$dotnet = Join-Path $dotnetDir 'dotnet.exe'
-& $dotnet tool restore
+. $scriptRoot\common\tools.ps1
+$dotnetRoot = InitializeDotNetCli -install:$true
+$dotnet = "$dotnetRoot\dotnet.exe"
+& "$dotnet" tool restore
 
 Highlight "Starting the synchronization of '$repository'.."
 
 # Synchronize the VMR
-$arguments = (
+$darcArgs = (
     "darc", "vmr", "update",
     "--vmr", $vmrDir,
     "--tmp", $tmpDir,
@@ -187,18 +187,18 @@ $arguments = (
 )  
 
 if ($recursive) {
-  $arguments += ("--recursive")
+  $darcArgs += ("--recursive")
 }
 
 if ($additionalRemotes) {
-  $arguments += ("--additional-remotes", $additionalRemotes)
+  $darcArgs += ("--additional-remotes", $additionalRemotes)
 }
 
 if ($azdevPat) {
-  $azdevPatArg += ("--azdev-pat", $azdevPat)
+  $darcArgs += ("--azdev-pat", $azdevPat)
 }
 
-& $dotnet $arguments
+& "$dotnet" $darcArgs
 
 if ($LASTEXITCODE -eq 0) {
   Highlight "Synchronization succeeded"

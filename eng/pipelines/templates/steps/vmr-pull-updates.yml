@@ -41,8 +41,8 @@ steps:
   displayName: Create artifacts folder (Unix)
   condition: ne(variables['Agent.OS'], 'Windows_NT')
 
-- script: |
-    mkdir ${{ parameters.vmrPath }}/artifacts/x64/Release
+- powershell: |
+    New-Item -ItemType Directory -Path ${{ parameters.vmrPath }}/artifacts/x64/Release
   displayName: Create artifacts folder (Windows)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
