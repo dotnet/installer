@@ -280,7 +280,7 @@ jobs:
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
         fi
 
-        buildArgs="--source-only --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
+        buildArgs="--clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
 
         # Only use Docker when a container is specified
         if [[ -n "${{ parameters.container }}" ]]; then
