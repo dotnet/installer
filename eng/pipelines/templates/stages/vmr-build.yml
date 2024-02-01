@@ -306,7 +306,6 @@ stages:
         vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
 
-    ### Job for ultralite build ###
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: Ubuntu2204
@@ -318,30 +317,27 @@ stages:
           demands: ${{ variables.defaultPoolDemandsLinux }}
         container: ${{ variables.ubuntu2204Container }}
 
-    ### Additional jobs for lite/full builds ###
-    - ${{ if in(parameters.scope, 'lite', 'full') }}:
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: OSX
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          vmImage: ${{ variables.defaultPoolNameMac }}
+        container: ''
 
-      - template: ../jobs/vmr-build.yml
-        parameters:
-          buildName: OSX
-          isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-          vmrBranch: ${{ variables.VmrBranch }}
-          architecture: x64
-          pool:
-            vmImage: ${{ variables.defaultPoolNameMac }}
-          container: ''
-
-      - template: ../jobs/vmr-build.yml
-        parameters:
-          buildName: Windows
-          isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-          vmrBranch: ${{ variables.VmrBranch }}
-          architecture: x64
-          pool:
-            name: ${{ variables.defaultPoolName }}
-            demands: ${{ variables.defaultPoolDemandsWindows }}
-          container: ''
-          targetRid: 'win-x64'               # 📝 # TODO: remove this once https://github.com/dotnet/installer/pull/18476 lands 
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Windows
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemandsWindows }}
+        container: ''
+        targetRid: 'win-x64'               # 📝 # TODO: remove this once https://github.com/dotnet/installer/pull/18476 lands 
 
       ### Additional jobs for full build ###
       - ${{ if in(parameters.scope, 'full') }}:
