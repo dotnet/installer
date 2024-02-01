@@ -40,6 +40,7 @@
 
     <!-- Source-only builds are non portable. -->
     <PortableBuild Condition="'$(PortableBuild)' == '' and '$(DotNetBuildSourceOnly)' != 'true'">true</PortableBuild>
+    <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
 
     <PortableRid Condition="'$(__PortableTargetOS)' != ''">$(__PortableTargetOS)-$(TargetArchitecture)</PortableRid>
     <PortableRid Condition="'$(PortableRid)' == '' and '$(TargetOS)' == 'freebsd'">freebsd-$(TargetArchitecture)</PortableRid>

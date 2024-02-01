@@ -10,11 +10,10 @@
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)os $(TargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRid=$(TargetRid)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(TargetOS)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:BaseOS=$(__PortableTargetOS)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:BaseOS=$(PortableRid)</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
-    <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <BuildNonPortable>true</BuildNonPortable>
     <BuildNonPortable Condition="'$(PortableBuild)' == 'true'">false</BuildNonPortable>
 
