@@ -85,8 +85,8 @@ stages:
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
       runOnline: true                    # ✅
-      useMonoRuntime: false              # 🚫
       runTests: true                     # ✅
+      useMonoRuntime: false              # 🚫
       withPreviousSDK: false             # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
@@ -106,8 +106,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
         reuseBuildArtifactsFrom: CentOSStream8_Online_MsftSdk
 
@@ -127,8 +127,8 @@ stages:
         enablePoison: true                 # ✅
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: true              # ✅
 
   - ${{ if eq(parameters.isLiteBuild, false) }}:
@@ -148,8 +148,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -167,8 +167,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -187,8 +187,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: true              # ✅
 
     - template: ../jobs/vmr-build.yml
@@ -207,8 +207,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: true              # ✅
 
     - template: ../jobs/vmr-build.yml
@@ -226,8 +226,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
-        useMonoRuntime: true               # ✅
         runTests: true                     # ✅
+        useMonoRuntime: true               # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -245,8 +245,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -264,8 +264,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -283,8 +283,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -300,8 +300,8 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -319,7 +319,7 @@ stages:
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
-        useMonoRuntime: false              # 🚫
         runTests: true                     # ✅
+        useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
         reuseBuildArtifactsFrom: Fedora39_Offline_MsftSdk
