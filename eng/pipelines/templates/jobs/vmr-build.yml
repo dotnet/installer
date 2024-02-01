@@ -202,43 +202,44 @@ jobs:
       displayName: Build
 
   - ${{ else }}:
-    - script: |
-        set -x
+    - ${{ if eq(parameters.buildSourceOnly, 'true') }}:
+      - script: |
+          set -x
 
-        customPrepArgs=""
-        prepSdk=true
+          customPrepArgs=""
+          prepSdk=true
 
-        if [[ -n '${{ parameters.artifactsRid }}' ]]; then
-          customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
-        fi
+          if [[ -n '${{ parameters.artifactsRid }}' ]]; then
+            customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
+          fi
 
-        if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
-          # Source-built artifacts are from CentOS 8 Stream or Alpine 3.19. We want to download them without
-          # downloading portable versions from the internet.
-          customPrepArgs="${customPrepArgs} --no-sdk --no-bootstrap"
-          prepSdk=false
-        elif [[ -n '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
-          customPrepArgs="${customPrepArgs} --no-sdk --no-artifacts"
-          prepSdk=false
-        fi
+          if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
+            # Source-built artifacts are from CentOS 8 Stream or Alpine 3.19. We want to download them without
+            # downloading portable versions from the internet.
+            customPrepArgs="${customPrepArgs} --no-sdk --no-bootstrap"
+            prepSdk=false
+          elif [[ -n '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
+            customPrepArgs="${customPrepArgs} --no-sdk --no-artifacts"
+            prepSdk=false
+          fi
 
-        if [[ "$prepSdk" == "false" ]]; then
-          mkdir $(sourcesPath)/.dotnet
-          previousSdkPath="$(sourcesPath)/prereqs/packages/archive/dotnet-sdk-*.tar.gz"
-          eval tar -ozxf "$previousSdkPath" -C "$(sourcesPath)/.dotnet"
-          eval rm -f "$previousSdkPath"
+          if [[ "$prepSdk" == "false" ]]; then
+            mkdir $(sourcesPath)/.dotnet
+            previousSdkPath="$(sourcesPath)/prereqs/packages/archive/dotnet-sdk-*.tar.gz"
+            eval tar -ozxf "$previousSdkPath" -C "$(sourcesPath)/.dotnet"
+            eval rm -f "$previousSdkPath"
 
-          echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
-        fi
+            echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
+          fi
 
-        # Only use Docker stuff on Linux
-        if [[ -n "${{ parameters.container }}" ]]; then
-          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
-        else
-          cd $(sourcesPath)
-          ./prep.sh $customPrepArgs
-        fi
-      displayName: Prep the Build
+          # Only use Docker stuff on Linux
+          if [[ -n "${{ parameters.container }}" ]]; then
+            docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
+          else
+            cd $(sourcesPath)
+            ./prep.sh $customPrepArgs
+          fi
+        displayName: Prep the Build
 
     - script: |
         set -x
