@@ -317,7 +317,6 @@ stages:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemandsLinux }}
         container: ${{ variables.ubuntu2204Container }}
-        excludeOmniSharpTests: true        # ✅
 
     ### Additional jobs for lite/full builds ###
     - ${{ if in(parameters.scope, 'lite', 'full') }}:
@@ -331,7 +330,6 @@ stages:
           pool:
             vmImage: ${{ variables.defaultPoolNameMac }}
           container: ''
-          excludeOmniSharpTests: true        # ✅
 
       - template: ../jobs/vmr-build.yml
         parameters:
@@ -343,7 +341,6 @@ stages:
             name: ${{ variables.defaultPoolName }}
             demands: ${{ variables.defaultPoolDemandsWindows }}
           container: ''
-          excludeOmniSharpTests: true        # ✅
           targetRid: 'win-x64'               # 📝 # TODO: remove this once https://github.com/dotnet/installer/pull/18476 lands 
 
       ### Additional jobs for full build ###
@@ -359,7 +356,6 @@ stages:
               name: ${{ variables.defaultPoolName }}
               demands: ${{ variables.defaultPoolDemandsLinux }}
             container: ${{ variables.marinerX64CrossContainer }}
-            excludeOmniSharpTests: true        # ✅
             crossRootFs: '/crossrootfs/x64'    # 📝
             targetRid: 'linux-x64'             # 📝
 
@@ -373,7 +369,6 @@ stages:
               name: ${{ variables.defaultPoolName }}
               demands: ${{ variables.defaultPoolDemandsLinux }}
             container: ${{ variables.marinerArm64CrossContainer }}
-            excludeOmniSharpTests: true        # ✅
             crossRootFs: '/crossrootfs/arm64'  # 📝
             targetRid: 'linux-arm64'           # 📝
 
@@ -386,6 +381,4 @@ stages:
             pool:
               vmImage: ${{ variables.defaultPoolNameMac }}
             container: ''
-            excludeOmniSharpTests: true        # ✅
-            useMonoRuntime: true               # ✅
             targetRid: 'osx-arm64'             # 📝
