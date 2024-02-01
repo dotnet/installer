@@ -12,9 +12,9 @@ using Microsoft.Build.Utilities;
 
 namespace Microsoft.DotNet.Build.Tasks
 {
-    // Takes a path to a json file and a string that represents a dotted path to an attribute
-    // and returns the attribute value.
-    public class GetJSonAttributeValue : Task
+    // Takes a path to a json file and a string that represents a colon-delimited path to an attribute
+    // and returns the attribute value as a task item.
+    public class GetJsonValue : Task
     {
         [Required]
         public string JsonFilePath { get; set; }

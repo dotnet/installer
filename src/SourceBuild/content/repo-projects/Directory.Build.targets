@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="GetJSonAttributeValue" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="GetJsonValue" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateJson" />
@@ -101,6 +101,8 @@
       <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
       <SourceBuildSources>$(SourceBuiltNuGetSourceName)</SourceBuildSources>
       <SourceBuildSources Condition="'$(ExtraRestoreSourcePath)' != ''">$(SourceBuildSources);$(ExtraSourcesNuGetSourceName)</SourceBuildSources>
+      <BuildCommand>$(BuildCommand) /p:RestoreConfigFile=@(NuGetConfigFiles)</BuildCommand>
+      <RestoreConfigFile>@(NuGetConfigFiles)</RestoreConfigFile>
     </PropertyGroup>
   
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -108,8 +110,6 @@
       <PreviouslySourceBuiltNuGetSourceName>previously-source-built</PreviouslySourceBuiltNuGetSourceName>
       <ReferencePackagesNuGetSourceName>reference-packages</ReferencePackagesNuGetSourceName>
       <SourceBuildSources>$(SourceBuildSources);$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName)</SourceBuildSources>
-      <BuildCommand>$(BuildCommand) /p:RestoreConfigFile=@(NuGetConfigFiles)</BuildCommand>
-      <RestoreConfigFile>@(NuGetConfigFiles)</RestoreConfigFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
@@ -712,18 +712,18 @@
     </PropertyGroup>
 
     <!-- Get Microsoft.Build.NoTargets package version from global.json - msbuild-sdks section -->
-    <GetJSonAttributeValue JsonFilePath="$(GlobalJsonFile)"
+    <GetJsonValue JsonFilePath="$(GlobalJsonFile)"
                            PathToAttribute="$(MicrosoftBuildNoTargetsJsonPath)">
-        <Output TaskParameter="Result" ItemName="_JSonAttributeValueNoTargets" />
-    </GetJSonAttributeValue>
+        <Output TaskParameter="Result" ItemName="_JSonValueNoTargets" />
+    </GetJsonValue>
     <!-- Get Microsoft.Build.NoTargets package version from global.json - msbuild-sdks section -->
-    <GetJSonAttributeValue JsonFilePath="$(GlobalJsonFile)"
+    <GetJsonValue JsonFilePath="$(GlobalJsonFile)"
                            PathToAttribute="$(MicrosoftBuildTraversalJsonPath)">
-        <Output TaskParameter="Result" ItemName="_JSonAttributeValueTraversal" />
-    </GetJSonAttributeValue>
+        <Output TaskParameter="Result" ItemName="_JSonValueTraversal" />
+    </GetJsonValue>
     <PropertyGroup>
-      <_MicrosoftBuildNoTargetsPackageVersion>@(_JSonAttributeValueNoTargets)</_MicrosoftBuildNoTargetsPackageVersion>
-      <_MicrosoftBuildTraversalPackageVersion>@(_JSonAttributeValueTraversal)</_MicrosoftBuildTraversalPackageVersion>
+      <_MicrosoftBuildNoTargetsPackageVersion>@(_JSonValueNoTargets)</_MicrosoftBuildNoTargetsPackageVersion>
+      <_MicrosoftBuildTraversalPackageVersion>@(_JSonValueTraversal)</_MicrosoftBuildTraversalPackageVersion>
     </PropertyGroup>
  
     <ItemGroup>
