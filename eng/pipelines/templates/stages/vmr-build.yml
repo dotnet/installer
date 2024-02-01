@@ -300,7 +300,6 @@ stages:
 - ${{ if not(parameters.isSourceOnlyBuild) }}:
   - stage: VMR_Vertical_Build
     displayName: VMR Vertical Build
-    condition: ${{ parameters.condition }}
     variables:
     - template: ../variables/vmr-stage.yml
       parameters:
