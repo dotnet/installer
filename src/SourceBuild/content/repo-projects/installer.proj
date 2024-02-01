@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- We need to extract the non-portable OS name from the non-portable RID and pass that to installer build script -->
+    <OSNameOverride>$(TargetOS)</OSNameOverride>
+    <OSNameOverride Condition="'$(PortableBuild)' != 'true'">$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
+
     <!-- Use the repo root build script -->
     <BuildScript>$(ProjectDirectory)build$(ShellExtension)</BuildScript>
 
@@ -14,7 +18,7 @@
       See https://github.com/dotnet/sdk/issues/1512#issuecomment-377082883
     -->
     <BuildArgs>$(BuildArgs) /p:NETCoreAppMaximumVersion=99.9</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:OSName=$(TargetOS)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:OSName=$(OSNameOverride)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:PortableOSName=$(__PortableTargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:Rid=$(TargetRid)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:DOTNET_INSTALL_DIR=$(DotNetRoot)</BuildArgs>
