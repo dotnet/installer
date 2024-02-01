@@ -78,7 +78,7 @@ stages:
     parameters:
       isBuiltFromVmr: true
       isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
-      ${{ if eq(variables.isScheduleTrigger, 'true' }}:
+      ${{ if eq(variables.isScheduleTrigger, 'true') }}:
         scope: full
       ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
         scope: ultralite
