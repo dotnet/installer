@@ -61,7 +61,6 @@ variables:
 
 # skip build in some cases (see table above)
 - name: disableBuild
-  type: bool
   ${{ if and(variables.isScheduleTrigger, variables.isInternalBuild, not(variables.isSourceOnlyBuild), variables.isMainBranch) }}:
     # Schedule - dotnet-unified-build (internal) - main
     value: true
@@ -79,7 +78,7 @@ stages:
     parameters:
       isBuiltFromVmr: true
       isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
-      ${{ if variables.isScheduleTrigger }}:
+      ${{ if eq(variables.isScheduleTrigger, 'true' }}:
         scope: full
       ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
         scope: ultralite
