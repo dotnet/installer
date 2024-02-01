@@ -1,6 +1,24 @@
-# This is the dotnet/dotnet pipeline that is triggered:
-# - Full build every weekday at midnight PST (08:00 UTC) for "main"
-# - Lite build for PRs and when changes are pushed to release/* and internal/release/* branches.
+# This yml is used by these pipelines and triggers:
+#
+# - dotnet-source-build (public)
+#   - PR: ultralite build
+#   - CI: release/* only, every batched commit, full build
+#   - Schedule: main only, full build
+#
+# - dotnet-unified-build (public)
+#   - PR: lite build
+#   - CI: release/* only, every batched commit, full build
+#   - Schedule: main only, full build
+#
+# - dotnet-source-build (internal)
+#   - PR: ultralite build
+#   - CI: release/* and internal/release/* only, every batched commit, full build
+#   - CI: main only, every batched commit, lite build
+#   - Schedule: main only, full build
+#
+# - dotnet-unified-build (internal)
+#   - PR: lite build
+#   - CI: release/*, internal/release/* and main, every batched commit, full build
 
 schedules:
 - cron: '0 8 * * Mon-Fri'
@@ -25,15 +43,49 @@ pr:
     - release/*
 
 variables:
-# enable source-only build for pipelines with the -source-build suffix
+# enable source-only build for pipelines that contain the -source-build string
 - name: isSourceOnlyBuild
-  value: ${{ in(variables['Build.DefinitionName'], '-source-build') }}
+  value: ${{ contains(variables['Build.DefinitionName'], '-source-build') }}
+
+- name: isInternalBuild
+  value: ${{ eq(variables['System.TeamProject'], 'internal') }}
+
+- name: isMainBranch
+  value: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+
+- name: isScheduleTrigger
+  value: ${{ eq(variables['Build.Reason'], 'Schedule') }}
+
+- name: isPRTrigger
+  value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+
+# skip build in some cases (see table above)
+- name: disableBuild
+  type: bool
+  ${{ if and(variables.isScheduleTrigger, variables.isInternalBuild, not(variables.isSourceOnlyBuild), variables.isMainBranch) }}:
+    # Schedule - dotnet-unified-build (internal) - main
+    value: true
+  ${{ if and(not(variables.isScheduleTrigger), not(variables.isPRTrigger), not(variables.isInternalBuild), variables.isMainBranch) }}:
+    # CI - dotnet-source-build (public) and dotnet-unified-build (public) - main
+    value: true
+  ${{ else }}:
+    value: false
 
 stages:
 - template: templates/stages/vmr-scan.yml
 
-- template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
-  parameters:
-    isBuiltFromVmr: true
-    isLiteBuild: ${{ ne(variables['Build.Reason'], 'Schedule') }}
-    isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
+- ${{ if not(variables.disableBuild) }}:
+  - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
+    parameters:
+      isBuiltFromVmr: true
+      isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
+      ${{ if variables.isScheduleTrigger }}:
+        scope: full
+      ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
+        scope: ultralite
+      ${{ elseif and(variables.isPRTrigger, not(variables.isSourceOnlyBuild)) }}:
+        scope: lite
+      ${{ elseif and(not(variables.isPRTrigger), variables.isSourceOnlyBuild, variables.isInternalBuild, variables.isMainBranch) }}:
+        scope: lite
+      ${{ else }}:
+        scope: full

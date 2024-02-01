@@ -2,34 +2,44 @@
 ### If run in a PR, new changes are applied to a local copy of the VMR, then it is built and tested
 
 parameters:
-  dependsOn: []
-  condition: always()
+# Branch of the VMR to use (to push to for internal builds)
+- name: vmrBranch
+  type: string
+  default: $(Build.SourceBranch)
 
-  # Branch of the VMR to use (to push to for internal builds)
-  vmrBranch: $(Build.SourceBranch)
+# Scope of jobs which are executed
+- name: scope
+  type: string
+  values:
+  # run 1 leg for smoke tests
+  - ultralite
+  # run several legs e.g. win/linux/mac for basic testing
+  - lite
+  # run everything
+  - full
 
-  # True when the build is a lite build
-  isLiteBuild: false
+# True when build is running from dotnet/dotnet directly
+- name: isBuiltFromVmr
+  type: boolean
+  default: false
 
-  # True when build is running from dotnet/dotnet directly
-  isBuiltFromVmr: false
-
-  # True when building the VMR in source-only mode
-  isSourceOnlyBuild: false
+# True when building the VMR in source-only mode
+- name: isSourceOnlyBuild
+  type: boolean
+  default: false
 
 #### SOURCE-ONLY BUILD ####
 stages:
 - ${{ if parameters.isSourceOnlyBuild }}:
   - stage: VMR_SourceOnly_Build
     displayName: VMR Source-Only Build
-    dependsOn: ${{ parameters.dependsOn }}
-    condition: ${{ parameters.condition }}
     variables:
     - template: ../variables/vmr-stage.yml
       parameters:
         vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
 
+    ### Jobs for ultralite builds ###
     - template: ../jobs/vmr-build.yml
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
@@ -49,8 +59,8 @@ stages:
         useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
 
-    ### Additional jobs for non-PR builds ###
-    - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    ### Additional jobs for lite/full builds ###
+    - ${{ if in(parameters.scope, 'lite', 'full') }}:
 
       - template: ../jobs/vmr-build.yml
         parameters:
@@ -93,7 +103,7 @@ stages:
           withPreviousSDK: true              # ✅
 
       ### Additional jobs for full build ###
-      - ${{ if eq(parameters.isLiteBuild, false) }}:
+      - ${{ if in(parameters.scope, 'full') }}:
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -290,7 +300,6 @@ stages:
 - ${{ if not(parameters.isSourceOnlyBuild) }}:
   - stage: VMR_Vertical_Build
     displayName: VMR Vertical Build
-    dependsOn: ${{ parameters.dependsOn }}
     condition: ${{ parameters.condition }}
     variables:
     - template: ../variables/vmr-stage.yml
@@ -298,6 +307,7 @@ stages:
         vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
 
+    ### Job for ultralite build ###
     - template: ../jobs/vmr-build.yml
       parameters:
         buildName: MarinerCrossX64
@@ -312,8 +322,8 @@ stages:
         crossRootFs: '/crossrootfs/x64'    # 📝
         targetRid: 'linux-x64'             # 📝
 
-    ### Additional jobs for non-PR builds ###
-    - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    ### Additional jobs for lite/full builds ###
+    - ${{ if in(parameters.scope, 'lite', 'full') }}:
 
       - template: ../jobs/vmr-build.yml
         parameters:
@@ -341,7 +351,7 @@ stages:
           targetRid: 'win-x64'               # 📝
 
       ### Additional jobs for full build ###
-      - ${{ if eq(parameters.isLiteBuild, false) }}:
+      - ${{ if in(parameters.scope, 'full') }}:
 
         - template: ../jobs/vmr-build.yml
           parameters:
