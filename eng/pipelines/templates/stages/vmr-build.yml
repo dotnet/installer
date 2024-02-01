@@ -86,6 +86,7 @@ stages:
       excludeOmniSharpTests: true        # ✅
       runOnline: true                    # ✅
       useMonoRuntime: false              # 🚫
+      runTests: true                     # ✅
       withPreviousSDK: false             # 🚫
 
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
@@ -106,6 +107,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
         reuseBuildArtifactsFrom: CentOSStream8_Online_MsftSdk
 
@@ -126,6 +128,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: true              # ✅
 
   - ${{ if eq(parameters.isLiteBuild, false) }}:
@@ -146,6 +149,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -164,6 +168,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -183,6 +188,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: true                    # ✅
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: true              # ✅
 
     - template: ../jobs/vmr-build.yml
@@ -202,6 +208,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: true              # ✅
 
     - template: ../jobs/vmr-build.yml
@@ -220,6 +227,7 @@ stages:
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
         useMonoRuntime: true               # ✅
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -238,6 +246,7 @@ stages:
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -256,6 +265,7 @@ stages:
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -274,6 +284,7 @@ stages:
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -290,6 +301,7 @@ stages:
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
 
     - template: ../jobs/vmr-build.yml
@@ -308,5 +320,6 @@ stages:
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
+        runTests: true                     # ✅
         withPreviousSDK: false             # 🚫
         reuseBuildArtifactsFrom: Fedora39_Offline_MsftSdk
