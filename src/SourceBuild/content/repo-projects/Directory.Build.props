@@ -36,7 +36,9 @@
 
     <!-- Set the bootstrap version to the VMR's version if empty. (no bootstrap set). -->
     <ArcadeBootstrapVersion>$([MSBuild]::ValueOrDefault('$(ARCADE_BOOTSTRAP_VERSION)', '$(ArcadeSdkVersion)'))</ArcadeBootstrapVersion>
+  </PropertyGroup>
 
+  <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
     <!-- Get Microsoft.Build.NoTargets and Microsoft.Build.Traversal versions from VMR's global.json -->
     <VMRGlobalJsonContents>$([System.IO.File]::ReadAllText($(RepoRoot)global.json))</VMRGlobalJsonContents>
     <NoTargetsSdkVersion>$([System.Text.RegularExpressions.Regex]::Match($(VMRGlobalJsonContents), '"Microsoft.Build.NoTargets": "([^"]*)"').Groups.get_Item(1))</NoTargetsSdkVersion>
