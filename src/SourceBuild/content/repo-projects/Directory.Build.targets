@@ -268,31 +268,19 @@
              StopOnFirstFailure="true" />
   </Target>
 
-  <Target Name="Build"
-          DependsOnTargets="BuildRepoReferences"
+  <Target Name="RepoBuild"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(BaseIntermediateOutputPath)Build.complete">
+          Outputs="$(BaseIntermediateOutputPath)Build.complete"
+          Condition="'$(BuildCommand)' != ''">
     <Exec Command="$(DotnetTool) build-server shutdown" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
-    <Message Importance="High" Text="Running command:" Condition="'$(BuildCommand)' != ''" />
-    <Message Importance="High" Text="  $(BuildCommand)" Condition="'$(BuildCommand)' != ''" />
-    <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" Condition="'$(BuildCommand)' != '' and '$(MinimalConsoleLogOutput)' == 'true'" />
-    <Message Importance="High" Text="  With Environment Variables:" Condition="'$(BuildCommand)' != ''" />
-    <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" Condition="'$(BuildCommand)' != ''" />
-    <CallTarget Targets="RepoBuild" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)...done" />
+    <Message Importance="High" Text="Running command:" />
+    <Message Importance="High" Text="  $(BuildCommand)" />
+    <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" Condition="'$(MinimalConsoleLogOutput)' == 'true'" />
+    <Message Importance="High" Text="  With Environment Variables:"/>
+    <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
 
-    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
-    <Touch Files="$(BaseIntermediateOutputPath)Build.complete" AlwaysCreate="true">
-      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-    </Touch>
-
-    <OnError ExecuteTargets="ReportRepoError" />
-  </Target>
-
-  <Target Name="RepoBuild"
-          Condition="'$(BuildCommand)' != ''">
     <Message Text="DirSize Before Building $(RepositoryName)" Importance="High"
              Condition=" '$(CleanWhileBuilding)' == 'true' and '$(BuildOS)' != 'windows'" />
     <Exec Command="df -h $(RepoRoot)"
@@ -315,15 +303,26 @@
 
     <Exec Command="$(FullCommand)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          IgnoreStandardErrorWarningFormat="true" />
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)...done" />
+
+    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
+    <Touch Files="$(BaseIntermediateOutputPath)Build.complete" AlwaysCreate="true">
+      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+    </Touch>
+
+    <!-- Propagate errors to the output when using the minimal console log feature. -->
+    <OnError ExecuteTargets="LogRepoBuildError" Condition="'$(MinimalConsoleLogOutput)' == 'true'" />
   </Target>
 
-  <Target Name="ReportRepoError">
+  <Target Name="LogRepoBuildError">
     <Message Importance="High" Text="$([System.IO.File]::ReadAllText('$(RepoConsoleLogFile)'))" Condition="Exists('$(RepoConsoleLogFile)') and '$(MinimalConsoleLogOutput)' == 'true'" />
     <Message Importance="High" Text="'$(RepositoryName)' failed during build." />
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)') and '$(MinimalConsoleLogOutput)' == 'true'" />
   </Target>
+
+  <Target Name="Build" DependsOnTargets="BuildRepoReferences;RepoBuild" />
 
   <Target Name="Package" AfterTargets="Build" />
 
