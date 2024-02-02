@@ -56,9 +56,6 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
 
   <Target Name="CopyNuGetConfig"
-          BeforeTargets="
-            UpdateNuGetConfig;
-            Build"
           Condition="'$(NuGetConfigFile)' != ''"
           Inputs="$(MSBuildProjectFullPath);$(OriginalNuGetConfigFile)"
           Outputs="$(NuGetConfigFile)">
@@ -67,12 +64,13 @@
 
     <Copy
       SourceFiles="$(OriginalNuGetConfigFile)"
-      DestinationFiles="$(NuGetConfigFile)" />
+      DestinationFiles="$(NuGetConfigFile)">
+      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
+    </Copy>
   </Target>
 
   <Target Name="UpdateNuGetConfig"
-          BeforeTargets="Build"
-          AfterTargets="CopyNuGetConfig"
+          DependsOnTargets="CopyNuGetConfig"
           Condition="'$(NuGetConfigFile)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete">
