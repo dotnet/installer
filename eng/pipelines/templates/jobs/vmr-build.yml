@@ -31,52 +31,14 @@ parameters:
 - name: pool
   type: object
 
-# Allow downloading artifacts from the internet during the build
-- name: runOnline
-  type: boolean
-  default: true
-
-# Name of a previous job (from the same template as this) whose output will be used to build this job
-# The SDK from its artifacts is copied to vmr/.dotnet
-- name: reuseBuildArtifactsFrom
-  type: string
-  default: ''
-
-- name: excludeOmniSharpTests
-  type: boolean
-  default: false
-
-- name: enablePoison
-  type: boolean
-  default: false
-
 # Instead of building the VMR directly, exports the sources into a tarball and builds from that
 - name: buildFromArchive
-  type: boolean
-  default: false
-
-# Enable for source-building the VMR
-- name: buildSourceOnly
-  type: boolean
-  default: false
-
-# Use the previous version's SDK to build the current one
-- name: withPreviousSDK
-  type: boolean
-  default: false
-
-- name: useMonoRuntime
-  displayName: True when build output uses the mono runtime
   type: boolean
   default: false
 
 - name: crossRootFS
   type: string
   default: ''
-
-- name: runTests
-  type: boolean
-  default: false
 
 - name: targetOS
   type: string
@@ -85,6 +47,46 @@ parameters:
 - name: targetArchitecture
   type: string
   default: ''
+
+#### SOURCE-ONLY parameters ####
+
+# Enable for source-building the VMR
+- name: buildSourceOnly
+  type: boolean
+  default: false
+
+- name: enablePoison
+  type: boolean
+  default: false
+
+- name: excludeOmniSharpTests
+  type: boolean
+  default: false
+
+# Name of a previous job (from the same template as this) whose output will be used to build this job
+# The SDK from its artifacts is copied to vmr/.dotnet
+- name: reuseBuildArtifactsFrom
+  type: string
+  default: ''
+
+# Allow downloading artifacts from the internet during the build
+- name: runOnline
+  type: boolean
+  default: true
+
+- name: runTests
+  type: boolean
+  default: false
+
+- name: useMonoRuntime
+  displayName: True when build output uses the mono runtime
+  type: boolean
+  default: false
+
+# Use the previous version's SDK to build the current one
+- name: withPreviousSDK
+  type: boolean
+  default: false
 
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
@@ -249,7 +251,7 @@ jobs:
 
         # Allows Arcade to have access to the commit for the build
         customEnvVars="BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
-        customBuildArgs="--ci --prepareMachine"
+        customBuildArgs="--ci --clean-while-building --prepareMachine"
         if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
           customBuildArgs="$customBuildArgs --online"
         fi
@@ -286,7 +288,7 @@ jobs:
           extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
         fi
 
-        buildArgs="--clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
+        buildArgs="$(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
 
         # Only use Docker when a container is specified
         if [[ -n "${{ parameters.container }}" ]]; then

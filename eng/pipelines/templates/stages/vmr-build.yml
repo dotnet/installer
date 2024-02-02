@@ -329,8 +329,8 @@ stages:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemandsLinux }}
         container: ${{ variables.ubuntu2204Container }}
-        targetOS: 'linux'
-        targetArchitecture: 'x64'
+        targetOS: linux
+        targetArchitecture: x64
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -341,8 +341,8 @@ stages:
         pool:
           vmImage: ${{ variables.defaultPoolNameMac }}
         container: ''
-        targetOS: 'osx'
-        targetArchitecture: 'x64'
+        targetOS: osx
+        targetArchitecture: x64
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -354,8 +354,8 @@ stages:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemandsWindows }}
         container: ''
-        targetOS: 'windows'
-        targetArchitecture: 'x64'
+        targetOS: windows
+        targetArchitecture: x64
 
     ### Additional jobs for full build ###
     - ${{ if in(parameters.scope, 'full') }}:
@@ -373,8 +373,8 @@ stages:
       #       demands: ${{ variables.defaultPoolDemandsLinux }}
       #     container: ${{ variables.marinerX64CrossContainer }}
       #     crossRootFs: '/crossrootfs/x64'
-      #     targetOS: 'linux'
-      #     targetArchitecture: 'x64'
+      #     targetOS: linux
+      #     targetArchitecture: x64
 
       # - template: ../jobs/vmr-build.yml
       #   parameters:
@@ -387,8 +387,8 @@ stages:
       #       demands: ${{ variables.defaultPoolDemandsLinux }}
       #     container: ${{ variables.marinerArm64CrossContainer }}
       #     crossRootFs: '/crossrootfs/arm64'
-      #     targetOS: 'linux'
-      #     targetArchitecture: 'arm64'
+      #     targetOS: linux
+      #     targetArchitecture: arm64
 
       # - template: ../jobs/vmr-build.yml
       #   parameters:
@@ -399,5 +399,5 @@ stages:
       #     pool:
       #       vmImage: ${{ variables.defaultPoolNameMac }}
       #     container: ''
-      #     targetOS: 'osx'
-      #     targetArchitecture: 'arm64'
+      #     targetOS: osx
+      #     targetArchitecture: arm64
