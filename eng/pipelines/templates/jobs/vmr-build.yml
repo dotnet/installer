@@ -387,17 +387,19 @@ jobs:
     continueOnError: true
     condition: succeededOrFailed()
 
-  - task: PublishTestResults@2
-    displayName: Publish Test Results
-    condition: succeededOrFailed()
-    continueOnError: true
-    inputs:
-      testRunner: vSTest
-      testResultsFiles: 'test/**/*.trx'
-      searchFolder: ${{ variables.sourcesPath }}
-      mergeTestResults: true
-      publishRunAttachments: true
-      testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+  # Only upload test results if enabled
+  - ${{ if eq(parameters.runTests, 'True') }}:
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      condition: succeededOrFailed()
+      continueOnError: true
+      inputs:
+        testRunner: vSTest
+        testResultsFiles: 'test/**/*.trx'
+        searchFolder: ${{ variables.sourcesPath }}
+        mergeTestResults: true
+        publishRunAttachments: true
+        testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
   - publish: '${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/'
     artifact: $(Agent.JobName)_Artifacts
