@@ -358,9 +358,9 @@ stages:
         targetArchitecture: x64
 
     ### Additional jobs for full build ###
-    - ${{ if in(parameters.scope, 'full') }}:
+    # Cross builds are currently failing
+    # - ${{ if in(parameters.scope, 'full') }}:
 
-      # Cross builds are currently failing
 
       # - template: ../jobs/vmr-build.yml
       #   parameters:
