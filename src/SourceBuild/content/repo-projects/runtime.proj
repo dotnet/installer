@@ -3,13 +3,16 @@
   <PropertyGroup>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
+    <_osIndex>$(TargetRid.IndexOf('-'))</_osIndex>
+    <RuntimeOS>$(TargetRid.Substring(0, $(_osIndex)))</RuntimeOS>
+
     <!-- Use the repo root build script -->
     <BuildScript>$(ProjectDirectory)build$(ShellExtension)</BuildScript>
 
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)os $(TargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRid=$(TargetRid)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(TargetOS)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:BaseOS=$(PortableRid)</BuildArgs>
   </PropertyGroup>
 
