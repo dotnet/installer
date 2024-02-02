@@ -31,7 +31,7 @@
              Directories="$(LocalNuGetPackageCacheDirectory)" />
 
     <AddSourceToNuGetConfig
-      NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+      NuGetConfigFile="$(NuGetConfigFile)"
       SourceName="source-build-reference-package-cache"
       SourcePath="$(LocalNuGetPackageCacheDirectory)" />
   </Target>

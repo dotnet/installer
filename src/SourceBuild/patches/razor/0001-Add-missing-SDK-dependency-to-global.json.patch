@@ -1,12 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Wed, 31 Jan 2024 16:46:03 +0000
+Date: Thu, 1 Feb 2024 20:38:17 +0000
 Subject: [PATCH] Add missing SDK dependency to global.json
 
 Backport: https://github.com/dotnet/razor/pull/9886
 ---
- global.json | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ global.json                                                    | 3 ++-
+ .../Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj  | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/global.json b/global.json
 index ada577e39..c3c7a902c 100644
@@ -21,3 +22,13 @@ index ada577e39..c3c7a902c 100644
 +    "Microsoft.Build.NoTargets": "2.0.1"
    }
  }
+diff --git a/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj b/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
+index b1f652079..91885d077 100644
+--- a/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
++++ b/src/Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport/Microsoft.NET.Sdk.Razor.SourceGenerators.Transport.csproj
+@@ -1,4 +1,4 @@
+-<Project Sdk="Microsoft.Build.NoTargets/2.0.1">
++<Project Sdk="Microsoft.Build.NoTargets">
+ 
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>

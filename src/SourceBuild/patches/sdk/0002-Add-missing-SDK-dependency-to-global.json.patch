@@ -1,12 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Wed, 31 Jan 2024 16:50:43 +0000
+Date: Thu, 1 Feb 2024 20:49:37 +0000
 Subject: [PATCH] Add missing SDK dependency to global.json
 
 Backport: https://github.com/dotnet/sdk/pull/38426
 ---
- global.json | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ global.json                             | 3 ++-
+ src/Containers/packaging/package.csproj | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/global.json b/global.json
 index a294ff1e80..d79e46c295 100644
@@ -21,3 +22,13 @@ index a294ff1e80..d79e46c295 100644
 +    "Microsoft.Build.NoTargets": "3.7.0"
    }
  }
+diff --git a/src/Containers/packaging/package.csproj b/src/Containers/packaging/package.csproj
+index 590b15e874..a3a40db735 100644
+--- a/src/Containers/packaging/package.csproj
++++ b/src/Containers/packaging/package.csproj
+@@ -1,4 +1,4 @@
+-﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
++﻿<Project Sdk="Microsoft.Build.NoTargets">
+     <PropertyGroup>
+         <TargetFramework>$(SdkTargetFramework)</TargetFramework>
+         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
