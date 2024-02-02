@@ -57,7 +57,6 @@
 
   <!-- Update NuGet feeds in the repo -->
   <Target Name="UpdateNuGetConfig"
-          BeforeTargets="Build"
           Condition="'$(NuGetConfigFile)' != '' or '@(NuGetConfigFiles)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete">
@@ -146,7 +145,6 @@
   <!-- Update the SDK version in the repo's global.json file.
        This guarantees that all repositories build with the VMR's SDK version. -->
   <Target Name="UpdateGlobalJsonVersions"
-          BeforeTargets="Build"
           Condition="'$(GlobalJsonFile)' != ''"
           Inputs="$(MSBuildProjectFullPath);$(MSBuildThisFileFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UpdateGlobalJsonVersions.complete">
@@ -173,8 +171,7 @@
 
   <!-- TODO: Remove when all repos use a consistent set of eng/common files: https://github.com/dotnet/source-build/issues/3710. -->
   <Target Name="UpdateEngCommonFiles"
-          Condition="'$(UpdateEngCommonFiles)' == 'true' or '$(DotNetBuildSourceOnly)' != 'true'"
-          BeforeTargets="Build">
+          Condition="'$(UpdateEngCommonFiles)' == 'true' or '$(DotNetBuildSourceOnly)' != 'true'">
     <ItemGroup>
       <OrchestratorEngCommonFile Include="$(RepositoryEngineeringDir)common\**\*" />
     </ItemGroup>
@@ -187,7 +184,6 @@
   <!-- Before a repository builds, set up the version property files that override the repo's defaults.
        There are 3 files generated -->
   <Target Name="CreateBuildInputProps"
-          BeforeTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)CreateBuildInputProps.complete">
     <ItemGroup>
@@ -271,7 +267,13 @@
   <Target Name="RepoBuild"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)Build.complete"
-          Condition="'$(BuildCommand)' != ''">
+          Condition="'$(BuildCommand)' != ''"
+          DependsOnTargets="BuildRepoReferences;
+                            UpdateNuGetConfig;
+                            UpdateGlobalJsonVersions;
+                            CreateBuildInputProps;
+                            UpdateEngCommonFiles;
+                            SetSourceBuiltSdkOverrides">
     <Exec Command="$(DotnetTool) build-server shutdown" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
@@ -642,7 +644,6 @@
   </Target>
 
   <Target Name="SetSourceBuiltSdkOverrides"
-          BeforeTargets="Build"
           Condition="'@(SourceBuiltSdkOverride)' != ''">
     <ItemGroup>
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_%(SourceBuiltSdkOverride.Group)=%(SourceBuiltSdkOverride.Identity)" />
