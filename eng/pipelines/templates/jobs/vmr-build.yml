@@ -322,25 +322,25 @@ jobs:
           docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestConsoleVerbosity=detailed
         displayName: Run Tests
 
-    # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
-    - script: |
-        set -x
+  # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
+  - script: |
+      set -x
 
-        targetFolder=$(Build.StagingDirectory)/BuildLogs/
-        mkdir -p ${targetFolder}
+      targetFolder=$(Build.StagingDirectory)/BuildLogs/
+      mkdir -p ${targetFolder}
 
-        cd "$(sourcesPath)"
-        find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-        find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-        find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
-        find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-        find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-        find test/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.diff" -exec cp {} --parents -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
-      displayName: Prepare BuildLogs staging directory
-      continueOnError: true
-      condition: succeededOrFailed()
+      cd "$(sourcesPath)"
+      find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
+      find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find test/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find test/ -type f -name "Updated*.diff" -exec cp {} --parents -t ${targetFolder} \;
+      find test/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
+    displayName: Prepare BuildLogs staging directory
+    continueOnError: true
+    condition: succeededOrFailed()
 
   - publish: '$(Build.StagingDirectory)/BuildLogs'
     artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
