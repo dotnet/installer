@@ -199,7 +199,7 @@ jobs:
   
   - ${{ if eq(variables.isWindowsBuild, 'true') }}:
     - script: |
-        build.cmd -ci -cleanWhileBuilding -prepareMachine
+        .\build.cmd -ci -cleanWhileBuilding -prepareMachine
       displayName: Build
 
   - ${{ else }}:
