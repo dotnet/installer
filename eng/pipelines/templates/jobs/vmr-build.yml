@@ -206,44 +206,44 @@ jobs:
       displayName: Build
 
   - ${{ else }}:
-    - ${{ if eq(parameters.buildSourceOnly, 'true') }}:
-      - script: |
-          set -x
+    - script: |
+        set -x
 
-          customPrepArgs=""
-          prepSdk=true
+        customPrepArgs=""
+        prepSdk=true
 
-          if [[ -n '${{ parameters.artifactsRid }}' ]]; then
-            customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
-          fi
+        if [[ -n '${{ parameters.artifactsRid }}' ]]; then
+          customPrepArgs="${customPrepArgs} --artifacts-rid ${{ parameters.artifactsRid }}"
+        fi
 
-          if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
-            # Source-built artifacts are from CentOS 8 Stream or Alpine 3.19. We want to download them without
-            # downloading portable versions from the internet.
-            customPrepArgs="${customPrepArgs} --no-sdk --no-bootstrap"
-            prepSdk=false
-          elif [[ -n '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
-            customPrepArgs="${customPrepArgs} --no-sdk --no-artifacts"
-            prepSdk=false
-          fi
+        if [[ '${{ parameters.withPreviousSDK }}' == 'True' ]]; then
+          # Source-built artifacts are from CentOS 8 Stream or Alpine 3.19. We want to download them without
+          # downloading portable versions from the internet.
+          customPrepArgs="${customPrepArgs} --no-sdk --no-bootstrap"
+          prepSdk=false
+        elif [[ -n '${{ parameters.reuseBuildArtifactsFrom }}' ]]; then
+          customPrepArgs="${customPrepArgs} --no-sdk --no-artifacts"
+          prepSdk=false
+        fi
 
-          if [[ "$prepSdk" == "false" ]]; then
-            mkdir $(sourcesPath)/.dotnet
-            previousSdkPath="$(sourcesPath)/prereqs/packages/archive/dotnet-sdk-*.tar.gz"
-            eval tar -ozxf "$previousSdkPath" -C "$(sourcesPath)/.dotnet"
-            eval rm -f "$previousSdkPath"
+        if [[ "$prepSdk" == "false" ]]; then
+          mkdir $(sourcesPath)/.dotnet
+          previousSdkPath="$(sourcesPath)/prereqs/packages/archive/dotnet-sdk-*.tar.gz"
+          eval tar -ozxf "$previousSdkPath" -C "$(sourcesPath)/.dotnet"
+          eval rm -f "$previousSdkPath"
 
-            echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
-          fi
+          echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
+        fi
 
-          # Only use Docker stuff on Linux
-          if [[ -n "${{ parameters.container }}" ]]; then
-            docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
-          else
-            cd $(sourcesPath)
-            ./prep.sh $customPrepArgs
-          fi
-        displayName: Prep the Build
+        # Only use Docker stuff on Linux
+        if [[ -n "${{ parameters.container }}" ]]; then
+          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
+        else
+          cd $(sourcesPath)
+          ./prep.sh $customPrepArgs
+        fi
+      displayName: Prep the Build
+      condition: ${{ eq(parameters.buildSourceOnly, 'true') }}
 
     - script: |
         set -x
@@ -314,41 +314,72 @@ jobs:
         fi
       displayName: Build
 
-    # Don't run tests if overriding RID, we don't support that for now
-    - ${{ if eq(parameters.runTests, 'True') }}:
-      - script: |
-          set -x
+  # Only run tests if enabled
+  - ${{ if eq(parameters.runTests, 'True') }}:
+    - script: |
+        set -x
 
-          dockerVolumeArgs="-v $(sourcesPath):/vmr"
-          dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
-          poisonArg=''
+        dockerVolumeArgs="-v $(sourcesPath):/vmr"
+        dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
+        poisonArg=''
 
-          if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
-            poisonArg='--poison'
-          fi
+        if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
+          poisonArg='--poison'
+        fi
 
-          docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestConsoleVerbosity=detailed
-        displayName: Run Tests
+        docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestConsoleVerbosity=detailed
+      displayName: Run Tests
 
-  # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
-  - script: |
-      set -x
+  - ${{ if eq(parameters.targetOS, 'windows') }}:
 
-      targetFolder=$(Build.StagingDirectory)/BuildLogs/
-      mkdir -p ${targetFolder}
+    # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
+    - powershell: |
+        function CopyWithRelativeFolders($sourcePath, $targetFolder, $filter) {
+          Get-ChildItem -Path $sourcePath -Filter $filter -Recurse | ForEach-Object { 
+            $targetPath = Join-Path $targetFolder (Resolve-Path -Relative $_.FullName)
+            New-Item -ItemType Directory -Path (Split-Path -Parent $targetPath) -Force | Out-Null
+            Copy-Item $_.FullName -Destination $targetPath -Force 
+          }
+        }
 
-      cd "$(sourcesPath)"
-      find artifacts/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/prebuilt-report/ -exec cp {} --parents -t ${targetFolder} \;
-      find src/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find src/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find test/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find test/ -type f -name "Updated*.diff" -exec cp {} --parents -t ${targetFolder} \;
-      find test/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
-    displayName: Prepare BuildLogs staging directory
-    continueOnError: true
-    condition: succeededOrFailed()
+        $targetFolder = "$(Build.StagingDirectory)/BuildLogs/"
+        New-Item -ItemType Directory -Path $targetFolder -Force | Out-Null
+
+        cd "$(sourcesPath)"
+
+        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
+        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
+        CopyWithRelativeFolders "artifacts/prebuilt-report/" $targetFolder
+        CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
+        CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
+        CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"
+        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.diff"
+        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.txt"
+      displayName: Prepare BuildLogs staging directory
+      continueOnError: true
+      condition: succeededOrFailed()
+
+  - ${{ else }}:
+
+    # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
+    - script: |
+        set -x
+
+        targetFolder=$(Build.StagingDirectory)/BuildLogs/
+        mkdir -p ${targetFolder}
+
+        cd "$(sourcesPath)"
+        find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+        find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
+        find test/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find test/ -type f -name "Updated*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        find test/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
+      displayName: Prepare BuildLogs staging directory
+      continueOnError: true
+      condition: succeededOrFailed()
 
   - publish: '$(Build.StagingDirectory)/BuildLogs'
     artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
