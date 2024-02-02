@@ -10,34 +10,34 @@ set -e
 usage()
 {
   echo "Common settings:"
-  echo "  --binaryLog                  Create MSBuild binary log (short: -bl)"
-  echo "  --configuration <value>      Build configuration: 'Debug' or 'Release' (short: -c)"
-  echo "  --verbosity <value>          Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)"
+  echo "  --binaryLog                     Create MSBuild binary log (short: -bl)"
+  echo "  --configuration <value>         Build configuration: 'Debug' or 'Release' (short: -c)"
+  echo "  --verbosity <value>             Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)"
   echo ""
 
   echo "Actions:"
-  echo "  --clean                      Clean the solution"
-  echo "  --help                       Print help and exit (short: -h)"
-  echo "  --test                       Run smoke tests (short: -t)"
+  echo "  --clean                         Clean the solution"
+  echo "  --help                          Print help and exit (short: -h)"
+  echo "  --test                          Run smoke tests (short: -t)"
   echo ""
 
   echo "Source-only settings:"
-  echo "  --source-only                Source-build the solution (short: -so)"
-  echo "  --online                     Build using online sources"
-  echo "  --poison                     Build with poisoning checks"
-  echo "  --release-manifest <FILE>    A JSON file, an alternative source of Source Link metadata"
-  echo "  --source-repository <URL>    Source Link repository URL, required when building from tarball"
-  echo "  --source-version <SHA>       Source Link revision, required when building from tarball"
-  echo "  --use-mono-runtime           Output uses the mono runtime"
-  echo "  --with-packages <DIR>        Use the specified directory of previously-built packages"
-  echo "  --with-sdk <DIR>             Use the SDK in the specified directory for bootstrapping"
+  echo "  --source-only, --source-build   Source-build the solution (short: -so, -sb)"
+  echo "  --online                        Build using online sources"
+  echo "  --poison                        Build with poisoning checks"
+  echo "  --release-manifest <FILE>       A JSON file, an alternative source of Source Link metadata"
+  echo "  --source-repository <URL>       Source Link repository URL, required when building from tarball"
+  echo "  --source-version <SHA>          Source Link revision, required when building from tarball"
+  echo "  --use-mono-runtime              Output uses the mono runtime"
+  echo "  --with-packages <DIR>           Use the specified directory of previously-built packages"
+  echo "  --with-sdk <DIR>                Use the SDK in the specified directory for bootstrapping"
   echo ""
 
   echo "Advanced settings:"
-  echo "  --ci                         Set when running on CI server"
-  echo "  --clean-while-building       Cleans each repo after building (reduces disk space usage, short: -cwb)"
-  echo "  --excludeCIBinarylog         Don't output binary log (short: -nobl)"
-  echo "  --prepareMachine             Prepare machine for CI run, clean up processes after build"
+  echo "  --ci                            Set when running on CI server"
+  echo "  --clean-while-building          Cleans each repo after building (reduces disk space usage, short: -cwb)"
+  echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
+  echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -117,12 +117,12 @@ while [[ $# > 0 ]]; do
       ;;
 
     # Source-only settings
-    -source-only|-so)
+    -source-only|-source-build|-so|-sb)
       sourceOnly=true
-      properties="$properties /p:DotNetBuildFromSource=true /p:DotNetBuildSourceOnly=true"
+      properties="$properties /p:DotNetBuildSourceOnly=true"
       ;;
     -online)
-      properties="$properties /p:DotNetBuildWithOnlineSources=true"
+      properties="$properties /p:DotNetBuildWithOnlineFeeds=true"
       ;;
     -poison)
       properties="$properties /p:EnablePoison=true"
@@ -142,7 +142,7 @@ while [[ $# > 0 ]]; do
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
-    --with-packages)
+    -with-packages)
       CUSTOM_PACKAGES_DIR="$(cd -P "$2" && pwd)"
       if [ ! -d "$CUSTOM_PACKAGES_DIR" ]; then
           echo "Custom prviously built packages directory '$CUSTOM_PACKAGES_DIR' does not exist"
@@ -150,7 +150,7 @@ while [[ $# > 0 ]]; do
       fi
       shift
       ;;
-    --with-sdk)
+    -with-sdk)
       CUSTOM_SDK_DIR="$(cd -P "$2" && pwd)"
       if [ ! -d "$CUSTOM_SDK_DIR" ]; then
           echo "Custom SDK directory '$CUSTOM_SDK_DIR' does not exist"

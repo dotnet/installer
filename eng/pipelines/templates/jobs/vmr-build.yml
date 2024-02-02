@@ -74,7 +74,15 @@ parameters:
   type: string
   default: ''
 
-- name: targetRid
+- name: runTests
+  type: boolean
+  default: false
+
+- name: targetOS
+  type: string
+  default: ''
+
+- name: targetArchitecture
   type: string
   default: ''
 
@@ -98,13 +106,6 @@ jobs:
       value: N/A
   - name: additionalBuildArgs
     value: ''
-
-  - ${{ if startsWith(parameters.targetrid, 'win-') }}:
-    - name: isWindowsBuild
-      value: true
-  - ${{ else }}:
-    - name: isWindowsBuild
-      value: false
 
   # Location of the VMR sources
   # We either build the repo directly, or we extract them outside (which is what partners do)
@@ -197,7 +198,7 @@ jobs:
         fi
       displayName: Setup Previously Source-Built SDK
   
-  - ${{ if eq(variables.isWindowsBuild, 'true') }}:
+  - ${{ if eq(parameters.targetOS, 'windows') }}:
     - script: |
         call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine
       displayName: Build
@@ -270,16 +271,19 @@ jobs:
           customBuildArgs="$customBuildArgs --use-mono-runtime"
         fi
 
-        if [[ ! -z '${{ parameters.targetRid }}' ]]; then
-          extraBuildProperties="--"
-          if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
-              customEnvVars="$customEnvVars CROSSCOMPILE=1"
-          fi
-          extraBuildProperties="$extraBuildProperties /p:PortableBuild=true /p:DotNetBuildVertical=true /p:CrossBuild=true /p:OverrideTargetRid=${{ parameters.targetRid }}"
+        if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
+          customEnvVars="$customEnvVars CROSSCOMPILE=1"
         fi
 
         if [[ ! -z '${{ parameters.crossRootFs }}' ]]; then
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
+        fi
+
+        if [[ ! -z '${{ parameters.targetOS }}' ]]; then
+          extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
+        fi
+        if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
+          extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
         fi
 
         buildArgs="--clean-while-building $(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
@@ -307,7 +311,7 @@ jobs:
       displayName: Build
 
     # Don't run tests if overriding RID, we don't support that for now
-    - ${{ if eq(parameters.targetRid, '') }}:
+    - ${{ if eq(parameters.runTests, 'True') }}:
       - script: |
           set -x
 
