@@ -249,8 +249,7 @@ jobs:
         set -x
         df -h
 
-        # Allows Arcade to have access to the commit for the build
-        customEnvVars="BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
+        customEnvVars=""
         customBuildArgs="--ci --clean-while-building --prepareMachine"
         if [[ '${{ parameters.runOnline }}' == 'True' ]]; then
           customBuildArgs="$customBuildArgs --online"
@@ -292,6 +291,9 @@ jobs:
 
         # Only use Docker when a container is specified
         if [[ -n "${{ parameters.container }}" ]]; then
+          # Allows Arcade to have access to the commit for the build, pass it through to the container
+          customEnvVars="$customEnvVars BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
+
           customDockerRunArgs=""
           for envVar in $customEnvVars; do
             customDockerRunArgs="$customDockerRunArgs -e $envVar"
