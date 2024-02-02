@@ -48,21 +48,17 @@ if ($help) {
   exit 0
 }
 
-$arguments=""
-if ($cleanWhileBuilding) {
-  $arguments += " /p:CleanWhileBuilding=true"
-}
-
 function Build {
   InitializeToolset
 
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'Build.binlog') } else { '' }
+  $cwb = if ($cleanWhileBuilding) { '/p:CleanWhileBuilding=true' } else { '' }
   $buildProj = Join-Path $RepoRoot 'build.proj'
 
   MSBuild $buildProj `
     $bl `
     /p:Configuration=$configuration `
-    $arguments `
+    $cwb `
     @properties
 }
 
