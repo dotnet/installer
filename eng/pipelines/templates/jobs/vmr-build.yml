@@ -2,9 +2,37 @@
 ### If run in a PR, new changes are applied to a local copy of the VMR, then it is built and tested
 
 parameters:
+- name: architecture
+  type: string
+
+- name: artifactsRid
+  type: string
+  default: ''
+
+- name: buildName
+  type: string
+
+- name: container
+  type: string
+
+- name: crossRootFS
+  type: string
+  default: ''
+
 - name: isBuiltFromVmr
   displayName: True when build is running from dotnet/dotnet directly
   type: boolean
+
+- name: pool
+  type: object
+
+- name: targetOS
+  type: string
+  default: ''
+
+- name: targetArchitecture
+  type: string
+  default: ''
 
 - name: vmrPath
   type: string
@@ -15,40 +43,12 @@ parameters:
   type: string
   default: $(Build.SourceBranch)
 
-- name: buildName
-  type: string
-
-- name: architecture
-  type: string
-
-- name: artifactsRid
-  type: string
-  default: ''
-
-- name: container
-  type: string
-
-- name: pool
-  type: object
+#### SOURCE-ONLY parameters ####
 
 # Instead of building the VMR directly, exports the sources into a tarball and builds from that
 - name: buildFromArchive
   type: boolean
   default: false
-
-- name: crossRootFS
-  type: string
-  default: ''
-
-- name: targetOS
-  type: string
-  default: ''
-
-- name: targetArchitecture
-  type: string
-  default: ''
-
-#### SOURCE-ONLY parameters ####
 
 # Enable for source-building the VMR
 - name: buildSourceOnly
