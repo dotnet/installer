@@ -264,9 +264,6 @@ jobs:
 
         if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
           customBuildArgs="$customBuildArgs --use-mono-runtime"
-        fi
-
-        if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
           customEnvVars="$customEnvVars CROSSCOMPILE=1"
         fi
 
@@ -277,6 +274,7 @@ jobs:
         if [[ ! -z '${{ parameters.targetOS }}' ]]; then
           extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
         fi
+
         if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
           extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
         fi
