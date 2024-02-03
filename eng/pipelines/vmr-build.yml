@@ -22,8 +22,8 @@ parameters:
   type: string
   default: ' '
 
-- name: disableVmrBuild
-  displayName: Skip building the VMR
+- name: disableBuild
+  displayName: Skip the VMR Build stage
   type: boolean
   default: false
 
@@ -48,8 +48,8 @@ resources:
     ref: ${{ variables.VmrBranch }}
 
 stages:
-# You can temporarily disable the VMR Build stage by setting the disableVmrBuild variable
-- ${{ if not(parameters.disableVmrBuild) }}:
+# You can temporarily disable the VMR Build stage by setting the disableBuild variable
+- ${{ if not(parameters.disableBuild) }}:
   - template: templates/stages/vmr-build.yml
     parameters:
       vmrBranch: ${{ variables.VmrBranch }}
