@@ -61,7 +61,7 @@ parameters:
   type: boolean
   default: false
 
-- name: crossRootFS
+- name: crossRootFs
   type: string
   default: ''
 
@@ -255,7 +255,7 @@ jobs:
         useDocker=true
       fi
 
-      if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
+      if [[ -n "${{ parameters.crossRootFs }}" ]]; then
         customEnvVars="$customEnvVars CROSSCOMPILE=1"
       fi
 
