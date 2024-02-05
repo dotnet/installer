@@ -16,17 +16,12 @@ pr:
     - main
     - release/*
 
-variables:
-# enable source-only build for pipelines with the -source-build suffix
-- name: isSourceOnlyBuild
-  value: ${{ contains(variables['Build.DefinitionName'], '-source-build') }}
-
 stages:
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - template: templates/stages/vmr-scan.yml
 
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
     isBuiltFromVmr: true
-    isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
+    isSourceOnlyBuild: true
     scope: lite

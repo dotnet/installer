@@ -1,4 +1,5 @@
-# This yml is used by these pipelines and triggers:
+# This yml is used by these pipelines and triggers: 
+# NOTE: the triggers are defined in the Azure DevOps UI as they are too complex
 #
 # - dotnet-source-build (public)
 #   - PR: ultralite build
@@ -20,28 +21,6 @@
 #   - PR: lite build
 #   - CI: release/*, internal/release/* and main, every batched commit, full build
 
-schedules:
-- cron: '0 8 * * Mon-Fri'
-  displayName: Weekday midnight build
-  branches:
-    include:
-    - main
-  batch: true
-
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-    - release/*
-    - internal/release/*
-
-pr:
-  branches:
-    include:
-    - main
-    - release/*
-
 variables:
 # enable source-only build for pipelines that contain the -source-build string
 - name: isSourceOnlyBuild
@@ -59,32 +38,20 @@ variables:
 - name: isPRTrigger
   value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
 
-# skip build in some cases (see table above)
-- name: disableBuild
-  ${{ if and(variables.isScheduleTrigger, variables.isInternalBuild, not(variables.isSourceOnlyBuild), variables.isMainBranch) }}:
-    # Schedule - dotnet-unified-build (internal) - main
-    value: true
-  ${{ if and(not(variables.isScheduleTrigger), not(variables.isPRTrigger), not(variables.isInternalBuild), variables.isMainBranch) }}:
-    # CI - dotnet-source-build (public) and dotnet-unified-build (public) - main
-    value: true
-  ${{ else }}:
-    value: false
-
 stages:
 - template: templates/stages/vmr-scan.yml
 
-- ${{ if not(variables.disableBuild) }}:
-  - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
-    parameters:
-      isBuiltFromVmr: true
-      isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
-      ${{ if eq(variables.isScheduleTrigger, 'true') }}:
-        scope: full
-      ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
-        scope: ultralite
-      ${{ elseif and(variables.isPRTrigger, not(variables.isSourceOnlyBuild)) }}:
-        scope: lite
-      ${{ elseif and(not(variables.isPRTrigger), variables.isSourceOnlyBuild, variables.isInternalBuild, variables.isMainBranch) }}:
-        scope: lite
-      ${{ else }}:
-        scope: full
+- template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
+  parameters:
+    isBuiltFromVmr: true
+    isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
+    ${{ if eq(variables.isScheduleTrigger, 'true') }}:
+      scope: full
+    ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
+      scope: ultralite
+    ${{ elseif and(variables.isPRTrigger, not(variables.isSourceOnlyBuild)) }}:
+      scope: lite
+    ${{ elseif and(not(variables.isPRTrigger), variables.isSourceOnlyBuild, variables.isInternalBuild, variables.isMainBranch) }}:
+      scope: lite
+    ${{ else }}:
+      scope: full
