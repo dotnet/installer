@@ -47,11 +47,11 @@ stages:
     isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
     ${{ if eq(variables.isScheduleTrigger, 'true') }}:
       scope: full
-    ${{ elseif and(variables.isPRTrigger, variables.isSourceOnlyBuild) }}:
+    ${{ elseif and(eq(variables.isPRTrigger, 'true'), eq(variables.isSourceOnlyBuild, 'true')) }}:
       scope: ultralite
-    ${{ elseif and(variables.isPRTrigger, not(variables.isSourceOnlyBuild)) }}:
+    ${{ elseif and(eq(variables.isPRTrigger, 'true'), not(eq(variables.isSourceOnlyBuild, 'true'))) }}:
       scope: lite
-    ${{ elseif and(not(variables.isPRTrigger), variables.isSourceOnlyBuild, variables.isInternalBuild, variables.isMainBranch) }}:
+    ${{ elseif and(not(eq(variables.isPRTrigger, 'true')), eq(variables.isSourceOnlyBuild, 'true'), eq(variables.isInternalBuild, 'true'), eq(variables.isMainBranch, 'true')) }}:
       scope: lite
     ${{ else }}:
       scope: full
