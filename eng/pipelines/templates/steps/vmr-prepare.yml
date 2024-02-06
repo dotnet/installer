@@ -11,6 +11,11 @@ parameters:
   type: string
   default: $(Build.SourceBranch)
 
+- name: checkoutToBranch
+  displayName: Check out the repo to the specified vmrBranch
+  type: boolean
+  default: false
+
 - name: skipComponentGovernanceDetection
   type: boolean
   default: false
@@ -28,11 +33,12 @@ steps:
     path: vmr
     clean: true
 
-- script: |
-    git checkout --track origin/${{ parameters.vmrBranch }}
-    echo "##vso[task.setvariable variable=vmrBranch]${{ parameters.vmrBranch }}"
-  displayName: Check out ${{ parameters.vmrBranch }}
-  workingDirectory: $(Agent.BuildDirectory)/vmr
+- ${{ if parameters.checkoutToBranch }}:
+  - script: |
+      git checkout --track origin/${{ parameters.vmrBranch }}
+      echo "##vso[task.setvariable variable=vmrBranch]${{ parameters.vmrBranch }}"
+    displayName: Check out ${{ parameters.vmrBranch }}
+    workingDirectory: $(Agent.BuildDirectory)/vmr
 
 # TODO (https://github.com/dotnet/arcade/issues/11332): Allow full CG?
 # Currently, we ignore dirs of individual repos - they have been scanned before
