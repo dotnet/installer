@@ -14,7 +14,6 @@
 # - dotnet-source-build (internal)
 #   - PR: ultralite build
 #   - CI: release/* and internal/release/* only, every batched commit, full build
-#   - CI: main only, every batched commit, lite build
 #   - Schedule: main only, full build
 #
 # - dotnet-unified-build (internal)
@@ -51,8 +50,6 @@ stages:
     ${{ elseif and(eq(variables.isPRTrigger, 'true'), eq(variables.isSourceOnlyBuild, 'true')) }}:
       scope: ultralite
     ${{ elseif and(eq(variables.isPRTrigger, 'true'), not(eq(variables.isSourceOnlyBuild, 'true'))) }}:
-      scope: lite
-    ${{ elseif and(not(eq(variables.isPRTrigger, 'true')), eq(variables.isSourceOnlyBuild, 'true'), eq(variables.isInternalBuild, 'true'), eq(variables.isMainBranch, 'true')) }}:
       scope: lite
     ${{ else }}:
       scope: full
