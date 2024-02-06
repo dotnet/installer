@@ -39,7 +39,8 @@ variables:
   value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
 
 stages:
-- template: templates/stages/vmr-scan.yml
+- ${{ if not(eq(variables.isPRTrigger, 'true')) }}:
+  - template: templates/stages/vmr-scan.yml
 
 - template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
   parameters:
