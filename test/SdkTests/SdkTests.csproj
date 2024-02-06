@@ -82,7 +82,8 @@
 
     <MSBuild Projects="$(MSBuildProjectFullPath)"
          Targets="InstallRuntimeToLayout"
-         Properties="RuntimeVersionToInstall=%(RuntimeVersionToInstall.Identity)" />
+         Properties="RuntimeVersionToInstall=%(RuntimeVersionToInstall.Identity)"
+         BuildInParallel="false"/>
   </Target>
 
   <Target Name="InstallRuntimeToLayout">
@@ -154,7 +155,9 @@
     </ItemGroup>
     
     <MSBuild Projects="@(TestProjectToRun)"
-             Targets="RunTestsAsTool" />
+             Targets="RunTestsAsTool"
+             BuildInParallel="true"
+             />
   </Target>
   
   <Target Name="RunTestsAsTool">
