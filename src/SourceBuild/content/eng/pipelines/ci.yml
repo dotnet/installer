@@ -54,7 +54,7 @@ stages:
     isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
     ${{ if eq(variables.isScheduleTrigger, 'true') }}:
       scope: full
-    ${{ elseif and(eq(variables.isPRTrigger, 'true'), eq(variables.isSourceOnlyBuildLite, 'true')) }}:
+    ${{ elseif eq(variables.isSourceOnlyBuildLite, 'true') }}:
       scope: lite
     ${{ elseif and(eq(variables.isPRTrigger, 'true'), eq(variables.isSourceOnlyBuild, 'true')) }}:
       scope: ultralite
