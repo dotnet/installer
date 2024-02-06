@@ -32,12 +32,6 @@ variables:
 - name: isSourceOnlyBuildLite
   value: ${{ contains(variables['Build.DefinitionName'], '-source-build-lite') }}
 
-- name: isInternalBuild
-  value: ${{ eq(variables['System.TeamProject'], 'internal') }}
-
-- name: isMainBranch
-  value: ${{ in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/main-ub') }}
-
 - name: isScheduleTrigger
   value: ${{ eq(variables['Build.Reason'], 'Schedule') }}
 
