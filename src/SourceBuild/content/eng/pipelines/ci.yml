@@ -30,7 +30,7 @@ variables:
   value: ${{ eq(variables['System.TeamProject'], 'internal') }}
 
 - name: isMainBranch
-  value: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+  value: ${{ in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/main-ub') }}
 
 - name: isScheduleTrigger
   value: ${{ eq(variables['Build.Reason'], 'Schedule') }}
