@@ -350,7 +350,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: OSX
+            buildName: OSX_x64_Cross
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
@@ -364,7 +364,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: Mariner_x64_Cross_x64
+            buildName: Mariner_x64_Cross
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
@@ -392,7 +392,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: OSX_x64_Cross_arm64
+            buildName: OSX_x64_Cross
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
