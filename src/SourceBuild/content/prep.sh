@@ -7,6 +7,7 @@
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
+###   --no-binaries               Remove the binaries before building. This is necessary for source-building.
 ###   --no-bootstrap              Don't replace portable packages in the download source-built artifacts
 ###   --no-prebuilts              Exclude the download of the prebuilts archive
 ###   --no-sdk                    Exclude the download of the .NET SDK
@@ -32,6 +33,7 @@ buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
+keepBinaries=true
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
@@ -45,6 +47,9 @@ while :; do
     "-?"|-h|--help)
       print_help
       exit 0
+      ;;
+    --no-binaries)
+      keepBinaries=false
       ;;
     --no-bootstrap)
       buildBootstrap=false
@@ -191,4 +196,9 @@ fi
 
 if [ "$downloadPrebuilts" == true ]; then
   DownloadArchive Prebuilts false $artifactsRid
+fi
+
+if [ "$keepBinaries" == false ]; then
+  echo "  Removing all checked-in binaries before building..."
+  git ls-files | grep -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$' | xargs rm -f
 fi
