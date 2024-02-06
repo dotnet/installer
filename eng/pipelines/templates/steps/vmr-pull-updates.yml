@@ -7,6 +7,10 @@ parameters:
   displayName: dotnet/dotnet branch to use
   type: string
 
+- name: targetOS
+  displayName: Target OS the pipeline runs on
+  type: string
+
 - name: targetRef
   displayName: Target revision in dotnet/installer to synchronize
   type: string
@@ -36,7 +40,7 @@ steps:
   displayName: Prepare branch ${{ parameters.vmrBranch }}
   workingDirectory: ${{ parameters.vmrPath }}
 
-- ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+- ${{ if eq(parameters.targetOS, 'Windows_NT') }}:
   - powershell: |
       New-Item -ItemType Directory -Path ${{ parameters.vmrPath }}/artifacts/x64/Release
     displayName: Create artifacts folder
@@ -57,7 +61,7 @@ steps:
   displayName: Prepare .artifactignore
   workingDirectory: $(Agent.TempDirectory)
 
-- ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+- ${{ if eq(parameters.targetOS, 'Windows_NT') }}:
   - powershell: >
       ./eng/vmr-sync.ps1 `
       -vmr ${{ parameters.vmrPath }} `

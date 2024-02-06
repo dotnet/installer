@@ -59,6 +59,7 @@ jobs:
     parameters:
       vmrPath: $(vmrPath)
       vmrBranch: ${{ parameters.vmrBranch }}
+      targetOS: $(Agent.OS)
       targetRef: ${{ parameters.targetRef }}
 
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
