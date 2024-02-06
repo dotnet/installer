@@ -1,0 +1,475 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Eric Erhardt <eric.erhardt@microsoft.com>
+Date: Fri, 19 Jan 2024 10:17:49 -0600
+Subject: [PATCH] Remove eShopLite Deployment folder (#1721)
+Backport: https://github.com/dotnet/aspire/pull/1721
+
+This is causing Secure Supply Chain Analysis violations, and this isn't the way we want to deploy apps to k8s going forward.
+
+Fix #1419
+---
+ .../eShopLite/Deployment/api-gateway.yml      | 43 ---------
+ .../eShopLite/Deployment/basket-service.yml   | 95 -------------------
+ .../eShopLite/Deployment/catalog-service.yml  | 46 ---------
+ .../eShopLite/Deployment/cert-manager.yml     | 18 ----
+ playground/eShopLite/Deployment/deploy.cmd    |  7 --
+ .../eShopLite/Deployment/my-frontend.yml      | 44 ---------
+ playground/eShopLite/Deployment/postgres.yml  | 51 ----------
+ playground/eShopLite/Deployment/redis.yml     | 41 --------
+ playground/eShopLite/Deployment/undeploy.cmd  |  6 --
+ playground/eShopLite/README.md                | 15 ---
+ playground/eShopLite/deploy.cmd               |  6 --
+ 11 files changed, 372 deletions(-)
+ delete mode 100644 playground/eShopLite/Deployment/api-gateway.yml
+ delete mode 100644 playground/eShopLite/Deployment/basket-service.yml
+ delete mode 100644 playground/eShopLite/Deployment/catalog-service.yml
+ delete mode 100644 playground/eShopLite/Deployment/cert-manager.yml
+ delete mode 100644 playground/eShopLite/Deployment/deploy.cmd
+ delete mode 100644 playground/eShopLite/Deployment/my-frontend.yml
+ delete mode 100644 playground/eShopLite/Deployment/postgres.yml
+ delete mode 100644 playground/eShopLite/Deployment/redis.yml
+ delete mode 100644 playground/eShopLite/Deployment/undeploy.cmd
+ delete mode 100644 playground/eShopLite/README.md
+ delete mode 100644 playground/eShopLite/deploy.cmd
+
+diff --git a/playground/eShopLite/Deployment/api-gateway.yml b/playground/eShopLite/Deployment/api-gateway.yml
+deleted file mode 100644
+index 13f2361e..00000000
+--- a/playground/eShopLite/Deployment/api-gateway.yml
++++ /dev/null
+@@ -1,43 +0,0 @@
+-apiVersion: apps/v1
+-kind: Deployment
+-metadata:
+-  name: api-gateway
+-  labels:
+-    app: api-gateway
+-spec:
+-  selector:
+-    matchLabels:
+-      app: api-gateway
+-  replicas: 1
+-  template:
+-    metadata:
+-      labels:
+-        app: api-gateway
+-    spec:
+-      containers:
+-        - name: main
+-          image: localhost:5001/api-gateway
+-          imagePullPolicy: Always
+-          ports:
+-          - containerPort: 8080
+-      terminationGracePeriodSeconds: 180
+-  minReadySeconds: 60
+-  strategy:
+-    rollingUpdate:
+-      maxUnavailable: 0
+-      maxSurge: 1
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: api-gateway
+-spec:
+-  type: LoadBalancer
+-  selector:
+-    app: api-gateway
+-  ports:
+-  - name: http
+-    port: 8888
+-    targetPort: 8080
+-  #- name: https
+-  #  port: 433
+diff --git a/playground/eShopLite/Deployment/basket-service.yml b/playground/eShopLite/Deployment/basket-service.yml
+deleted file mode 100644
+index 4e00139f..00000000
+--- a/playground/eShopLite/Deployment/basket-service.yml
++++ /dev/null
+@@ -1,95 +0,0 @@
+-apiVersion: apps/v1
+-kind: Deployment
+-metadata:
+-  name: basket-service
+-  labels:
+-    name: basket-service
+-spec:
+-  selector:
+-    matchLabels:
+-      name: basket-service
+-  replicas: 3
+-  template:
+-    metadata:
+-      labels:
+-        name: basket-service
+-    spec:
+-      containers:
+-        - name: main
+-          image: localhost:5001/basket-service
+-          imagePullPolicy: Always
+-          ports:
+-          - containerPort: 8080
+-          - containerPort: 8443
+-          env:
+-          - name: ConnectionStrings__basketCache
+-            value: "redis"
+-          - name: ASPNETCORE_URLS
+-            value: "https://+:8443;http://+:8080"
+-          - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+-            value: "/var/run/secrets/certs/tls.crt"
+-          - name: ASPNETCORE_Kestrel__Certificates__Default__KeyPath
+-            value: "/var/run/secrets/certs/tls.key"
+-          volumeMounts:
+-          - name: tls
+-            mountPath: "/var/run/secrets/certs"
+-            readOnly: true
+-      volumes:
+-       - name: tls
+-         secret:
+-           secretName: basket-tls
+-      terminationGracePeriodSeconds: 180
+-  minReadySeconds: 60
+-  strategy:
+-    rollingUpdate:
+-      maxUnavailable: 0
+-      maxSurge: 1
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: basket
+-spec:
+-  selector:
+-    name: basket-service
+-  clusterIP: None
+-  ports:
+-  - name: http
+-    port: 8080
+-  - name: https
+-    port: 8443
+----
+-apiVersion: cert-manager.io/v1
+-kind: Certificate
+-metadata:
+-  name: basket-tls
+-  namespace: default
+-spec:
+-  # Secret names are always required.
+-  secretName: basket-tls
+-
+-  duration: 2160h # 90d
+-  renewBefore: 360h # 15d
+-  subject:
+-    organizations:
+-      - eShop LLC
+-  isCA: false
+-  privateKey:
+-    algorithm: RSA
+-    encoding: PKCS1
+-    size: 2048
+-  usages:
+-    - server auth
+-    - client auth
+-  # At least one of a DNS Name, URI, or IP address is required.
+-  dnsNames:
+-    - basket
+-  # Issuer references are always required.
+-  issuerRef:
+-    name: ca-issuer
+-    # We can reference ClusterIssuers by changing the kind here.
+-    # The default value is Issuer (i.e. a locally namespaced Issuer)
+-    kind: Issuer
+-    # This is optional since cert-manager will default to this value however
+-    # if you are using an external issuer, change this to that issuer group.
+-    group: cert-manager.io
+diff --git a/playground/eShopLite/Deployment/catalog-service.yml b/playground/eShopLite/Deployment/catalog-service.yml
+deleted file mode 100644
+index 2cc89043..00000000
+--- a/playground/eShopLite/Deployment/catalog-service.yml
++++ /dev/null
+@@ -1,46 +0,0 @@
+-apiVersion: apps/v1
+-kind: Deployment
+-metadata:
+-  name: catalog-service
+-  labels:
+-    name: catalog-service
+-spec:
+-  selector:
+-    matchLabels:
+-      name: catalog-service
+-  replicas: 3
+-  template:
+-    metadata:
+-      labels:
+-        name: catalog-service
+-    spec:
+-      containers:
+-        - name: main
+-          image: localhost:5001/catalog-service
+-          imagePullPolicy: Always
+-          ports:
+-          - containerPort: 8080
+-          #- containerPort: 443
+-          env:
+-          - name: ConnectionStrings__catalog
+-            value: "Host=postgres-service;Database=catalog;Username=postgres;Password=postgres"
+-      terminationGracePeriodSeconds: 180
+-  minReadySeconds: 60
+-  strategy:
+-    rollingUpdate:
+-      maxUnavailable: 0
+-      maxSurge: 1
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: catalog
+-spec:
+-  selector:
+-    name: catalog-service
+-  clusterIP: None
+-  ports:
+-  - name: http
+-    port: 8080
+-  #- name: https
+-  #  port: 433
+diff --git a/playground/eShopLite/Deployment/cert-manager.yml b/playground/eShopLite/Deployment/cert-manager.yml
+deleted file mode 100644
+index 8d972649..00000000
+--- a/playground/eShopLite/Deployment/cert-manager.yml
++++ /dev/null
+@@ -1,18 +0,0 @@
+-apiVersion: v1
+-kind: Secret
+-type: kubernetes.io/tls
+-metadata:
+-  name: ca-key-pair
+-  namespace: default
+-data: # Generated via: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=ca-issuer", converted to base64 via `base64 -w0 tls.key`, etc
+-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDVENDQWZHZ0F3SUJBZ0lVWW9xc1pzY1htQjhSb0w1WWJCdVVidnRuRFBjd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0ZERVNNQkFHQTFVRUF3d0pZMkV0YVhOemRXVnlNQjRYRFRJek1EY3lPREU0TURrMU5Wb1hEVEkwTURjeQpOekU0TURrMU5Wb3dGREVTTUJBR0ExVUVBd3dKWTJFdGFYTnpkV1Z5TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBcFU3THhLK3Foc0ZCTDNEdmtTTGNxc01VYjVlbVdmUE9UTmJUbWlCVnRPYUoKZmVqYThWbXQ5cjgvdXNxbzJlVWRRY2JwRUxwRjB5ZGFPOWhSUW1sdWQwdHRZaWVCVnU5WVE0K2Z6R1o0MVowWgpmU1NJY0ZwT1ZCVi9XRlZzd3doNmZMT0d5aGJOUG9pdkdVT2cxb1JRQ0Zod0gwdzI5aTMwYXhVNmRqalMxbW9nCkpqSk9YdkdodWN4RjErOTBDblBCRTdUQnl4QkJpN0hieUdiYmlWTjk1Y3ZmcHVTMjRPY29hMnZKUWo0dGhRN1kKZVc0Q2pocUVGbzVrdnM1K3V2Ymlja2NjcSsrRUZlSDFuTEY0V2w3dlZVekNqZVFmNkJiRWVQV2RQb3gyWVFWcApJL01iSzZzYkt4L3lieG5aR1pnZStXcXlJajc2QWRDUDhKeW53S3hlR1FJREFRQUJvMU13VVRBZEJnTlZIUTRFCkZnUVVSd3ptSUpKdU4wSWVZZ2Q0b09qSUEzZXVpZjB3SHdZRFZSMGpCQmd3Rm9BVVJ3em1JSkp1TjBJZVlnZDQKb09qSUEzZXVpZjB3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBQ0pUUAo5VUdMZml1NEVzKzVKbTdKajVnM1ErbEwvSjFsSkNRWDZ2TWZQWENTemtqTzU3RHA0NjRXMEhpdTdrZ1JOeDBYCjViUWVndjVJdjYxRDBSL2FLdEp3Y1hHVFRBZE5GT1Z3Uk9hNUJ2Q1RFUU1iY3o1eVBhMWNSeFYyTEErbCtMVWEKbGZyUU02OEZYRmtCWmxZSjdCdldwSkszTGRBa0IwQmM5RmpCT01iQTZCWlNEZkZtZHRuc1Q1VTFyVEdUV3dqdwppbXBqNXpYVVQrYWRvU2c0b29SOXIveGkzYjBCeC9rQzFQU1p4R2V5clFTNDNqdEljckZDOTFZU2N1S29MZDRsClJ3bzdjSWZaSFN1MDNMZm1NR2x0Nk1kNkxib1A3SDZVZGJCUjIrdUF4eExrWlNRN3F1djljMzNaVGVWQ2lhL0sKSTFtclpmd3V5K1FxK1JqdFNRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+-  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktnd2dnU2tBZ0VBQW9JQkFRQ2xUc3ZFcjZxR3dVRXYKY08rUkl0eXF3eFJ2bDZaWjg4NU0xdE9hSUZXMDVvbDk2TnJ4V2EzMnZ6KzZ5cWpaNVIxQnh1a1F1a1hUSjFvNwoyRkZDYVc1M1MyMWlKNEZXNzFoRGo1L01abmpWblJsOUpJaHdXazVVRlg5WVZXekRDSHA4czRiS0ZzMCtpSzhaClE2RFdoRkFJV0hBZlREYjJMZlJyRlRwMk9OTFdhaUFtTWs1ZThhRzV6RVhYNzNRS2M4RVR0TUhMRUVHTHNkdkkKWnR1SlUzM2x5OSttNUxiZzV5aHJhOGxDUGkyRkR0aDViZ0tPR29RV2ptUyt6bjY2OXVKeVJ4eXI3NFFWNGZXYwpzWGhhWHU5VlRNS041Qi9vRnNSNDlaMCtqSFpoQldrajh4c3JxeHNySC9Kdkdka1ptQjc1YXJJaVB2b0IwSS93Cm5LZkFyRjRaQWdNQkFBRUNnZ0VBQXRUYUR1aGE0QzdEenZGdEVHUWpyemhDOFBrM2RWamttVmZySjl1aXJZUHUKMzRyRjR2RXExb2JXcTJjd3FVc2dPelNTTmZ5dUk1UjJtbFNRS2haQlRsYTFoNDNwYkZ1bnZDclpQVkIvMmU4cApwUHFqbHlLOEx0QWFTUUV0UG5ITHNQZmRhTTFSN3BQN3NDVTM4UUN6R0dkL3VTWXVnVkk1YitoSHpYSUNUaXBHCnJLODhBTkxNbG1MQzlxRms2VUh0SFRnbDFGdnBBN0NreXZmWTd4MlBGNnpUTy84QTFWYTF2MDErY0E5UXdHV2EKT0hibWNXRXRpM0JJYlk3THN6RExOcnhMREdzS2hNcmJFM2MxSTc5OHhrTnJHVlgzSWpFWGxyMDNpTkxxQklSZApPdEFPNGgrckFYbjBzS0JpN3FEOUQ1WVNHZWxiSlZwMnk1M2tVWGpjNFFLQmdRRG5sSlZvQVh1RTg1VkEvODU2CmtYK2drdkpiNUEvY0k5Sm1oWjI2Rk9leFFLbllrMFRKWEZaSXpQcWR6R0hJL3Q3QytTbUkwSTFMTlR5R1QxS3UKZWNlT3A3SDBVaXR3czIwbzkzV1hRb2liamRyVDZwSUFaME9oNForc1NiYXEwdGxZSTZxblF0RksyVHdZeVdCZwpvS2pTN0NtMGhmTThrRVNoYkQzajR3T1A0UUtCZ1FDMnZUWUJOdm1PNjZ0UU0rTHZNY2ZuZm9ycHJZMmx1UHhxClVUbkJMVTdSVUhWTUpyZXhuUndlYXBjZnVPMVNPTkRhclNnMVg5NjJNcHpockkrQ2g0V2NTV3JDcGI2VUxaRWUKR2ZZWmFkNmdpYjJ5VERwQU95dFkxSmZ0ejdQY1doNEYxOWVpcXFwN1owVDBKandFb0lVcnRVVmxIUEFBY1pHcwoxbzlXSGcvMU9RS0JnQ1J5QTlsc2NrNElMN01kRHhmSEVqanBKMjlDd3lRNEZ3Sy9nSVVxaVJRaVF4aXNoS1RUCi9WaFR1aFZmZHZ3MDhFWHJCSmhkaWY4T0Q4cHJiVzI4Q0tYd3lsYlRIN2NLNWVFT29Oai9SWlNGakt6Uk84MEkKYzJKa3FjWnBpMi95NHZXMkYwTmZocVNxNzRSUEhQWFlFdm11NVJsZUExdkNzS3BlNkphV3daYkJBb0dCQUk2Ywp0NnJYQm9mOWNDTVZlME9GTENlRDRGRmgrcXVjNUpEc2R4QkZsYjlROVZuSzFZMHR1YVliTlhteVRyUGVWMUJ4CjFuRmhNbVFxdDdoL2ZUZzNINVRLenlDOVRUQkRKMy9BYndtQ1VCWWxxUCtlOGM3eTNtOWk2bmJUbytDU0MrQXYKaE1BVVJSd3RpZWlvZGlwK1E2L0t0aStsRjhDZzRUbHI4VTBhQlFZeEFvR0JBSUVLWjFmRm4yc0dkaDdValM5bgo1MFRDNG1CeHFQbGlPU1VWVVh2cXRic2xCYmhrd3FlNWt1aDJ6ZGNnWnZ3TnU5eE45VmgyVVBhWVFlNWxvbm9zCmIxa3oyUERDald6YkxUUzRaLzRDSXJzU3psYVNSNFI0M0RRb0Y4bS8rRlZkKzk1bGVMVW9nVXdZaVZ0MXc3SG0KYXJlalNraUdZbW9PaFh0Z0RHNEhpNUpnCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+----
+-apiVersion: cert-manager.io/v1
+-kind: Issuer
+-metadata:
+-  name: ca-issuer
+-  namespace: default
+-spec:
+-  ca:
+-    secretName: ca-key-pair
+\ No newline at end of file
+diff --git a/playground/eShopLite/Deployment/deploy.cmd b/playground/eShopLite/Deployment/deploy.cmd
+deleted file mode 100644
+index a196fd33..00000000
+--- a/playground/eShopLite/Deployment/deploy.cmd
++++ /dev/null
+@@ -1,7 +0,0 @@
+-kubectl apply -f ./cert-manager.yml
+-kubectl apply -f ./redis.yml
+-kubectl apply -f ./postgres.yml
+-kubectl apply -f ./api-gateway.yml
+-kubectl apply -f ./catalog-service.yml
+-kubectl apply -f ./basket-service.yml
+-kubectl apply -f ./my-frontend.yml
+diff --git a/playground/eShopLite/Deployment/my-frontend.yml b/playground/eShopLite/Deployment/my-frontend.yml
+deleted file mode 100644
+index e99ca4cf..00000000
+--- a/playground/eShopLite/Deployment/my-frontend.yml
++++ /dev/null
+@@ -1,44 +0,0 @@
+-apiVersion: apps/v1
+-kind: Deployment
+-metadata:
+-  name: my-frontend
+-  labels:
+-    app: my-frontend
+-spec:
+-  selector:
+-    matchLabels:
+-      app: my-frontend
+-  replicas: 1
+-  template:
+-    metadata:
+-      labels:
+-        app: my-frontend
+-    spec:
+-      containers:
+-        - name: main
+-          image: localhost:5001/my-frontend
+-          imagePullPolicy: Always
+-          ports:
+-          - containerPort: 8080
+-          env:
+-          - name: ASPNETCORE_ENVIRONMENT
+-            value: "Production"
+-      terminationGracePeriodSeconds: 180
+-  minReadySeconds: 60
+-  strategy:
+-    rollingUpdate:
+-      maxUnavailable: 0
+-      maxSurge: 1
+-
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: my-frontend
+-spec:
+-  type: LoadBalancer
+-  selector:
+-    app: my-frontend
+-  ports:
+-  - name: http
+-    port: 8080
+diff --git a/playground/eShopLite/Deployment/postgres.yml b/playground/eShopLite/Deployment/postgres.yml
+deleted file mode 100644
+index e54e9c09..00000000
+--- a/playground/eShopLite/Deployment/postgres.yml
++++ /dev/null
+@@ -1,51 +0,0 @@
+-apiVersion: v1
+-kind: ConfigMap
+-metadata:
+-  name: postgres-configuration
+-  labels:
+-    app: postgres
+-data:
+-  POSTGRES_DB: postgres
+-  POSTGRES_USER: postgres
+-  POSTGRES_PASSWORD: postgres
+----
+-apiVersion: apps/v1
+-kind: StatefulSet
+-metadata:
+-  name: postgres-statefulset
+-  labels:
+-    app: postgres
+-spec:
+-  serviceName: "postgres"
+-  replicas: 1
+-  selector:
+-    matchLabels:
+-      app: postgres
+-  template:
+-    metadata:
+-      labels:
+-        app: postgres
+-    spec:
+-      containers:
+-      - name: postgres
+-        image: postgres:12
+-        envFrom:
+-        - configMapRef:
+-            name: postgres-configuration
+-        ports:
+-        - containerPort: 5432
+-          name: postgresdb
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: postgres-service
+-  labels:
+-    app: postgres
+-spec:
+-  type: ClusterIP
+-  ports:
+-  - port: 5432
+-    name: postgres
+-  selector:
+-    app: postgres
+\ No newline at end of file
+diff --git a/playground/eShopLite/Deployment/redis.yml b/playground/eShopLite/Deployment/redis.yml
+deleted file mode 100644
+index e9120ea9..00000000
+--- a/playground/eShopLite/Deployment/redis.yml
++++ /dev/null
+@@ -1,41 +0,0 @@
+-apiVersion: apps/v1
+-kind: Deployment
+-metadata:
+-  name: redis
+-spec:
+-  replicas: 1
+-  selector:
+-    matchLabels:
+-      app: redis
+-  template:
+-    metadata:
+-      labels:
+-        app: redis
+-    spec:
+-      containers:
+-      - name: redis
+-        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+-        env:
+-        - name: ALLOW_EMPTY_PASSWORD
+-          value: "yes"
+-        resources:
+-          requests:
+-            cpu: 100m
+-            memory: 128Mi
+-          limits:
+-            cpu: 250m
+-            memory: 256Mi
+-        ports:
+-        - containerPort: 6379
+-          name: redis
+----
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: redis
+-spec:
+-  ports:
+-  - port: 6379
+-  selector:
+-    app: redis
+----
+\ No newline at end of file
+diff --git a/playground/eShopLite/Deployment/undeploy.cmd b/playground/eShopLite/Deployment/undeploy.cmd
+deleted file mode 100644
+index 97ab1f61..00000000
+--- a/playground/eShopLite/Deployment/undeploy.cmd
++++ /dev/null
+@@ -1,6 +0,0 @@
+-kubectl delete -f ./redis.yml
+-kubectl delete -f ./postgres.yml
+-kubectl delete -f ./api-gateway.yml
+-kubectl delete -f ./catalog-service.yml
+-kubectl delete -f ./basket-service.yml
+-kubectl delete -f ./my-frontend.yml
+diff --git a/playground/eShopLite/README.md b/playground/eShopLite/README.md
+deleted file mode 100644
+index f554eb18..00000000
+--- a/playground/eShopLite/README.md
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# Instructions for running in Kubernetes locally
+-
+-* Install Docker Desktop
+-* Enable Kubernetes support in Docker Desktop
+-* Start a local image repository
+-
+-```sh
+-> docker run -d -p 5001:5000 --restart always --name registry registry:2
+-```
+-
+-* Build the containers, pushing them to the local repository, and deploy to kubernetes
+-
+-```sh
+-> ./deploy.cmd
+-```
+diff --git a/playground/eShopLite/deploy.cmd b/playground/eShopLite/deploy.cmd
+deleted file mode 100644
+index 804f9efc..00000000
+--- a/playground/eShopLite/deploy.cmd
++++ /dev/null
+@@ -1,6 +0,0 @@
+-call ./build-containers.cmd
+-
+-pushd Deployment
+-call ./undeploy.cmd
+-call ./deploy.cmd
+-popd
