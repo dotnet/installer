@@ -54,6 +54,17 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageVersionsProps" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
+  
+  <Target Name="GetRepositoryReferenceInfo">
+    <ItemGroup>
+      <RepositoryReferenceInfo Include="@(RepositoryReference)">
+        <SourceName>source-built-%(Identity)</SourceName>
+        <PackagesPath>$(SourceBuiltBasePackagesPath)%(Identity)/</PackagesPath>
+      </RepositoryReferenceInfo>
+      <DependentRepoSourceName Include="@(RepositoryReferenceInfo->'%(SourceName)')" />
+      <DependentRepoPackageFile Include="%(RepositoryReferenceInfo.PackagesPath)**" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="CopyNuGetConfig"
           Condition="'$(NuGetConfigFile)' != ''"
@@ -70,24 +81,32 @@
   </Target>
 
   <Target Name="UpdateNuGetConfig"
-          DependsOnTargets="CopyNuGetConfig"
+          DependsOnTargets="CopyNuGetConfig;GetRepositoryReferenceInfo"
           Condition="'$(NuGetConfigFile)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete">
     <PropertyGroup>
-      <SourceBuiltNuGetSourceName>source-built</SourceBuiltNuGetSourceName>
       <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
-      <SourceBuildSources>$(SourceBuiltNuGetSourceName)</SourceBuildSources>
-      <SourceBuildSources Condition="'$(ExtraRestoreSourcePath)' != ''">$(SourceBuildSources);$(ExtraSourcesNuGetSourceName)</SourceBuildSources>
     </PropertyGroup>
   
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
       <PrebuiltNuGetSourceName>prebuilt</PrebuiltNuGetSourceName>
       <PreviouslySourceBuiltNuGetSourceName>previously-source-built</PreviouslySourceBuiltNuGetSourceName>
       <ReferencePackagesNuGetSourceName>reference-packages</ReferencePackagesNuGetSourceName>
-      <SourceBuildSources>$(SourceBuildSources);$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName)</SourceBuildSources>
     </PropertyGroup>
 
+    <ItemGroup>
+      <_CommonSourceBuildSources Include="@(DependentRepoSourceName)" />
+      <_CommonSourceBuildSources Include="$(ExtraSourcesNuGetSourceName)" Condition="'$(ExtraRestoreSourcePath)' != ''" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <SourceBuildSources Condition="'$(DotNetBuildSourceOnly)' == 'true'"
+                          Include="$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName);@(_CommonSourceBuildSources)" />
+      <SourceBuildSources Condition="'$(DotNetBuildSourceOnly)' != 'true'"
+                          Include="@(_CommonSourceBuildSources)" />
+    </ItemGroup>
+    
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
       <!-- When not building source-only, repositories lagging behind on the .NET SDK (e.g. tooling repos)
           that need to utilize a VS-aligned version for development purposes may not have the latest product
@@ -126,8 +145,9 @@
                             Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
-                            SourceName="$(SourceBuiltNuGetSourceName)"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
+                            SourceName="%(RepositoryReferenceInfo.SourceName)"
+                            SourcePath="%(RepositoryReferenceInfo.PackagesPath)"
+                            Condition=" '@(RepositoryReferenceInfo)' != '' " />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
                             SourceName="$(ExtraSourcesNuGetSourceName)"
@@ -143,12 +163,16 @@
     <UpdateNuGetConfigPackageSourcesMappings
       NuGetConfigFile="$(NuGetConfigFile)"
       BuildWithOnlineFeeds="$(DotNetBuildWithOnlineFeeds)"
-      SourceBuildSources="$(SourceBuildSources)" />
+      SourceBuildSources="@(SourceBuildSources)" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete" AlwaysCreate="true">
       <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
     </Touch>
+
+    <ItemGroup>
+      <EmbedInBinlog Include="$(NuGetConfigFile)" />
+  </ItemGroup>
   </Target>
 
   <!-- Update the SDK version in the repo's global.json file.
@@ -193,11 +217,13 @@
   <!-- Before a repository builds, set up the version property files that override the repo's defaults.
        There are 3 files generated -->
   <Target Name="CreateBuildInputProps"
+          DependsOnTargets="GetRepositoryReferenceInfo"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)CreateBuildInputProps.complete">
     <ItemGroup>
-      <_CurrentSourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
-                                   Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
+      <!-- Collect all the NuGet packages from dependent repos except for the symbols -->
+      <_CurrentSourceBuiltPackages Include="@(DependentRepoPackageFile)"
+                                   Condition="'%(Extension)' == '.nupkg' and !$([System.String]::new('%(Filename)').EndsWith('.symbols')) " />
       <_PreviouslyBuiltSourceBuiltPackages Include="$(PrebuiltSourceBuiltPackagesPath)*.nupkg" />
     </ItemGroup>
 
