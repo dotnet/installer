@@ -261,7 +261,7 @@ jobs:
         if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
           customBuildArgs="$customBuildArgs --source-only"
         fi
-        
+
         if [[ '${{ parameters.useMonoRuntime }}' == 'True' ]]; then
           customBuildArgs="$customBuildArgs --use-mono-runtime"
         fi
