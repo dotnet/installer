@@ -153,7 +153,7 @@
     <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildSourceOnly)' == 'true'">$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'ArcadeBootstrapPackage'))</ArcadeBootstrapPackageDir>
     <ArcadeBootstrapPackageDir Condition="'$(DotNetBuildSourceOnly)' != 'true'">$(NuGetPackageRoot)</ArcadeBootstrapPackageDir>
 
-    <VSMSBuildSdkResolversDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts', 'toolset', 'VSSdkResolvers'))</VSMSBuildSdkResolversDir>
+    <VSMSBuildSdkResolversDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset', 'VSSdkResolvers'))</VSMSBuildSdkResolversDir>
 
     <!-- Shared output and intermediate output path folders that are architecture and configuration specific. -->
     <SharedOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', '$(TargetArchitecture)', '$(Configuration)'))</SharedOutputPath>

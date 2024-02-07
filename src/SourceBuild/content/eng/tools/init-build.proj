@@ -14,7 +14,7 @@
           DependsOnTargets="
       UnpackTarballs;
       BuildXPlatTasks;
-      LayoutMSBuildSdkResolver;
+      BuildMSBuildSdkResolver;
       BuildLeakDetection;
       ExtractToolPackage;
       GenerateRootFs;
@@ -81,20 +81,9 @@
     <SourceBuildMSBuildSdkResolverManifestPath>$([MSBuild]::NormalizePath('$(VSMSBuildSdkResolversDir)', 'SourceBuild.MSBuildSdkResolver', 'SourceBuild.MSBuildSdkResolver.xml'))</SourceBuildMSBuildSdkResolverManifestPath>
   </PropertyGroup>
 
-  <Target Name="LayoutMSBuildSdkResolver"
-          DependsOnTargets="BuildMSBuildSdkResolver"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(SourceBuildMSBuildSdkResolverManifestPath)">
-
-    <WriteLinesToFile
-      File="$(SourceBuildMSBuildSdkResolverManifestPath)"
-      Lines="&lt;SdkResolver&gt;&lt;Path&gt;%(SourceBuildSdkResolver.FullPath)&lt;/Path&gt;&lt;/SdkResolver&gt;"
-      Overwrite="true" />
-  </Target>
-
   <!-- Build msbuild tasks. -->
   <Target Name="BuildXPlatTasks"
-          DependsOnTargets="UnpackTarballs;LayoutMSBuildSdkResolver"
+          DependsOnTargets="UnpackTarballs;BuildMSBuildSdkResolver"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)BuildXPlatTasks.complete">
     <MSBuild Projects="tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj"
@@ -112,7 +101,7 @@
 
   <!-- Build msbuild tasks for the poisoning feature. -->
   <Target Name="BuildLeakDetection"
-          DependsOnTargets="ExtractToolPackage;LayoutMSBuildSdkResolver"
+          DependsOnTargets="ExtractToolPackage;BuildMSBuildSdkResolver"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)BuildLeakDetection.complete"
           Condition="'$(EnablePoison)' == 'true'">

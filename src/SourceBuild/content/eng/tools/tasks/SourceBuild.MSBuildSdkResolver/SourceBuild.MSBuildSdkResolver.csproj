@@ -11,4 +11,14 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" ExcludeAssets="runtime" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <SourceBuildMSBuildSdkResolverManifestPath>$([MSBuild]::NormalizePath('$(VSMSBuildSdkResolversDir)', '$(MSBuildProjectName)', '$(MSBuildProjectName).xml'))</SourceBuildMSBuildSdkResolverManifestPath>
+  </PropertyGroup>
+
+  <Target Name="InstallResolver" BeforeTargets="PrepareForRun">
+    <WriteLinesToFile
+      File="$(SourceBuildMSBuildSdkResolverManifestPath)"
+      Lines="&lt;SdkResolver&gt;&lt;Path&gt;$(MSBuildProjectFullPath)&lt;/Path&gt;&lt;/SdkResolver&gt;"
+      Overwrite="true" />
+  </Target>
 </Project>
