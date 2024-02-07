@@ -187,8 +187,8 @@
 
     <!-- When not bootstrapping, use the just-built versions. -->
     <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
-    <SourceBuiltSdkOverride Include="@(ArcadeCMakeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true' />
-    <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true' />
+    <SourceBuiltSdkOverride Include="@(ArcadeCMakeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
+    <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
 
     <WindowsDesktopSdkOverride Include="Microsoft.Net.Sdk.WindowsDesktop" Group="WINDOWS_DESKTOP" Location="$(ToolsDir)EmptySdk" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
 
