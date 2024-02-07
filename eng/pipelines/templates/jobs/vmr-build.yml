@@ -51,7 +51,7 @@ parameters:
   default: false
 
 # Name of a previous job (from the same template as this) whose output will be used to build this job
-# The SDK from its artifacts is copied to $(vmrPath)/.dotnet
+# The SDK from its artifacts is copied to $(sourcesPath)/.dotnet
 - name: reuseBuildArtifactsFrom
   type: string
   default: ''
