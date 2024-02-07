@@ -350,7 +350,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-          buildName: Android_Shortstack
+            buildName: Android_Shortstack
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
