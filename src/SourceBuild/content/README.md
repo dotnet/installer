@@ -43,7 +43,7 @@ See the [Unified Build roadmap](src/arcade/Documentation/UnifiedBuild/Roadmap.md
     * source-build configuration on Linux
 * 9.0+ (WIP)
     * source-build configuration on Linux
-    * non-source-build configartion on Linux, Mac, and Windows
+    * non-source-build configuration on Linux, Mac, and Windows
 
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
