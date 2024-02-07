@@ -2,10 +2,6 @@
 ### It synchronizes the content of the VMR to this new commit and pushes the changes
 
 parameters:
-- name: jobName
-  displayName: Name of the pipeline job
-  type: string
-
 - name: targetRef
   displayName: Target revision of dotnet/installer to synchronize
   type: string
@@ -22,7 +18,7 @@ parameters:
   default: false
 
 jobs:
-- job: ${{ parameters.jobName }}
+- job: Synchronize_VMR
   displayName: Synchronize dotnet/dotnet
   timeoutInMinutes: 120
   variables:

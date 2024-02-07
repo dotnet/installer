@@ -36,10 +36,4 @@ variables:
 jobs:
 - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
   parameters:
-    jobName: Synchronize_VMR
     vmrBranch: ${{ variables.VmrBranch }}
-
-- template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
-  parameters:
-    jobName: Synchronize_VMR_uncloacked
-    vmrBranch: ${{ variables.VmrBranch }}-ub
