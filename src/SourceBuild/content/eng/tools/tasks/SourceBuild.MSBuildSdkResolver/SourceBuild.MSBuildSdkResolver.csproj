@@ -18,7 +18,8 @@
   <Target Name="InstallResolver" BeforeTargets="PrepareForRun">
     <WriteLinesToFile
       File="$(SourceBuildMSBuildSdkResolverManifestPath)"
-      Lines="&lt;SdkResolver&gt;&lt;Path&gt;$(MSBuildProjectFullPath)&lt;/Path&gt;&lt;/SdkResolver&gt;"
+      Lines="&lt;SdkResolver&gt;&lt;Path&gt;$(TargetPath)&lt;/Path&gt;&lt;/SdkResolver&gt;"
       Overwrite="true" />
   </Target>
+
 </Project>

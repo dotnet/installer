@@ -67,9 +67,7 @@
              Properties="MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
 
     <MSBuild Projects="tasks\SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.csproj"
-             Targets="Build">
-      <Output TaskParameter="TargetOutputs" ItemName="SourceBuildSdkResolver" />
-    </MSBuild>
+             Targets="Build" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)BuildMSBuildSdkResolver.complete" AlwaysCreate="true">
