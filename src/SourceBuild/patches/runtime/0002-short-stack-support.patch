@@ -3,7 +3,7 @@ From: Jo Shields <joshield@microsoft.com>
 Date: Fri, 2 Feb 2024 06:56:20 -0500
 Subject: [PATCH] Source built short stack support (#97725)
 
-Backport: https://github.com/dotnet/runtime/pull/97725
+Backport: https://github.com/dotnet/runtime/pull/97725 and https://github.com/dotnet/runtime/pull/98128
 
 --- a/eng/SourceBuild.props	2024-02-07 11:01:33.807337902 -0500
 +++ b/eng/SourceBuild.props	2024-02-05 16:48:58.219933758 -0500
@@ -15,7 +15,7 @@ Backport: https://github.com/dotnet/runtime/pull/97725
  
      <_hostRidPlatformIndex>$(_hostRid.LastIndexOf('-'))</_hostRidPlatformIndex>
      <_hostArch>$(_hostRid.Substring($(_hostRidPlatformIndex)).TrimStart('-'))</_hostArch>
-@@ -22,6 +23,17 @@
+@@ -22,6 +23,18 @@
      <LogVerbosity Condition="'$(LogVerbosity)' == ''">minimal</LogVerbosity>
    </PropertyGroup>
  
@@ -28,12 +28,13 @@ Backport: https://github.com/dotnet/runtime/pull/97725
 +    <ShortStack Condition="'$(TargetOS)' == 'tvossimulator'">true</ShortStack>
 +    <ShortStack Condition="'$(TargetOS)' == 'maccatalyst'">true</ShortStack>
 +    <ShortStack Condition="'$(TargetOS)' == 'android'">true</ShortStack>
++    <ShortStack Condition="'$(TargetOS)' == 'linux-bionic'">true</ShortStack>
 +  </PropertyGroup>
 +
    <Target Name="GetRuntimeSourceBuildCommandConfiguration"
            BeforeTargets="GetSourceBuildCommandConfiguration">
      <PropertyGroup>
-@@ -29,9 +41,10 @@
+@@ -29,9 +42,10 @@
             This allows to build the repository using './build.sh <args> /p:DotNetBuildFromSource=true'.
             Properties that control flags from source-build, and the expected output for source-build should be added to this file. -->
        <InnerBuildArgs>$(InnerBuildArgs) $(FlagParameterPrefix)arch $(TargetArch)</InnerBuildArgs>
