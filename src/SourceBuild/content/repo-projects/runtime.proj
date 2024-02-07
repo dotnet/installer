@@ -15,8 +15,8 @@
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)os $(TargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRid=$(TargetRid)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:BaseOS=$(BaseOS)</BuildArgs>
+    <BuildArgs Condition="'$(ShortStack)' != 'true'">$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
+    <BuildArgs Condition="'$(ShortStack)' != 'true'">$(BuildArgs) /p:BaseOS=$(BaseOS)</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -33,10 +33,6 @@
     <RepositoryReference Include="cecil" />
     <RepositoryReference Include="symreader" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
