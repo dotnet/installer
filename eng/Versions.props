@@ -8,7 +8,7 @@
     <VersionMajor>8</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>2</VersionSDKMinor>
-    <VersionFeature>00</VersionFeature>
+    <VersionFeature>01</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
@@ -153,8 +153,8 @@
     <SubtractOneFromTemplateVersions Condition="$(VersionFeature) &gt;= 1 AND ! $(MicrosoftNETSdkPackageVersion.Contains('rtm')) AND ! $(MicrosoftNETSdkPackageVersion.Contains('servicing'))">true</SubtractOneFromTemplateVersions>
     <AspNetCoreTemplateFeature60>$([MSBuild]::Subtract($(VersionFeature60), 1))</AspNetCoreTemplateFeature60>
     <AspNetCoreTemplateFeature70>$([MSBuild]::Subtract($(VersionFeature70), 1))</AspNetCoreTemplateFeature70>
-    <AspNetCoreTemplateFeature60 Condition="$(MicrosoftNETSdkPackageVersion.Contains('preview'))">$(VersionFeature60)</AspNetCoreTemplateFeature60>
-    <AspNetCoreTemplateFeature70 Condition="$(MicrosoftNETSdkPackageVersion.Contains('preview'))">$(VersionFeature70)</AspNetCoreTemplateFeature70>
+    <AspNetCoreTemplateFeature60 Condition="$(MicrosoftNETSdkPackageVersion.Contains('preview')) AND $(VersionFeature) &lt; 1">$(VersionFeature60)</AspNetCoreTemplateFeature60>
+    <AspNetCoreTemplateFeature70 Condition="$(MicrosoftNETSdkPackageVersion.Contains('preview')) AND $(VersionFeature) &lt; 1">$(VersionFeature70)</AspNetCoreTemplateFeature70>
     <AspNetCoreTemplateFeature60 Condition="'$(SubtractOneFromTemplateVersions)' == 'true'">$([MSBuild]::Subtract($(AspNetCoreTemplateFeature60), 1))</AspNetCoreTemplateFeature60>
     <AspNetCoreTemplateFeature70 Condition="'$(SubtractOneFromTemplateVersions)' == 'true'">$([MSBuild]::Subtract($(AspNetCoreTemplateFeature70), 1))</AspNetCoreTemplateFeature70>
   </PropertyGroup>
