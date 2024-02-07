@@ -347,7 +347,7 @@
 
   <Target Name="CopyRepoArtifacts"
           AfterTargets="Package"
-          Condition="'$(RepositoryName)' != 'dotnet'"
+          Condition="'$(IsUtilityProject)' != 'true'"
           Inputs="$(RepoManifestFile)"
           Outputs="$(BaseIntermediateOutputPath)ArtifactsCopy.complete">
     <Error Text="Repo manifest file doesn't exist." Condition="!Exists('$(RepoManifestFile)')" />
