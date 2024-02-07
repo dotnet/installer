@@ -19,7 +19,8 @@
     <WriteLinesToFile
       File="$(SourceBuildMSBuildSdkResolverManifestPath)"
       Lines="&lt;SdkResolver&gt;&lt;Path&gt;$(TargetPath)&lt;/Path&gt;&lt;/SdkResolver&gt;"
-      Overwrite="true" />
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true" />
   </Target>
 
 </Project>
