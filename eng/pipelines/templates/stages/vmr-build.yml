@@ -353,13 +353,13 @@ stages:
             buildName: Android_Shortstack
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
-            architecture: arm32
+            architecture: arm
             pool:
               name: ${{ variables.defaultPoolName }}
               demands: ${{ variables.defaultPoolDemandsLinux }}
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
-            targetArchitecture: arm32
+            targetArchitecture: arm
 
         - template: ../jobs/vmr-build.yml
           parameters:
