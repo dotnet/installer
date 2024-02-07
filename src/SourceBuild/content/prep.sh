@@ -200,5 +200,6 @@ fi
 
 if [ "$keepBinaries" == false ]; then
   echo "  Removing all checked-in binaries before building..."
+  git config --global --add safe.directory /vmr
   git ls-files | grep -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$' | xargs rm -f
 fi
