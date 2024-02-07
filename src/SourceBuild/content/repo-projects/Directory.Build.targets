@@ -349,6 +349,8 @@
           AfterTargets="Package"
           Inputs="$(RepoManifestFile)"
           Outputs="$(BaseIntermediateOutputPath)ArtifactsCopy.complete">
+    <Error Text="Repo manifest file doesn't exist." Condition="!Exists('$(RepoManifestFile)')" />
+
     <XmlPeek XmlInputPath="$(RepoManifestFile)"
              Query="Build/Artifact/@Path">
         <Output TaskParameter="Result" ItemName="RepoManifestArtifact" />
