@@ -199,7 +199,12 @@ if [ "$downloadPrebuilts" == true ]; then
 fi
 
 if [ "$keepBinaries" == false ]; then
-  echo "  Removing all checked-in binaries before building..."
   git config --global --add safe.directory /vmr
-  git ls-files | grep -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$' | xargs rm -f
+  
+  if git ls-files | grep -q -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$'; then
+    echo "  Removing all checked-in binaries before building..."
+    git ls-files | grep -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$' | xargs rm -rf
+  else
+      echo "  No checked-in binaries found...no binaries were removed"
+  fi
 fi
