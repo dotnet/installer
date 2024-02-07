@@ -23,7 +23,7 @@ parameters:
 
 jobs:
 - job: ${{ parameters.jobName }}
-  displayName: Synchronize VMR's ${{ parameters.vmrBranch }}
+  displayName: Synchronize dotnet/dotnet
   timeoutInMinutes: 120
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
@@ -70,7 +70,7 @@ jobs:
 
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     # Push main and release branches to the public VMR
-    - ${{ if or(eq(parameters.vmrBranch, 'main'), eq(parameters.vmrBranch, 'main-ub'), startsWith(parameters.vmrBranch, 'release/')) }}:
+    - ${{ if or(eq(parameters.vmrBranch, 'main'), startsWith(parameters.vmrBranch, 'release/')) }}:
       - script: >
           ./.dotnet/dotnet darc vmr push
           --vmr '$(vmrPath)'
