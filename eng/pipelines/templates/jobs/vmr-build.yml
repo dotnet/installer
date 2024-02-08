@@ -272,7 +272,7 @@ jobs:
 
         if [[ -n "${{ parameters.crossRootFs }}" ]]; then
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
-          if [[ ${{ parameters.targetArchitecture }}' != 'wasm' ]]; then
+          if [[ '${{ parameters.targetArchitecture }}' != 'wasm' ]]; then
             customEnvVars="$customEnvVars CROSSCOMPILE=1"
           fi
         fi
