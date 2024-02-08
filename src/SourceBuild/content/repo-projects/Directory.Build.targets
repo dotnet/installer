@@ -335,10 +335,16 @@
 
   <Target Name="Build" DependsOnTargets="BuildRepoReferences;RepoBuild" />
 
-  <Target Name="Package" AfterTargets="Build" />
+  <Target Name="Package"
+          AfterTargets="Build"
+          DependsOnTargets="
+    CopyRepoArtifacts;
+    CopyInnerBuildRestoredPackages;
+    EnsurePackagesCreated;
+    ExtractToolPackage;
+    CleanupRepo" />
 
   <Target Name="CopyRepoArtifacts"
-          AfterTargets="Package"
           Condition="'$(IsUtilityProject)' != 'true'"
           Inputs="$(RepoManifestFile)"
           Outputs="$(BaseIntermediateOutputPath)ArtifactsCopy.complete">
@@ -397,8 +403,7 @@
 
   <!-- Copy restored packages from inner build to ensure they're included in the
        main build prebuilt check -->
-  <Target Name="CopyInnerBuildRestoredPackages"
-          AfterTargets="Package">
+  <Target Name="CopyInnerBuildRestoredPackages">
     <ItemGroup>
       <_InnerPackageCacheFiles Include="$(ProjectDirectory)artifacts/sb/package-cache/**/*" />
     </ItemGroup>
@@ -409,7 +414,6 @@
   </Target>
 
   <Target Name="CleanupRepo"
-          AfterTargets="RemoveBuiltPackagesFromCache"
           Condition="'$(CleanWhileBuilding)' == 'true' and Exists('$(ProjectDirectory)artifacts')">
     <PropertyGroup>
       <BuildLogsDir>$([MSBuild]::NormalizeDirectory('$(ProjectDirectory)', 'artifacts', 'buildLogs'))</BuildLogsDir>
@@ -451,7 +455,7 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
-          AfterTargets="CopyRepoArtifacts"
+          DependsOnTargets="CopyRepoArtifacts"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
@@ -496,7 +500,7 @@
   </Target>
 
   <Target Name="EnsurePackagesCreated"
-          AfterTargets="CopyRepoArtifacts"
+          DependsOnTargets="CopyRepoArtifacts"
           Condition="'$(SkipEnsurePackagesCreated)' != 'true' and '$(IsUtilityProject)' != 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)EnsurePackagesCreated.complete">
