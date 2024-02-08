@@ -7,10 +7,10 @@
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
-###   --keep-binaries             Do not remove the binaries before building.
 ###   --no-bootstrap              Don't replace portable packages in the download source-built artifacts
 ###   --no-prebuilts              Exclude the download of the prebuilts archive
 ###   --no-sdk                    Exclude the download of the .NET SDK
+###   --keep-binaries             Do not remove the binaries before building.
 ###   --artifacts-rid             The RID of the previously source-built artifacts archive to download
 ###                               Default is centos.8-x64
 ###   --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and
