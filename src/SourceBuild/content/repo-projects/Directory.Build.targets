@@ -496,7 +496,7 @@
   </Target>
 
   <Target Name="EnsurePackagesCreated"
-          AfterTargets="CopyPackage"
+          AfterTargets="CopyRepoArtifacts"
           Condition="'$(SkipEnsurePackagesCreated)' != 'true' and '$(IsUtilityProject)' != 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)EnsurePackagesCreated.complete">
