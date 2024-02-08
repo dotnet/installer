@@ -210,7 +210,7 @@ jobs:
       - script: |
           set -x
 
-          customPrepArgs="--no-binaries"
+          customPrepArgs=""
           prepSdk=true
 
           if [[ -n '${{ parameters.artifactsRid }}' ]]; then
