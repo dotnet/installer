@@ -146,8 +146,7 @@ git clone https://github.com/dotnet/dotnet .
 ./build.sh --clean-while-building
 
 # - Building from source
-./prep.sh
-./build.sh -sb --clean-while-building
+./prep.sh && ./build.sh -sb --clean-while-building
 
 mkdir -p $HOME/.dotnet
 tar -zxf artifacts/x64/Release/dotnet-sdk-9.0.100-centos.8-x64.tar.gz -C $HOME/.dotnet
