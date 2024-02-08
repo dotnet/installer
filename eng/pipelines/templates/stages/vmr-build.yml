@@ -368,9 +368,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: ios
             targetArchitecture: arm64
 
@@ -381,9 +380,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: iossimulator
             targetArchitecture: arm64
 
@@ -394,9 +392,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: iossimulator
             targetArchitecture: x64
 
@@ -407,9 +404,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: maccatalyst
             targetArchitecture: arm64
 
@@ -420,9 +416,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: maccatalyst
             targetArchitecture: x64
 
@@ -433,9 +428,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: tvos
             targetArchitecture: arm64
 
@@ -446,9 +440,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: tvossimulator
             targetArchitecture: arm64
 
@@ -459,9 +452,8 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
             pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.androidCrossContainer }}
+              vmImage: ${{ variables.defaultPoolNameMac }}
+            container: ''
             targetOS: tvossimulator
             targetArchitecture: x64
 
