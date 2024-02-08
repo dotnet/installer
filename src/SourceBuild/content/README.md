@@ -74,7 +74,7 @@ For the latest information about Source-Build support, please watch for announce
 The dependencies for building can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/).
 In case you don't want to / cannot prepare your environment per the requirements, consider [using Docker](#building-using-docker).
 
-### Building (source-build configuration)
+### Building
 
 1. **Clone the repository**
 
@@ -133,7 +133,7 @@ In case you don't want to / cannot prepare your environment per the requirements
 > [!NOTE]
 > Run `./build.sh --help` (for Unix) or `.\build.cmd -help` (for Windows) to see more information about supported build options.
 
-### Building using Docker (source-build configuration)
+### Building using Docker
 
 You can also build the repository using a Docker image which has the required prerequisites inside.
 The example below creates a Docker volume named `vmr` and clones and builds the VMR there.
