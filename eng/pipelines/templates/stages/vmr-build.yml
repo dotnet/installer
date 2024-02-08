@@ -345,6 +345,18 @@ stages:
         targetOS: windows
         targetArchitecture: x64
 
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: iOSSimulator_Shortstack
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: arm64
+        pool:
+          vmImage: ${{ variables.defaultPoolNameMac }}
+        container: ''
+        targetOS: iossimulator
+        targetArchitecture: arm64
+
     ### Additional jobs for full build ###
     - ${{ if in(parameters.scope, 'full') }}:
 
@@ -371,18 +383,6 @@ stages:
               vmImage: ${{ variables.defaultPoolNameMac }}
             container: ''
             targetOS: ios
-            targetArchitecture: arm64
-
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            buildName: iOSSimulator_Shortstack
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
-            container: ''
-            targetOS: iossimulator
             targetArchitecture: arm64
 
         - template: ../jobs/vmr-build.yml
