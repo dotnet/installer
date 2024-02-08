@@ -15,7 +15,7 @@ Codespace, the built-from-source SDK will already be there.
 
 ## Build the SDK
 
-To build the VMR, run one of the following:
+To build the repository, run one of the following:
 ```bash
 # Microsoft based build
 ./build.sh
