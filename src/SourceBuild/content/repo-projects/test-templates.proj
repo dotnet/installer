@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
-
-    <BuildArgs Condition="'$(BuildOS)' == 'windows'">$(BuildArgs) $(FlagParameterPrefix)msbuildEngine dotnet</BuildArgs>
   </PropertyGroup>
 
   <ItemGroup>
