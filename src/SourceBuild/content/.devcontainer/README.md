@@ -17,10 +17,13 @@ Codespace, the built-from-source SDK will already be there.
 
 To build the VMR, run one of the following:
 ```bash
-# Either Microsoft based build
+# Microsoft based build
 ./build.sh
+```
+or
 
-# Alternatively, building from source only
+```bash
+# Building from source only
 ./prep.sh && ./build.sh -sb
 ```
 
