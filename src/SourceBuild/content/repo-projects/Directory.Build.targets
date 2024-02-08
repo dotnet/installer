@@ -337,14 +337,6 @@
 
   <Target Name="Package" AfterTargets="Build" />
 
-  <Target Name="GatherBuiltPackages">
-    <ItemGroup>
-      <!-- Filter out packages for WriteVersions -->
-      <_BuiltPackages Condition="'$(PackagesOutput)' != ''" Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
-      <_BuiltPackages Condition="'@(PackagesOutputList)' != ''" Include="%(PackagesOutputList.Identity)/*.nupkg" Exclude="%(PackagesOutputList.Identity)/*.symbols.nupkg"/>
-    </ItemGroup>
-  </Target>
-
   <Target Name="CopyRepoArtifacts"
           AfterTargets="Package"
           Condition="'$(IsUtilityProject)' != 'true'"
@@ -416,26 +408,17 @@
           Condition=" '@(_InnerPackageCacheFiles)' != '' " />
   </Target>
 
-  <Target Name="CopyPackage"
-          AfterTargets="Package"
-          Condition="'$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != ''"
-          DependsOnTargets="GatherBuiltPackages">
-    <Copy SourceFiles="@(_BuiltPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)"
-          Condition="'@(_BuiltPackages)'!=''"
-          SkipUnchangedFiles="true" />
-  </Target>
-
   <Target Name="RemoveBuiltPackagesFromCache"
           AfterTargets="Package"
-          Condition="'@(_BuiltPackages)'!=''"
-          DependsOnTargets="GatherBuiltPackages"
+          Condition="'@(RepoManifestNonShippingPackage)' != ''"
+          DependsOnTargets="CopyRepoArtifacts"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)RemoveBuiltPackagesFromCache.complete">
     <ItemGroup>
       <!-- Excluding Arcade here will keep it in the cache, because that's where we're running from.
            Subsequent projects will get Arcade from eng/source-built-sdks. -->
-      <PackagePaths Include="@(_BuiltPackages)" Exclude="$(PackagesOutput)/Microsoft.DotNet.Arcade.Sdk.*.nupkg" />
+      <PackagePaths Include="@(RepoManifestNonShippingPackage)"
+                    Condition="!$([System.String]::Copy('%(Filename)').StartsWith('Microsoft.DotNet.Arcade.Sdk'))" />
     </ItemGroup>
 
     <ReadNuGetPackageInfos PackagePaths="@(PackagePaths)">
@@ -502,7 +485,6 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
-          DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
@@ -564,7 +546,7 @@
       <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
       <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
       <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(CurrentSourceBuiltPackageVersionPropsPath)" />
-      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check PackagesOutput in $(MSBuildProjectFullPath) (currently '$(PackagesOutput)')" />
+      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check RepoManifestFile in $(MSBuildProjectFullPath) (currently '$(RepoManifestFile)')" />
     </ItemGroup>
 
     <Error Condition="'@(JustSourceBuiltPackages)' == ''"
