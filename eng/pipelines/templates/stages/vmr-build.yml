@@ -345,6 +345,20 @@ stages:
         targetOS: windows
         targetArchitecture: x64
 
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        buildName: Browser_Shortstack
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: wasm
+        pool:
+          name: ${{ variables.defaultPoolName }}
+          demands: ${{ variables.defaultPoolDemandsLinux }}
+        container: ${{ variables.wasmCrossContainer }}
+        crossRootFs: '/crossrootfs/x64'
+        targetOS: browser
+        targetArchitecture: wasm
+
     ### Additional jobs for full build ###
     - ${{ if in(parameters.scope, 'full') }}:
 
@@ -360,20 +374,6 @@ stages:
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: x64
-
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            buildName: Browser_Shortstack
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: wasm
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
-            container: ${{ variables.wasmCrossContainer }}
-            crossRootFs: '/crossrootfs/x64'
-            targetOS: browser
-            targetArchitecture: wasm
 
         - template: ../jobs/vmr-build.yml
           parameters:
