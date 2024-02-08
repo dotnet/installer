@@ -451,7 +451,7 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
-          AfterTargets="Build"
+          AfterTargets="CopyRepoArtifacts"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
