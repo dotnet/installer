@@ -84,6 +84,9 @@ In case you don't want to / cannot prepare your environment per the requirements
    ```
 
 2. **Build the .NET SDK**
+
+    Choose one of the following build modes:
+   
     - **Microsoft based build**
 
         For Unix:
@@ -108,7 +111,7 @@ In case you don't want to / cannot prepare your environment per the requirements
 
     The resulting SDK is placed at `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].tar.gz` (for Unix) or `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].zip` (for Windows).
 
-3. *(Optional)* **Unpack and install the .NET SDK**
+4. *(Optional)* **Unpack and install the .NET SDK**
     
     For Unix:
     ```bash
