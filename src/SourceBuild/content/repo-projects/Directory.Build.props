@@ -69,7 +69,6 @@
     <BuildArgs>$(BuildArgs) /p:DotNetBuildRepo=true</BuildArgs>
     <!-- Indicate that the build is being run from the orchestrator -->
     <BuildArgs>$(BuildArgs) /p:DotNetBuildOrchestrator=true</BuildArgs>
-    <BuildArgs Condition="'$(BuildOS)' == 'windows'">$(BuildArgs) $(FlagParameterPrefix)msbuildEngine dotnet</BuildArgs>
     <BuildArgs Condition="'$(CrossBuild)' == 'true'">$(BuildArgs) /p:CrossBuild=true</BuildArgs>
     <BuildArgs Condition="'$(DotNetBuildSkipTests)' == 'true'">$(BuildArgs) /p:DotNetBuildSkipTests=true</BuildArgs>
     <BuildArgs Condition="'$(NuGetConfigFile)' != ''">$(BuildArgs) /p:RestoreConfigFile=$(NuGetConfigFile)</BuildArgs>
