@@ -28,7 +28,6 @@
   <!-- Exclude repositories that currently don't build when not building source-only. -->
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
     <RepositoryReference Remove="roslyn" />
-    <RepositoryReference Remove="wpf" />
     <RepositoryReference Remove="msbuild" />
     <RepositoryReference Remove="roslyn-analyzers" />
     <RepositoryReference Remove="aspnetcore" />
