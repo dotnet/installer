@@ -7,7 +7,7 @@
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
-###   --no-binaries               Remove the binaries before building. This is necessary for source-building.
+###   --keep-binaries             Do not remove the binaries before building.
 ###   --no-bootstrap              Don't replace portable packages in the download source-built artifacts
 ###   --no-prebuilts              Exclude the download of the prebuilts archive
 ###   --no-sdk                    Exclude the download of the .NET SDK
@@ -33,7 +33,7 @@ buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
-keepBinaries=true
+removeBinaries=true
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
@@ -48,8 +48,8 @@ while :; do
       print_help
       exit 0
       ;;
-    --no-binaries)
-      keepBinaries=false
+    --keep-binaries)
+      removeBinaries=false
       ;;
     --no-bootstrap)
       buildBootstrap=false
@@ -176,6 +176,32 @@ function BootstrapArtifacts {
   rm -rf "$workingDir"
 }
 
+function RemoveBinaries {
+  echo "  Removing binaries..."
+
+  # Define the paths to ignore when removing binaries
+  pathsToIgnore=(
+    "*.dotnet*"
+    "*artifacts*"
+    "**/eng/tools/**/bin/**"
+    "**/eng/tools/**/obj/**"
+    "$SCRIPT_ROOT/prereqs/packages/**"
+    "$SCRIPT_ROOT/test/Microsoft.DotNet.SourceBuild.SmokeTests/bin/**"
+    "$SCRIPT_ROOT/test/Microsoft.DotNet.SourceBuild.SmokeTests/obj/**"
+    "$SCRIPT_ROOT/test/Microsoft.DotNet.SourceBuild.SmokeTests/TestResults/**"
+  )
+
+  # Define the find command
+  findCmd="find \"$SCRIPT_ROOT\" -type f"
+  for path in "${pathsToIgnore[@]}"; do
+    findCmd+=" -not \( -path \"$path\" \)"
+  done
+  findCmd+=" -regex '.*\.\(dll\|Dll\|exe\|mdb\|nupkg\|pdb\|tgz\|zip\)$' -delete -print"
+
+  # Run the find command to remove the binaries
+  eval $findCmd
+}
+
 # Check for the version of dotnet to install
 if [ "$installDotnet" == true ]; then
   echo "  Installing dotnet..."
@@ -198,13 +224,6 @@ if [ "$downloadPrebuilts" == true ]; then
   DownloadArchive Prebuilts false $artifactsRid
 fi
 
-if [ "$keepBinaries" == false ]; then
-  git config --global --add safe.directory /vmr
-  
-  if git ls-files | grep -q -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$'; then
-    echo "  Removing all checked-in binaries before building..."
-    git ls-files | grep -i '\.\(dll\|exe\|mdb\|nupkg|\pbd\|tgz\|zip\)$' | xargs rm -rf
-  else
-      echo "  No checked-in binaries found...no binaries were removed"
-  fi
+if [ "$removeBinaries" == true ]; then
+  RemoveBinaries
 fi
