@@ -408,40 +408,6 @@
           Condition=" '@(_InnerPackageCacheFiles)' != '' " />
   </Target>
 
-  <Target Name="RemoveBuiltPackagesFromCache"
-          AfterTargets="Package"
-          Condition="'@(RepoManifestNonShippingPackage)' != ''"
-          DependsOnTargets="CopyRepoArtifacts"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(BaseIntermediateOutputPath)RemoveBuiltPackagesFromCache.complete">
-    <ItemGroup>
-      <!-- Excluding Arcade here will keep it in the cache, because that's where we're running from.
-           Subsequent projects will get Arcade from eng/source-built-sdks. -->
-      <PackagePaths Include="@(RepoManifestNonShippingPackage)"
-                    Condition="!$([System.String]::Copy('%(Filename)').StartsWith('Microsoft.DotNet.Arcade.Sdk'))" />
-    </ItemGroup>
-
-    <ReadNuGetPackageInfos PackagePaths="@(PackagePaths)">
-      <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
-    </ReadNuGetPackageInfos>
-
-    <!-- Copy built nupkgs from nuget packages cache directory to the previouslyRestored directory
-         and then delete all expanded files and the nupkg from the package cache so the next time
-         the package is used, it will reload the source-built version -->
-    <ItemGroup>
-      <_FilesToCopy Include="$(NuGetPackageRoot)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLowerInvariant())/%(_BuiltPackageInfos.PackageVersion)/**/*.nupkg" />
-      <_FilesToDelete Include="$(NuGetPackageRoot)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLowerInvariant())/%(_BuiltPackageInfos.PackageVersion)/**/*.*" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
-    <Delete Files="@(_FilesToDelete)" />
-
-    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
-    <Touch Files="$(BaseIntermediateOutputPath)RemoveBuiltPackagesFromCache.complete" AlwaysCreate="true">
-      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-    </Touch>
-  </Target>
-
   <Target Name="CleanupRepo"
           AfterTargets="RemoveBuiltPackagesFromCache"
           Condition="'$(CleanWhileBuilding)' == 'true' and Exists('$(ProjectDirectory)artifacts')">
