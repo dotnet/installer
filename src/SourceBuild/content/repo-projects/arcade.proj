@@ -3,6 +3,9 @@
   <PropertyGroup>
     <!-- Use a prebuilt Arcade to build Arcade -->
     <UseBootstrapArcade>true</UseBootstrapArcade>
+
+    <!-- Remove after arcade bootstrap version is updated. -->
+    <BuildArgs>$(BuildArgs) /p:DotNetBuildSkipTests=true</BuildArgs>
   </PropertyGroup>
 
   <ItemGroup>
