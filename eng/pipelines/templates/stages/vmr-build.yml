@@ -363,6 +363,110 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
+            buildName: iOS_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: arm64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: ios
+            targetArchitecture: arm64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: iOSSimulator_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: arm64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: iossimulator
+            targetArchitecture: arm64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: iOSSimulator_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: x64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: iossimulator
+            targetArchitecture: x64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: MacCatalyst_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: arm64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: maccatalyst
+            targetArchitecture: arm64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: MacCatalyst_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: x64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: maccatalyst
+            targetArchitecture: x64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: tvOS_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: arm64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: tvos
+            targetArchitecture: arm64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: tvOSSimulator_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: arm64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: tvossimulator
+            targetArchitecture: arm64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
+            buildName: tvOSSimulator_Shortstack
+            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+            vmrBranch: ${{ variables.VmrBranch }}
+            architecture: x64
+            pool:
+              name: ${{ variables.defaultPoolName }}
+              demands: ${{ variables.defaultPoolDemandsLinux }}
+            container: ${{ variables.androidCrossContainer }}
+            targetOS: tvossimulator
+            targetArchitecture: x64
+
+        - template: ../jobs/vmr-build.yml
+          parameters:
             buildName: OSX
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
