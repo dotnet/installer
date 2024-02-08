@@ -503,9 +503,7 @@
     <ItemGroup>
       <JustSourceBuiltPackages
         Include="$(SourceBuiltPackagesPath)*.nupkg"
-        Exclude="
-          $(SourceBuiltPackagesPath)*.symbols.nupkg;
-          @(PreviouslySourceBuiltPackages)" />
+        Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
     </ItemGroup>
 
     <ItemGroup>
