@@ -105,11 +105,8 @@ In case you don't want to / cannot prepare your environment per the requirements
         # Build the .NET SDK
         ./build.sh -sb --clean-while-building
         ```
-        
-    The resulting SDK is placed at `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].tar.gz` (for Unix) or `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].zip` (for Windows).
 
-    > [!NOTE]  
-    > Run `./build.sh --help` (for Unix) or `.\build.cmd -help` (for Windows) to see more information about supported build options.
+    The resulting SDK is placed at `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].tar.gz` (for Unix) or `artifacts/[your-arch]/Release/dotnet-sdk-9.0.100-[your-RID].zip` (for Windows).
 
 3. *(Optional)* **Unpack and install the .NET SDK**
     
@@ -132,6 +129,9 @@ In case you don't want to / cannot prepare your environment per the requirements
     ```bash
     dotnet --info
     ```
+
+> [!NOTE]
+> Run `./build.sh --help` (for Unix) or `.\build.cmd -help` (for Windows) to see more information about supported build options.
 
 ### Building using Docker (source-build configuration)
 
