@@ -20,7 +20,7 @@ To build the VMR, run one of the following:
 # Either Microsoft based build
 ./build.sh
 
-# or building from source
+# Alternatively, building from source only
 ./prep.sh && ./build.sh -sb
 ```
 
