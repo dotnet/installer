@@ -37,7 +37,7 @@
     // Only filters which start with submodule's path are applied when syncing submodules
     "defaults": {
         "defaultRef": "main",
-        "exclude": [
+        "include": [
             "**/*.dll",
             "**/*.Dll",
             "**/*.exe",
@@ -54,7 +54,7 @@
         {
             "name": "arcade",
             "defaultRemote": "https://github.com/dotnet/arcade",
-            "exclude": [
+            "include": [
                 "src/Microsoft.DotNet.SignTool.Tests/*.mpack",
                 "src/Microsoft.DotNet.SignTool.Tests/*.msi",
                 "src/Microsoft.DotNet.SignTool.Tests/*.vsix"
@@ -70,12 +70,15 @@
         {
             "name": "aspnetcore",
             "defaultRemote": "https://github.com/dotnet/aspnetcore",
-            "exclude": [
+            "include": [
                 "src/submodules/MessagePack-CSharp/**/*.dll",
-                "**/samples/**/jquery-validation-unobtrusive/.bower.json",
-                "**/samples/**/jquery-validation-unobtrusive/*.js",
-                "src/Installers/Windows/AspNetCoreModule-Setup/*",
                 "src/SignalR/clients/java/signalr/gradle/wrapper/gradle-wrapper.jar"
+            ],
+            "exclude": [
+                // Non-OSS license - https://github.com/dotnet/source-build/issues/3537
+                "src/Installers/Windows/AspNetCoreModule-Setup/*",
+                "**/samples/**/jquery-validation-unobtrusive/.bower.json",
+                "**/samples/**/jquery-validation-unobtrusive/*.js"
             ]
         },
         {
@@ -122,7 +125,7 @@
             "name": "nuget-client",
             "defaultRemote": "https://github.com/NuGet/NuGet.Client",
             "defaultRef": "dev",
-            "exclude":[
+            "include":[
                 "src/NuGet.Clients/NuGet.VisualStudio.Client"
             ]
         },
@@ -153,10 +156,12 @@
         {
             "name": "source-build-externals",
             "defaultRemote": "https://github.com/dotnet/source-build-externals",
-            "exclude": [
+            "include": [
                 "src/application-insights/**/*.exe",
                 "src/application-insights/**/*.dll",
-                "src/application-insights/**/*.zip",
+                "src/application-insights/**/*.zip"
+            ],
+            "exclude": [
                 "src/application-insights/**/NuGet.config",
                 "src/humanizer/samples/**/*.js",
                 "src/newtonsoft-json/**/NuGet.Config",
@@ -210,11 +215,24 @@
         },
         {
             "name": "winforms",
-            "defaultRemote": "https://github.com/dotnet/winforms"
+            "defaultRemote": "https://github.com/dotnet/winforms",
+            "include": [
+                "src/System.Windows.Forms.Design/src/Resources/colordlg.data",
+                "src/System.Windows.Forms/src/Resources/System/Windows/Forms/Design/Thumbs.db"
+            ],
+            "exclude": [
+                // Non-OSS license - https://github.com/dotnet/winforms/issues/10779
+                "https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/tests/IntegrationTests/DesignSurface/LICENSE.txt"
+            ]
         },
         {
             "name": "wpf",
-            "defaultRemote": "https://github.com/dotnet/wpf"
+            "defaultRemote": "https://github.com/dotnet/wpf",
+            "include": [
+                "src/Microsoft.DotNet.Wpf/src/PresentationFramework/**",
+                "src/Microsoft.DotNet.Wpf/src/Shared/Tracing/resources/**",
+                "Microsoft.DotNet.Wpf/src/WpfGfx/core/geometry/Scanner.doc"
+            ]
         },
         {
             "name": "windowsdesktop",
