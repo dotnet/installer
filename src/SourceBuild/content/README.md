@@ -146,6 +146,7 @@ git clone https://github.com/dotnet/dotnet .
 ./build.sh --clean-while-building
 
 # - Building from source
+./prep.sh
 ./build.sh -sb --clean-while-building
 
 mkdir -p $HOME/.dotnet
