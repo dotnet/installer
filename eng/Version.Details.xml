@@ -52,7 +52,7 @@
       <Sha>d40c654c274fe4f4afe66328f0599130f3eb2ea6</Sha>
     </Dependency>
     <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.runtime" Version="9.0.0-preview.2.24080.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.runtime.linux-x64" Version="9.0.0-preview.2.24080.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>d40c654c274fe4f4afe66328f0599130f3eb2ea6</Sha>
       <SourceBuild RepoName="runtime" ManagedOnly="false" />
@@ -129,18 +129,18 @@
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>becc4bd157cd6608b51a5ffe414a5d2de6330272</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.8.0" Version="1.1.0-rc.24107.1">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.8.0" Version="1.1.0-rc.24108.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>23a6d5c63f8a3c8b7314334906fd9681baf60969</Sha>
+      <Sha>777cf69d17013af9153cae88ad451f5ce9934f18</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.9.0" Version="1.1.0-rc.24107.1">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.9.0" Version="1.1.0-rc.24108.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>23a6d5c63f8a3c8b7314334906fd9681baf60969</Sha>
+      <Sha>777cf69d17013af9153cae88ad451f5ce9934f18</Sha>
     </Dependency>
     <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.test-templates" Version="1.1.0-rc.24107.1">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.test-templates" Version="1.1.0-rc.24108.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>23a6d5c63f8a3c8b7314334906fd9681baf60969</Sha>
+      <Sha>777cf69d17013af9153cae88ad451f5ce9934f18</Sha>
       <SourceBuild RepoName="test-templates" ManagedOnly="true" />
     </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
@@ -226,9 +226,9 @@
       <SourceBuild RepoName="deployment-tools" ManagedOnly="true" />
     </Dependency>
     <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-externals" Version="9.0.0-alpha.1.24105.2">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-externals" Version="9.0.0-alpha.1.24106.1">
       <Uri>https://github.com/dotnet/source-build-externals</Uri>
-      <Sha>2c52f66055a098987321c8fe96472679661c4071</Sha>
+      <Sha>f1ef074dfcf79d2f2da6e6ff9df8696a32aa063c</Sha>
       <SourceBuild RepoName="source-build-externals" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="System.CommandLine" Version="2.0.0-beta4.24068.1" CoherentParentDependency="Microsoft.NET.Sdk">
@@ -243,17 +243,17 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.24105.3">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.24106.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8cfc9489d3e51071fedec9dcb99071dc912718bd</Sha>
+      <Sha>f7eb7794c703dc29a83b414b786e9a154f0ca042</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.CMake.Sdk" Version="9.0.0-beta.24105.3">
+    <Dependency Name="Microsoft.DotNet.CMake.Sdk" Version="9.0.0-beta.24106.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8cfc9489d3e51071fedec9dcb99071dc912718bd</Sha>
+      <Sha>f7eb7794c703dc29a83b414b786e9a154f0ca042</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="9.0.0-beta.24105.3">
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Installers" Version="9.0.0-beta.24106.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8cfc9489d3e51071fedec9dcb99071dc912718bd</Sha>
+      <Sha>f7eb7794c703dc29a83b414b786e9a154f0ca042</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Darc" Version="1.1.0-beta.24080.1">
       <Uri>https://github.com/dotnet/arcade-services</Uri>
@@ -263,23 +263,23 @@
       <Uri>https://github.com/dotnet/arcade-services</Uri>
       <Sha>749beebfd890571ce6f3fe8f557cb3cad070c946</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XliffTasks" Version="9.0.0-beta.24105.3">
+    <Dependency Name="Microsoft.DotNet.XliffTasks" Version="9.0.0-beta.24106.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8cfc9489d3e51071fedec9dcb99071dc912718bd</Sha>
+      <Sha>f7eb7794c703dc29a83b414b786e9a154f0ca042</Sha>
     </Dependency>
     <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="9.0.0-beta.24105.3">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="9.0.0-beta.24106.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8cfc9489d3e51071fedec9dcb99071dc912718bd</Sha>
+      <Sha>f7eb7794c703dc29a83b414b786e9a154f0ca042</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.Extensions.Logging.Console" Version="9.0.0-alpha.1.23612.13">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>ab1a8224cdf115b65e0db5dc88d11f205068f444</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="9.0.0-alpha.1.24107.1">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="9.0.0-alpha.1.24108.1">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>a739c05eb1a5200d7fa2f1e3977b4dc54fdec36a</Sha>
+      <Sha>6b94d1513777c3aa0426f648649ce06d0d705bb2</Sha>
       <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.DotNet.ScenarioTests.SdkTemplateTests" Version="9.0.0-preview.24057.2">
