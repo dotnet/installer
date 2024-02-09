@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 8 Feb 2024 22:25:19 +0000
+Subject: [PATCH] Support for RestoreConfigFile property
+
+Backport PR: https://github.com/dotnet/runtime/pull/97778
+---
+ eng/SourceBuild.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+index 3b544528694..184b082db72 100644
+--- a/eng/SourceBuild.props
++++ b/eng/SourceBuild.props
+@@ -50,6 +50,7 @@
+       <InnerBuildArgs Condition="'$(ArcadeBuildVertical)' == 'true'">$(InnerBuildArgs) /p:ArcadeBuildVertical=true</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(OfficialBuildId)' != ''">$(InnerBuildArgs) /p:OfficialBuildId=$(OfficialBuildId)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(ContinuousIntegrationBuild)' != ''">$(InnerBuildArgs) /p:ContinuousIntegrationBuild=$(ContinuousIntegrationBuild)</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(RestoreConfigFile)' != ''">$(InnerBuildArgs) /p:RestoreConfigFile=$(RestoreConfigFile)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(PortableBuild)' != ''">$(InnerBuildArgs) /p:PortableBuild=$(PortableBuild)</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
