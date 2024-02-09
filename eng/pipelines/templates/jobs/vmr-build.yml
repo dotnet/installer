@@ -347,9 +347,6 @@ jobs:
 
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
-        if ("${{ parameters.buildSourceOnly }}" -eq $True) {
-          CopyWithRelativeFolders "artifacts/prebuilt-report/" $targetFolder
-        }
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
         CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"

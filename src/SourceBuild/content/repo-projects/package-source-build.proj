@@ -33,9 +33,14 @@
       DestinationFiles="@(SourceBuildReferencePackagesNupkgFiles -> '$(SourceBuildReferencePackagesDestination)%(Filename)%(Extension)')"
       Condition="'@(SourceBuildReferencePackagesNupkgFiles)' != ''" />
 
+    <ItemGroup>
+      <ArtifactsPackage Include="$(ArtifactsPackagesDir)**\*.nupkg" />
+    </ItemGroup>
+
     <!-- Copy packages to staging dir. -->
-    <Copy SourceFiles="$(ArtifactsPackagesDir)**\*.nupkg"
-          DestinationFolder="$(SourceBuildTarballStagingDir)" />
+    <Copy SourceFiles="@(ArtifactsPackage)"
+          DestinationFolder="$(SourceBuildTarballStagingDir)"
+          Condition="'@(ArtifactsPackage)' != ''" />
 
     <PropertyGroup>
       <SourceBuiltTarballName>$(ArtifactsShippingPackagesDir)$(SourceBuiltArtifactsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SourceBuiltTarballName>

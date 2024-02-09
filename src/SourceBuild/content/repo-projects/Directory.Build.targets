@@ -383,16 +383,16 @@
     <Error Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_ArtifactsNotCreatedReason, '%0A')"
            Condition="'@(RepoManifestArtifact)' == ''" />
 
-    <!-- Log the new repo artifacts -->
-    <Message Importance="High" Text="New artifact(s) after building $(RepositoryName):" />
-    <Message Importance="High" Text="  -> %(RepoManifestArtifact.Filename)%(RepoManifestArtifact.Extension)" />
-
     <!-- The repo symbol archive shouldn't be copied. -->
     <ItemGroup>
       <RepoSymbolsArchive Include="@(RepoManifestArtifact)"
                           Condition="$([System.String]::Copy('%(Identity)').EndsWith('Symbols.$(RepositoryName)$(ArchiveExtension)'))" />
       <RepoManifestArtifact Remove="@(RepoSymbolsArchive)" />
     </ItemGroup>
+
+    <!-- Log the new repo artifacts -->
+    <Message Importance="High" Text="New artifact(s) after building $(RepositoryName):" />
+    <Message Importance="High" Text="  -> %(RepoManifestArtifact.Filename)%(RepoManifestArtifact.Extension)" />
 
     <ItemGroup>
       <RepoManifestPackage Include="@(RepoManifestArtifact->WithMetadataValue('Extension', '.nupkg'))" />
@@ -544,7 +544,9 @@
 
   <Target Name="ExtractSymbolsArchiveFile"
           DependsOnTargets="CopyRepoArtifacts"
-          Condition="'$(IsUtilityProject)' != 'true' and '@(RepoSymbolsArchive)' != ''"
+          Condition="'$(DotNetBuildSourceOnly)' == 'true' and
+                     '$(IsUtilityProject)' != 'true' and
+                     '@(RepoSymbolsArchive)' != ''"
           Inputs="@(RepoSymbolsArchive)"
           Outputs="$(IntermediateSymbolsRepoDir)">
 
