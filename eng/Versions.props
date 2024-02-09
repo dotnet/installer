@@ -107,7 +107,10 @@
     <SharedHostVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedHostVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <WixPackageVersion>1.0.0-v3.14.0.5722</WixPackageVersion>
+    <!-- This is the version of the zip archive -->
+    <WixVersion>3.14.0.8606</WixVersion>
+    <!-- Unlike Arcade 7 and later, there is no default package version property defined in the Arcade SDK -->
+    <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- 6.0 Template versions -->
