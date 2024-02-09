@@ -362,6 +362,8 @@ stages:
           - Darwin
           - Source_Build_Managed
           - Source_Build_Create_Tarball
+          - PGO_Linux
+          - PGO_Windows_NT
         publishUsingPipelines: true
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
