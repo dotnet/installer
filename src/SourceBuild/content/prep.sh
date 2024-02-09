@@ -181,6 +181,7 @@ function RemoveBinaries {
 
   # Define the paths to ignore when removing binaries
   pathsToIgnore=(
+    "*.git*"
     "*.dotnet*"
     "*artifacts*"
     "**/eng/tools/**/bin/**"
@@ -191,12 +192,20 @@ function RemoveBinaries {
     "$SCRIPT_ROOT/test/Microsoft.DotNet.SourceBuild.SmokeTests/TestResults/**"
   )
 
+  # Also ignore paths in allowed-binaries.txt
+  if [ -f "$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt" ]; then
+    while IFS= read -r line
+    do
+      pathsToIgnore+=("$line")
+    done < "$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+  fi
+
   # Define the find command
   findCmd="find \"$SCRIPT_ROOT\" -type f"
   for path in "${pathsToIgnore[@]}"; do
-    findCmd+=" -not \( -path \"$path\" \)"
+    findCmd+=" -not -path \"$path\""
   done
-  findCmd+=" -regex '.*\.\(dll\|Dll\|exe\|mdb\|nupkg\|pdb\|tgz\|zip\)$' -delete -print"
+  findCmd+=" -print0 | xargs -0 grep -IL . | tee /dev/tty | xargs rm -f"
 
   # Run the find command to remove the binaries
   eval $findCmd
