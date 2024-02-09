@@ -20,7 +20,7 @@
           AfterTargets="Build"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <PropertyGroup>
-      <UnifiedSymbolsTarball>$(ArtifactsShippingPackagesDir)dotnet-symbols-all-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)</UnifiedSymbolsTarball>
+      <UnifiedSymbolsTarball>$(ArtifactsAssetsDir)dotnet-symbols-all-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)</UnifiedSymbolsTarball>
     </PropertyGroup>
 
     <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(UnifiedSymbolsTarball)'))" />
@@ -36,11 +36,11 @@
           AfterTargets="Build"
           DependsOnTargets="RepackageSymbols">
     <ItemGroup>
-      <SdkTarballItem Include="$(ArtifactsShippingPackagesDir)dotnet-sdk-*$(ArchiveExtension)" />
+      <SdkTarballItem Include="$(ArtifactsAssetsDir)dotnet-sdk-*$(ArchiveExtension)" />
     </ItemGroup>
 
     <PropertyGroup>
-      <SdkSymbolsTarball>$(ArtifactsShippingPackagesDir)dotnet-symbols-sdk-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)</SdkSymbolsTarball>
+      <SdkSymbolsTarball>$(ArtifactsAssetsDir)dotnet-symbols-sdk-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)</SdkSymbolsTarball>
 
       <IntermediateSdkSymbolsLayout>$(BaseIntermediateOutputPath)SdkSymbols</IntermediateSdkSymbolsLayout>
       <IntermediateSdkLayout>$(BaseIntermediateOutputPath)Sdk</IntermediateSdkLayout>
@@ -83,7 +83,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ReportPoisonUsage.complete" >
     <ItemGroup>
-      <FinalCliTarball Include="$(ArtifactsShippingPackagesDir)*$(ArchiveExtension)" />
+      <FinalCliTarball Include="$(ArtifactsAssetsDir)*$(ArchiveExtension)" />
     </ItemGroup>
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Checking @(FinalCliTarball) for poisoned files." />
@@ -122,8 +122,8 @@
 
   <Target Name="RunSmokeTest">
     <ItemGroup>
-      <SdkTarballItem Include="$(ArtifactsShippingPackagesDir)dotnet-sdk*$(ArchiveExtension)" />
-      <SourceBuiltArtifactsItem Include="$(ArtifactsShippingPackagesDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
+      <SdkTarballItem Include="$(ArtifactsAssetsDir)dotnet-sdk*$(ArchiveExtension)" />
+      <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -170,7 +170,7 @@
           DependsOnTargets="DetermineSourceBuiltSdkVersion"
           Condition="'@(SmokeTestsPrereqs->Count())' != '0'">
     <PropertyGroup>
-      <SmokeTestPrereqsTarball>$(ArtifactsShippingPackagesDir)dotnet-smoke-test-prereqs.$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SmokeTestPrereqsTarball>
+      <SmokeTestPrereqsTarball>$(ArtifactsAssetsDir)dotnet-smoke-test-prereqs.$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SmokeTestPrereqsTarball>
       <SmokeTestsPrereqPackagesDir>$(SmokeTestsArtifactsDir)prereq-packages/</SmokeTestsPrereqPackagesDir>
     </PropertyGroup>
 
@@ -204,7 +204,7 @@
           DependsOnTargets="DetermineSourceBuiltSdkVersion"
           Condition="'@(PrebuiltFile->Count())' != '0'">
     <PropertyGroup>
-      <PrebuiltsTarball>$(ArtifactsShippingPackagesDir)$(SourceBuiltPrebuiltsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</PrebuiltsTarball>
+      <PrebuiltsTarball>$(ArtifactsAssetsDir)$(SourceBuiltPrebuiltsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</PrebuiltsTarball>
       <PrebuiltsTarballWorkingDir>$(ResultingPrebuiltPackagesDir)</PrebuiltsTarballWorkingDir>
     </PropertyGroup>
 

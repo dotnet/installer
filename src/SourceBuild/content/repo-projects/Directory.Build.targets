@@ -210,8 +210,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)CreateBuildInputProps.complete">
     <ItemGroup>
-      <_CurrentSourceBuiltPackages Include="$(ArtifactsShippingPackagesDir)*.nupkg;
-                                            $(ArtifactsNonShippingPackagesDir)*.nupkg"
+      <_CurrentSourceBuiltPackages Include="$(ArtifactsPackagesDir)**\*.nupkg"
                                    Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
       <_PreviouslyBuiltSourceBuiltPackages Include="$(PrebuiltSourceBuiltPackagesPath)*.nupkg" />
     </ItemGroup>
@@ -332,7 +331,8 @@
 
     <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(RepoConsoleLogFile)'));
                           $(ArtifactsShippingPackagesDir);
-                          $(ArtifactsNonShippingPackagesDir)" />
+                          $(ArtifactsNonShippingPackagesDir);
+                          $(ArtifactsAssetsDir)" />
 
     <!-- Create directories for extra debugging. -->
     <MakeDir Directories="$(MSBuildDebugPathTargetDir);
@@ -375,12 +375,12 @@
 
    <!-- Error if a repository doesn't produce any shipping or non-shipping artifacts. -->
     <ItemGroup Condition="'@(RepoManifestArtifact)' == ''">
-      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the repo build." />
-      <_PackagesNotCreatedReason Include="^ To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" Condition="'$(MinimalConsoleLogOutput)' == 'true'" />
-      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check RepoManifestFile in $(MSBuildProjectFullPath) (currently '$(RepoManifestFile)')" />
+      <_ArtifactsNotCreatedReason Include="^ There may have been a silent failure in the repo build." />
+      <_ArtifactsNotCreatedReason Include="^ To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" Condition="'$(MinimalConsoleLogOutput)' == 'true'" />
+      <_ArtifactsNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check RepoManifestFile in $(MSBuildProjectFullPath) (currently '$(RepoManifestFile)')" />
     </ItemGroup>
 
-    <Error Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_PackagesNotCreatedReason, '%0A')"
+    <Error Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_ArtifactsNotCreatedReason, '%0A')"
            Condition="'@(RepoManifestArtifact)' == ''" />
 
     <!-- Log the new repo artifacts -->
@@ -394,19 +394,24 @@
       <RepoManifestArtifact Remove="@(RepoSymbolsArchive)" />
     </ItemGroup>
 
-    <!-- Prepare the repo manifest artifacts and group them by shipping and non-shipping. -->
     <ItemGroup>
-      <RepoManifestNonShippingArtifact Include="@(RepoManifestArtifact)"
-                                       Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))">
+      <RepoManifestPackage Include="@(RepoManifestArtifact->WithMetadataValue('Extension', '.nupkg'))" />
+      <RepoManifestAsset Include="@(RepoManifestArtifact)" Exclude="@(RepoManifestPackage)" />
+    </ItemGroup>
+
+    <!-- Prepare the repo manifest packages and group them by shipping and non-shipping. -->
+    <ItemGroup>
+      <RepoManifestNonShippingPackage Include="@(RepoManifestPackage)"
+                                      Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))">
         <DestinationFolder Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$(ArtifactsNonShippingPackagesDir)</DestinationFolder>
         <DestinationFolder Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</DestinationFolder>
-      </RepoManifestNonShippingArtifact>
+      </RepoManifestNonShippingPackage>
 
-      <RepoManifestShippingArtifact Include="@(RepoManifestArtifact)"
-                                    Exclude="@(RepoManifestNonShippingArtifact)">
+      <RepoManifestShippingPackage Include="@(RepoManifestPackage)"
+                                   Exclude="@(RepoManifestNonShippingPackage)">
         <DestinationFolder Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$(ArtifactsShippingPackagesDir)</DestinationFolder>
         <DestinationFolder Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</DestinationFolder>
-      </RepoManifestShippingArtifact>
+      </RepoManifestShippingPackage>
     </ItemGroup>
 
     <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
@@ -414,15 +419,20 @@
     <RemoveDir Directories="$(ReferencePackagesDir)"
                Condition="'$(RepositoryName)' == 'source-build-reference-packages'" />
 
-    <!-- Copy shipping assets -->
-    <Copy SourceFiles="@(RepoManifestShippingArtifact)"
-          DestinationFolder="%(RepoManifestShippingArtifact.DestinationFolder)"
-          Condition="'@(RepoManifestShippingArtifact)' != ''" />
+    <!-- Copy shipping packages -->
+    <Copy SourceFiles="@(RepoManifestShippingPackage)"
+          DestinationFolder="%(RepoManifestShippingPackage.DestinationFolder)"
+          Condition="'@(RepoManifestShippingPackage)' != ''" />
 
-    <!-- Copy non-shipping assets -->
-    <Copy SourceFiles="@(RepoManifestNonShippingArtifact)"
-          DestinationFolder="%(RepoManifestNonShippingArtifact.DestinationFolder)"
-          Condition="'@(RepoManifestNonShippingArtifact)' != ''" />
+    <!-- Copy non-shipping packages -->
+    <Copy SourceFiles="@(RepoManifestNonShippingPackage)"
+          DestinationFolder="%(RepoManifestNonShippingPackage.DestinationFolder)"
+          Condition="'@(RepoManifestNonShippingPackage)' != ''" />
+
+    <!-- Copy assets -->
+    <Copy SourceFiles="@(RepoManifestAsset)"
+          DestinationFolder="$(ArtifactsAssetsDir)"
+          Condition="'@(RepoManifestAsset)' != ''" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)CopyRepoArtifacts.complete" AlwaysCreate="true">

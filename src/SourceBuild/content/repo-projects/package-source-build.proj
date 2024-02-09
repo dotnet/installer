@@ -34,10 +34,8 @@
       Condition="'@(SourceBuildReferencePackagesNupkgFiles)' != ''" />
 
     <!-- Copy packages to staging dir. -->
-    <Copy
-      SourceFiles="@(ArtifactsShippingPackagesDir);
-                   @(ArtifactsNonShippingPackagesDir)"
-      DestinationFolder="$(SourceBuildTarballStagingDir)" />
+    <Copy SourceFiles="$(ArtifactsPackagesDir)**\*.nupkg"
+          DestinationFolder="$(SourceBuildTarballStagingDir)" />
 
     <PropertyGroup>
       <SourceBuiltTarballName>$(ArtifactsShippingPackagesDir)$(SourceBuiltArtifactsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SourceBuiltTarballName>
