@@ -139,7 +139,6 @@ jobs:
           vmrPath: $(vmrPath)
           vmrBranch: ${{ parameters.vmrBranch }}
           targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
-          architecture: ${{ parameters.architecture }}
 
   - ${{ if parameters.buildFromArchive }}:
     - script: |
@@ -400,7 +399,7 @@ jobs:
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts/${{ parameters.architecture }}/Release/'
+  - publish: '$(sourcesPath)/artifacts/packages/Release/'
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
     condition: succeededOrFailed()
