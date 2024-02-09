@@ -4,6 +4,7 @@ Date: Fri, 9 Feb 2024 10:59:55 -0800
 Subject: [PATCH] Don't error when file copy fails due to locking until all the
  backoffs have failed
 
+Backport: https://github.com/dotnet/winforms/pull/10858
 ---
  eng/SourceBuild.props | 1 +
  1 file changed, 1 insertion(+)
