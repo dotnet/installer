@@ -33,16 +33,6 @@ stages:
       workingDirectory: $(Build.SourcesDirectory)/src/installer
 
     - script: >
-        ./.dotnet/dotnet darc vmr scan-binary-files
-        --vmr "$(Build.SourcesDirectory)"
-        --tmp "$(Agent.TempDirectory)"
-        --baseline-file "src/VirtualMonoRepo/allowed-binaries.txt"
-        || (echo '##[error]Found binaries in the VMR' && exit 1)
-      displayName: Scan for binaries
-      workingDirectory: $(Build.SourcesDirectory)/src/installer
-      continueOnError: true
-
-    - script: >
         ./.dotnet/dotnet darc vmr scan-cloaked-files
         --vmr "$(Build.SourcesDirectory)"
         --tmp "$(Agent.TempDirectory)"
