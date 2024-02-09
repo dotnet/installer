@@ -52,7 +52,6 @@
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateNuGetConfigPackageSourcesMappings" />
@@ -374,13 +373,28 @@
         <Output TaskParameter="Result" ItemName="RepoManifestArtifact" />
     </XmlPeek>
 
+   <!-- Error if a repository doesn't produce any shipping or non-shipping artifacts. -->
+    <ItemGroup Condition="'@(RepoManifestArtifact)' == ''">
+      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the repo build." />
+      <_PackagesNotCreatedReason Include="^ To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" Condition="'$(MinimalConsoleLogOutput)' == 'true'" />
+      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check RepoManifestFile in $(MSBuildProjectFullPath) (currently '$(RepoManifestFile)')" />
+    </ItemGroup>
+
+    <Error Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_PackagesNotCreatedReason, '%0A')"
+           Condition="'@(RepoManifestArtifact)' == ''" />
+
+    <!-- Log the new repo artifacts -->
+    <Message Importance="High" Text="New artifact(s) after building $(RepositoryName):" />
+    <Message Importance="High" Text="  -> %(RepoManifestArtifact.Filename)%(RepoManifestArtifact.Extension)" />
+
+    <!-- The repo symbol archive shouldn't be copied. -->
     <ItemGroup>
-      <!-- The repo symbol archive shouldn't be copied. -->
       <RepoSymbolsArchive Include="@(RepoManifestArtifact)"
                           Condition="$([System.String]::Copy('%(Identity)').EndsWith('Symbols.$(RepositoryName)$(ArchiveExtension)'))" />
       <RepoManifestArtifact Remove="@(RepoSymbolsArchive)" />
     </ItemGroup>
 
+    <!-- Prepare the repo manifest artifacts and group them by shipping and non-shipping. -->
     <ItemGroup>
       <RepoManifestNonShippingArtifact Include="@(RepoManifestArtifact)"
                                        Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))">
@@ -520,50 +534,16 @@
 
   <Target Name="ExtractSymbolsArchiveFile"
           DependsOnTargets="CopyRepoArtifacts"
-          Condition="'$(IsUtilityProject)' != 'true' and @(RepoSymbolsArchive->Count()) > 0"
+          Condition="'$(IsUtilityProject)' != 'true' and '@(RepoSymbolsArchive)' != ''"
           Inputs="@(RepoSymbolsArchive)"
           Outputs="$(IntermediateSymbolsRepoDir)">
 
     <Error Text="There must only be a single repository symbols archive file. Found: @(RepoSymbolsArchive)"
-           Condition="@(RepoSymbolsArchive->Count()) > 1" />
+           Condition="@(RepoSymbolsArchive->Count()) &gt; 1" />
 
     <!-- Extract repo symbols tarball -->
     <MakeDir Directories="$(IntermediateSymbolsRepoDir)" />
     <Exec Command="tar -xzf %(RepoSymbolsArchive.Identity) -C $(IntermediateSymbolsRepoDir)" />
-  </Target>
-
-  <Target Name="EnsurePackagesCreated"
-          DependsOnTargets="CopyRepoArtifacts"
-          Condition="'$(SkipEnsurePackagesCreated)' != 'true' and '$(IsUtilityProject)' != 'true'"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(BaseIntermediateOutputPath)EnsurePackagesCreated.complete">
-    <ItemGroup>
-      <JustSourceBuiltPackages Include="@(RepoManifestArtifact)"
-                               Condition="'%(Extension)' == '.nupkg' and
-                                          !$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
-      <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
-      <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(CurrentSourceBuiltPackageVersionPropsPath)" />
-      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check RepoManifestFile in $(MSBuildProjectFullPath) (currently '$(RepoManifestFile)')" />
-    </ItemGroup>
-
-    <Error Condition="'@(JustSourceBuiltPackages)' == ''"
-           Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_PackagesNotCreatedReason, '%0A')" />
-
-    <ReadNuGetPackageInfos PackagePaths="@(JustSourceBuiltPackages)">
-      <Output TaskParameter="PackageInfoItems" ItemName="_JustSourceBuiltPackageInfos" />
-    </ReadNuGetPackageInfos>
-
-    <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
-    <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
-
-    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
-    <Touch Files="$(BaseIntermediateOutputPath)EnsurePackagesCreated.complete" AlwaysCreate="true">
-      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-    </Touch>
   </Target>
 
   <Target Name="Build"
@@ -571,7 +551,6 @@
     BuildRepoReferences;
     RepoBuild;
     CopyRepoArtifacts;
-    EnsurePackagesCreated;
     CopyInnerBuildRestoredPackages;
     ExtractToolPackage;
     ExtractSymbolsArchiveFile;
