@@ -43,7 +43,7 @@
           Condition="'@(ArtifactsPackage)' != ''" />
 
     <PropertyGroup>
-      <SourceBuiltTarballName>$(ArtifactsShippingPackagesDir)$(SourceBuiltArtifactsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SourceBuiltTarballName>
+      <SourceBuiltTarballName>$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SourceBuiltTarballName>
       <SourceBuiltVersionFileName>.version</SourceBuiltVersionFileName>
     </PropertyGroup>
 

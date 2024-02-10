@@ -411,4 +411,3 @@ jobs:
     - publish: '$(sourcesPath)/artifacts/packages/Release/'
       artifact: $(Agent.JobName)_Packages
       displayName: Publish Packages
-      condition: ${{ parameters.buildSourceOnly }}
