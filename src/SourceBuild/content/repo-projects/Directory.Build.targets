@@ -33,6 +33,7 @@
   <!-- Exclude repositories that currently don't build when not building source-only. -->
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
     <RepositoryReference Remove="roslyn" />
+    <RepositoryReference Remove="msbuild" />
     <RepositoryReference Remove="razor" />
     <RepositoryReference Remove="deployment-tools" />
     <RepositoryReference Remove="format" />
