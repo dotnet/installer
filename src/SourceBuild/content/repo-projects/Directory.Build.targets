@@ -84,7 +84,7 @@
       <SourceBuiltShippingNuGetSourceName>source-built</SourceBuiltShippingNuGetSourceName>
       <!-- Feed for the non-shipping live built packages -->
       <SourceBuiltNonShippingNuGetSourceName>source-built-transport</SourceBuiltNonShippingNuGetSourceName>
-      <SourceBuildSources>$(SourceBuiltShippingNuGetSourceName);SourceBuiltNonShippingNuGetSourceName</SourceBuildSources>
+      <SourceBuildSources>$(SourceBuiltShippingNuGetSourceName);$(SourceBuiltNonShippingNuGetSourceName)</SourceBuildSources>
 
       <!-- Dev innerloop opt-in feed: /p:ExtraRestoreSourcePath=... -->
       <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
