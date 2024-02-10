@@ -34,6 +34,7 @@
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
     <RepositoryReference Remove="roslyn" />
     <RepositoryReference Remove="msbuild" />
+    <RepositoryReference Remove="aspnetcore" />
     <RepositoryReference Remove="razor" />
     <RepositoryReference Remove="deployment-tools" />
     <RepositoryReference Remove="format" />
