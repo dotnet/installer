@@ -178,9 +178,19 @@ function BootstrapArtifacts {
 
 function RemoveBinaries {
   echo "  Removing binaries..."
+  allowedBinariesFile="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+
+  # These files are classified as binary when they are not. This is a workaround for that.
+  pathsToIgnore=(
+    "*.txt"
+    "*.json"
+    "*.cs"
+    "*.resx"
+    "*.js"
+  )
 
   # Define the paths to ignore when removing binaries
-  pathsToIgnore=(
+  pathsToIgnore+=(
     "*.git*"
     "*.dotnet*"
     "*artifacts*"
@@ -193,11 +203,11 @@ function RemoveBinaries {
   )
 
   # Also ignore paths in allowed-binaries.txt
-  if [ -f "$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt" ]; then
+  if [ -f $allowedBinariesFile ]; then
     while IFS= read -r line
     do
       pathsToIgnore+=("$line")
-    done < "$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+    done < $allowedBinariesFile
   fi
 
   # Define the find command
@@ -205,7 +215,7 @@ function RemoveBinaries {
   for path in "${pathsToIgnore[@]}"; do
     findCmd+=" -not -path \"$path\""
   done
-  findCmd+=" -print0 | xargs -0 grep -IL . | tee /dev/tty | xargs rm -f"
+  findCmd+=" -print0 | xargs -0 grep -IL . | xargs -I{} file --mime-type "{}" | grep -v 'text\|xml\|json\|x-empty' | cut -d: -f1 | tee /dev/stderr | xargs rm -f"
 
   # Run the find command to remove the binaries
   eval $findCmd
