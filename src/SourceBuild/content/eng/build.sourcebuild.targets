@@ -82,13 +82,16 @@
           Condition="'$(EnablePoison)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ReportPoisonUsage.complete" >
+    <!-- Exclude the Private.SourceBuilt.* archives from poison usage scan and include nuget packages from the shipping directory. -->
     <ItemGroup>
-      <FinalCliTarball Include="$(ArtifactsAssetsDir)*$(ArchiveExtension)" />
+      <PoisonFileToCheck Include="$(ArtifactsAssetsDir)*$(ArchiveExtension)"
+                         Condition="!$([System.String]::Copy('%(Identity)').StartsWith('$(SourceBuiltArtifactsTarballName)'))" />
+      <PoisonFileToCheck Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
     </ItemGroup>
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Checking @(FinalCliTarball) for poisoned files." />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Checking @(PoisonFileToCheck) for poisoned files." />
 
-    <CheckForPoison FilesToCheck="@(FinalCliTarball)"
+    <CheckForPoison FilesToCheck="@(PoisonFileToCheck)"
                     ProjectDirPath="$(RepoRoot)"
                     HashCatalogFilePath="$(PoisonReportDataFile)"
                     MarkerFileName="$(PoisonMarkerFile)"
