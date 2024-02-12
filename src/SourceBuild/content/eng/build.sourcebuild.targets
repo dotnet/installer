@@ -82,11 +82,14 @@
           Condition="'$(EnablePoison)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ReportPoisonUsage.complete" >
-    <!-- Exclude the Private.SourceBuilt.* archives from poison usage scan and include nuget packages from the shipping directory. -->
     <ItemGroup>
+      <!-- Exclude the Private.SourceBuilt.Artifacts archive from poison usage scan. -->
       <PoisonFileToCheck Include="$(ArtifactsAssetsDir)*$(ArchiveExtension)"
                          Condition="!$([System.String]::Copy('%(Identity)').StartsWith('$(SourceBuiltArtifactsTarballName)'))" />
+      <!-- Include shipping nuget packages. -->
       <PoisonFileToCheck Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
+      <!-- Add and mark SBRP packages to validate that they have the correct poison attribute. -->
+      <PoisonFileToCheck Include="$(ReferencePackagesDir)**\*.nupkg" IsSourceBuildReferencePackage="true" />
     </ItemGroup>
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Checking @(PoisonFileToCheck) for poisoned files." />

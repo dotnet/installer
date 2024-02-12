@@ -28,6 +28,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// The files to check for poison and/or hash matches.  Zips and
         /// nupkgs will be extracted and checked recursively.
         /// %(Identity): Path to the initial set of files.
+        /// Add SourceBuildReferencePackage metadata and set to true to
+        /// indicate that the file comes from SBRP.
         /// </summary>
         [Required]
         public ITaskItem[] FilesToCheck { get; set; }
@@ -147,11 +149,13 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
         private const string SbrpAttributeType = "System.Reflection.AssemblyMetadataAttribute";
 
-        private record CandidateFileEntry(string ExtractedPath, string DisplayPath);
+        private const string SbrpMetadataName = "IsSourceBuildReferencePackage";
+
+        private record CandidateFileEntry(string ExtractedPath, string DisplayPath, bool IsSourceBuildReferencePackage);
 
         public override bool Execute()
         {
-            IEnumerable<PoisonedFileEntry> poisons = GetPoisonedFiles(FilesToCheck.Select(f => f.ItemSpec), HashCatalogFilePath, MarkerFileName);
+            IEnumerable<PoisonedFileEntry> poisons = GetPoisonedFiles(FilesToCheck, HashCatalogFilePath, MarkerFileName);
 
             // if we should write out the poison report, do that
             if (!string.IsNullOrWhiteSpace(PoisonReportOutputFilePath))
@@ -179,12 +183,14 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <param name="catalogedPackagesFilePath">File path to the file hash catalog</param>
         /// <param name="markerFileName">Marker file name to check for in poisoned nupkgs</param>
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
-        internal IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
+        internal IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<ITaskItem> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<CandidateFileEntry>(initialCandidates.Select(candidate =>
-                new CandidateFileEntry(candidate, Utility.MakeRelativePath(candidate, ProjectDirPath))));
+                new CandidateFileEntry(candidate.ItemSpec,
+                    Utility.MakeRelativePath(candidate.ItemSpec, ProjectDirPath),
+                    candidate.GetMetadata(SbrpMetadataName) == "true")));
 
             if (!string.IsNullOrWhiteSpace(OverrideTempPath))
             {
@@ -276,7 +282,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             try
             {
                 AssemblyName asm = AssemblyName.GetAssemblyName(fileToCheck);
-                if (!candidate.DisplayPath.Contains("SourceBuildReferencePackages") && IsAssemblyFromSbrp(fileToCheck))
+                if (!candidate.IsSourceBuildReferencePackage && IsAssemblyFromSbrp(fileToCheck))
                 {
                     poisonEntry.Type |= PoisonType.SourceBuildReferenceAssembly;
                 }
