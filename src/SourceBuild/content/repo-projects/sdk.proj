@@ -13,23 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
-    <RepositoryReference Include="aspnetcore" />
-    <RepositoryReference Include="command-line-api" />
     <RepositoryReference Include="deployment-tools" />
     <RepositoryReference Include="emsdk" />
     <RepositoryReference Include="format" />
     <RepositoryReference Include="fsharp" />
-    <RepositoryReference Include="msbuild" />
-    <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="razor" />
-    <RepositoryReference Include="roslyn" />
-    <RepositoryReference Include="roslyn-analyzers" />
-    <RepositoryReference Include="runtime" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="sourcelink" />
-    <RepositoryReference Include="symreader" />
     <RepositoryReference Include="templating" />
     <RepositoryReference Include="vstest" />
     <RepositoryReference Include="windowsdesktop" Condition="'$(TargetOS)' == 'windows'" />

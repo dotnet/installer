@@ -25,26 +25,6 @@
     <RepoManifestFile>$([MSBuild]::NormalizePath('$(ProjectDirectory)', 'artifacts', 'RepoManifest.xml'))</RepoManifestFile>
   </PropertyGroup>
 
-  <!-- Exclude repositories that currently don't build when not building source-only. -->
-  <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
-    <RepositoryReference Remove="roslyn" />
-    <RepositoryReference Remove="wpf" />
-    <RepositoryReference Remove="msbuild" />
-    <RepositoryReference Remove="roslyn-analyzers" />
-    <RepositoryReference Remove="aspnetcore" />
-    <RepositoryReference Remove="razor" />
-    <RepositoryReference Remove="deployment-tools" />
-    <RepositoryReference Remove="format" />
-    <RepositoryReference Remove="nuget-client" />
-    <RepositoryReference Remove="templating" />
-    <RepositoryReference Remove="test-templates" />
-    <RepositoryReference Remove="fsharp" />
-    <RepositoryReference Remove="vstest" />
-    <RepositoryReference Remove="sdk" />
-    <RepositoryReference Remove="aspire" />
-    <RepositoryReference Remove="installer" />
-  </ItemGroup>
-
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
@@ -55,9 +35,10 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
   
-  <Target Name="GetRepositoryReferenceInfo">
+  <Target Name="GetRepositoryReferenceInfo"
+          DependsOnTargets="GetTransitiveRepositoryReferences">
     <ItemGroup>
-      <RepositoryReferenceInfo Include="@(RepositoryReference)">
+      <RepositoryReferenceInfo Include="@(TransitiveRepositoryReference)">
         <SourceName>source-built-%(Identity)</SourceName>
         <PackagesPath>$(SourceBuiltBasePackagesPath)%(Identity)/</PackagesPath>
       </RepositoryReferenceInfo>
@@ -286,11 +267,12 @@
 
   <!-- SkipRepoReferences is a developer innerloop switch to skip building dependencies. -->
   <Target Name="BuildRepoReferences"
+          DependsOnTargets="GetTransitiveRepositoryReferences"
           Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
-    <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
+    <Message Importance="High" Text="Building dependencies [@(TransitiveRepositoryReference)] needed by '$(RepositoryName)'." />
 
     <ItemGroup>
-      <_DependentProject Include="@(RepositoryReference -> '%(Identity).proj')" />
+      <_DependentProject Include="@(TransitiveRepositoryReference -> '%(Identity).proj')" />
     </ItemGroup>
 
     <MSBuild Projects="@(_DependentProject)"

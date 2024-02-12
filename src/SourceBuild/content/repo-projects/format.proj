@@ -1,12 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
-    <RepositoryReference Include="command-line-api" />
     <RepositoryReference Include="msbuild" />
-    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="roslyn-analyzers" />
-    <RepositoryReference Include="runtime" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="sourcelink" />

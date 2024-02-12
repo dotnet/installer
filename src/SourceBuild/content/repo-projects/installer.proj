@@ -36,8 +36,26 @@
     <BuildArgs>$(BuildArgs) /p:UsePortableLinuxSharedFramework=false</BuildArgs>
   </PropertyGroup>
 
-  <!-- Import RepositoryReferences of installer from a shared file -->
-  <Import Project="$(MSBuildThisFileDirectory)installer-deps.props" />
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="aspire" />
+    <RepositoryReference Include="aspnetcore" />
+    <RepositoryReference Include="command-line-api" />
+    <RepositoryReference Include="deployment-tools" />
+    <RepositoryReference Include="emsdk" />
+    <RepositoryReference Include="fsharp" />
+    <RepositoryReference Include="msbuild" />
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="runtime" />
+    <RepositoryReference Include="scenario-tests" />
+    <RepositoryReference Include="sdk" />
+    <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+    <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+    <RepositoryReference Include="symreader" />
+    <RepositoryReference Include="test-templates" />
+    <RepositoryReference Include="vstest" />
+  </ItemGroup>
 
   <!--
     If we have authentication, keep the templating internal feed (if one exists) to acquire the
