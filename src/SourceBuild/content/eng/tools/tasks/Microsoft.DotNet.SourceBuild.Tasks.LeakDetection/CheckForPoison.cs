@@ -430,7 +430,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             {
                 string displayPath = $"{candidate.DisplayPath}/{child.Replace(tempDir, string.Empty).TrimStart(Path.DirectorySeparatorChar)}";
 
-                futureFilesToCheck.Enqueue(new CandidateFileEntry(child, displayPath));
+                futureFilesToCheck.Enqueue(new CandidateFileEntry(child, displayPath, candiate.IsSourceBuildReferencePackage));
             }
 
             return poisonEntry.Type != PoisonType.None ? poisonEntry : null;
