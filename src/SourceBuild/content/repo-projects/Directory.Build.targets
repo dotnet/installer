@@ -798,4 +798,83 @@
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
   <Target Name="GetRepositoryReferences" Outputs="@(RepositoryReference)" />
 
+  <!-- Returns the repository references of this project and all the projects this project references, recursively -->
+  <Target Name="GetTransitiveRepositoryReferences" Outputs="@(TransitiveRepositoryReference)">
+    <ItemGroup>
+      <_TransitiveRepositoryReference Include="@(RepositoryReference)" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(RepositoryReference->'%(Identity).proj')"
+             Targets="GetTransitiveRepositoryReferences">
+      <Output TaskParameter="TargetOutputs" ItemName="_DependencyTransitiveRepositoryReference" />
+    </MSBuild>
+
+    <!-- When items are transferred between projects, they get metadata indicating their source (e.g. MSBuildSourceProjectFile).
+         This is problematic because it causes introduces distinctness on the items. For example, an arcade RepositoryReference
+         that comes from both msbuild and source-build-externals will be treated as two separate items. But we only want one arcade
+         reference. To prevent this from happening, we need to remove the extra metadata so the two references can be seen as duplicates. -->
+    <ItemGroup>
+      <_TransitiveRepositoryReference Include="@(_DependencyTransitiveRepositoryReference)"
+                                      RemoveMetadata="MSBuildSourceProjectFile;MSBuildSourceTargetName;OriginalItemSpec" />
+      <TransitiveRepositoryReference Include="@(_TransitiveRepositoryReference)" KeepDuplicates="false" />
+    </ItemGroup>
+
+    <!-- Exclude repositories that currently don't build when not building source-only. -->
+    <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
+      <TransitiveRepositoryReference Remove="roslyn" />
+      <TransitiveRepositoryReference Remove="wpf" />
+      <TransitiveRepositoryReference Remove="msbuild" />
+      <TransitiveRepositoryReference Remove="roslyn-analyzers" />
+      <TransitiveRepositoryReference Remove="aspnetcore" />
+      <TransitiveRepositoryReference Remove="razor" />
+      <TransitiveRepositoryReference Remove="deployment-tools" />
+      <TransitiveRepositoryReference Remove="format" />
+      <TransitiveRepositoryReference Remove="nuget-client" />
+      <TransitiveRepositoryReference Remove="templating" />
+      <TransitiveRepositoryReference Remove="test-templates" />
+      <TransitiveRepositoryReference Remove="fsharp" />
+      <TransitiveRepositoryReference Remove="vstest" />
+      <TransitiveRepositoryReference Remove="sdk" />
+      <TransitiveRepositoryReference Remove="aspire" />
+      <TransitiveRepositoryReference Remove="installer" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Outputs a dependency graph of the repos, in YAML form, to the console. -->
+  <Target Name="ShowDependencyGraph">
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="GetDependencyGraphString"
+             Properties="DependencyGraphIndent=">
+      <Output TaskParameter="TargetOutputs" PropertyName="DependencyGraphString" />
+    </MSBuild>
+
+    <!-- Replace the '_' placeholder with spaces -->
+    <Message Importance="High" Text="$(DependencyGraphString.Replace('_', ' ').Trim())" />
+  </Target>
+
+  <!-- Recursively walks the repo dependency graph gathering each repo's dependencies which are returned as a YAML string representation -->
+  <Target Name="GetDependencyGraphString"
+          DependsOnTargets="GetTransitiveRepositoryReferences"
+          Outputs="$(DependencyGraphString)">
+    <PropertyGroup>
+      <!-- Each step deeper in the graph builds up the indentation used for the YAML representation.
+           Use '_' as a placeholder for the space ' ' character since trailing spaces aren't handled well as property values. -->
+      <_NextIndent>$(DependencyGraphIndent)__</_NextIndent>
+    </PropertyGroup>
+    
+    <!-- For each of the current project's direct repo dependencies, recursively call the target to get each of there dependency graphs -->
+    <MSBuild Projects="@(RepositoryReference->'%(Identity).proj')"
+             Targets="GetDependencyGraphString"
+             Properties="DependencyGraphIndent=$(_NextIndent)">
+      <Output TaskParameter="TargetOutputs" ItemName="_DependencyGraphString" />
+    </MSBuild>
+
+    <!-- Append all the separate dependency graph snippets together -->
+    <PropertyGroup>
+      <!-- Ensure the item `;` separators are removed from the the target output -->
+      <_DependencyGraphString>@(_DependencyGraphString, '')</_DependencyGraphString>
+      <_LineBreak>%0a</_LineBreak>
+      <DependencyGraphString>$(DependencyGraphIndent)-_$(RepositoryName)$(_LineBreak)$(_DependencyGraphString)</DependencyGraphString>
+    </PropertyGroup>
+  </Target>
 </Project>
