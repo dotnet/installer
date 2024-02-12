@@ -85,7 +85,7 @@
     <ItemGroup>
       <!-- Exclude the Private.SourceBuilt.Artifacts archive from poison usage scan. -->
       <PoisonFileToCheck Include="$(ArtifactsAssetsDir)*$(ArchiveExtension)"
-                         Condition="!$([System.String]::Copy('%(Identity)').StartsWith('$(SourceBuiltArtifactsTarballName)'))" />
+                         Condition="!$([System.String]::Copy('%(Filename)').StartsWith('$(SourceBuiltArtifactsTarballName)'))" />
       <!-- Include shipping nuget packages. -->
       <PoisonFileToCheck Include="$(ArtifactsShippingPackagesDir)*.nupkg" />
       <!-- Add and mark SBRP packages to validate that they have the correct poison attribute. -->
