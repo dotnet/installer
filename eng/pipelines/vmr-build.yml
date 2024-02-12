@@ -56,7 +56,7 @@ stages:
       isBuiltFromVmr: false
       isSourceOnlyBuild: ${{ variables.isSourceOnlyBuild }}
       ${{ if eq(variables.isSourceOnlyBuild, 'true') }}:
-        scope: full
+        scope: ultralite
       ${{ else }}:
         scope: full
 
