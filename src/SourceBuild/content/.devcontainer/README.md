@@ -11,13 +11,20 @@
 This Codespace can help you debug the source build of .NET. This build takes about
 45 minutes and, after completion, produces an archived .NET SDK located in
 `/workspaces/dotnet/artifacts/x64/Release`. In case you selected the `prebuilt-sdk`
-Codespace, the SDK will already be there.
+Codespace, the built-from-source SDK will already be there.
 
 ## Build the SDK
 
-To build the VMR, run following:
+To build the repository, run one of the following:
 ```bash
-./prep.sh && ./build.sh --online
+# Microsoft based build
+./build.sh
+```
+or
+
+```bash
+# Building from source only
+./prep.sh && ./build.sh -sb
 ```
 
 > Please note that, at this time, the build modifies some of the checked-in sources so it might
