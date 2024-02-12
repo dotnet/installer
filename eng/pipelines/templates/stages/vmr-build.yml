@@ -436,6 +436,7 @@ stages:
               name: ${{ variables.defaultPoolName }}
               demands: ${{ variables.defaultPoolDemandsLinux }}
             container: ${{ variables.androidCrossContainer }}
+            crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: arm64
 
@@ -449,6 +450,7 @@ stages:
               name: ${{ variables.defaultPoolName }}
               demands: ${{ variables.defaultPoolDemandsLinux }}
             container: ${{ variables.androidCrossContainer }}
+            crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: x64
 
