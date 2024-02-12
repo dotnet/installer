@@ -6,13 +6,13 @@ Subject: [PATCH] Fix missing short stack define
 Backport: https://github.com/dotnet/runtime/pull/98128
 
 ---
- eng/SourceBuild.props | 1 +
+ eng/DotNetBuild.props | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/eng/SourceBuild.props b/eng/SourceBuild.props
+diff --git a/eng/DotNetBuild.props b/eng/DotNetBuild.props
 index f0637cad996c40..aa8d466378caec 100644
---- a/eng/SourceBuild.props
-+++ b/eng/SourceBuild.props
+--- a/eng/DotNetBuild.props
++++ b/eng/DotNetBuild.props
 @@ -32,6 +32,7 @@
      <ShortStack Condition="'$(TargetOS)' == 'tvossimulator'">true</ShortStack>
      <ShortStack Condition="'$(TargetOS)' == 'maccatalyst'">true</ShortStack>
