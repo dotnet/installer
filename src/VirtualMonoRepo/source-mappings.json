@@ -36,30 +36,14 @@
     // The default filters do not apply to submodules
     // Only filters which start with submodule's path are applied when syncing submodules
     "defaults": {
-        "defaultRef": "main",
-        "exclude": [
-            "**/*.dll",
-            "**/*.Dll",
-            "**/*.exe",
-            "**/*.mdb",
-            "**/*.nupkg",
-            "**/*.pdb",
-            "**/*.tgz",
-            "**/*.zip"
-        ]
+        "defaultRef": "main"
     },
 
     // Each of these mappings has a corresponding folder in the src/ directory
     "mappings": [
         {
             "name": "arcade",
-            "defaultRemote": "https://github.com/dotnet/arcade",
-            "include": [
-                "src/Microsoft.DotNet.Build.Tasks.Feed.Tests/**/*",
-                "src/Microsoft.DotNet.Build.Tasks.Workloads.Tests/**/*",
-                "src/Microsoft.DotNet.NuGetRepack/tests/**/*",
-                "src/Microsoft.DotNet.SignTool.Tests/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/arcade"
         },
         {
             "name": "aspire",
@@ -71,24 +55,14 @@
         {
             "name": "aspnetcore",
             "defaultRemote": "https://github.com/dotnet/aspnetcore",
-            "include": [
-                "src/Servers/IIS/AspNetCoreModuleV2/CommonLibTests/Fake/**/*",
-                "src/submodules/MessagePack-CSharp/**/*"
-            ],
             "exclude": [
                 // Non-OSS license - https://github.com/dotnet/source-build/issues/3537
-                "src/Installers/Windows/AspNetCoreModule-Setup/**/*"
+                "src/Installers/Windows/AspNetCoreModule-Setup/*"
             ]
         },
         {
             "name": "cecil",
-            "defaultRemote": "https://github.com/dotnet/cecil",
-            "include": [
-                "Test/Resources/assemblies/**/*",
-                "rocks/Test/Resources/**/*",
-                "symbols/mdb/Test/Resources/**/*",
-                "symbols/pdb/Test/Resources/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/cecil"
         },
         {
             "name": "command-line-api",
@@ -112,17 +86,7 @@
         },
         {
             "name": "fsharp",
-            "defaultRemote": "https://github.com/dotnet/fsharp",
-            "include": [
-                "tests/FSharp.Compiler.ComponentTests/**/*",
-                "tests/fsharp/core/attributes/**/*",
-                "tests/fsharp/core/ilread/**/*",
-                "tests/fsharp/regression/**/*",
-                "tests/fsharp/typecheck/full-rank-arrays/**/*",
-                "tests/fsharpqa/Source/**/*",
-                "tests/fsharpqa/testenv/bin/**/*",
-                "tests/service/data/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/fsharp"
         },
         {
             "name": "installer",
@@ -139,30 +103,15 @@
         {
             "name": "nuget-client",
             "defaultRemote": "https://github.com/NuGet/NuGet.Client",
-            "defaultRef": "dev",
-            "include": [
-                "test/EndToEnd/Packages/**/*",
-                "test/NuGet.Clients.Tests/**/*",
-                "test/NuGet.Core.FuncTests/**/*",
-                "test/NuGet.Core.Tests/**/*",
-                "test/TestUtilities/Test.Utility/**/*",
-                "src/NuGet.Clients/NuGet.VisualStudio.Client"
-            ]
+            "defaultRef": "dev"
         },
         {
             "name": "razor",
-            "defaultRemote": "https://github.com/dotnet/razor",
-            "include": [
-                "src/Razor/test/Microsoft.VisualStudio.Razor.IntegrationTests/TestFiles/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/razor"
         },
         {
             "name": "roslyn",
-            "defaultRemote": "https://github.com/dotnet/roslyn",
-            "include": [
-                "src/Compilers/Test/Resources/Core/**/*",
-                "src/Workspaces/MSBuildTest/Resources/Dlls/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/roslyn"
         },
         {
             "name": "roslyn-analyzers",
@@ -170,13 +119,7 @@
         },
         {
             "name": "runtime",
-            "defaultRemote": "https://github.com/dotnet/runtime",
-            "include": [
-                "src/libraries/Common/tests/**/*",
-                "src/libraries/System.Diagnostics.FileVersionInfo/tests/**/*",
-                "src/libraries/System.Private.Xml/tests/**/*",
-                "src/libraries/System.Reflection.Metadata/tests/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/runtime"
         },
         {
             "name": "scenario-tests",
@@ -184,20 +127,11 @@
         },
         {
             "name": "sdk",
-            "defaultRemote": "https://github.com/dotnet/sdk",
-            "include": [
-                "src/Assets/TestPackages/dotnet-new/nupkg_templates/**/*",
-                "test/Microsoft.DotNet.PackageInstall.Tests/**/*",
-                "test/Microsoft.DotNet.ShellShim.Tests/**/*",
-                "test/Microsoft.NET.Sdk.Publish.Tasks.Tests/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/sdk"
         },
         {
             "name": "source-build-externals",
             "defaultRemote": "https://github.com/dotnet/source-build-externals",
-            "include": [
-                "src/application-insights/WEB/Src/WindowsServer/WindowsServer.Tests/*/**"
-            ],
             "exclude": [
                 "src/application-insights/**/NuGet.config",
                 "src/humanizer/samples/**/*.js",
@@ -218,37 +152,19 @@
         },
         {
             "name": "symreader",
-            "defaultRemote": "https://github.com/dotnet/symreader",
-            "include": [
-                "src/PdbTestResources/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/symreader"
         },
         {
             "name": "templating",
-            "defaultRemote": "https://github.com/dotnet/templating",
-            "include": [
-                "test/Microsoft.TemplateEngine.TestTemplates/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/templating"
         },
         {
             "name": "test-templates",
-            "defaultRemote": "https://github.com/dotnet/test-templates",
-            "include": [
-                "Templates/Desktop-CSharp/packages/**/*",
-                "Templates/Desktop-VisualBasic/packages/**/*",
-                "Templates/EdgeDriver-DotNetFramework-CSharp/packages/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/test-templates"
         },
         {
             "name": "vstest",
             "defaultRemote": "https://github.com/microsoft/vstest",
-            "include": [
-                "samples/Microsoft.TestPlatform.E2ETest/**/*",
-                "samples/Microsoft.TestPlatform.TranslationLayer.E2ETest/**/*",
-                "temp/cpp/**/*",
-                "test/Microsoft.TestPlatform.CoreUtilities.UnitTests/**/*",
-                "test/TestAssets/**/*"
-            ],
             "exclude": [
                 // Non-OSS license used in VS specific build configurations.
                 "src/package/licenses/LICENSE_VS.txt"
@@ -270,14 +186,11 @@
         },
         {
             "name": "winforms",
-            "defaultRemote": "https://github.com/dotnet/winforms",
-            "include": [
-                "src/System.Windows.Forms/tests/IntegrationTests/**/*"
-            ]
+            "defaultRemote": "https://github.com/dotnet/winforms"
         },
         {
             "name": "wpf",
-            "defaultRemote": "https://github.com/dotnet/wpf",
+            "defaultRemote": "https://github.com/dotnet/wpf"
         },
         {
             "name": "windowsdesktop",
