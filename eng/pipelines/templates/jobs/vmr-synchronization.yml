@@ -19,7 +19,7 @@ parameters:
 
 jobs:
 - job: Synchronize_VMR
-  displayName: Synchronize dotnet/dotnet
+  displayName: Synchronize VMR's ${{ parameters.vmrBranch }}
   timeoutInMinutes: 120
   variables:
   - template: /eng/common/templates/variables/pool-providers.yml
