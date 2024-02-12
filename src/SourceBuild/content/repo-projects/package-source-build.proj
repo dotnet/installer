@@ -7,10 +7,6 @@
     <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
   </PropertyGroup>
 
-  <ItemGroup>
-    <RepositoryReference Include="installer" />
-  </ItemGroup>
-
   <Target Name="CustomRepoBuild"
           AfterTargets="RepoBuild"
           DependsOnTargets="CreateBuildInputProps;DetermineSourceBuiltSdkVersion">
