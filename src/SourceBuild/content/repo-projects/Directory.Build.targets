@@ -34,7 +34,6 @@
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
     <RepositoryReference Remove="roslyn" />
     <RepositoryReference Remove="msbuild" />
-    <RepositoryReference Remove="sdk" />
     <RepositoryReference Remove="wpf" />
     <RepositoryReference Remove="aspnetcore" />
     <RepositoryReference Remove="razor" />
@@ -45,7 +44,6 @@
     <RepositoryReference Remove="fsharp" />
     <RepositoryReference Remove="vstest" />
     <RepositoryReference Remove="aspire" />
-    <RepositoryReference Remove="installer" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
