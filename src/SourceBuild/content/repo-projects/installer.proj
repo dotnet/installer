@@ -36,7 +36,7 @@
   <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="aspnetcore" />
-    <RepositoryReference Include="windowsdesktop" />
+    <RepositoryReference Include="windowsdesktop" Condition="'$(BuildOS)' == 'windows'" />
     <RepositoryReference Include="emsdk" />
     <RepositoryReference Include="fsharp" />
     <RepositoryReference Include="msbuild" />
