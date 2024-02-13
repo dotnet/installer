@@ -139,7 +139,6 @@ jobs:
           vmrPath: $(vmrPath)
           vmrBranch: ${{ parameters.vmrBranch }}
           targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
-          architecture: ${{ parameters.architecture }}
 
   - ${{ if parameters.buildFromArchive }}:
     - script: |
@@ -348,13 +347,17 @@ jobs:
 
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
-        CopyWithRelativeFolders "artifacts/prebuilt-report/" $targetFolder
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
         CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"
         CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.diff"
         CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.txt"
-      displayName: Prepare BuildLogs staging directory
+
+        # check if we have assets to publish
+        if (Test-Path "artifacts/assets/Release/*") {
+          echo "##vso[task.setvariable variable=hasAssets]true"
+        }
+      displayName: Prepare BuildLogs staging directory and check assets
       continueOnError: true
       condition: succeededOrFailed()
 
@@ -370,13 +373,20 @@ jobs:
         cd "$(sourcesPath)"
         find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+        if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
+          find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+        fi
         find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "Updated*.diff" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
-      displayName: Prepare BuildLogs staging directory
+
+        # check if we have assets to publish
+        if [ -n "$(ls -A 'artifacts/assets/Release/')" ]; then
+          echo "##vso[task.setvariable variable=hasAssets]true"
+        fi
+      displayName: Prepare BuildLogs staging directory and check assets
       continueOnError: true
       condition: succeededOrFailed()
 
@@ -400,8 +410,14 @@ jobs:
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts/${{ parameters.architecture }}/Release/'
+  - publish: '$(sourcesPath)/artifacts/assets/Release/'
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed(), eq(variables['hasAssets'], 'true'))
     continueOnError: true
+
+  # When building from source, the Private.SourceBuilt.Artifacts archive already contains the nuget packages
+  - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
+    - publish: '$(sourcesPath)/artifacts/packages/Release/'
+      artifact: $(Agent.JobName)_Packages
+      displayName: Publish Packages
