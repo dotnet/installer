@@ -15,13 +15,13 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
     <ProjectDirectory>$([MSBuild]::NormalizeDirectory('$(SrcDir)', '$(RepositoryName)'))</ProjectDirectory>
-    <PackagesOutput>$([MSBuild]::NormalizeDirectory('$(ProjectDirectory)', 'artifacts', 'packages', '$(Configuration)', 'NonShipping'))</PackagesOutput>
 
     <!-- Paths to the version props files -->
-    <PackageVersionPropsPath>$(SharedIntermediateOutputPath)PackageVersions.$(RepositoryName).props</PackageVersionPropsPath>
-    <CurrentSourceBuiltPackageVersionPropsPath>$(SharedIntermediateOutputPath)PackageVersions.$(RepositoryName).Current.props</CurrentSourceBuiltPackageVersionPropsPath>
-    <PreviouslySourceBuiltPackageVersionPropsPath>$(SharedIntermediateOutputPath)PackageVersions.$(RepositoryName).Previous.props</PreviouslySourceBuiltPackageVersionPropsPath>
-    <SnapshotPackageVersionPropsPath>$(SharedIntermediateOutputPath)PackageVersions.$(RepositoryName).Snapshot.props</SnapshotPackageVersionPropsPath>
+    <PackageVersionsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'PackageVersions'))</PackageVersionsDir>
+    <PackageVersionPropsPath>$(PackageVersionsDir)PackageVersions.$(RepositoryName).props</PackageVersionPropsPath>
+    <CurrentSourceBuiltPackageVersionPropsPath>$(PackageVersionsDir)PackageVersions.$(RepositoryName).Current.props</CurrentSourceBuiltPackageVersionPropsPath>
+    <PreviouslySourceBuiltPackageVersionPropsPath>$(PackageVersionsDir)PackageVersions.$(RepositoryName).Previous.props</PreviouslySourceBuiltPackageVersionPropsPath>
+    <SnapshotPackageVersionPropsPath>$(PackageVersionsDir)PackageVersions.$(RepositoryName).Snapshot.props</SnapshotPackageVersionPropsPath>
     <PackageVersionPropsFlowType>DependenciesOnly</PackageVersionPropsFlowType>
 
     <GlobalJsonFile Condition="'$(GlobalJsonFile)' == '' and Exists('$(ProjectDirectory)global.json')">$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -71,7 +71,8 @@
     <!-- Indicate that the build is being run from the orchestrator -->
     <BuildArgs>$(BuildArgs) /p:DotNetBuildOrchestrator=true</BuildArgs>
     <BuildArgs Condition="'$(CrossBuild)' == 'true'">$(BuildArgs) /p:CrossBuild=true</BuildArgs>
-    <BuildArgs Condition="'$(DotNetBuildSkipTests)' == 'true'">$(BuildArgs) /p:DotNetBuildSkipTests=true</BuildArgs>
+    <!-- Only pass when enabled to reduce command line noise. -->
+    <BuildArgs Condition="'$(DotNetBuildTests)' == 'true'">$(BuildArgs) /p:DotNetBuildTests=true</BuildArgs>
     <BuildArgs Condition="'$(NuGetConfigFile)' != ''">$(BuildArgs) /p:RestoreConfigFile=$(NuGetConfigFile)</BuildArgs>
   </PropertyGroup>
 
@@ -178,13 +179,19 @@
   <ItemGroup>
     <!-- The Arcade SDK is automatically registered while the others are opt-in for the repo projects. -->
     <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(arcadeOutputPackageVersion)" />
-    <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
+    <ArcadeSharedFrameworkSdkOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Group="ARCADE_SHARED_FX_SDK" Version="$(arcadeOutputPackageVersion)" />
+    <ArcadeCMakeSdkOverride Include="Microsoft.DotNet.CMake.Sdk" Group="ARCADE_CMAKE_SDK" Version="$(arcadeOutputPackageVersion)" />
+
     <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)"
                             Version="$(ArcadeBootstrapVersion)"
                             Location="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)"
                             Condition="'$(UseBootstrapArcade)' == 'true'" />
 
-    <ArcadeSharedFrameworkSdkOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Group="ARCADE_SHARED_FX_SDK" Version="$(arcadeOutputPackageVersion)" />
+    <!-- When not bootstrapping, use the just-built versions. -->
+    <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
+    <SourceBuiltSdkOverride Include="@(ArcadeCMakeSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
+    <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" Condition="'$(UseBootstrapArcade)' != 'true'" />
+
     <WindowsDesktopSdkOverride Include="Microsoft.Net.Sdk.WindowsDesktop" Group="WINDOWS_DESKTOP" Location="$(ToolsDir)EmptySdk" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
 
     <!--

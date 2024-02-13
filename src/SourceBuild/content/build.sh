@@ -57,8 +57,7 @@ scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
 # Set the NUGET_PACKAGES dir so that we don't accidentally pull some packages from the global location,
 # They should be pulled from the local feeds.
-packagesDir="$scriptroot/prereqs/packages/"
-packagesRestoredDir="${packagesDir}restored/"
+packagesRestoredDir="$scriptroot/.packages/"
 export NUGET_PACKAGES=$packagesRestoredDir/
 
 # Common settings
@@ -77,6 +76,7 @@ sourceRepository=''
 sourceVersion=''
 CUSTOM_PACKAGES_DIR=''
 CUSTOM_SDK_DIR=''
+packagesDir="$scriptroot/prereqs/packages/"
 packagesArchiveDir="${packagesDir}archive/"
 packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 
@@ -225,6 +225,9 @@ function Build {
 
       # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
       "$CLI_ROOT/dotnet" build-server shutdown
+
+      # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
+      export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
       "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
     fi

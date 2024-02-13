@@ -15,8 +15,8 @@
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)os $(TargetOS)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRid=$(TargetRid)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:BaseOS=$(BaseOS)</BuildArgs>
+    <BuildArgs Condition="'$(ShortStack)' != 'true'">$(BuildArgs) /p:RuntimeOS=$(RuntimeOS)</BuildArgs>
+    <BuildArgs Condition="'$(ShortStack)' != 'true'">$(BuildArgs) /p:BaseOS=$(BaseOS)</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -35,23 +35,11 @@
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
   </ItemGroup>
 
-  <ItemGroup>
-    <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_4_X" Version="%24(MicrosoftCodeAnalysisVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_4_4" Version="%24(MicrosoftCodeAnalysisVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_4_8" Version="%24(MicrosoftCodeAnalysisVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftCodeAnalysisVersion_LatestVS" Version="%24(MicrosoftCodeAnalysisVersion)" />
   </ItemGroup>
-
-  <Target Name="SetOutputList"
-          AfterTargets="Package"
-          BeforeTargets="GatherBuiltPackages">
-    <ItemGroup>
-      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
-      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
-    </ItemGroup>
-  </Target>
 
 </Project>
