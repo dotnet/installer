@@ -7,8 +7,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
-static class ZipExtensions
+static class ZipArchiveExtensions
 {
     public static List<string> Lines(this ZipArchiveEntry entry, Encoding? encoding = null)
     {
@@ -33,6 +34,17 @@ static class ZipExtensions
     public static ZipArchiveEntry GetNuspec(this ZipArchive package)
     {
         return package.Entries.Where(entry => entry.FullName.EndsWith(".nuspec")).Single();
+    }
+
+    public static (string? Name, string? Version) GetPackageNameAndVersion(this ZipArchive package)
+    {
+        var nuspecData = package.GetNuspec().ReadToString();
+
+        XDocument doc = XDocument.Parse(nuspecData);
+        XNamespace? ns = doc.Root?.GetDefaultNamespace() ?? "";
+        XElement? versionElement = doc.Root?.Element(ns + "metadata")?.Element(ns + "version");
+        XElement? nameElement = doc.Root?.Element(ns + "metadata")?.Element(ns + "id");
+        return (nameElement?.Value, versionElement?.Value);
     }
 
     public static byte[] ReadToEnd(this Stream stream)

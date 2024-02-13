@@ -1,73 +1,46 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
-using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Threading.Tasks;
 
-public class PackageDiff
+public abstract class PackageDiffBase: NugetPackageTaskBase
 {
-    public static async Task<int> Main(string[] args)
+    protected async Task<bool> DiffPackages(string baselinePackagePath, string testPackagePath)
     {
-        if (args.Length != 2)
+        var packages = await GetPackages(baselinePackagePath, testPackagePath);
+        if (packages is not (var baselinePackage, var testPackage))
         {
-            Console.WriteLine("Usage: PackageDiff <path-or-url-of-package1> <path-or-url-of-package2>");
-            return 1;
+            Log.LogWarning($"Will not compare {baselinePackagePath} and {testPackagePath} because at least one of the packages was not found");
+            return true;
         }
-
-        ZipArchive package1 = await GetZipArchiveAsync(args[0]);
-        ZipArchive package2 = await GetZipArchiveAsync(args[1]);
-        var diff = GetDiffs(package1, package2);
-        if (diff is not "")
-        {
-            Console.WriteLine(diff);
-            return 1;
-        }
-        return 0;
+        GetPackageDiffs(baselinePackage, testPackage);
+        return true;
     }
 
-    public static async Task<ZipArchive> GetZipArchiveAsync(string arg)
+    public bool GetPackageDiffs(ZipArchive package1, ZipArchive package2)
     {
-        if (File.Exists(arg))
-        {
-            return new ZipArchive(File.OpenRead(arg));
-        }
-        else if (Uri.TryCreate(arg, UriKind.RelativeOrAbsolute, out var uri))
-        {
-            var webClient = new HttpClient();
-            return new ZipArchive(await webClient.GetStreamAsync(uri));
-        }
-        else
-        {
-            throw new ArgumentException($"Invalid path or url to package1: {arg}");
-        }
-    }
-
-    public static string GetDiffs(ZipArchive package1, ZipArchive package2)
-    {
-        StringBuilder output = new();
-
+        bool noDiffs = true;
         if (TryGetDiff(package1.Entries.Select(entry => entry.FullName).ToList(), package2.Entries.Select(entry => entry.FullName).ToList(), out var fileDiffs))
         {
-            output.AppendLine("File differences:");
-            output.AppendLine(string.Join(Environment.NewLine, fileDiffs.Select(d => "  " + d)));
-            output.AppendLine();
+            Log.LogWarning("File differences:");
+            Log.LogWarning(string.Join(Environment.NewLine, fileDiffs.Select(d => "  " + d)));
+            Log.LogWarning("");
+            noDiffs = false;
         }
 
         if (TryGetDiff(package1.GetNuspec().Lines(), package2.GetNuspec().Lines(), out var editedDiff))
         {
-            output.AppendLine("Nuspec differences:");
-            output.AppendLine(string.Join(Environment.NewLine, editedDiff.Select(d => "  " + d)));
-            output.AppendLine();
+            Log.LogWarning("Nuspec differences:");
+            Log.LogWarning(string.Join(Environment.NewLine, editedDiff.Select(d => "  " + d)));
+            Log.LogWarning("");
+            noDiffs = false;
         }
         var dlls1 = package1.Entries.Where(entry => entry.FullName.EndsWith(".dll")).ToImmutableDictionary(entry => entry.FullName, entry => entry);
         var dlls2 = package2.Entries.Where(entry => entry.FullName.EndsWith(".dll")).ToImmutableDictionary(entry => entry.FullName, entry => entry);
@@ -83,14 +56,15 @@ public class PackageDiff
                     var version2 = new PEReader(dll2.Open().ReadToEnd().ToImmutableArray()).GetMetadataReader().GetAssemblyDefinition().Version.ToString();
                     if (version1 != version2)
                     {
-                        output.AppendLine($"Assembly {dllPath} has different versions: {version1} and {version2}");
+                        Log.LogWarning($"Assembly {dllPath} has different versions: {version1} and {version2}");
+                        noDiffs = false;
                     }
                 }
                 catch (InvalidOperationException)
                 { }
             }
         }
-        return output.ToString();
+        return noDiffs;
     }
 
     public static bool TryGetDiff(List<string> originalLines, List<string> modifiedLines, out List<string> formattedDiff)
@@ -156,5 +130,4 @@ public class PackageDiff
         formattedDiff.Reverse();
         return dp[originalLines.Count, modifiedLines.Count] != 0;
     }
-
 }

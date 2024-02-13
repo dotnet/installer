@@ -15,6 +15,7 @@
       UnpackTarballs;
       BuildXPlatTasks;
       BuildMSBuildSdkResolver;
+      BuildPackageDiff;
       BuildLeakDetection;
       ExtractToolPackage;
       GenerateRootFs;
@@ -110,6 +111,14 @@
     <Touch Files="$(BaseIntermediateOutputPath)BuildLeakDetection.complete" AlwaysCreate="true">
       <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
     </Touch>
+  </Target>
+
+  <Target Name="BuildPackageDiff" >
+    <MSBuild Projects="tasks\PackageDiff\PackageDiff.csproj"
+             Targets="Restore"
+             Properties="MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
+    <MSBuild Projects="tasks\PackageDiff\PackageDiff.csproj"
+             Targets="Build" />
   </Target>
 
   <Target Name="GenerateRootFs"

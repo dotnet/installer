@@ -1,0 +1,18 @@
+<Project>
+
+  <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="PackageDiff" />
+  <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="PackagesDiff" />
+  <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="GetClosestPackage" />
+  <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="GetClosestPackages" />
+  <Target Name="ReportPackageDiffs"
+          AfterTargets="Build">
+      <ItemGroup>
+          <PackagesToDiff Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
+      </ItemGroup>
+      <GetClosestPackages Packages="@(PackagesToDiff)" >
+        <Output TaskParameter="ClosestPackagePaths" ItemName="ClosestPackages" />
+      </GetClosestPackages>
+      <PackagesDiff BaselinePackages="@(ClosestPackages)" TestPackages="@(PackagesToDiff)" />
+  </Target>
+
+</Project>
