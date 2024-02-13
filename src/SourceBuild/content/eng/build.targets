@@ -5,7 +5,8 @@
   <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="GetClosestPackage" />
   <UsingTask AssemblyFile="$(PackageDiffTasksAssembly)" TaskName="GetClosestPackages" />
   <Target Name="ReportPackageDiffs"
-          AfterTargets="Build">
+          AfterTargets="Build"
+          Condition="'$(ReportPackageDiffs)' == 'true'">
       <ItemGroup>
           <PackagesToDiff Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
       </ItemGroup>
