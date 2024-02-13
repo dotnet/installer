@@ -27,7 +27,7 @@
     <BuildArgs Condition="'$(TargetOS)' != 'windows'">$(BuildArgs) /p:NetRuntimeRid=$(TargetRid)</BuildArgs>
 
     <!-- Consume the source-built blob assets from runtime, aspnetcore, etc. -->
-    <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(SourceBuiltAssetsDir)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(ArtifactsAssetsDir)</BuildArgs>
     <!-- In non-source-only scenarios, currently consume aspnetcore from the normal public base url -->
     <BuildArgs>$(BuildArgs) /p:FallbackPublicBaseURL=https://dotnetbuilds.blob.core.windows.net/public/</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:UsePortableLinuxSharedFramework=false</BuildArgs>
