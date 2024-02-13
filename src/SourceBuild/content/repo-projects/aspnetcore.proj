@@ -25,7 +25,7 @@
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="symreader" />
+    <RepositoryReference Include="symreader" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="xdt" />
   </ItemGroup>
 

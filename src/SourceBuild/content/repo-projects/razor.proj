@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <RepositoryReference Include="aspnetcore" />
+    <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="aspnetcore" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
   </ItemGroup>
 

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <RepositoryReference Include="diagnostics" />
-    <RepositoryReference Include="runtime" />
+    <RepositoryReference Include="runtime" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
   </ItemGroup>
