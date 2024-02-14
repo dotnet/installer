@@ -76,7 +76,7 @@ jobs:
       name: PGO_${{ parameters.agentOs }}_${{ parameters.jobName }}
     ${{ if not(parameters.pgoInstrument) }}:
       name: ${{ parameters.agentOs }}_${{ parameters.jobName }}
-    
+
     ## Set up the pool/machine info to be used based on the Agent OS
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
@@ -91,10 +91,10 @@ jobs:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: $(DncEngPublicBuildPool)
-          demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
+          demands: ImageOverride -equals Build.Ubuntu.2204.Amd64.Open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: $(DncEngInternalBuildPool)
-          demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+          demands: ImageOverride -equals Build.Ubuntu.2204.Amd64
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
@@ -111,7 +111,7 @@ jobs:
     workspace:
       clean: all
 
-# Test parameters
+    # Test parameters
     variables:
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - _PackArg: '-pack'
