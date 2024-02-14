@@ -1,0 +1,26 @@
+From 89012113e3ebdc7c96aaf00bf218774a6f75accf Mon Sep 17 00:00:00 2001
+From: Jeremy Koritzinsky <jekoritz@microsoft.com>
+Date: Wed, 14 Feb 2024 11:43:33 -0800
+Subject: [PATCH] Forward the pgoinstrument argument to the inner build for
+ VMR/Source-build builds
+
+Backport: https://github.com/dotnet/runtime/pull/98446
+---
+ eng/DotNetBuild.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/eng/DotNetBuild.props b/eng/DotNetBuild.props
+index fbad52bdac7..b5226fa76af 100644
+--- a/eng/DotNetBuild.props
++++ b/eng/DotNetBuild.props
+@@ -61,6 +61,7 @@
+       <!-- Pass through special build modes controlled by properties -->
+       <InnerBuildArgs Condition="'$(DotNetBuildRuntimeWasmEnableThreads)' == 'true'">$(InnerBuildArgs) /p:WasmEnableThreads=true</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(DotNetBuildRuntimeNativeAOTRuntimePack)' == 'true'">$(InnerBuildArgs) $(FlagParameterPrefix)s clr.nativeaotlibs+clr.nativeaotruntime+libs+packs /p:BuildNativeAOTRuntimePack=true /p:SkipLibrariesNativeRuntimePackages=true</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(PgoInstrument)' == 'true'">$(InnerBuildArgs) $(FlagParameterPrefix)pgoinstrument</InnerBuildArgs>
+ 
+       <!-- This prop needs to be passed to the inner build manually as the BaseInnerSourceBuildCommand gets overriden above -->
+       <InnerBuildArgs Condition="'$(ArcadeBuildFromSource)' == 'true'">$(InnerBuildArgs) /p:ArcadeBuildFromSource=true</InnerBuildArgs>
+-- 
+2.43.0.windows.1
+
