@@ -68,6 +68,17 @@
     <TargetRid Condition="'$(ShortStack)' == 'true' and '$(TargetOS)' == 'windows'">win-$(TargetArchitecture)</TargetRid>
   </PropertyGroup>
 
+  <!-- A "limited shipping tall stack" is a stack where we build the tall stack, but only ship assets from specific repos (which will individually opt-in)  -->
+  <PropertyGroup Label="LimitedShippingTallStack">
+    <!-- We need to build a full SDK that's PGO-instrumented, but we are only shipping the final SDK. -->
+    <IsLimitedShippingTallStack Condition="'$(PgoInstrument)' == 'true'">true</IsLimitedShippingTallStack>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Are this repo's artifacts only meant to be used as references to build later repos and not shipped, even to the NonShipping locations? -->
+    <ReferenceOnlyRepoArtifacts Condition="'$(IsLimitedShippingTallStack)' == 'true'">true</ReferenceOnlyRepoArtifacts>
+  </PropertyGroup>
+
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
   <!-- Init basic Arcade props, if the project importing this file doesn't use Arcade.
@@ -188,6 +199,7 @@
     <NonShippingPackagesListPrefix>NonShipping.Packages.</NonShippingPackagesListPrefix>
 
     <ReferencePackagesDir>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'reference'))</ReferencePackagesDir>
+    <ReferenceAssetsDir>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'reference-assets'))</ReferenceAssetsDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
     <SourceBuiltPrebuiltsTarballName>Private.SourceBuilt.Prebuilts</SourceBuiltPrebuiltsTarballName>
 

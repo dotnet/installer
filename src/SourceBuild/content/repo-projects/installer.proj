@@ -29,11 +29,16 @@
     <BuildArgs Condition="'$(TargetOS)' != 'windows'">$(BuildArgs) /p:CoreSetupRid=$(TargetRid)</BuildArgs>
 
     <!-- Consume the source-built Core-Setup and toolset. This line must be removed to source-build CLI without source-building Core-Setup first. -->
+    <BaseUrl>$(ArtifactsAssetsDir)</BaseUrl>
+    <BaseUrl Condition="'$(PgoInstrument)' == 'true'">$(ReferenceAssetsDir)</BaseUrl>
     <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(ArtifactsAssetsDir)</BuildArgs>
 
     <BuildArgs>$(BuildArgs) /p:UsePortableLinuxSharedFramework=false</BuildArgs>
 
     <BuildArgs Condition="'$(PgoInstrument)' == 'true'">$(BuildArgs) /p:PgoInstrument=true</BuildArgs>
+
+    <!-- For PGO-instrumented builds, we want to publish the installer artifacts -->
+    <ReferenceOnlyRepoArtifacts Condition="'$(PgoInstrument)' == 'true'">false</ReferenceOnlyRepoArtifacts>
   </PropertyGroup>
 
   <ItemGroup>
