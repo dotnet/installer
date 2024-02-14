@@ -25,6 +25,8 @@
     <!-- installer always wants to build portable on FreeBSD -->
     <BuildArgs Condition="'$(TargetOS)' == 'freebsd' and '$(DotNetBuildSourceOnly)' == 'true'">$(BuildArgs) /p:PortableBuild=true</BuildArgs>
     <BuildArgs Condition="'$(TargetOS)' != 'windows'">$(BuildArgs) /p:NetRuntimeRid=$(TargetRid)</BuildArgs>
+    <!-- https://github.com/dotnet/source-build/issues/4138 -->
+    <BuildArgs Condition="'$(TargetOS)' != 'windows' and '$(TargetOS)' != 'osx'">$(BuildArgs) /p:SkipBuildingInstallers=true</BuildArgs>
 
     <!-- Consume the source-built blob assets from runtime, aspnetcore, etc. -->
     <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(ArtifactsAssetsDir)</BuildArgs>
