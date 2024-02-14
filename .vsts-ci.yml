@@ -52,11 +52,11 @@ stages:
     - publish: $(Build.SourcesDirectory)\eng\buildConfiguration
       artifact: buildConfiguration
       displayName: Publish Build Config
-  
+
   ## PR-only jobs
-  
+
   - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-    
+
     ## Windows
 
     - template: eng/build.yml
@@ -149,9 +149,9 @@ stages:
         runTests: true
 
   ## Official/PGO instrumentation Builds
-  
+
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-    
+
     ## Windows
 
     - template: eng/build.yml
