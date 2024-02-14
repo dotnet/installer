@@ -28,7 +28,6 @@
     <BuildArgs Condition="'$(TargetOS)' == 'freebsd' and '$(DotNetBuildSourceOnly)' == 'true'">$(BuildArgs) /p:PortableBuild=true</BuildArgs>
     <BuildArgs Condition="'$(TargetOS)' != 'windows'">$(BuildArgs) /p:CoreSetupRid=$(TargetRid)</BuildArgs>
 
-    <!-- Consume the source-built Core-Setup and toolset. This line must be removed to source-build CLI without source-building Core-Setup first. -->
     <BaseUrl>$(ArtifactsAssetsDir)</BaseUrl>
     <BaseUrl Condition="'$(PgoInstrument)' == 'true'">$(ReferenceAssetsDir)</BaseUrl>
     <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(ArtifactsAssetsDir)</BuildArgs>
