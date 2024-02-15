@@ -142,7 +142,7 @@
     <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
 
     <EnvironmentVariables Include="SourceRoot=$(ProjectDirectory)" />
-    <EnvironmentVariables Include="DotNetBuildFromSourceFlavor=Product" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+    <EnvironmentVariables Include="DotNetBuildFromSourceFlavor=Product" />
 
     <!-- Need to be passed in as an env var so that custom Exec tasks in the repo's SourceBuild.props receive this setting. -->
     <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
