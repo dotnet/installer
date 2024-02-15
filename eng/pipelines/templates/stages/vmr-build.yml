@@ -767,7 +767,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: OSX_x64_Cross_Mono
+            buildName: OSX_Mono
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
