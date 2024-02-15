@@ -1,5 +1,3 @@
-# DO NOT DELETE: This is used to validate PRs in the internal security-partners-dotnet repo
-
 trigger: none
 
 variables:
@@ -21,12 +19,13 @@ jobs:
     architecture: x64
     excludeSdkContentTests: true
     matrix:
-      Ubuntu1804-Offline:
-        _BootstrapPrep: false
-        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04
+      Ubuntu2004-Offline:
+        _BootstrapPrep: true
+        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04
         _EnablePoison: false
         _ExcludeOmniSharpTests: false
         _RunOnline: false
+        _WithPreviousSDK: false
     name: Build_Tarball_x64
     pool:
       name: NetCore1ESPool-Svc-Internal
