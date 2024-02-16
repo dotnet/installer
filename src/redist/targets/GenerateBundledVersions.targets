@@ -372,7 +372,11 @@
         freebsd-arm64;
         " />
 
-      <ILCompilerSupportedRids Include="@(Net80ILCompilerSupportedRids)" />
+      <ILCompilerSupportedRids Include="
+        @(Net80ILCompilerSupportedRids);
+        linux-arm;
+        linux-musl-arm;
+        " />
 
       <Net80NativeAOTRuntimePackRids Include="
           ios-arm64;
@@ -395,8 +399,10 @@
       <Net90NativeAOTRuntimePackRids Include="
           @(Net80NativeAOTRuntimePackRids);
           linux-x64;
+          linux-arm;
           linux-arm64;
           linux-musl-x64;
+          linux-musl-arm;
           linux-musl-arm64;
           win-x64;
           win-arm64;
