@@ -21,6 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="nuget-client" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />

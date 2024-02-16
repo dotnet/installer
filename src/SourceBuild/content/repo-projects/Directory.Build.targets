@@ -41,15 +41,24 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
   
+  <!-- Wraps the transitive repo references with additional metadata -->
   <Target Name="GetRepositoryReferenceInfo"
           DependsOnTargets="GetTransitiveRepositoryReferences">
-    <ItemGroup>
-      <RepositoryReferenceInfo Include="@(TransitiveRepositoryReference)">
-        <SourceName>source-built-%(Identity)</SourceName>
-        <PackagesPath>$(SourceBuiltBasePackagesPath)%(Identity)/</PackagesPath>
+    <!-- SBRP is explicitly excluded since it is output to its own special directory, $(ReferencePackagesDir). -->
+    <ItemGroup Condition="'@(TransitiveRepositoryReference)' != ''">
+      <RepositoryReferenceInfo Include="@(TransitiveRepositoryReference)"
+                               Condition="'%(Identity)' != 'source-build-reference-packages'">
+        <ShippingSourceName>source-built-%(Identity)</ShippingSourceName>
+        <NonShippingSourceName>source-built-transport-%(Identity)</NonShippingSourceName>
+        <ShippingPackagesPath>$(ArtifactsShippingPackagesDir)/%(Identity)/</ShippingPackagesPath>
+        <NonShippingPackagesPath>$(ArtifactsNonShippingPackagesDir)/%(Identity)/</NonShippingPackagesPath>
       </RepositoryReferenceInfo>
-      <DependentRepoSourceName Include="@(RepositoryReferenceInfo->'%(SourceName)')" />
-      <DependentRepoPackageFile Include="%(RepositoryReferenceInfo.PackagesPath)**" />
+    </ItemGroup>
+    <ItemGroup Condition="'@(RepositoryReferenceInfo)' != ''">
+      <DependentRepoSourceName Include="@(RepositoryReferenceInfo->'%(ShippingSourceName)')" />
+      <DependentRepoSourceName Include="@(RepositoryReferenceInfo->'%(NonShippingSourceName)')" />
+      <DependentRepoPackageFile Include="%(RepositoryReferenceInfo.ShippingPackagesPath)**" />
+      <DependentRepoPackageFile Include="%(RepositoryReferenceInfo.NonShippingPackagesPath)**" />
     </ItemGroup>
   </Target>
 
@@ -73,8 +82,6 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete">
     <PropertyGroup>
-      <!-- Feed for the non-shipping live built packages -->
-      <SourceBuiltNonShippingNuGetSourceName>source-built-transport</SourceBuiltNonShippingNuGetSourceName>
       <!-- Dev innerloop opt-in feed: /p:ExtraRestoreSourcePath=... -->
       <ExtraSourcesNuGetSourceName>ExtraSources</ExtraSourcesNuGetSourceName>
     </PropertyGroup>
@@ -87,7 +94,6 @@
 
     <ItemGroup>
       <_CommonSourceBuildSources Include="@(DependentRepoSourceName)" />
-      <_CommonSourceBuildSources Include="$(SourceBuiltNonShippingNuGetSourceName)" />
       <_CommonSourceBuildSources Include="$(ExtraSourcesNuGetSourceName)" Condition="'$(ExtraRestoreSourcePath)' != ''" />
     </ItemGroup>
 
@@ -136,13 +142,14 @@
                             Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
-                            SourceName="%(RepositoryReferenceInfo.SourceName)"
-                            SourcePath="%(RepositoryReferenceInfo.PackagesPath)"
+                            SourceName="%(RepositoryReferenceInfo.ShippingSourceName)"
+                            SourcePath="%(RepositoryReferenceInfo.ShippingPackagesPath)"
                             Condition=" '@(RepositoryReferenceInfo)' != '' " />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
-                            SourceName="$(SourceBuiltNonShippingNuGetSourceName)"
-                            SourcePath="$(ArtifactsNonShippingPackagesDir)" />
+                            SourceName="%(RepositoryReferenceInfo.NonShippingSourceName)"
+                            SourcePath="%(RepositoryReferenceInfo.NonShippingPackagesPath)"
+                            Condition=" '@(RepositoryReferenceInfo)' != '' " />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
                             SourceName="$(ExtraSourcesNuGetSourceName)"
@@ -216,7 +223,6 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)CreateBuildInputProps.complete">
     <ItemGroup>
-      <!-- TODO: Double-check this is targeting the right path. Should include both shipping and non-shipping -->
       <!-- Collect all the NuGet packages from dependent repos except for the symbols -->
       <_CurrentSourceBuiltPackages Include="@(DependentRepoPackageFile)"
                                    Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
@@ -339,8 +345,8 @@
     </PropertyGroup>
 
     <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(RepoConsoleLogFile)'));
-                          $(ArtifactsShippingPackagesDir);
-                          $(ArtifactsNonShippingPackagesDir);
+                          $(RepoArtifactsShippingPackagesDir);
+                          $(RepoArtifactsNonShippingPackagesDir);
                           $(ArtifactsAssetsDir)" />
 
     <!-- Create directories for extra debugging. -->
@@ -412,14 +418,12 @@
     <ItemGroup>
       <RepoManifestNonShippingPackage Include="@(RepoManifestPackage)"
                                       Condition="$([System.String]::Copy('%(Identity)').Contains('$([System.IO.Path]::DirectorySeparatorChar)NonShipping$([System.IO.Path]::DirectorySeparatorChar)'))">
-        <DestinationFolder Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$(ArtifactsNonShippingPackagesDir)</DestinationFolder>
-        <DestinationFolder Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</DestinationFolder>
+        <DestinationFolder>$(RepoArtifactsNonShippingPackagesDir)</DestinationFolder>
       </RepoManifestNonShippingPackage>
 
       <RepoManifestShippingPackage Include="@(RepoManifestPackage)"
                                    Exclude="@(RepoManifestNonShippingPackage)">
-        <DestinationFolder Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$(ArtifactsShippingPackagesDir)</DestinationFolder>
-        <DestinationFolder Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</DestinationFolder>
+        <DestinationFolder>$(RepoArtifactsShippingPackagesDir)</DestinationFolder>
       </RepoManifestShippingPackage>
     </ItemGroup>
 
@@ -520,8 +524,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
     <PropertyGroup>
-      <_ToolPackagesRoot Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$(ArtifactsNonShippingPackagesDir)</_ToolPackagesRoot>
-      <_ToolPackagesRoot Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</_ToolPackagesRoot>
+      <_ToolPackagesRoot>$(RepoArtifactsNonShippingPackagesDir)</_ToolPackagesRoot>
     </PropertyGroup>
 
     <ItemGroup>
@@ -731,20 +734,17 @@
 
     <!-- Exclude repositories that currently don't build when not building source-only. -->
     <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
-	  <TransitiveRepositoryReference Remove="roslyn" />
-	  <TransitiveRepositoryReference Remove="msbuild" />
-	  <TransitiveRepositoryReference Remove="sdk" />
-	  <TransitiveRepositoryReference Remove="aspnetcore" />
-	  <TransitiveRepositoryReference Remove="razor" />
-	  <TransitiveRepositoryReference Remove="deployment-tools" />
-	  <TransitiveRepositoryReference Remove="format" />
-	  <TransitiveRepositoryReference Remove="nuget-client" />
-	  <TransitiveRepositoryReference Remove="test-templates" />
-	  <TransitiveRepositoryReference Remove="fsharp" />
-	  <TransitiveRepositoryReference Remove="vstest" />
-	  <TransitiveRepositoryReference Remove="aspire" />
-	  <TransitiveRepositoryReference Remove="installer" />
-	  </ItemGroup>
+	  <RepositoryReference Remove="roslyn" />
+	  <RepositoryReference Remove="msbuild" />
+	  <RepositoryReference Remove="aspnetcore" />
+	  <RepositoryReference Remove="razor" />
+	  <RepositoryReference Remove="format" />
+	  <RepositoryReference Remove="nuget-client" />
+	  <RepositoryReference Remove="fsharp" />
+	  <RepositoryReference Remove="vstest" />
+	  <RepositoryReference Remove="aspire" />
+	  <RepositoryReference Remove="installer" />
+	</ItemGroup>
   </Target>
 
   <!-- Outputs a dependency graph of the repos, in YAML form, to the console. -->
