@@ -5,6 +5,8 @@ Subject: [PATCH] Forward the pgoinstrument argument to the inner build for
  VMR/Source-build builds
 
 Build all assets when we're building PGO-instrumented assets in a vertical build/source-build scenario (where we won't have assets from a non-PGO-instrumented job available)
+
+Backport: https://github.com/dotnet/runtime/pull/98446
 ---
  eng/DotNetBuild.props |  1 +
  eng/Subsets.props     | 21 +++++++++++++--------
