@@ -7,6 +7,11 @@
     <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
   </PropertyGroup>
 
+  <ItemGroup>
+    <RepositoryReference Include="installer" />
+    <RepositoryReference Include="scenario-tests" />
+  </ItemGroup>
+
   <Target Name="CustomRepoBuild"
           AfterTargets="RepoBuild"
           DependsOnTargets="CreateBuildInputProps;DetermineSourceBuiltSdkVersion">
@@ -50,10 +55,5 @@
 
     <Message Importance="High" Text="Packaged source-built artifacts to $(SourceBuiltTarballName)" />
   </Target>
-
-  <ItemGroup>
-    <RepositoryReference Include="installer" />
-    <RepositoryReference Include="scenario-tests" />
-  </ItemGroup>
 
 </Project>
