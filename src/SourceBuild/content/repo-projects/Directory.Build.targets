@@ -145,12 +145,12 @@
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
                             SourceName="%(RepositoryReferenceInfo.ShippingSourceName)"
                             SourcePath="%(RepositoryReferenceInfo.ShippingPackagesPath)"
-                            Condition=" '@(RepositoryReferenceInfo)' != '' " />
+                            Condition="Exists('%(RepositoryReferenceInfo.ShippingPackagesPath)')" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
                             SourceName="%(RepositoryReferenceInfo.NonShippingSourceName)"
                             SourcePath="%(RepositoryReferenceInfo.NonShippingPackagesPath)"
-                            Condition=" '@(RepositoryReferenceInfo)' != '' " />
+                            Condition="Exists('%(RepositoryReferenceInfo.NonShippingPackagesPath)')" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
                             SourceName="$(ExtraSourcesNuGetSourceName)"
@@ -346,8 +346,6 @@
     </PropertyGroup>
 
     <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(RepoConsoleLogFile)'));
-                          $(RepoArtifactsShippingPackagesDir);
-                          $(RepoArtifactsNonShippingPackagesDir);
                           $(ArtifactsAssetsDir)" />
 
     <!-- Create directories for extra debugging. -->
