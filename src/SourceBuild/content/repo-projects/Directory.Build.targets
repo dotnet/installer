@@ -177,7 +177,7 @@
       <!-- This is defined in this target to ensure the NuGet.config file is updated before it gets embedded. If this item
            was define globally, it would immediately get embedded with the original, unmodified version of the file. -->
       <EmbedInBinlog Include="$(NuGetConfigFile)" />
-  </ItemGroup>
+    </ItemGroup>
   </Target>
 
   <!-- Update the SDK version in the repo's global.json file.
