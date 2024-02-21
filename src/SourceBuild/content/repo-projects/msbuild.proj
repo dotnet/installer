@@ -9,11 +9,11 @@
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
-    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="runtime" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="source-build-reference-packages" />
   </ItemGroup>
 
