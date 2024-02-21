@@ -22,7 +22,10 @@
     <RepositoryReference Include="arcade" />  
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="runtime" />
-    <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <RepositoryReference Include="source-build-reference-packages" />
   </ItemGroup>
 
 </Project>

@@ -24,11 +24,14 @@
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="runtime" />
-    <RepositoryReference Include="nuget-client" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="source-build-reference-packages" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="symreader" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <RepositoryReference Include="xdt" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="source-build-externals" />
+    <RepositoryReference Include="source-build-reference-packages" />
+    <RepositoryReference Include="symreader" />
   </ItemGroup>
 
   <ItemGroup>
