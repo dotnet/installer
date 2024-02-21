@@ -30,8 +30,6 @@
       Lines="@(VersionFileContent)"
       Overwrite="true" />
 
-    <MakeDir Directories="$(SharedOutputPath)" />
-
     <ItemGroup>
       <_AllRepoDirs Include="$([System.IO.Directory]::GetDirectories($(ArtifactsShippingPackagesDir)))" />
       <_AllRepoDirs Include="$([System.IO.Directory]::GetDirectories($(ArtifactsNonShippingPackagesDir)))" />
