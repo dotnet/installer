@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(NetCurrent)</TargetFramework>
+    <Nullable>enable</Nullable>
+    <SelfContained>true</SelfContained>
+    <PublishTrimmed>true</PublishTrimmed>
+    <NoWarn>$(NoWarn);NU1604</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- There are no defined version props for FileSystemGlobbing, Logging.Console, and Logging in the context of vmr/eng. -->
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.0-preview.1.24080.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0-preview.1.24080.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-preview.1.24080.9" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" />
+  </ItemGroup>
+
+  <Target Name="CleanBuildArtifacts" AfterTargets="Publish">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
+</Project>
