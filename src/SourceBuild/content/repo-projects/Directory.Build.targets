@@ -735,17 +735,17 @@
 
     <!-- Exclude repositories that currently don't build when not building source-only. -->
     <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
-	  <RepositoryReference Remove="roslyn" />
-	  <RepositoryReference Remove="msbuild" />
-	  <RepositoryReference Remove="aspnetcore" />
-	  <RepositoryReference Remove="razor" />
-	  <RepositoryReference Remove="format" />
-	  <RepositoryReference Remove="nuget-client" />
-	  <RepositoryReference Remove="fsharp" />
-	  <RepositoryReference Remove="vstest" />
-	  <RepositoryReference Remove="aspire" />
-	  <RepositoryReference Remove="installer" />
-	</ItemGroup>
+      <TransitiveRepositoryReference Remove="roslyn" />
+      <TransitiveRepositoryReference Remove="msbuild" />
+      <TransitiveRepositoryReference Remove="aspnetcore" />
+      <TransitiveRepositoryReference Remove="razor" />
+      <TransitiveRepositoryReference Remove="format" />
+      <TransitiveRepositoryReference Remove="nuget-client" />
+      <TransitiveRepositoryReference Remove="fsharp" />
+      <TransitiveRepositoryReference Remove="vstest" />
+      <TransitiveRepositoryReference Remove="aspire" />
+      <TransitiveRepositoryReference Remove="installer" />
+    </ItemGroup>
   </Target>
 
   <!-- Outputs a dependency graph of the repos, in YAML form, to the console. -->
