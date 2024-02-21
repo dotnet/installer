@@ -94,15 +94,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_CommonSourceBuildSources Include="@(DependentRepoSourceName)" />
-      <_CommonSourceBuildSources Include="$(ExtraSourcesNuGetSourceName)" Condition="'$(ExtraRestoreSourcePath)' != ''" />
+      <_CommonBuildSources Include="@(DependentRepoSourceName)" />
+      <_CommonBuildSources Include="$(ExtraSourcesNuGetSourceName)" Condition="'$(ExtraRestoreSourcePath)' != ''" />
     </ItemGroup>
 
     <ItemGroup>
-      <SourceBuildSources Condition="'$(DotNetBuildSourceOnly)' == 'true'"
-                          Include="$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName);@(_CommonSourceBuildSources)" />
-      <SourceBuildSources Condition="'$(DotNetBuildSourceOnly)' != 'true'"
-                          Include="@(_CommonSourceBuildSources)" />
+      <_BuildSources Condition="'$(DotNetBuildSourceOnly)' == 'true'"
+                          Include="$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName);@(_CommonBuildSources)" />
+      <_BuildSources Condition="'$(DotNetBuildSourceOnly)' != 'true'"
+                          Include="@(_CommonBuildSources)" />
     </ItemGroup>
     
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
@@ -166,7 +166,7 @@
     <UpdateNuGetConfigPackageSourcesMappings
       NuGetConfigFile="$(NuGetConfigFile)"
       BuildWithOnlineFeeds="$(DotNetBuildWithOnlineFeeds)"
-      SourceBuildSources="@(SourceBuildSources)" />
+      SourceBuildSources="@(_BuildSources)" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete" AlwaysCreate="true">
