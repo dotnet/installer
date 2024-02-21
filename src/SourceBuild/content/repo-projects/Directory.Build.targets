@@ -47,7 +47,7 @@
     <!-- SBRP is explicitly excluded since it is output to its own special directory, $(ReferencePackagesDir). -->
     <ItemGroup Condition="'@(TransitiveRepositoryReference)' != ''">
       <RepositoryReferenceInfo Include="@(TransitiveRepositoryReference)"
-                               Condition="'%(Identity)' != 'source-build-reference-packages'">
+                               Exclude="source-build-reference-packages">
         <ShippingSourceName>source-built-%(Identity)</ShippingSourceName>
         <NonShippingSourceName>source-built-transport-%(Identity)</NonShippingSourceName>
         <ShippingPackagesPath>$(ArtifactsShippingPackagesDir)/%(Identity)/</ShippingPackagesPath>
