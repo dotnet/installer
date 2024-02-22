@@ -41,6 +41,7 @@
       <_SourceBuiltLayoutDir>$([MSBuild]::NormalizeDirectory('$(BaseIntermediateOutputPath)', 'artifacts-layout'))</_SourceBuiltLayoutDir>
       <SourceBuildReferencePackagesDestinationDirName>SourceBuildReferencePackages</SourceBuildReferencePackagesDestinationDirName>
     </PropertyGroup>
+    
     <Copy SourceFiles="@(_AllRepoFiles)"
           DestinationFolder="$(_SourceBuiltLayoutDir)"
           UseSymbolicLinksIfPossible="true" />
