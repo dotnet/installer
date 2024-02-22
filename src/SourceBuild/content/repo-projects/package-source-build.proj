@@ -45,14 +45,14 @@
     <Copy SourceFiles="@(_AllRepoFiles)"
           DestinationFolder="$(_SourceBuiltLayoutDir)"
           UseSymbolicLinksIfPossible="true" />
-    <Copy SourceFiles="$([MSBuild]::NormalizeDirectory('$(BaseIntermediateOutputPath)', '$(SourceBuiltVersionFileName)'))"
+    <Copy SourceFiles="$(BaseIntermediateOutputPath)$(SourceBuiltVersionFileName)"
           DestinationFolder="$(_SourceBuiltLayoutDir)"
           UseSymbolicLinksIfPossible="true" />
     <Copy SourceFiles="$(CurrentSourceBuiltPackageVersionPropsPath)"
-          DestinationFiles="$([MSBuild]::NormalizeDirectory('$(_SourceBuiltLayoutDir)', 'PackageVersions.props'))"
+          DestinationFiles="$(_SourceBuiltLayoutDir)/PackageVersions.props"
           UseSymbolicLinksIfPossible="true" />
     <Copy SourceFiles="@(_ReferencePackageFiles)"
-          DestinationFolder="$([MSBuild]::NormalizeDirectory('$(_SourceBuiltLayoutDir)', '$(SourceBuildReferencePackagesDestinationDirName)'))"
+          DestinationFolder="$(_SourceBuiltLayoutDir)/$(SourceBuildReferencePackagesDestinationDirName)"
           UseSymbolicLinksIfPossible="true" />
 
     <Exec Command="tar --numeric-owner -czhf $(SourceBuiltTarballName) $(SourceBuiltVersionFileName) *"
