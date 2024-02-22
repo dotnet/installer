@@ -30,9 +30,8 @@
       Overwrite="true" />
 
     <ItemGroup>
-      <_AllRepoDirs Include="$([System.IO.Directory]::GetDirectories($(ArtifactsShippingPackagesDir)))" />
-      <_AllRepoDirs Include="$([System.IO.Directory]::GetDirectories($(ArtifactsNonShippingPackagesDir)))" />
-      <_AllRepoFiles Include="%(_AllRepoDirs.Identity)/**" />
+      <_AllRepoFiles Include="$(ArtifactsShippingPackagesDir)/**" />
+      <_AllRepoFiles Include="$(ArtifactsNonShippingPackagesDir)/**" />
       <_ReferencePackageFiles Include="$(ReferencePackagesDir)**" />
     </ItemGroup>
 
