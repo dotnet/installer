@@ -100,9 +100,8 @@
 
     <ItemGroup>
       <_BuildSources Condition="'$(DotNetBuildSourceOnly)' == 'true'"
-                          Include="$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName);@(_CommonBuildSources)" />
-      <_BuildSources Condition="'$(DotNetBuildSourceOnly)' != 'true'"
-                          Include="@(_CommonBuildSources)" />
+                     Include="$(PrebuiltNuGetSourceName);$(PreviouslySourceBuiltNuGetSourceName);$(ReferencePackagesNuGetSourceName)" />
+      <_BuildSources Include="@(_CommonBuildSources)" />
     </ItemGroup>
     
     <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
