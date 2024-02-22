@@ -718,7 +718,8 @@
     </ItemGroup>
 
     <MSBuild Projects="@(RepositoryReference->'%(Identity).proj')"
-             Targets="GetTransitiveRepositoryReferences">
+             Targets="GetTransitiveRepositoryReferences"
+             BuildInParallel="true">
       <Output TaskParameter="TargetOutputs" ItemName="_DependencyTransitiveRepositoryReference" />
     </MSBuild>
 
