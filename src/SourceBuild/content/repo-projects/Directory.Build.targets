@@ -726,11 +726,10 @@
     <!-- When items are transferred between projects, they get metadata indicating their source (e.g. MSBuildSourceProjectFile).
          This is problematic because it causes introduces distinctness on the items. For example, an arcade RepositoryReference
          that comes from both msbuild and source-build-externals will be treated as two separate items. But we only want one arcade
-         reference. To prevent this from happening, we need to remove the extra metadata so the two references can be seen as duplicates. -->
+         reference. To prevent this from happening, use the Distinct method which operates on just the Identity to get a unique set
+         of values. -->
     <ItemGroup>
-      <_TransitiveRepositoryReference Include="@(_DependencyTransitiveRepositoryReference)"
-                                      RemoveMetadata="MSBuildSourceProjectFile;MSBuildSourceTargetName;OriginalItemSpec" />
-      <TransitiveRepositoryReference Include="@(_TransitiveRepositoryReference)" KeepDuplicates="false" />
+      <TransitiveRepositoryReference Include="@(_DependencyTransitiveRepositoryReference->Distinct())" />
     </ItemGroup>
 
     <!-- Exclude repositories that currently don't build when not building source-only. -->
