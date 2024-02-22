@@ -51,6 +51,7 @@
     <RepositoryReference Include="symreader" />
     <RepositoryReference Include="test-templates" />
     <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="windowsdesktop" Condition="'$(TargetOS)' == 'windows'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
