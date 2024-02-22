@@ -49,10 +49,10 @@
           DestinationFolder="$(_SourceBuiltLayoutDir)"
           UseSymbolicLinksIfPossible="true" />
     <Copy SourceFiles="$(CurrentSourceBuiltPackageVersionPropsPath)"
-          DestinationFiles="$(_SourceBuiltLayoutDir)/PackageVersions.props"
+          DestinationFiles="$(_SourceBuiltLayoutDir)PackageVersions.props"
           UseSymbolicLinksIfPossible="true" />
     <Copy SourceFiles="@(_ReferencePackageFiles)"
-          DestinationFolder="$(_SourceBuiltLayoutDir)/$(SourceBuildReferencePackagesDestinationDirName)"
+          DestinationFolder="$(_SourceBuiltLayoutDir)$(SourceBuildReferencePackagesDestinationDirName)"
           UseSymbolicLinksIfPossible="true" />
 
     <Exec Command="tar --numeric-owner -czhf $(SourceBuiltTarballName) $(SourceBuiltVersionFileName) *"
