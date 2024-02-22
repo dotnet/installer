@@ -5,7 +5,6 @@
     <RepositoryReference Include="command-line-api" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="runtime" />
-    <RepositoryReference Include="symreader" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -13,6 +12,7 @@
     <RepositoryReference Include="roslyn-analyzers" />
     <RepositoryReference Include="source-build-externals" />
     <RepositoryReference Include="source-build-reference-packages" />
+    <RepositoryReference Include="symreader" />
   </ItemGroup>
 
 </Project>
