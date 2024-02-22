@@ -84,7 +84,8 @@
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
 
-  <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive">
+  <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive";
+          DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <!-- Inputs: Packages to include in the tarball -->
     <ItemGroup>
       <ArtifactsPackageToBundle Include="$(ArtifactsShippingPackagesDir)**;
@@ -109,8 +110,7 @@
   <!-- Create the SourceBuilt.Private.Artifacts archive when building source-only. -->
   <Target Name="CreatePrivateSourceBuiltArtifactsArchive"
           AfterTargets="Build"
-          DependsOnTargets="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive;
-                            DetermineSourceBuiltSdkVersion"
+          DependsOnTargets="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive"
           Inputs="@(ArtifactsPackageToBundle);@(ReferencePackageToBundle)"
           Outputs="$(SourceBuiltTarballName);$(SourceBuiltVersionName);$(AllPackageVersionsPropsName)"
           Condition="'$(DotNetBuildSourceOnly)' == 'true'">
