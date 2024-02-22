@@ -84,7 +84,7 @@
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
 
-  <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive";
+  <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <!-- Inputs: Packages to include in the tarball -->
     <ItemGroup>
