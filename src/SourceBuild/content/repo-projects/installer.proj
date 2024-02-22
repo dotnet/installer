@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Need to set to false to calculate RepositoryCommit. -->
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+
     <!-- We need to extract the non-portable OS name from the non-portable RID and pass that to installer build script -->
     <OSNameOverride>$(TargetOS)</OSNameOverride>
     <OSNameOverride Condition="'$(PortableBuild)' != 'true'">$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
@@ -80,5 +83,57 @@
       Unable to find package dotnet-watch.  -->
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
+
+  <!-- Create the SourceBuilt.Private.Artifacts archive when building source-only. -->
+  <Target Name="CreatePrivateSourceBuiltArtifactsArchive"
+          AfterTargets="Build"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion"
+          Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <PropertyGroup>
+      <SourceBuiltTarballName>$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SourceBuiltTarballName>
+      <SourceBuiltVersionFileName>.version</SourceBuiltVersionFileName>
+    </PropertyGroup>
+
+    <!-- Content of the .version file to include in the tarball -->
+    <ItemGroup>
+      <VersionFileContent Include="$(RepositoryCommit);$(SourceBuiltSdkVersion)" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      File="$(BaseIntermediateOutputPath)$(SourceBuiltVersionFileName)"
+      Lines="@(VersionFileContent)"
+      Overwrite="true" />
+
+    <ItemGroup>
+      <ArtifactsPackage Include="$(ArtifactsShippingPackagesDir)**;
+                                 $(ArtifactsNonShippingPackagesDir)**" />
+      <ReferencePackage Include="$(ReferencePackagesDir)**" />
+    </ItemGroup>
+
+    <!-- Create a layout directory for the files that are to be included in the artifacts tarball. Since there are a large number of files, this will use symlinks
+         instead of copying files to make this execute quickly. -->
+    <PropertyGroup>
+      <SourceBuiltLayoutDir>$([MSBuild]::NormalizeDirectory('$(BaseIntermediateOutputPath)', 'artifacts-layout'))</SourceBuiltLayoutDir>
+      <SourceBuildReferencePackagesDestinationDirName>SourceBuildReferencePackages</SourceBuildReferencePackagesDestinationDirName>
+    </PropertyGroup>
+
+    <Copy SourceFiles="@(ArtifactsPackage)"
+          DestinationFolder="$(SourceBuiltLayoutDir)"
+          UseSymbolicLinksIfPossible="true" />
+    <Copy SourceFiles="$(BaseIntermediateOutputPath)$(SourceBuiltVersionFileName)"
+          DestinationFolder="$(SourceBuiltLayoutDir)"
+          UseSymbolicLinksIfPossible="true" />
+    <Copy SourceFiles="$(CurrentSourceBuiltPackageVersionPropsPath)"
+          DestinationFiles="$(SourceBuiltLayoutDir)PackageVersions.props"
+          UseSymbolicLinksIfPossible="true" />
+    <Copy SourceFiles="@(ReferencePackage)"
+          DestinationFolder="$(SourceBuiltLayoutDir)$(SourceBuildReferencePackagesDestinationDirName)"
+          UseSymbolicLinksIfPossible="true" />
+
+    <Exec Command="tar --numeric-owner -czhf $(SourceBuiltTarballName) $(SourceBuiltVersionFileName) *"
+          WorkingDirectory="$(SourceBuiltLayoutDir)" />
+
+    <Message Importance="High" Text="Packaged source-built artifacts to $(SourceBuiltTarballName)" />
+  </Target>
 
 </Project>
