@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace BinaryProcessor;
+namespace BinaryTool;
 public static class ProcessManager
 {
     public static async Task<string> Execute(string executable, string arguments)

@@ -15,6 +15,11 @@
 ###   --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and
 ###                               runtimes can be downloaded
 ###   --runtime-source-feed-key   Key for accessing the above server, if necessary
+###   --no-binary-removal         Exclude the removal of binaries
+###   --binaries-keep-file        Path to the file containing the list of allowed binaries to keep. Default is
+###                               VMR/src/installer/src/VirtualMonoRepo/allowed-binaries.txt
+###   --binaries-remove-file      Path to the file containing the list of allowed binaries to remove.
+###                               Default is null.
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -27,11 +32,16 @@ function print_help () {
 }
 
 defaultArtifactsRid='centos.8-x64'
+defaultBinariesKeepFile="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+defaultBinariesRemoveFile=''
 
 buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
 installDotnet=true
+removeBinaries=true
+binariesKeepFile=$defaultBinariesKeepFile
+binariesRemoveFile=$defaultBinariesRemoveFile
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
@@ -69,6 +79,17 @@ while :; do
       runtime_source_feed_key=$2
       shift
       ;;
+    --no-binary-removal)
+      removeBinaries=false
+      ;;
+    --binaries-keep-file)
+      binariesKeepFile=$2
+      shift
+      ;;
+    --binaries-remove-file)
+      binariesRemoveFile=$2
+      shift
+      ;;
     *)
       positional_args+=("$1")
       ;;
@@ -81,6 +102,13 @@ done
 # or a pre-existing .dotnet SDK directory must exist.
 if [ "$buildBootstrap" == true ] && [ "$installDotnet" == false ] && [ ! -d "$SCRIPT_ROOT/.dotnet" ]; then
   echo "  ERROR: --no-sdk requires --no-bootstrap or a pre-existing .dotnet SDK directory.  Exiting..."
+  exit 1
+fi
+
+## Attemping to remove binaries without an SDK will fail. So either the --no-binary-removal flag must be passed
+# or a pre-existing .dotnet SDK directory must exist.
+if [ "$removeBinaries" == true ] && [ "$installDotnet" == false ] && [ ! -d "$SCRIPT_ROOT/.dotnet" ]; then
+  echo "  ERROR: --no-sdk requires --no-binary-removal or a pre-existing .dotnet SDK directory.  Exiting..."
   exit 1
 fi
 
@@ -97,6 +125,10 @@ packagesArchiveDir="$SCRIPT_ROOT/prereqs/packages/archive/"
 if [ "$downloadArtifacts" == true ] && [ -f ${packagesArchiveDir}${artifactsBaseFileName}.*.tar.gz ]; then
   echo "  Private.SourceBuilt.Artifacts.*.tar.gz exists...it will not be downloaded"
   downloadArtifacts=false
+
+  if [ -z "$runtime_source_feed" ]; then
+  runtime_source_feed="file://$packagesArchiveDir"
+  fi
 fi
 
 # Check if Private.SourceBuilt prebuilts archive exists
@@ -171,6 +203,50 @@ function BootstrapArtifacts {
   rm -rf "$workingDir"
 }
 
+function RemoveBinaries {
+  DOTNET_SDK_PATH="$SCRIPT_ROOT/.dotnet"
+  BinaryDetectionTool="$SCRIPT_ROOT/eng/tools/BinaryToolKit/BinaryToolCli"
+
+  # Reconfigure the runtime source feed if it is not set or is set to the default
+  previouslySourceBuiltDir="$SCRIPT_ROOT/prereqs/packages/previously-source-built"
+  if [ -z "$runtime_source_feed" ] || [ "$runtime_source_feed" == "file://$packagesArchiveDir" ]; then
+    runtime_source_feed="file://$previouslySourceBuiltDir"
+    
+    # Unpack the PSB artifacts if they haven't been unpacked
+    if [ ! -d "$previouslySourceBuiltDir" ]; then
+      echo "  Unpacking Private.SourceBuilt.Artifacts.*.tar.gz to $previouslySourceBuiltDir"
+      sourceBuiltArchive=$(find "$packagesArchiveDir" -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz')
+      mkdir -p "$previouslySourceBuiltDir"
+      tar -xzf "$sourceBuiltArchive" -C "$previouslySourceBuiltDir"
+    fi
+  fi
+
+  export ARTIFACTS_PATH="$runtime_source_feed"
+
+  # Set the key for the runtime source feed if it is provided
+  if [ -n "$runtime_source_feed_key" ]; then
+    export ARTIFACTS_KEY="$runtime_source_feed_key"
+  else
+    export ARTIFACTS_KEY="previously-source-built"
+  fi
+
+  # Get the runtime version
+  runtimeVersion=$("$DOTNET_SDK_PATH/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
+
+  # Check binary files
+  if [ -n "$binariesKeepFile" ] && [ ! -f "$binariesKeepFile" ]; then
+    echo "  ERROR: Allowed binaries keep file not found.  Exiting..."
+    exit 1
+  fi
+  if [ -n "$binariesRemoveFile" ] && [ ! -f "$binariesRemoveFile" ]; then
+    echo "  ERROR: Allowed binaries remove file not found.  Exiting..."
+    exit 1
+  fi
+
+  # Run the BinaryDetection tool
+  "$DOTNET_SDK_PATH/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$SCRIPT_ROOT" "$SCRIPT_ROOT/artifacts/binary-report" --keep "$binariesKeepFile" --remove "$binariesRemoveFile"
+}
+
 # Check for the version of dotnet to install
 if [ "$installDotnet" == true ]; then
   echo "  Installing dotnet..."
@@ -191,4 +267,8 @@ fi
 
 if [ "$downloadPrebuilts" == true ]; then
   DownloadArchive Prebuilts false $artifactsRid
+fi
+
+if [ "$removeBinaries" == true ]; then
+  RemoveBinaries
 fi

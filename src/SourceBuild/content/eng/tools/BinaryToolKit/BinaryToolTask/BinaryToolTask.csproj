@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildVersion)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179-*" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179-*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BinaryProcessor\BinaryProcessor.csproj" />
+    <ProjectReference Include="..\BinaryTool\BinaryTool.csproj" />
   </ItemGroup>
 
   <UsingTask TaskName="BinaryToolTask" AssemblyFile="$(OutputDir)BinaryToolTask.dll" />

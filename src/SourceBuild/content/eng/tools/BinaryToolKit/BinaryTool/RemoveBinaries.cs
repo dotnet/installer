@@ -3,20 +3,20 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace BinaryProcessor;
+namespace BinaryTool;
 public static class RemoveBinaries
 {
     public static void Execute()
     {
-        Driver.Log.LogInformation($"Removing binaries from {Driver.TargetDirectory}...");
+        Driver.Log.LogInformation($"Removing binaries listed in {Driver.RemovedBinariesFile} from {Driver.TargetDirectory}...");
 
-        IEnumerable<string> binariesToRemove = File.ReadLines(Driver.DetectedBinariesFile);
+        IEnumerable<string> binariesToRemove = File.ReadLines(Driver.RemovedBinariesFile);
         
         foreach (var binary in binariesToRemove)
         {
             File.Delete(Path.Combine(Driver.TargetDirectory, binary));
         }
 
-        Driver.Log.LogInformation("Finished binary removal.");
+        Driver.Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");
     }
 }

@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RuntimeVersion>9.0.0-preview.1.24080.9</RuntimeVersion>
+    <RuntimeVersion></RuntimeVersion>
   </PropertyGroup>
 
   <Target Name="CheckRuntimeVersion" BeforeTargets="CoreCompile">
@@ -12,11 +12,11 @@
   </Target>
 
   <ItemGroup>
-    <!-- There are no defined version props for FileSystemGlobbing, Logging.Console, and Logging in the context of vmr/eng. -->
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="$(RuntimeVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="$(RuntimeVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(RuntimeVersion)" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179-*"/>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-*" />
   </ItemGroup>
 
 </Project>

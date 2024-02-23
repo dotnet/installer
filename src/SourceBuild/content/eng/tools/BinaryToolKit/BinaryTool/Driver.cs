@@ -3,23 +3,31 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace BinaryProcessor;
+namespace BinaryTool;
 
 public static class Driver
 {
-    // Directory to scan for binaries
+    // Directory to scan for binaries: required
     public static string TargetDirectory { get; set; } = string.Empty;
 
-    // Directory to output reports
+    // Directory to output reports: required
     public static string OutputReportDirectory { get; set; } = string.Empty;
 
-    // Full path to the binary baseline file
-    public static string BinaryBaselineFile { get; set; } = string.Empty;
+    // File for the baseline of allowed retainable binaries: optional
+    public static string AllowedBinariesKeepFile { get; set; } = string.Empty;
 
-    public static ILogger Log { get; private set; } = ConfigureLogger();
+    // File for the baseline of allowed removeable binaries: optional
+    public static string AllowedBinariesRemoveFile { get; set; } = string.Empty;
+
+    // Output files
     public static string DetectedBinariesFile { get; private set; } = string.Empty;
-    public static string UpdatedBinaryBaselineFile { get; private set; } = string.Empty;
+    public static string UpdatedAllowedBinariesKeepFile { get; private set; } = string.Empty;
+    public static string UpdatedAllowedBinariesRemoveFile { get; private set; } = string.Empty;
     public static string NewBinariesFile { get; private set; } = string.Empty;
+    public static string RemovedBinariesFile { get; private set; } = string.Empty;
+
+    // Logger
+    public static ILogger Log { get; private set; } = ConfigureLogger();
 
     public static void Execute()
     {
@@ -36,7 +44,6 @@ public static class Driver
 
     private static ILogger ConfigureLogger()
     {
-        // Setup logger with console output
         using ILoggerFactory loggerFactory =
             LoggerFactory.Create(builder =>
                 builder.AddSimpleConsole(options =>
@@ -46,7 +53,7 @@ public static class Driver
                     options.TimestampFormat = "HH:mm:ss ";
                     options.UseUtcTimestamp = true;
                 }));
-        return loggerFactory.CreateLogger("BinaryProcessor");
+        return loggerFactory.CreateLogger("BinaryTool");
     }
 
     private static void ProcessParameters()
@@ -65,15 +72,30 @@ public static class Driver
             Directory.CreateDirectory(OutputReportDirectory);
         }
 
-        if (!string.IsNullOrEmpty(BinaryBaselineFile) && !File.Exists(BinaryBaselineFile))
+        if (!string.IsNullOrEmpty(AllowedBinariesKeepFile))
         {
-            Log.LogError($"Binary baseline file {BinaryBaselineFile} does not exist.");
-            Environment.Exit(1);
+            AllowedBinariesKeepFile = Path.GetFullPath(AllowedBinariesKeepFile);
+            if (!File.Exists(AllowedBinariesKeepFile))
+            {
+                Log.LogError($"Allowed retainable binaries baseline file {AllowedBinariesKeepFile} does not exist.");
+                Environment.Exit(1);
+            }
         }
 
-        // Setup configuration from command line arguments
+        if (!string.IsNullOrEmpty(AllowedBinariesRemoveFile))
+        {
+            AllowedBinariesRemoveFile = Path.GetFullPath(AllowedBinariesRemoveFile);
+            if (!File.Exists(AllowedBinariesRemoveFile))
+            {
+                Log.LogError($"Allowed removeable binaries baseline file {AllowedBinariesRemoveFile} does not exist.");
+                Environment.Exit(1);
+            }
+        }
+
         DetectedBinariesFile = Path.Combine(OutputReportDirectory, "DetectedBinaries.txt");
-        UpdatedBinaryBaselineFile = Path.Combine(OutputReportDirectory, "UpdatedBinaryBaselineFile.txt");
+        UpdatedAllowedBinariesKeepFile = Path.Combine(OutputReportDirectory, "UpdatedAllowedBinariesKeepFile.txt");
+        UpdatedAllowedBinariesRemoveFile = Path.Combine(OutputReportDirectory, "UpdatedAllowedBinariesRemoveFile.txt");
         NewBinariesFile = Path.Combine(OutputReportDirectory, "NewBinaries.txt");
+        RemovedBinariesFile = Path.Combine(OutputReportDirectory, "RemovedBinaries.txt");
     }
 }

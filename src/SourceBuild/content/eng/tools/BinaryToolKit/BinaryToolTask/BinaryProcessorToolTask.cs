@@ -3,7 +3,7 @@
 
 using Microsoft.Build.Framework;
 using Task = Microsoft.Build.Utilities.Task;
-using BinaryProcessor;
+using BinaryTool;
 
 namespace BinaryToolTask;
 
