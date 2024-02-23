@@ -17,7 +17,7 @@ public static class DetectBinaries
 
         var matcher = new Matcher();
         matcher.AddInclude("**/*");
-        matcher.AddExcludePatterns(new[] { "**/.dotnet/**", "**/.git/**", "**/git-info/**", "**/artifacts/**", "**/prereqs/packages/**, **/.packages/**" });
+        matcher.AddExcludePatterns(new[] { "**/.dotnet/**", "**/.git/**", "**/git-info/**", "**/artifacts/**", "**/prereqs/packages/**", "**/.packages/**" });
 
         IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(Driver.TargetDirectory);
 
