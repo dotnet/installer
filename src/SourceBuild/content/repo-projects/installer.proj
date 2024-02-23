@@ -29,8 +29,7 @@
     <BuildArgs Condition="'$(TargetOS)' == 'freebsd' and '$(DotNetBuildSourceOnly)' == 'true'">$(BuildArgs) /p:PortableBuild=true</BuildArgs>
     <BuildArgs Condition="'$(TargetOS)' != 'windows'">$(BuildArgs) /p:CoreSetupRid=$(TargetRid)</BuildArgs>
 
-    <BaseUrl>$(ArtifactsAssetsDir)</BaseUrl>
-    <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(BaseUrl)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:PublicBaseURL=file:%2F%2F$(ArtifactsAssetsDir)</BuildArgs>
 
     <BuildArgs>$(BuildArgs) /p:UsePortableLinuxSharedFramework=false</BuildArgs>
 
