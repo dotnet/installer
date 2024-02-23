@@ -829,7 +829,7 @@ stages:
 
         - template: ../jobs/vmr-build.yml
           parameters:
-            buildName: Windows_x64_Pgo
+            buildName: Windows_Pgo
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
