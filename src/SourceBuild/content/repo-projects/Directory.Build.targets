@@ -322,8 +322,6 @@
                             UpdateEngCommonFiles;
                             CreateBuildInputProps;
                             SetSourceBuiltSdkOverrides">
-    <Exec Command="$(DotnetTool) build-server shutdown" />
-
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildCommand)" />
@@ -476,6 +474,7 @@
       To work around these source generators, shut down the compiler server so we can delete the obj directories.
     -->
     <Exec Command="$(DotnetTool) build-server shutdown --vbcscompiler" />
+    <Exec Command="$(DotnetTool) build-server shutdown --razor" />
 
     <PropertyGroup>
       <BuildLogsDir>$([MSBuild]::NormalizeDirectory('$(ProjectDirectory)', 'artifacts', 'buildLogs'))</BuildLogsDir>
