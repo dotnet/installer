@@ -17,7 +17,7 @@
 ###   --runtime-source-feed-key   Key for accessing the above server, if necessary
 ###   --no-binary-removal         Exclude the removal of binaries
 ###   --binaries-keep-file        Path to the file containing the list of allowed binaries to keep. Default is
-###                               VMR/src/installer/src/VirtualMonoRepo/allowed-binaries.txt
+###                               src/installer/src/VirtualMonoRepo/allowed-binaries.txt
 ###   --binaries-remove-file      Path to the file containing the list of allowed binaries to remove.
 ###                               Default is null.
 
