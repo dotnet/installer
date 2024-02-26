@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Formats.Tar;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,7 +23,7 @@ public class ArtifactsSizeTest : SdkTests
     private static readonly string BaselineFilePath = BaselineHelper.GetBaselineFilePath($"ArtifactsSizes/{Config.TargetRid}.txt");
     private readonly Dictionary<string, long> BaselineFileContent = new();
     private Dictionary<string, int> FilePathCountMap = new();
-    private string Differences = "";
+    private StringBuilder Differences = new();
 
     public ArtifactsSizeTest(ITestOutputHelper outputHelper) : base(outputHelper)
     {
@@ -74,15 +75,15 @@ public class ArtifactsSizeTest : SdkTests
             throw new InvalidOperationException($"An error occurred while copying the baselines file: {BaselineFilePath}", ex);
         }
 
-        if (!string.IsNullOrEmpty(Differences))
+        if (Differences.Length > 0)
         {
             if (Config.WarnOnSdkContentDiffs)
             {
-                OutputHelper.LogWarningMessage(Differences);
+                OutputHelper.LogWarningMessage(Differences.ToString());
             }
             else
             {
-                OutputHelper.WriteLine(Differences);
+                OutputHelper.WriteLine(Differences.ToString());
                 Assert.Fail("Differences were found in the artifacts sizes");
             }
         }
@@ -175,7 +176,7 @@ public class ArtifactsSizeTest : SdkTests
         }
     }
 
-    private void TrackDifference(string difference) => Differences += difference + Environment.NewLine;
+    private void TrackDifference(string difference) => Differences.AppendLine(difference);
 
     private void TrackMissingBaselineFiles(FileSize[] tarEntries)
     {
