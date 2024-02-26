@@ -83,7 +83,7 @@ public class ArtifactsSizeTest : SdkTests
             else
             {
                 OutputHelper.WriteLine(Differences);
-                Assert.Fail( "Differences were found in the artifacts sizes");
+                Assert.Fail("Differences were found in the artifacts sizes");
             }
         }
     }
