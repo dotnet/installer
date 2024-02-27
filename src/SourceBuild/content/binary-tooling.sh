@@ -26,7 +26,7 @@ function print_help () {
 defaultBinariesKeepFile="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
 defaultBinariesRemoveFile=''
 defaultDotnetSdk="$SCRIPT_ROOT/.dotnet"
-defaultPackagesDir="$SCRIPT_ROOT/prereqs/packages/"
+defaultPackagesDir="$SCRIPT_ROOT/prereqs/packages"
 defaultPackagesSourceFeed=''
 
 # Parse arguments
@@ -109,6 +109,21 @@ function ParsePositionalArgs {
     echo "  ERROR: A pre-existing packages directory is needed if --with-packages or --packages-source-feed is not provided. \
     Please either supply a packages directory using --with-packages, supply a source-feed using --packages-source-feed, or execute ./prep.sh before proceeding. Exiting..."
     exit 1
+  fi
+
+  # Unpack the previously built packages if the previously built packages directory is empty
+  previouslyBuiltPackagesDir="$packagesDir/previously-source-built"
+  packageArtifacts="$packagesDir/archive/Private.SourceBuilt.Artifacts.*.tar.gz"
+  if [ "$packagesDir" == "$defaultPackagesDir" ] && [ ! -d "$previouslyBuiltPackagesDir" ]; then
+    if [ -f ${packageArtifacts} ]; then
+      echo "Unpacking previously built artifacts from ${packageArtifacts} to $previouslyBuiltPackagesDir"
+      mkdir -p "$previouslyBuiltPackagesDir"
+      tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir"
+    else
+      echo "  ERROR: A pre-existing package archive is needed if --with-packages or --packages-source-feed is not provided. \
+      Please either supply a packages directory using --with-packages, supply a source-feed using --packages-source-feed, or execute ./prep.sh before proceeding. Exiting..."
+      exit 1
+    fi
   fi
 
   # Set the source feed for the packages if it is not already set
