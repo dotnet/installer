@@ -476,7 +476,7 @@
     <Exec Command="$(DotnetTool) build-server shutdown --vbcscompiler" />
     <Exec Command="$(DotnetTool) build-server shutdown --razor" />
 
-    <Exec Command="$(MSBuildThisFileDirectory)handle64.exe -a $(ProjectDirectory)artifacts\sb" />
+    <Exec Command="$(MSBuildThisFileDirectory)handle64.exe -accepteula -a $(ProjectDirectory)artifacts\sb" />
 
     <PropertyGroup>
       <BuildLogsDir>$([MSBuild]::NormalizeDirectory('$(ProjectDirectory)', 'artifacts', 'buildLogs'))</BuildLogsDir>
