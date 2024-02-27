@@ -100,7 +100,7 @@ public partial class Driver
                 {
                     options.IncludeScopes = false;
                     options.SingleLine = true;
-                    options.TimestampFormat = "HH:mm:ss ";
+                    options.TimestampFormat = "HH:mm:ss";
                     options.UseUtcTimestamp = true;
                 }));
         return loggerFactory.CreateLogger("BinaryTool");

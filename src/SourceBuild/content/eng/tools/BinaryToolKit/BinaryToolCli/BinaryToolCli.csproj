@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\BinaryTool\BinaryTool.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(NetCurrent)</TargetFramework>
@@ -11,5 +7,9 @@
     <Nullable>enable</Nullable>
     <AllowPreReleaseDependencies>true</AllowPreReleaseDependencies>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BinaryTool\BinaryTool.csproj" />
+  </ItemGroup>
 
 </Project>
