@@ -474,9 +474,6 @@
       To work around these source generators, shut down the compiler server so we can delete the obj directories.
     -->
     <Exec Command="$(DotnetTool) build-server shutdown --vbcscompiler" />
-    <Exec Command="$(DotnetTool) build-server shutdown --razor" />
-
-    <Exec Condition="'$(BuildOS)' == 'windows'" IgnoreExitCode="true" Command="$(MSBuildThisFileDirectory)handle64.exe -accepteula -a $(ProjectDirectory)artifacts\sb" />
 
     <PropertyGroup>
       <BuildLogsDir>$([MSBuild]::NormalizeDirectory('$(ProjectDirectory)', 'artifacts', 'buildLogs'))</BuildLogsDir>
