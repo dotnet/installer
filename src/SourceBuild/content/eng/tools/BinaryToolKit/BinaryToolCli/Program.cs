@@ -41,11 +41,7 @@ class Program
             }
         }
 
-        Driver.TargetDirectory = targetDirectory;
-        Driver.OutputReportDirectory = outputReportDirectory;
-        Driver.AllowedBinariesKeepFile = allowedBinariesKeepFile;
-        Driver.AllowedBinariesRemoveFile = allowedBinariesRemoveFile;
-
-        Driver.Execute();
+        Driver driver = new Driver(targetDirectory, outputReportDirectory, allowedBinariesKeepFile, allowedBinariesRemoveFile);
+        driver.Execute();
     }
 }

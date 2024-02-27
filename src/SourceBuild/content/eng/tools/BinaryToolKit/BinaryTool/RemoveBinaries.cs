@@ -4,19 +4,22 @@
 using Microsoft.Extensions.Logging;
 
 namespace BinaryTool;
-public static class RemoveBinaries
+public partial class Driver
 {
-    public static void Execute()
+    // Requires: RemovedBinariesFile exists
+    // Modifies: TargetDirectory
+    // Effects:  Removes the binaries listed in the RemovedBinariesFile from the TargetDirectory.
+    private void RemoveBinaries()
     {
-        Driver.Log.LogInformation($"Removing binaries listed in {Driver.RemovedBinariesFile} from {Driver.TargetDirectory}...");
+        Log.LogInformation($"Removing binaries listed in {RemovedBinariesFile} from {TargetDirectory}...");
 
-        IEnumerable<string> binariesToRemove = File.ReadLines(Driver.RemovedBinariesFile);
+        IEnumerable<string> binariesToRemove = File.ReadLines(RemovedBinariesFile);
         
         foreach (var binary in binariesToRemove)
         {
-            File.Delete(Path.Combine(Driver.TargetDirectory, binary));
+            File.Delete(Path.Combine(TargetDirectory, binary));
         }
 
-        Driver.Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");
+        Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");
     }
 }

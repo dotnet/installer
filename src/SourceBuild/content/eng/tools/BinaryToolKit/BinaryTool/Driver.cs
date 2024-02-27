@@ -5,44 +5,94 @@ using Microsoft.Extensions.Logging;
 
 namespace BinaryTool;
 
-public static class Driver
+public partial class Driver
 {
-    // Directory to scan for binaries: required
-    public static string TargetDirectory { get; set; } = string.Empty;
 
-    // Directory to output reports: required
-    public static string OutputReportDirectory { get; set; } = string.Empty;
+    // Target directory - where to look for binaries
+    private string TargetDirectory { get; set; }
 
-    // File for the baseline of allowed retainable binaries: optional
-    public static string AllowedBinariesKeepFile { get; set; } = string.Empty;
+    // Allowed binaries keep file - binaries allowed in the target directory that should be kept
+    private string AllowedBinariesKeepFile { get; set; } = string.Empty;
 
-    // File for the baseline of allowed removeable binaries: optional
-    public static string AllowedBinariesRemoveFile { get; set; } = string.Empty;
+    // Allowed binaries remove file - binaries allowed in the target directory that should be removed
+    private string AllowedBinariesRemoveFile { get; set; } = string.Empty;
 
-    // Output files
-    public static string DetectedBinariesFile { get; private set; } = string.Empty;
-    public static string UpdatedAllowedBinariesKeepFile { get; private set; } = string.Empty;
-    public static string UpdatedAllowedBinariesRemoveFile { get; private set; } = string.Empty;
-    public static string NewBinariesFile { get; private set; } = string.Empty;
-    public static string RemovedBinariesFile { get; private set; } = string.Empty;
+    // Detected binaries file - list of detected binaries in the target directory
+    private string DetectedBinariesFile { get; set; }
+
+    // Updated allowed binaries keep file - updated baseline of allowed binaries to keep
+    private string UpdatedAllowedBinariesKeepFile { get; set; }
+
+    // Updated allowed binaries remove file - updated baseline of allowed binaries to remove
+    private string UpdatedAllowedBinariesRemoveFile { get; set; }
+
+    // New binaries file - list of new binaries detected in the target directory
+    private string NewBinariesFile { get; set; }
+
+    // Removed binaries file - list of removed binaries from the target directory
+    private string RemovedBinariesFile { get; set; }
 
     // Logger
-    public static ILogger Log { get; private set; } = ConfigureLogger();
+    private ILogger Log { get; set; }
 
-    public static void Execute()
+    public Driver(string targetDirectory, string outputReportDirectory, string allowedBinariesKeepFile, string allowedBinariesRemoveFile)
+    {
+        Log = ConfigureLogger();
+
+        TargetDirectory = Path.GetFullPath(targetDirectory);
+        if(!Directory.Exists(TargetDirectory))
+        {
+            Log.LogError($"Target directory {TargetDirectory} does not exist.");
+            Environment.Exit(1);
+        }
+
+        string outDir = Path.GetFullPath(outputReportDirectory);
+        if(!Directory.Exists(outDir))
+        {
+            Log.LogInformation($"Creating output report directory {outDir}");
+            Directory.CreateDirectory(outDir);
+        }
+
+        DetectedBinariesFile = Path.Combine(outDir, "DetectedBinaries.txt");
+        UpdatedAllowedBinariesKeepFile = Path.Combine(outDir, "UpdatedAllowedBinariesKeepFile.txt");
+        UpdatedAllowedBinariesRemoveFile = Path.Combine(outDir, "UpdatedAllowedBinariesRemoveFile.txt");
+        NewBinariesFile = Path.Combine(outDir, "NewBinaries.txt");
+        RemovedBinariesFile = Path.Combine(outDir, "RemovedBinaries.txt");
+
+        if (!string.IsNullOrEmpty(allowedBinariesKeepFile))
+        {
+            AllowedBinariesKeepFile = Path.GetFullPath(allowedBinariesKeepFile);
+            if (!File.Exists(AllowedBinariesKeepFile))
+            {
+                Log.LogError($"Allowed retainable binaries baseline file {AllowedBinariesKeepFile} does not exist.");
+                Environment.Exit(1);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(allowedBinariesRemoveFile))
+        {
+            AllowedBinariesRemoveFile = Path.GetFullPath(allowedBinariesRemoveFile);
+            if (!File.Exists(AllowedBinariesRemoveFile))
+            {
+                Log.LogError($"Allowed removeable binaries baseline file {AllowedBinariesRemoveFile} does not exist.");
+                Environment.Exit(1);
+            }
+        }
+    }
+
+    public void Execute()
     {
         DateTime startTime = DateTime.Now;
         Log.LogInformation($"Starting binary detection, validation, and removal tool from {Environment.CurrentDirectory}...");
 
-        ProcessParameters();
-        DetectBinaries.Execute();
-        CompareBinariesAgainstBaseline.Execute();
-        RemoveBinaries.Execute();
+        DetectBinaries();
+        CompareBinariesAgainstBaselines();
+        RemoveBinaries();
 
         Log.LogInformation("Finished binary detection, validation, and removal tool. Took " + (DateTime.Now - startTime).TotalSeconds + " seconds.");
     }
 
-    private static ILogger ConfigureLogger()
+    private ILogger ConfigureLogger()
     {
         using ILoggerFactory loggerFactory =
             LoggerFactory.Create(builder =>
@@ -54,48 +104,5 @@ public static class Driver
                     options.UseUtcTimestamp = true;
                 }));
         return loggerFactory.CreateLogger("BinaryTool");
-    }
-
-    private static void ProcessParameters()
-    {
-        TargetDirectory = Path.GetFullPath(TargetDirectory);
-        if(!Directory.Exists(TargetDirectory))
-        {
-            Log.LogError($"Target directory {TargetDirectory} does not exist.");
-            Environment.Exit(1);
-        }
-
-        OutputReportDirectory = Path.GetFullPath(OutputReportDirectory);
-        if(!Directory.Exists(OutputReportDirectory))
-        {
-            Log.LogInformation($"Creating output report directory {OutputReportDirectory}");
-            Directory.CreateDirectory(OutputReportDirectory);
-        }
-
-        if (!string.IsNullOrEmpty(AllowedBinariesKeepFile))
-        {
-            AllowedBinariesKeepFile = Path.GetFullPath(AllowedBinariesKeepFile);
-            if (!File.Exists(AllowedBinariesKeepFile))
-            {
-                Log.LogError($"Allowed retainable binaries baseline file {AllowedBinariesKeepFile} does not exist.");
-                Environment.Exit(1);
-            }
-        }
-
-        if (!string.IsNullOrEmpty(AllowedBinariesRemoveFile))
-        {
-            AllowedBinariesRemoveFile = Path.GetFullPath(AllowedBinariesRemoveFile);
-            if (!File.Exists(AllowedBinariesRemoveFile))
-            {
-                Log.LogError($"Allowed removeable binaries baseline file {AllowedBinariesRemoveFile} does not exist.");
-                Environment.Exit(1);
-            }
-        }
-
-        DetectedBinariesFile = Path.Combine(OutputReportDirectory, "DetectedBinaries.txt");
-        UpdatedAllowedBinariesKeepFile = Path.Combine(OutputReportDirectory, "UpdatedAllowedBinariesKeepFile.txt");
-        UpdatedAllowedBinariesRemoveFile = Path.Combine(OutputReportDirectory, "UpdatedAllowedBinariesRemoveFile.txt");
-        NewBinariesFile = Path.Combine(OutputReportDirectory, "NewBinaries.txt");
-        RemovedBinariesFile = Path.Combine(OutputReportDirectory, "RemovedBinaries.txt");
     }
 }
