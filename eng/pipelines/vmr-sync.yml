@@ -42,5 +42,5 @@ jobs:
 - ${{ if eq(parameters.vmrBranch, 'main') }}:
   - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
     parameters:
-      jobName: Synchronize_VMR_uncloacked
+      jobName: Synchronize_VMR_uncloaked
       vmrBranch: ${{ variables.VmrBranch }}-ub
