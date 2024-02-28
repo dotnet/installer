@@ -39,7 +39,7 @@ jobs:
     jobName: Synchronize_VMR
     vmrBranch: ${{ variables.VmrBranch }}
 
-- ${{ if eq(parameters.vmrBranch, 'main') }}:
+- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
   - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
     parameters:
       jobName: Synchronize_VMR_uncloaked
