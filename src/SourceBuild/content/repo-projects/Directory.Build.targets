@@ -351,7 +351,8 @@
 
     <Exec Command="$(FullCommand)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)">
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="RepoBuildExitCode" />
     </Exec>
 
