@@ -56,7 +56,7 @@ public partial class BinaryTool
     {
         DateTime startTime = DateTime.Now;
 
-        Log.LogInformation($"Starting binary tool at {startTime}");
+        Log.LogInformation($"Starting binary tool at {startTime} in {ModeOption} mode");
 
         var detectedBinaries = await DetectBinariesAsync();
         var comparedBinaries = CompareBinariesAgainstBaselines(detectedBinaries);
