@@ -2,7 +2,7 @@
 
 ### Usage: $0
 ###
-###   Runs the binary tooling as needed for source-build scenarios. The tooling is responsible for
+###   Cleans binaries in the VMR.
 ###
 ### Options:
 ###   --binaries-keep-file <FILE>     Path to the file containing the list of allowed binaries to keep. Default is
@@ -143,8 +143,12 @@ function RunBinaryTool {
   # Get the runtime version
   runtimeVersion=$("$dotnetSdk/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
 
+  "$dotnetSdk/dotnet" clean "$SCRIPT_ROOT/eng/tools/BinaryToolKit/BinaryTool"
+
+  export LOG_LEVEL=Debug
+
   # Run the BinaryDetection tool
-  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" --keep "$binariesKeepFile" --remove "$binariesRemoveFile"
+  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -k "$binariesKeepFile" -r "$binariesRemoveFile" -m c
 }
 
 ParsePositionalArgs

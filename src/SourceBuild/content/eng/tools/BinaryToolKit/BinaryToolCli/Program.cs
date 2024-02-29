@@ -1,47 +1,42 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.CommandLine;
 using BinaryTool;
-
-namespace BinaryToolCli;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
-        if (args.Length < 2 || args.Length > 6)
+        CliArgument<string> TargetDirectory = new("target-directory") { Description = "The directory to run the binary tooling on" };
+        CliArgument<string> OutputReportDirectory = new("output-report-directory") { Description = "The directory to output the report to" };
+        CliOption<string> AllowedBinariesKeepFile = new("--allowed-binaries-keep-file", "-k") { Description = "The file containing the allowed binaries to keep" };
+        CliOption<string> AllowedBinariesRemoveFile = new("--allowed-binaries-remove-file", "-r") { Description = "The file containing the allowed binaries to remove" };
+        CliOption<Mode.ModeOptions> ModeOption = new("--mode", "-m") { Description = "The mode to run the tool in. Defaults to 'both' ('b').", Arity = ArgumentArity.ZeroOrOne};
+
+        var rootCommand = new CliRootCommand("Tool for detecting, validating, and cleaning binaries in the target directory.")
         {
-            Console.WriteLine("Usage: BinaryToolCli <target-directory> <output-report-directory> [--allowed-binaries-keep-file <file> | --keep <file>] [--allowed-binaries-remove-file <file> | --remove <file>]");
-            return;
-        }
+            TargetDirectory,
+            OutputReportDirectory,
+            AllowedBinariesKeepFile,
+            AllowedBinariesRemoveFile,
+            ModeOption
+        };
 
-        var targetDirectory = args[0];
-        var outputReportDirectory = args[1];
-        var allowedBinariesKeepFile = "";
-        var allowedBinariesRemoveFile = "";
-
-        for (int i = 2; i < args.Length; i++)
+        rootCommand.SetAction(async (result, CancellationToken) =>
         {
-            switch (args[i])
-            {
-                case "--allowed-binaries-keep-file":
-                case "--keep":
-                    if (++i < args.Length)
-                    {
-                        allowedBinariesKeepFile = args[i];
-                    }
-                    break;
-                case "--allowed-binaries-remove-file":
-                case "--remove":
-                    if (++i < args.Length)
-                    {
-                        allowedBinariesRemoveFile = args[i];
-                    }
-                    break;
-            }
-        }
+            var driver = new Driver(
+                result.GetValue(TargetDirectory)!,
+                result.GetValue(OutputReportDirectory)!,
+                result.GetValue(AllowedBinariesKeepFile),
+                result.GetValue(AllowedBinariesRemoveFile),
+                result.GetValue(ModeOption));
 
-        Driver driver = new Driver(targetDirectory, outputReportDirectory, allowedBinariesKeepFile, allowedBinariesRemoveFile);
-        driver.Execute();
+            await driver.ExecuteAsync();
+        });
+
+        // return new CliConfiguration(rootCommand).Invoke(args);
+        return await rootCommand.Parse(args).InvokeAsync();
     }
 }

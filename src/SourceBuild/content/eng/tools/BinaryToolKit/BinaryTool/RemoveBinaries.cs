@@ -9,15 +9,14 @@ public partial class Driver
     // Requires: RemovedBinariesFile exists
     // Modifies: TargetDirectory
     // Effects:  Removes the binaries listed in the RemovedBinariesFile from the TargetDirectory.
-    private void RemoveBinaries()
+    private void RemoveBinaries(IEnumerable<string> binariesToRemove)
     {
-        Log.LogInformation($"Removing binaries listed in {RemovedBinariesFile} from {TargetDirectory}...");
-
-        IEnumerable<string> binariesToRemove = File.ReadLines(RemovedBinariesFile);
+        Log.LogInformation($"Removing binaries from {TargetDirectory}...");
         
         foreach (var binary in binariesToRemove)
         {
             File.Delete(Path.Combine(TargetDirectory, binary));
+            Log.LogDebug($"Removed {binary}");
         }
 
         Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");

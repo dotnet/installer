@@ -9,65 +9,62 @@ public partial class Driver
 {
     private const string PatternsToRemoveMarker = "# Consider removing the following unused patterns from the baseline file:";
 
-    // Requires: DetectedBinariesFile exists
-    // Modifies: UpdatedAllowedBinariesKeepFile, UpdatedAllowedBinariesRemoveFile, NewBinariesFile, RemovedBinariesFile
-    // Effects:  Compares the detected binaries against the baseline patterns and writes the results to the output files.
-    private void CompareBinariesAgainstBaselines()
+    private List<string> CompareBinariesAgainstBaselines(IEnumerable<string> detectedBinaries)
     {
-        Log.LogInformation($"Validating binaries in {TargetDirectory} {GetBaselineLogString()}...");
+        Log.LogInformation("Comparing detected binaries to baseline(s).");
 
-        IEnumerable<string> detectedBinaries = File.ReadLines(DetectedBinariesFile);
+        var binariesToRemove = GetUnmatchedBinaries(detectedBinaries, AllowedBinariesKeepFile, UpdatedAllowedBinariesKeepFile).ToList();
 
-        var binariesToKeep = MatchBinariesAndUpdateBaseline(detectedBinaries, AllowedBinariesKeepFile, UpdatedAllowedBinariesKeepFile);
-        var binariesToRemove = MatchBinariesAndUpdateBaseline(detectedBinaries, AllowedBinariesRemoveFile, UpdatedAllowedBinariesRemoveFile);
-        var newBinaries = detectedBinaries.Except(binariesToKeep).Except(binariesToRemove);
-
-        if (newBinaries.Any())
+        if (ModeOption != Mode.ModeOptions.clean)
         {
-            Log.LogWarning($"    New binaries detected. Review {NewBinariesFile} and update the baseline file(s).");
-        }
+            var newBinaries = GetUnmatchedBinaries(binariesToRemove, AllowedBinariesRemoveFile, UpdatedAllowedBinariesRemoveFile).ToList();
 
-        // Write new binaries to file
-        File.WriteAllLines(NewBinariesFile, newBinaries);
-
-        // Write binaries to remove to file
-        File.WriteAllLines(RemovedBinariesFile, newBinaries);
-        File.AppendAllLines(RemovedBinariesFile, binariesToRemove);
-
-        Log.LogInformation("Finished binary validation.");
-    }
-
-    private HashSet<string> MatchBinariesAndUpdateBaseline(IEnumerable<string> detectedBinaries, string? baselineFile, string updatedBaselineFile)
-    {
-        IEnumerable<string> baselinePatterns = ParseBaselineFile(baselineFile);
-        HashSet<string> unusedPatterns = new HashSet<string>(baselinePatterns);
-        HashSet<string> matchedBinaries = new HashSet<string>();
-
-        // Compare detected binaries against the baseline patterns
-        foreach (string pattern in baselinePatterns)
-        {
-            Matcher matcher = new Matcher();
-            matcher.AddInclude(pattern);
-            
-            var matches = matcher.Match(TargetDirectory, detectedBinaries);
-            if (matches.HasMatches)
+            if (newBinaries.Any())
             {
-                unusedPatterns.Remove(pattern);
-                matchedBinaries.UnionWith(matches.Files.Select(file => file.Path));
+                Log.LogWarning($"    New binaries detected. Check {NewBinariesFile}");
+                File.WriteAllLines(NewBinariesFile!, newBinaries);
             }
         }
 
-        // Write the updated baseline file
-        if(File.Exists(baselineFile))
+        Log.LogInformation("Finished comparing binaries.");
+
+        return binariesToRemove;
+    }
+
+    private IEnumerable<string> GetUnmatchedBinaries(IEnumerable<string> searchFiles, string? baselineFile, string? updatedBaselineFile)
+    {
+        var patterns = ParseBaselineFile(baselineFile);
+
+        if (ModeOption == Mode.ModeOptions.clean)
         {
-            File.Copy(baselineFile, updatedBaselineFile, true);
+            Matcher matcher = new Matcher();
+            matcher.AddInclude("**/*");
+            matcher.AddExcludePatterns(patterns);
+
+            return matcher.Match(TargetDirectory, searchFiles).Files.Select(file => file.Path);
         }
-        File.AppendAllText(updatedBaselineFile, $"{Environment.NewLine}{PatternsToRemoveMarker}{Environment.NewLine}");
-        File.AppendAllLines(updatedBaselineFile, unusedPatterns);
+        else
+        {
+            HashSet<string> unusedPatterns = new HashSet<string>(patterns);
+            HashSet<string> unmatchedFiles = new HashSet<string>(searchFiles);
 
-        Log.LogInformation($"    Updated baseline file written to {updatedBaselineFile}");
+            foreach (string pattern in patterns)
+            {
+                Matcher matcher = new Matcher();
+                matcher.AddInclude(pattern);
+                
+                var matches = matcher.Match(TargetDirectory, searchFiles);
+                if (matches.HasMatches)
+                {
+                    unusedPatterns.Remove(pattern);
+                    unmatchedFiles.ExceptWith(matches.Files.Select(file => file.Path));
+                }
+            }
 
-        return matchedBinaries;
+            UpdateBaselineFile(baselineFile!, updatedBaselineFile!, unusedPatterns);
+
+            return unmatchedFiles;
+        }
     }
 
     private IEnumerable<string> ParseBaselineFile(string? file) {
@@ -82,21 +79,15 @@ public partial class Driver
             .Select(line => line.Split('#')[0].Trim());
     }
 
-    private string GetBaselineLogString()
+    private void UpdateBaselineFile(string? file, string updatedFile, HashSet<string> unusedPatterns)
     {
-        if (!string.IsNullOrEmpty(AllowedBinariesKeepFile) && !string.IsNullOrEmpty(AllowedBinariesRemoveFile))
+        if(File.Exists(file))
         {
-            return $"against baselines {AllowedBinariesKeepFile} and {AllowedBinariesRemoveFile}";
-        }
-        else if (string.IsNullOrEmpty(AllowedBinariesKeepFile))
-        {
-            return $"against baseline {AllowedBinariesRemoveFile}";
-        }
-        else if (string.IsNullOrEmpty(AllowedBinariesRemoveFile))
-        {
-            return $"against baseline {AllowedBinariesKeepFile}";
-        }
+            File.Copy(file, updatedFile, true);
+            File.AppendAllText(updatedFile, $"{Environment.NewLine}{PatternsToRemoveMarker}{Environment.NewLine}");
+            File.AppendAllLines(updatedFile, unusedPatterns);
 
-        return "without a baseline";
+            Log.LogInformation($"    Updated baseline file {file} written to {updatedFile}");
+        }
     }
 }

@@ -10,12 +10,7 @@ public partial class Driver
 {
     private const string Utf16Marker = "UTF-16";
 
-    // Requires: TargetDirectory exists
-    // Modifies: DetectedBinariesFile
-    // Effects:  Detects binaries in the target directory and writes the results to the DetectedBinariesFile.
-    private void DetectBinaries() => DetectBinariesAsync().GetAwaiter().GetResult();
-
-    private async Task DetectBinariesAsync()
+    private async Task<IEnumerable<string>> DetectBinariesAsync()
     {
         Log.LogInformation($"Detecting binaries in {TargetDirectory}...");
 
@@ -31,17 +26,17 @@ public partial class Driver
             .Select(async file =>
             {
                 string output = await ExecuteProcessAsync("diff", $"/dev/null \"{file}\"");
-                return output.StartsWith("Binary") && await IsNotUTF16(file) ? file : null;
+                return output.StartsWith("Binary") && await IsNotUTF16Async(file) ? file : null;
             });
 
-        var binaryFiles = (await Task.WhenAll(tasks)).Where(file => file != null).Select(file => file!).Select(file => file.Substring(TargetDirectory.Length + 1));
-
-        File.WriteAllLines(DetectedBinariesFile, binaryFiles);
+        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(TargetDirectory.Length + 1));
         
-        Log.LogInformation($"Finished binary detection. Wrote all detected binaries to {DetectedBinariesFile}.");
+        Log.LogInformation($"Finished binary detection.");
+
+        return binaryFiles;
     }
 
-    private async Task<bool> IsNotUTF16(string file)
+    private async Task<bool> IsNotUTF16Async(string file)
     {
         if (Environment.OSVersion.Platform == PlatformID.Unix)
         {
