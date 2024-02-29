@@ -133,7 +133,7 @@ function ParsePositionalArgs {
 }
 
 function RunBinaryTool {
-  BinaryDetectionTool="$SCRIPT_ROOT/eng/tools/BinaryToolKit/BinaryToolCli"
+  BinaryDetectionTool="$SCRIPT_ROOT/eng/tools/BinaryToolKit"
   TargetDir="$SCRIPT_ROOT"
   OutputDir="$SCRIPT_ROOT/artifacts/binary-report"
 
@@ -143,7 +143,7 @@ function RunBinaryTool {
   # Get the runtime version
   runtimeVersion=$("$dotnetSdk/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
 
-  "$dotnetSdk/dotnet" clean "$SCRIPT_ROOT/eng/tools/BinaryToolKit/BinaryTool"
+  "$dotnetSdk/dotnet" clean "$SCRIPT_ROOT/eng/tools/BinaryToolKit"
 
   export LOG_LEVEL=Debug
 

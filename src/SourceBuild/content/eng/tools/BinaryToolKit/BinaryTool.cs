@@ -3,9 +3,9 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace BinaryTool;
+namespace BinaryToolKit;
 
-public partial class Driver
+public partial class BinaryTool
 {
 
     // Target directory - where to look for binaries
@@ -32,7 +32,7 @@ public partial class Driver
     // Logger
     private ILogger Log;
 
-    public Driver(string targetDirectory, string outputReportDirectory, string? allowedBinariesKeepFile, string? allowedBinariesRemoveFile, Mode.ModeOptions mode)
+    public BinaryTool(string targetDirectory, string outputReportDirectory, string? allowedBinariesKeepFile, string? allowedBinariesRemoveFile, Mode.ModeOptions mode)
     {
         ModeOption = Mode.GetFullMode(mode);
         Log = ConfigureLogger();

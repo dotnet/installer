@@ -5,8 +5,9 @@ using System.Diagnostics;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.Logging;
 
-namespace BinaryTool;
-public partial class Driver
+namespace BinaryToolKit;
+
+public partial class BinaryTool
 {
     private const string Utf16Marker = "UTF-16";
 

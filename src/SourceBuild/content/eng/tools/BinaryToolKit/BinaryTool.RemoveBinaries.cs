@@ -3,12 +3,10 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace BinaryTool;
-public partial class Driver
+namespace BinaryToolKit;
+
+public partial class BinaryTool
 {
-    // Requires: RemovedBinariesFile exists
-    // Modifies: TargetDirectory
-    // Effects:  Removes the binaries listed in the RemovedBinariesFile from the TargetDirectory.
     private void RemoveBinaries(IEnumerable<string> binariesToRemove)
     {
         Log.LogInformation($"Removing binaries from {TargetDirectory}...");

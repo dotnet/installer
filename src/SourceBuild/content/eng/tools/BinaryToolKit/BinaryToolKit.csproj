@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RuntimeVersion></RuntimeVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <Target Name="CheckRuntimeVersion" BeforeTargets="CoreCompile">
@@ -15,6 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="$(RuntimeVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="$(RuntimeVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(RuntimeVersion)" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-*" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-namespace BinaryTool;
+namespace BinaryToolKit;
 
 public static class Mode
 {

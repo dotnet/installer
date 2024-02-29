@@ -4,8 +4,9 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.Logging;
 
-namespace BinaryTool;
-public partial class Driver
+namespace BinaryToolKit;
+
+public partial class BinaryTool
 {
     private const string PatternsToRemoveMarker = "# Consider removing the following unused patterns from the baseline file:";
 

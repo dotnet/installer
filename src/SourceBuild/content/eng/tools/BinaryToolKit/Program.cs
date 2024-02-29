@@ -3,7 +3,8 @@
 
 using System;
 using System.CommandLine;
-using BinaryTool;
+
+namespace BinaryToolKit;
 
 class Program
 {
@@ -26,14 +27,14 @@ class Program
 
         rootCommand.SetAction(async (result, CancellationToken) =>
         {
-            var driver = new Driver(
+            var binaryTool = new BinaryTool(
                 result.GetValue(TargetDirectory)!,
                 result.GetValue(OutputReportDirectory)!,
                 result.GetValue(AllowedBinariesKeepFile),
                 result.GetValue(AllowedBinariesRemoveFile),
                 result.GetValue(ModeOption));
 
-            await driver.ExecuteAsync();
+            await binaryTool.ExecuteAsync();
         });
 
         // return new CliConfiguration(rootCommand).Invoke(args);
