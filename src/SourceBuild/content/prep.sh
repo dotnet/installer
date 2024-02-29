@@ -15,6 +15,19 @@
 ###   --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and
 ###                               runtimes can be downloaded
 ###   --runtime-source-feed-key   Key for accessing the above server, if necessary
+###
+### Binary-Tooling options:
+###   --no-binaries               Don't run the binary tooling
+###   --binaries-keep-file        Path to the file containing the list of allowed binaries to keep. Default is
+###                               src/installer/src/VirtualMonoRepo/allowed-binaries.txt
+###   --binaries-remove-file      Path to the file containing the list of allowed binaries.
+###                               Default is null.
+###   --with-sdk                  Use the SDK in the specified directory
+###                               Default is the .NET SDK
+###   --packages-source-feed      URL or specified directory as the source feed for packages
+###                               Default is the previously source-built artifacts archive
+###   --no-validate               Do not run validation. Only remove the binaries.
+###   --no-clean                  Do not remove the binaries. Only run the validation.
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -26,8 +39,16 @@ function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
 }
 
+# SB prep default arguments
 defaultArtifactsRid='centos.8-x64'
 
+# Binary Tooling default arguments
+defaultBinariesKeepFile="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+defaultDotnetSdk="$SCRIPT_ROOT/.dotnet"
+defaultPackagesDir="$SCRIPT_ROOT/prereqs/packages"
+defaultMode="both"
+
+# SB prep arguments
 buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
@@ -35,6 +56,15 @@ installDotnet=true
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
+
+# Binary Tooling arguments
+runBinaryTool=true
+binariesKeepFile=$defaultBinariesKeepFile
+binariesRemoveFile=''
+dotnetSdk=$defaultDotnetSdk
+packagesSourceFeed=$defaultPackagesDir
+mode=$defaultMode
+
 positional_args=()
 while :; do
   if [ $# -le 0 ]; then
@@ -68,6 +98,47 @@ while :; do
     --runtime-source-feed-key)
       runtime_source_feed_key=$2
       shift
+      ;;
+    --no-binaries)
+      runBinaryTool=false
+      ;;
+    --binaries-keep-file)
+      binariesKeepFile=$2
+      if [ ! -f "$binariesKeepFile" ]; then
+        echo "Allowed binaries keep file '$binariesKeepFile' does not exist"
+        exit 1
+      fi
+      shift
+      ;;
+    --binaries-remove-file)
+      binariesRemoveFile=$2
+      if [ ! -f "$binariesRemoveFile" ]; then
+        echo "Allowed binaries remove file '$binariesRemoveFile' does not exist"
+        exit 1
+      fi
+      shift
+      ;;
+    --with-sdk)
+      dotnetSdk=$2
+      if [ ! -d "$dotnetSdk" ]; then
+        echo "Custom SDK directory '$dotnetSdk' does not exist"
+        exit 1
+      fi
+      if [ ! -x "$dotnetSdk/dotnet" ]; then
+        echo "Custom SDK '$dotnetSdk/dotnet' does not exist or is not executable"
+        exit 1
+      fi
+      shift
+      ;;
+    --packages-source-feed)
+      packagesSourceFeed=$2
+      shift
+      ;;
+    --no-clean)
+      mode="v"
+      ;;
+    --no-validate)
+      mode="c"
       ;;
     *)
       positional_args+=("$1")
@@ -111,6 +182,42 @@ if [ "$installDotnet" == true ] && [ -d "$SCRIPT_ROOT/.dotnet" ]; then
   echo "  ./.dotnet SDK directory exists...it will not be installed"
   installDotnet=false;
 fi
+
+function ParseBinaryArgs {
+  # Attempting to run the binary tooling without an SDK will fail. So either the --with-sdk flag must be passed
+  # or a pre-existing .dotnet SDK directory must exist.
+  if [ "$dotnetSdk" == "$defaultDotnetSdk" ] && [ ! -d "$dotnetSdk" ]; then
+    echo "  ERROR: A pre-existing .dotnet SDK directory is needed if --with-sdk is not provided. \
+    Please either supply an SDK using --with-sdk or execute ./prep.sh before proceeding. Exiting..."
+    exit 1
+  fi
+
+  ## Attemping to run the binary tooling without a packages directory or source-feed will fail.
+  ## So either the --with-packages flag must be passed with a valid directory or the source feed must be set using --packages-source-feed
+  if [ "$packagesSourceFeed" == "$defaultPackagesDir" ] && [ ! -d "$packagesSourceFeed" ]; then
+    echo "  ERROR: A pre-existing packages directory is needed if --packages-source-feed is not provided. \
+    Please either supply a packages directory using --with-packages or \
+    execute ./prep.sh with download artifacts enabled before proceeding. Exiting..."
+    exit 1
+  fi
+
+  # Unpack the previously built packages if the previously built packages directory is empty and
+  # if we're using the default artifacts
+  previouslyBuiltPackagesDir="$defaultPackagesDir/previously-source-built"
+  packageArtifacts="$defaultPackagesDir/archive/Private.SourceBuilt.Artifacts.*.tar.gz"
+  if [ "$packagesSourceFeed" == "$defaultPackagesDir" ] && [ ! -d "$previouslyBuiltPackagesDir" ]; then
+    if [ -f ${packageArtifacts} ]; then
+      echo "Unpacking previously built artifacts from ${packageArtifacts} to $previouslyBuiltPackagesDir"
+      mkdir -p "$previouslyBuiltPackagesDir"
+      tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir"
+    else
+      echo "  ERROR: A pre-existing package archive is needed if --packages-source-feed is not provided. \
+      Please either supply a source-feed using --packages-source-feed or \
+      execute ./prep.sh with with download artifacts enabled before proceeding. Exiting..."
+      exit 1
+    fi
+  fi
+}
 
 function DownloadArchive {
   archiveType="$1"
@@ -171,6 +278,24 @@ function BootstrapArtifacts {
   rm -rf "$workingDir"
 }
 
+function RunBinaryTool {
+  BinaryDetectionTool="$SCRIPT_ROOT/eng/tools/BinaryToolKit"
+  TargetDir="$SCRIPT_ROOT"
+  OutputDir="$SCRIPT_ROOT/artifacts/binary-report"
+
+  # Set the environment variable for the packages source feed
+  export ARTIFACTS_PATH="$packagesSourceFeed"
+
+  # Get the runtime version
+  runtimeVersion=$("$dotnetSdk/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
+
+  # Set the log level
+  export LOG_LEVEL=Debug
+
+  # Run the BinaryDetection tool
+  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -k "$binariesKeepFile" -r "$binariesRemoveFile" -m $mode
+}
+
 # Check for the version of dotnet to install
 if [ "$installDotnet" == true ]; then
   echo "  Installing dotnet..."
@@ -191,4 +316,9 @@ fi
 
 if [ "$downloadPrebuilts" == true ]; then
   DownloadArchive Prebuilts false $artifactsRid
+fi
+
+if [ "$runBinaryTool" == true ]; then
+  ParseBinaryArgs
+  RunBinaryTool
 fi
