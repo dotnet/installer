@@ -11,17 +11,17 @@ public partial class BinaryTool
     // Target directory - where to look for binaries
     private readonly string TargetDirectory;
 
-    // Allowed binaries keep file - binaries allowed in the target directory that should be kept. Needed for validation and cleaning.
-    private readonly string? AllowedBinariesKeepFile;
+    // Allowed binaries file - known binaries in the target directory that should not be removed. Needed for validation and cleaning.
+    private readonly string? AllowedBinariesFile;
 
-    // Allowed binaries remove file - binaries allowed in the target directory that should be removed. Needed for validation.
-    private readonly string? AllowedBinariesRemoveFile;
+    // Disallowed source build binaries file - known binaries in the target directory that are disallowed for source-build. Needed for validation.
+    private readonly string? DisallowedSbBinariesFile;
 
-    // Updated allowed binaries keep file - updated baseline of allowed binaries to keep
-    private readonly string? UpdatedAllowedBinariesKeepFile;
+    // Updated allowed binaries file - updated baseline of allowed binaries
+    private readonly string? UpdatedAllowedBinariesFile;
 
-    // Updated allowed binaries remove file - updated baseline of allowed binaries to remove
-    private readonly string? UpdatedAllowedBinariesRemoveFile;
+    // Updated disallowed source build binaries file - updated baseline of disallowed source build binaries
+    private readonly string? UpdatedDisallowedSbBinariesFile;
 
     // New binaries file - list of new binaries detected in the target directory
     private readonly string? NewBinariesFile;
@@ -32,7 +32,7 @@ public partial class BinaryTool
     // Logger
     private ILogger Log;
 
-    public BinaryTool(string targetDirectory, string outputReportDirectory, string? allowedBinariesKeepFile, string? allowedBinariesRemoveFile, Mode.ModeOptions mode)
+    public BinaryTool(string targetDirectory, string outputReportDirectory, string? allowedBinariesFile, string? disallowedSbBinariesFile, Mode.ModeOptions mode)
     {
         ModeOption = Mode.GetFullMode(mode);
         Log = ConfigureLogger();
@@ -43,13 +43,13 @@ public partial class BinaryTool
         {
             string outDir = GetAndValidateFullPath(outputReportDirectory, true, true)!;
 
-            UpdatedAllowedBinariesKeepFile = Path.Combine(outDir, "UpdatedAllowedBinariesKeepFile.txt");
-            UpdatedAllowedBinariesRemoveFile = Path.Combine(outDir, "UpdatedAllowedBinariesRemoveFile.txt");
+            UpdatedAllowedBinariesFile = Path.Combine(outDir, "UpdatedAllowedBinariesFile.txt");
+            UpdatedDisallowedSbBinariesFile = Path.Combine(outDir, "UpdatedDisallowedSbBinariesFile.txt");
             NewBinariesFile = Path.Combine(outDir, "NewBinaries.txt");
         }
 
-        AllowedBinariesKeepFile = GetAndValidateFullPath(allowedBinariesKeepFile, false, false);
-        AllowedBinariesRemoveFile = GetAndValidateFullPath(allowedBinariesRemoveFile, false, false);
+        AllowedBinariesFile = GetAndValidateFullPath(allowedBinariesFile, false, false);
+        DisallowedSbBinariesFile = GetAndValidateFullPath(disallowedSbBinariesFile, false, false);
     }
 
     public async Task ExecuteAsync()

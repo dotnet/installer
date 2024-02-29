@@ -18,9 +18,11 @@
 ###
 ### Binary-Tooling options:
 ###   --no-binaries               Don't run the binary tooling
-###   --binaries-keep-file        Path to the file containing the list of allowed binaries to keep. Default is
-###                               src/installer/src/VirtualMonoRepo/allowed-binaries.txt
-###   --binaries-remove-file      Path to the file containing the list of allowed binaries.
+###   --allowed-binaries          Path to the file containing the list of known binaries that are allowed
+###                               in the VMR and can be kept for source-building.
+###                               Default is src/installer/src/VirtualMonoRepo/allowed-binaries.txt
+###   --disallowed-sb-binaries    Path to the file containing the list of known binaries that are allowed
+###                               in the VMR but cannot be kept for source-building.
 ###                               Default is null.
 ###   --with-sdk                  Use the SDK in the specified directory
 ###                               Default is the .NET SDK
@@ -43,7 +45,7 @@ function print_help () {
 defaultArtifactsRid='centos.8-x64'
 
 # Binary Tooling default arguments
-defaultBinariesKeepFile="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+defaultAllowedBinaries="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
 defaultDotnetSdk="$SCRIPT_ROOT/.dotnet"
 defaultPackagesDir="$SCRIPT_ROOT/prereqs/packages"
 defaultMode="both"
@@ -59,8 +61,8 @@ runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 
 # Binary Tooling arguments
 runBinaryTool=true
-binariesKeepFile=$defaultBinariesKeepFile
-binariesRemoveFile=''
+allowedBinaries=$defaultAllowedBinaries
+disallowedSbBinaries=''
 dotnetSdk=$defaultDotnetSdk
 packagesSourceFeed=$defaultPackagesDir
 mode=$defaultMode
@@ -102,18 +104,18 @@ while :; do
     --no-binaries)
       runBinaryTool=false
       ;;
-    --binaries-keep-file)
-      binariesKeepFile=$2
-      if [ ! -f "$binariesKeepFile" ]; then
-        echo "Allowed binaries keep file '$binariesKeepFile' does not exist"
+    --allowed-binaries)
+      allowedBinaries=$2
+      if [ ! -f "$allowedBinaries" ]; then
+        echo "Allowed binaries file '$allowedBinaries' does not exist"
         exit 1
       fi
       shift
       ;;
-    --binaries-remove-file)
-      binariesRemoveFile=$2
-      if [ ! -f "$binariesRemoveFile" ]; then
-        echo "Allowed binaries remove file '$binariesRemoveFile' does not exist"
+    --disallowed-sb-binaries)
+      disallowedSbBinaries=$2
+      if [ ! -f "$disallowedSbBinaries" ]; then
+        echo "Disallowed source build binaries file '$disallowedSbBinaries' does not exist"
         exit 1
       fi
       shift
@@ -293,7 +295,7 @@ function RunBinaryTool {
   export LOG_LEVEL=Debug
 
   # Run the BinaryDetection tool
-  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -k "$binariesKeepFile" -r "$binariesRemoveFile" -m $mode
+  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -k "$allowedBinaries" -r "$disallowedSbBinaries" -m $mode
 }
 
 # Check for the version of dotnet to install

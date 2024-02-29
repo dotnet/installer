@@ -14,11 +14,11 @@ public partial class BinaryTool
     {
         Log.LogInformation("Comparing detected binaries to baseline(s).");
 
-        var binariesToRemove = GetUnmatchedBinaries(detectedBinaries, AllowedBinariesKeepFile, UpdatedAllowedBinariesKeepFile).ToList();
+        var binariesToRemove = GetUnmatchedBinaries(detectedBinaries, AllowedBinariesFile, UpdatedAllowedBinariesFile).ToList();
 
         if (ModeOption != Mode.ModeOptions.clean)
         {
-            var newBinaries = GetUnmatchedBinaries(binariesToRemove, AllowedBinariesRemoveFile, UpdatedAllowedBinariesRemoveFile).ToList();
+            var newBinaries = GetUnmatchedBinaries(binariesToRemove, DisallowedSbBinariesFile, UpdatedDisallowedSbBinariesFile).ToList();
 
             if (newBinaries.Any())
             {
