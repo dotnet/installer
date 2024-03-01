@@ -380,6 +380,10 @@
            https://github.com/dotnet/runtime/blob/main/src/installer/pkg/projects/Microsoft.DotNet.ILCompiler/ILCompilerRIDs.props -->
       <ILCompilerSupportedRids Include="@(Net90ILCompilerSupportedRids)" />
 
+      <ILCompilerSupportedRids
+        Condition="'$(BundleNativeAotCompiler)' == 'true'"
+        Include="$(ProductMonikerRid)" />
+
       <Net80NativeAOTRuntimePackRids Include="
           ios-arm64;
           iossimulator-arm64;
