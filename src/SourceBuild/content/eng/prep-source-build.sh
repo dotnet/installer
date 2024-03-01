@@ -2,7 +2,7 @@
 
 ### Usage: $0
 ###
-###   Prepares the environment to be built by downloading Private.SourceBuilt.Artifacts.*.tar.gz and
+###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz and
 ###   installing the version of dotnet referenced in global.json
 ###
 ### Options:
