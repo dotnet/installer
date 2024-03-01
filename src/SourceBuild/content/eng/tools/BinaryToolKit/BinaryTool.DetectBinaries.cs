@@ -10,6 +10,7 @@ namespace BinaryToolKit;
 public partial class BinaryTool
 {
     private const string Utf16Marker = "UTF-16";
+    private const int ChunkSize = 4096;
 
     private async Task<IEnumerable<string>> DetectBinariesAsync()
     {
@@ -21,13 +22,10 @@ public partial class BinaryTool
 
         IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(TargetDirectory);
 
-        // Parse matching files with diff command to detect binary files
-        // Need to check that the file is not UTF-16 encoded because diff can return false positives
         var tasks = matchingFiles
             .Select(async file =>
             {
-                string output = await ExecuteProcessAsync("diff", $"/dev/null \"{file}\"");
-                return output.StartsWith("Binary") && await IsNotUTF16Async(file) ? file : null;
+                return await IsBinary(file) ? file : null;
             });
 
         var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(TargetDirectory.Length + 1));
@@ -35,6 +33,30 @@ public partial class BinaryTool
         Log.LogInformation($"Finished binary detection.");
 
         return binaryFiles;
+    }
+
+    private async Task<bool> IsBinary(string filePath)
+    {
+        // Using the GNU diff heuristic to determine if a file is binary or not.
+        // For more details, refer to the GNU diff manual: 
+        // https://www.gnu.org/software/diffutils/manual/html_node/Binary.html
+
+        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        using (BinaryReader br = new BinaryReader(fs))
+        {
+            byte[] buffer = new byte[ChunkSize];
+            int bytesRead = br.Read(buffer, 0, ChunkSize);
+            for (int i = 0; i < bytesRead; i++)
+            {
+                if (buffer[i] == 0)
+                {
+                    // Need to check that the file is not UTF-16 encoded
+                    // because heuristic can return false positives
+                    return await IsNotUTF16Async(filePath);
+                }
+            }
+        }
+        return false;
     }
 
     private async Task<bool> IsNotUTF16Async(string file)
