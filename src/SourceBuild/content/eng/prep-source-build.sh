@@ -45,9 +45,9 @@ function print_help () {
 defaultArtifactsRid='centos.8-x64'
 
 # Binary Tooling default arguments
-defaultAllowedBinaries="$SCRIPT_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
-defaultDotnetSdk="$SCRIPT_ROOT/.dotnet"
-defaultPackagesDir="$SCRIPT_ROOT/prereqs/packages"
+defaultAllowedBinaries="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+defaultDotnetSdk="$REPO_ROOT/.dotnet"
+defaultPackagesDir="$REPO_ROOT/prereqs/packages"
 defaultMode="both"
 
 # SB prep arguments
@@ -281,9 +281,9 @@ function BootstrapArtifacts {
 }
 
 function RunBinaryTool {
-  BinaryDetectionTool="$SCRIPT_ROOT/eng/tools/BinaryToolKit"
-  TargetDir="$SCRIPT_ROOT"
-  OutputDir="$SCRIPT_ROOT/artifacts/binary-report"
+  BinaryTool="$REPO_ROOT/eng/tools/BinaryToolKit"
+  TargetDir="$REPO_ROOT"
+  OutputDir="$REPO_ROOT/artifacts/binary-report"
 
   # Set the environment variable for the packages source feed
   export ARTIFACTS_PATH="$packagesSourceFeed"
@@ -295,7 +295,7 @@ function RunBinaryTool {
   export LOG_LEVEL=Debug
 
   # Run the BinaryDetection tool
-  "$dotnetSdk/dotnet" run --project "$BinaryDetectionTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -k "$allowedBinaries" -r "$disallowedSbBinaries" -m $mode
+  "$dotnetSdk/dotnet" run --project "$BinaryTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -ab "$allowedBinaries" -db "$disallowedSbBinaries" -m $mode
 }
 
 # Check for the version of dotnet to install

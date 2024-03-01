@@ -12,16 +12,16 @@ class Program
     {
         CliArgument<string> TargetDirectory = new("target-directory") { Description = "The directory to run the binary tooling on" };
         CliArgument<string> OutputReportDirectory = new("output-report-directory") { Description = "The directory to output the report to" };
-        CliOption<string> AllowedBinariesKeepFile = new("--allowed-binaries-keep-file", "-k") { Description = "The file containing the allowed binaries to keep" };
-        CliOption<string> AllowedBinariesRemoveFile = new("--allowed-binaries-remove-file", "-r") { Description = "The file containing the allowed binaries to remove" };
+        CliOption<string> AllowedBinariesFile = new("--allowed-binaries", "-ab") { Description = "The file containing the list of known binaries that are allowed in the VMR and can be kept for source-building." };
+        CliOption<string> DisallowedSbBinariesFile = new("--disallowed-sb-binaries", "-db") { Description = "The file containing the list of known binaries that are allowed in the VMR but cannot be kept for source-building." };
         CliOption<Mode.ModeOptions> ModeOption = new("--mode", "-m") { Description = "The mode to run the tool in. Defaults to 'both' ('b').", Arity = ArgumentArity.ZeroOrOne};
 
         var rootCommand = new CliRootCommand("Tool for detecting, validating, and cleaning binaries in the target directory.")
         {
             TargetDirectory,
             OutputReportDirectory,
-            AllowedBinariesKeepFile,
-            AllowedBinariesRemoveFile,
+            AllowedBinariesFile,
+            DisallowedSbBinariesFile,
             ModeOption
         };
 
@@ -30,14 +30,13 @@ class Program
             var binaryTool = new BinaryTool(
                 result.GetValue(TargetDirectory)!,
                 result.GetValue(OutputReportDirectory)!,
-                result.GetValue(AllowedBinariesKeepFile),
-                result.GetValue(AllowedBinariesRemoveFile),
+                result.GetValue(AllowedBinariesFile),
+                result.GetValue(DisallowedSbBinariesFile),
                 result.GetValue(ModeOption));
 
             await binaryTool.ExecuteAsync();
         });
 
-        // return new CliConfiguration(rootCommand).Invoke(args);
         return await rootCommand.Parse(args).InvokeAsync();
     }
 }

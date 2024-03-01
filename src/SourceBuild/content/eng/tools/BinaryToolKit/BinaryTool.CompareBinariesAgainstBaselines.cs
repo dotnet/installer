@@ -18,11 +18,12 @@ public partial class BinaryTool
 
         if (ModeOption != Mode.ModeOptions.clean)
         {
-            var newBinaries = GetUnmatchedBinaries(binariesToRemove, DisallowedSbBinariesFile, UpdatedDisallowedSbBinariesFile).ToList();
+            var nonSbBinariesToRemove = GetUnmatchedBinaries(detectedBinaries, DisallowedSbBinariesFile, UpdatedDisallowedSbBinariesFile).ToList();
+            var newBinaries = binariesToRemove.Intersect(nonSbBinariesToRemove);
 
             if (newBinaries.Any())
             {
-                Log.LogWarning($"    New binaries detected. Check {NewBinariesFile}");
+                Log.LogWarning($"    {newBinaries.Count()} new binaries detected. Check {NewBinariesFile}");
                 File.WriteAllLines(NewBinariesFile!, newBinaries);
             }
         }
@@ -38,7 +39,7 @@ public partial class BinaryTool
 
         if (ModeOption == Mode.ModeOptions.clean)
         {
-            Matcher matcher = new Matcher();
+            Matcher matcher = new Matcher(StringComparison.Ordinal);
             matcher.AddInclude("**/*");
             matcher.AddExcludePatterns(patterns);
 
@@ -51,7 +52,7 @@ public partial class BinaryTool
 
             foreach (string pattern in patterns)
             {
-                Matcher matcher = new Matcher();
+                Matcher matcher = new Matcher(StringComparison.Ordinal);
                 matcher.AddInclude(pattern);
                 
                 var matches = matcher.Match(TargetDirectory, searchFiles);

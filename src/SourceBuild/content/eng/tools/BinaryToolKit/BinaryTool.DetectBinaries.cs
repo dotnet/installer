@@ -16,7 +16,7 @@ public partial class BinaryTool
     {
         Log.LogInformation($"Detecting binaries in {TargetDirectory}...");
 
-        var matcher = new Matcher();
+        var matcher = new Matcher(StringComparison.Ordinal);
         matcher.AddInclude("**/*");
         matcher.AddExcludePatterns(new[] { "**/.dotnet/**", "**/.git/**", "**/git-info/**", "**/artifacts/**", "**/prereqs/packages/**", "**/.packages/**" });
 
@@ -64,6 +64,7 @@ public partial class BinaryTool
         if (Environment.OSVersion.Platform == PlatformID.Unix)
         {
             string output = await ExecuteProcessAsync("file", file);
+            output = output.Split(":")[1].Trim();
 
             if (output.Contains(Utf16Marker))
             {
