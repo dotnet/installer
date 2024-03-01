@@ -12,15 +12,23 @@ public partial class BinaryTool
     private const string Utf16Marker = "UTF-16";
     private const int ChunkSize = 4096;
 
-    private async Task<IEnumerable<string>> DetectBinariesAsync()
+    private async Task<IEnumerable<string>> DetectBinariesAsync(string targetDirectory)
     {
-        Log.LogInformation($"Detecting binaries in {TargetDirectory}...");
+        Log.LogInformation($"Detecting binaries in {targetDirectory}...");
 
         var matcher = new Matcher(StringComparison.Ordinal);
         matcher.AddInclude("**/*");
-        matcher.AddExcludePatterns(new[] { "**/.dotnet/**", "**/.git/**", "**/git-info/**", "**/artifacts/**", "**/prereqs/packages/**", "**/.packages/**" });
+        matcher.AddExcludePatterns(new[]
+        {
+            "**/.dotnet/**",
+            "**/.git/**",
+            "**/git-info/**",
+            "**/artifacts/**",
+            "**/prereqs/packages/**",
+            "**/.packages/**"
+        });
 
-        IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(TargetDirectory);
+        IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(targetDirectory);
 
         var tasks = matchingFiles
             .Select(async file =>
@@ -28,7 +36,7 @@ public partial class BinaryTool
                 return await IsBinary(file) ? file : null;
             });
 
-        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(TargetDirectory.Length + 1));
+        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(targetDirectory.Length + 1));
         
         Log.LogInformation($"Finished binary detection.");
 
@@ -80,7 +88,6 @@ public partial class BinaryTool
         {
             FileName = executable,
             Arguments = arguments,
-            WorkingDirectory = TargetDirectory,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true

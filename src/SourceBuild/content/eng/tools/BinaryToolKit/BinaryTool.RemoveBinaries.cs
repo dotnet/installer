@@ -7,13 +7,13 @@ namespace BinaryToolKit;
 
 public partial class BinaryTool
 {
-    private void RemoveBinaries(IEnumerable<string> binariesToRemove)
+    private void RemoveBinaries(IEnumerable<string> binariesToRemove, string targetDirectory)
     {
-        Log.LogInformation($"Removing binaries from {TargetDirectory}...");
+        Log.LogInformation($"Removing binaries from {targetDirectory}...");
         
         foreach (var binary in binariesToRemove)
         {
-            File.Delete(Path.Combine(TargetDirectory, binary));
+            File.Delete(Path.Combine(targetDirectory, binary));
             Log.LogDebug($"    Removed {binary}");
         }
 

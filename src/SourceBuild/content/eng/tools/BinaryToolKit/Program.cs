@@ -10,11 +10,33 @@ class Program
 {
     static async Task<int> Main(string[] args)
     {
-        CliArgument<string> TargetDirectory = new("target-directory") { Description = "The directory to run the binary tooling on" };
-        CliArgument<string> OutputReportDirectory = new("output-report-directory") { Description = "The directory to output the report to" };
-        CliOption<string> AllowedBinariesFile = new("--allowed-binaries", "-ab") { Description = "The file containing the list of known binaries that are allowed in the VMR and can be kept for source-building." };
-        CliOption<string> DisallowedSbBinariesFile = new("--disallowed-sb-binaries", "-db") { Description = "The file containing the list of known binaries that are allowed in the VMR but cannot be kept for source-building." };
-        CliOption<Mode.ModeOptions> ModeOption = new("--mode", "-m") { Description = "The mode to run the tool in. Defaults to 'both' ('b').", Arity = ArgumentArity.ZeroOrOne};
+        CliArgument<string> TargetDirectory = new("target-directory")
+        {
+            Description = "The directory to run the binary tooling on."
+        };
+
+        CliArgument<string> OutputReportDirectory = new("output-report-directory")
+        {
+            Description = "The directory to output the report to."
+        };
+
+        CliOption<string> AllowedBinariesFile = new("--allowed-binaries", "-ab")
+        {
+            Description = "The file containing the list of known binaries " +
+                    "that are allowed in the VMR and can be kept for source-building."
+        };
+
+        CliOption<string> DisallowedSbBinariesFile = new("--disallowed-sb-binaries", "-db")
+        {
+            Description = "The file containing the list of known binaries " +
+                        "that are allowed in the VMR but cannot be kept for source-building."
+        };
+
+        CliOption<Modes> Mode = new("--mode", "-m")
+        {
+            Description = "The mode to run the tool in. Defaults to 'both'.",
+            Arity = ArgumentArity.ZeroOrOne
+        };
 
         var rootCommand = new CliRootCommand("Tool for detecting, validating, and cleaning binaries in the target directory.")
         {
@@ -22,19 +44,19 @@ class Program
             OutputReportDirectory,
             AllowedBinariesFile,
             DisallowedSbBinariesFile,
-            ModeOption
+            Mode
         };
 
         rootCommand.SetAction(async (result, CancellationToken) =>
         {
-            var binaryTool = new BinaryTool(
+            var binaryTool = new BinaryTool();
+
+            await binaryTool.ExecuteAsync(
                 result.GetValue(TargetDirectory)!,
                 result.GetValue(OutputReportDirectory)!,
                 result.GetValue(AllowedBinariesFile),
                 result.GetValue(DisallowedSbBinariesFile),
-                result.GetValue(ModeOption));
-
-            await binaryTool.ExecuteAsync();
+                result.GetValue(Mode));
         });
 
         return await rootCommand.Parse(args).InvokeAsync();

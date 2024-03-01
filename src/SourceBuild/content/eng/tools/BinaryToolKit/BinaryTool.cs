@@ -7,63 +7,42 @@ namespace BinaryToolKit;
 
 public partial class BinaryTool
 {
-
-    // Target directory - where to look for binaries
-    private readonly string TargetDirectory;
-
-    // Allowed binaries file - known binaries in the target directory that should not be removed. Needed for validation and cleaning.
-    private readonly string? AllowedBinariesFile;
-
-    // Disallowed source build binaries file - known binaries in the target directory that are disallowed for source-build. Needed for validation.
-    private readonly string? DisallowedSbBinariesFile;
-
-    // Updated allowed binaries file - updated baseline of allowed binaries
-    private readonly string? UpdatedAllowedBinariesFile;
-
-    // Updated disallowed source build binaries file - updated baseline of disallowed source build binaries
-    private readonly string? UpdatedDisallowedSbBinariesFile;
-
-    // New binaries file - list of new binaries detected in the target directory
-    private readonly string? NewBinariesFile;
-
-    // Mode to run the binary detection in
-    private Mode.ModeOptions ModeOption;
-
-    // Logger
     private ILogger Log;
 
-    public BinaryTool(string targetDirectory, string outputReportDirectory, string? allowedBinariesFile, string? disallowedSbBinariesFile, Mode.ModeOptions mode)
-    {
-        ModeOption = Mode.GetFullMode(mode);
+    public BinaryTool() =>
         Log = ConfigureLogger();
 
-        TargetDirectory = GetAndValidateFullPath(targetDirectory, true, false)!;
-
-        if (ModeOption != Mode.ModeOptions.clean)
-        {
-            string outDir = GetAndValidateFullPath(outputReportDirectory, true, true)!;
-
-            UpdatedAllowedBinariesFile = Path.Combine(outDir, "UpdatedAllowedBinariesFile.txt");
-            UpdatedDisallowedSbBinariesFile = Path.Combine(outDir, "UpdatedDisallowedSbBinariesFile.txt");
-            NewBinariesFile = Path.Combine(outDir, "NewBinaries.txt");
-        }
-
-        AllowedBinariesFile = GetAndValidateFullPath(allowedBinariesFile, false, false);
-        DisallowedSbBinariesFile = GetAndValidateFullPath(disallowedSbBinariesFile, false, false);
-    }
-
-    public async Task ExecuteAsync()
+    public async Task ExecuteAsync(
+        string targetDirectory,
+        string outputReportDirectory,
+        string? allowedBinariesFile,
+        string? disallowedSbBinariesFile,
+        Modes mode)
     {
         DateTime startTime = DateTime.Now;
 
-        Log.LogInformation($"Starting binary tool at {startTime} in {ModeOption} mode");
+        Log.LogInformation($"Starting binary tool at {startTime} in {mode} mode");
 
-        var detectedBinaries = await DetectBinariesAsync();
-        var comparedBinaries = CompareBinariesAgainstBaselines(detectedBinaries);
+        // Parse args
+        targetDirectory = GetAndValidateFullPath(targetDirectory, isDirectory: true, createIfNotExist: false)!;
+        outputReportDirectory = GetAndValidateFullPath(outputReportDirectory, isDirectory: true, createIfNotExist: true)!;
+        allowedBinariesFile = GetAndValidateFullPath(allowedBinariesFile, isDirectory: false, createIfNotExist: false);
+        disallowedSbBinariesFile = GetAndValidateFullPath(disallowedSbBinariesFile, isDirectory: false, createIfNotExist: false);
 
-        if (ModeOption == Mode.ModeOptions.both || ModeOption == Mode.ModeOptions.clean)
+        // Run the tooling
+        var detectedBinaries = await DetectBinariesAsync(targetDirectory);
+
+        var comparedBinaries = CompareBinariesAgainstBaselines(
+            detectedBinaries,
+            allowedBinariesFile,
+            disallowedSbBinariesFile,
+            outputReportDirectory,
+            targetDirectory,
+            mode);
+
+        if (mode == Modes.both || mode == Modes.clean)
         {
-            RemoveBinaries(comparedBinaries);
+            RemoveBinaries(comparedBinaries, targetDirectory);
         }
 
         Log.LogInformation("Finished all binary tasks. Took " + (DateTime.Now - startTime).TotalSeconds + " seconds.");

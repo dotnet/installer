@@ -17,7 +17,7 @@
 ###   --runtime-source-feed-key   Key for accessing the above server, if necessary
 ###
 ### Binary-Tooling options:
-###   --no-binaries               Don't run the binary tooling
+###   --no-binary-tooling         Don't run the binary tooling
 ###   --allowed-binaries          Path to the file containing the list of known binaries that are allowed
 ###                               in the VMR and can be kept for source-building.
 ###                               Default is src/installer/src/VirtualMonoRepo/allowed-binaries.txt
@@ -101,7 +101,7 @@ while :; do
       runtime_source_feed_key=$2
       shift
       ;;
-    --no-binaries)
+    --no-binary-tooling)
       runBinaryTool=false
       ;;
     --allowed-binaries)
@@ -137,10 +137,10 @@ while :; do
       shift
       ;;
     --no-clean)
-      mode="v"
+      mode="validate"
       ;;
     --no-validate)
-      mode="c"
+      mode="clean"
       ;;
     *)
       positional_args+=("$1")
@@ -283,7 +283,7 @@ function BootstrapArtifacts {
 function RunBinaryTool {
   BinaryTool="$REPO_ROOT/eng/tools/BinaryToolKit"
   TargetDir="$REPO_ROOT"
-  OutputDir="$REPO_ROOT/artifacts/binary-report"
+  OutputDir="$REPO_ROOT/artifacts/log/binary-report"
 
   # Set the environment variable for the packages source feed
   export ARTIFACTS_PATH="$packagesSourceFeed"
