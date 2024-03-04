@@ -10,35 +10,35 @@ set -e
 usage()
 {
   echo "Common settings:"
-  echo "  --binaryLog                  Create MSBuild binary log (short: -bl)"
-  echo "  --configuration <value>      Build configuration: 'Debug' or 'Release' (short: -c)"
-  echo "  --verbosity <value>          Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)"
+  echo "  --binaryLog                     Create MSBuild binary log (short: -bl)"
+  echo "  --configuration <value>         Build configuration: 'Debug' or 'Release' (short: -c)"
+  echo "  --verbosity <value>             Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)"
   echo ""
 
   echo "Actions:"
-  echo "  --clean                      Clean the solution"
-  echo "  --help                       Print help and exit (short: -h)"
-  echo "  --test                       Run smoke tests (short: -t)"
+  echo "  --clean                         Clean the solution"
+  echo "  --help                          Print help and exit (short: -h)"
+  echo "  --test                          Run smoke tests (short: -t)"
   echo ""
 
   echo "Source-only settings:"
-  echo "  --source-only                Source-build the solution (short: -so)"
-  echo "  --online                     Build using online sources"
-  echo "  --poison                     Build with poisoning checks"
-  echo "  --release-manifest <FILE>    A JSON file, an alternative source of Source Link metadata"
-  echo "  --source-repository <URL>    Source Link repository URL, required when building from tarball"
-  echo "  --source-version <SHA>       Source Link revision, required when building from tarball"
-  echo "  --use-mono-runtime           Output uses the mono runtime"
-  echo "  --with-packages <DIR>        Use the specified directory of previously-built packages"
-  echo "  --with-sdk <DIR>             Use the SDK in the specified directory for bootstrapping"
+  echo "  --source-only, --source-build   Source-build the solution (short: -so, -sb)"
+  echo "  --online                        Build using online sources"
+  echo "  --poison                        Build with poisoning checks"
+  echo "  --release-manifest <FILE>       A JSON file, an alternative source of Source Link metadata"
+  echo "  --source-repository <URL>       Source Link repository URL, required when building from tarball"
+  echo "  --source-version <SHA>          Source Link revision, required when building from tarball"
+  echo "  --with-packages <DIR>           Use the specified directory of previously-built packages"
+  echo "  --with-sdk <DIR>                Use the SDK in the specified directory for bootstrapping"
   echo ""
 
   echo "Advanced settings:"
-  echo "  --build-tests                Build repository tests. May not be supported with --source-only"
-  echo "  --ci                         Set when running on CI server"
-  echo "  --clean-while-building       Cleans each repo after building (reduces disk space usage, short: -cwb)"
-  echo "  --excludeCIBinarylog         Don't output binary log (short: -nobl)"
-  echo "  --prepareMachine             Prepare machine for CI run, clean up processes after build"
+  echo "  --build-tests                   Build repository tests. May not be supported with --source-only"
+  echo "  --ci                            Set when running on CI server"
+  echo "  --clean-while-building          Cleans each repo after building (reduces disk space usage, short: -cwb)"
+  echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
+  echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
+  echo "  --use-mono-runtime              Output uses the mono runtime"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -58,8 +58,7 @@ scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
 # Set the NUGET_PACKAGES dir so that we don't accidentally pull some packages from the global location,
 # They should be pulled from the local feeds.
-packagesDir="$scriptroot/prereqs/packages/"
-packagesRestoredDir="${packagesDir}restored/"
+packagesRestoredDir="$scriptroot/.packages/"
 export NUGET_PACKAGES=$packagesRestoredDir/
 
 # Common settings
@@ -78,6 +77,7 @@ sourceRepository=''
 sourceVersion=''
 CUSTOM_PACKAGES_DIR=''
 CUSTOM_SDK_DIR=''
+packagesDir="$scriptroot/prereqs/packages/"
 packagesArchiveDir="${packagesDir}archive/"
 packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 
@@ -118,7 +118,7 @@ while [[ $# > 0 ]]; do
       ;;
 
     # Source-only settings
-    -source-only|-so)
+    -source-only|-source-build|-so|-sb)
       sourceOnly=true
       properties="$properties /p:DotNetBuildSourceOnly=true"
       ;;
@@ -139,9 +139,6 @@ while [[ $# > 0 ]]; do
     -source-version)
       sourceVersion="$2"
       shift
-      ;;
-    -use-mono-runtime)
-      properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
     -with-packages)
       CUSTOM_PACKAGES_DIR="$(cd -P "$2" && pwd)"
@@ -180,6 +177,9 @@ while [[ $# > 0 ]]; do
     -preparemachine)
       prepare_machine=true
       ;;
+    -use-mono-runtime)
+      properties="$properties /p:SourceBuildUseMonoRuntime=true"
+      ;;
 
     *)
       properties="$properties $1"
@@ -188,6 +188,12 @@ while [[ $# > 0 ]]; do
 
   shift
 done
+
+if [[ "$ci" == true ]]; then
+  if [[ "$exclude_ci_binary_log" == false ]]; then
+    binary_log=true
+  fi
+fi
 
 . "$scriptroot/eng/common/tools.sh"
 
@@ -210,6 +216,10 @@ function Build {
 
   else
 
+    if [ "$ci" == "true" ]; then
+      properties="$properties /p:ContinuousIntegrationBuild=true"
+    fi
+
     "$CLI_ROOT/dotnet" build-server shutdown
 
     if [ "$test" == "true" ]; then
@@ -219,6 +229,9 @@ function Build {
 
       # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
       "$CLI_ROOT/dotnet" build-server shutdown
+
+      # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
+      export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
       "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
     fi
@@ -296,7 +309,7 @@ if [[ "$sourceOnly" == "true" ]]; then
   fi
 
   if [ ! -d "$scriptroot/.git" ]; then
-    echo "ERROR: $scriptroot is not a git repository. Please run prep.sh add initialize Source Link metadata."
+    echo "ERROR: $scriptroot is not a git repository."
     exit 1
   fi
 

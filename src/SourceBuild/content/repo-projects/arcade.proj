@@ -12,11 +12,7 @@
   <ItemGroup>
     <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
-    <EnvironmentVariables Include="useInstalledDotNetCli=false" />
+    <BuiltSdkPackageOverride Include="@(ArcadeCMakeSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>
