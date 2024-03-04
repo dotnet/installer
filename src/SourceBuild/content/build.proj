@@ -11,11 +11,10 @@
 
   <Target Name="Build">
     <PropertyGroup>
-      <SourceBuildInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">(source-build)</SourceBuildInfoText>
-      <SourceBuildInfoText Condition="'$(DotNetBuildSourceOnly)' != 'true'">(unified-build)</SourceBuildInfoText>
+      <SourceOnlyInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'"> (source-only)</SourceOnlyInfoText>
     </PropertyGroup>
 
-    <Message Text="Build Environment $(SourceBuildInfoText): $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
+    <Message Text="Build Environment$(SourceOnlyInfoText): $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <MSBuild Projects="$(ToolsDir)init-build.proj;
                        $(RepoProjectsDir)$(RootRepo).proj"
