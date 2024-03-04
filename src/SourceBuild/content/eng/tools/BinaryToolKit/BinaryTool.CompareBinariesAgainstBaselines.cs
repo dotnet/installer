@@ -27,7 +27,7 @@ public partial class BinaryTool
             targetDirectory,
             mode).ToList();
 
-        if (mode != Modes.clean)
+        if (mode != Modes.Clean)
         {
             var nonSbBinariesToRemove = GetUnmatchedBinaries(
                 detectedBinaries,
@@ -62,7 +62,7 @@ public partial class BinaryTool
     {
         var patterns = ParseBaselineFile(baselineFile);
 
-        if (mode == Modes.clean)
+        if (mode == Modes.Clean)
         {
             Matcher matcher = new Matcher(StringComparison.Ordinal);
             matcher.AddInclude("**/*");

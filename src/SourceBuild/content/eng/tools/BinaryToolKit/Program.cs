@@ -34,8 +34,9 @@ class Program
 
         CliOption<Modes> Mode = new("--mode", "-m")
         {
-            Description = "The mode to run the tool in. Defaults to 'both'.",
-            Arity = ArgumentArity.ZeroOrOne
+            Description = "The mode to run the tool in.",
+            Arity = ArgumentArity.ZeroOrOne,
+            DefaultValueFactory = _ => Modes.All
         };
 
         var rootCommand = new CliRootCommand("Tool for detecting, validating, and cleaning binaries in the target directory.")

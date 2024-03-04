@@ -2,8 +2,9 @@
 
 ### Usage: $0
 ###
-###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz and
-###   installing the version of dotnet referenced in global.json
+###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz,
+###   installing the version of dotnet referenced in global.json,
+###   and detecting new binaries and removing any non-SB allowed binaries.
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
@@ -48,7 +49,7 @@ defaultArtifactsRid='centos.8-x64'
 defaultAllowedBinaries="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
 defaultDotnetSdk="$REPO_ROOT/.dotnet"
 defaultPackagesDir="$REPO_ROOT/prereqs/packages"
-defaultMode="both"
+defaultMode="All"
 
 # SB prep arguments
 buildBootstrap=true
@@ -137,10 +138,10 @@ while :; do
       shift
       ;;
     --no-clean)
-      mode="validate"
+      mode="Validate"
       ;;
     --no-validate)
-      mode="clean"
+      mode="Clean"
       ;;
     *)
       positional_args+=("$1")

@@ -40,7 +40,7 @@ public partial class BinaryTool
             targetDirectory,
             mode);
 
-        if (mode == Modes.both || mode == Modes.clean)
+        if (mode == Modes.All || mode == Modes.Clean)
         {
             RemoveBinaries(comparedBinaries, targetDirectory);
         }

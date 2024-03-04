@@ -5,7 +5,7 @@ namespace BinaryToolKit;
 
 public enum Modes
 {
-    both,
-    validate,
-    clean
+    All,
+    Validate,
+    Clean
 }
