@@ -52,8 +52,8 @@
     <BuildRid>$(__DistroRid)</BuildRid>
     <BuildRid Condition="'$(BuildRid)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</BuildRid>
 
-    <HostRid Condition="'$(HostRid)' == ''">$(BuildRid)</HostRid>
     <TargetRid Condition="'$(TargetRid)' == ''">$(BuildRid.Substring(0, $(BuildRid.LastIndexOf('-'))))-$(TargetArchitecture)</TargetRid>
+    <HostRid Condition="'$(HostRid)' == ''">$(TargetRid)</HostRid>
 
     <!-- Source-only builds are non portable, except for cross-builds.
          Source-only cross-builds default to the portable configuration so the resulting SDK works on a wider range of distros. -->
