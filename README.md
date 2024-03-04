@@ -170,7 +170,6 @@ Do not directly edit the table below. Use https://github.com/dotnet/installer/tr
 
 ### Table
 
-Use 'dotnet --help' to see available commands or visit: https://aka.ms/dotnet-cli
 --------------------------------------------------------------------------------------
 | Platform | main<br>(9.0.x&nbsp;Runtime) | 9.0.1xx-preview1<br>(9.0-preview1&nbsp;Runtime) | 8.0.3xx<br>(8.0&nbsp;Runtime) | Release/7.0.4xx<br>(7.0.x&nbsp;Runtime) |
 | :--------- | :----------: | :----------: | :----------: | :----------: |
