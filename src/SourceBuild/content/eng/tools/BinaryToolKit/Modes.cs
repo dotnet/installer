@@ -3,9 +3,10 @@
 
 namespace BinaryToolKit;
 
+[Flags]
 public enum Modes
 {
-    All,
-    Validate,
-    Clean
+    Validate = 1,
+    Clean = 2,
+    All = Validate | Clean
 }

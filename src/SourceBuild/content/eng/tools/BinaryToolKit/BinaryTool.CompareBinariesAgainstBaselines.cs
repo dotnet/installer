@@ -27,7 +27,7 @@ public partial class BinaryTool
             targetDirectory,
             mode).ToList();
 
-        if (mode != Modes.Clean)
+        if (mode.HasFlag(Modes.Validate))
         {
             var nonSbBinariesToRemove = GetUnmatchedBinaries(
                 detectedBinaries,
@@ -62,16 +62,12 @@ public partial class BinaryTool
     {
         var patterns = ParseBaselineFile(baselineFile);
 
-        if (mode == Modes.Clean)
+        if (mode.HasFlag(Modes.Validate))
         {
-            Matcher matcher = new Matcher(StringComparison.Ordinal);
-            matcher.AddInclude("**/*");
-            matcher.AddExcludePatterns(patterns);
+            // If validating in any mode (Mode == Validate or Mode == All), 
+            // we need to detect both unused patterns and unmatched files.
+            // We simultaneously detect unused patterns and unmatched files for efficiency.
 
-            return matcher.Match(targetDirectory, searchFiles).Files.Select(file => file.Path);
-        }
-        else
-        {
             HashSet<string> unusedPatterns = new HashSet<string>(patterns);
             HashSet<string> unmatchedFiles = new HashSet<string>(searchFiles);
 
@@ -91,6 +87,18 @@ public partial class BinaryTool
             UpdateBaselineFile(baselineFile, outputReportDirectory, unusedPatterns);
 
             return unmatchedFiles;
+        }
+        else
+        {
+            // If only cleaning and not validating (Mode == Clean),
+            // we don't need to update the baseline files with unused patterns
+            // so we can just detect unmatched files.
+
+            Matcher matcher = new Matcher(StringComparison.Ordinal);
+            matcher.AddInclude("**/*");
+            matcher.AddExcludePatterns(patterns);
+
+            return matcher.Match(targetDirectory, searchFiles).Files.Select(file => file.Path);
         }
     }
 
