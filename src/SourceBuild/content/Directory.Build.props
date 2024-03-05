@@ -15,8 +15,8 @@
     <BuildOS Condition="$([MSBuild]::IsOSPlatform('SOLARIS'))">solaris</BuildOS>
     <BuildOS Condition="$([MSBuild]::IsOSPlatform('HAIKU'))">haiku</BuildOS>
     <BuildOS Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">windows</BuildOS>
-    <HostOS Condition="'$(HostOS)' == ''">$(BuildOS)</HostOS>
     <TargetOS Condition="'$(TargetOS)' == ''">$(BuildOS)</TargetOS>
+    <HostOS Condition="'$(HostOS)' == ''">$(TargetOS)</HostOS>
   </PropertyGroup>
 
   <!-- This is a list of cases where we aren't producing a whole SDK, just a runtime. This list should be kept in sync with https://github.com/dotnet/runtime/blob/main/eng/SourceBuild.props#L26 -->
@@ -34,12 +34,15 @@
     <RootRepo Condition="'$(ShortStack)' == 'true'">runtime</RootRepo>
   </PropertyGroup>
 
+  <!-- See https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Unified-Build-Controls.md#output-controls for 
+       control set definition. -->
   <PropertyGroup Label="CalculateArch">
+    <!-- Build architecture is what we are building on. -->
     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant)</BuildArchitecture>
-    <HostArchitecture Condition="'$(HostArchitecture)' == ''">$(BuildArchitecture)</HostArchitecture>
-
-    <!-- When building on non-x64 architectures, there may be no cross-compilation available, select a target architecture that is the same as the build. -->
+    <!-- The target architecture is the what the customer is targeting their outputs to run on. -->
     <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">$(BuildArchitecture)</TargetArchitecture>
+    <!-- The host architecture is the what the customer will build on. Much of the time, Host==Target. -->
+    <HostArchitecture Condition="'$(HostArchitecture)' == ''">$(TargetArchitecture)</HostArchitecture>
 
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
   </PropertyGroup>
@@ -49,12 +52,12 @@
     <BuildRid>$(__DistroRid)</BuildRid>
     <BuildRid Condition="'$(BuildRid)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</BuildRid>
 
-    <HostRid Condition="'$(HostRid)' == ''">$(BuildRid)</HostRid>
     <TargetRid Condition="'$(TargetRid)' == ''">$(BuildRid.Substring(0, $(BuildRid.LastIndexOf('-'))))-$(TargetArchitecture)</TargetRid>
+    <HostRid Condition="'$(HostRid)' == ''">$(TargetRid)</HostRid>
 
     <!-- Source-only builds are non portable, except for cross-builds.
          Source-only cross-builds default to the portable configuration so the resulting SDK works on a wider range of distros. -->
-    <PortableBuild Condition="'$(PortableBuild)' == '' and '$(DotNetBuildSourceOnly)' == 'true' and '$(HostArchitecture)' == '$(TargetArchitecture)'">false</PortableBuild>
+    <PortableBuild Condition="'$(PortableBuild)' == '' and '$(DotNetBuildSourceOnly)' == 'true' and '$(BuildArchitecture)' == '$(TargetArchitecture)'">false</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">true</PortableBuild>
 
     <PortableRid Condition="'$(__PortableTargetOS)' != ''">$(__PortableTargetOS)-$(TargetArchitecture)</PortableRid>

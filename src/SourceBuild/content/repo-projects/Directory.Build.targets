@@ -322,8 +322,6 @@
                             UpdateEngCommonFiles;
                             CreateBuildInputProps;
                             SetSourceBuiltSdkOverrides">
-    <Exec Command="$(DotnetTool) build-server shutdown" />
-
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildCommand)" />
@@ -353,7 +351,10 @@
 
     <Exec Command="$(FullCommand)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true">
+      <Output TaskParameter="ExitCode" PropertyName="RepoBuildExitCode" />
+    </Exec>
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)...done" />
 
@@ -737,12 +738,9 @@
       <TransitiveRepositoryReference Remove="roslyn" />
       <TransitiveRepositoryReference Remove="msbuild" />
       <TransitiveRepositoryReference Remove="aspnetcore" />
-      <TransitiveRepositoryReference Remove="razor" />
-      <TransitiveRepositoryReference Remove="format" />
       <TransitiveRepositoryReference Remove="nuget-client" />
       <TransitiveRepositoryReference Remove="fsharp" />
       <TransitiveRepositoryReference Remove="vstest" />
-      <TransitiveRepositoryReference Remove="installer" />
     </ItemGroup>
   </Target>
 
