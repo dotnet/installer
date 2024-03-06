@@ -5,22 +5,6 @@ namespace BinaryToolKit;
 
 public class BinaryTool
 {
-    private readonly DetectBinaries _detectBinaries;
-    private readonly CompareBinariesAgainstBaselines _compareBinariesAgainstBaselines;
-    private readonly RemoveBinaries _removeBinaries;
-
-    public BinaryTool() : this(new DetectBinaries(), new CompareBinariesAgainstBaselines(), new RemoveBinaries()) { }
-
-    public BinaryTool(
-        DetectBinaries detectBinaries,
-        CompareBinariesAgainstBaselines compareBinariesAgainstBaselines,
-        RemoveBinaries removeBinaries)
-    {
-        _detectBinaries = detectBinaries;
-        _compareBinariesAgainstBaselines = compareBinariesAgainstBaselines;
-        _removeBinaries = removeBinaries;
-    }
-
     public async Task ExecuteAsync(
         string targetDirectory,
         string outputReportDirectory,
@@ -59,9 +43,9 @@ public class BinaryTool
             isRequired: false);
 
         // Run the tooling
-        var detectedBinaries = await _detectBinaries.ExecuteAsync(targetDirectory);
+        var detectedBinaries = await DetectBinaries.ExecuteAsync(targetDirectory);
 
-        var comparedBinaries = _compareBinariesAgainstBaselines
+        var comparedBinaries = CompareBinariesAgainstBaselines
             .Execute(
                 detectedBinaries,
                 allowedBinariesFile,
@@ -72,7 +56,7 @@ public class BinaryTool
 
         if (mode.HasFlag(Modes.Clean))
         {
-            _removeBinaries.Execute(comparedBinaries, targetDirectory);
+            RemoveBinaries.Execute(comparedBinaries, targetDirectory);
         }
 
         Log.LogInformation("Finished all binary tasks. Took " + (DateTime.Now - startTime).TotalSeconds + " seconds.");

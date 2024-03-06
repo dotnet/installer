@@ -6,12 +6,12 @@ using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace BinaryToolKit;
 
-public class DetectBinaries
+public static class DetectBinaries
 {
-    private const string Utf16Marker = "UTF-16";
-    private const int ChunkSize = 4096;
+    private static readonly string Utf16Marker = "UTF-16";
+    private static readonly int ChunkSize = 4096;
 
-    public async Task<IEnumerable<string>> ExecuteAsync(string targetDirectory)
+    public static async Task<List<string>> ExecuteAsync(string targetDirectory)
     {
         Log.LogInformation($"Detecting binaries in '{targetDirectory}'...");
 
@@ -33,18 +33,17 @@ public class DetectBinaries
         var tasks = matchingFiles
             .Select(async file =>
             {
-                return await IsBinaryAsync(file) ? file : null;
-            })
-            .ToList();
+                return await IsBinaryAsync(file) ? file.Substring(targetDirectory.Length + 1) : null;
+            });
 
-        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(targetDirectory.Length + 1)).ToList();
+        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().ToList();
 
         Log.LogInformation($"Finished binary detection.");
 
         return binaryFiles;
     }
 
-    private async Task<bool> IsBinaryAsync(string filePath)
+    private static async Task<bool> IsBinaryAsync(string filePath)
     {
         // Using the GNU diff heuristic to determine if a file is binary or not.
         // For more details, refer to the GNU diff manual: 
@@ -68,7 +67,7 @@ public class DetectBinaries
         return false;
     }
 
-    private async Task<bool> IsNotUTF16Async(string file)
+    private static async Task<bool> IsNotUTF16Async(string file)
     {
         if (Environment.OSVersion.Platform == PlatformID.Unix)
         {
@@ -83,7 +82,7 @@ public class DetectBinaries
         return true;
     }
 
-    private async Task<string> ExecuteProcessAsync(string executable, string arguments)
+    private static async Task<string> ExecuteProcessAsync(string executable, string arguments)
     {
         ProcessStartInfo psi = new ()
         {

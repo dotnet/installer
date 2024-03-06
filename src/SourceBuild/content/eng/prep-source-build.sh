@@ -292,11 +292,8 @@ function RunBinaryTool {
   # Get the runtime version
   runtimeVersion=$("$dotnetSdk/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
 
-  # Set the log level
-  export LOG_LEVEL=Debug
-
   # Run the BinaryDetection tool
-  "$dotnetSdk/dotnet" run --project "$BinaryTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -ab "$allowedBinaries" -db "$disallowedSbBinaries" -m $mode
+  "$dotnetSdk/dotnet" run --project "$BinaryTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -ab "$allowedBinaries" -db "$disallowedSbBinaries" -m $mode -l Debug
 }
 
 # Check for the version of dotnet to install

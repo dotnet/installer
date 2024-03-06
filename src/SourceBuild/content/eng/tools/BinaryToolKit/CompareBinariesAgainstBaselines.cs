@@ -4,10 +4,9 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace BinaryToolKit;
-
-public class CompareBinariesAgainstBaselines
+public static class CompareBinariesAgainstBaselines
 {
-    public List<string> Execute(
+    public static List<string> Execute(
         IEnumerable<string> detectedBinaries,
         string? allowedBinariesFile,
         string? disallowedSbBinariesFile,
@@ -50,7 +49,7 @@ public class CompareBinariesAgainstBaselines
         return binariesToRemove;
     }
 
-    private IEnumerable<string> GetUnmatchedBinaries(
+    private static IEnumerable<string> GetUnmatchedBinaries(
         IEnumerable<string> searchFiles,
         string? baselineFile,
         string outputReportDirectory,
@@ -104,7 +103,7 @@ public class CompareBinariesAgainstBaselines
         } 
     }
 
-    private IEnumerable<string> ParseBaselineFile(string? file) {
+    private static IEnumerable<string> ParseBaselineFile(string? file) {
         if (!File.Exists(file))
         {
             return Enumerable.Empty<string>();
@@ -117,7 +116,7 @@ public class CompareBinariesAgainstBaselines
             .Select(line => line.Split('#')[0].Trim());
     }
 
-    private void UpdateBaselineFile(string? file, string outputReportDirectory, HashSet<string> unusedPatterns)
+    private static void UpdateBaselineFile(string? file, string outputReportDirectory, HashSet<string> unusedPatterns)
     {
         if(File.Exists(file))
         {

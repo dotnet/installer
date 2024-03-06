@@ -7,6 +7,8 @@ namespace BinaryToolKit;
 
 public static class Log
 {
+    public static LogLevel Level = LogLevel.Information;
+
     private static readonly Lazy<ILogger> _logger = new Lazy<ILogger>(ConfigureLogger);
 
     public static void LogDebug(string message)
@@ -31,9 +33,6 @@ public static class Log
 
     private static ILogger ConfigureLogger()
     {
-        var logLevel = Environment.GetEnvironmentVariable("LOG_LEVEL");
-        LogLevel level = Enum.TryParse<LogLevel>(logLevel, out var parsedLevel) ? parsedLevel : LogLevel.Information;
-
         using ILoggerFactory loggerFactory =
             LoggerFactory.Create(builder =>
                 builder.AddSimpleConsole(options =>
@@ -42,7 +41,7 @@ public static class Log
                     options.TimestampFormat = "HH:mm:ss ";
                     options.UseUtcTimestamp = true;
                 })
-                .SetMinimumLevel(level));
+                .SetMinimumLevel(Level));
         return loggerFactory.CreateLogger("BinaryTool");
     }
 }

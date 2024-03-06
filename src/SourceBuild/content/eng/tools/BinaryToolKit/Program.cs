@@ -3,6 +3,7 @@
 
 using System;
 using System.CommandLine;
+using Microsoft.Extensions.Logging;
 
 namespace BinaryToolKit;
 
@@ -39,17 +40,27 @@ public class Program
             DefaultValueFactory = _ => Modes.All
         };
 
+        CliOption<LogLevel> Level = new("--log-level", "-l")
+        {
+            Description = "The log level to run the tool in.",
+            Arity = ArgumentArity.ZeroOrOne,
+            DefaultValueFactory = _ => LogLevel.Information
+        };
+
         var rootCommand = new CliRootCommand("Tool for detecting, validating, and cleaning binaries in the target directory.")
         {
             TargetDirectory,
             OutputReportDirectory,
             AllowedBinariesFile,
             DisallowedSbBinariesFile,
-            Mode
+            Mode,
+            Level
         };
 
         rootCommand.SetAction(async (result, CancellationToken) =>
         {
+            Log.Level = result.GetValue(Level);
+            
             var binaryTool = new BinaryTool();
 
             await binaryTool.ExecuteAsync(

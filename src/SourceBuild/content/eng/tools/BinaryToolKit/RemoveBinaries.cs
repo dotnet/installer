@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace BinaryToolKit;
 
-public class RemoveBinaries
+public static class RemoveBinaries
 {
-    public void Execute(IEnumerable<string> binariesToRemove, string targetDirectory)
+    public static void Execute(IEnumerable<string> binariesToRemove, string targetDirectory)
     {
         Log.LogInformation($"Removing binaries from '{targetDirectory}'...");
         
