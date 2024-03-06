@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="CheckRuntimeVersion">
 
   <PropertyGroup>
     <TargetFramework>$(NetCurrent)</TargetFramework>
@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <Target Name="CheckRuntimeVersion" BeforeTargets="CoreCompile">
+  <Target Name="CheckRuntimeVersion">
     <Error Condition="'$(RuntimeVersion)' == ''" Text="RuntimeVersion is not set. Please consider passing as an MSBuild Property" />
   </Target>
 

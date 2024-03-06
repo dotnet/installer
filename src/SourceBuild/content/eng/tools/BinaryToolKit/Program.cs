@@ -6,7 +6,7 @@ using System.CommandLine;
 
 namespace BinaryToolKit;
 
-class Program
+public class Program
 {
     static async Task<int> Main(string[] args)
     {

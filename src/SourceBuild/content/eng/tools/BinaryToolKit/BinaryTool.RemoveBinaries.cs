@@ -5,16 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace BinaryToolKit;
 
-public partial class BinaryTool
+public class RemoveBinaries
 {
-    private void RemoveBinaries(IEnumerable<string> binariesToRemove, string targetDirectory)
+    public void Execute(IEnumerable<string> binariesToRemove, string targetDirectory)
     {
-        Log.LogInformation($"Removing binaries from {targetDirectory}...");
+        Log.LogInformation($"Removing binaries from '{targetDirectory}'...");
         
         foreach (var binary in binariesToRemove)
         {
             File.Delete(Path.Combine(targetDirectory, binary));
-            Log.LogDebug($"    Removed {binary}");
+            Log.LogDebug($"    Removed '{binary}'");
         }
 
         Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");

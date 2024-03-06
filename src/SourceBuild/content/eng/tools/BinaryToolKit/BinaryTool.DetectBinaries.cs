@@ -3,18 +3,17 @@
 
 using System.Diagnostics;
 using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.Extensions.Logging;
 
 namespace BinaryToolKit;
 
-public partial class BinaryTool
+public class DetectBinaries
 {
     private const string Utf16Marker = "UTF-16";
     private const int ChunkSize = 4096;
 
-    private async Task<IEnumerable<string>> DetectBinariesAsync(string targetDirectory)
+    public async Task<IEnumerable<string>> ExecuteAsync(string targetDirectory)
     {
-        Log.LogInformation($"Detecting binaries in {targetDirectory}...");
+        Log.LogInformation($"Detecting binaries in '{targetDirectory}'...");
 
         var matcher = new Matcher(StringComparison.Ordinal);
         matcher.AddInclude("**/*");
@@ -23,9 +22,10 @@ public partial class BinaryTool
             "**/.dotnet/**",
             "**/.git/**",
             "**/git-info/**",
-            "**/artifacts/**",
             "**/prereqs/packages/**",
-            "**/.packages/**"
+            "**/.packages/**",
+            "artifacts/**",
+            "src/*/artifacts/**",
         });
 
         IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(targetDirectory);
@@ -33,17 +33,18 @@ public partial class BinaryTool
         var tasks = matchingFiles
             .Select(async file =>
             {
-                return await IsBinary(file) ? file : null;
-            });
+                return await IsBinaryAsync(file) ? file : null;
+            })
+            .ToList();
 
-        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(targetDirectory.Length + 1));
-        
+        var binaryFiles = (await Task.WhenAll(tasks)).OfType<string>().Select(file => file.Substring(targetDirectory.Length + 1)).ToList();
+
         Log.LogInformation($"Finished binary detection.");
 
         return binaryFiles;
     }
 
-    private async Task<bool> IsBinary(string filePath)
+    private async Task<bool> IsBinaryAsync(string filePath)
     {
         // Using the GNU diff heuristic to determine if a file is binary or not.
         // For more details, refer to the GNU diff manual: 

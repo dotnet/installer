@@ -2,15 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.Extensions.Logging;
 
 namespace BinaryToolKit;
 
-public partial class BinaryTool
+public class CompareBinariesAgainstBaselines
 {
-    private const string PatternsToRemoveMarker = "# Consider removing the following unused patterns from the baseline file:";
-
-    private List<string> CompareBinariesAgainstBaselines(
+    public List<string> Execute(
         IEnumerable<string> detectedBinaries,
         string? allowedBinariesFile,
         string? disallowedSbBinariesFile,
@@ -44,7 +41,7 @@ public partial class BinaryTool
 
                 File.WriteAllLines(newBinariesFile, newBinaries);
 
-                Log.LogWarning($"    {newBinaries.Count()} new binaries detected. Check {newBinariesFile}");
+                Log.LogWarning($"    {newBinaries.Count()} new binaries detected. Check '{newBinariesFile}' for details.");
             }
         }
 
@@ -88,7 +85,7 @@ public partial class BinaryTool
 
             return unmatchedFiles;
         }
-        else
+        else if (mode == Modes.Clean)
         {
             // If only cleaning and not validating (Mode == Clean),
             // we don't need to update the baseline files with unused patterns
@@ -100,6 +97,11 @@ public partial class BinaryTool
 
             return matcher.Match(targetDirectory, searchFiles).Files.Select(file => file.Path);
         }
+        else
+        {
+            // Unhandled mode
+            throw new ArgumentException($"Unhandled mode: {mode}");
+        } 
     }
 
     private IEnumerable<string> ParseBaselineFile(string? file) {
@@ -110,6 +112,7 @@ public partial class BinaryTool
 
         // Read the baseline file and parse the patterns, ignoring comments and empty lines
         return File.ReadLines(file)
+            .Select(line => line.Trim())
             .Where(line => !string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
             .Select(line => line.Split('#')[0].Trim());
     }
@@ -118,13 +121,14 @@ public partial class BinaryTool
     {
         if(File.Exists(file))
         {
+            var lines = File.ReadAllLines(file);
+            var newLines = lines.Where(line => !unusedPatterns.Contains(line)).ToList();
+
             string updatedFile = Path.Combine(outputReportDirectory, "Updated" + Path.GetFileName(file));
 
-            File.Copy(file, updatedFile, true);
-            File.AppendAllText(updatedFile, $"{Environment.NewLine}{PatternsToRemoveMarker}{Environment.NewLine}");
-            File.AppendAllLines(updatedFile, unusedPatterns);
+            File.WriteAllLines(updatedFile, newLines);
 
-            Log.LogInformation($"    Updated baseline file {file} written to {updatedFile}");
+            Log.LogInformation($"    Updated baseline file '{file}' written to '{updatedFile}'");
         }
     }
 }
