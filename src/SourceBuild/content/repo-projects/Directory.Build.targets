@@ -643,7 +643,7 @@
 
     <ItemGroup>
       <RepoProject Include="$(RepoProjectsDir)*.proj" />
-      <RepoProjectDirectory Include="@(RepoProject->'$(SrcDir)%(RepoProject.Filename)')" />
+      <RepoProjectDirectory Include="@(RepoProject->'$(SrcDir)%(Filename)')" />
 
       <!-- Add some other potential top-level project directories for a more specific report. -->
       <RepoProjectDirectory Include="$(SourceBuiltSdksDir);$(TasksDir);$(ArtifactsObjDir)" />
