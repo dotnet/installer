@@ -9,7 +9,7 @@ namespace BinaryToolKit;
 
 public class Program
 {
-    static async Task<int> Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         CliArgument<string> TargetDirectory = new("target-directory")
         {

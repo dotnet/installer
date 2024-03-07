@@ -9,8 +9,8 @@ namespace BinaryToolKit;
 
 public static class DetectBinaries
 {
-    private static readonly string Utf16Marker = "UTF-16";
-    private static readonly int ChunkSize = 4096;
+    private const string Utf16Marker = "UTF-16";
+    private const int ChunkSize = 4096;
     private static readonly Regex GitCleanRegex = new Regex(@"Would (remove|skip)( repository)? (.*)");
 
     public static async Task<List<string>> ExecuteAsync(string targetDirectory)
@@ -40,32 +40,40 @@ public static class DetectBinaries
     {
         string gitDirectory = Path.Combine(targetDirectory, ".git");
         bool isGitRepo = Directory.Exists(gitDirectory);
-        if (!isGitRepo)
+
+        try 
         {
-            // Configure a fake git repo to use so that we can run git clean -ndx
-            await ExecuteProcessAsync("git", $"-C {targetDirectory} init -q");
+            if (!isGitRepo)
+            {
+                // Configure a fake git repo to use so that we can run git clean -ndx
+                await ExecuteProcessAsync("git", $"-C {targetDirectory} init -q");
+            }
+
+            await ExecuteProcessAsync("git", $"-C {targetDirectory} config --global safe.directory {targetDirectory}");
+
+            string output = await ExecuteProcessAsync("git", $"-C {targetDirectory} clean -ndx");
+
+            List<string> ignoredPaths = output.Split(Environment.NewLine)
+                .Select(line => GitCleanRegex.Match(line))
+                .Where(match => match.Success)
+                .Select(match => match.Groups[3].Value)
+                .ToList();
+
+            if (isGitRepo)
+            {
+                ignoredPaths.Add(".git");
+            }
+
+            return ignoredPaths;
         }
-
-        await ExecuteProcessAsync("git", $"-C {targetDirectory} config --global safe.directory {targetDirectory}");
-
-        string output = await ExecuteProcessAsync("git", $"-C {targetDirectory} clean -ndx");
-
-        List<string> ignoredPaths = output.Split(Environment.NewLine)
-            .Select(line => GitCleanRegex.Match(line))
-            .Where(match => match.Success)
-            .Select(match => match.Groups[3].Value)
-            .ToList();
-
-        if (!isGitRepo)
+        finally
         {
-            Directory.Delete(gitDirectory, true);
+            // Ensure .git directory is deleted if it wasn't originally a git repo
+            if (!isGitRepo && Directory.Exists(gitDirectory))
+            {
+                Directory.Delete(gitDirectory, true);
+            }
         }
-        else
-        {
-            ignoredPaths.Add(".git");
-        }
-
-        return ignoredPaths;
     }
 
     private static async Task<bool> IsBinaryAsync(string filePath)
@@ -96,7 +104,7 @@ public static class DetectBinaries
     {
         if (Environment.OSVersion.Platform == PlatformID.Unix)
         {
-            string output = await ExecuteProcessAsync("file", file);
+            string output = await ExecuteProcessAsync("file",  $"\"{file}\"");
             output = output.Split(":")[1].Trim();
 
             if (output.Contains(Utf16Marker))
