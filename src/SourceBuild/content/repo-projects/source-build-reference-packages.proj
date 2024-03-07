@@ -32,7 +32,7 @@
   </Target>
 
   <Target Name="ClearPreviousSBRP"
-          BeforeTargets="CopyRepoArtifacts"
+          BeforeTargets="CopyRepoArtifacts;CopySBRPArtifacts"
           DependsOnTargets="RepoBuild">
     <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
          clear it before copying the current SBRPs.  This ensures n-1 SBRPs aren't required to build the product repos. -->
