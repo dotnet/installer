@@ -277,7 +277,9 @@ jobs:
 
         if [[ -n "${{ parameters.crossRootFs }}" ]]; then
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
-          extraBuildProperties="$extraBuildProperties /p:CrossBuild=true"
+          if [[ '${{ parameters.targetArchitecture }}' != 'wasm' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:CrossBuild=true"
+          fi
         fi
 
         if [[ ! -z '${{ parameters.targetOS }}' ]]; then
