@@ -10,7 +10,11 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="Build">
-    <Message Text="Build Environment: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
+    <PropertyGroup>
+      <SourceOnlyInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'"> (source-only)</SourceOnlyInfoText>
+    </PropertyGroup>
+
+    <Message Text="Build Environment$(SourceOnlyInfoText): $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <MSBuild Projects="$(ToolsDir)init-build.proj;
                        $(RepoProjectsDir)$(RootRepo).proj"
@@ -20,5 +24,12 @@
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+
+  <!-- Intentionally below the import to appear at the end. -->
+  <Target Name="LogBuildOutputFolders"
+          AfterTargets="Build">
+   <Message Importance="high" Text="Shipping packages are located in '$(ArtifactsShippingPackagesDir)'." />
+   <Message Importance="high" Text="Shipping assets are located in '$(ArtifactsAssetsDir)'." />
+  </Target>
 
 </Project>
