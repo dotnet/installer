@@ -24,6 +24,7 @@
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+  <Import Project="$(RepositoryEngineeringDir)build.targets" />
 
   <!-- Intentionally below the import to appear at the end. -->
   <Target Name="LogBuildOutputFolders"
