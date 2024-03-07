@@ -4,6 +4,7 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace BinaryToolKit;
+
 public static class CompareBinariesAgainstBaselines
 {
     public static List<string> Execute(
