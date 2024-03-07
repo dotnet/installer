@@ -46,6 +46,8 @@ public static class DetectBinaries
             await ExecuteProcessAsync("git", $"-C {targetDirectory} init -q");
         }
 
+        await ExecuteProcessAsync("git", $"-C {targetDirectory} config --global safe.directory {targetDirectory}");
+
         string output = await ExecuteProcessAsync("git", $"-C {targetDirectory} clean -ndx");
 
         List<string> ignoredPaths = output.Split(Environment.NewLine)
@@ -61,11 +63,6 @@ public static class DetectBinaries
         else
         {
             ignoredPaths.Add(".git");
-        }
-
-        foreach (var ignoredPath in ignoredPaths)
-        {
-            Log.LogDebug($"Ignoring path: {ignoredPath}");
         }
 
         return ignoredPaths;
