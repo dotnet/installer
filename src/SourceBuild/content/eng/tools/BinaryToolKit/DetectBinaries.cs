@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using Microsoft.Extensions.FileSystemGlobbing;
+using System.Text.RegularExpressions;
 
 namespace BinaryToolKit;
 
@@ -10,6 +11,7 @@ public static class DetectBinaries
 {
     private static readonly string Utf16Marker = "UTF-16";
     private static readonly int ChunkSize = 4096;
+    private static readonly Regex GitCleanRegex = new Regex(@"Would (remove|skip)( repository)? (.*)");
 
     public static async Task<List<string>> ExecuteAsync(string targetDirectory)
     {
@@ -17,16 +19,7 @@ public static class DetectBinaries
 
         var matcher = new Matcher(StringComparison.Ordinal);
         matcher.AddInclude("**/*");
-        matcher.AddExcludePatterns(new[]
-        {
-            "**/.dotnet/**",
-            "**/.git/**",
-            "**/git-info/**",
-            "**/prereqs/packages/**",
-            "**/.packages/**",
-            "artifacts/**",
-            "src/*/artifacts/**",
-        });
+        matcher.AddExcludePatterns(await GetIgnoredPatterns(targetDirectory));
 
         IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(targetDirectory);
 
@@ -41,6 +34,41 @@ public static class DetectBinaries
         Log.LogInformation($"Finished binary detection.");
 
         return binaryFiles;
+    }
+
+    private static async Task<List<string>> GetIgnoredPatterns(string targetDirectory)
+    {
+        string gitDirectory = Path.Combine(targetDirectory, ".git");
+        bool isGitRepo = Directory.Exists(gitDirectory);
+        if (!isGitRepo)
+        {
+            // Configure a fake git repo to use so that we can run git clean -ndx
+            await ExecuteProcessAsync("git", $"-C {targetDirectory} init -q");
+        }
+
+        string output = await ExecuteProcessAsync("git", $"-C {targetDirectory} clean -ndx");
+
+        List<string> ignoredPaths = output.Split(Environment.NewLine)
+            .Select(line => GitCleanRegex.Match(line))
+            .Where(match => match.Success)
+            .Select(match => match.Groups[3].Value)
+            .ToList();
+
+        if (!isGitRepo)
+        {
+            Directory.Delete(gitDirectory, true);
+        }
+        else
+        {
+            ignoredPaths.Add(".git");
+        }
+
+        foreach (var ignoredPath in ignoredPaths)
+        {
+            Log.LogDebug($"Ignoring path: {ignoredPath}");
+        }
+
+        return ignoredPaths;
     }
 
     private static async Task<bool> IsBinaryAsync(string filePath)
