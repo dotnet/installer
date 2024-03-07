@@ -19,7 +19,7 @@ public static class DetectBinaries
 
         var matcher = new Matcher(StringComparison.Ordinal);
         matcher.AddInclude("**/*");
-        matcher.AddExcludePatterns(await GetIgnoredPatterns(targetDirectory));
+        matcher.AddExcludePatterns(await GetIgnoredPatternsAsync(targetDirectory));
 
         IEnumerable<string> matchingFiles = matcher.GetResultsInFullPath(targetDirectory);
 
@@ -36,7 +36,7 @@ public static class DetectBinaries
         return binaryFiles;
     }
 
-    private static async Task<List<string>> GetIgnoredPatterns(string targetDirectory)
+    private static async Task<List<string>> GetIgnoredPatternsAsync(string targetDirectory)
     {
         string gitDirectory = Path.Combine(targetDirectory, ".git");
         bool isGitRepo = Directory.Exists(gitDirectory);
