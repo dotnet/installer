@@ -158,6 +158,11 @@
                             SourcePath="$(NetSdkSupportingFeed)"
                             Condition="'$(AddNetSdkSupportingFeed)' == 'true'" />
 
+    <ItemGroup>
+      <_BuildSources Include="$(NetSdkSupportingFeedName)"
+                     Condition="'$(AddNetSdkSupportingFeed)' == 'true'" />
+    </ItemGroup>
+
     <UpdateNuGetConfigPackageSourcesMappings
       NuGetConfigFile="$(NuGetConfigFile)"
       BuildWithOnlineFeeds="$(DotNetBuildWithOnlineFeeds)"
