@@ -79,7 +79,7 @@ extends:
           displayName: Publish Build Config
 
       # Windows
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           jobName: Build_Release_x64
@@ -87,14 +87,14 @@ extends:
           buildArchitecture: x64
           additionalBuildParameters: '/p:PublishInternalAsset=true'
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           jobName: Build_Release_x86
           buildConfiguration: Release
           buildArchitecture: x86
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           jobName: Build_Release_arm64
@@ -103,7 +103,7 @@ extends:
           runTests: false
 
       # Linux
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Arm_Release
@@ -112,7 +112,7 @@ extends:
           runtimeIdentifier: 'linux-arm'
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Arm64_Release
@@ -121,7 +121,7 @@ extends:
           runtimeIdentifier: 'linux-arm64'
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_musl_Release_arm
@@ -132,7 +132,7 @@ extends:
           additionalBuildParameters: '/p:OSName="linux-musl"'
           linuxPortable: false
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_musl_Release_arm64
@@ -142,7 +142,7 @@ extends:
           additionalBuildParameters: '/p:OSName="linux-musl"'
           linuxPortable: false
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_musl_Release_x64
@@ -154,7 +154,7 @@ extends:
           additionalBuildParameters: '/p:HostOSName="linux-musl"'
           linuxPortable: false
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_Portable_Deb_Release_x64
@@ -166,7 +166,7 @@ extends:
           additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_Portable_Rpm_Release_x64
@@ -178,7 +178,7 @@ extends:
           additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:IsRPMBasedDistro=true'
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_Linux_Portable_Rpm_Release_Arm64
@@ -191,7 +191,7 @@ extends:
           additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true  /p:IsRPMBasedDistro=true'
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           jobName: Build_LinuxPortable_Release_x64
@@ -201,14 +201,14 @@ extends:
           runTests: false
 
       # MacOS
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Darwin
           jobName: Build_Release_x64
           buildConfiguration: Release
           buildArchitecture: x64
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Darwin
           jobName: Build_Release_arm64
@@ -218,7 +218,7 @@ extends:
           runTests: false
 
       # Windows PGO Instrumentation
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           pgoInstrument: true
@@ -227,7 +227,7 @@ extends:
           buildArchitecture: x64
           additionalBuildParameters: '/p:PublishInternalAsset=true'
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           pgoInstrument: true
@@ -235,7 +235,7 @@ extends:
           buildConfiguration: Release
           buildArchitecture: x86
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Windows_NT
           pgoInstrument: true
@@ -245,7 +245,7 @@ extends:
           runTests: false
 
       # Linux PGO Instrumentation
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           pgoInstrument: true
@@ -254,7 +254,7 @@ extends:
           buildArchitecture: x64
           linuxPortable: true
           runTests: false
-      - template: eng/build.yml
+      - template: eng/build.yml@self
         parameters:
           agentOs: Linux
           pgoInstrument: true
