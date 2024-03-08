@@ -105,6 +105,7 @@ steps:
     Contents: |
       **/*.log
       **/*.binlog
+      artifacts/log/binary-report/**
       artifacts/sb/prebuilt-report/**
     TargetFolder: '$(Build.StagingDirectory)/BuildLogs'
     CleanTargetFolder: true
