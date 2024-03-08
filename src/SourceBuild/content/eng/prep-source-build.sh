@@ -4,7 +4,7 @@
 ###
 ###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz,
 ###   installing the version of dotnet referenced in global.json,
-###   and detecting new binaries and removing any non-SB allowed binaries.
+###   and detecting binaries and removing any non-SB allowed binaries.
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
@@ -27,7 +27,7 @@
 ###                               Default is null.
 ###   --with-sdk                  Use the SDK in the specified directory
 ###                               Default is the .NET SDK
-###   --packages-source-feed      URL or specified directory as the source feed for packages
+###   --with-packages             URL or specified directory to use as the source feed for packages
 ###                               Default is the previously source-built artifacts archive
 ###   --no-validate               Do not run validation. Only remove the binaries.
 ###   --no-clean                  Do not remove the binaries. Only run the validation.
@@ -133,7 +133,7 @@ while :; do
       fi
       shift
       ;;
-    --packages-source-feed)
+    --with-packages)
       packagesSourceFeed=$2
       shift
       ;;
@@ -195,12 +195,19 @@ function ParseBinaryArgs {
     exit 1
   fi
 
-  ## Attemping to run the binary tooling without a packages directory or source-feed will fail.
-  ## So either the --with-packages flag must be passed with a valid directory or the source feed must be set using --packages-source-feed
+  ## Attemping to run the binary tooling without a packages directory or source-feed will fail. So either the
+  ## --with-packages flag must be passed with a valid directory or a pre-existing packages directory must exist.
   if [ "$packagesSourceFeed" == "$defaultPackagesDir" ] && [ ! -d "$packagesSourceFeed" ]; then
-    echo "  ERROR: A pre-existing packages directory is needed if --packages-source-feed is not provided. \
+    echo "  ERROR: A pre-existing packages directory is needed if --with-packages is not provided. \
     Please either supply a packages directory using --with-packages or \
     execute ./prep.sh with download artifacts enabled before proceeding. Exiting..."
+    exit 1
+  fi
+
+  # Attempting to run the binary tooling with a custom packages feed that does not
+  # have PackageVersions.props in the packages directory or source-feed will fail.
+  if [ "$packagesSourceFeed" != "$defaultPackagesDir" ] && [ ! -f "$packagesSourceFeed/PackageVersions.props" ]; then
+    echo "  ERROR: PackageVersions.props is needed in the packages directory or source-feed. Exiting..."
     exit 1
   fi
 
@@ -213,10 +220,12 @@ function ParseBinaryArgs {
       echo "Unpacking previously built artifacts from ${packageArtifacts} to $previouslyBuiltPackagesDir"
       mkdir -p "$previouslyBuiltPackagesDir"
       tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir"
+      tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir" PackageVersions.props
+      packagesSourceFeed="$previouslyBuiltPackagesDir"
     else
-      echo "  ERROR: A pre-existing package archive is needed if --packages-source-feed is not provided. \
-      Please either supply a source-feed using --packages-source-feed or \
-      execute ./prep.sh with with download artifacts enabled before proceeding. Exiting..."
+      echo "  ERROR: A pre-existing package archive is needed if --with-packages is not provided. \
+      Please either supply a source-feed using --with-packages or execute ./prep.sh with \
+      download artifacts enabled before proceeding. Exiting..."
       exit 1
     fi
   fi
@@ -289,11 +298,8 @@ function RunBinaryTool {
   # Set the environment variable for the packages source feed
   export ARTIFACTS_PATH="$packagesSourceFeed"
 
-  # Get the runtime version
-  runtimeVersion=$("$dotnetSdk/dotnet" --list-runtimes | tail -n 1 | awk '{print $2}')
-
   # Run the BinaryDetection tool
-  "$dotnetSdk/dotnet" run --project "$BinaryTool" -c Release -p RuntimeVersion="$runtimeVersion" "$TargetDir" "$OutputDir" -ab "$allowedBinaries" -db "$disallowedSbBinaries" -m $mode -l Debug
+  "$dotnetSdk/dotnet" run --project "$BinaryTool" -c Release -p PackagesPropsDirectory="$packagesSourceFeed" "$TargetDir" "$OutputDir" -ab "$allowedBinaries" -db "$disallowedSbBinaries" -m $mode -l Debug
 }
 
 # Check for the version of dotnet to install
