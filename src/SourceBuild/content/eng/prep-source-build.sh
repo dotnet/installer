@@ -191,7 +191,7 @@ function ParseBinaryArgs {
   # or a pre-existing .dotnet SDK directory must exist.
   if [ "$dotnetSdk" == "$defaultDotnetSdk" ] && [ ! -d "$dotnetSdk" ]; then
     echo "  ERROR: A pre-existing .dotnet SDK directory is needed if --with-sdk is not provided. \
-    Please either supply an SDK using --with-sdk or execute ./prep.sh before proceeding. Exiting..."
+    Please either supply an SDK using --with-sdk or execute ./eng/prep-source-build.sh before proceeding. Exiting..."
     exit 1
   fi
 
@@ -200,7 +200,7 @@ function ParseBinaryArgs {
   if [ "$packagesSourceFeed" == "$defaultPackagesDir" ] && [ ! -d "$packagesSourceFeed" ]; then
     echo "  ERROR: A pre-existing packages directory is needed if --with-packages is not provided. \
     Please either supply a packages directory using --with-packages or \
-    execute ./prep.sh with download artifacts enabled before proceeding. Exiting..."
+    execute ./eng/prep-source-build.sh with download artifacts enabled before proceeding. Exiting..."
     exit 1
   fi
 
@@ -224,8 +224,8 @@ function ParseBinaryArgs {
       packagesSourceFeed="$previouslyBuiltPackagesDir"
     else
       echo "  ERROR: A pre-existing package archive is needed if --with-packages is not provided. \
-      Please either supply a source-feed using --with-packages or execute ./prep.sh with \
-      download artifacts enabled before proceeding. Exiting..."
+      Please either supply a source-feed using --with-packages or execute ./eng/prep-source-build.sh \
+      with download artifacts enabled before proceeding. Exiting..."
       exit 1
     fi
   fi
