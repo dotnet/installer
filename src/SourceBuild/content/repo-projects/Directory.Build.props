@@ -90,10 +90,6 @@
     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetManifestsDir=$(RepoAssetManifestsDir)</BuildArgs>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
-    <BuildArgs>$(BuildArgs) /p:ArcadeBuildVertical=true</BuildArgs>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
     <BuildArgs>$(BuildArgs) /p:ArcadeBuildFromSource=true</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:DotNetBuildSourceOnly=true</BuildArgs>

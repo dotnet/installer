@@ -11,10 +11,12 @@
 
   <Target Name="Build">
     <PropertyGroup>
-      <SourceOnlyInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'"> (source-only)</SourceOnlyInfoText>
+      <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">source-build</BuildModeInfoText>
+      <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' != 'true'">non-source-build</BuildModeInfoText>
     </PropertyGroup>
 
-    <Message Text="Build Environment$(SourceOnlyInfoText): $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
+    <Message Text="Build Mode: $(BuildModeInfoText)" Importance="high" />
+    <Message Text="Build Environment: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <MSBuild Projects="$(ToolsDir)init-build.proj;
                        $(RepoProjectsDir)$(RootRepo).proj"
@@ -24,6 +26,8 @@
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+  <!-- ShortStack doesn't produce an SDK, and GetClosestOfficialSdk doesn't support finding non-portable SDKs -->
+  <Import Project="$(RepositoryEngineeringDir)sdkArchiveDiff.targets" Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true'" />
 
   <!-- Intentionally below the import to appear at the end. -->
   <Target Name="LogBuildOutputFolders"
