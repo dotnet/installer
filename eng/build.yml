@@ -87,7 +87,8 @@ jobs:
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         name: $(DncEngInternalBuildPool)
-        demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+        image: 1es-ubuntu-2204-pt
+        os: linux
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:

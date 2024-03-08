@@ -27,19 +27,16 @@ variables:
   - name: _PublishUsingPipelines
     value: true
 - name: _InternalRuntimeDownloadArgs
-  value: ''
+  value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
+    /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
+    /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 # Only used for tracking purposes in MicroBuild tasks.
 # See: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/650/MicroBuild-Signing?anchor=high-level-steps-to-enable-signing
 - name: TeamName
   value: DotNetCLI
 
 # Variable Groups
-- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-  - group: DotNetBuilds storage account read tokens
-  - name: _InternalRuntimeDownloadArgs
-    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
-      /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
-      /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
+- group: DotNetBuilds storage account read tokens
 
 # Variable Templates
 - template: /eng/common/templates-official/variables/pool-providers.yml
@@ -67,12 +64,9 @@ extends:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
         pool:
-          ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            name: $(DncEngPublicBuildPool)
-            demands: ImageOverride -equals windows.vs2022preview.amd64.open
-          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: $(DncEngInternalBuildPool)
-            demands: ImageOverride -equals windows.vs2022preview.amd64
+          name: $(DncEngInternalBuildPool)
+          image: 1es-windows-2022-pt
+          os: windows
         steps:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
