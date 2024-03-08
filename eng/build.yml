@@ -92,7 +92,9 @@ jobs:
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
-        vmImage: 'macOS-latest'
+        name: Azure Pipelines
+        image: macOS-latest
+        os: macOS
 
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if parameters.isBuiltFromVmr }}:
