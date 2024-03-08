@@ -265,13 +265,13 @@ extends:
           runTests: false
 
       # Source Build
-      - template: /eng/common/templates-official/jobs/source-build.yml
+      - template: /eng/common/templates-official/jobs/source-build.yml@self
 
     - stage: Publish
       dependsOn:
       - Build
       jobs:
-      - template: /eng/common/templates-official/job/publish-build-assets.yml
+      - template: /eng/common/templates-official/job/publish-build-assets.yml@self
         parameters:
           publishUsingPipelines: true
           publishAssetsImmediately: true
