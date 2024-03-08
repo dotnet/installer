@@ -74,9 +74,11 @@ extends:
             name: $(DncEngInternalBuildPool)
             demands: ImageOverride -equals windows.vs2022preview.amd64
         steps:
-        - publish: $(Build.SourcesDirectory)\eng\buildConfiguration
-          artifact: buildConfiguration
+        - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
+          inputs:
+            targetPath: $(Build.SourcesDirectory)\eng\buildConfiguration
+            artifactName: buildConfiguration
 
       # Windows
       - template: eng/build.yml@self
