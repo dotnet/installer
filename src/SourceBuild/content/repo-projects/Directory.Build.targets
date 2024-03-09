@@ -313,6 +313,32 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="ComputeCommitHash"
+          BeforeTargets="RepoBuild">
+
+        <!-- Figure out the repo commit. We try and accomodoate both minimal git repository metadata (https://github.com/dotnet/sourcelink/tree/main/docs#min
+mal-git-repository-metadata) or full git repo metadata. -->
+
+    <Exec Command="git rev-parse HEAD"
+          WorkingDirectory="$(RepoRoot)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitRevParseHeadOutput" />
+    </Exec>
+
+    <ReadLinesFromFile File="$(RepoRoot)/.git/HEAD">
+      <Output TaskParameter="Lines" PropertyName="GitHeadContents" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <DotNetGitCommitHash Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(GitHeadContents), `^[0-9a-zA-Z]{40}$`))">$(GitHeadContents)</DotNetitCommitHash>
+      <DotNetGitCommitHash Condition="'$(DotNetGitCommitHash)' == ''">$(GitRevParseHeadOutput)</DotNetGitCommitHash>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <EnvironmentVariables Include="DotNetGitCommitHash=$(DotNetGitCommitHash)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="RepoBuild"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)Build.complete"
