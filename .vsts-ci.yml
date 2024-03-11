@@ -34,6 +34,9 @@ variables:
 # See: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/650/MicroBuild-Signing?anchor=high-level-steps-to-enable-signing
 - name: TeamName
   value: DotNetCLI
+# TODO: TEMPORARY
+- name: skipComponentGovernanceDetection
+  value: true
 
 # Variable Groups
 - group: DotNetBuilds storage account read tokens
