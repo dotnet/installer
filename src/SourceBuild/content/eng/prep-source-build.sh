@@ -211,16 +211,21 @@ function ParseBinaryArgs {
     exit 1
   fi
 
-  # Unpack the previously built packages if the previously built packages directory is empty and
-  # if we're using the default artifacts
+  # Set up the packages source feed if we're using the default artifacts
   previouslyBuiltPackagesDir="$defaultPackagesDir/previously-source-built"
   packageArtifacts="$defaultPackagesDir/archive/Private.SourceBuilt.Artifacts.*.tar.gz"
-  if [ "$packagesSourceFeed" == "$defaultPackagesDir" ] && [ ! -d "$previouslyBuiltPackagesDir" ]; then
-    if [ -f ${packageArtifacts} ]; then
-      echo "Unpacking previously built artifacts from ${packageArtifacts} to $previouslyBuiltPackagesDir"
+  if [ "$packagesSourceFeed" == "$defaultPackagesDir" ]; then
+    if [ -d "$previouslyBuiltPackagesDir" ]; then
+      echo "  Previously source built packages directory exists..."
+      echo "  Using $previouslyBuiltPackagesDir as the source-feed for the binary tooling..."
+      packagesSourceFeed="$previouslyBuiltPackagesDir"
+    elif [ -f ${packageArtifacts} ]; then
+      echo "  Unpacking Private.SourceBuilt.Artifacts.*.tar.gz to $previouslyBuiltPackagesDir..."
       mkdir -p "$previouslyBuiltPackagesDir"
       tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir"
       tar -xzf ${packageArtifacts} -C "$previouslyBuiltPackagesDir" PackageVersions.props
+
+      echo "  Using $previouslyBuiltPackagesDir as the source-feed for the binary tooling..."
       packagesSourceFeed="$previouslyBuiltPackagesDir"
     else
       echo "  ERROR: A pre-existing package archive is needed if --with-packages is not provided. \
