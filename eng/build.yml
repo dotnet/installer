@@ -87,7 +87,7 @@ jobs:
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         name: $(DncEngInternalBuildPool)
-        image: 1es-ubuntu-2204-pt
+        image: 1es-mariner-2-pt
         os: linux
       containers:
         default_linux_container:
