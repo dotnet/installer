@@ -82,14 +82,16 @@ jobs:
       enableMicrobuild: true
       pool:
         name: $(DncEngInternalBuildPool)
-        image: 1es-windows-2022
+        image: 1es-windows-2022-pt
         os: windows
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         name: $(DncEngInternalBuildPool)
-        image: 1es-ubuntu-1804
+        image: 1es-ubuntu-2204-pt
         os: linux
-      container: ${{ parameters.container }}
+      containers:
+        default_linux_container:
+          image: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
         name: Azure Pipelines
