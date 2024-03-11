@@ -51,14 +51,18 @@ resources:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
+    # TODO: Temporary
+    enableComponentGovernanceScan: false
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022-pt
         os: windows
       # TODO: Temporary
+      # https://docs.opensource.microsoft.com/tools/cg/component-detection/variables/
       componentgovernance:
         failOnAlert: false
+        alertWarningLevel: Never
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
