@@ -51,8 +51,6 @@ resources:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
-    # TODO: Temporary
-    skipSDL: true
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
@@ -63,6 +61,7 @@ extends:
       componentgovernance:
         failOnAlert: false
         alertWarningLevel: Never
+        ignoreDirectories: '.packages'
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
