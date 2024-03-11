@@ -52,7 +52,7 @@ extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
     # TODO: Temporary
-    enableComponentGovernanceScan: false
+    skipSDL: true
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
