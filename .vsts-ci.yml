@@ -60,6 +60,7 @@ resources:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
+    containers: ${{ resources.containers }}
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)

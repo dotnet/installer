@@ -76,7 +76,7 @@ jobs:
       name: PGO_${{ parameters.agentOs }}_${{ parameters.jobName }}
     ${{ if not(parameters.pgoInstrument) }}:
       name: ${{ parameters.agentOs }}_${{ parameters.jobName }}
-    
+
     # Set up the pool/machine info to be used based on the Agent OS
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       enableMicrobuild: true
