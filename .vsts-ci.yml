@@ -60,15 +60,6 @@ resources:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
-    containers:
-      - container: MuslArm
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
-      - container: MuslX64
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
-      - container: PortableDeb
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
-      - container: PortableRpm
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
