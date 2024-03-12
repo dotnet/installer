@@ -14,6 +14,7 @@ parameters:
 
 - name: container
   type: string
+  default: ''
 
 - name: crossRootFs
   type: string
@@ -29,6 +30,11 @@ parameters:
 - name: targetArchitecture
   type: string
   default: ''
+
+- name: useMonoRuntime
+  displayName: True when build output uses the mono runtime
+  type: boolean
+  default: false
 
 #### SOURCE-ONLY parameters ####
 
@@ -65,10 +71,10 @@ parameters:
   type: boolean
   default: false
 
-- name: useMonoRuntime
-  displayName: True when build output uses the mono runtime
-  type: boolean
-  default: false
+# Freeform field for extra values to pass to build.sh for special build modes
+- name: extraProperties
+  type: string
+  default: ''
 
 # Use the previous version's SDK to build the current one
 - name: withPreviousSDK
@@ -138,7 +144,6 @@ jobs:
           vmrPath: $(vmrPath)
           vmrBranch: ${{ parameters.vmrBranch }}
           targetRef: $(Build.SourceVersion) # Synchronize the current installer commit
-          architecture: ${{ parameters.architecture }}
 
   - ${{ if parameters.buildFromArchive }}:
     - script: |
@@ -203,16 +208,16 @@ jobs:
           exit 1
         fi
       displayName: Setup Previously Source-Built SDK
-  
+
   - ${{ if eq(parameters.targetOS, 'windows') }}:
     - script: |
-        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine
+        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine ${{ parameters.extraProperties }}
       displayName: Build
 
   - ${{ else }}:
     - ${{ if eq(parameters.buildSourceOnly, 'true') }}:
       - script: |
-          set -x
+          set -ex
 
           customPrepArgs=""
           prepSdk=true
@@ -240,11 +245,11 @@ jobs:
             echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
           fi
 
-          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
+          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./eng/prep-source-build.sh $customPrepArgs
         displayName: Prep the Build
 
     - script: |
-        set -x
+        set -ex
         df -h
 
         customEnvVars=""
@@ -271,7 +276,10 @@ jobs:
         fi
 
         if [[ -n "${{ parameters.crossRootFs }}" ]]; then
-          customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}} CROSSCOMPILE=1"
+          customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
+          if [[ '${{ parameters.targetArchitecture }}' != 'wasm' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:CrossBuild=true"
+          fi
         fi
 
         if [[ ! -z '${{ parameters.targetOS }}' ]]; then
@@ -280,6 +288,10 @@ jobs:
 
         if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
           extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
+        fi
+
+        if [[ -n "${{ parameters.extraProperties }}" ]]; then
+          extraBuildProperties="$extraBuildProperties ${{ parameters.extraProperties }}"
         fi
 
         buildArgs="$(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
@@ -293,7 +305,7 @@ jobs:
           for envVar in $customEnvVars; do
             customDockerRunArgs="$customDockerRunArgs -e $envVar"
           done
-          
+
           if [[ '${{ parameters.runOnline }}' == 'False' ]]; then
             customDockerRunArgs="$customDockerRunArgs --network none"
           fi
@@ -312,7 +324,7 @@ jobs:
   # Only run tests if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
     - script: |
-        set -x
+        set -ex
 
         dockerVolumeArgs="-v $(sourcesPath):/vmr"
         dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
@@ -330,10 +342,10 @@ jobs:
     # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
     - powershell: |
         function CopyWithRelativeFolders($sourcePath, $targetFolder, $filter) {
-          Get-ChildItem -Path $sourcePath -Filter $filter -Recurse | ForEach-Object { 
+          Get-ChildItem -Path $sourcePath -Filter $filter -Recurse | ForEach-Object {
             $targetPath = Join-Path $targetFolder (Resolve-Path -Relative $_.FullName)
             New-Item -ItemType Directory -Path (Split-Path -Parent $targetPath) -Force | Out-Null
-            Copy-Item $_.FullName -Destination $targetPath -Force 
+            Copy-Item $_.FullName -Destination $targetPath -Force
           }
         }
 
@@ -344,13 +356,18 @@ jobs:
 
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
-        CopyWithRelativeFolders "artifacts/prebuilt-report/" $targetFolder
+        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.diff"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
         CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"
         CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.diff"
         CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.txt"
-      displayName: Prepare BuildLogs staging directory
+
+        # check if we have assets to publish
+        if (Test-Path "artifacts/assets/Release/*") {
+          echo "##vso[task.setvariable variable=hasAssets]true"
+        }
+      displayName: Prepare BuildLogs staging directory and check assets
       continueOnError: true
       condition: succeededOrFailed()
 
@@ -366,13 +383,22 @@ jobs:
         cd "$(sourcesPath)"
         find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
+          find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+          find artifacts/log/binary-report/ -exec rsync -R {} -t ${targetFolder} \;
+        fi
         find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "Updated*.diff" -exec rsync -R {} -t ${targetFolder} \;
         find test/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
-      displayName: Prepare BuildLogs staging directory
+
+        # check if we have assets to publish
+        if [ -n "$(ls -A 'artifacts/assets/Release/')" ]; then
+          echo "##vso[task.setvariable variable=hasAssets]true"
+        fi
+      displayName: Prepare BuildLogs staging directory and check assets
       continueOnError: true
       condition: succeededOrFailed()
 
@@ -396,8 +422,14 @@ jobs:
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts/${{ parameters.architecture }}/Release/'
+  - publish: '$(sourcesPath)/artifacts/assets/Release/'
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed(), eq(variables['hasAssets'], 'true'))
     continueOnError: true
+
+  # When building from source, the Private.SourceBuilt.Artifacts archive already contains the nuget packages
+  - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
+    - publish: '$(sourcesPath)/artifacts/packages/Release/'
+      artifact: $(Agent.JobName)_Packages
+      displayName: Publish Packages
