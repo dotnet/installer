@@ -24,7 +24,7 @@
 ###                               Default is src/installer/src/VirtualMonoRepo/allowed-binaries.txt
 ###   --disallowed-sb-binaries    Path to the file containing the list of known binaries that are allowed
 ###                               in the VMR but cannot be kept for source-building.
-###                               Default is null.
+###                               Default is src/installer/src/VirtualMonoRepo/disallowed-sb-binaries.txt
 ###   --with-sdk                  Use the SDK in the specified directory
 ###                               Default is the .NET SDK
 ###   --with-packages             URL or specified directory to use as the source feed for packages
@@ -47,6 +47,7 @@ defaultArtifactsRid='centos.8-x64'
 
 # Binary Tooling default arguments
 defaultAllowedBinaries="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-binaries.txt"
+defaultDisallowedSbBinaries="$REPO_ROOT/src/installer/src/VirtualMonoRepo/disallowed-sb-binaries.txt"
 defaultDotnetSdk="$REPO_ROOT/.dotnet"
 defaultPackagesDir="$REPO_ROOT/prereqs/packages"
 defaultMode="All"
@@ -63,7 +64,7 @@ runtime_source_feed_key='' # IBM requested these to support s390x scenarios
 # Binary Tooling arguments
 runBinaryTool=true
 allowedBinaries=$defaultAllowedBinaries
-disallowedSbBinaries=''
+disallowedSbBinaries=$defaultDisallowedSbBinaries
 dotnetSdk=$defaultDotnetSdk
 packagesSourceFeed=$defaultPackagesDir
 mode=$defaultMode
