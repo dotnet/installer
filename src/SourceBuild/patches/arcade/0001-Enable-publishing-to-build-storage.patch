@@ -1,41 +1,39 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Thu, 7 Mar 2024 19:24:13 +0000
+Date: Wed, 13 Mar 2024 02:02:44 +0000
 Subject: [PATCH] Enable publishing to build storage
 
-Backport: https://github.com/dotnet/arcade/pull/14559
 ---
  .../DependencyFlowOnboardingWithoutArcade.md  |   8 +-
  .../tools/Build.proj                          |  19 ++-
- .../tools/Publish.proj                        |  33 ++++-
- .../tools/SourceBuild/AfterSourceBuild.proj   |  20 +--
- .../SourceBuild/SourceBuildArcade.targets     |   5 +-
+ .../tools/Publish.proj                        |  39 +++++-
+ .../tools/SourceBuild/AfterSourceBuild.proj   |  27 ++--
+ .../SourceBuild/SourceBuildArcade.targets     |   6 +-
  .../SourceBuildArcadeBuild.targets            |   3 +
  .../SourceBuildArcadePublish.targets          |  19 ---
  .../SourceBuildArcadeTools.targets            |   1 +
  .../GeneralTests.cs                           |   5 +-
  .../PublishArtifactsInManifestTests.cs        |   1 +
  ...ctsTests.cs => PushToBuildStorageTests.cs} |  43 +++---
- .../Microsoft.DotNet.Build.Tasks.Feed.csproj  |  47 ++++++-
+ .../Microsoft.DotNet.Build.Tasks.Feed.csproj  |  50 +++++--
  .../Microsoft.DotNet.Build.Tasks.Feed.targets |   2 +-
  .../src/PublishArtifactsInManifestBase.cs     |  19 +--
  ...vOpsArtifacts.cs => PushToBuildStorage.cs} | 117 ++++++++++++++--
  .../src/common/AzureStorageUtils.cs           | 132 ++++++++++++++++++
  .../src/common/GeneralUtils.cs                | 132 +-----------------
- .../Directory.Build.props                     |   6 -
+ .../Directory.Build.props                     |  11 --
  .../lib/src/Automation/NupkgInfo.cs           |  34 ++++-
- .../lib/src/Automation/NupkgInfoFactory.cs    |  65 ++++++++-
- ...Microsoft.DotNet.VersionTools.Tasks.csproj |   6 +
- ...Microsoft.DotNet.VersionTools.Tests.csproj |   6 +
- ...osoft.DotNet.VersionTools.Cli.Tests.csproj |   6 +
+ .../lib/src/Automation/NupkgInfoFactory.cs    |  63 ++++++++-
+ ...Microsoft.DotNet.VersionTools.Tasks.csproj |   5 +
  .../VersionTrimmingOperationTests.cs          |   3 +-
- .../Microsoft.DotNet.VersionTools.Cli.csproj  |   6 +
- 25 files changed, 491 insertions(+), 247 deletions(-)
+ .../Microsoft.DotNet.VersionTools.Cli.csproj  |   5 +
+ 23 files changed, 491 insertions(+), 253 deletions(-)
  rename src/Microsoft.DotNet.Build.Tasks.Feed.Tests/{PushToAzureDevOpsArtifactsTests.cs => PushToBuildStorageTests.cs} (94%)
  rename src/Microsoft.DotNet.Build.Tasks.Feed/src/{PushToAzureDevOpsArtifacts.cs => PushToBuildStorage.cs} (64%)
+ delete mode 100644 src/Microsoft.DotNet.VersionTools/Directory.Build.props
 
 diff --git a/Documentation/DependencyFlowOnboardingWithoutArcade.md b/Documentation/DependencyFlowOnboardingWithoutArcade.md
-index a45c707e2..d5cd51058 100644
+index a45c707e..d5cd5105 100644
 --- a/Documentation/DependencyFlowOnboardingWithoutArcade.md
 +++ b/Documentation/DependencyFlowOnboardingWithoutArcade.md
 @@ -4,14 +4,14 @@
@@ -66,10 +64,10 @@ index a45c707e2..d5cd51058 100644
      ManifestBuildData="@(ManifestBuildData)"
      ManifestRepoUri="$(BUILD_REPOSITORY_NAME)"
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj
-index 702b6f21f..e25b92369 100644
+index e90155f7..8314e100 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj
-@@ -308,18 +308,27 @@
+@@ -307,18 +307,27 @@
      <!--
        Publish artifacts. This should run in the following situations:
        - Regular single repo builds
@@ -103,10 +101,26 @@ index 702b6f21f..e25b92369 100644
  
  </Project>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
-index c35176019..444d1f472 100644
+index 9fa35734..db23d6cf 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
-@@ -41,9 +41,10 @@
+@@ -21,6 +21,15 @@
+   -->
+ 
+   <Import Project="BuildStep.props" />
++
++  <!--
++    In VMR inner-build copy to local storage, do not push to AzDO.
++    Define this property before importing repo Publishing.props, to have it control any repo-specific publishing.
++  -->
++  <PropertyGroup Condition="'$(DotNetBuildInnerRepo)' == 'true' and '$(DotNetBuildOrchestrator)' == 'true'">
++    <PushToLocalStorage>true</PushToLocalStorage>
++  </PropertyGroup>
++
+   <!-- Allow for repo specific Publish properties such as add additional files to be published -->
+   <Import Project="$(RepositoryEngineeringDir)Publishing.props" Condition="Exists('$(RepositoryEngineeringDir)Publishing.props')" />
+ 
+@@ -41,9 +50,10 @@
      
      <!-- If `AutoGenerateSymbolPackages` is not set we default it to true. -->
      <!-- Do not generate symbol packages if in outer source build mode, to avoid creating copies of the intermediates. -->
@@ -119,21 +133,23 @@ index c35176019..444d1f472 100644
  
      <AssetManifestOS Condition="'$(AssetManifestOS)' == ''">$(OS)</AssetManifestOS>
  
-@@ -85,6 +86,13 @@
-         <IsShipping>%(PackagesToPublish.IsShipping)</IsShipping>
-       </SymbolPackagesToGenerate>
- 
-+      <!-- Include Symbols.<repo>.tar.gz, if running in inner source-only build -->
-+      <UnifiedSymbolsPackage Include="$(ArtifactsPackagesDir)**/Symbols*.tar.gz" IsShipping="false" />
-+      <PackagesToPublish Condition="'$(DotNetBuildSourceOnly)' == 'true' and '$(DotNetBuildInnerRepo)' == 'true'" Include="@(UnifiedSymbolsPackage)">
-+        <PublishFlatContainer>true</PublishFlatContainer>
-+        <RelativeBlobPath>%(Filename)%(Extension)</RelativeBlobPath>
-+      </PackagesToPublish>
-+
-       <!-- If PostBuildSign is true, then we need to include newly generated packages in ItemsToSignPostBuild. -->
+@@ -89,6 +99,15 @@
        <ItemsToSignPostBuild Include="@(SymbolPackagesToGenerate->'%(Filename)%(Extension)')" Condition="'$(PostBuildSign)' == 'true'" />
      </ItemGroup>
-@@ -105,8 +113,11 @@
+ 
++    <!-- Include Symbols.<repo>.tar.gz, if running in inner source-only build -->
++    <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true' and '$(DotNetBuildInnerRepo)' == 'true'">
++      <UnifiedSymbolsPackage Include="$(ArtifactsNonShippingPackagesDir)Symbols.*.tar.gz" IsShipping="false" />
++      <PackagesToPublish Include="@(UnifiedSymbolsPackage)">
++        <PublishFlatContainer>true</PublishFlatContainer>
++        <RelativeBlobPath>Symbols/%(Filename)%(Extension)</RelativeBlobPath>
++      </PackagesToPublish>
++    </ItemGroup>
++
+     <!--
+       If a symbol package doesn't exist yet we assume that the regular package contains Portable PDBs.
+       Such packages can act as symbol packages since they have the same structure.
+@@ -105,8 +124,11 @@
        -->
        <SymbolPackagesToGenerate Remove="$(SymbolPackagesDir)**/Microsoft.DotNet.Darc.*" />
        <SymbolPackagesToGenerate Remove="$(SymbolPackagesDir)**/Microsoft.DotNet.Maestro.Tasks.*" />
@@ -147,19 +163,7 @@ index c35176019..444d1f472 100644
          <ManifestArtifactData Condition="'%(IsShipping)' != 'true'">NonShipping=true</ManifestArtifactData>
          <ManifestArtifactData Condition="'%(IsShipping)' == 'true' and '$(ProducesDotNetReleaseShippingAssets)' == 'true'">DotNetReleaseShipping=true</ManifestArtifactData>
        </ItemsToPushToBlobFeed>
-@@ -145,6 +156,11 @@
-       <PDBsToPublishTempLocation>$(ArtifactsTmpDir)PDBsToPublish/</PDBsToPublishTempLocation>
-     </PropertyGroup>
-     
-+    <!-- In VMR inner-build copy to local storage, do not push to AzDO -->
-+    <PropertyGroup Condition="'$(ArcadeInnerBuildFromSource)' == 'true' or '$(DotNetBuildPhase)' == 'InnerRepo'">
-+      <PushToLocalStorage>true</PushToLocalStorage>
-+    </PropertyGroup>
-+
-     <!--
-       The new Maestro/BAR build model keeps separate Azure DevOps and GitHub build information.
-       The GitHub information will be extracted based on the Azure DevOps repository.
-@@ -163,7 +179,7 @@
+@@ -163,7 +185,7 @@
      <!--
        The user can set `PublishingVersion` via eng\Publishing.props
      -->
@@ -168,7 +172,7 @@ index c35176019..444d1f472 100644
        AzureDevOpsCollectionUri="$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)"
        AzureDevOpsProject="$(SYSTEM_TEAMPROJECT)"
        AzureDevOpsBuildId="$(BUILD_BUILDID)"
-@@ -181,7 +197,12 @@
+@@ -181,7 +203,12 @@
        IsStableBuild="$(IsStableBuild)"
        PublishingVersion="$(PublishingVersion)"
        AssetManifestPath="$(AssetManifestFilePath)" 
@@ -183,7 +187,7 @@ index c35176019..444d1f472 100644
      <!-- 
          Publish Windows PDBs produced by SymStore.targets (by default, only shipping PDBs are placed there).
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
-index b6f7e9a87..da0c8a4d5 100644
+index b6f7e9a8..c2ba0644 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/AfterSourceBuild.proj
 @@ -1,5 +1,5 @@
@@ -193,14 +197,21 @@ index b6f7e9a87..da0c8a4d5 100644
  
    <Import Project="..\BuildStep.props" />
  
-@@ -11,22 +11,16 @@
+@@ -11,22 +11,23 @@
  
    <Import Project="$(MicrosoftDotNetSourceBuildTasksBuildDir)Microsoft.DotNet.SourceBuild.Tasks.props" />
  
 +  <Target Name="AfterSourceBuildInnerBuild"
 +          Condition="('$(ArcadeInnerBuildFromSource)' == 'true' or '$(DotNetBuildInnerRepo)' == 'true') and
 +                     '$(DotNetBuildOrchestrator)' == 'true'"
-+          DependsOnTargets="CreateRepoSymbolsArchive" />
++          DependsOnTargets="CreateRepoSymbolsArchive;ClearPreviousSBRP" />
++
++  <Target Name="ClearPreviousSBRP"
++          Condition="'$(GitHubRepositoryName)' == 'source-build-reference-packages'">
++    <!-- Building SBRP: At this point the References directory contains the previously-source-built SBRPs,
++         clear it before publishing current SBRPs.  This ensures n-1 SBRPs aren't required to build the product repos. -->
++    <RemoveDir Directories="$(ReferencePackageNupkgCacheDir)" />
++  </Target>
 +
    <Target Name="AfterSourceBuild"
            Condition="'$(ArcadeInnerBuildFromSource)' != 'true' and '$(DotNetBuildInnerRepo)' != 'true'"
@@ -223,10 +234,18 @@ index b6f7e9a87..da0c8a4d5 100644
    <Target Name="WritePrebuiltUsageData">
      <ItemGroup>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-index 1fcd705b8..8250cdd79 100644
+index 1fcd705b..41817c3a 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcade.targets
-@@ -69,6 +69,7 @@
+@@ -46,6 +46,7 @@
+     <CurrentRepoSourceBuildArtifactsDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildSourceDir)', 'artifacts'))</CurrentRepoSourceBuildArtifactsDir>
+     <CurrentRepoSourceBuildArtifactsLogsDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildArtifactsDir)', 'log', '$(Configuration)'))</CurrentRepoSourceBuildArtifactsLogsDir>
+     <CurrentRepoSourceBuildArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildArtifactsDir)', 'packages', '$(Configuration)'))</CurrentRepoSourceBuildArtifactsPackagesDir>
++    <CurrentRepoSourceBuildArtifactsNonShippingPackagesDir>$([MSBuild]::NormalizeDirectory('$(CurrentRepoSourceBuildArtifactsPackagesDir)', 'NonShipping'))</CurrentRepoSourceBuildArtifactsNonShippingPackagesDir>
+ 
+     <CurrentRepoSourceBuildNuGetSourceName>source-build-int-nupkg-cache</CurrentRepoSourceBuildNuGetSourceName>
+     <!-- If this path is updated, also update the component detection task in eng\common\templates\steps\source-build.yml -->
+@@ -69,6 +70,7 @@
      <_DefaultNetFrameworkFilter>netstandard2.0%3bnetstandard2.1%3bnetcoreapp2.1%3bnetcoreapp3.1%3bnet5.0%3bnet6.0%3bnet7.0%3bnet8.0%3bnet9.0</_DefaultNetFrameworkFilter>
      <SourceBuildTargetFrameworkFilter Condition="'$(SourceBuildTargetFrameworkFilter)' == ''">$(_DefaultNetFrameworkFilter)</SourceBuildTargetFrameworkFilter>
      <RepoManifestFile>$(ArtifactsDir)RepoManifest.xml</RepoManifestFile>
@@ -234,7 +253,7 @@ index 1fcd705b8..8250cdd79 100644
    </PropertyGroup>
  
    <Target Name="GetSourceBuildIntermediateNupkgNameConvention">
-@@ -159,12 +160,12 @@
+@@ -159,12 +161,12 @@
    -->
    <Target Name="CreateRepoSymbolsArchive"
            Condition="'$(OS)' != 'Windows_NT' and ('$(DotNetBuildFromSourceFlavor)' == 'Product' or '$(DotNetBuildOrchestrator)' == 'true' or '$(SupplementalIntermediateNupkgCategory)' == '$(SymbolsIntermediateNupkgCategory)')"
@@ -245,15 +264,15 @@ index 1fcd705b8..8250cdd79 100644
        <!-- Fall back to repo root for source-build-externals or repos that don't have the regular SymbolsRoot as defined above -->
        <SymbolsRoot Condition="!Exists('$(SymbolsRoot)') or '$(GitHubRepositoryName)' == 'source-build-externals'">$(RepoRoot)</SymbolsRoot>
 -      <SymbolsArchiveLocation>$(CurrentRepoSourceBuildArtifactsPackagesDir)</SymbolsArchiveLocation>
-+      <SymbolsArchiveLocation>$(CurrentRepoSourceBuildArtifactsPackagesDir)NonShipping/</SymbolsArchiveLocation>
++      <SymbolsArchiveLocation>$(CurrentRepoSourceBuildArtifactsNonShippingPackagesDir)</SymbolsArchiveLocation>
        <SymbolsArchiveLocation Condition="'$(GitHubRepositoryName)' == 'nuget-client' and '$(PackageOutputPath)' != ''">$([MSBuild]::EnsureTrailingSlash('$(PackageOutputPath)'))</SymbolsArchiveLocation>
        <SymbolsList>$([MSBuild]::NormalizePath('$(SymbolsArchiveLocation)', 'symbols.lst'))</SymbolsList>
        <SymbolsArchivePrefix>Symbols.</SymbolsArchivePrefix>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeBuild.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeBuild.targets
-index 38114e1c8..000357217 100644
+index a4343829..0c38335c 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeBuild.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeBuild.targets
-@@ -84,6 +84,9 @@
+@@ -80,6 +80,9 @@
        <InnerBuildArgs Condition="'$(DotNetPackageVersionPropsPath)' != ''">$(InnerBuildArgs) /p:DotNetPackageVersionPropsPath="$(DotNetPackageVersionPropsPath)"</InnerBuildArgs>
  
        <InnerBuildArgs>$(InnerBuildArgs) /p:FullAssemblySigningSupported=$(FullAssemblySigningSupported)</InnerBuildArgs>
@@ -264,7 +283,7 @@ index 38114e1c8..000357217 100644
  
      <ItemGroup>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadePublish.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadePublish.targets
-index 2b023696c..fa81a5755 100644
+index 2b023696..fa81a575 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadePublish.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadePublish.targets
 @@ -3,23 +3,4 @@
@@ -292,7 +311,7 @@ index 2b023696c..fa81a5755 100644
 -
  </Project>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeTools.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeTools.targets
-index ed8e7dfe8..180b2ae6c 100644
+index ed8e7dfe..180b2ae6 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeTools.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild/SourceBuildArcadeTools.targets
 @@ -9,6 +9,7 @@
@@ -304,7 +323,7 @@ index ed8e7dfe8..180b2ae6c 100644
  
    <!-- Because the condition here is rather complex, it should read as the following:
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/GeneralTests.cs b/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/GeneralTests.cs
-index c70bd1bc5..35556df9c 100644
+index c70bd1bc..35556df9 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/GeneralTests.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/GeneralTests.cs
 @@ -13,6 +13,7 @@
@@ -334,7 +353,7 @@ index c70bd1bc5..35556df9c 100644
                  packageContentUrl,
                  httpClient,
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PublishArtifactsInManifestTests.cs b/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PublishArtifactsInManifestTests.cs
-index 4ce693ff9..ff65ce03e 100644
+index 4ce693ff..ff65ce03 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PublishArtifactsInManifestTests.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PublishArtifactsInManifestTests.cs
 @@ -18,6 +18,7 @@
@@ -349,7 +368,7 @@ diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PushToAzureDevOpsArtifa
 similarity index 94%
 rename from src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PushToAzureDevOpsArtifactsTests.cs
 rename to src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PushToBuildStorageTests.cs
-index 330c46a33..0635a6121 100644
+index 330c46a3..0635a612 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PushToAzureDevOpsArtifactsTests.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed.Tests/PushToBuildStorageTests.cs
 @@ -12,7 +12,6 @@
@@ -524,7 +543,7 @@ index 330c46a33..0635a6121 100644
              var collection = new ServiceCollection();
              task.ConfigureServices(collection);
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj b/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
-index 4a612a441..3a20fba7a 100644
+index 4a612a44..a730b287 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
 @@ -7,17 +7,19 @@
@@ -552,8 +571,13 @@ index 4a612a441..3a20fba7a 100644
    </ItemGroup>
  
    <!-- Upgrade SymbolUploader's transitive NETStandard.Library dependency to avoid .NET Standard 1.x dependencies. -->
-@@ -29,7 +31,7 @@
-                       VersionOverride="2.0.3" />
+@@ -26,10 +28,11 @@
+                       IsImplicitlyDefined="false"
+                       PrivateAssets="all"
+                       ExcludeAssets="runtime"
+-                      VersionOverride="2.0.3" />
++                      VersionOverride="2.0.3"
++                      Condition="'$(DotNetBuildSourceOnly)' != 'true'" />
    </ItemGroup>
  
 -  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
@@ -561,7 +585,7 @@ index 4a612a441..3a20fba7a 100644
      <!-- Maestro.Client stopped supporting .NET 4.7.2 long ago.
           This functionality should eventually be moved into an arcade-services package,
           but for users consuming other functionality we'll still support 4.7.2 by ifdefing it out. -->
-@@ -42,7 +44,7 @@
+@@ -42,7 +45,7 @@
  
    <ItemGroup>
      <ProjectReference Include="..\Common\Microsoft.Arcade.Common\Microsoft.Arcade.Common.csproj" />
@@ -570,7 +594,7 @@ index 4a612a441..3a20fba7a 100644
      <ProjectReference Include="..\Microsoft.DotNet.VersionTools\lib\Microsoft.DotNet.VersionTools.csproj" />
    </ItemGroup>
  
-@@ -50,4 +52,35 @@
+@@ -50,4 +53,35 @@
      <Compile Include="..\Common\Internal\EnumExtensions.cs" />
    </ItemGroup>
  
@@ -607,7 +631,7 @@ index 4a612a441..3a20fba7a 100644
 +
  </Project>
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/build/Microsoft.DotNet.Build.Tasks.Feed.targets b/src/Microsoft.DotNet.Build.Tasks.Feed/build/Microsoft.DotNet.Build.Tasks.Feed.targets
-index 7110f8783..c58f5a4d3 100644
+index 7110f878..c58f5a4d 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/build/Microsoft.DotNet.Build.Tasks.Feed.targets
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/build/Microsoft.DotNet.Build.Tasks.Feed.targets
 @@ -47,7 +47,7 @@
@@ -620,7 +644,7 @@ index 7110f8783..c58f5a4d3 100644
    <UsingTask TaskName="CreateAzureDevOpsFeed" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
    <UsingTask TaskName="PublishSignedAssets" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/src/PublishArtifactsInManifestBase.cs b/src/Microsoft.DotNet.Build.Tasks.Feed/src/PublishArtifactsInManifestBase.cs
-index ccd417c0a..1de07e422 100644
+index ccd417c0..1de07e42 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/src/PublishArtifactsInManifestBase.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/src/PublishArtifactsInManifestBase.cs
 @@ -29,6 +29,7 @@
@@ -696,7 +720,7 @@ diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/src/PushToAzureDevOpsArtifact
 similarity index 64%
 rename from src/Microsoft.DotNet.Build.Tasks.Feed/src/PushToAzureDevOpsArtifacts.cs
 rename to src/Microsoft.DotNet.Build.Tasks.Feed/src/PushToBuildStorage.cs
-index 2c1825c26..05c853c75 100644
+index 2c1825c2..05c853c7 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/src/PushToAzureDevOpsArtifacts.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/src/PushToBuildStorage.cs
 @@ -3,6 +3,7 @@
@@ -885,7 +909,7 @@ index 2c1825c26..05c853c75 100644
      }
  }
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/AzureStorageUtils.cs b/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/AzureStorageUtils.cs
-index b126fa4ce..c805c6b4d 100644
+index b126fa4c..c805c6b4 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/AzureStorageUtils.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/AzureStorageUtils.cs
 @@ -8,6 +8,8 @@
@@ -1041,7 +1065,7 @@ index b126fa4ce..c805c6b4d 100644
      }
  }
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/GeneralUtils.cs b/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/GeneralUtils.cs
-index ab8b35f75..a361aa45a 100644
+index ab8b35f7..a361aa45 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/GeneralUtils.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/src/common/GeneralUtils.cs
 @@ -4,7 +4,9 @@
@@ -1199,22 +1223,24 @@ index ab8b35f75..a361aa45a 100644
          ///     Determine whether the feed is public or private.
          /// </summary>
 diff --git a/src/Microsoft.DotNet.VersionTools/Directory.Build.props b/src/Microsoft.DotNet.VersionTools/Directory.Build.props
-index 2c4fb658b..4ea2a0573 100644
+deleted file mode 100644
+index 2c4fb658..00000000
 --- a/src/Microsoft.DotNet.VersionTools/Directory.Build.props
-+++ b/src/Microsoft.DotNet.VersionTools/Directory.Build.props
-@@ -2,10 +2,4 @@
- 
-   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
- 
++++ /dev/null
+@@ -1,11 +0,0 @@
+-<Project>
+-
+-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
+-
 -  <!-- Don't include VersionTools in source-build until we find a reason to use it. -->
 -  <PropertyGroup>
 -    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 -    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
 -  </PropertyGroup>
 -
- </Project>
+-</Project>
 diff --git a/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfo.cs b/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfo.cs
-index c3646c580..4e4aed0ab 100644
+index c3646c58..4e4aed0a 100644
 --- a/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfo.cs
 +++ b/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfo.cs
 @@ -1,7 +1,7 @@
@@ -1271,7 +1297,7 @@ index c3646c580..4e4aed0ab 100644
 +    }
  }
 diff --git a/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfoFactory.cs b/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfoFactory.cs
-index ddf8dd992..bb0179619 100644
+index ddf8dd99..eab28d72 100644
 --- a/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfoFactory.cs
 +++ b/src/Microsoft.DotNet.VersionTools/lib/src/Automation/NupkgInfoFactory.cs
 @@ -1,8 +1,12 @@
@@ -1289,7 +1315,7 @@ index ddf8dd992..bb0179619 100644
  
  namespace Microsoft.DotNet.VersionTools.Automation
  {
-@@ -22,10 +26,61 @@ public NupkgInfoFactory(IPackageArchiveReaderFactory packageArchiveReaderFactory
+@@ -22,10 +26,59 @@ public NupkgInfoFactory(IPackageArchiveReaderFactory packageArchiveReaderFactory
  
          public NupkgInfo CreateNupkgInfo(string path)
          {
@@ -1348,65 +1374,28 @@ index ddf8dd992..bb0179619 100644
 +
 +        private static XElement GetSingleElement(XElement el, string name)
 +        {
-+            return el.Descendants()
-+                .Where(c => c.Name.LocalName.ToString() == name)
-+                .ToArray().First();
++            return el.Descendants().First(c => c.Name.LocalName.ToString() == name);
          }
      }
  }
 diff --git a/src/Microsoft.DotNet.VersionTools/tasks/Microsoft.DotNet.VersionTools.Tasks.csproj b/src/Microsoft.DotNet.VersionTools/tasks/Microsoft.DotNet.VersionTools.Tasks.csproj
-index 2013e9da5..391469a91 100644
+index 2013e9da..72277ea5 100644
 --- a/src/Microsoft.DotNet.VersionTools/tasks/Microsoft.DotNet.VersionTools.Tasks.csproj
 +++ b/src/Microsoft.DotNet.VersionTools/tasks/Microsoft.DotNet.VersionTools.Tasks.csproj
-@@ -7,6 +7,12 @@
+@@ -7,6 +7,11 @@
      <PackageType>MSBuildSdk</PackageType>
    </PropertyGroup>
  
 +  <!-- Don't include VersionTools.Tasks in source-build until we find a reason to use it. -->
 +  <PropertyGroup>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 +    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
 +  </PropertyGroup>
 +
    <ItemGroup>
      <PackageReference Include="Microsoft.Build.Tasks.Core" />
    </ItemGroup>
-diff --git a/src/Microsoft.DotNet.VersionTools/tests/Microsoft.DotNet.VersionTools.Tests.csproj b/src/Microsoft.DotNet.VersionTools/tests/Microsoft.DotNet.VersionTools.Tests.csproj
-index 380b5fb82..4768c0029 100644
---- a/src/Microsoft.DotNet.VersionTools/tests/Microsoft.DotNet.VersionTools.Tests.csproj
-+++ b/src/Microsoft.DotNet.VersionTools/tests/Microsoft.DotNet.VersionTools.Tests.csproj
-@@ -4,6 +4,12 @@
-     <TargetFramework>$(NetToolCurrent)</TargetFramework>
-   </PropertyGroup>
- 
-+  <!-- Don't include VersionTools.Tests in source-build until we find a reason to use it. -->
-+  <PropertyGroup>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-+    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
-+  </PropertyGroup>
-+
-   <ItemGroup>
-     <PackageReference Include="Moq" />
-     <PackageReference Include="FluentAssertions" />
-diff --git a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/Microsoft.DotNet.VersionTools.Cli.Tests.csproj b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/Microsoft.DotNet.VersionTools.Cli.Tests.csproj
-index 9e1065280..beacf1587 100644
---- a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/Microsoft.DotNet.VersionTools.Cli.Tests.csproj
-+++ b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/Microsoft.DotNet.VersionTools.Cli.Tests.csproj
-@@ -4,6 +4,12 @@
-     <TargetFramework>$(NetToolCurrent)</TargetFramework>
-   </PropertyGroup>
- 
-+  <!-- Don't include VersionTools.Cli.Tests in source-build until we find a reason to use it. -->
-+  <PropertyGroup>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-+    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
-+  </PropertyGroup>
-+
-   <ItemGroup>
-     <PackageReference Include="Moq" />
-     <PackageReference Include="FluentAssertions" />
 diff --git a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/VersionTrimmingOperationTests.cs b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/VersionTrimmingOperationTests.cs
-index 7a1b83c12..fb1be051b 100644
+index 7a1b83c1..fb1be051 100644
 --- a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/VersionTrimmingOperationTests.cs
 +++ b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli.Tests/VersionTrimmingOperationTests.cs
 @@ -4,7 +4,6 @@
@@ -1427,16 +1416,15 @@ index 7a1b83c12..fb1be051b 100644
          var fileProxy = new Mock<IFileProxy>();
          fileProxy.Setup(m => m.Move(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 diff --git a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli/Microsoft.DotNet.VersionTools.Cli.csproj b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli/Microsoft.DotNet.VersionTools.Cli.csproj
-index 3f28b805f..b963c88ea 100644
+index 3f28b805..a2f9360e 100644
 --- a/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli/Microsoft.DotNet.VersionTools.Cli.csproj
 +++ b/src/Microsoft.DotNet.VersionTools/tools/Microsoft.DotNet.VersionTools.Cli/Microsoft.DotNet.VersionTools.Cli.csproj
-@@ -9,6 +9,12 @@
+@@ -9,6 +9,11 @@
      <Description>This package provides a CLI interface to the Microsoft.DotNet.VersionTools library.</Description>
    </PropertyGroup>
  
 +  <!-- Don't include VersionTools.Cli in source-build until we find a reason to use it. -->
 +  <PropertyGroup>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 +    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
 +  </PropertyGroup>
 +

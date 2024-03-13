@@ -135,13 +135,12 @@
       <IsStableBuild Condition="'$(DotNetFinalVersionKind)' == 'release'">true</IsStableBuild>
     </PropertyGroup>
 
-    <!-- In VMR inner-build copy to local storage, do not push to AzDO -->
-    <PropertyGroup Condition="'$(ArcadeInnerBuildFromSource)' == 'true' or '$(DotNetBuildPhase)' == 'InnerRepo'">
-      <PushToLocalStorage>true</PushToLocalStorage>
-    </PropertyGroup>
-
+    <!--
+      Delete PushToAzureDevOpsArtifacts task and remove condition from PushToBuildStorage task
+      after this repo picks up arcade with the following change: https://github.com/dotnet/arcade/pull/14559
+    -->
     <PushToAzureDevOpsArtifacts
-      Condition="'$(DotNetBuildRepo)' != 'true'"
+      Condition="'$(DotNetBuildOrchestrator)' != 'true'"
       AzureDevOpsCollectionUri="$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)"
       AzureDevOpsProject="$(SYSTEM_TEAMPROJECT)"
       AzureDevOpsBuildId="$(BUILD_BUILDID)"
@@ -162,7 +161,7 @@
       PublishingVersion="3" />
 
     <PushToBuildStorage
-      Condition="'$(DotNetBuildRepo)' == 'true'"
+      Condition="'$(DotNetBuildOrchestrator)' == 'true'"
       AzureDevOpsCollectionUri="$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)"
       AzureDevOpsProject="$(SYSTEM_TEAMPROJECT)"
       AzureDevOpsBuildId="$(BUILD_BUILDID)"

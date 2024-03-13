@@ -28,6 +28,19 @@
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
   <Import Project="$(RepositoryEngineeringDir)sdkArchiveDiff.targets" Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" />
 
+  <!-- Copy SDK archive to assets root. -->
+  <Target Name="CopySdkArchive"
+          AfterTargets="Build">
+    <ItemGroup>
+      <_SdkArchive Include="$(ArtifactsAssetsDir)Sdk/**/dotnet-sdk-*$(ArchiveExtension)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_SdkArchive)"
+          DestinationFolder="$(ArtifactsAssetsDir)"
+          SkipUnchangedFiles="true"
+          UseHardlinksIfPossible="true" />
+  </Target>
+
   <!-- Intentionally below the import to appear at the end. -->
   <Target Name="LogBuildOutputFolders"
           AfterTargets="Build">

@@ -24,7 +24,7 @@
     <ProjectAssetsJsonArchiveFile>$(PackageReportDir)all-project-assets-json-files.zip</ProjectAssetsJsonArchiveFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <RepoManifestFile>$([MSBuild]::NormalizePath('$(ProjectDirectory)', 'artifacts', 'RepoManifest.xml'))</RepoManifestFile>
-    <RepoAssetsSymbolsArchive>$(ArtifactsAssetsDir)Symbols.$(RepositoryName)$(ArchiveExtension)</RepoAssetsSymbolsArchive>
+    <RepoAssetsSymbolsArchive>$(ArtifactsAssetsSymbolsDir)Symbols.$(RepositoryName)$(ArchiveExtension)</RepoAssetsSymbolsArchive>
 
     <IntermediateSymbolsRepoDir>$(IntermediateSymbolsRootDir)$(RepositoryName)</IntermediateSymbolsRepoDir>
   </PropertyGroup>
@@ -377,6 +377,10 @@
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)') and '$(MinimalConsoleLogOutput)' == 'true'" />
   </Target>
 
+  <!--
+    Remove this target after arcade changes for publishing have flown to installer repo.
+    https://github.com/dotnet/source-build/issues/4207
+  -->
   <Target Name="CopyRepoArtifacts"
           DependsOnTargets="RepoBuild"
           Condition="'$(IsUtilityProject)' != 'true' and Exists('$(RepoManifestFile)')"
@@ -454,26 +458,6 @@
     <Touch Files="$(BaseIntermediateOutputPath)CopyRepoArtifacts.complete" AlwaysCreate="true">
       <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
     </Touch>
-  </Target>
-
-  <!--
-    Copy published SBRP artifacts to reference-packages dir.
-    Artifacts get published to a temp location, as we cannot publish them directly to
-    reference-packages dir, until repo build is complete and previous content of
-    reference-packages dir is deleted.
-  -->
-  <Target Name="CopySBRPArtifacts"
-          DependsOnTargets="RepoBuild"
-          Condition="'$(RepositoryName)' == 'source-build-reference-packages' and Exists('$(RepoPackagesTempDir)')">
-    <ItemGroup>
-      <_ReferenceTempPackages Include="$(RepoPackagesTempDir)**/*" />
-    </ItemGroup>
-
-    <Error Text="SBRP artifacts do not exist in expected location: $(RepoPackagesTemp)" Condition="'@(_ReferenceTempPackages)' == ''" />
-
-    <Copy SourceFiles="@(_ReferenceTempPackages)"
-          DestinationFolder="$(ReferencePackagesDir)"
-          Condition="'@(_ReferenceTempPackages)' != ''" />
   </Target>
 
   <!-- Copy restored packages from inner build to ensure they're included in the
@@ -614,9 +598,6 @@
     <!-- Extract repo symbols tarball -->
     <MakeDir Directories="$(IntermediateSymbolsRepoDir)" />
     <Exec Command="tar -xzf %(RepoSymbolsArchive.Identity) -C $(IntermediateSymbolsRepoDir)" />
-
-    <!-- Delete repo symbols archive in assets folder -->
-    <Delete Condition="'%(RepoSymbolsArchive.Identity)' == '$(RepoAssetsSymbolsArchive)'" Files="%(RepoSymbolsArchive.Identity)" />
   </Target>
 
   <Target Name="Build"
@@ -624,7 +605,6 @@
     BuildRepoReferences;
     RepoBuild;
     CopyRepoArtifacts;
-    CopySBRPArtifacts;
     CopyInnerBuildRestoredPackages;
     ExtractToolPackage;
     DiscoverSymbolsArchiveFile;

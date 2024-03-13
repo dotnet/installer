@@ -15,17 +15,6 @@
     <MSBuild Projects="$(RepoProjectsDir)$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
   </Target>
 
-  <!-- After building, copy SDK archive to assets root. -->
-  <Target Name="CopySdkArchive"
-          AfterTargets="Build">
-    <ItemGroup>
-      <_SdkTarball Include="$(ArtifactsAssetsDir)**/dotnet-sdk-*$(ArchiveExtension)" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(_SdkTarball)"
-          DestinationFolder="$(ArtifactsAssetsDir)" />
-  </Target>
-
   <!-- After building, repackage symbols into a single tarball. -->
   <Target Name="RepackageSymbols"
           AfterTargets="Build"
