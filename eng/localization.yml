@@ -19,7 +19,7 @@ variables:
 
 jobs:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Manual'))) }}:
-  - template: /eng/common/templates-official/job/onelocbuild.yml
+  - template: /eng/common/templates/job/onelocbuild.yml
     parameters:
       CreatePr: ${{ ne(variables['Build.Reason'], 'Manual') }}
       LclPackageId: 'LCL-JUNO-PROD-DOTNETINSTALLER'
