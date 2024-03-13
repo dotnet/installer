@@ -154,7 +154,7 @@ jobs:
                 $(_PgoInstrument)
     - ${{ else }}:
       - installerRoot: '$(Build.SourcesDirectory)'
-      - ${{ if notin(variables['Build.Reason'], 'PullRequest') }}:
+      - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - group: DotNet-HelixApi-Access
         - _PushToVSFeed: true
         - _SignType: real
@@ -170,7 +170,7 @@ jobs:
     - checkout: self
       clean: true
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-      - ${{ if not(parameters.isBuiltFromVmr) }}:
+      - ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
         - task: PowerShell@2
           displayName: Setup Private Feeds Credentials
           inputs:
@@ -191,7 +191,7 @@ jobs:
           DOTNET_CLI_UI_LANGUAGE: ${{ parameters.dotnetCLIUILanguage }}
 
     - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
-      - ${{ if not(parameters.isBuiltFromVmr) }}:
+      - ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
         - task: Bash@3
           displayName: Setup Private Feeds Credentials
           inputs:
