@@ -93,7 +93,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/NuGet/NuGet.Client -->
-    <NuGetVersioningPackageVersion>5.8.0</NuGetVersioningPackageVersion>
+    <NuGetBuildTasksPackageVersion>6.3.4-rc.2</NuGetBuildTasksPackageVersion>
+    <NuGetVersioningPackageVersion>$(NuGetBuildTasksPackageVersion)</NuGetVersioningPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Dependencies from https://github.com/dotnet/msbuild -->
+    <MicrosoftBuildPackageVersion>17.3.2</MicrosoftBuildPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Cross-release dependency versions -->
