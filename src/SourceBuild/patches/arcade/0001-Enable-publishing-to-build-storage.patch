@@ -16,19 +16,19 @@ Backport: https://github.com/dotnet/arcade/pull/14559
  .../GeneralTests.cs                           |   5 +-
  .../PublishArtifactsInManifestTests.cs        |   1 +
  ...ctsTests.cs => PushToBuildStorageTests.cs} |  43 +++---
- .../Microsoft.DotNet.Build.Tasks.Feed.csproj  |  50 +++++--
+ .../Microsoft.DotNet.Build.Tasks.Feed.csproj  |  49 ++++++-
  .../Microsoft.DotNet.Build.Tasks.Feed.targets |   2 +-
  .../src/PublishArtifactsInManifestBase.cs     |  19 +--
  ...vOpsArtifacts.cs => PushToBuildStorage.cs} | 117 ++++++++++++++--
  .../src/common/AzureStorageUtils.cs           | 132 ++++++++++++++++++
  .../src/common/GeneralUtils.cs                | 132 +-----------------
- .../Directory.Build.props                     |  11 --
+ .../Directory.Build.props                     |  10 --
  .../lib/src/Automation/NupkgInfo.cs           |  34 ++++-
  .../lib/src/Automation/NupkgInfoFactory.cs    |  63 ++++++++-
  ...Microsoft.DotNet.VersionTools.Tasks.csproj |   5 +
  .../VersionTrimmingOperationTests.cs          |   3 +-
  .../Microsoft.DotNet.VersionTools.Cli.csproj  |   5 +
- 23 files changed, 492 insertions(+), 253 deletions(-)
+ 23 files changed, 492 insertions(+), 251 deletions(-)
  rename src/Microsoft.DotNet.Build.Tasks.Feed.Tests/{PushToAzureDevOpsArtifactsTests.cs => PushToBuildStorageTests.cs} (94%)
  rename src/Microsoft.DotNet.Build.Tasks.Feed/src/{PushToAzureDevOpsArtifacts.cs => PushToBuildStorage.cs} (64%)
  delete mode 100644 src/Microsoft.DotNet.VersionTools/Directory.Build.props
@@ -545,14 +545,13 @@ index 330c46a3..0635a612 100644
              var collection = new ServiceCollection();
              task.ConfigureServices(collection);
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj b/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
-index 4a612a44..a730b287 100644
+index 383e5bbe..a730b287 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Feed/Microsoft.DotNet.Build.Tasks.Feed.csproj
-@@ -7,17 +7,19 @@
+@@ -7,16 +7,19 @@
      <DevelopmentDependency>true</DevelopmentDependency>
      <IsBuildTaskProject>true</IsBuildTaskProject>
      <PackageType>MSBuildSdk</PackageType>
--    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 -    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
 +  </PropertyGroup>
 +
@@ -573,7 +572,7 @@ index 4a612a44..a730b287 100644
    </ItemGroup>
  
    <!-- Upgrade SymbolUploader's transitive NETStandard.Library dependency to avoid .NET Standard 1.x dependencies. -->
-@@ -26,10 +28,11 @@
+@@ -25,10 +28,11 @@
                        IsImplicitlyDefined="false"
                        PrivateAssets="all"
                        ExcludeAssets="runtime"
@@ -587,7 +586,7 @@ index 4a612a44..a730b287 100644
      <!-- Maestro.Client stopped supporting .NET 4.7.2 long ago.
           This functionality should eventually be moved into an arcade-services package,
           but for users consuming other functionality we'll still support 4.7.2 by ifdefing it out. -->
-@@ -42,7 +45,7 @@
+@@ -41,7 +45,7 @@
  
    <ItemGroup>
      <ProjectReference Include="..\Common\Microsoft.Arcade.Common\Microsoft.Arcade.Common.csproj" />
@@ -596,7 +595,7 @@ index 4a612a44..a730b287 100644
      <ProjectReference Include="..\Microsoft.DotNet.VersionTools\lib\Microsoft.DotNet.VersionTools.csproj" />
    </ItemGroup>
  
-@@ -50,4 +53,35 @@
+@@ -49,4 +53,35 @@
      <Compile Include="..\Common\Internal\EnumExtensions.cs" />
    </ItemGroup>
  
@@ -1226,17 +1225,16 @@ index ab8b35f7..a361aa45 100644
          /// </summary>
 diff --git a/src/Microsoft.DotNet.VersionTools/Directory.Build.props b/src/Microsoft.DotNet.VersionTools/Directory.Build.props
 deleted file mode 100644
-index 2c4fb658..00000000
+index 2dc829c3..00000000
 --- a/src/Microsoft.DotNet.VersionTools/Directory.Build.props
 +++ /dev/null
-@@ -1,11 +0,0 @@
+@@ -1,10 +0,0 @@
 -<Project>
 -
 -  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
 -
 -  <!-- Don't include VersionTools in source-build until we find a reason to use it. -->
 -  <PropertyGroup>
--    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 -    <ExcludeFromSourceOnlyBuild>true</ExcludeFromSourceOnlyBuild>
 -  </PropertyGroup>
 -
