@@ -43,21 +43,37 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     containers:
-      alpine319WithNode:
+      # alpine319WithNode:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
+      # cblMariner20Fpm:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
+      # centosStream8:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+      # debian11Amd64:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
+      # fedora39:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+      # ubuntu2204:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
+      # ubuntu2204CrossArmAlpine:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
+      # ubuntu2204DebPkg:
+      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
+      - container: alpine319WithNode
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
-      cblMariner20Fpm:
+      - container: cblMariner20Fpm
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
-      centosStream8:
+      - container: centosStream8
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-      debian11Amd64:
+      - container: debian11Amd64
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
-      fedora39:
+      - container: fedora39
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
-      ubuntu2204:
+      - container: ubuntu2204
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
-      ubuntu2204CrossArmAlpine:
+      - container: ubuntu2204CrossArmAlpine
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
-      ubuntu2204DebPkg:
+      - container: ubuntu2204DebPkg
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
       sourceAnalysisPool:
