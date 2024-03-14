@@ -46,42 +46,26 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     containers:
-      # alpine319WithNode:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
-      # cblMariner20Fpm:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
-      # centosStream8:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-      # debian11Amd64:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
-      # fedora39:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
-      # ubuntu2204:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
-      # ubuntu2204CrossArmAlpine:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
-      # ubuntu2204DebPkg:
-      #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
-    - container: alpine319WithNode
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
-    - container: cblMariner20Fpm
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
-    - container: centosStream8
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-    - container: debian11Amd64
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
-    - container: fedora39
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
-    - container: ubuntu2204
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
-    - container: ubuntu2204CrossArmAlpine
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
-    - container: ubuntu2204DebPkg
-      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
+      alpine319WithNode:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
+      cblMariner20Fpm:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
+      centosStream8:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+      debian11Amd64:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
+      fedora39:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+      ubuntu2204:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
+      ubuntu2204CrossArmAlpine:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
+      ubuntu2204DebPkg:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
-        image: windows.vs2022preview.amd64
+        image: 1es-windows-2022
         os: windows
       # https://docs.opensource.microsoft.com/tools/cg/component-detection/variables/
       componentgovernance:
@@ -96,11 +80,11 @@ extends:
         pool:
           ${{ if eq(variables['System.TeamProject'], 'public') }}:
             name: $(DncEngPublicBuildPool)
-            image: windows.vs2022preview.amd64.open
+            image: 1es-windows-2022-open
             os: windows
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: $(DncEngInternalBuildPool)
-            image: windows.vs2022preview.amd64
+            image: 1es-windows-2022
             os: windows
         steps:
         - task: 1ES.PublishPipelineArtifact@1
@@ -401,5 +385,5 @@ extends:
             publishAssetsImmediately: true
             pool:
               name: $(DncEngInternalBuildPool)
-              image: windows.vs2022preview.amd64
+              image: 1es-windows-2022
               os: windows
