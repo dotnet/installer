@@ -62,22 +62,22 @@ extends:
       #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
       # ubuntu2204DebPkg:
       #   image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
-      - container: alpine319WithNode
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
-      - container: cblMariner20Fpm
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
-      - container: centosStream8
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-      - container: debian11Amd64
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
-      - container: fedora39
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
-      - container: ubuntu2204
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
-      - container: ubuntu2204CrossArmAlpine
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
-      - container: ubuntu2204DebPkg
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
+    - container: alpine319WithNode
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
+    - container: cblMariner20Fpm
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
+    - container: centosStream8
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+    - container: debian11Amd64
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
+    - container: fedora39
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+    - container: ubuntu2204
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
+    - container: ubuntu2204CrossArmAlpine
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-cross-arm-alpine
+    - container: ubuntu2204DebPkg
+      image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
