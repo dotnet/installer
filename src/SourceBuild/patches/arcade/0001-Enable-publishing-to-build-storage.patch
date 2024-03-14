@@ -1,12 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Wed, 13 Mar 2024 02:02:44 +0000
+Date: Thu, 14 Mar 2024 00:40:08 +0000
 Subject: [PATCH] Enable publishing to build storage
 
+Backport: https://github.com/dotnet/arcade/pull/14559
 ---
  .../DependencyFlowOnboardingWithoutArcade.md  |   8 +-
  .../tools/Build.proj                          |  19 ++-
- .../tools/Publish.proj                        |  39 +++++-
+ .../tools/Publish.proj                        |  40 +++++-
  .../tools/SourceBuild/AfterSourceBuild.proj   |  27 ++--
  .../SourceBuild/SourceBuildArcade.targets     |   6 +-
  .../SourceBuildArcadeBuild.targets            |   3 +
@@ -27,7 +28,7 @@ Subject: [PATCH] Enable publishing to build storage
  ...Microsoft.DotNet.VersionTools.Tasks.csproj |   5 +
  .../VersionTrimmingOperationTests.cs          |   3 +-
  .../Microsoft.DotNet.VersionTools.Cli.csproj  |   5 +
- 23 files changed, 491 insertions(+), 253 deletions(-)
+ 23 files changed, 492 insertions(+), 253 deletions(-)
  rename src/Microsoft.DotNet.Build.Tasks.Feed.Tests/{PushToAzureDevOpsArtifactsTests.cs => PushToBuildStorageTests.cs} (94%)
  rename src/Microsoft.DotNet.Build.Tasks.Feed/src/{PushToAzureDevOpsArtifacts.cs => PushToBuildStorage.cs} (64%)
  delete mode 100644 src/Microsoft.DotNet.VersionTools/Directory.Build.props
@@ -101,26 +102,27 @@ index e90155f7..8314e100 100644
  
  </Project>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
-index 9fa35734..db23d6cf 100644
+index 9fa35734..dc83aac9 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Publish.proj
-@@ -21,6 +21,15 @@
+@@ -21,6 +21,16 @@
    -->
  
    <Import Project="BuildStep.props" />
 +
 +  <!--
 +    In VMR inner-build copy to local storage, do not push to AzDO.
++    Inner-repo builds outside of VMR do not use arcade publishing.
 +    Define this property before importing repo Publishing.props, to have it control any repo-specific publishing.
 +  -->
-+  <PropertyGroup Condition="'$(DotNetBuildInnerRepo)' == 'true' and '$(DotNetBuildOrchestrator)' == 'true'">
++  <PropertyGroup Condition="'$(DotNetBuildPhase)' == 'InnerRepo' and '$(DotNetBuildOrchestrator)' == 'true'">
 +    <PushToLocalStorage>true</PushToLocalStorage>
 +  </PropertyGroup>
 +
    <!-- Allow for repo specific Publish properties such as add additional files to be published -->
    <Import Project="$(RepositoryEngineeringDir)Publishing.props" Condition="Exists('$(RepositoryEngineeringDir)Publishing.props')" />
  
-@@ -41,9 +50,10 @@
+@@ -41,9 +51,10 @@
      
      <!-- If `AutoGenerateSymbolPackages` is not set we default it to true. -->
      <!-- Do not generate symbol packages if in outer source build mode, to avoid creating copies of the intermediates. -->
@@ -133,7 +135,7 @@ index 9fa35734..db23d6cf 100644
  
      <AssetManifestOS Condition="'$(AssetManifestOS)' == ''">$(OS)</AssetManifestOS>
  
-@@ -89,6 +99,15 @@
+@@ -89,6 +100,15 @@
        <ItemsToSignPostBuild Include="@(SymbolPackagesToGenerate->'%(Filename)%(Extension)')" Condition="'$(PostBuildSign)' == 'true'" />
      </ItemGroup>
  
@@ -149,7 +151,7 @@ index 9fa35734..db23d6cf 100644
      <!--
        If a symbol package doesn't exist yet we assume that the regular package contains Portable PDBs.
        Such packages can act as symbol packages since they have the same structure.
-@@ -105,8 +124,11 @@
+@@ -105,8 +125,11 @@
        -->
        <SymbolPackagesToGenerate Remove="$(SymbolPackagesDir)**/Microsoft.DotNet.Darc.*" />
        <SymbolPackagesToGenerate Remove="$(SymbolPackagesDir)**/Microsoft.DotNet.Maestro.Tasks.*" />
@@ -163,7 +165,7 @@ index 9fa35734..db23d6cf 100644
          <ManifestArtifactData Condition="'%(IsShipping)' != 'true'">NonShipping=true</ManifestArtifactData>
          <ManifestArtifactData Condition="'%(IsShipping)' == 'true' and '$(ProducesDotNetReleaseShippingAssets)' == 'true'">DotNetReleaseShipping=true</ManifestArtifactData>
        </ItemsToPushToBlobFeed>
-@@ -163,7 +185,7 @@
+@@ -163,7 +186,7 @@
      <!--
        The user can set `PublishingVersion` via eng\Publishing.props
      -->
@@ -172,7 +174,7 @@ index 9fa35734..db23d6cf 100644
        AzureDevOpsCollectionUri="$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)"
        AzureDevOpsProject="$(SYSTEM_TEAMPROJECT)"
        AzureDevOpsBuildId="$(BUILD_BUILDID)"
-@@ -181,7 +203,12 @@
+@@ -181,7 +204,12 @@
        IsStableBuild="$(IsStableBuild)"
        PublishingVersion="$(PublishingVersion)"
        AssetManifestPath="$(AssetManifestFilePath)" 
