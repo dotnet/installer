@@ -25,11 +25,14 @@ variables:
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
-- group: DotNetBuilds storage account read tokens
 - name: _InternalRuntimeDownloadArgs
-  value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
-    /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
-    /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
+  value: ''
+- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+  - group: DotNetBuilds storage account read tokens
+  - name: _InternalRuntimeDownloadArgs
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
+      /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
+      /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 - template: /eng/common/templates-official/variables/pool-providers.yml
 
 resources:
@@ -91,9 +94,14 @@ extends:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
         pool:
-          name: $(DncEngInternalBuildPool)
-          image: windows.vs2022preview.amd64
-          os: windows
+          ${{ if eq(variables['System.TeamProject'], 'public') }}:
+            name: $(DncEngPublicBuildPool)
+            image: windows.vs2022preview.amd64.open
+            os: windows
+          ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+            name: $(DncEngInternalBuildPool)
+            image: windows.vs2022preview.amd64
+            os: windows
         steps:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
