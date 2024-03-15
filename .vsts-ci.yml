@@ -69,8 +69,11 @@ extends:
         os: windows
       # https://docs.opensource.microsoft.com/tools/cg/component-detection/variables/
       componentgovernance:
-        failOnAlert: false
-      #   ignoreDirectories: '.packages'
+        # This should be uncommented when a fix is available.
+        # See: https://dev.azure.com/mseng/1ES/_workitems/edit/2159448
+        # failOnAlert: false
+        # This should be removed when failOnAlert works properly.
+        ignoreDirectories: '.packages'
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
