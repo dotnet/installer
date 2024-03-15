@@ -68,8 +68,7 @@ parameters:
   type: boolean
   default: false
 
-variables:
-- name: PublishTaskName
+- name: publishTaskName
   ${{ if eq(variables['OneESPT'], true) }}:
     value: 1ES.PublishBuildArtifacts@1
   ${{ else }}:
@@ -289,7 +288,7 @@ jobs:
       continueOnError: true
       condition: always()
 
-    - task: $(PublishTaskName)
+    - task: ${{ parameters.publishTaskName }}
       displayName: Publish Logs to VSTS
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
