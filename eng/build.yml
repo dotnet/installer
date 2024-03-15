@@ -69,10 +69,8 @@ parameters:
   default: false
 
 - name: publishTaskName
-  ${{ if eq(variables['OneESPT'], true) }}:
-    value: 1ES.PublishBuildArtifacts@1
-  ${{ else }}:
-    value: PublishBuildArtifacts@1
+  # https://stackoverflow.com/a/70184550/294804
+  value: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
 
 jobs:
 - ${{ if eq(variables['OneESPT'], true) }}:
