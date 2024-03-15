@@ -146,7 +146,6 @@
     <EnableDefaultItems Condition="'$(MSBuildProjectExtension)' == '.proj'">false</EnableDefaultItems>
 
     <LogVerbosity Condition="'$(LogVerbosity)'==''">minimal</LogVerbosity>
-    <BuildInParallel Condition="'$(BuildInParallel)'==''">false</BuildInParallel>
 
     <ShellExtension Condition="'$(BuildOS)' == 'windows'">.cmd</ShellExtension>
     <ShellExtension Condition="'$(BuildOS)' != 'windows'">.sh</ShellExtension>
@@ -174,7 +173,9 @@
 
     <VSMSBuildSdkResolversDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset', 'VSSdkResolvers'))</VSMSBuildSdkResolversDir>
     <IntermediateSymbolsRootDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'Symbols'))</IntermediateSymbolsRootDir>
+    <AssetManifestsIntermediateDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'AssetManifests'))</AssetManifestsIntermediateDir>
     <ArtifactsAssetsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'assets', '$(Configuration)'))</ArtifactsAssetsDir>
+    <ArtifactsAssetsSymbolsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsAssetsDir)', 'Symbols'))</ArtifactsAssetsSymbolsDir>
 
     <PrebuiltPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'prebuilt'))</PrebuiltPackagesPath>
     <PreviouslyRestoredPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'previouslyRestored'))</PreviouslyRestoredPackagesPath>
@@ -203,6 +204,7 @@
   <PropertyGroup>
     <XPlatSourceBuildTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.XPlat', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.XPlat.dll'))</XPlatSourceBuildTasksAssembly>
     <LeakDetectionTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.LeakDetection', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll'))</LeakDetectionTasksAssembly>
+    <SdkArchiveDiffTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff.dll'))</SdkArchiveDiffTasksAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(EnablePoison)' == 'true'">
