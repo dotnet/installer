@@ -88,6 +88,7 @@ extends:
             os: windows
         steps:
         - powershell: 'Get-ChildItem env:'
+          displayName: List Environment Variables
         - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
           inputs:
