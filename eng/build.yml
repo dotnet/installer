@@ -74,11 +74,11 @@ parameters:
 #   default: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
 
 jobs:
-- template: common/templates-official/job/job.yml
-# - ${{ if eq(variables['OneESPT'], true) }}:
-    # template: common/templates-official/job/job.yml
-  # ${{ else }}:
-  #   template: common/templates/job/job.yml
+# - template: common/templates-official/job/job.yml
+- ${{ if variables.OneESPT }}:
+    template: common/templates-official/job/job.yml
+  ${{ else }}:
+    template: common/templates/job/job.yml
   parameters:
     # Set up the name of the job.
     ${{ if parameters.pgoInstrument }}:
