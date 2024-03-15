@@ -36,7 +36,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 source="${BASH_SOURCE[0]}"
-REPO_ROOT="$( cd -P "$( dirname "$0" )/../" && pwd )"
+REPO_ROOT="$( cd -P "$( dirname "$0" )" && pwd )"
 
 function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
