@@ -68,6 +68,13 @@ parameters:
   type: boolean
   default: false
 
+variables:
+- name: PublishTaskName
+  ${{ if eq(variables['OneESPT'], true) }}:
+    value: 1ES.PublishBuildArtifacts@1
+  ${{ else }}:
+    value: PublishBuildArtifacts@1
+
 jobs:
 - ${{ if eq(variables['OneESPT'], true) }}:
     template: common/templates-official/job/job.yml
@@ -282,10 +289,7 @@ jobs:
       continueOnError: true
       condition: always()
 
-    - ${{ if eq(variables['OneESPT'], true) }}:
-        task: 1ES.PublishBuildArtifacts@1
-      ${{ else }}:
-        task: PublishBuildArtifacts@1
+    - task: $(PublishTaskName)
       displayName: Publish Logs to VSTS
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
