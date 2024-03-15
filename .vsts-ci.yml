@@ -87,6 +87,7 @@ extends:
             image: 1es-windows-2022
             os: windows
         steps:
+        - powershell: 'Get-ChildItem env:'
         - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
           inputs:

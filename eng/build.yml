@@ -68,10 +68,10 @@ parameters:
   type: boolean
   default: false
 
-- name: publishTaskName
-  type: string
-  # https://stackoverflow.com/a/70184550/294804
-  default: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
+# - name: publishTaskName
+#   type: string
+#   # https://stackoverflow.com/a/70184550/294804
+#   default: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
 
 jobs:
 - ${{ if eq(variables['OneESPT'], true) }}:
@@ -287,11 +287,11 @@ jobs:
       continueOnError: true
       condition: always()
 
-    - task: ${{ parameters.publishTaskName }}
-      displayName: Publish Logs to VSTS
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
-        publishLocation: Container
-      continueOnError: true
-      condition: always()
+    # - task: ${{ parameters.publishTaskName }}
+    #   displayName: Publish Logs to VSTS
+    #   inputs:
+    #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    #     ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
+    #     publishLocation: Container
+    #   continueOnError: true
+    #   condition: always()
