@@ -68,7 +68,8 @@ extends:
         image: 1es-windows-2022
         os: windows
       # https://docs.opensource.microsoft.com/tools/cg/component-detection/variables/
-      # componentgovernance:
+      componentgovernance:
+        failOnAlert: false
       #   ignoreDirectories: '.packages'
     customBuildTags:
     - ES365AIMigrationTooling
