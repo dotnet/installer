@@ -73,12 +73,18 @@ parameters:
 #   # https://stackoverflow.com/a/70184550/294804
 #   default: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
 
+- name: jobTemplatePath
+  type: string
+  # https://stackoverflow.com/a/70184550/294804
+  default: $[replace(replace('True', variables.OneESPT, 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
+
 jobs:
 # - template: common/templates-official/job/job.yml
-- ${{ if variables.OneESPT }}:
-    template: common/templates-official/job/job.yml
-  ${{ else }}:
-    template: common/templates/job/job.yml
+# - ${{ if variables.OneESPT }}:
+#     template: common/templates-official/job/job.yml
+#   ${{ else }}:
+#     template: common/templates/job/job.yml
+- template: ${{ parameters.jobTemplatePath }}
   parameters:
     # Set up the name of the job.
     ${{ if parameters.pgoInstrument }}:
