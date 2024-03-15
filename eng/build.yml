@@ -76,7 +76,7 @@ parameters:
 - name: jobTemplatePath
   type: string
   # https://stackoverflow.com/a/70184550/294804
-  default: $[replace(replace('True', variables.OneESPT, 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
+  default: $[replace(replace('True', eq(variables['OneESPT'], true), 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
 
 jobs:
 # - template: common/templates-official/job/job.yml
