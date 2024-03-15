@@ -1,5 +1,6 @@
 trigger: none
 pr: none
+
 resources:
   pipelines:
   - pipeline: installer-build-resource
@@ -12,10 +13,24 @@ resources:
         - internal/release/*
       stages:
       - build
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
 
-stages:
-- stage: build
-  jobs:
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
-    parameters:
-      installerBuildResourceId: installer-build-resource
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: NetCore1ESPool-Svc-Internal
+      image: 1es-windows-2022
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: build
+      jobs:
+      - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml@self
+        parameters:
+          installerBuildResourceId: installer-build-resource

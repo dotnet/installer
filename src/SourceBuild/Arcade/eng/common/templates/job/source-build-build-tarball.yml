@@ -55,6 +55,19 @@ jobs:
   workspace:
     clean: all
 
+  templateContext:
+    outputs:
+    - output: pipelineArtifact
+      displayName: 'Publish BuildLogs'
+      condition: succeededOrFailed()
+      targetPath: '$(Build.StagingDirectory)/BuildLogs'
+      artifactName: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+    - output: pipelineArtifact
+      displayName: 'Publish Artifacts'
+      condition: succeededOrFailed()
+      targetPath: '$(tarballDir)/artifacts/${{ parameters.architecture}}/Release/'
+      artifactName: $(Agent.JobName)_Artifacts
+  
   steps:
   - checkout: self
     clean: true
@@ -197,13 +210,6 @@ jobs:
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
-
-  - publish: '$(Build.StagingDirectory)/BuildLogs'
-    artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
-    displayName: Publish BuildLogs
-    continueOnError: true
-    condition: succeededOrFailed()
-
   - task: PublishTestResults@2
     displayName: Publish Test Results
     condition: succeededOrFailed()
@@ -215,9 +221,3 @@ jobs:
       mergeTestResults: true
       publishRunAttachments: true
       testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
-
-  - publish: '$(tarballDir)/artifacts/${{ parameters.architecture}}/Release/'
-    artifact: $(Agent.JobName)_Artifacts
-    displayName: Publish Artifacts
-    condition: succeededOrFailed()
-    continueOnError: true
