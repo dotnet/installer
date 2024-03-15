@@ -89,11 +89,11 @@ extends:
         steps:
         - powershell: 'Get-ChildItem env:'
           displayName: List Environment Variables
-        # - task: 1ES.PublishPipelineArtifact@1
-        #   displayName: Publish Build Config
-        #   inputs:
-        #     targetPath: $(Build.SourcesDirectory)\eng\buildConfiguration
-        #     artifactName: buildConfiguration
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: Publish Build Config
+          inputs:
+            targetPath: $(Build.SourcesDirectory)\eng\buildConfiguration
+            artifactName: buildConfiguration
 
         # PR-only jobs
       - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
