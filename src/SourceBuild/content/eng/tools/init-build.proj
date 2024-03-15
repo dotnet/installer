@@ -17,6 +17,7 @@
       BuildMSBuildSdkResolver;
       BuildSdkArchiveDiff;
       BuildLeakDetection;
+      BuildPublishVerticalManifest;
       ExtractToolPackage;
       GenerateRootFs;
       PoisonPrebuiltPackages" />
@@ -124,6 +125,24 @@
              Properties="MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
     <MSBuild Projects="tasks\Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff\Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff.csproj"
              Targets="Build" />
+  </Target>
+
+  <Target Name="BuildPublishVerticalManifest"
+          DependsOnTargets="ExtractToolPackage;BuildMSBuildSdkResolver"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(BaseIntermediateOutputPath)PublishVerticalManifest.complete">
+
+    <MSBuild Projects="tasks\Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest\Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest.csproj"
+             Targets="Restore"
+             Properties="MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
+
+    <MSBuild Projects="tasks\Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest\Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest.csproj"
+             Targets="Build" />
+
+    <MakeDir Directories="$(BaseIntermediateOutputPath)" />
+    <Touch Files="$(BaseIntermediateOutputPath)PublishVerticalManifest.complete" AlwaysCreate="true">
+      <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+    </Touch>
   </Target>
 
   <Target Name="GenerateRootFs"

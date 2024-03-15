@@ -422,14 +422,6 @@ jobs:
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts/assets/Release/'
+  - publish: '$(sourcesPath)/artifacts'
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
-    condition: and(succeededOrFailed(), eq(variables['hasAssets'], 'true'))
-    continueOnError: true
-
-  # When building from source, the Private.SourceBuilt.Artifacts archive already contains the nuget packages
-  - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
-    - publish: '$(sourcesPath)/artifacts/packages/Release/'
-      artifact: $(Agent.JobName)_Packages
-      displayName: Publish Packages

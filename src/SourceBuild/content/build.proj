@@ -9,6 +9,8 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
+  <UsingTask AssemblyFile="$(PublishVerticalManifestAssembly)" TaskName="PublishVerticalManifest" />
+
   <Target Name="Build">
     <PropertyGroup>
       <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">source-build</BuildModeInfoText>
@@ -23,6 +25,17 @@
              Targets="Build"
              BuildInParallel="false"
              StopOnFirstFailure="true" />
+  </Target>
+
+  <Target Name="AfterBuild" AfterTargets="Build">
+    <PropertyGroup>
+      <AssetManifestsLocalStorageDir>$(ArtifactsObjDir)</AssetManifestsLocalStorageDir>
+      <VerticalAssetManifestLocalPath>$(ArtifactsDir)verticalManifest.xml</VerticalAssetManifestLocalPath>
+    </PropertyGroup>
+
+    <PublishVerticalManifest 
+      AssetManifestsLocalStorageDir="$(AssetManifestsLocalStorageDir)" 
+      VerticalAssetManifestLocalPath="$(VerticalAssetManifestLocalPath)" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
