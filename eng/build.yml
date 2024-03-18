@@ -68,6 +68,10 @@ parameters:
   type: boolean
   default: false
 
+- name: OneESPT
+  type: boolean
+  default: false
+
 # - name: publishTaskName
 #   type: string
 #   # https://stackoverflow.com/a/70184550/294804
@@ -96,8 +100,8 @@ jobs:
 # - template: common/templates-official/job/job.yml
 # - template: ${{ parameters.jobTemplatePath }}
 # - ${{ if variables.OneESPT }}:
-# - ${{ if eq(variables['ONEESPT'], true) }}:
-- ${{ if eq(parameters.predefinedOneESPTVariables.OneESPT, true) }}:
+# - ${{ if eq(variables['OneESPT'], true) }}:
+- ${{ if eq(parameters.OneESPT, true) }}:
   - template: common/templates-official/job/job.yml
     parameters:
       # Set up the name of the job.
