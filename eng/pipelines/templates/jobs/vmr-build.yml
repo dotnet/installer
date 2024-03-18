@@ -422,6 +422,16 @@ jobs:
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: $(sourcesPath)/artifacts
+      Contents: |
+        VerticalManifest.xml
+        assets/**
+        packages/**
+      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
+      displayName: Copy artifacts to Artifact Staging Directory
+
+  - publish: $(Build.ArtifactStagingDirectory)/publishing
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts

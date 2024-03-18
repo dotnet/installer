@@ -27,7 +27,7 @@
              StopOnFirstFailure="true" />
   </Target>
 
-  <Target Name="AfterBuild" AfterTargets="Build">
+  <Target Name="PublishVerticalManifest" AfterTargets="Build">
     <PropertyGroup>
       <AssetManifestsLocalStorageDir>$(ArtifactsObjDir)</AssetManifestsLocalStorageDir>
       <VerticalAssetManifestLocalPath>$(ArtifactsDir)VerticalManifest.xml</VerticalAssetManifestLocalPath>
