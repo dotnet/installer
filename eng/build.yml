@@ -81,9 +81,9 @@ parameters:
 jobs:
 # - template: common/templates-official/job/job.yml
 - ${{ if variables.OneESPT }}:
-    template: common/templates-official/job/job.yml
+  - template: common/templates-official/job/job.yml
 - ${{ else }}:
-    template: common/templates/job/job.yml
+  - template: common/templates/job/job.yml
 # - template: ${{ parameters.jobTemplatePath }}
   parameters:
     # Set up the name of the job.
