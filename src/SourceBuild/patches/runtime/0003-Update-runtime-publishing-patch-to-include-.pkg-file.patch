@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Mon, 18 Mar 2024 21:00:41 +0000
+Subject: [PATCH] Update runtime publishing patch to include *.pkg files
+
+Backport: https://github.com/dotnet/runtime/pull/99931
+---
+ eng/Publishing.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/eng/Publishing.props b/eng/Publishing.props
+index 348da87600d..7be6dbd851d 100644
+--- a/eng/Publishing.props
++++ b/eng/Publishing.props
+@@ -11,6 +11,7 @@
+     <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.zip" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
+     <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.deb" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
+     <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.rpm" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
++    <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.pkg" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
+     <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.exe" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
+     <_InstallersToPublish Include="$(ArtifactsPackagesDir)**\*.msi" UploadPathSegment="Runtime" Condition="'$(DotNetBuildRepo)' == 'true'" />
+   </ItemGroup>
