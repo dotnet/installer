@@ -28,13 +28,16 @@
   </Target>
 
   <Target Name="PublishVerticalManifest" AfterTargets="Build">
-    <PropertyGroup>
-      <AssetManifestsLocalStorageDir>$(ArtifactsObjDir)</AssetManifestsLocalStorageDir>
+    <PropertyGroup>      
       <VerticalAssetManifestLocalPath>$(ArtifactsDir)VerticalManifest.xml</VerticalAssetManifestLocalPath>
     </PropertyGroup>
 
+    <ItemGroup>
+      <AssetManifestPaths Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
+    </ItemGroup>
+
     <PublishVerticalManifest 
-      AssetManifestsLocalStorageDir="$(AssetManifestsLocalStorageDir)" 
+      AssetManifestPaths="@(AssetManifestPaths)" 
       VerticalAssetManifestLocalPath="$(VerticalAssetManifestLocalPath)" />
   </Target>
 

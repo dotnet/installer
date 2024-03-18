@@ -3,9 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.Build.Utilities;
+using Microsoft.Build.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -15,14 +15,13 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
     public class PublishVerticalManifest : Task
     {
         [Required]
-        public string AssetManifestsLocalStorageDir { get; set; }
+        public ITaskItem[] AssetManifestPaths { get; set; }
         [Required]
         public string VerticalAssetManifestLocalPath { get; set; }
 
         public override bool Execute()
         {
-            var assetManifestXmls = Directory.GetFiles(AssetManifestsLocalStorageDir, "*.xml", SearchOption.AllDirectories)
-                .Select(xmlPath => XDocument.Load(xmlPath)).ToList();
+            var assetManifestXmls = AssetManifestPaths.Select(xmlPath => XDocument.Load(xmlPath.ItemSpec)).ToList();
 
             var rootName = assetManifestXmls.First().Root.Name;
             var rootAttributes = assetManifestXmls.First().Root.Attributes();
