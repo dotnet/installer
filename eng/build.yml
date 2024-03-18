@@ -300,9 +300,9 @@ jobs:
       #     publishLocation: Container
       #   continueOnError: true
       #   condition: always()
-- ${{ else }}:
-  - template: common/templates/job/job.yml
-    parameters:
+# - ${{ else }}:
+#   - template: common/templates/job/job.yml
+#     parameters:
       # Set up the name of the job.
       ${{ if parameters.pgoInstrument }}:
         name: PGO_${{ parameters.agentOs }}_${{ parameters.jobName }}
