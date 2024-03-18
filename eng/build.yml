@@ -79,7 +79,7 @@ parameters:
 #   default: $[replace(replace('True', eq(variables['OneESPT'], true), 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
 
 jobs:
-- job: ListVars
+- job: ListVars_${{ parameters.agentOs }}_${{ parameters.jobName }}
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: $(DncEngPublicBuildPool)
