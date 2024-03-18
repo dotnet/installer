@@ -286,9 +286,9 @@ jobs:
         inputs:
           SourceFolder: '$(installerRoot)/artifacts'
           Contents: |
-          log/${{ parameters.buildConfiguration }}/**/*
-          TestResults/${{ parameters.buildConfiguration }}/**/*
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            log/${{ parameters.buildConfiguration }}/**/*
+            TestResults/${{ parameters.buildConfiguration }}/**/*
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
         continueOnError: true
         condition: always()
 
@@ -505,9 +505,9 @@ jobs:
         inputs:
           SourceFolder: '$(installerRoot)/artifacts'
           Contents: |
-          log/${{ parameters.buildConfiguration }}/**/*
-          TestResults/${{ parameters.buildConfiguration }}/**/*
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            log/${{ parameters.buildConfiguration }}/**/*
+            TestResults/${{ parameters.buildConfiguration }}/**/*
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
         continueOnError: true
         condition: always()
 
