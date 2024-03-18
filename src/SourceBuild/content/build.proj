@@ -29,16 +29,16 @@
 
   <Target Name="PublishVerticalManifest" AfterTargets="Build">
     <PropertyGroup>      
-      <VerticalAssetManifestLocalPath>$(ArtifactsDir)VerticalManifest.xml</VerticalAssetManifestLocalPath>
+      <VerticalAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</VerticalAssetManifestOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
-      <AssetManifestPaths Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
+      <AssetManifestPath Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
     </ItemGroup>
 
     <PublishVerticalManifest 
-      AssetManifestPaths="@(AssetManifestPaths)" 
-      VerticalAssetManifestLocalPath="$(VerticalAssetManifestLocalPath)" />
+      AssetManifestPath="@(AssetManifestPath)" 
+      VerticalAssetManifestOutputPath="$(VerticalAssetManifestOutputPath)" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />

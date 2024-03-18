@@ -428,9 +428,16 @@ jobs:
       Contents: |
         VerticalManifest.xml
         assets/**
-        packages/**
       TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
-      displayName: Copy artifacts to Artifact Staging Directory
+    displayName: Copy artifacts to Artifact Staging Directory
+
+  # When building from source, the Private.SourceBuilt.Artifacts archive already contains the nuget packages
+  - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(sourcesPath)/artifacts/packages
+        TargetFolder: $(Build.ArtifactStagingDirectory)/publishing/packages
+      displayName: Copy packages to Artifact Staging Directory
 
   - publish: $(Build.ArtifactStagingDirectory)/publishing
     artifact: $(Agent.JobName)_Artifacts

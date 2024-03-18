@@ -15,13 +15,15 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
     public class PublishVerticalManifest : Task
     {
         [Required]
-        public ITaskItem[] AssetManifestPaths { get; set; }
+        public ITaskItem[] AssetManifestPath { get; set; }
         [Required]
-        public string VerticalAssetManifestLocalPath { get; set; }
+        public string VerticalAssetManifestOutputPath { get; set; }
 
         public override bool Execute()
         {
-            var assetManifestXmls = AssetManifestPaths.Select(xmlPath => XDocument.Load(xmlPath.ItemSpec)).ToList();
+            var assetManifestXmls = AssetManifestPath.Select(xmlPath => XDocument.Load(xmlPath.ItemSpec)).ToList();
+
+            VerifyAssetManifests(assetManifestXmls);
 
             var rootName = assetManifestXmls.First().Root.Name;
             var rootAttributes = assetManifestXmls.First().Root.Attributes();
@@ -39,9 +41,31 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
 
             var verticalManifest = new XDocument(new XElement(rootName, rootAttributes, packageElements, blobElements));
 
-            File.WriteAllText(VerticalAssetManifestLocalPath, verticalManifest.ToString());
+            File.WriteAllText(VerticalAssetManifestOutputPath, verticalManifest.ToString());
 
             return true;
+        }
+
+        private static void VerifyAssetManifests(List<XDocument> assetManifestXmls)
+        {
+            if (assetManifestXmls.Count == 0)
+            {
+                throw new ArgumentException("No asset manifests were provided.");
+            }
+
+            var rootAttributes = assetManifestXmls
+                .First()
+                .Root
+                .Attributes()
+                .Select(attribute => attribute.ToString())
+                .ToHashSet();
+
+            if (assetManifestXmls.Skip(1).Any(assetManifestXml => 
+                    !assetManifestXml.Root.Attributes().All(attribute => 
+                        rootAttributes.Contains(attribute.ToString()))))
+            {
+                throw new ArgumentException("The asset manifests do not have the same root attributes.");
+            }
         }
     }
 }
