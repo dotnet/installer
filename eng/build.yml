@@ -81,7 +81,8 @@ parameters:
 jobs:
 # - template: common/templates-official/job/job.yml
 # - template: ${{ parameters.jobTemplatePath }}
-- ${{ if variables.OneESPT }}:
+# - ${{ if variables.OneESPT }}:
+- ${{ if eq(variables['OneESPT'], true) }}:
   - template: common/templates-official/job/job.yml
     parameters:
       # Set up the name of the job.
@@ -300,7 +301,7 @@ jobs:
       #     publishLocation: Container
       #   continueOnError: true
       #   condition: always()
-- ${{ else }}:
+- ${{ if eq(variables['IAmABanana'], true) }}:
   - template: common/templates/job/job.yml
     parameters:
       # Set up the name of the job.
