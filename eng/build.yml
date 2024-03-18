@@ -79,6 +79,20 @@ parameters:
 #   default: $[replace(replace('True', eq(variables['OneESPT'], true), 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
 
 jobs:
+- job: ListVars
+  pool:
+    ${{ if eq(variables['System.TeamProject'], 'public') }}:
+      name: $(DncEngPublicBuildPool)
+      image: 1es-windows-2022-open
+      os: windows
+    ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022
+      os: windows
+  steps:
+  - powershell: 'Get-ChildItem env:'
+    displayName: List Environment Variables
+
 # - template: common/templates-official/job/job.yml
 # - template: ${{ parameters.jobTemplatePath }}
 # - ${{ if variables.OneESPT }}:
