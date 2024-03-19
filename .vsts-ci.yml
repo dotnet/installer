@@ -107,6 +107,7 @@ extends:
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # Linux
         - template: eng/build.yml@self
@@ -119,6 +120,7 @@ extends:
             linuxPortable: true
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -129,6 +131,7 @@ extends:
             linuxPortable: true
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -139,6 +142,7 @@ extends:
             linuxPortable: false
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -150,6 +154,7 @@ extends:
             linuxPortable: false
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -161,6 +166,7 @@ extends:
             # Never run tests on arm64
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -174,6 +180,7 @@ extends:
             linuxPortable: false
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -183,6 +190,7 @@ extends:
             linuxPortable: true
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # MacOS
         - template: eng/build.yml@self
@@ -193,6 +201,7 @@ extends:
             buildArchitecture: x64
             runTests: true
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
       # Official/PGO instrumentation Builds
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -206,6 +215,7 @@ extends:
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -214,6 +224,7 @@ extends:
             buildArchitecture: x86
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -222,6 +233,7 @@ extends:
             buildArchitecture: arm64
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # Linux
         - template: eng/build.yml@self
@@ -234,6 +246,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -244,6 +257,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -256,6 +270,7 @@ extends:
             linuxPortable: false
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -267,6 +282,7 @@ extends:
             linuxPortable: false
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -280,6 +296,7 @@ extends:
             linuxPortable: false
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -293,6 +310,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -306,6 +324,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -320,6 +339,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -329,6 +349,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # MacOS
         - template: eng/build.yml@self
@@ -339,6 +360,7 @@ extends:
             buildArchitecture: x64
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Darwin
@@ -348,6 +370,7 @@ extends:
             buildArchitecture: arm64
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # Windows PGO Instrumentation
         - template: eng/build.yml@self
@@ -360,6 +383,7 @@ extends:
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -369,6 +393,7 @@ extends:
             buildArchitecture: x86
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -378,6 +403,7 @@ extends:
             buildArchitecture: arm64
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # Linux PGO Instrumentation
         - template: eng/build.yml@self
@@ -390,6 +416,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -400,6 +427,7 @@ extends:
             linuxPortable: true
             runTests: false
             OneESPT: true
+            jobTemplatePath: common/templates-official/job/job.yml
 
         # Source Build
         - template: /eng/common/templates-official/jobs/source-build.yml@self
