@@ -38,10 +38,8 @@ function print_help () {
 defaultArtifactsRid='centos.8-x64'
 
 # Binary Tooling default arguments
-defaultallowedSbBinaries="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-vmr-binaries.txt"
 defaultDotnetSdk="$REPO_ROOT/.dotnet"
-defaultPackagesDir="$REPO_ROOT/prereqs/packages"
-defaultMode="All"
+defaultPackagesDir="$REPO_ROOT/prereqs/packages/previously-source-built"
 
 # SB prep arguments
 buildBootstrap=true
@@ -52,6 +50,10 @@ installDotnet=true
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
+
+# Binary Tooling arguments
+dotnetSdk=$defaultDotnetSdk
+packagesDir=$defaultPackagesDir
 
 positional_args=()
 while :; do
@@ -89,6 +91,14 @@ while :; do
       ;;
     --no-binary-removal)
       removeBinaries=false
+      ;;
+    --with-sdk)
+      dotnetSdk=$2
+      shift
+      ;;
+    --with-packages)
+      packagesDir=$2
+      shift
       ;;
     *)
       positional_args+=("$1")
@@ -214,25 +224,22 @@ fi
 if [ "$removeBinaries" == true ]; then
 
   # If --with-packages is not passed, unpack PSB artifacts
-  if ! [[ " ${positional_args[@]} " =~ " --with-packages " ]]; then
-    previouslySourceBuiltDir="$defaultPackagesDir/previously-source-built"
+  if [[ $packagesDir == $defaultPackagesDir ]]; then
     sourceBuiltArchive=$(find "$packagesArchiveDir" -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz')
 
-    if [ ! -d "$previouslySourceBuiltDir" ] && [ -f "$sourceBuiltArchive" ]; then
-      echo "  Unpacking Private.SourceBuilt.Artifacts.*.tar.gz into $previouslySourceBuiltDir"
-      mkdir -p "$previouslySourceBuiltDir"
-      tar -xzf "$sourceBuiltArchive" -C "$previouslySourceBuiltDir"
-    elif [ ! -f "$previouslySourceBuiltDir/PackageVersions.props" ] && [ -f "$sourceBuiltArchive" ]; then
-      echo "  Creating $previouslySourceBuiltDir/PackageVersions.props..."
-      tar -xzf "$sourceBuiltArchive" -C "$previouslySourceBuiltDir" PackageVersions.props
+    if [ ! -d "$packagesDir" ] && [ -f "$sourceBuiltArchive" ]; then
+      echo "  Unpacking Private.SourceBuilt.Artifacts.*.tar.gz into $packagesDir"
+      mkdir -p "$packagesDir"
+      tar -xzf "$sourceBuiltArchive" -C "$packagesDir"
+    elif [ ! -f "$packagesDir/PackageVersions.props" ] && [ -f "$sourceBuiltArchive" ]; then
+      echo "  Creating $packagesDir/PackageVersions.props..."
+      tar -xzf "$sourceBuiltArchive" -C "$packagesDir" PackageVersions.props
     elif [ ! -f "$sourceBuiltArchive" ]; then
       echo "  ERROR: Private.SourceBuilt.Artifacts.*.tar.gz does not exist..."\
             "Cannot remove non-SB allowed binaries. Either pass --with-packages or download the artifacts."
       exit 1
     fi
-
-    positional_args+=("--with-packages" "$previouslySourceBuiltDir")
   fi
 
- "$REPO_ROOT/eng/run-binary-tooling.sh" --clean ${positional_args[@]}
+ "$REPO_ROOT/eng/run-binary-tooling.sh" --clean --with-packages $packagesDir --with-sdk $dotnetSdk
 fi
