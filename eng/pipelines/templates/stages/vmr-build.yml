@@ -28,6 +28,36 @@ parameters:
   type: boolean
   default: false
 
+# These are not expected to be passed it but rather just object variables reused below
+- name: pool_Linux
+  type: object
+  default:
+    name: $(defaultPoolName)
+    image: $(poolImage_Linux)
+    os: linux
+
+- name: pool_Windows
+  type: object
+  default:
+    name: $(defaultPoolName)
+    image: $(poolImage_Windows)
+    os: windows
+
+- name: pool_LinuxArm64
+  type: object
+  default:
+    name: $(poolName_LinuxArm64)
+    image: $(poolImage_LinuxArm64)
+    hostArchitecture: Arm64
+    os: linux
+
+- name: pool_Mac
+  type: object
+  default:
+    name: Azure Pipelines
+    image: $(poolName_Mac)
+    os: macOS
+
 #### SOURCE-ONLY BUILD ####
 stages:
 - ${{ if parameters.isSourceOnlyBuild }}:
@@ -48,9 +78,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemandsLinux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ variables.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         buildSourceOnly: true              # ✅
@@ -71,9 +99,7 @@ stages:
           isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
-          pool:
-            name: ${{ variables.defaultPoolName }}
-            demands: ${{ variables.defaultPoolDemandsLinux }}
+          pool: ${{ parameters.pool_Linux }}
           container: ${{ variables.centOSStream8Container }}
           buildFromArchive: false            # 🚫
           buildSourceOnly: true              # ✅
@@ -93,9 +119,7 @@ stages:
           vmrBranch: ${{ variables.VmrBranch }}
           architecture: x64
           artifactsRid: alpine.3.19-x64
-          pool:
-            name: ${{ variables.defaultPoolName }}
-            demands: ${{ variables.defaultPoolDemandsLinux }}
+          pool: ${{ parameters.pool_Linux }}
           container: ${{ variables.alpine319Container }}
           buildFromArchive: false            # 🚫
           buildSourceOnly: true              # ✅
@@ -116,9 +140,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.alpine319Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -136,9 +158,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream8Container }}
             buildFromArchive: true             # ✅
             buildSourceOnly: true              # ✅
@@ -157,9 +177,7 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
             artifactsRid: centos.8-x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream8Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -178,9 +196,7 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
             artifactsRid: centos.8-x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream8Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -198,9 +214,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream8Container }}
             buildFromArchive: true             # ✅
             buildSourceOnly: true              # ✅
@@ -218,9 +232,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream9Container }}
             buildFromArchive: true             # ✅
             buildSourceOnly: true              # ✅
@@ -238,9 +250,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.fedora39Container }}
             buildFromArchive: true             # ✅
             buildSourceOnly: true              # ✅
@@ -258,9 +268,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.ubuntu2204Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -278,7 +286,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool: ${{ variables.defaultPoolNameLinuxArm64 }}
+            pool: ${{ parameters.pool_LinuxArm64 }}
             container: ${{ variables.ubuntu2204ArmContainer }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -296,9 +304,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.fedora39Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
@@ -327,9 +333,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemandsLinux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
@@ -340,9 +344,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemandsWindows }}
+        pool: ${{ parameters.pool_Windows }}
         targetOS: windows
         targetArchitecture: x64
 
@@ -352,9 +354,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: arm64
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemandsLinux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ variables.androidCrossContainer }}
         targetOS: android
         targetArchitecture: arm64
@@ -365,9 +365,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: wasm
-        pool:
-          name: ${{ variables.defaultPoolName }}
-          demands: ${{ variables.defaultPoolDemandsLinux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ variables.browserCrossContainer }}
         crossRootFs: '/crossrootfs/x64'
         targetOS: browser
@@ -379,8 +377,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: arm64
-        pool:
-          vmImage: ${{ variables.defaultPoolNameMac }}
+        pool: ${{ parameters.pool_Mac }}
         targetOS: iossimulator
         targetArchitecture: arm64
 
@@ -393,9 +390,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: arm
@@ -406,9 +401,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: x64
@@ -419,9 +412,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x86
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: x86
@@ -432,9 +423,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: wasm
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.browserCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: browser
@@ -447,9 +436,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
@@ -461,9 +448,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
@@ -476,9 +461,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
@@ -490,9 +473,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.androidCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
@@ -505,8 +486,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: ios
             targetArchitecture: arm64
 
@@ -516,8 +496,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: ios
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -528,8 +507,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -540,8 +518,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: x64
 
@@ -551,8 +528,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -563,8 +539,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: arm64
 
@@ -574,8 +549,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -586,8 +560,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: x64
 
@@ -597,8 +570,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -609,8 +581,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvos
             targetArchitecture: arm64
 
@@ -620,8 +591,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvos
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -632,8 +602,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: arm64
 
@@ -643,8 +612,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -655,8 +623,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: x64
 
@@ -666,8 +633,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
@@ -678,9 +644,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: wasm
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.wasiCrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: wasi
@@ -692,8 +656,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: x64
 
@@ -703,8 +666,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: x64
@@ -715,9 +677,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.marinerX64CrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux
@@ -729,9 +689,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsLinux }}
+            pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.marinerX64CrossContainer }}
             crossRootFs: '/crossrootfs/x64'
             useMonoRuntime: true
@@ -746,9 +704,7 @@ stages:
       #     isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       #     vmrBranch: ${{ variables.VmrBranch }}
       #     architecture: arm64
-      #     pool:
-      #       name: ${{ variables.defaultPoolName }}
-      #       demands: ${{ variables.defaultPoolDemandsLinux }}
+      #     pool: ${{ parameters.pool_Linux }}
       #     container: ${{ variables.marinerArm64CrossContainer }}
       #     crossRootFs: '/crossrootfs/arm64'
       #     targetOS: linux
@@ -760,8 +716,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: arm64
 
@@ -771,8 +726,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              vmImage: ${{ variables.defaultPoolNameMac }}
+            pool: ${{ parameters.pool_Mac }}
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: arm64
@@ -783,9 +737,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsWindows }}
+            pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: arm64
 
@@ -795,9 +747,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsWindows }}
+            pool: ${{ parameters.pool_Windows }}
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x64
@@ -808,9 +758,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x86
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsWindows }}
+            pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x86
 
@@ -820,9 +768,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x86
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsWindows }}
+            pool: ${{ parameters.pool_Windows }}
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x86
@@ -833,9 +779,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            pool:
-              name: ${{ variables.defaultPoolName }}
-              demands: ${{ variables.defaultPoolDemandsWindows }}
+            pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x64
             extraProperties: /p:PgoInstrument=true
