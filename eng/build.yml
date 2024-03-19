@@ -72,16 +72,6 @@ parameters:
   type: boolean
   default: false
 
-# - name: publishTaskName
-#   type: string
-#   # https://stackoverflow.com/a/70184550/294804
-#   default: $[replace(replace('True', eq(variables['OneESPT'], true), '1ES.PublishBuildArtifacts@1'), 'True', 'PublishBuildArtifacts@1')]
-
-# - name: jobTemplatePath
-#   type: string
-#   # https://stackoverflow.com/a/70184550/294804
-#   default: $[replace(replace('True', eq(variables['OneESPT'], true), 'common/templates-official/job/job.yml'), 'True', 'common/templates/job/job.yml')]
-
 jobs:
 - job: ListVars_${{ parameters.pgoInstrument }}_${{ parameters.agentOs }}_${{ parameters.jobName }}
   pool:
@@ -101,8 +91,7 @@ jobs:
 # - template: ${{ parameters.jobTemplatePath }}
 # - ${{ if variables.OneESPT }}:
 # - ${{ if eq(variables['OneESPT'], true) }}:
-# - ${{ if eq(parameters.OneESPT, true) }}:
-- ${{ if eq(variables._OneESPT, true) }}:
+- ${{ if eq(parameters.OneESPT, true) }}:
   - template: common/templates-official/job/job.yml
     parameters:
       # Set up the name of the job.
