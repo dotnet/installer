@@ -5,11 +5,10 @@ namespace BinaryToolKit;
 
 public class BinaryTool
 {
-    public async Task ExecuteAsync(
+    public async Task<int> ExecuteAsync(
         string targetDirectory,
         string outputReportDirectory,
-        string? allowedBinariesFile,
-        string? disallowedSbBinariesFile,
+        string? baselineFile,
         Modes mode)
     {
         DateTime startTime = DateTime.Now;
@@ -29,15 +28,9 @@ public class BinaryTool
             isDirectory: true,
             createIfNotExist: true,
             isRequired: true)!;
-        allowedBinariesFile = GetAndValidateFullPath(
-            "AllowedBinariesFile",
-            allowedBinariesFile,
-            isDirectory: false,
-            createIfNotExist: false,
-            isRequired: false);
-        disallowedSbBinariesFile = GetAndValidateFullPath(
-            "DisallowedSbBinariesFile",
-            disallowedSbBinariesFile,
+        baselineFile = GetAndValidateFullPath(
+            "BaselineFile",
+            baselineFile,
             isDirectory: false,
             createIfNotExist: false,
             isRequired: false);
@@ -48,8 +41,7 @@ public class BinaryTool
         var comparedBinaries = CompareBinariesAgainstBaselines
             .Execute(
                 detectedBinaries,
-                allowedBinariesFile,
-                disallowedSbBinariesFile,
+                baselineFile,
                 outputReportDirectory,
                 targetDirectory,
                 mode);
@@ -60,6 +52,8 @@ public class BinaryTool
         }
 
         Log.LogInformation("Finished all binary tasks. Took " + (DateTime.Now - startTime).TotalSeconds + " seconds.");
+
+        return Log.GetExitCode();
     }
 
     private string? GetAndValidateFullPath(

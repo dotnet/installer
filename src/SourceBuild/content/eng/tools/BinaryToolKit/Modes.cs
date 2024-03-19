@@ -7,6 +7,5 @@ namespace BinaryToolKit;
 public enum Modes
 {
     Validate = 1,
-    Clean = 2,
-    All = Validate | Clean
+    Clean = 2
 }

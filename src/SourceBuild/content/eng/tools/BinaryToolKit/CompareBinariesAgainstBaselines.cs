@@ -9,45 +9,41 @@ public static class CompareBinariesAgainstBaselines
 {
     public static List<string> Execute(
         IEnumerable<string> detectedBinaries,
-        string? allowedBinariesFile,
-        string? disallowedSbBinariesFile,
+        string? baselineFile,
         string outputReportDirectory,
         string targetDirectory,
         Modes mode)
     {
-        Log.LogInformation("Comparing detected binaries to baseline(s).");
+        Log.LogInformation($"Comparing detected binaries to baseline {Path.GetFileName(baselineFile)}.");
 
-        var binariesToRemove = GetUnmatchedBinaries(
+        var unmatchedBinaries = GetUnmatchedBinaries(
             detectedBinaries,
-            allowedBinariesFile,
+            baselineFile,
             outputReportDirectory,
             targetDirectory,
             mode).ToList();
 
         if (mode.HasFlag(Modes.Validate))
         {
-            var nonSbBinariesToRemove = GetUnmatchedBinaries(
-                detectedBinaries,
-                disallowedSbBinariesFile,
-                outputReportDirectory,
-                targetDirectory,
-                mode).ToList();
-    
-            var newBinaries = binariesToRemove.Intersect(nonSbBinariesToRemove);
-
-            if (newBinaries.Any())
+            if (unmatchedBinaries.Any())
             {
                 string newBinariesFile = Path.Combine(outputReportDirectory, "NewBinaries.txt");
 
-                File.WriteAllLines(newBinariesFile, newBinaries);
+                File.WriteAllLines(newBinariesFile, unmatchedBinaries);
 
-                Log.LogWarning($"    {newBinaries.Count()} new binaries detected. Check '{newBinariesFile}' for details.");
+                foreach (var unmatchedBinary in unmatchedBinaries)
+                {
+                    Log.LogDebug($"    {unmatchedBinary}");
+                }
+
+                Log.LogError($"    {unmatchedBinaries.Count()} new binaries detected. Check '{newBinariesFile}' for details.");
+
             }
         }
 
         Log.LogInformation("Finished comparing binaries.");
 
-        return binariesToRemove;
+        return unmatchedBinaries;
     }
 
     private static IEnumerable<string> GetUnmatchedBinaries(
@@ -57,16 +53,15 @@ public static class CompareBinariesAgainstBaselines
         string targetDirectory,
         Modes mode)
     {
-        var patterns = ParseBaselineFile(baselineFile);
+        HashSet<string> unmatchedFiles = new HashSet<string>(searchFiles);
 
-        if (mode.HasFlag(Modes.Validate))
+        var filesToPatterns = new Dictionary<string, HashSet<string>>();
+        ParseBaselineFile(baselineFile, ref filesToPatterns);
+
+        foreach (var fileToPatterns in filesToPatterns)
         {
-            // If validating in any mode (Mode == Validate or Mode == All), 
-            // we need to detect both unused patterns and unmatched files.
-            // We simultaneously detect unused patterns and unmatched files for efficiency.
-
+            var patterns = fileToPatterns.Value;
             HashSet<string> unusedPatterns = new HashSet<string>(patterns);
-            HashSet<string> unmatchedFiles = new HashSet<string>(searchFiles);
 
             foreach (string pattern in patterns)
             {
@@ -81,45 +76,58 @@ public static class CompareBinariesAgainstBaselines
                 }
             }
 
-            UpdateBaselineFile(baselineFile, outputReportDirectory, unusedPatterns);
-
-            return unmatchedFiles;
+            UpdateBaselineFile(fileToPatterns.Key, outputReportDirectory, unusedPatterns);
         }
-        else if (mode == Modes.Clean)
-        {
-            // If only cleaning and not validating (Mode == Clean),
-            // we don't need to update the baseline files with unused patterns
-            // so we can just detect unmatched files.
 
-            Matcher matcher = new Matcher(StringComparison.Ordinal);
-            matcher.AddInclude("**/*");
-            matcher.AddExcludePatterns(patterns);
-
-            return matcher.Match(targetDirectory, searchFiles).Files.Select(file => file.Path);
-        }
-        else
-        {
-            // Unhandled mode
-            throw new ArgumentException($"Unhandled mode: {mode}");
-        } 
+        return unmatchedFiles;
     }
 
-    private static IEnumerable<string> ParseBaselineFile(string? file) {
+    private static void ParseBaselineFile(string? file, ref Dictionary<string, HashSet<string>> result)
+    {
         if (!File.Exists(file))
         {
-            return Enumerable.Empty<string>();
+            return;
         }
 
-        // Read the baseline file and parse the patterns, ignoring comments and empty lines
-        return File.ReadLines(file)
-            .Select(line => line.Trim())
-            .Where(line => !string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
-            .Select(line => line.Split('#')[0].Trim());
+        if (!result.ContainsKey(file))
+        {
+            result[file] = new HashSet<string>();
+        }
+
+        foreach (var line in File.ReadLines(file))
+        {
+            var trimmedLine = line.Trim();
+            if (string.IsNullOrWhiteSpace(trimmedLine) || trimmedLine.StartsWith("#"))
+            {
+                continue;
+            }
+
+            if (trimmedLine.StartsWith("import:"))
+            {
+                var importFile = trimmedLine.Substring("import:".Length).Trim();
+                if (!Path.IsPathFullyQualified(importFile))
+                {
+                    var currentDirectory = Path.GetDirectoryName(file)!;
+                    importFile = Path.Combine(currentDirectory, importFile);
+                }
+                if (result.ContainsKey(importFile))
+                {
+                    Log.LogWarning($"    Duplicate import {importFile}. Skipping.");
+                    continue;
+                }
+
+                ParseBaselineFile(importFile, ref result);
+            }
+            else
+            {
+                result[file].Add(trimmedLine.Split('#')[0].Trim());
+            }
+        }
     }
 
     private static void UpdateBaselineFile(string? file, string outputReportDirectory, HashSet<string> unusedPatterns)
     {
-        if(File.Exists(file))
+        if(File.Exists(file) && unusedPatterns.Any())
         {
             var lines = File.ReadAllLines(file);
             var newLines = lines.Where(line => !unusedPatterns.Contains(line)).ToList();

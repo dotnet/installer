@@ -1,0 +1,123 @@
+# Contains the binaries that are allowed for source build
+
+# This file is used by the Binary Tool to remove binaries from the VMR
+# If importing a file, include the relative path to the file
+
+**/*.bmp
+**/*.doc
+**/*.docx
+**/*.gif
+**/*.ico
+**/*.jpg
+**/*.JPG
+**/*.pdf
+**/*.png
+**/*.PNG
+**/*.rtf
+**/*.snk
+**/*.vsd
+**/*.vsdx
+**/*.xlsx
+**/*.ttf
+**/*.cur
+**/*.icm
+**/*.reg
+
+**/testCert*.pfx
+**/TestCert*.pfx
+
+eng/common/loc/*.lss # UTF16-LE text files
+**/eng/common/loc/*.lss # UTF16-LE text files
+
+# arcade
+src/arcade/src/Microsoft.DotNet.NuGetRepack/tests/Resources/.signature.p7s
+
+# aspnetcore
+src/aspnetcore/src/**/*.cer
+src/aspnetcore/src/**/*.pfx
+src/aspnetcore/src/**/*.eot
+src/aspnetcore/src/**/*.woff
+src/aspnetcore/src/**/*.woff2
+src/aspnetcore/src/Components/Web.JS/dist/Release/blazor.*.js # JavaScript files with a null bytes
+src/aspnetcore/src/ProjectTemplates/Web.ProjectTemplates/**/app.db
+src/aspnetcore/src/Shared/TestCertificates/*.crt
+src/aspnetcore/src/submodules/Node-Externals/cache/**/* # https://github.com/dotnet/source-build/issues/4161
+
+# cecil
+src/cecil/Test/Resources/assemblies/*.netmodule
+src/cecil/Test/Resources/assemblies/*.winmd
+
+# fsharp
+src/fsharp/tests/**/*.resources
+src/fsharp/tests/fsharp/core/resources/chimes.wav
+src/fsharp/src/fsi/fsi.res # Icon
+
+# msbuild
+src/msbuild/src/Tasks.UnitTests/TestResources/*.pfx
+src/msbuild/src/Tasks.UnitTests/AssemblyDependency/CacheFileSamples/Microsoft.VisualStudio.LanguageServices.Implementation.csprojAssemblyReference.cache
+
+# nuget-client
+src/nuget-client/test/NuGet.Clients.Tests/NuGet.PackageManagement.UI.Test/Resources/customMetadata.jpeg
+src/nuget-client/test/TestUtilities/Test.Utility/compiler/resources/*.crt
+src/nuget-client/test/TestUtilities/Test.Utility/compiler/resources/.signature.p7s
+src/nuget-client/test/NuGet.Core.Tests/NuGet.Commands.Test/compiler/resources/EmptyCertificateStore.p7b
+
+# razor
+src/razor/**/SampleApp/**/fonts/**/*.eot
+src/razor/**/SampleApp/**/fonts/**/*.otf
+src/razor/**/SampleApp/**/fonts/**/*.woff
+
+# roslyn
+src/roslyn/src/Compilers/Test/Resources/Core/**/*.metadata
+src/roslyn/src/Compilers/Test/Resources/Core/**/*.winmd
+src/roslyn/src/Compilers/Test/Resources/Core/**/*.mod
+src/roslyn/src/Compilers/Test/Resources/Core/**/*.netmodule
+src/roslyn/src/Compilers/Test/Resources/Core/**/*.obj
+src/roslyn/**/CodeAnalysisTest/**/*.res
+src/roslyn/**/CodeAnalysisTest/**/*.blah
+src/roslyn/**/CodeAnalysisTest/**/*.RES
+src/roslyn/src/ExpressionEvaluator/Core/Source/ExpressionCompiler/Resources/WindowsProxy.winmd
+
+# runtime
+src/runtime/src/mono/mono/eglib/test/*.txt
+src/runtime/src/mono/mono/tests/exiting/*.out
+src/runtime/src/**/tests/**/*.res
+src/runtime/src/**/tests/**/*.resources
+src/runtime/src/tests/FunctionalTests/Android/Device_Emulator/gRPC/grpc-dotnet/testassets/Certs/InteropTests/server1.pfx
+src/runtime/src/tests/FunctionalTests/Android/Device_Emulator/AOT_PROFILED/*.mibc
+src/runtime/src/tests/FunctionalTests/Android/Device_Emulator/AOT_PROFILED/*.nettrace
+src/runtime/src/libraries/System.Runtime.Serialization.Xml/tests/Canonicalization/baselines/ReaderWriter_C14N_BaselineXML_Binary.xml
+src/runtime/src/libraries/System.Reflection.Metadata/tests/Resources/NetModule/*.mod
+src/runtime/src/libraries/System.Reflection.Metadata/tests/Resources/WinRT/Lib.winmd
+src/runtime/src/libraries/System.Reflection.Metadata/tests/Resources/Misc/CPPClassLibrary2.obj
+src/runtime/src/libraries/System.Console/tests/TestData/ncursesFormats/s/screen-256color
+src/runtime/src/libraries/System.Console/tests/TestData/ncursesFormats/x/xterm
+src/runtime/src/mono/wasm/testassets/**/*.dat
+src/runtime/src/mono/wasm/testassets/**/*.o
+src/runtime/src/libraries/System.Diagnostics.EventLog/src/Messages/EventLogMessages.res # Icon
+src/runtime/src/libraries/System.Speech/src/**/*.upsmap # https://github.com/dotnet/runtime/issues/81692
+src/runtime/src/libraries/System.Text.Encoding.CodePages/src/Data/codepages.nlp # https://github.com/dotnet/runtime/issues/81693
+src/runtime/src/native/external/brotli/common/dictionary.bin.br
+
+# sdk
+src/sdk/src/Assets/TestProjects/**/*.dat
+src/sdk/src/Assets/TestProjects/**/*.cache
+src/sdk/src/Assets/TestProjects/**/*.tlb
+
+# source-build-externals
+src/source-build-externals/src/humanizer/src/Humanizer.Tests**/*.pfx
+src/source-build-externals/src/newtonsoft-json/Src/Newtonsoft.Json.Tests/SpaceShipV2.bson
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/build/strongNameBypass.reg # UTF16-LE text file
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/build/strongNameBypass2.reg # UTF16-LE text file
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/test/Certs/*.pfx
+src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/test/Certs/*.cer
+
+# vstest
+src/vstest/test/Microsoft.TestPlatform.CoreUtilities.UnitTests/TestAssets/dotnetMac*
+src/vstest/test/Microsoft.TestPlatform.Utilities.UnitTests/TestFiles/fullcovered.coverage
+
+# winforms
+src/winforms/src/System.Windows.Forms/tests/IntegrationTests/WinformsControlsTest/Resources/media.mpg
+src/winforms/src/System.Windows.Forms/tests/UnitTests/bitmaps/milkmateya01.emf
+src/winforms/src/System.Windows.Forms/tests/UnitTests/TestResources/VB6/SimpleControl.vb6
+src/winforms/src/System.Windows.Forms*/**/*.wmf

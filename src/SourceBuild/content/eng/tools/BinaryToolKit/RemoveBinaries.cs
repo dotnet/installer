@@ -14,7 +14,7 @@ public static class RemoveBinaries
         foreach (var binary in binariesToRemove)
         {
             File.Delete(Path.Combine(targetDirectory, binary));
-            Log.LogDebug($"    Removed '{binary}'");
+            Log.LogDebug($"    {binary}");
         }
 
         Log.LogInformation($"Finished binary removal. Removed {binariesToRemove.Count()} binaries.");
