@@ -38,12 +38,12 @@ public class BinaryTool
         // Run the tooling
         var detectedBinaries = await DetectBinaries.ExecuteAsync(targetDirectory, outputReportDirectory, allowedBinariesFile);
 
-        if (mode.HasFlag(Modes.Validate))
+        if (mode == Modes.Validate)
         {
             ValidateBinaries(detectedBinaries, outputReportDirectory);
         }
 
-        else if (mode.HasFlag(Modes.Clean))
+        else if (mode == Modes.Clean)
         {
             RemoveBinaries(detectedBinaries, targetDirectory);
         }
