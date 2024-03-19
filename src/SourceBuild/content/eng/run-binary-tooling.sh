@@ -125,72 +125,21 @@ function ParseBinaryArgs
 
     # Check the packages directory
     if [ -z "$packagesDir" ]; then
-
         # Use dotnet-public feed as the default packages source feed
         export ARTIFACTS_PATH="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json"
 
-        # Use temp directory to store the package versions
-        packagesDir=$(mktemp -d -p "$REPO_ROOT" "temp.XXXXXX")
-        touch "$packagesDir/PackageVersions.props"
-
-        # Create a PackageVersions.props file with the package versions
-        packageReferences=$(grep -oP '<PackageReference Include=".*"' "$BINARY_TOOL/BinaryToolKit.csproj")
-        echo "<Project>" > "$packagesDir/PackageVersions.props"
-        echo "  <PropertyGroup>" >> "$packagesDir/PackageVersions.props"
-        for line in $packageReferences; do
-            package_name=$(echo "$line" | grep -oP '(?<=Include=")[^"]*')
-            package_version=$(echo "$line" | grep -oP '(?<=Version="\$\()[^)]*')
-            version=$(GetPackageVersion "$package_name")
-            echo "    <$package_version>$version</$package_version>" >> "$packagesDir/PackageVersions.props"
-        done
-        echo "  </PropertyGroup>" >> "$packagesDir/PackageVersions.props"
-        echo "</Project>" >> "$packagesDir/PackageVersions.props"
+        # Add dotnet-libraries feed to the NuGet.config. This is needed for System.CommandLine.
+        "$dotnetSdk/dotnet" nuget add source "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json" --name "dotnet-libraries" --configfile "$BINARY_TOOL/NuGet.config" > /dev/null 2>&1
     else
+        packagesDir=$(realpath ${packagesDir})
         export ARTIFACTS_PATH=$packagesDir
     fi
 }
 
-function GetPackageVersion
+function CleanUp
 {
-  packageName=$1
-
-  url="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/flat2/${packageName}/index.json"
-
-  # If package is system.commandline, use the dotnet-libraries feed
-  if [ "$packageName" == "System.CommandLine" ]; then
-    url="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/flat2/${packageName}/index.json"
-
-    # Add dotnet-libraries feed to the NuGet.config if it doesn't exist in the config file already
-    if ! grep -q "dotnet-libraries" "$BINARY_TOOL/NuGet.config"; then
-      dotnet nuget add source "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json" --name "dotnet-libraries" --configfile "$BINARY_TOOL/NuGet.config" > /dev/null 2>&1
-    fi
-  fi
-
-  # Send the GET request
-  response=$(curl -s "${url}")
-
-  # Check if the request was successful
-  if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to get the package version for ${packageName}."
-    exit 1
-  fi
-
-  # Extract the latest version of the package
-  latest_version=$(echo "${response}" | jq -r '.versions[0]')
-
-  # Print the latest version
-  echo "${latest_version}"
-}
-
-function CleanUp() {
-
-  # Remove the temp directory if it was created
-  if [[ "$packagesDir" =~ temp\..{6} ]]; then
-    rm -rf "$packagesDir"
-  fi
-
   # Undo the NuGet.config changes if they were made
-  if [ "$packagesDir" != "$defaultDotnetSdk" ]; then
+  if [ -z "$packagesDir" ]; then
     sed -i '/dotnet-libraries/d' "$BINARY_TOOL/NuGet.config"
   fi
 }
@@ -199,11 +148,16 @@ function RunBinaryTool
 {
   targetDir="$REPO_ROOT"
   outputDir="$REPO_ROOT/artifacts/log/binary-report"
+  BinaryToolCommand=""$dotnetSdk/dotnet" run --project "$BINARY_TOOL" -c Release "$mode" "$targetDir" -o "$outputDir" -b "$baseline" -l "$logLevel""
 
   trap CleanUp EXIT
-  
-  # Run the BinaryDetection tool
-  "$REPO_ROOT/.dotnet/dotnet" run --project "$BINARY_TOOL" -c Release -p PackagesPropsDirectory="$packagesDir" $mode "$targetDir" -o "$outputDir" -b "$baseline" -l "$logLevel"
+
+  if [ -n "$packagesDir" ]; then
+    BinaryToolCommand=""$BinaryToolCommand" -p CustomPackageVersionsProps="$packagesDir/PackageVersions.props""
+  fi
+
+  # Run the Binary Tool
+  eval "$BinaryToolCommand"
 }
 
 ParseBinaryArgs
