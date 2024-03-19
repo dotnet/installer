@@ -57,7 +57,6 @@
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
     <!-- Supported versions -->
-    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates50PackageVersion>
     <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.1.0-rc.24059.1</MicrosoftDotNetTestProjectTemplates60PackageVersion>
     <MicrosoftDotNetTestProjectTemplates70PackageVersion>1.1.0-rc.24059.1</MicrosoftDotNetTestProjectTemplates70PackageVersion>
     <MicrosoftDotNetTestProjectTemplates80PackageVersion>1.1.0-rc.24059.1</MicrosoftDotNetTestProjectTemplates80PackageVersion>
@@ -156,14 +155,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Cross-release dependency versions -->
-    <MicrosoftDotNetCommonItemTemplates50PackageVersion>5.0.403</MicrosoftDotNetCommonItemTemplates50PackageVersion>
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>6.0.302</MicrosoftDotNetCommonItemTemplates60PackageVersion>
     <MicrosoftDotNetCommonItemTemplates70PackageVersion>7.0.100</MicrosoftDotNetCommonItemTemplates70PackageVersion>
-    <MicrosoftAspNetCoreAppRuntime50PackageVersion>5.0.17</MicrosoftAspNetCoreAppRuntime50PackageVersion>
     <MicrosoftAspNetCoreAppRuntime60PackageVersion>6.0.14</MicrosoftAspNetCoreAppRuntime60PackageVersion>
     <MicrosoftAspNetCoreAppRuntime70PackageVersion>7.0.3</MicrosoftAspNetCoreAppRuntime70PackageVersion>
-    <MicrosoftWinFormsProjectTemplates50PackageVersion>5.0.17-servicing.22215.4</MicrosoftWinFormsProjectTemplates50PackageVersion>
-    <MicrosoftWPFProjectTemplates50PackageVersion>5.0.17-servicing.22218.2</MicrosoftWPFProjectTemplates50PackageVersion>
     <MicrosoftWinFormsProjectTemplates60PackageVersion>6.0.7-servicing.22322.3</MicrosoftWinFormsProjectTemplates60PackageVersion>
     <MicrosoftWPFProjectTemplates60PackageVersion>6.0.7-servicing.22322.2</MicrosoftWPFProjectTemplates60PackageVersion>
     <MicrosoftWinFormsProjectTemplates70PackageVersion>7.0.0-rtm.22518.7</MicrosoftWinFormsProjectTemplates70PackageVersion>
@@ -199,13 +194,6 @@
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplates60PackageVersion)</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
     <AspNetCorePackageVersionFor60Templates>6.0.$(AspNetCoreTemplateFeature60)</AspNetCorePackageVersionFor60Templates>
-    <!-- 5.0 Template versions -->
-    <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftWinFormsProjectTemplates50PackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
-    <MicrosoftDotNetWpfProjectTemplates50PackageVersion>$(MicrosoftWPFProjectTemplates50PackageVersion)</MicrosoftDotNetWpfProjectTemplates50PackageVersion>
-    <NUnit3Templates50PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates50PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonItemTemplates50PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonProjectTemplates50PackageVersion>
-    <AspNetCorePackageVersionFor50Templates>5.0.17</AspNetCorePackageVersionFor50Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
