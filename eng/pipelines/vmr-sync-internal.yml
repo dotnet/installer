@@ -47,8 +47,9 @@ extends:
       os: windows
 
     stages:
-      - stage: VMR Synchronization
-        jobs:
-        - template: templates/jobs/vmr-synchronization.yml@self
-          parameters:
-            vmrBranch: ${{ variables.VmrBranch }}
+    - stage: VMRSynchronization
+      displayName: VMR Synchronization
+      jobs:
+      - template: templates/jobs/vmr-synchronization.yml@self
+        parameters:
+          vmrBranch: ${{ variables.VmrBranch }}

@@ -48,8 +48,14 @@ extends:
       image: 1es-windows-2022-pt
       os: windows
 
+    sdl:
+      sourceRepositoriesToScan:
+        exclude:
+        - repository: vmr
+
     stages:
-    - stage: VMR Synchronization
+    - stage: VMRSynchronization
+      displayName: VMR Synchronization
       jobs:
       - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml@self
         parameters:
