@@ -77,7 +77,7 @@ parameters:
   default: common/templates/job/job.yml
 
 jobs:
-- template: ${{ parameters.jobTemplatePath }}
+- template: ${{ variables.DoesThisDoAnything }}
   parameters:
     # Set up the name of the job.
     ${{ if parameters.pgoInstrument }}:

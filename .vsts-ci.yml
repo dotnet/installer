@@ -74,6 +74,8 @@ extends:
     - ES365AIMigrationTooling
     stages:
     - stage: Build
+      variables:
+        DoesThisDoAnything: common/templates-official/job/job.yml
       jobs:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
