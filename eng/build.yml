@@ -87,10 +87,6 @@ jobs:
   - powershell: 'Get-ChildItem env:'
     displayName: List Environment Variables
 
-# - template: common/templates-official/job/job.yml
-# - template: ${{ parameters.jobTemplatePath }}
-# - ${{ if variables.OneESPT }}:
-# - ${{ if eq(variables['OneESPT'], true) }}:
 - ${{ if eq(parameters.OneESPT, true) }}:
   - template: common/templates-official/job/job.yml
     parameters:
