@@ -18,6 +18,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
         public ITaskItem[] AssetManifest { get; set; }
         [Required]
         public string VerticalAssetManifestOutputPath { get; set; }
+        [Required]
+        public string VmrBuildNumber { get; set; }
+
+        private static readonly string _buildIdAttribute = "BuildId";
+        private static readonly string _azureDevOpsBuildNumberAttribute = "AzureDevOpsBuildNumber";
+        private static readonly string[] _ignoredAttributes = new string[] { _buildIdAttribute, _azureDevOpsBuildNumberAttribute, "IsReleaseOnlyPackageVersion" };
 
         public override bool Execute()
         {
@@ -25,8 +31,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
 
             VerifyAssetManifests(assetManifestXmls);
 
-            var rootName = assetManifestXmls.First().Root.Name;
-            var rootAttributes = assetManifestXmls.First().Root.Attributes();
+            var verticalManifestRoot = assetManifestXmls.First().Root;
+
+            // Set the BuildId and AzureDevOpsBuildNumber attributes to the value of VmrBuildNumber
+            verticalManifestRoot.SetAttributeValue(_buildIdAttribute, VmrBuildNumber);
+            verticalManifestRoot.SetAttributeValue(_azureDevOpsBuildNumberAttribute, VmrBuildNumber);
+
             var packageElements = new List<XElement>();
             var blobElements = new List<XElement>();
 
@@ -39,7 +49,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
             packageElements = packageElements.OrderBy(packageElement => packageElement.Attribute("Id").Value).ToList();
             blobElements = blobElements.OrderBy(blobElement => blobElement.Attribute("Id").Value).ToList();
 
-            var verticalManifest = new XDocument(new XElement(rootName, rootAttributes, packageElements, blobElements));
+            var verticalManifest = new XDocument(new XElement(verticalManifestRoot.Name, verticalManifestRoot.Attributes(), packageElements, blobElements));
 
             File.WriteAllText(VerticalAssetManifestOutputPath, verticalManifest.ToString());
 
@@ -69,10 +79,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
                     !assetManifestXml.Root.Attributes().Select(attribute => attribute.ToString()).All(attribute =>
                         // Ignore BuildId and AzureDevOpsBuildNumber attributes, they're different for different repos, 
                         // TODO this should be fixed with https://github.com/dotnet/source-build/issues/3934
-                        rootAttributes.Contains(attribute) 
-                            || attribute.Contains("BuildId") 
-                            || attribute.Contains("AzureDevOpsBuildNumber")
-                            || attribute.Contains("IsReleaseOnlyPackageVersion"))))
+                        _ignoredAttributes.Any(ignoredAttribute => attribute.Contains(ignoredAttribute)) || rootAttributes.Contains(attribute))))
             {
                 throw new ArgumentException("The asset manifests do not have the same root attributes.");
             }

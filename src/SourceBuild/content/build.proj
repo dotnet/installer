@@ -38,7 +38,8 @@
 
     <PublishVerticalManifest 
       AssetManifest="@(RepoAssetManifest)" 
-      VerticalAssetManifestOutputPath="$(VerticalAssetManifestOutputPath)" />
+      VerticalAssetManifestOutputPath="$(VerticalAssetManifestOutputPath)"
+      VmrBuildNumber="$(VmrBuildNumber)" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
