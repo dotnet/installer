@@ -75,7 +75,9 @@ extends:
     stages:
     - stage: Build
       variables:
-        _OneESPT: true
+      - name: DoesThisWork
+        type: boolean
+        value: true
       jobs:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
@@ -108,7 +110,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # Linux
         - template: eng/build.yml@self
@@ -120,7 +122,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -130,7 +132,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -140,7 +142,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: false
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -151,7 +153,7 @@ extends:
             additionalBuildParameters: '/p:BuildSdkDeb=true'
             linuxPortable: false
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -162,7 +164,7 @@ extends:
             linuxPortable: true
             # Never run tests on arm64
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -175,7 +177,7 @@ extends:
             additionalBuildParameters: '/p:HostOSName="linux-musl"'
             linuxPortable: false
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -184,7 +186,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # MacOS
         - template: eng/build.yml@self
@@ -194,7 +196,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x64
             runTests: true
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
       # Official/PGO instrumentation Builds
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
@@ -207,7 +209,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -215,7 +217,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x86
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -223,7 +225,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # Linux
         - template: eng/build.yml@self
@@ -235,7 +237,7 @@ extends:
             runtimeIdentifier: 'linux-arm'
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -245,7 +247,7 @@ extends:
             runtimeIdentifier: 'linux-arm64'
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -257,7 +259,7 @@ extends:
             additionalBuildParameters: '/p:OSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -268,7 +270,7 @@ extends:
             additionalBuildParameters: '/p:OSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -281,7 +283,7 @@ extends:
             additionalBuildParameters: '/p:HostOSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -294,7 +296,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -307,7 +309,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:IsRPMBasedDistro=true'
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -321,7 +323,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true  /p:IsRPMBasedDistro=true'
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -330,7 +332,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # MacOS
         - template: eng/build.yml@self
@@ -340,7 +342,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x64
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Darwin
@@ -349,7 +351,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # Windows PGO Instrumentation
         - template: eng/build.yml@self
@@ -361,7 +363,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -370,7 +372,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x86
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Windows_NT
@@ -379,7 +381,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # Linux PGO Instrumentation
         - template: eng/build.yml@self
@@ -391,7 +393,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -401,7 +403,7 @@ extends:
             buildArchitecture: arm64
             linuxPortable: true
             runTests: false
-            OneESPT: $(_OneESPT)
+            OneESPT: $(DoesThisWork)
 
         # Source Build
         - template: /eng/common/templates-official/jobs/source-build.yml@self
