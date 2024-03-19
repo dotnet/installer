@@ -130,7 +130,8 @@ jobs:
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
-        ${{ if parameters.OneESPT }}:
+        # ${{ if parameters.OneESPT }}:
+        ${{ if variables.globalOneESPT }}:
           name: Azure Pipelines
           image: macOS-latest
           os: macOS

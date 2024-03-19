@@ -34,6 +34,9 @@ variables:
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 - template: /eng/common/templates-official/variables/pool-providers.yml
+- name: globalOneESPT
+  value: true
+  readonly: true
 
 resources:
   repositories:
@@ -70,8 +73,6 @@ extends:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
-    customBuildTags:
-    - ES365AIMigrationTooling
     stages:
     - stage: Build
       jobs:
