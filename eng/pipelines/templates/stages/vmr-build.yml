@@ -58,7 +58,8 @@ parameters:
   type: object
   default:
     name: Azure Pipelines
-    image: $(poolName_Mac)
+    vmImage: $(poolImage_Mac)
+    image: $(poolImage_Mac)
     os: macOS
 
 #### SOURCE-ONLY BUILD ####
