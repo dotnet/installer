@@ -68,7 +68,7 @@ parameters:
   type: boolean
   default: false
 
-- name: OneESPT
+- name: oneESPT
   type: boolean
   default: false
 
@@ -94,7 +94,7 @@ jobs:
       enableMicrobuild: true
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          ${{ if parameters.OneESPT }}:
+          ${{ if parameters.oneESPT }}:
             name: $(DncEngPublicBuildPool)
             image: 1es-windows-2022-open
             os: windows
@@ -102,7 +102,7 @@ jobs:
             name: $(DncEngPublicBuildPool)
             demands: ImageOverride -equals 1es-windows-2022-open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          ${{ if parameters.OneESPT }}:
+          ${{ if parameters.oneESPT }}:
             name: $(DncEngInternalBuildPool)
             image: 1es-windows-2022
             os: windows
@@ -112,7 +112,7 @@ jobs:
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          ${{ if parameters.OneESPT }}:
+          ${{ if parameters.oneESPT }}:
             name: $(DncEngPublicBuildPool)
             image: 1es-ubuntu-2004-open
             os: linux
@@ -120,7 +120,7 @@ jobs:
             name: $(DncEngPublicBuildPool)
             demands: ImageOverride -equals 1es-ubuntu-2004-open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          ${{ if parameters.OneESPT }}:
+          ${{ if parameters.oneESPT }}:
             name: $(DncEngInternalBuildPool)
             image: 1es-ubuntu-2204
             os: linux
@@ -130,8 +130,7 @@ jobs:
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
-        # ${{ if parameters.OneESPT }}:
-        ${{ if variables.globalOneESPT }}:
+        ${{ if parameters.oneESPT }}:
           name: Azure Pipelines
           image: macOS-latest
           os: macOS
@@ -206,7 +205,7 @@ jobs:
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
                   $(_PgoInstrument)
 
-    - ${{ if parameters.OneESPT }}:
+    - ${{ if parameters.oneESPT }}:
       - template: /eng/common/templates-official/variables/pool-providers.yml
     - ${{ else }}:
       - template: /eng/common/templates/variables/pool-providers.yml

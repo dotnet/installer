@@ -34,9 +34,6 @@ variables:
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 - template: /eng/common/templates-official/variables/pool-providers.yml
-- name: globalOneESPT
-  value: true
-  readonly: true
 
 resources:
   repositories:
@@ -107,7 +104,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -121,7 +118,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -133,7 +130,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -145,7 +142,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: false
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -158,7 +155,7 @@ extends:
             additionalBuildParameters: '/p:BuildSdkDeb=true'
             linuxPortable: false
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -171,7 +168,7 @@ extends:
             linuxPortable: true
             # Never run tests on arm64
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -186,7 +183,7 @@ extends:
             additionalBuildParameters: '/p:HostOSName="linux-musl"'
             linuxPortable: false
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -197,7 +194,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -209,7 +206,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x64
             runTests: true
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -224,7 +221,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -234,7 +231,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x86
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -244,7 +241,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -258,7 +255,7 @@ extends:
             runtimeIdentifier: 'linux-arm'
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -270,7 +267,7 @@ extends:
             runtimeIdentifier: 'linux-arm64'
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -284,7 +281,7 @@ extends:
             additionalBuildParameters: '/p:OSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -297,7 +294,7 @@ extends:
             additionalBuildParameters: '/p:OSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -312,7 +309,7 @@ extends:
             additionalBuildParameters: '/p:HostOSName="linux-musl"'
             linuxPortable: false
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -327,7 +324,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -342,7 +339,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:IsRPMBasedDistro=true'
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -358,7 +355,7 @@ extends:
             additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true  /p:IsRPMBasedDistro=true'
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -369,7 +366,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -381,7 +378,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x64
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -392,7 +389,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -406,7 +403,7 @@ extends:
             buildArchitecture: x64
             additionalBuildParameters: '/p:PublishInternalAsset=true'
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -417,7 +414,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: x86
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -428,7 +425,7 @@ extends:
             buildConfiguration: Release
             buildArchitecture: arm64
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
@@ -442,7 +439,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
@@ -454,7 +451,7 @@ extends:
             buildArchitecture: arm64
             linuxPortable: true
             runTests: false
-            OneESPT: true
+            oneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
             publishTaskName: 1ES.PublishBuildArtifacts@1
 
