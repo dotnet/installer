@@ -76,8 +76,12 @@ parameters:
   type: string
   default: common/templates/job/job.yml
 
+- name: publishTaskName
+  type: string
+  default: PublishBuildArtifacts@1
+
 jobs:
-- template: ${{ variables.DoesThisDoAnything }}
+- template: ${{ parameters.jobTemplatePath }}
   parameters:
     # Set up the name of the job.
     ${{ if parameters.pgoInstrument }}:
@@ -90,48 +94,48 @@ jobs:
       enableMicrobuild: true
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          # ${{ if eq(variables['OneESPT'], true) }}:
-          name: $(DncEngPublicBuildPool)
-          image: 1es-windows-2022-open
-          os: windows
-          # ${{ else }}:
-            # name: $(DncEngPublicBuildPool)
-            # demands: ImageOverride -equals 1es-windows-2022-open
+          ${{ if parameters.OneESPT }}:
+            name: $(DncEngPublicBuildPool)
+            image: 1es-windows-2022-open
+            os: windows
+          ${{ else }}:
+            name: $(DncEngPublicBuildPool)
+            demands: ImageOverride -equals 1es-windows-2022-open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          # ${{ if eq(variables['OneESPT'], true) }}:
-          name: $(DncEngInternalBuildPool)
-          image: 1es-windows-2022
-          os: windows
-          # ${{ else }}:
-            # name: $(DncEngInternalBuildPool)
-            # demands: ImageOverride -equals 1es-windows-2022
+          ${{ if parameters.OneESPT }}:
+            name: $(DncEngInternalBuildPool)
+            image: 1es-windows-2022
+            os: windows
+          ${{ else }}:
+            name: $(DncEngInternalBuildPool)
+            demands: ImageOverride -equals 1es-windows-2022
     ${{ if eq(parameters.agentOs, 'Linux') }}:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          # ${{ if eq(variables['OneESPT'], true) }}:
-          name: $(DncEngPublicBuildPool)
-          image: 1es-ubuntu-2004-open
-          os: linux
-          # ${{ else }}:
-            # name: $(DncEngPublicBuildPool)
-            # demands: ImageOverride -equals 1es-ubuntu-2004-open
+          ${{ if parameters.OneESPT }}:
+            name: $(DncEngPublicBuildPool)
+            image: 1es-ubuntu-2004-open
+            os: linux
+          ${{ else }}:
+            name: $(DncEngPublicBuildPool)
+            demands: ImageOverride -equals 1es-ubuntu-2004-open
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          # ${{ if eq(variables['OneESPT'], true) }}:
-          name: $(DncEngInternalBuildPool)
-          image: 1es-ubuntu-2204
-          os: linux
-          # ${{ else }}:
-            # name: $(DncEngInternalBuildPool)
-            # demands: ImageOverride -equals 1es-ubuntu-2204
+          ${{ if parameters.OneESPT }}:
+            name: $(DncEngInternalBuildPool)
+            image: 1es-ubuntu-2204
+            os: linux
+          ${{ else }}:
+            name: $(DncEngInternalBuildPool)
+            demands: ImageOverride -equals 1es-ubuntu-2204
       container: ${{ parameters.container }}
     ${{ if eq(parameters.agentOs, 'Darwin') }}:
       pool:
-        # ${{ if eq(variables['OneESPT'], true) }}:
-        name: Azure Pipelines
-        image: macOS-latest
-        os: macOS
-        # ${{ else }}:
-          # vmImage: macOS-latest
+        ${{ if parameters.OneESPT }}:
+          name: Azure Pipelines
+          image: macOS-latest
+          os: macOS
+        ${{ else }}:
+          vmImage: macOS-latest
 
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     ${{ if parameters.isBuiltFromVmr }}:
@@ -201,10 +205,10 @@ jobs:
                   /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
                   $(_PgoInstrument)
 
-    # - ${{ if eq(variables['OneESPT'], true) }}:
-    - template: /eng/common/templates-official/variables/pool-providers.yml
-    # - ${{ else }}:
-    #   - template: /eng/common/templates/variables/pool-providers.yml
+    - ${{ if parameters.OneESPT }}:
+      - template: /eng/common/templates-official/variables/pool-providers.yml
+    - ${{ else }}:
+      - template: /eng/common/templates/variables/pool-providers.yml
 
     steps:
     - checkout: self
@@ -287,14 +291,11 @@ jobs:
       continueOnError: true
       condition: always()
 
-    # - ${{ if eq(variables['OneESPT'], true) }}:
-    #     task: 1ES.PublishBuildArtifacts@1
-    # - ${{ else }}:
-    #     task: PublishBuildArtifacts@1
-    #   displayName: Publish Logs to VSTS
-    #   inputs:
-    #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    #     ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
-    #     publishLocation: Container
-    #   continueOnError: true
-    #   condition: always()
+    - task: ${{ parameters.publishTaskName }}
+      displayName: Publish Logs to VSTS
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)'
+        publishLocation: Container
+      continueOnError: true
+      condition: always()
