@@ -2,11 +2,11 @@
 
 ### Usage: $0
 ###
-###   Prepares and runs the binary tooling to detect or remove binaries not in the specified allowedBinariesFile.
+###   Prepares and runs the binary tooling to detect or remove binaries not in the specified allowed-binaries file.
 ###
 ### Options:
-###   --clean                    Clean the VMR of binaries not in the specified allowed-binaries-file.
-###   --validate                 Validate the VMR for binaries not in the specified allowed-binaries-file.
+###   --clean                    Clean the VMR of binaries not in the specified allowed-binaries file.
+###   --validate                 Validate the VMR for binaries not in the specified allowed-binaries file.
 ###   --allowed-binaries-file    Path to the file containing the list of binaries to be
 ###                              ignored for either cleaning or validating.
 ###                              Defaults to eng/allowed-vmr-binaries.txt for validate.
