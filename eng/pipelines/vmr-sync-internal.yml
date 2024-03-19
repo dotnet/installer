@@ -46,6 +46,11 @@ extends:
       image: 1es-windows-2022-pt
       os: windows
 
+    sdl:
+      sourceRepositoriesToScan:
+        exclude:
+        - repository: vmr
+
     stages:
     - stage: VMRSynchronization
       displayName: VMR Synchronization

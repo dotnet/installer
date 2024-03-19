@@ -62,6 +62,11 @@ extends:
       image: 1es-windows-2022-pt
       os: windows
 
+    sdl:
+      sourceRepositoriesToScan:
+        exclude:
+        - repository: vmr
+
     stages:
     # You can temporarily disable the VMR Build stage by setting the disableBuild variable
     - ${{ if not(parameters.disableBuild) }}:
