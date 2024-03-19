@@ -9,16 +9,16 @@ public static class CompareBinariesAgainstBaselines
 {
     public static List<string> Execute(
         IEnumerable<string> detectedBinaries,
-        string? baselineFile,
+        string? allowedBinariesFile,
         string outputReportDirectory,
         string targetDirectory,
         Modes mode)
     {
-        Log.LogInformation($"Comparing detected binaries to baseline {Path.GetFileName(baselineFile)}.");
+        Log.LogInformation($"Detecting binaries not listed in '{Path.GetFileName(allowedBinariesFile)}'.");
 
         var unmatchedBinaries = GetUnmatchedBinaries(
             detectedBinaries,
-            baselineFile,
+            allowedBinariesFile,
             outputReportDirectory,
             targetDirectory,
             mode).ToList();
@@ -48,7 +48,7 @@ public static class CompareBinariesAgainstBaselines
 
     private static IEnumerable<string> GetUnmatchedBinaries(
         IEnumerable<string> searchFiles,
-        string? baselineFile,
+        string? allowedBinariesFile,
         string outputReportDirectory,
         string targetDirectory,
         Modes mode)
@@ -56,7 +56,7 @@ public static class CompareBinariesAgainstBaselines
         HashSet<string> unmatchedFiles = new HashSet<string>(searchFiles);
 
         var filesToPatterns = new Dictionary<string, HashSet<string>>();
-        ParseBaselineFile(baselineFile, ref filesToPatterns);
+        ParseAllowedBinariesFile(allowedBinariesFile, ref filesToPatterns);
 
         foreach (var fileToPatterns in filesToPatterns)
         {
@@ -76,13 +76,13 @@ public static class CompareBinariesAgainstBaselines
                 }
             }
 
-            UpdateBaselineFile(fileToPatterns.Key, outputReportDirectory, unusedPatterns);
+            UpdateAllowedBinariesFile(fileToPatterns.Key, outputReportDirectory, unusedPatterns);
         }
 
         return unmatchedFiles;
     }
 
-    private static void ParseBaselineFile(string? file, ref Dictionary<string, HashSet<string>> result)
+    private static void ParseAllowedBinariesFile(string? file, ref Dictionary<string, HashSet<string>> result)
     {
         if (!File.Exists(file))
         {
@@ -116,7 +116,7 @@ public static class CompareBinariesAgainstBaselines
                     continue;
                 }
 
-                ParseBaselineFile(importFile, ref result);
+                ParseAllowedBinariesFile(importFile, ref result);
             }
             else
             {
@@ -125,7 +125,7 @@ public static class CompareBinariesAgainstBaselines
         }
     }
 
-    private static void UpdateBaselineFile(string? file, string outputReportDirectory, HashSet<string> unusedPatterns)
+    private static void UpdateAllowedBinariesFile(string? file, string outputReportDirectory, HashSet<string> unusedPatterns)
     {
         if(File.Exists(file) && unusedPatterns.Any())
         {
@@ -136,7 +136,7 @@ public static class CompareBinariesAgainstBaselines
 
             File.WriteAllLines(updatedFile, newLines);
 
-            Log.LogInformation($"    Updated baseline file '{file}' written to '{updatedFile}'");
+            Log.LogInformation($"    Updated allowed binaries file '{Path.GetFileName(file)}' written to '{updatedFile}'");
         }
     }
 }

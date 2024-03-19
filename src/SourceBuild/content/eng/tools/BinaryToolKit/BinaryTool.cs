@@ -8,7 +8,7 @@ public class BinaryTool
     public async Task<int> ExecuteAsync(
         string targetDirectory,
         string outputReportDirectory,
-        string? baselineFile,
+        string? allowedBinariesFile,
         Modes mode)
     {
         DateTime startTime = DateTime.Now;
@@ -28,9 +28,9 @@ public class BinaryTool
             isDirectory: true,
             createIfNotExist: true,
             isRequired: true)!;
-        baselineFile = GetAndValidateFullPath(
-            "BaselineFile",
-            baselineFile,
+        allowedBinariesFile = GetAndValidateFullPath(
+            "AllowedBinariesFile",
+            allowedBinariesFile,
             isDirectory: false,
             createIfNotExist: false,
             isRequired: false);
@@ -41,7 +41,7 @@ public class BinaryTool
         var comparedBinaries = CompareBinariesAgainstBaselines
             .Execute(
                 detectedBinaries,
-                baselineFile,
+                allowedBinariesFile,
                 outputReportDirectory,
                 targetDirectory,
                 mode);

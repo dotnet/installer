@@ -30,11 +30,9 @@ public class Program
         Recursive = true
     };
 
-    public static readonly CliOption<string> BaselineFile = new("--baseline-file", "-b")
+    public static readonly CliOption<string> AllowedBinariesFile = new("--allowed-binaries-file", "-ab")
     {
-        Description = "The file containing the list of known binaries.\n" +
-                    "For the 'clean' command, this is the list of binaries that can be kept for source-building.\n" +
-                    "For the 'validate' command, this is the list of known binaries in the target directory.",
+        Description = "The file containing the list of allowed binaries that are ignored for cleaning or validating.\n",
         Arity = ArgumentArity.ZeroOrOne
     };
 
@@ -66,7 +64,7 @@ public class Program
         {
             TargetDirectory,
             OutputReportDirectory,
-            BaselineFile
+            AllowedBinariesFile
         };
     }
 
@@ -81,7 +79,7 @@ public class Program
             ExitCode = await binaryTool.ExecuteAsync(
                 result.GetValue(TargetDirectory)!,
                 result.GetValue(OutputReportDirectory)!,
-                result.GetValue(BaselineFile),
+                result.GetValue(AllowedBinariesFile),
                 mode);
         });
     }

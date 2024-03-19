@@ -2,12 +2,13 @@
 
 ### Usage: $0
 ###
-###   Prepares and runs the binary tooling to detect or remove binaries not in the specified baseline.
+###   Prepares and runs the binary tooling to detect or remove binaries not in the specified allowedBinariesFile.
 ###
 ### Options:
-###   --clean                    Clean the VMR of binaries not in the specified baseline.
-###   --validate                 Validate the VMR for binaries not in the specified baseline.
-###   --baseline <path>          Path to the baseline file.
+###   --clean                    Clean the VMR of binaries not in the specified allowed-binaries-file.
+###   --validate                 Validate the VMR for binaries not in the specified allowed-binaries-file.
+###   --allowed-binaries-file    Path to the file containing the list of binaries to be
+###                              ignored for either cleaning or validating.
 ###                              Defaults to eng/allowed-vmr-binaries.txt for validate.
 ###                              Defaults to eng/allowed-sb-binaries.txt for clean.
 ###   --log-level <level>        Set the log level for the binary tooling. Defaults to Debug.
@@ -30,7 +31,7 @@ function print_help () {
 defaultDotnetSdk="$REPO_ROOT/.dotnet"
 
 # Set default values
-baseline=''
+allowedBinariesFile=''
 mode=''
 logLevel='Debug'
 propsDir=''
@@ -50,20 +51,20 @@ while :; do
       ;;
     --clean)
       mode="clean"
-      if [ -z "$baseline" ]; then
-        baseline="$REPO_ROOT/eng/allowed-sb-binaries.txt"
+      if [ -z "$allowedBinariesFile" ]; then
+        allowedBinariesFile="$REPO_ROOT/eng/allowed-sb-binaries.txt"
       fi
       ;;
     --validate)
       mode="validate"
-      if [ -z "$baseline" ]; then
-        baseline="$REPO_ROOT/eng/allowed-vmr-binaries.txt"
+      if [ -z "$allowedBinariesFile" ]; then
+        allowedBinariesFile="$REPO_ROOT/eng/allowed-vmr-binaries.txt"
       fi
       ;;
-    --baseline)
-      baseline=$2
-      if [ ! -f "$baseline" ]; then
-        echo "ERROR: The specified baseline file does not exist."
+    --allowed-binaries-file)
+      allowedBinariesFile=$2
+      if [ ! -f "$allowedBinariesFile" ]; then
+        echo "ERROR: The specified allowedBinariesFile file does not exist."
         exit 1
       fi
       shift
@@ -148,9 +149,9 @@ function RunBinaryTool
 {
   targetDir="$REPO_ROOT"
   outputDir="$REPO_ROOT/artifacts/log/binary-report"
-  BinaryToolCommand=""$dotnetSdk/dotnet" run --project "$BINARY_TOOL" -c Release "$mode" "$targetDir" -o "$outputDir" -b "$baseline" -l "$logLevel""
+  BinaryToolCommand=""$dotnetSdk/dotnet" run --project "$BINARY_TOOL" -c Release "$mode" "$targetDir" -o "$outputDir" -ab "$allowedBinariesFile" -l "$logLevel""
 
-  trap CleanUp EXIT
+ trap CleanUp EXIT
 
   if [ -n "$packagesDir" ]; then
     BinaryToolCommand=""$BinaryToolCommand" -p CustomPackageVersionsProps="$packagesDir/PackageVersions.props""
