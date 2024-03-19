@@ -33,11 +33,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <AssetManifestPath Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
+      <RepoAssetManifest Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
     </ItemGroup>
 
     <PublishVerticalManifest 
-      AssetManifestPath="@(AssetManifestPath)" 
+      AssetManifest="@(RepoAssetManifest)" 
       VerticalAssetManifestOutputPath="$(VerticalAssetManifestOutputPath)" />
   </Target>
 
