@@ -19,6 +19,11 @@ resources:
     endpoint: dotnet
     ref: $(Build.SourceBranch)
 
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
 parameters:
 - name: vmrBranch
   displayName: dotnet/dotnet branch to push to
@@ -35,14 +40,24 @@ variables:
   - name: VmrBranch
     value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
 
-jobs:
-- template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    jobName: Synchronize_VMR
-    vmrBranch: ${{ variables.VmrBranch }}
+    pool:
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022-pt
+      os: windows
 
-- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-  - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml
-    parameters:
-      jobName: Synchronize_VMR_uncloaked
-      vmrBranch: ${{ variables.VmrBranch }}-ub
+    stages:
+    - stage: VMR Synchronization
+      jobs:
+      - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml@self
+        parameters:
+          jobName: Synchronize_VMR
+          vmrBranch: ${{ variables.VmrBranch }}
+
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+        - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml@self
+          parameters:
+            jobName: Synchronize_VMR_uncloaked
+            vmrBranch: ${{ variables.VmrBranch }}-ub
