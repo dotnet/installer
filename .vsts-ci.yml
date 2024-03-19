@@ -12,8 +12,6 @@ trigger:
 variables:
 - name: _PublishUsingPipelines
   value: false
-- name: _OneESPT
-  value: true
 - ${{ if or(startswith(variables['Build.SourceBranch'], 'refs/heads/release/'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/'), eq(variables['Build.Reason'], 'Manual')) }}:
   - name: PostBuildSign
     value: false
@@ -76,6 +74,9 @@ extends:
     - ES365AIMigrationTooling
     stages:
     - stage: Build
+      variables:
+      - name: _OneESPT
+        value: true
       jobs:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
