@@ -8,8 +8,8 @@
 ###   --clean                    Clean the VMR of binaries not in the specified baseline.
 ###   --validate                 Validate the VMR for binaries not in the specified baseline.
 ###   --baseline <path>          Path to the baseline file.
-###                              Defaults to src/installer/src/VirtualMonoRepo/allowed-vmr-binaries.txt for validate.
-###                              Defaults to artifacts/log/binary-report/baseline.txt for clean.
+###                              Defaults to eng/allowed-vmr-binaries.txt for validate.
+###                              Defaults to eng/allowed-sb-binaries.txt for clean.
 ###   --log-level <level>        Set the log level for the binary tooling. Defaults to Debug.
 ###   --with-packages            Use the specified directory as the packages source feed.
 ###                              Defaults to online dotnet-public and dotnet-libraries feeds.
@@ -51,13 +51,13 @@ while :; do
     --clean)
       mode="clean"
       if [ -z "$baseline" ]; then
-        baseline="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-sb-binaries.txt"
+        baseline="$REPO_ROOT/eng/allowed-sb-binaries.txt"
       fi
       ;;
     --validate)
       mode="validate"
       if [ -z "$baseline" ]; then
-        baseline="$REPO_ROOT/src/installer/src/VirtualMonoRepo/allowed-vmr-binaries.txt"
+        baseline="$REPO_ROOT/eng/allowed-vmr-binaries.txt"
       fi
       ;;
     --baseline)
