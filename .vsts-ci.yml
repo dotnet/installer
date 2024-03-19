@@ -76,8 +76,8 @@ extends:
     - stage: Build
       variables:
       - name: DoesThisWork
-        type: boolean
         value: true
+        readonly: true
       jobs:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
