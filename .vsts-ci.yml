@@ -443,6 +443,7 @@ extends:
             runTests: false
             OneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
+            publishTaskName: 1ES.PublishBuildArtifacts@1
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
@@ -454,6 +455,7 @@ extends:
             runTests: false
             OneESPT: true
             jobTemplatePath: common/templates-official/job/job.yml
+            publishTaskName: 1ES.PublishBuildArtifacts@1
 
         # Source Build
         - template: /eng/common/templates-official/jobs/source-build.yml@self
