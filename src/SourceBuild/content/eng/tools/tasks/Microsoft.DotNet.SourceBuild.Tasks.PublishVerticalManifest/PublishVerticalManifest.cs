@@ -60,7 +60,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
                 .Select(attribute => attribute.ToString())
                 .ToHashSet();
 
-            if (assetManifestXmls.Skip(1).Any(manifest => manifest.Root.Attributes.Count() != rootAttributes.Count))
+            if (assetManifestXmls.Skip(1).Any(manifest => manifest.Root.Attributes().Count() != rootAttributes.Count))
             {
                 throw new ArgumentException("The asset manifests do not have the same number of root attributes.");
             }
