@@ -68,7 +68,7 @@ stages:
     displayName: VMR Source-Only Build
     dependsOn: []
     variables:
-    - template: ../variables/vmr-stage.yml
+    - template: ../variables/vmr-build.yml
       parameters:
         vmrBranch: ${{ parameters.vmrBranch }}
 
@@ -326,7 +326,7 @@ stages:
     displayName: VMR Vertical Build
     dependsOn: []
     variables:
-    - template: ../variables/vmr-stage.yml
+    - template: ../variables/vmr-build.yml
       parameters:
         vmrBranch: ${{ parameters.vmrBranch }}
     jobs:
