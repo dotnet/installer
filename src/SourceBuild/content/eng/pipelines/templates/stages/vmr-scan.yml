@@ -6,12 +6,9 @@ stages:
   - job: Tag_n_Scan
     displayName: Tag & Scan
     pool:
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: $(DncEngPublicBuildPool)
-        ${{ else }}:
-          name: $(DncEngInternalBuildPool)
-        image: 1es-ubuntu-2204
-        os: linux
+      name: $(DncEngInternalBuildPool)
+      image: 1es-ubuntu-2004
+      os: linux
 
     steps:
     - checkout: self
