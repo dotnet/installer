@@ -101,7 +101,8 @@ jobs:
 # - template: ${{ parameters.jobTemplatePath }}
 # - ${{ if variables.OneESPT }}:
 # - ${{ if eq(variables['OneESPT'], true) }}:
-- ${{ if eq(parameters.OneESPT, true) }}:
+# - ${{ if eq(parameters.OneESPT, true) }}:
+- ${{ if eq(variables._OneESPT, true) }}:
   - template: common/templates-official/job/job.yml
     parameters:
       # Set up the name of the job.
