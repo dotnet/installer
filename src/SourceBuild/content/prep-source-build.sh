@@ -241,5 +241,5 @@ if [ "$removeBinaries" == true ]; then
     fi
   fi
 
- "$REPO_ROOT/eng/run-binary-tooling.sh" --clean --with-packages $packagesDir --with-sdk $dotnetSdk
+ "$REPO_ROOT/eng/detect-binaries.sh" --clean --with-packages $packagesDir --with-sdk $dotnetSdk
 fi

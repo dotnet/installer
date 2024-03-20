@@ -2,11 +2,11 @@
 
 ### Usage: $0
 ###
-###   Prepares and runs the binary tooling to detect or remove binaries not in the specified allowed-binaries file.
+###   Prepares and runs the binary tooling to detect binaries in the VMR. Default behavior is to report any binaries
+###   not found in the allowed-binaries file. To remove binaries not specified in the allowed-binaries file, pass --clean.
 ###
 ### Options:
 ###   --clean                    Clean the VMR of binaries not in the specified allowed-binaries file.
-###   --validate                 Validate the VMR for binaries not in the specified allowed-binaries file.
 ###   --allowed-binaries-file    Path to the file containing the list of binaries to be
 ###                              ignored for either cleaning or validating.
 ###                              Defaults to eng/allowed-vmr-binaries.txt for validate.
@@ -29,10 +29,11 @@ function print_help () {
 }
 
 defaultDotnetSdk="$REPO_ROOT/.dotnet"
+defaultAllowedBinariesFile="$REPO_ROOT/eng/allowed-vmr-binaries.txt"
 
 # Set default values
-allowedBinariesFile=''
-mode=''
+allowedBinariesFile=$defaultAllowedBinariesFile
+mode='validate'
 logLevel='Debug'
 propsDir=''
 packagesDir=''
@@ -51,22 +52,12 @@ while :; do
       ;;
     --clean)
       mode="clean"
-      if [ -z "$allowedBinariesFile" ]; then
+      if [ "$allowedBinariesFile" == "$defaultAllowedBinariesFile" ]; then
         allowedBinariesFile="$REPO_ROOT/eng/allowed-sb-binaries.txt"
-      fi
-      ;;
-    --validate)
-      mode="validate"
-      if [ -z "$allowedBinariesFile" ]; then
-        allowedBinariesFile="$REPO_ROOT/eng/allowed-vmr-binaries.txt"
       fi
       ;;
     --allowed-binaries-file)
       allowedBinariesFile=$2
-      if [ ! -f "$allowedBinariesFile" ]; then
-        echo "ERROR: The specified allowedBinariesFile file does not exist."
-        exit 1
-      fi
       shift
       ;;
     --log-level)
@@ -106,10 +97,10 @@ done
 
 function ParseBinaryArgs
 {
-    if [ -z "$mode" ]; then
-        echo "ERROR: --clean or --validate must be specified."
-        print_help
-        exit 1
+    # Check allowed binaries file
+    if [ ! -f "$allowedBinariesFile" ]; then
+      echo "ERROR: The specified allowed-binaries file does not exist."
+      exit 1
     fi
 
     # Check dotnet sdk

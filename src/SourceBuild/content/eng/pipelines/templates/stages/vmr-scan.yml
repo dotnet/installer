@@ -33,7 +33,7 @@ stages:
       workingDirectory: $(Build.SourcesDirectory)/src/installer
 
     - script: |
-        ./eng/run-binary-tooling.sh --validate
+        ./eng/detect-binaries.sh
       displayName: Scan for binaries
       workingDirectory: $(Build.SourcesDirectory)
       continueOnError: true
