@@ -117,23 +117,12 @@ function ParseBinaryArgs
 
     # Check the packages directory
     if [ -z "$packagesDir" ]; then
-        # Use dotnet-public feed as the default packages source feed
-        export ARTIFACTS_PATH="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json"
-
-        # Add dotnet-libraries feed to the NuGet.config. This is needed for System.CommandLine.
-        "$dotnetSdk/dotnet" nuget add source "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json" --name "dotnet-libraries" --configfile "$BINARY_TOOL/NuGet.config" > /dev/null 2>&1
+        # Use dotnet-public and dotnet-libraries feeds as the default packages source feeds
+        export ARTIFACTS_PATH="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json;https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json"
     else
         packagesDir=$(realpath ${packagesDir})
         export ARTIFACTS_PATH=$packagesDir
     fi
-}
-
-function CleanUp
-{
-  # Undo the NuGet.config changes if they were made
-  if [ -z "$packagesDir" ]; then
-    sed -i '/dotnet-libraries/d' "$BINARY_TOOL/NuGet.config"
-  fi
 }
 
 function RunBinaryTool
@@ -141,8 +130,6 @@ function RunBinaryTool
   targetDir="$REPO_ROOT"
   outputDir="$REPO_ROOT/artifacts/log/binary-report"
   BinaryToolCommand=""$dotnetSdk/dotnet" run --project "$BINARY_TOOL" -c Release "$mode" "$targetDir" -o "$outputDir" -ab "$allowedBinariesFile" -l "$logLevel""
-
- trap CleanUp EXIT
 
   if [ -n "$packagesDir" ]; then
     BinaryToolCommand=""$BinaryToolCommand" -p CustomPackageVersionsProps="$packagesDir/PackageVersions.props""
