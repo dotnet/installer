@@ -13,9 +13,9 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 internal class SkippableFactAttribute : FactAttribute
 {
     public SkippableFactAttribute(string envName, bool skipOnNullOrWhiteSpaceEnv = false, bool skipOnTrueEnv = false, string[] skipArchitectures = null) =>
-	            EvaluateSkips(skipOnNullOrWhiteSpaceEnv, skipOnTrueEnv, skipArchitectures, (skip) => Skip = skip, envName);
+	    EvaluateSkips(skipOnNullOrWhiteSpaceEnv, skipOnTrueEnv, skipArchitectures, (skip) => Skip = skip, envName);
      public SkippableFactAttribute(string[] envNames, bool skipOnNullOrWhiteSpaceEnv = false, bool skipOnTrueEnv = false, string[] skipArchitectures = null) =>
-		        EvaluateSkips(skipOnNullOrWhiteSpaceEnv, skipOnTrueEnv, skipArchitectures, (skip) => Skip = skip, envNames);
+		 EvaluateSkips(skipOnNullOrWhiteSpaceEnv, skipOnTrueEnv, skipArchitectures, (skip) => Skip = skip, envNames);
    
      public static void EvaluateSkips(bool skipOnNullOrWhiteSpaceEnv, bool skipOnTrueEnv, string[] skipArchitectures, Action<string> setSkip, params string[] envNames)
     {
@@ -24,22 +24,23 @@ internal class SkippableFactAttribute : FactAttribute
             string? envValue = Environment.GetEnvironmentVariable(envName);
 
             if (skipOnNullOrWhiteSpaceEnv && string.IsNullOrWhiteSpace(envValue))
-	    {
+	        {
                 setSkip($"Skipping because `{envName}` is null or whitespace");
                 break;
             }
 	    else if (skipOnTrueEnv && bool.TryParse(envValue, out bool boolValue) && boolValue)
-	    {
+	        {
                 setSkip($"Skipping because `{envName}` is set to True");
                 break;
             }
         }
-       if (skipArchitectures != null) {
-	                   string? arch = Config.TargetArchitecture;
-			               if (skipArchitectures.Contains(arch))
-					                   {
-								                   setSkip($"Skipping because arch is `{arch}`");
-										               }
-				               }
+       
+        if (skipArchitectures != null) {
+	        string? arch = Config.TargetArchitecture;
+			if (skipArchitectures.Contains(arch))
+			{
+				setSkip($"Skipping because arch is `{arch}`");
+			}
+		}
     }
 }
