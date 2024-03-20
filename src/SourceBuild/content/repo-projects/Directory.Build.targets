@@ -197,7 +197,8 @@
     <UpdateNuGetConfigPackageSourcesMappings
       NuGetConfigFile="$(NuGetConfigFile)"
       BuildWithOnlineFeeds="$(DotNetBuildWithOnlineFeeds)"
-      SourceBuildSources="@(_BuildSources)" />
+      SourceBuildSources="@(_BuildSources)"
+      VmrRoot="$(RepoRoot)" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete" AlwaysCreate="true">
