@@ -20,7 +20,7 @@ internal class DotNetHelper
     public static string ProjectsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), $"projects-{DateTime.Now:yyyyMMddHHmmssffff}");
 
     private ITestOutputHelper OutputHelper { get; }
-    private bool IsMonoRuntime { get; }
+    public bool IsMonoRuntime { get; }
 
     public DotNetHelper(ITestOutputHelper outputHelper)
     {
@@ -256,4 +256,6 @@ internal class DotNetHelper
     }
 
     private static string GetProjectDirectory(string projectName) => Path.Combine(ProjectsDirectory, projectName);
+    public static bool ShouldPublishComplex() =>
+        string.Equals(Config.TargetArchitecture,"ppc64le") || string.Equals(Config.TargetArchitecture,"s390x");
 }

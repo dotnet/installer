@@ -23,7 +23,7 @@ public class SdkContentTests : SmokeTests
     /// This makes the baseline durable between releases.  This does mean however, entries
     /// in the baseline may appear identical if the diff is version specific.
     /// </Summary>
-    [SkippableFact(new[] { Config.MsftSdkTarballPathEnv, Config.SdkTarballPathEnv }, skipOnNullOrWhiteSpace: true)]
+    [SkippableFact(new[] { Config.MsftSdkTarballPathEnv, Config.SdkTarballPathEnv }, skipOnNullOrWhiteSpaceEnv: true)]
     public void CompareMsftToSb()
     {
         const string msftFileListingFileName = "msftSdkFiles.txt";
@@ -35,7 +35,6 @@ public class SdkContentTests : SmokeTests
         diff = RemoveDiffMarkers(diff);
         BaselineHelper.CompareContents("MsftToSbSdk.diff", diff, OutputHelper, Config.WarnOnSdkContentDiffs);
     }
-
     private void WriteTarballFileList(string? tarballPath, string outputFileName, bool isPortable, string sdkType)
     {
         if (!File.Exists(tarballPath))
