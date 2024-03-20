@@ -32,6 +32,12 @@ stages:
       displayName: Tag the build
       workingDirectory: $(Build.SourcesDirectory)/src/installer
 
+    - script: |
+        ./eng/detect-binaries.sh
+      displayName: Scan for binaries
+      workingDirectory: $(Build.SourcesDirectory)
+      continueOnError: true
+
     - script: >
         ./.dotnet/dotnet darc vmr scan-cloaked-files
         --vmr "$(Build.SourcesDirectory)"
