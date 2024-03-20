@@ -141,8 +141,6 @@
       need to be parsed from Maestro++ auto-update and passed through.
     -->
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <!-- The BUILD_BUILDNUMBER environmental variable is set by the AzDo agent. We're overwriting it below, so we need to save it in a different env variable -->
-    <EnvironmentVariables Include="VmrBuildNumber=$(BUILD_BUILDNUMBER)"/>
     <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" />
 
     <!-- Give build access to commit info without necessarily requiring git queries. -->
