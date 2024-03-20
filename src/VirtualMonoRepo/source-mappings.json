@@ -89,7 +89,7 @@
             "name": "installer",
             "defaultRemote": "https://github.com/dotnet/installer",
             "exclude": [
-                // We don't need the tarball content in the VMR again, it's already copied in the root
+                // Exclude the VMR content as this is copied to the root of VMR via the synchronization process.
                 "src/SourceBuild/content/**/*"
             ]
         },
