@@ -241,5 +241,10 @@ if [ "$removeBinaries" == true ]; then
     fi
   fi
 
- "$REPO_ROOT/eng/detect-binaries.sh" --clean --with-packages $packagesDir --with-sdk $dotnetSdk
+ "$REPO_ROOT/eng/detect-binaries.sh" \
+  --clean \
+  --allowed-binaries-file "$REPO_ROOT/eng/allowed-sb-binaries.txt" \
+  --with-packages $packagesDir \
+  --with-sdk $dotnetSdk \
+
 fi
