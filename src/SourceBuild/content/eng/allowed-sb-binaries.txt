@@ -23,32 +23,18 @@
 **/*.icm
 **/*.reg
 
-**/testCert*.pfx
-**/TestCert*.pfx
-
-eng/common/loc/*.lss # UTF16-LE text files
-**/eng/common/loc/*.lss # UTF16-LE text files
-
-# arcade
-src/arcade/src/Microsoft.DotNet.NuGetRepack/tests/Resources/.signature.p7s
-
 # aspnetcore
-src/aspnetcore/src/**/*.cer
-src/aspnetcore/src/**/*.pfx
-src/aspnetcore/src/**/*.eot
-src/aspnetcore/src/**/*.woff
-src/aspnetcore/src/**/*.woff2
+src/aspnetcore/src/**/samples/**/*.eot
+src/aspnetcore/src/**/samples/**/*.pfx
+src/aspnetcore/src/**/samples/**/*.woff*
+src/aspnetcore/src/**/Samples/**/*.woff*
+src/aspnetcore/src/Components/benchmarkapps/BlazingPizza.Server/wwwroot/css/font/quicksand-v8-latin-*.woff*
 src/aspnetcore/src/Components/Web.JS/dist/Release/blazor.*.js # JavaScript files with a null bytes
 src/aspnetcore/src/ProjectTemplates/Web.ProjectTemplates/**/app.db
-src/aspnetcore/src/Shared/TestCertificates/*.crt
 src/aspnetcore/src/submodules/Node-Externals/cache/**/* # https://github.com/dotnet/source-build/issues/4161
 
 # fsharp
 src/fsharp/src/fsi/fsi.res # Icon
-
-# msbuild
-src/msbuild/src/Tasks.UnitTests/TestResources/*.pfx
-src/msbuild/src/Tasks.UnitTests/AssemblyDependency/CacheFileSamples/Microsoft.VisualStudio.LanguageServices.Implementation.csprojAssemblyReference.cache
 
 # razor
 src/razor/**/SampleApp/**/fonts/**/*.eot
@@ -64,11 +50,6 @@ src/runtime/src/libraries/System.Speech/src/**/*.upsmap # https://github.com/dot
 src/runtime/src/libraries/System.Text.Encoding.CodePages/src/Data/codepages.nlp # https://github.com/dotnet/runtime/issues/81693
 src/runtime/src/native/external/brotli/common/dictionary.bin.br
 
-# sdk
-src/sdk/src/Assets/TestProjects/**/*.dat
-src/sdk/src/Assets/TestProjects/**/*.cache
-src/sdk/src/Assets/TestProjects/**/*.tlb
-
 # source-build-externals
 src/source-build-externals/src/humanizer/src/Humanizer.Tests**/*.pfx
 src/source-build-externals/src/newtonsoft-json/Src/Newtonsoft.Json.Tests/SpaceShipV2.bson
@@ -76,7 +57,3 @@ src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-fo
 src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/build/strongNameBypass2.reg # UTF16-LE text file
 src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/test/Certs/*.pfx
 src/source-build-externals/src/azure-activedirectory-identitymodel-extensions-for-dotnet/test/Certs/*.cer
-
-# vstest
-src/vstest/test/Microsoft.TestPlatform.CoreUtilities.UnitTests/TestAssets/dotnetMac*
-src/vstest/test/Microsoft.TestPlatform.Utilities.UnitTests/TestFiles/fullcovered.coverage
