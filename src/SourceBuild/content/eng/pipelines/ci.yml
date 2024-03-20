@@ -55,10 +55,15 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    pool:
-      name: $(DncEngInternalBuildPool)
-      image: 1es-windows-2022-pt
-      os: windows
+    sdl:
+      sourceAnalysisPool:
+        name: $(DncEngInternalBuildPool)
+        image: 1es-windows-2022
+        os: windows
+
+    componentgovernance:
+      sourceScanPath: $(Agent.BuildDirectory)/vmr
+      ignoreDirectories: $(Agent.BuildDirectory)/vmr/src
 
     stages:
     - ${{ if and(ne(variables.isPRTrigger, 'true'), eq(variables['System.TeamProject'], 'internal')) }}:
