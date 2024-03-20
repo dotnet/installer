@@ -17,10 +17,13 @@ using Microsoft.Build.Utilities;
 namespace Microsoft.DotNet.Build.Tasks
 {
     /*
-     * This task updates the package source mappings in the NuGet.Config.
-     * If package source mappings are used, source-build packages sources will be added with the cumulative package patterns
-     * for all of the existing package sources. When building offline, the existing package source mappings will be removed;
-     * otherwise they will be preserved after the source-build sources.
+     * This task updates the package source mappings in the NuGet.Config using the following logic:
+     * Add all packages from current source-build sources, i.e. source-built-*, reference-packages.
+     * For previously source-built sources, add only the packages that do not exist in any of the current source-built sources.
+     * Also add PSB packages if that package version does not exist in current package sources.
+     * In offline build, remove all existing package source mappings for online sources.
+     * In online build, filter existing package source mappings to remove anything that exists in any source-build source.
+     * In online build, if NuGet.config didn't have any mappings, add default "*" pattern for all online sources.
      */
     public class UpdateNuGetConfigPackageSourcesMappings : Task
     {
@@ -37,63 +40,51 @@ namespace Microsoft.DotNet.Build.Tasks
         /// </summary>
         public string[] SourceBuildSources { get; set; }
 
-        public string VmrRoot { get; set; }
+        [Required]
+        public string SbrpRepoSrcPath { get; set; }
 
-        private string SBRPCacheSourceName = "source-build-reference-package-cache";
+        private const string SbrpCacheSourceName = "source-build-reference-package-cache";
 
         public override bool Execute()
         {
             string xml = File.ReadAllText(NuGetConfigFile);
             string newLineChars = FileUtilities.DetectNewLineChars(xml);
             XDocument document = XDocument.Parse(xml);
-            XElement pkgSrcMappingElement = document.Root.Descendants().FirstOrDefault(e => e.Name == "packageSourceMapping");
             XElement pkgSourcesElement = document.Root.Descendants().FirstOrDefault(e => e.Name == "packageSources");
             if (pkgSourcesElement == null)
             {
+                Log.LogMessage(MessageImportance.Low, "Package sources are missing.");
+
                 return true;
             }
 
+            XElement pkgSrcMappingElement = document.Root.Descendants().FirstOrDefault(e => e.Name == "packageSourceMapping");
             if (pkgSrcMappingElement == null)
             {
                 pkgSrcMappingElement = new XElement("packageSourceMapping");
                 document.Root.Add(pkgSrcMappingElement);
             }
 
-            Hashtable allSourcesPackages = new Hashtable();
-            Hashtable currentPackages = new Hashtable();
-            Hashtable referencePackages = new Hashtable();
-            Hashtable previouslyBuiltPackages = new Hashtable();
-            Hashtable oldSourceMappingPatterns = new Hashtable();
+            var allSourcesPackages = new Dictionary<string, List<string>>();
+            var currentPackages = new Dictionary<string, List<string>>();
+            var referencePackages = new Dictionary<string, List<string>>();
+            var previouslyBuiltPackages = new Dictionary<string, List<string>>();
+            var oldSourceMappingPatterns = new Dictionary<string, List<string>>();
 
             DiscoverPackagesFromAllSourceBuildSources(pkgSourcesElement, allSourcesPackages, currentPackages, referencePackages, previouslyBuiltPackages);
 
             // Discover all SBRP packages if source-build-reference-package-cache source is present in NuGet.config
-            XElement sbrpCacheSourceElement = pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == SBRPCacheSourceName);
+            XElement sbrpCacheSourceElement = pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == SbrpCacheSourceName);
             if (sbrpCacheSourceElement != null)
             {
-                DiscoverPackagesFromSBRPCacheSource(pkgSourcesElement, allSourcesPackages, referencePackages);
+                DiscoverPackagesFromSbrpCacheSource(pkgSourcesElement, allSourcesPackages, referencePackages);
             }
 
             // If building online, enumerate any existing package source mappings and filter
             // to remove packages that are present in any local source-build source
             if (BuildWithOnlineFeeds && pkgSrcMappingElement != null)
             {
-                foreach (XElement packageSource in pkgSrcMappingElement.Descendants().Where(e => e.Name == "packageSource"))
-                {
-                    List<string> filteredPatterns = new List<string>();
-                    foreach (XElement package in packageSource.Descendants().Where(e => e.Name == "package"))
-                    {
-                        string pattern = package.Attribute("pattern").Value.ToLower();
-                        if (!currentPackages.Contains(pattern) &&
-                            !referencePackages.Contains(pattern) &&
-                            !previouslyBuiltPackages.Contains(pattern))
-                        {
-                            filteredPatterns.Add(pattern);
-                        }
-                    }
-
-                    oldSourceMappingPatterns.Add(packageSource.Attribute("key").Value, filteredPatterns);
-                }
+                GetExistingFilteredSourceMappings(pkgSrcMappingElement, currentPackages, referencePackages, previouslyBuiltPackages, oldSourceMappingPatterns);
             }
 
             // Remove all packageSourceMappings
@@ -102,23 +93,26 @@ namespace Microsoft.DotNet.Build.Tasks
             XElement pkgSrcMappingClearElement = pkgSrcMappingElement.Descendants().FirstOrDefault(e => e.Name == "clear");
 
             // When building online add the filtered mappings from original online sources.
+            // If there are none, add default mappings for all online sources.
             if (BuildWithOnlineFeeds)
             {
-                foreach (DictionaryEntry entry in oldSourceMappingPatterns)
+                if (oldSourceMappingPatterns.Count > 0)
                 {
-                    // Skip sources with zero package patterns
-                    if (entry.Value == null)
+                    foreach (var entry in oldSourceMappingPatterns)
                     {
-                        continue;
+                        // Skip sources with zero package patterns
+                        if (entry.Value != null)
+                        {
+                            pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(entry.Key, entry.Value));
+                        }
                     }
-
-                    XElement pkgSrc = new XElement("packageSource", new XAttribute("key", entry.Key));
-                    foreach (string pattern in (List<string>)entry.Value)
+                }
+                else
+                {
+                    foreach (XElement sourceElement in pkgSourcesElement.Descendants().Where(e => e.Name == "add" && !allSourcesPackages.Keys.Contains(e.Attribute("key").Value)))
                     {
-                        pkgSrc.Add(new XElement("package", new XAttribute("pattern", pattern)));
+                        pkgSrcMappingClearElement.AddAfterSelf(new XElement("packageSource", new XAttribute("key", sourceElement.Attribute("key").Value), new XElement("package", new XAttribute("pattern", "*"))));
                     }
-
-                    pkgSrcMappingClearElement.AddAfterSelf(pkgSrc);
                 }
             }
 
@@ -126,40 +120,10 @@ namespace Microsoft.DotNet.Build.Tasks
             foreach (string packageSource in allSourcesPackages.Keys)
             {
                 // Skip sources with zero package patterns
-                if (allSourcesPackages[packageSource] == null)
+                if (allSourcesPackages[packageSource] != null)
                 {
-                    continue;
+                    pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(packageSource, allSourcesPackages, currentPackages, previouslyBuiltPackages));
                 }
-
-                bool isCurrentSourceBuiltSource =
-                    packageSource.StartsWith("source-built-") ||
-                    packageSource.Equals(SBRPCacheSourceName) ||
-                    packageSource.Equals("reference-packages");
-
-                XElement pkgSrc = new XElement("packageSource", new XAttribute("key", packageSource));
-                foreach (string packagePattern in (List<string>)allSourcesPackages[packageSource])
-                {
-                    // Add all packages from current source-built sources.
-                    // For previously source-built and prebuilt sources add only packages
-                    // where version does not exist in current source-built sources.
-                    if (isCurrentSourceBuiltSource || !currentPackages.Contains(packagePattern))
-                    {
-                        pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
-                    }
-                    else
-                    {
-                        foreach (string version in (List<string>)previouslyBuiltPackages[packagePattern])
-                        {
-                            if (!((List<string>)currentPackages[packagePattern]).Contains(version))
-                            {
-                                pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                pkgSrcMappingClearElement.AddAfterSelf(pkgSrc);
             }
 
             using (var writer = XmlWriter.Create(NuGetConfigFile, new XmlWriterSettings { NewLineChars = newLineChars, Indent = true }))
@@ -170,7 +134,56 @@ namespace Microsoft.DotNet.Build.Tasks
             return true;
         }
 
-        private void DiscoverPackagesFromAllSourceBuildSources(XElement pkgSourcesElement, Hashtable allSourcesPackages, Hashtable currentPackages, Hashtable referencePackages, Hashtable previouslyBuiltPackages)
+        private void AddDefaultMappingsForOnlineSources(XElement pkgSrcMappingClearElement, XElement pkgSourcesElement)
+        {
+            throw new NotImplementedException();
+        }
+
+        private XElement GetPackageMappingsElementForSource(string key, List<string> value)
+        {
+            XElement pkgSrc = new XElement("packageSource", new XAttribute("key", key));
+            foreach (string pattern in value)
+            {
+                pkgSrc.Add(new XElement("package", new XAttribute("pattern", pattern)));
+            }
+
+            return pkgSrc;
+        }
+
+        private XElement GetPackageMappingsElementForSource(string packageSource, Dictionary<string, List<string>> allSourcesPackages, Dictionary<string, List<string>> currentPackages, Dictionary<string, List<string>> previouslyBuiltPackages)
+        {
+            bool isCurrentSourceBuiltSource =
+                packageSource.StartsWith("source-built-") ||
+                packageSource.Equals(SbrpCacheSourceName) ||
+                packageSource.Equals("reference-packages");
+
+            XElement pkgSrc = new XElement("packageSource", new XAttribute("key", packageSource));
+            foreach (string packagePattern in allSourcesPackages[packageSource])
+            {
+                // Add all packages from current source-built sources.
+                // For previously source-built and prebuilt sources add only packages
+                // where version does not exist in current source-built sources.
+                if (isCurrentSourceBuiltSource || !currentPackages.ContainsKey(packagePattern))
+                {
+                    pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
+                }
+                else
+                {
+                    foreach (string version in previouslyBuiltPackages[packagePattern])
+                    {
+                        if (!currentPackages[packagePattern].Contains(version))
+                        {
+                            pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return pkgSrc;
+        }
+
+        private void DiscoverPackagesFromAllSourceBuildSources(XElement pkgSourcesElement, Dictionary<string, List<string>> allSourcesPackages, Dictionary<string, List<string>> currentPackages, Dictionary<string, List<string>> referencePackages, Dictionary<string, List<string>> previouslyBuiltPackages)
         {
             foreach (string packageSource in SourceBuildSources)
             {
@@ -196,39 +209,33 @@ namespace Microsoft.DotNet.Build.Tasks
                     // Add package with version to appropriate hashtable
                     if (packageSource.StartsWith("source-built-"))
                     {
-                        AddToHashtable(currentPackages, id, version);
+                        AddToDictionary(currentPackages, id, version);
                     }
                     else if (packageSource.Equals("reference-packages"))
                     {
-                        AddToHashtable(referencePackages, id, version);
+                        AddToDictionary(referencePackages, id, version);
                     }
                     else // previously built packages
                     {
-                        AddToHashtable(previouslyBuiltPackages, id, version);
+                        AddToDictionary(previouslyBuiltPackages, id, version);
                     }
 
-                    AddToHashtable(allSourcesPackages, packageSource, id);
+                    AddToDictionary(allSourcesPackages, packageSource, id);
                 }
             }
         }
 
-        private void DiscoverPackagesFromSBRPCacheSource(XElement pkgSourcesElement, Hashtable allSourcesPackages, Hashtable currentPackages)
+        private void DiscoverPackagesFromSbrpCacheSource(XElement pkgSourcesElement, Dictionary<string, List<string>> allSourcesPackages, Dictionary<string, List<string>> currentPackages)
         {
-            // source-build-reference-package-cache is a dynamic source, populated by SBRP build,
+            // 'source-build-reference-package-cache' is a dynamic source, populated by SBRP build.
             // Discover all SBRP packages from checked in nuspec files.
 
-            if (string.IsNullOrEmpty(VmrRoot))
+            if (!Directory.Exists(SbrpRepoSrcPath))
             {
-                throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "VmrRoot is not set - cannot determine SBRP packages."));
+                throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "SBRP repo root does not exist in expected path: {0}", SbrpRepoSrcPath));
             }
 
-            string sbrpRepoRoot = Path.Combine(VmrRoot, "src", "source-build-reference-packages");
-            if (!Directory.Exists(sbrpRepoRoot))
-            {
-                throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "SBRP repo root does not exist in expected path: {0}", sbrpRepoRoot));
-            }
-
-            string[] nuspecFiles = Directory.GetFiles(sbrpRepoRoot, "*.nuspec", SearchOption.AllDirectories);
+            string[] nuspecFiles = Directory.GetFiles(SbrpRepoSrcPath, "*.nuspec", SearchOption.AllDirectories);
             foreach (string nuspecFile in nuspecFiles)
             {
                 try
@@ -238,8 +245,8 @@ namespace Microsoft.DotNet.Build.Tasks
                     string id = info.Id.ToLower();
                     string version = info.Version.ToLower();
 
-                    AddToHashtable(currentPackages, id, version);
-                    AddToHashtable(allSourcesPackages, SBRPCacheSourceName, id);
+                    AddToDictionary(currentPackages, id, version);
+                    AddToDictionary(allSourcesPackages, SbrpCacheSourceName, id);
                 }
                 catch (Exception ex)
                 {
@@ -248,11 +255,31 @@ namespace Microsoft.DotNet.Build.Tasks
             }
         }
 
-        private void AddToHashtable(Hashtable hashtable, string key, string value)
+        private void GetExistingFilteredSourceMappings(XElement pkgSrcMappingElement, Dictionary<string, List<string>> currentPackages, Dictionary<string, List<string>> referencePackages, Dictionary<string, List<string>> previouslyBuiltPackages, Dictionary<string, List<string>> oldSourceMappingPatterns)
         {
-            if (hashtable.ContainsKey(key))
+            foreach (XElement packageSource in pkgSrcMappingElement.Descendants().Where(e => e.Name == "packageSource"))
             {
-                List<string> values = (List<string>)hashtable[key];
+                List<string> filteredPatterns = new List<string>();
+                foreach (XElement package in packageSource.Descendants().Where(e => e.Name == "package"))
+                {
+                    string pattern = package.Attribute("pattern").Value.ToLower();
+                    if (!currentPackages.ContainsKey(pattern) &&
+                        !referencePackages.ContainsKey(pattern) &&
+                        !previouslyBuiltPackages.ContainsKey(pattern))
+                    {
+                        filteredPatterns.Add(pattern);
+                    }
+                }
+
+                oldSourceMappingPatterns.Add(packageSource.Attribute("key").Value, filteredPatterns);
+            }
+        }
+
+        private void AddToDictionary(Dictionary<string, List<string>> dictionary, string key, string value)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                List<string> values = dictionary[key];
                 if (!values.Contains(value))
                 {
                     values.Add(value);
@@ -260,7 +287,7 @@ namespace Microsoft.DotNet.Build.Tasks
             }
             else
             {
-                hashtable.Add(key, new List<string> { value });
+                dictionary.Add(key, [value]);
             }
         }
 
@@ -281,13 +308,13 @@ namespace Microsoft.DotNet.Build.Tasks
                         return GetNupkgInfo(nuspecFileStream);
                     }
                 }
-
-                throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "Did not extract nuspec file from package: {0}", path));
             }
             catch (Exception ex)
             {
                 throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "Invalid package", path), ex);
             }
+
+            throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "Did not extract nuspec file from package: {0}", path));
         }
 
         /// <summary>
@@ -301,17 +328,17 @@ namespace Microsoft.DotNet.Build.Tasks
                     metadataElement.Descendants().First(c => c.Name.LocalName.ToString() == "id").Value,
                     metadataElement.Descendants().First(c => c.Name.LocalName.ToString() == "version").Value);
         }
-    }
 
-    public class NupkgInfo
-    {
-        public NupkgInfo(string id, string version)
+        private class NupkgInfo
         {
-            Id = id;
-            Version = version;
-        }
+            public NupkgInfo(string id, string version)
+            {
+                Id = id;
+                Version = version;
+            }
 
-        public string Id { get; }
-        public string Version { get; }
+            public string Id { get; }
+            public string Version { get; }
+        }
     }
 }
