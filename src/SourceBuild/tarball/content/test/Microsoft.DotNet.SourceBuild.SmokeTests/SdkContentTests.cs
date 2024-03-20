@@ -35,6 +35,7 @@ public class SdkContentTests : SmokeTests
         diff = RemoveDiffMarkers(diff);
         BaselineHelper.CompareContents("MsftToSbSdk.diff", diff, OutputHelper, Config.WarnOnSdkContentDiffs);
     }
+    
     private void WriteTarballFileList(string? tarballPath, string outputFileName, bool isPortable, string sdkType)
     {
         if (!File.Exists(tarballPath))
