@@ -25,7 +25,7 @@ parameters:
   type: string
   default: ' '
 
-variables: 
+variables:
 - ${{ if ne(parameters.vmrBranch, ' ') }}:
   - name: VmrBranch
     value: ${{ replace(parameters.vmrBranch, ' ', '') }}

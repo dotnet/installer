@@ -4,14 +4,11 @@
     <!-- AspNetCore doesn't have a root build script but one under the eng folder. -->
     <BuildScript>$(ProjectDirectory)eng\build$(ShellExtension)</BuildScript>
 
-    <!-- BuildActions includes -publish which is not supported by the aspnetcore build script. -->
-    <BuildActions>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack</BuildActions>
     <!-- On Windows, build all for the VB PoC -->
     <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true' and '$(BuildOS)' == 'windows'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack</BuildActions>
 
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildArgs Condition="'$(DotNetBuildSourceOnly)' == 'true' or '$(BuildOS)' != 'windows'">$(BuildArgs) $(FlagParameterPrefix)no-build-repo-tasks</BuildArgs>
-    <BuildArgs Condition="'$(DotNetBuildSourceOnly)' == 'true' or '$(BuildOS)' != 'windows'">$(BuildArgs) $(FlagParameterPrefix)no-build-nodejs</BuildArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
   </PropertyGroup>
@@ -23,11 +20,16 @@
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
-    <RepositoryReference Include="source-build-externals" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
-    <RepositoryReference Include="runtime" />
-    <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="roslyn" />
-    <RepositoryReference Include="roslyn-analyzers" />
+    <RepositoryReference Include="runtime" />
+    <RepositoryReference Include="xdt" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="source-build-externals" />
+    <RepositoryReference Include="source-build-reference-packages" />
+    <RepositoryReference Include="symreader" />
   </ItemGroup>
 
   <ItemGroup>
