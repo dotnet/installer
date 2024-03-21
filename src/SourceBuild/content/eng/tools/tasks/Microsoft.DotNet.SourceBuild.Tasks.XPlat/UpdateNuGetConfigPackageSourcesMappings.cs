@@ -19,7 +19,7 @@ namespace Microsoft.DotNet.Build.Tasks
     /*
      * This task updates the package source mappings in the NuGet.Config using the following logic:
      * Add all packages from current source-build sources, i.e. source-built-*, reference-packages.
-     * For previously source-built sources, add only the packages that do not exist in any of the current source-built sources.
+     * For previously source-built sources (PSB), add only the packages that do not exist in any of the current source-built sources.
      * Also add PSB packages if that package version does not exist in current package sources.
      * In offline build, remove all existing package source mappings for online sources.
      * In online build, filter existing package source mappings to remove anything that exists in any source-build source.
