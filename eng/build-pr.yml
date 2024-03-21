@@ -18,7 +18,7 @@ parameters:
   enablePublishUsingPipelines: true
 
 phases:
-- template: /eng/common/templates-official/job/job.yml
+- template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
       name: PGO_${{ parameters.agentOs }}
