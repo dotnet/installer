@@ -104,7 +104,7 @@ namespace Microsoft.DotNet.Build.Tasks
                     foreach (var entry in oldSourceMappingPatterns)
                     {
                         // Skip sources with zero package patterns
-                        if (entry.Value != null)
+                        if (entry.Value?.Count > 0)
                         {
                             pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(entry.Key, entry.Value));
                         }
