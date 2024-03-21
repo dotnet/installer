@@ -344,7 +344,7 @@ stages:
         linuxPortable: true
         runTests: false
 
-  - template: /eng/common/templates/jobs/source-build-pr.yml
+  - template: /eng/common/templates/jobs/source-build.yml
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish
