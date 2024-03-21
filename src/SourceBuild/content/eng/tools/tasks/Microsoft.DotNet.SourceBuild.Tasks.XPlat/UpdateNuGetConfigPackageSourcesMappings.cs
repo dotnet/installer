@@ -140,8 +140,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 .Descendants()
                 .Where(e => e.Name == "add" && !allSourcesPackages.Keys.Contains(e.Attribute("key").Value))
                 .Select(e => e.Attribute("key").Value)
-                .Distinct()
-                .ToArray())
+                .Distinct())
             {
                 pkgSrcMappingClearElement.AddAfterSelf(new XElement("packageSource", new XAttribute("key", sourceName), new XElement("package", new XAttribute("pattern", "*"))));
             }
