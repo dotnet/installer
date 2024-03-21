@@ -129,7 +129,6 @@ phases:
       - task: 1ES.PublishNuget@1
         displayName: Push Visual Studio NuPkgs
         inputs:
-          command: push
           packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: 'DevDiv - VS package feed'

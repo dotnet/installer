@@ -372,10 +372,10 @@ stages:
 
   - template: /eng/common/templates/jobs/source-build.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball-pr.yml
 
   - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build-pr.yml
       parameters:
         dependsOn: Source_Build_Create_Tarball
 
