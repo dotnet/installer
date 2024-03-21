@@ -126,7 +126,7 @@ phases:
         displayName: Build
 
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT'), ne(variables['PostBuildSign'], 'true')) }}:
-      - task: NuGetCommand@2
+      - task: 1ES.PublishNuget@1
         displayName: Push Visual Studio NuPkgs
         inputs:
           command: push
@@ -156,7 +156,7 @@ phases:
       continueOnError: true
       condition: always()
 
-    - task: PublishBuildArtifacts@1
+    - task: 1ES.PublishBuildArtifacts@1
       displayName: Publish Logs to VSTS
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
