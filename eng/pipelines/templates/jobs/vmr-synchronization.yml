@@ -26,7 +26,10 @@ jobs:
   displayName: Synchronize VMR's ${{ parameters.vmrBranch }}
   timeoutInMinutes: 120
   variables:
-  - template: /eng/common/templates-official/variables/pool-providers.yml
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - template: /eng/common/templates/variables/pool-providers.yml
+  - ${{ else }}:
+    - template: /eng/common/templates-official/variables/pool-providers.yml
   - name: vmrPath
     value: $(Agent.BuildDirectory)/vmr
   - ${{ if not(parameters.noPush) }}:
@@ -42,9 +45,14 @@ jobs:
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
 
   pool:
-    name: $(DncEngInternalBuildPool)
-    demands: ImageOverride -equals 1es-ubuntu-2004
-    os: linux
+    ${{ if eq(variables['System.TeamProject'], 'public') }}:
+      name: $(DncEngPublicBuildPool)
+      image: 1es-ubuntu-2004-open
+      os: linux
+    ${{ else }}:
+      name: $(DncEngInternalBuildPool)
+      demands: ImageOverride -equals 1es-ubuntu-2004
+      os: linux
 
   steps:
   - template: ../steps/vmr-prepare.yml
