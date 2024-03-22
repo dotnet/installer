@@ -3,32 +3,32 @@
 
 parameters:
 - name: dependsOn
-  value: []
+  default: []
 - name: condition
-  value: always()
+  default: always()
 
   # Branch of the VMR to use (to push to for internal builds)
 - name: vmrBranch
-  value: $(Build.SourceBranch)
+  default: $(Build.SourceBranch)
 
   # True when build is running from dotnet/dotnet directly
 - name: isBuiltFromVmr
-  value: false
+  default: false
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
 - name: alpine317Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
 - name: centOSStream8Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
 - name: centOSStream9Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
 - name: fedora38Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
 - name: ubuntu2204Container
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
 - name: ubuntu2204ArmContainer
-  value: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
 
 # These are not expected to be passed it but rather just object variables reused below
 - name: pool_Linux
