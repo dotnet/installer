@@ -3,31 +3,41 @@
 
 parameters:
 - name: dependsOn
+  type: object
   default: []
 - name: condition
+  type: string
   default: always()
 
   # Branch of the VMR to use (to push to for internal builds)
 - name: vmrBranch
+  type: string
   default: $(Build.SourceBranch)
 
   # True when build is running from dotnet/dotnet directly
 - name: isBuiltFromVmr
+  type: boolean
   default: false
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
 - name: alpine317Container
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
 - name: centOSStream8Container
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
 - name: centOSStream9Container
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
 - name: fedora38Container
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
 - name: ubuntu2204Container
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
 - name: ubuntu2204ArmContainer
+  type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
 
 # These are not expected to be passed it but rather just object variables reused below
@@ -54,7 +64,7 @@ stages:
   dependsOn: ${{ parameters.dependsOn }}
   condition: ${{ parameters.condition }}
   variables:
-  - template: /variables/vmr-build.yml@self
+  - template: ../variables/vmr-build.yml@self
   - ${{ if ne(parameters.vmrBranch, '') }}:
     - name: VmrBranch
       value: ${{ parameters.vmrBranch }}
@@ -73,7 +83,7 @@ stages:
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
-      pool: ${{ variables.pool_Linux }}
+      pool: ${{ parameters.pool_Linux }}
       container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
@@ -89,7 +99,7 @@ stages:
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
-      pool: ${{ variables.pool_Linux }}
+      pool: ${{ parameters.pool_Linux }}
       container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: true             # ✅
       enablePoison: false                # 🚫
@@ -109,7 +119,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.alpine317Container }}
         buildFromArchive: false            # ✅
         enablePoison: false                # 🚫
@@ -125,7 +135,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
@@ -141,7 +151,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
@@ -157,7 +167,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: true             # ✅
         enablePoison: false                # 🚫
@@ -173,7 +183,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.centOSStream9Container }}
         buildFromArchive: true             # ✅
         enablePoison: false                # 🚫
@@ -189,7 +199,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.fedora38Container }}
         buildFromArchive: true             # ✅
         enablePoison: true                 # ✅
@@ -205,7 +215,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.ubuntu2204Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
@@ -241,7 +251,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
@@ -258,7 +268,7 @@ stages:
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
-        pool: ${{ variables.pool_Linux }}
+        pool: ${{ parameters.pool_Linux }}
         container: ${{ parameters.fedora38Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
