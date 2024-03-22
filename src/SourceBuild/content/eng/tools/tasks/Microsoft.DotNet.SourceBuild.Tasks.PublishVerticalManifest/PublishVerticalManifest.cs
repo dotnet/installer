@@ -79,7 +79,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
                     !assetManifestXml.Root.Attributes().Select(attribute => attribute.ToString()).All(attribute =>
                         // Ignore BuildId and AzureDevOpsBuildNumber attributes, they're different for different repos, 
                         // TODO this should be fixed with https://github.com/dotnet/source-build/issues/3934
-                        _ignoredAttributes.Any(ignoredAttribute => attribute.Contains(ignoredAttribute)) || rootAttributes.Contains(attribute))))
+                        _ignoredAttributes.Any(ignoredAttribute => attribute.StartsWith(ignoredAttribute)) || rootAttributes.Contains(attribute))))
             {
                 throw new ArgumentException("The asset manifests do not have the same root attributes.");
             }
