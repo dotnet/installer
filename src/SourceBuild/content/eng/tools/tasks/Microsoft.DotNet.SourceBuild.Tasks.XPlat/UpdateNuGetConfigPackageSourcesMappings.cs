@@ -54,6 +54,8 @@ namespace Microsoft.DotNet.Build.Tasks
         private Dictionary<string, List<string>> previouslyBuiltPackages = [];
         private Dictionary<string, List<string>> oldSourceMappingPatterns = [];
 
+        private string[] CustomSources = ["prebuilt", "net-sdk-supporting-feed"];
+
         public override bool Execute()
         {
             string xml = File.ReadAllText(NuGetConfigFile);
@@ -95,6 +97,16 @@ namespace Microsoft.DotNet.Build.Tasks
 
             XElement pkgSrcMappingClearElement = pkgSrcMappingElement.Descendants().FirstOrDefault(e => e.Name == "clear");
 
+            // Add package source mappings for local package sources
+            foreach (string packageSource in allSourcesPackages.Keys)
+            {
+                // Skip sources with zero package patterns
+                if (allSourcesPackages[packageSource] != null)
+                {
+                    pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(packageSource));
+                }
+            }
+
             // When building online add the filtered mappings from original online sources.
             // If there are none, add default mappings for all online sources.
             if (BuildWithOnlineFeeds)
@@ -106,23 +118,34 @@ namespace Microsoft.DotNet.Build.Tasks
                         // Skip sources with zero package patterns
                         if (entry.Value?.Count > 0)
                         {
-                            pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(entry.Key, entry.Value));
+                            pkgSrcMappingElement.Add(GetPackageMappingsElementForSource(entry.Key, entry.Value));
                         }
                     }
                 }
-                else
-                {
-                    AddDefaultMappingsForOnlineSources(pkgSrcMappingClearElement, pkgSourcesElement);
-                }
-            }
 
-            // Add package source mappings for local package sources
-            foreach (string packageSource in allSourcesPackages.Keys)
-            {
-                // Skip sources with zero package patterns
-                if (allSourcesPackages[packageSource] != null)
+                // Union all package sources to get the distinct list.  These will get added to
+                // the two custom sourcess (prebuilt and net-sdk-supporting-feed) and all online
+                // sources based on following logic:
+                // If there were existing mappings for online feeds, add cummulative mappings
+                // from all feeds to these two.
+                // If there were no existing mappings, add default mappings for all online feeds.
+                List<string> packagePatterns = pkgSrcMappingElement.Descendants()
+                    .Where(e => e.Name == "packageSource")
+                    .SelectMany(e => e.Descendants().Where(e => e.Name == "package"))
+                    .Select(e => e.Attribute("pattern").Value)
+                    .Distinct()
+                    .ToList();
+
+                if (oldSourceMappingPatterns.Count == 0)
                 {
-                    pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(packageSource));
+                    packagePatterns.Add("*");
+                }
+
+                AddMappingsForCustomSources(pkgSrcMappingElement, pkgSourcesElement, packagePatterns);
+
+                if (oldSourceMappingPatterns.Count == 0)
+                {
+                    AddMappingsForOnlineSources(pkgSrcMappingElement, pkgSourcesElement, packagePatterns);
                 }
             }
 
@@ -134,15 +157,48 @@ namespace Microsoft.DotNet.Build.Tasks
             return true;
         }
 
-        private void AddDefaultMappingsForOnlineSources(XElement pkgSrcMappingClearElement, XElement pkgSourcesElement)
+        private void AddMappingsForCustomSources(XElement pkgSrcMappingElement, XElement pkgSourcesElement, List<string> packagePatterns)
+        {
+            foreach (string sourceName in CustomSources)
+            {
+                if (null != pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == sourceName))
+                {
+                    ReplaceSourceMappings(pkgSrcMappingElement, sourceName, packagePatterns);
+                }
+            }
+        }
+
+        private void ReplaceSourceMappings(XElement pkgSrcMappingElement, string sourceName, List<string> packagePatterns)
+        {
+            XElement pkgSrc = new XElement("packageSource", new XAttribute("key", sourceName));
+            foreach (string packagePattern in packagePatterns)
+            {
+                pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
+            }
+
+            XElement pkgSrcMappingClearElement = pkgSrcMappingElement.Descendants().FirstOrDefault(e => e.Name == "packageSource" && e.Attribute("key").Value == sourceName);
+            if (pkgSrcMappingClearElement != null)
+            {
+                pkgSrcMappingClearElement.ReplaceWith(pkgSrc);
+            }
+            else
+            {
+                pkgSrcMappingElement.Add(pkgSrc);
+            }
+        }
+
+        private void AddMappingsForOnlineSources(XElement pkgSrcMappingElement, XElement pkgSourcesElement, List<string> packagePatterns)
         {
             foreach (string sourceName in pkgSourcesElement
                 .Descendants()
-                .Where(e => e.Name == "add" && !allSourcesPackages.Keys.Contains(e.Attribute("key").Value))
+                .Where(e => e.Name == "add" &&
+                        !SourceBuildSources.Contains(e.Attribute("key").Value) &&
+                        // SBRP Cache source is not in SourceBuildSources, skip it as it's not an online source
+                        !(e.Attribute("key").Value == SbrpCacheSourceName))
                 .Select(e => e.Attribute("key").Value)
                 .Distinct())
             {
-                pkgSrcMappingClearElement.AddAfterSelf(new XElement("packageSource", new XAttribute("key", sourceName), new XElement("package", new XAttribute("pattern", "*"))));
+                ReplaceSourceMappings(pkgSrcMappingElement, sourceName, packagePatterns);
             }
         }
 
