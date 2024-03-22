@@ -61,10 +61,6 @@ extends:
         image: 1es-windows-2022
         os: windows
 
-    componentgovernance:
-      sourceScanPath: $(Agent.BuildDirectory)/vmr
-      ignoreDirectories: $(Agent.BuildDirectory)/vmr/src
-
     stages:
     - ${{ if and(ne(variables.isPRTrigger, 'true'), eq(variables['System.TeamProject'], 'internal')) }}:
       - template: /eng/pipelines/templates/stages/vmr-scan.yml@self

@@ -51,6 +51,10 @@ extends:
         exclude:
         - repository: vmr
 
+      componentgovernance:
+        sourceScanPath: $(Agent.BuildDirectory)/vmr
+        ignoreDirectories: $(Agent.BuildDirectory)/vmr/src
+
     stages:
     - stage: VMRSynchronization
       displayName: VMR Synchronization
