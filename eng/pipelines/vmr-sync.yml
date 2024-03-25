@@ -43,12 +43,12 @@ variables:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    pool:
-      name: $(DncEngInternalBuildPool)
-      image: 1es-windows-2022-pt
-      os: windows
-
     sdl:
+      sourceAnalysisPool:
+        name: $(DncEngInternalBuildPool)
+        image: 1es-windows-2022
+        os: windows
+
       sourceRepositoriesToScan:
         exclude:
         - repository: vmr
@@ -63,5 +63,4 @@ extends:
       jobs:
       - template: /eng/pipelines/templates/jobs/vmr-synchronization.yml@self
         parameters:
-          jobName: Synchronize_VMR
           vmrBranch: ${{ variables.VmrBranch }}
