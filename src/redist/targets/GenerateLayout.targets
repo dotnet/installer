@@ -483,8 +483,13 @@
 
   <Target Name="GenerateVersionFile"
           DependsOnTargets="SetupBundledComponents;GetCommitHash;GenerateFullNuGetVersion">
+    <PropertyGroup>
+      <CommitHashForVersionFile Condition="'$(DotNetGitCommitHash)' != ''">$(DotNetGitCommitHash)</CommitHashForVersionFile>
+      <CommitHashForVersionFile Condition="'$(DotNetGitCommitHash)' == ''">$(GitCommitHash)</CommitHashForVersionFile>
+    </PropertyGroup>
+
     <WriteLinesToFile File="$(SdkOutputDirectory).version"
-                      Lines="$(GitCommitHash);$(Version);$(Rid);$(FullNugetVersion);$(SdkFeatureBand)"
+                      Lines="$(CommitHashForVersionFile);$(Version);$(Rid);$(FullNugetVersion);$(SdkFeatureBand)"
                       Overwrite="true" />
 
     <!-- This is a hack to make the full nuget version available during the publishing step -->
