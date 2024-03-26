@@ -65,7 +65,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
 
             File.WriteAllText(MergedAssetManifestOutputPath, verticalManifest.ToString());
 
-            return Log.HasLoggedErrors;
+            return !Log.HasLoggedErrors;
         }
 
         private static void VerifyAssetManifests(IReadOnlyList<XDocument> assetManifestXmls)
