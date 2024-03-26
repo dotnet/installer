@@ -4,8 +4,9 @@
     <!-- AspNetCore doesn't have a root build script but one under the eng folder. -->
     <BuildScript>$(ProjectDirectory)eng\build$(ShellExtension)</BuildScript>
 
-    <!-- On Windows, build all for the VB PoC -->
-    <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true' and '$(BuildOS)' == 'windows'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack -NativeToolsOnMachine</BuildActions>
+    <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildActions>
+    <!-- On windows, native tooling (JDK) is pre-installed on the machine. -->
+    <BuildActions Condition="'$(BuildOS)' == 'windows'">$(BuildActions) -NativeToolsOnMachine</BuildActions>
 
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildWithDesktopMSBuild>true</BuildWithDesktopMSBuild>
