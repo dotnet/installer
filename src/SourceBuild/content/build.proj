@@ -29,7 +29,7 @@
 
   <Target Name="PublishVerticalManifest" AfterTargets="Build">
     <PropertyGroup>      
-      <VerticalAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</VerticalAssetManifestOutputPath>
+      <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,7 +38,7 @@
 
     <PublishVerticalManifest 
       AssetManifest="@(RepoAssetManifest)" 
-      VerticalAssetManifestOutputPath="$(VerticalAssetManifestOutputPath)"
+      MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
       VmrBuildNumber="$(VmrBuildNumber)" />
   </Target>
 
