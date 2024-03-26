@@ -127,7 +127,7 @@
              Targets="Build" />
   </Target>
 
-  <Target Name="MergeAssetManifests"
+  <Target Name="BuildMergeAssetManifests"
           DependsOnTargets="ExtractToolPackage;BuildMSBuildSdkResolver"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)MergeAssetManifests.complete">
