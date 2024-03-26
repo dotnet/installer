@@ -8,7 +8,6 @@
     <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true' and '$(BuildOS)' == 'windows'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack -NativeToolsOnMachine</BuildActions>
 
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
-    <BuildArgs Condition="'$(DotNetBuildSourceOnly)' == 'true' or '$(BuildOS)' != 'windows'">$(BuildArgs) $(FlagParameterPrefix)no-build-repo-tasks</BuildArgs>
     <BuildWithDesktopMSBuild>true</BuildWithDesktopMSBuild>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
@@ -17,6 +16,7 @@
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
     <BuildArgs>$(BuildArgs) /p:PortableBuild=$(PortableBuild)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:TargetRuntimeIdentifier=$(TargetRid)</BuildArgs>
+    <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)no-build-repo-tasks</BuildArgs>
   </PropertyGroup>
 
   <ItemGroup>
