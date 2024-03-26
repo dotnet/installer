@@ -2,8 +2,9 @@
 
 ### Usage: $0
 ###
-###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz and
-###   installing the version of dotnet referenced in global.json
+###   Prepares the environment for a source build by downloading Private.SourceBuilt.Artifacts.*.tar.gz,
+###   installing the version of dotnet referenced in global.json,
+###   and detecting binaries and removing any non-SB allowed binaries.
 ###
 ### Options:
 ###   --no-artifacts              Exclude the download of the previously source-built artifacts archive
@@ -15,26 +16,45 @@
 ###   --runtime-source-feed       URL of a remote server or a local directory, from which SDKs and
 ###                               runtimes can be downloaded
 ###   --runtime-source-feed-key   Key for accessing the above server, if necessary
+###
+### Binary-Tooling options:
+###   --no-binary-removal         Don't remove non-SB allowed binaries
+###   --with-sdk                  Use the SDK in the specified directory
+###                               Default is the .NET SDK
+###   --with-packages             Specified directory to use as the source feed for packages
+###                               Default is the previously source-built artifacts archive.
 
 set -euo pipefail
 IFS=$'\n\t'
 
 source="${BASH_SOURCE[0]}"
-REPO_ROOT="$( cd -P "$( dirname "$0" )/../" && pwd )"
+REPO_ROOT="$( cd -P "$( dirname "$0" )" && pwd )"
 
 function print_help () {
     sed -n '/^### /,/^$/p' "$source" | cut -b 5-
 }
 
+# SB prep default arguments
 defaultArtifactsRid='centos.8-x64'
 
+# Binary Tooling default arguments
+defaultDotnetSdk="$REPO_ROOT/.dotnet"
+defaultPackagesDir="$REPO_ROOT/prereqs/packages/previously-source-built"
+
+# SB prep arguments
 buildBootstrap=true
 downloadArtifacts=true
 downloadPrebuilts=true
+removeBinaries=true
 installDotnet=true
 artifactsRid=$defaultArtifactsRid
 runtime_source_feed='' # IBM requested these to support s390x scenarios
 runtime_source_feed_key='' # IBM requested these to support s390x scenarios
+
+# Binary Tooling arguments
+dotnetSdk=$defaultDotnetSdk
+packagesDir=$defaultPackagesDir
+
 positional_args=()
 while :; do
   if [ $# -le 0 ]; then
@@ -67,6 +87,17 @@ while :; do
       ;;
     --runtime-source-feed-key)
       runtime_source_feed_key=$2
+      shift
+      ;;
+    --no-binary-removal)
+      removeBinaries=false
+      ;;
+    --with-sdk)
+      dotnetSdk=$2
+      shift
+      ;;
+    --with-packages)
+      packagesDir=$2
       shift
       ;;
     *)
@@ -188,4 +219,32 @@ fi
 
 if [ "$downloadPrebuilts" == true ]; then
   DownloadArchive Prebuilts false $artifactsRid
+fi
+
+if [ "$removeBinaries" == true ]; then
+
+  # If --with-packages is not passed, unpack PSB artifacts
+  if [[ $packagesDir == $defaultPackagesDir ]]; then
+    sourceBuiltArchive=$(find "$packagesArchiveDir" -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz')
+
+    if [ ! -d "$packagesDir" ] && [ -f "$sourceBuiltArchive" ]; then
+      echo "  Unpacking Private.SourceBuilt.Artifacts.*.tar.gz into $packagesDir"
+      mkdir -p "$packagesDir"
+      tar -xzf "$sourceBuiltArchive" -C "$packagesDir"
+    elif [ ! -f "$packagesDir/PackageVersions.props" ] && [ -f "$sourceBuiltArchive" ]; then
+      echo "  Creating $packagesDir/PackageVersions.props..."
+      tar -xzf "$sourceBuiltArchive" -C "$packagesDir" PackageVersions.props
+    elif [ ! -f "$sourceBuiltArchive" ]; then
+      echo "  ERROR: Private.SourceBuilt.Artifacts.*.tar.gz does not exist..."\
+            "Cannot remove non-SB allowed binaries. Either pass --with-packages or download the artifacts."
+      exit 1
+    fi
+  fi
+
+ "$REPO_ROOT/eng/detect-binaries.sh" \
+  --clean \
+  --allowed-binaries-file "$REPO_ROOT/eng/allowed-sb-binaries.txt" \
+  --with-packages $packagesDir \
+  --with-sdk $dotnetSdk \
+
 fi

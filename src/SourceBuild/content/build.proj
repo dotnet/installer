@@ -9,18 +9,37 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
+  <UsingTask AssemblyFile="$(MergeAssetManifestsAssembly)" TaskName="Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests" />
+
   <Target Name="Build">
     <PropertyGroup>
-      <SourceOnlyInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'"> (source-only)</SourceOnlyInfoText>
+      <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">source-build</BuildModeInfoText>
+      <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' != 'true'">non-source-build</BuildModeInfoText>
     </PropertyGroup>
 
-    <Message Text="Build Environment$(SourceOnlyInfoText): $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
+    <Message Text="Build Mode: $(BuildModeInfoText)" Importance="high" />
+    <Message Text="Build Environment: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <MSBuild Projects="$(ToolsDir)init-build.proj;
                        $(RepoProjectsDir)$(RootRepo).proj"
              Targets="Build"
              BuildInParallel="false"
              StopOnFirstFailure="true" />
+  </Target>
+
+  <Target Name="MergeAssetManifests" AfterTargets="Build">
+    <PropertyGroup>      
+      <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <RepoAssetManifest Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
+    </ItemGroup>
+
+    <Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests 
+      AssetManifest="@(RepoAssetManifest)" 
+      MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
+      VmrBuildNumber="$(VmrBuildNumber)" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
