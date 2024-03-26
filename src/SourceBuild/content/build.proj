@@ -5,7 +5,6 @@
     <!-- Fake, to satisfy the SDK. -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    <VmrBuildNumber>$(BUILD_BUILDNUMBER)</VmrBuildNumber>
   </PropertyGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
@@ -31,6 +30,7 @@
   <Target Name="MergeAssetManifests" AfterTargets="Build">
     <PropertyGroup>      
       <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
+      <VmrBuildNumber>$(BUILD_BUILDNUMBER)</VmrBuildNumber>
     </PropertyGroup>
 
     <ItemGroup>
