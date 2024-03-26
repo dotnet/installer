@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Viktor Hofer <viktor.hofer@microsoft.com>
+Date: Mon, 25 Mar 2024 16:59:27 +0100
+Subject: [PATCH] Update Padding.cs (#11122)
+
+Backport: https://github.com/dotnet/winforms/pull/11122
+
+Fixes:
+
+D:\a\_work\1\vmr\src\winforms\src\System.Windows.Forms.Primitives\src\System\Windows\Forms\Padding.cs(47,22): error IDE0100: Remove redundant equality (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0100) [D:\a\_work\1\vmr\src\winforms\src\System.Windows.Forms.Primitives\src\System.Windows.Forms.Primitives.csproj]
+
+from https://dev.azure.com/dnceng-public/public/_build/results?buildId=614433&view=logs&jobId=9050e078-31bf-5111-d8ec-8b6fa95caf9c&j=9050e078-31bf-5111-d8ec-8b6fa95caf9c&t=7c4aad8e-3f00-5c65-8153-2dae8a34a4c9
+---
+ .../src/System/Windows/Forms/Padding.cs                         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/System.Windows.Forms.Primitives/src/System/Windows/Forms/Padding.cs b/src/System.Windows.Forms.Primitives/src/System/Windows/Forms/Padding.cs
+index 92f4d25e4..43823acc2 100644
+--- a/src/System.Windows.Forms.Primitives/src/System/Windows/Forms/Padding.cs
++++ b/src/System.Windows.Forms.Primitives/src/System/Windows/Forms/Padding.cs
+@@ -44,7 +44,7 @@ public struct Padding : IEquatable<Padding>
+         readonly get => _all ? _top : -1;
+         set
+         {
+-            if (_all != true || _top != value)
++            if (!_all || _top != value)
+             {
+                 _all = true;
+                 _top = _left = _right = _bottom = value;
