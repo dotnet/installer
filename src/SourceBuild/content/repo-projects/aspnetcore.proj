@@ -7,6 +7,8 @@
     <BuildActions Condition="'$(DotNetBuildSourceOnly)' != 'true'">$(FlagParameterPrefix)restore $(FlagParameterPrefix)all $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildActions>
     <!-- On windows, native tooling (JDK) is pre-installed on the machine. -->
     <BuildActions Condition="'$(BuildOS)' == 'windows'">$(BuildActions) -NativeToolsOnMachine</BuildActions>
+    <!-- On non-windows, we don't have the JDK available and don't need to build those projects anyway because they are not consumed downstream. -->
+    <BuildActions Condition="'$(BuildOS)' != 'windows'">$(BuildActions) $(FlagParameterPrefix)no-build-java</BuildActions>
 
     <BuildArgs>$(BuildArgs) $(FlagParameterPrefix)arch $(TargetArchitecture)</BuildArgs>
     <BuildWithDesktopMSBuild>true</BuildWithDesktopMSBuild>
