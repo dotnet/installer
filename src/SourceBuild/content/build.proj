@@ -30,6 +30,7 @@
   <Target Name="MergeAssetManifests" AfterTargets="Build">
     <PropertyGroup>      
       <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
+      <VmrBuildNumber>$(BUILD_BUILDNUMBER)</VmrBuildNumber>
     </PropertyGroup>
 
     <ItemGroup>
