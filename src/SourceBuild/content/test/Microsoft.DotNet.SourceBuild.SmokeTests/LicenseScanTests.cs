@@ -103,34 +103,7 @@ public class LicenseScanTests : TestBase
         "zlib" // https://opensource.org/license/zlib/
     };
 
-    private static readonly string[] s_ignoredFilePatterns = new string[]
-    {
-        "*.bin",
-        "*.bmp",
-        "*.bson",
-        "*.db",
-        "*.dic",
-        "*.eot",
-        "*.gif",
-        "*.ico",
-        "*.jpg",
-        "*.il",
-        "*.ildump",
-        "*.lss",
-        "*.nlp",
-        "*.otf",
-        "*.pdf",
-        "*.pfx",
-        "*.png",
-        "*.snk",
-        "*.ttf",
-        "*.vsd",
-        "*.vsdx",
-        "*.winmd",
-        "*.woff",
-        "*.woff2",
-        "*.xlsx",
-    };
+    private static readonly string[] s_ignoredFilePatterns = new string[] { };
 
     private readonly string _targetRepo;
 
