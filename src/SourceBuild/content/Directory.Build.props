@@ -209,12 +209,6 @@
     <PublishVerticalManifestAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest.dll'))</PublishVerticalManifestAssembly>
   </PropertyGroup>
 
-  <!-- The predefined environmental variable `BUILD_BUILDNUMBER` is getting overwritten in repo-projects,
-    so save it in a different varialbe-->
-  <PropertyGroup>
-    <VmrBuildNumber>$(BUILD_BUILDNUMBER)"</VmrBuildNumber>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(EnablePoison)' == 'true'">
     <PoisonMarkerFile>.prebuilt.xml</PoisonMarkerFile>
     <PoisonReportDataFile>$(PackageReportDir)poison-catalog.xml</PoisonReportDataFile>
