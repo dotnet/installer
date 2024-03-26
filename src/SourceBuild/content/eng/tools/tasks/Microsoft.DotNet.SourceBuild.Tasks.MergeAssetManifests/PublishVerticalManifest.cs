@@ -10,9 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
+namespace Microsoft.DotNet.SourceBuild.Tasks
 {
-    public class PublishVerticalManifest : Task
+    public class MergeAssetManifests : Task
     {
         /// <summary>
         /// AssetManifest paths
@@ -65,7 +65,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest
 
             File.WriteAllText(MergedAssetManifestOutputPath, verticalManifest.ToString());
 
-            return true;
+            return Log.HasLoggedErrors;
         }
 
         private static void VerifyAssetManifests(IReadOnlyList<XDocument> assetManifestXmls)

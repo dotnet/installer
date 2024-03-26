@@ -9,7 +9,7 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
-  <UsingTask AssemblyFile="$(PublishVerticalManifestAssembly)" TaskName="PublishVerticalManifest" />
+  <UsingTask AssemblyFile="$(PublishVerticalManifestAssembly)" TaskName="Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests" />
 
   <Target Name="Build">
     <PropertyGroup>
@@ -30,14 +30,14 @@
   <Target Name="PublishVerticalManifest" AfterTargets="Build">
     <PropertyGroup>      
       <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
-      <VmrBuildNumber>$(BUILD_BUILDNUMBER)"</VmrBuildNumber>
+      <VmrBuildNumber>$(BUILD_BUILDNUMBER)</VmrBuildNumber>
     </PropertyGroup>
 
     <ItemGroup>
       <RepoAssetManifest Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
     </ItemGroup>
 
-    <PublishVerticalManifest 
+    <Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests 
       AssetManifest="@(RepoAssetManifest)" 
       MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
       VmrBuildNumber="$(VmrBuildNumber)" />

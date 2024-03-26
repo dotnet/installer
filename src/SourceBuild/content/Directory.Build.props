@@ -206,7 +206,7 @@
     <XPlatSourceBuildTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.XPlat', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.XPlat.dll'))</XPlatSourceBuildTasksAssembly>
     <LeakDetectionTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.LeakDetection', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll'))</LeakDetectionTasksAssembly>
     <SdkArchiveDiffTasksAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.SdkArchiveDiff.dll'))</SdkArchiveDiffTasksAssembly>
-    <PublishVerticalManifestAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.PublishVerticalManifest.dll'))</PublishVerticalManifestAssembly>
+    <MergeAssetManifestsAssembly>$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests', '$(Configuration)', 'Microsoft.DotNet.SourceBuild.Tasks.MergeAssetManifests.dll'))</MergeAssetManifestsAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(EnablePoison)' == 'true'">
