@@ -79,6 +79,7 @@ public class LicenseScanTests : TestBase
         "lzma-sdk-9.22", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/lzma-sdk-9.22.LICENSE
         "mit", // https://opensource.org/license/mit/
         "mit-addition", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/mit-addition.LICENSE
+        "mit-testregex", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/mit-testregex.LICENSE
         "ms-patent-promise", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ms-patent-promise.LICENSE
         "ms-lpl", // https://github.com/nexB/scancode-toolkit/blob/develop/src/licensedcode/data/licenses/ms-lpl.LICENSE
         "ms-pl", // https://opensource.org/license/ms-pl-html/
