@@ -26,7 +26,6 @@ variables:
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
-
 # Default to running tests in PRs and public CI, but not in official builds
 - name: _WindowsTestArg
   value: '-test'
@@ -37,10 +36,8 @@ variables:
     value: ''
   - name: _NonWindowsTestArg
     value: ''
-
 - name: _InternalRuntimeDownloadArgs
   value: ''
-
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
   - name: _InternalRuntimeDownloadArgs
@@ -63,7 +60,7 @@ stages:
     - publish: $(Build.SourcesDirectory)\eng\BuildConfiguration
       artifact: BuildConfiguration
       displayName: Publish Build Config
-  - template: /eng/build.yml
+  - template: /eng/build-pr.yml
     parameters:
       agentOs: Windows_NT
       pool:
@@ -107,7 +104,7 @@ stages:
               _TestArg: ''
 
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-    - template: /eng/build.yml
+    - template: /eng/build-pr.yml
       parameters:
         agentOs: Windows_NT
         pool:
@@ -139,7 +136,7 @@ stages:
               _TestArg: ''
         pgoInstrument: true
 
-  - template: /eng/build.yml
+  - template: /eng/build-pr.yml
     parameters:
       agentOs: Linux
       pool:
@@ -283,7 +280,7 @@ stages:
             _TestArg: $(_NonWindowsTestArg)
 
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-    - template: /eng/build.yml
+    - template: /eng/build-pr.yml
       parameters:
         agentOs: Linux
         pool:
@@ -309,7 +306,7 @@ stages:
               _TestArg: ''
         pgoInstrument: true
 
-  - template: /eng/build.yml
+  - template: /eng/build-pr.yml
     parameters:
       agentOs: Darwin
       pool:
@@ -332,25 +329,12 @@ stages:
 
   - template: /eng/common/templates/jobs/source-build.yml
 
-  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml
+  - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball-pr.yml
 
   - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml
+    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build-pr.yml
       parameters:
         dependsOn: Source_Build_Create_Tarball
-
-  # https://github.com/dotnet/core-sdk/issues/248
-  # - template: /eng/build.yml
-  #   parameters:
-  #     agentOs: FreeBSD
-  #     queue:
-  #       name: dnceng-freebsd-internal
-  #       timeoutInMinutes: 180
-  #       matrix:
-  #         Build_Release:
-  #           _BuildConfig: Release
-  #           _BuildArchitecture: 'x64'
-  #           _AdditionalBuildParameters: '/p:DisableSourceLink=true /p:DISABLE_CROSSGEN=true'
 
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
     - template: /eng/common/templates/job/publish-build-assets.yml
@@ -368,7 +352,6 @@ stages:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: NetCore1ESPool-Svc-Internal
             demands: ImageOverride -equals windows.vs2017.amd64
-
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: eng\common\templates\post-build\post-build.yml
