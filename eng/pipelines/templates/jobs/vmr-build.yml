@@ -173,7 +173,7 @@ jobs:
       displayName: Export VMR sources
       workingDirectory: $(Build.StagingDirectory)
 
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(parameters.runTests, 'True')) }}:
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(parameters.buildSourceOnly, 'True'), eq(parameters.runTests, 'True')) }}:
     - script: cp "$(sourcesPath)/src/installer/NuGet.config" "$(sourcesPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config"
       displayName: Copy Test NuGet Config
 
@@ -233,7 +233,11 @@ jobs:
     - script: |
         call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine ${{ parameters.extraProperties }}
       displayName: Build
-
+    
+    - ${{ if eq(parameters.runTests, 'True') }}:
+      - script: |
+          call $(sourcesPath)\build.cmd -test -testnobuild
+        displayName: Run Tests
   - ${{ else }}:
     - ${{ if eq(parameters.buildSourceOnly, 'true') }}:
       - script: |
@@ -341,21 +345,35 @@ jobs:
         fi
       displayName: Build
 
-  # Only run tests if enabled
-  - ${{ if eq(parameters.runTests, 'True') }}:
-    - script: |
-        set -ex
+    # Only run tests if enabled
+    - ${{ if eq(parameters.runTests, 'True') }}:
+      - script: |
+          set -ex
 
-        dockerVolumeArgs="-v $(sourcesPath):/vmr"
-        dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
-        poisonArg=''
+          buildArgs="--test --testnobuild $(additionalBuildArgs)"
 
-        if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
-          poisonArg='--poison'
-        fi
+          if [[ -n "${{ parameters.container }}" ]]; then
+            dockerVolumeArgs="-v $(sourcesPath):/vmr"
+            dockerEnvArgs=""
+            
+            if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
+              dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
 
-        docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestConsoleVerbosity=detailed
-      displayName: Run Tests
+              poisonArg=""
+
+              if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
+                poisonArg="--poison"
+              fi
+
+              buildArgs="$buildArgs --source-only $poisonArg /p:SmokeTestConsoleVerbosity=detailed"
+            fi
+
+            docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $buildArgs
+          else
+            cd $(sourcesPath)
+            ./build.sh $buildArgs
+          fi
+        displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
 
@@ -424,17 +442,30 @@ jobs:
 
   # Only upload test results if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
+    - ${{ if eq(parameters.buildSourceOnly, 'True') }}:
+      - task: PublishTestResults@2
+        displayName: Publish Source Build Smoke Test Results
+        condition: succeededOrFailed()
+        continueOnError: true
+        inputs:
+          testRunner: vSTest
+          testResultsFiles: 'test/**/*.trx'
+          searchFolder: $(sourcesPath)
+          mergeTestResults: true
+          publishRunAttachments: true
+          testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+
     - task: PublishTestResults@2
-      displayName: Publish Test Results
+      displayName: Publish Scenario Test Results
       condition: succeededOrFailed()
       continueOnError: true
       inputs:
-        testRunner: vSTest
-        testResultsFiles: 'test/**/*.trx'
+        testRunner: xUnit
+        testResultsFiles: 'artifacts/TestResults/**/*.xml'
         searchFolder: $(sourcesPath)
         mergeTestResults: true
         publishRunAttachments: true
-        testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+        testRunTitle: ScenarioTests_$(Agent.JobName)
 
   - task: CopyFiles@2
     inputs:
