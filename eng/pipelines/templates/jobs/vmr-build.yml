@@ -136,16 +136,10 @@ jobs:
       artifactName: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
 
     - output: pipelineArtifact
+      path: $(Build.ArtifactStagingDirectory)/publishing
+      artifact: $(Agent.JobName)_Artifacts
       displayName: Publish Artifacts
-      condition: and(succeededOrFailed(), eq(variables['hasAssets'], 'true'))
-      targetPath: $(sourcesPath)/artifacts/assets/Release/
-      artifactName: $(Agent.JobName)_Artifacts
-
-    - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
-      - output: pipelineArtifact
-        displayName: Publish Packages
-        targetPath: $(sourcesPath)/artifacts/packages/Release/
-        artifactName: $(Agent.JobName)_Packages
+      condition: always()
 
     - ${{ if not(parameters.isBuiltFromVmr) }}:
       - output: pipelineArtifact
@@ -327,6 +321,8 @@ jobs:
           # Allows Arcade to have access to the commit for the build, pass it through to the container
           customEnvVars="$customEnvVars BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
 
+          customEnvVars="$customEnvVars BUILD_BUILDNUMBER=$(Build.BuildNumber)"
+
           customDockerRunArgs=""
           for envVar in $customEnvVars; do
             customDockerRunArgs="$customDockerRunArgs -e $envVar"
@@ -458,7 +454,3 @@ jobs:
         SourceFolder: $(sourcesPath)/artifacts/packages
         TargetFolder: $(Build.ArtifactStagingDirectory)/publishing/packages
       displayName: Copy packages to Artifact Staging Directory
-
-  - publish: $(Build.ArtifactStagingDirectory)/publishing
-    artifact: $(Agent.JobName)_Artifacts
-    displayName: Publish Artifacts
