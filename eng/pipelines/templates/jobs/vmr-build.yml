@@ -459,6 +459,8 @@ jobs:
         TargetFolder: $(Build.ArtifactStagingDirectory)/publishing/packages
       displayName: Copy packages to Artifact Staging Directory
 
-  - publish: $(Build.ArtifactStagingDirectory)/publishing
-    artifact: $(Agent.JobName)_Artifacts
+  - task: 1ES.PublishPipelineArtifact@1
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)/publishing
+      artifactName: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
