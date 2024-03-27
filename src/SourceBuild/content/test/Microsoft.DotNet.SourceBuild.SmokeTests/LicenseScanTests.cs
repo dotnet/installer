@@ -103,7 +103,10 @@ public class LicenseScanTests : TestBase
         "zlib" // https://opensource.org/license/zlib/
     };
 
-    private static readonly string[] s_ignoredFilePatterns = new string[] { };
+    private static readonly string[] s_ignoredFilePatterns = new string[]
+    {
+        "*.ildump",
+    };
 
     private readonly string _targetRepo;
 
