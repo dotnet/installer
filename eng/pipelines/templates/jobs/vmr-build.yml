@@ -429,7 +429,7 @@ jobs:
       artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
       displayName: Publish BuildLogs
       continueOnError: true
-      condition: succeededOrFailed()
+      condition: always()
 
   # Only upload test results if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
@@ -466,5 +466,5 @@ jobs:
     - publish: $(Build.ArtifactStagingDirectory)/publishing
       artifact: $(Agent.JobName)_Artifacts
       displayName: Publish Artifacts
-      condition: always()
+      condition: succeededOrFailed()
       continueOnError: true
