@@ -22,8 +22,9 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
      * For previously source-built sources (PSB), add only the packages that do not exist in any of the current source-built sources.
      * Also add PSB packages if that package version does not exist in current package sources.
      * In offline build, remove all existing package source mappings for online sources.
-     * In online build, filter existing package source mappings to remove anything that exists in any source-build source.
-     * In online build, if NuGet.config didn't have any mappings, add default "*" pattern for all online sources.
+     * In online build, add online source mappings for all discovered packages from local sources.
+     * In online build, if NuGet.config didn't originally have any mappings, additionally,
+     * add default "*" pattern to all online source mappings.
      */
     public class UpdateNuGetConfigPackageSourcesMappings : Task
     {
@@ -50,16 +51,19 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
 
         public string ReferencePackagesSourceName { get; set; }
 
+        public string PreviouslySourceBuiltSourceName { get; set; }
+
         public string[] CustomSources { get; set; }
 
-        // allSourcesPackages contains 'package source', 'list of packages' mappings
+        // allSourcesPackages and oldSourceMappingPatterns contain 'package source', 'list of packages' mappings
         private Dictionary<string, List<string>> allSourcesPackages = [];
+        private Dictionary<string, List<string>> oldSourceMappingPatterns = [];
 
         // All other dictionaries are: 'package id', 'list of package versions'
         private Dictionary<string, List<string>> currentPackages = [];
         private Dictionary<string, List<string>> referencePackages = [];
-        private Dictionary<string, List<string>> previouslyBuiltPackages = [];
-        private Dictionary<string, List<string>> oldSourceMappingPatterns = [];
+        private Dictionary<string, List<string>> previouslySourceBuiltPackages = [];
+        private Dictionary<string, List<string>> prebuiltPackages = [];
 
         public override bool Execute()
         {
@@ -236,9 +240,20 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                 {
                     pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
                 }
-                else
+                else if (packageSource.Equals(PreviouslySourceBuiltSourceName))
                 {
-                    foreach (string version in previouslyBuiltPackages[packagePattern])
+                    foreach (string version in previouslySourceBuiltPackages[packagePattern])
+                    {
+                        if (!currentPackages[packagePattern].Contains(version))
+                        {
+                            pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
+                            break;
+                        }
+                    }
+                }
+                else // prebuilt source
+                {
+                    foreach (string version in prebuiltPackages[packagePattern])
                     {
                         if (!currentPackages[packagePattern].Contains(version))
                         {
@@ -284,9 +299,13 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                     {
                         AddToDictionary(referencePackages, id, version);
                     }
-                    else // previously built packages
+                    else if (packageSource.Equals(PreviouslySourceBuiltSourceName))
                     {
-                        AddToDictionary(previouslyBuiltPackages, id, version);
+                        AddToDictionary(previouslySourceBuiltPackages, id, version);
+                    }
+                    else // prebuilt source
+                    {
+                        AddToDictionary(prebuiltPackages, id, version);
                     }
 
                     AddToDictionary(allSourcesPackages, packageSource, id);
@@ -339,7 +358,8 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                     string pattern = package.Attribute("pattern").Value.ToLower();
                     if (!currentPackages.ContainsKey(pattern) &&
                         !referencePackages.ContainsKey(pattern) &&
-                        !previouslyBuiltPackages.ContainsKey(pattern))
+                        !previouslySourceBuiltPackages.ContainsKey(pattern) &&
+                        !prebuiltPackages.ContainsKey(pattern))
                     {
                         filteredPatterns.Add(pattern);
                     }
