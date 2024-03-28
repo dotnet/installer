@@ -1,0 +1,18 @@
+<Project>
+
+  <PropertyGroup>
+    <UnifiedBuildValidationTestsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'test', 'Microsoft.DotNet.UnifiedBuild.Tests'))</UnifiedBuildValidationTestsDir>
+    <UnifiedBuildValidationTestsProject>$([MSBuild]::NormalizePath('$(UnifiedBuildValidationTestsDir)', 'Microsoft.DotNet.UnifiedBuild.Tests.csproj'))</UnifiedBuildValidationTestsProject>
+  </PropertyGroup>
+
+  <Target Name="RunUnifiedBuildValidation"
+          AfterTargets="Build"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion">
+
+    <MSBuild Projects="$(UnifiedBuildValidationTestsProject)"
+             Targets="VSTest"
+             Properties="ExcludeFromDotNetBuild=false;VsTestUseMSBuildOutput=true" />
+
+  </Target>
+
+</Project>
