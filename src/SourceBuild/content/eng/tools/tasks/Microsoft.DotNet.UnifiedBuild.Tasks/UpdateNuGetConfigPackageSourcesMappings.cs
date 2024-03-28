@@ -43,7 +43,14 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         [Required]
         public string SbrpRepoSrcPath { get; set; }
 
-        private const string SbrpCacheSourceName = "source-build-reference-package-cache";
+        [Required]
+        public string SourceBuiltSourceNamePrefix { get; set; }
+
+        public string SbrpCacheSourceName { get; set; }
+
+        public string ReferencePackagesSourceName { get; set; }
+
+        public string[] CustomSources { get; set; }
 
         // allSourcesPackages contains 'package source', 'list of packages' mappings
         private Dictionary<string, List<string>> allSourcesPackages = [];
@@ -53,8 +60,6 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         private Dictionary<string, List<string>> referencePackages = [];
         private Dictionary<string, List<string>> previouslyBuiltPackages = [];
         private Dictionary<string, List<string>> oldSourceMappingPatterns = [];
-
-        private string[] CustomSources = ["prebuilt", "net-sdk-supporting-feed"];
 
         public override bool Execute()
         {
@@ -79,7 +84,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
             DiscoverPackagesFromAllSourceBuildSources(pkgSourcesElement);
 
             // Discover all SBRP packages if source-build-reference-package-cache source is present in NuGet.config
-            XElement sbrpCacheSourceElement = pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == SbrpCacheSourceName);
+            XElement sbrpCacheSourceElement = GetElement(pkgSourcesElement, "add", SbrpCacheSourceName);
             if (sbrpCacheSourceElement != null)
             {
                 DiscoverPackagesFromSbrpCacheSource();
@@ -101,7 +106,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
             foreach (string packageSource in allSourcesPackages.Keys)
             {
                 // Skip sources with zero package patterns
-                if (allSourcesPackages[packageSource] != null)
+                if (allSourcesPackages[packageSource]?.Count > 0)
                 {
                     pkgSrcMappingClearElement.AddAfterSelf(GetPackageMappingsElementForSource(packageSource));
                 }
@@ -111,21 +116,17 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
             // If there are none, add default mappings for all online sources.
             if (BuildWithOnlineFeeds)
             {
-                if (oldSourceMappingPatterns.Count > 0)
+                foreach (var entry in oldSourceMappingPatterns)
                 {
-                    foreach (var entry in oldSourceMappingPatterns)
+                    // Skip sources with zero package patterns
+                    if (entry.Value?.Count > 0)
                     {
-                        // Skip sources with zero package patterns
-                        if (entry.Value?.Count > 0)
-                        {
-                            pkgSrcMappingElement.Add(GetPackageMappingsElementForSource(entry.Key, entry.Value));
-                        }
+                        pkgSrcMappingElement.Add(GetPackageMappingsElementForSource(entry.Key, entry.Value));
                     }
                 }
 
-                // Union all package sources to get the distinct list.  These will get added to
-                // the two custom sourcess (prebuilt and net-sdk-supporting-feed) and all online
-                // sources based on following logic:
+                // Union all package sources to get the distinct list. These will get added to
+                // all custom sources and all online sources based on the following logic:
                 // If there were existing mappings for online feeds, add cummulative mappings
                 // from all feeds to these two.
                 // If there were no existing mappings, add default mappings for all online feeds.
@@ -159,9 +160,14 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
 
         private void AddMappingsForCustomSources(XElement pkgSrcMappingElement, XElement pkgSourcesElement, List<string> packagePatterns)
         {
+            if (CustomSources == null)
+            {
+                return;
+            }
+
             foreach (string sourceName in CustomSources)
             {
-                if (null != pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == sourceName))
+                if (null != GetElement(pkgSourcesElement, "add", sourceName))
                 {
                     ReplaceSourceMappings(pkgSrcMappingElement, sourceName, packagePatterns);
                 }
@@ -176,10 +182,10 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                 pkgSrc.Add(new XElement("package", new XAttribute("pattern", packagePattern)));
             }
 
-            XElement pkgSrcMappingClearElement = pkgSrcMappingElement.Descendants().FirstOrDefault(e => e.Name == "packageSource" && e.Attribute("key").Value == sourceName);
-            if (pkgSrcMappingClearElement != null)
+            XElement existingPkgSrcElement = GetElement(pkgSrcMappingElement, "packageSource", sourceName);
+            if (existingPkgSrcElement != null)
             {
-                pkgSrcMappingClearElement.ReplaceWith(pkgSrc);
+                existingPkgSrcElement.ReplaceWith(pkgSrc);
             }
             else
             {
@@ -216,9 +222,9 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         private XElement GetPackageMappingsElementForSource(string packageSource)
         {
             bool isCurrentSourceBuiltSource =
-                packageSource.StartsWith("source-built-") ||
+                packageSource.StartsWith(SourceBuiltSourceNamePrefix) ||
                 packageSource.Equals(SbrpCacheSourceName) ||
-                packageSource.Equals("reference-packages");
+                packageSource.Equals(ReferencePackagesSourceName);
 
             XElement pkgSrc = new XElement("packageSource", new XAttribute("key", packageSource));
             foreach (string packagePattern in allSourcesPackages[packageSource])
@@ -250,7 +256,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         {
             foreach (string packageSource in SourceBuildSources)
             {
-                XElement sourceElement = pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute("key").Value == packageSource);
+                XElement sourceElement = GetElement(pkgSourcesElement, "add", packageSource);
                 if (sourceElement == null)
                 {
                     continue;
@@ -270,11 +276,11 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                     string version = info.Version.ToLower();
 
                     // Add package with version to appropriate hashtable
-                    if (packageSource.StartsWith("source-built-"))
+                    if (packageSource.StartsWith(SourceBuiltSourceNamePrefix))
                     {
                         AddToDictionary(currentPackages, id, version);
                     }
-                    else if (packageSource.Equals("reference-packages"))
+                    else if (packageSource.Equals(ReferencePackagesSourceName))
                     {
                         AddToDictionary(referencePackages, id, version);
                     }
@@ -316,6 +322,11 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                     throw new InvalidDataException(string.Format(CultureInfo.CurrentCulture, "Invalid nuspec file", nuspecFile), ex);
                 }
             }
+        }
+
+        private XElement GetElement(XElement pkgSourcesElement, string name, string key)
+        {
+            return pkgSourcesElement.Descendants().FirstOrDefault(e => e.Name == name && e.Attribute("key").Value == key);
         }
 
         private void GetExistingFilteredSourceMappings(XElement pkgSrcMappingElement)
