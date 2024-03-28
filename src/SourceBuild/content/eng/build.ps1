@@ -8,9 +8,11 @@ Param(
   # Actions
   [switch]$clean,
   [switch][Alias('h')]$help,
+  [switch][Alias('t')]$test,
 
   # Advanced settings
-  [switch]$buildTests,
+  [switch]$buildRepoTests,
+  [switch]$testNoBuild,
   [switch]$ci,
   [switch][Alias('cwb')]$cleanWhileBuilding,
   [switch][Alias('nobl')]$excludeCIBinarylog,
@@ -28,10 +30,13 @@ function Get-Usage() {
   Write-Host "Actions:"
   Write-Host "  -clean                  Clean the solution"
   Write-Host "  -help                   Print help and exit (short: -h)"
+  Write-Host "  -test                   Run scenario tests (short: -t)"
+  Write-Host "                          Use in conjunction with -testNoBuild to run tests without building"
   Write-Host ""
 
   Write-Host "Advanced settings:"
-  Write-Host "  -build-tests            Build repository tests"
+  Write-Host "  -buildRepoTests         Build repository tests"
+  Write-Host "  -testNoBuild            Run scenario tests without building when invoked with -test"
   Write-Host "  -ci                     Set when running on CI server"
   Write-Host "  -cleanWhileBuilding     Cleans each repo after building (reduces disk space usage, short: -cwb)"
   Write-Host "  -excludeCIBinarylog     Don't output binary log (short: -nobl)"
@@ -50,19 +55,31 @@ if ($help) {
   exit 0
 }
 
+$buildProj = Join-Path $RepoRoot 'build.proj'
+
 function Build {
   InitializeToolset
 
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'Build.binlog') } else { '' }
   $cwb = if ($cleanWhileBuilding) { '/p:CleanWhileBuilding=true' } else { '' }
-  $btst = if ($buildTests) { '/p:DotNetBuildTests=true' } else { '' }
-  $buildProj = Join-Path $RepoRoot 'build.proj'
+  $btst = if ($buildRepoTests) { '/p:DotNetBuildTests=true' } else { '' }
 
   MSBuild $buildProj `
     $bl `
     /p:Configuration=$configuration `
     $cwb `
     $btst `
+    @properties
+}
+
+function Test {
+  InitializeToolset
+
+  $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'ScenarioTests.binlog') } else { '' }
+
+  MSBuild $buildProj `
+    $bl `
+    /t:Test `
     @properties
 }
 
@@ -81,7 +98,13 @@ try {
     }
   }
 
-  Build
+  if (-not ($test -and $testNoBuild)) {
+    Build
+  }
+  
+  if ($test) {
+    Test
+  }
 }
 catch {
   Write-Host $_.ScriptStackTrace

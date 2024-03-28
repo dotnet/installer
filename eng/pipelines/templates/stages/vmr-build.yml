@@ -341,6 +341,7 @@ stages:
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
+        runTests: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -351,6 +352,7 @@ stages:
         pool: ${{ parameters.pool_Windows }}
         targetOS: windows
         targetArchitecture: x64
+        runTests: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -362,6 +364,7 @@ stages:
         container: ${{ variables.androidCrossContainer }}
         targetOS: android
         targetArchitecture: arm64
+        runTests: false
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -374,6 +377,7 @@ stages:
         crossRootFs: '/crossrootfs/x64'
         targetOS: browser
         targetArchitecture: wasm
+        runTests: false
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -384,6 +388,7 @@ stages:
         pool: ${{ parameters.pool_Mac }}
         targetOS: iossimulator
         targetArchitecture: arm64
+        runTests: false
 
     ### Additional jobs for full build ###
     - ${{ if in(parameters.scope, 'full') }}:
@@ -398,6 +403,7 @@ stages:
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: arm
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -409,6 +415,7 @@ stages:
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: x64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -420,6 +427,7 @@ stages:
             container: ${{ variables.androidCrossContainer }}
             targetOS: android
             targetArchitecture: x86
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -432,6 +440,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: browser
             targetArchitecture: wasm
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeWasmEnableThreads=true
 
         - template: ../jobs/vmr-build.yml
@@ -445,6 +454,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: arm64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -457,6 +467,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -470,6 +481,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: x64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -482,6 +494,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux-bionic
             targetArchitecture: x64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -493,6 +506,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: ios
             targetArchitecture: arm64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -503,6 +517,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: ios
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -514,6 +529,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -525,6 +541,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: x64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -535,6 +552,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: iossimulator
             targetArchitecture: x64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -546,6 +564,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: arm64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -556,6 +575,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -567,6 +587,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: x64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -577,6 +598,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: maccatalyst
             targetArchitecture: x64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -588,6 +610,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvos
             targetArchitecture: arm64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -598,6 +621,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvos
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -609,6 +633,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: arm64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -619,6 +644,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: arm64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -630,6 +656,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: x64
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -640,6 +667,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: tvossimulator
             targetArchitecture: x64
+            runTests: false
             extraProperties: /p:DotNetBuildRuntimeNativeAOTRuntimePack=true
 
         - template: ../jobs/vmr-build.yml
@@ -653,6 +681,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: wasi
             targetArchitecture: wasm
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -663,6 +692,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: x64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -674,6 +704,7 @@ stages:
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: x64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -686,6 +717,7 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux
             targetArchitecture: x64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -699,6 +731,7 @@ stages:
             useMonoRuntime: true
             targetOS: linux
             targetArchitecture: x64
+            runTests: true
 
       # Mariner x64->non-x64 builds are currently broken, see https://github.com/dotnet/source-build/issues/3698
 
@@ -713,6 +746,7 @@ stages:
       #     crossRootFs: '/crossrootfs/arm64'
       #     targetOS: linux
       #     targetArchitecture: arm64
+      #     runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -723,6 +757,7 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: arm64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -734,6 +769,7 @@ stages:
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: arm64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -744,6 +780,7 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: arm64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -755,6 +792,7 @@ stages:
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x64
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -765,6 +803,7 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x86
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -776,6 +815,7 @@ stages:
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x86
+            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -786,4 +826,5 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x64
+            runTests: true
             extraProperties: /p:PgoInstrument=true

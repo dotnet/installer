@@ -18,7 +18,8 @@ usage()
   echo "Actions:"
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
-  echo "  --test                          Run smoke tests (short: -t)"
+  echo "  --test                          Run scenario tests (short: -t)"
+  echo "                                  Use in conjunction with --testnobuild to run tests without building"
   echo ""
 
   echo "Source-only settings:"
@@ -33,12 +34,13 @@ usage()
   echo ""
 
   echo "Advanced settings:"
-  echo "  --build-tests                   Build repository tests. May not be supported with --source-only"
+  echo "  --build-repo-tests              Build repository tests. May not be supported with --source-only"
   echo "  --ci                            Set when running on CI server"
   echo "  --clean-while-building          Cleans each repo after building (reduces disk space usage, short: -cwb)"
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
+  echo "  --testnobuild                   Run scenario tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -85,6 +87,7 @@ packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
+test_no_build=false
 
 properties=''
 while [[ $# > 0 ]]; do
@@ -112,8 +115,6 @@ while [[ $# > 0 ]]; do
       exit 0
       ;;
     -test|-t)
-      export NUGET_PACKAGES=$NUGET_PACKAGES/smoke-tests
-      properties="$properties /t:RunSmokeTest"
       test=true
       ;;
 
@@ -162,7 +163,7 @@ while [[ $# > 0 ]]; do
       ;;
 
     # Advanced settings
-    -build-tests)
+    -build-repo-tests)
       properties="$properties /p:DotNetBuildTests=true"
       ;;
     -ci)
@@ -180,6 +181,9 @@ while [[ $# > 0 ]]; do
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
+    -testnobuild)
+      test_no_build=true
+      ;;
 
     *)
       properties="$properties $1"
@@ -193,49 +197,61 @@ if [[ "$ci" == true ]]; then
   if [[ "$exclude_ci_binary_log" == false ]]; then
     binary_log=true
   fi
+
+  properties="$properties /p:ContinuousIntegrationBuild=true"
 fi
 
 . "$scriptroot/eng/common/tools.sh"
 
 function Build {
-  if [[ "$sourceOnly" != "true" ]]; then
+  if [[ "$sourceOnly" == "true" ]]; then
+    "$CLI_ROOT/dotnet" build-server shutdown
 
+    InvokeMsBuild "$scriptroot/eng/tools/init-build.proj" "ExtractToolPackage,BuildMSBuildSdkResolver" "BuildMSBuildSdkResolver"
+
+    # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
+    "$CLI_ROOT/dotnet" build-server shutdown
+
+    # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
+    export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
+    
+  fi
+
+  InvokeMsBuild "$scriptroot/build.proj" "Build" "Build"
+}
+
+function Test {
+  if [[ "$sourceOnly" == "true" ]]; then
+    NUGET_PACKAGES=$NUGET_PACKAGES/smoke-tests InvokeMsBuild "$scriptroot/build.proj" "RunSmokeTest" "SourceBuildSmokeTests"
+  fi
+  
+  InvokeMsBuild "$scriptroot/build.proj" "Test" "ScenarioTests"
+}
+
+function InvokeMsBuild {
+  local projectPath="$1"
+  local target="$2"
+  local logName="$3"
+
+  if [[ "$sourceOnly" == "true" ]]; then
+    "$CLI_ROOT/dotnet" msbuild "$projectPath" \
+      -t:$target \
+      -bl:"$scriptroot/artifacts/log/$configuration/$logName.binlog" \
+      -flp:LogFile="$scriptroot/artifacts/log/$configuration/$logName.log" \
+      -clp:v=m \
+      $properties
+  else
     InitializeToolset
 
     local bl=""
     if [[ "$binary_log" == true ]]; then
-      bl="/bl:\"$log_dir/Build.binlog\""
+      bl="/bl:\"$log_dir/$logName.binlog\""
     fi
-
-    MSBuild "$scriptroot/build.proj" \
+    MSBuild "$projectPath" \
+      -t:$target \
       $bl \
       /p:Configuration=$configuration \
       $properties
-
-    ExitWithExitCode 0
-
-  else
-
-    if [ "$ci" == "true" ]; then
-      properties="$properties /p:ContinuousIntegrationBuild=true"
-    fi
-
-    "$CLI_ROOT/dotnet" build-server shutdown
-
-    if [ "$test" == "true" ]; then
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildTests.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/BuildTests.log" -clp:v=m $properties
-    else
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
-
-      # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
-      "$CLI_ROOT/dotnet" build-server shutdown
-
-      # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
-      export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
-
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
-    fi
-
   fi
 }
 
@@ -367,4 +383,11 @@ if [[ "$sourceOnly" == "true" ]]; then
   echo "Found bootstrap SDK $SDK_VERSION, bootstrap Arcade $ARCADE_BOOTSTRAP_VERSION"
 fi
 
-Build
+# Run the build as long as we're not only running tests
+if [[ !("$test" == "true" && "$test_no_build" == "true") ]]; then
+  Build
+fi
+
+if [ "$test" == "true" ]; then
+  Test
+fi
