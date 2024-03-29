@@ -35,7 +35,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/test-templates -->
-    <MicrosoftDotNetTestProjectTemplates50PackageVersion>1.0.2-beta4.22064.3</MicrosoftDotNetTestProjectTemplates50PackageVersion>
     <MicrosoftDotNetTestProjectTemplates60PackageVersion>1.0.2-beta4.22064.3</MicrosoftDotNetTestProjectTemplates60PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -101,13 +100,6 @@
     <MicrosoftBuildPackageVersion>17.0.1</MicrosoftBuildPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Cross-release dependency versions -->
-    <MicrosoftDotNetCommonItemTemplates50PackageVersion>5.0.3</MicrosoftDotNetCommonItemTemplates50PackageVersion>
-    <MicrosoftAspNetCoreAppRuntime50PackageVersion>5.0.0-rc.2.20474.4</MicrosoftAspNetCoreAppRuntime50PackageVersion>
-    <MicrosoftWinFormsProjectTemplates50PackageVersion>5.0.17-servicing.22215.4</MicrosoftWinFormsProjectTemplates50PackageVersion>
-    <MicrosoftWPFProjectTemplates50PackageVersion>5.0.17-servicing.22218.2</MicrosoftWPFProjectTemplates50PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
     <HostFxrVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</HostFxrVersion>
     <SharedHostVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedHostVersion>
   </PropertyGroup>
@@ -125,13 +117,6 @@
     <MicrosoftDotNetCommonItemTemplates60PackageVersion>$(MicrosoftDotNetCommonItemTemplatesPackageVersion)</MicrosoftDotNetCommonItemTemplates60PackageVersion>
     <MicrosoftDotNetCommonProjectTemplates60PackageVersion>6.0.128</MicrosoftDotNetCommonProjectTemplates60PackageVersion>
     <AspNetCorePackageVersionFor60Templates>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCorePackageVersionFor60Templates>
-    <!-- 5.0 Template versions -->
-    <MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>$(MicrosoftWinFormsProjectTemplates50PackageVersion)</MicrosoftDotnetWinFormsProjectTemplates50PackageVersion>
-    <MicrosoftDotNetWpfProjectTemplates50PackageVersion>$(MicrosoftWPFProjectTemplates50PackageVersion)</MicrosoftDotNetWpfProjectTemplates50PackageVersion>
-    <NUnit3Templates50PackageVersion>$(NUnit3DotNetNewTemplatePackageVersion)</NUnit3Templates50PackageVersion>
-    <MicrosoftDotNetCommonItemTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonItemTemplates50PackageVersion>
-    <MicrosoftDotNetCommonProjectTemplates50PackageVersion>$(MicrosoftDotNetCommonItemTemplates50PackageVersion)</MicrosoftDotNetCommonProjectTemplates50PackageVersion>
-    <AspNetCorePackageVersionFor50Templates>5.0.17</AspNetCorePackageVersionFor50Templates>
   </PropertyGroup>
   <!-- infrastructure and test only dependencies -->
   <PropertyGroup>
