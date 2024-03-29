@@ -1,23 +1,24 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Fri, 29 Mar 2024 21:17:57 +0000
+Date: Fri, 29 Mar 2024 22:34:14 +0000
 Subject: [PATCH] Disable CA2022 error
 
+Backport: https://github.com/NuGet/Home/issues/13361
 ---
- .../Signing/Archive/SignedPackageArchiveIOUtility.cs            | 2 ++
+ .../Signing/Archive/SignedPackageArchiveUtility.cs              | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
-index cb34694d8..51b53f93c 100644
---- a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
-+++ b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
-@@ -101,7 +101,9 @@ public static void ReadAndHashUntilPosition(BinaryReader reader, HashAlgorithm h
-             {
-                 var bytesToRead = (int)Math.Min(position - currentPosition, buffer.Length);
+diff --git a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveUtility.cs b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveUtility.cs
+index 44f3dbdc2..0d133441d 100644
+--- a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveUtility.cs
++++ b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveUtility.cs
+@@ -104,7 +104,9 @@ public static Stream OpenPackageSignatureFileStream(BinaryReader reader)
+             var buffer = new byte[localFileHeader.UncompressedSize];
  
+             reader.BaseStream.Seek(offsetToData, SeekOrigin.Begin);
 +#pragma warning disable CA2022 // Avoid inexact read
-                 int bytesRead = stream.Read(buffer, offset: 0, bytesToRead);
+             reader.BaseStream.Read(buffer, offset: 0, count: buffer.Length);
 +#pragma warning restore CA2022
-                 HashBytes(hashAlgorithm, buffer, bytesRead);
-             }
  
+             return new MemoryStream(buffer, writable: false);
+         }
