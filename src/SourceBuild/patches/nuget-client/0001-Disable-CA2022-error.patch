@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Fri, 29 Mar 2024 21:17:57 +0000
+Subject: [PATCH] Disable CA2022 error
+
+---
+ .../Signing/Archive/SignedPackageArchiveIOUtility.cs            | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
+index cb34694d8..51b53f93c 100644
+--- a/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
++++ b/src/NuGet.Core/NuGet.Packaging/Signing/Archive/SignedPackageArchiveIOUtility.cs
+@@ -101,7 +101,9 @@ public static void ReadAndHashUntilPosition(BinaryReader reader, HashAlgorithm h
+             {
+                 var bytesToRead = (int)Math.Min(position - currentPosition, buffer.Length);
+ 
++#pragma warning disable CA2022 // Avoid inexact read
+                 int bytesRead = stream.Read(buffer, offset: 0, bytesToRead);
++#pragma warning restore CA2022
+                 HashBytes(hashAlgorithm, buffer, bytesRead);
+             }
+ 
