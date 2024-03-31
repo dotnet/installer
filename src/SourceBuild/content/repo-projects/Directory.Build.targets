@@ -409,6 +409,25 @@
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)') and '$(MinimalConsoleLogOutput)' == 'true'" />
   </Target>
 
+  <!-- Log the new repo artifacts -->
+  <Target Name="LogRepoArtifacts"
+          DependsOnTargets="RepoBuild"
+          Condition="'$(IsUtilityProject)' != 'true'">
+    <ItemGroup>
+      <RepoAssetManifest Include="$(RepoAssetManifestsDir)*.xml" />
+    </ItemGroup>
+
+    <Error Text="Repo manifest files don't exist." Condition="'@(RepoAssetManifest)' == ''" />
+
+    <XmlPeek XmlInputPath="%(RepoAssetManifest.Identity)"
+             Query="/Build/*[self::Package | self::Blob]/@Id">
+        <Output TaskParameter="Result" ItemName="RepoManifestArtifact" />
+    </XmlPeek>
+
+    <Message Importance="High" Text="New artifact(s) after building $(RepositoryName):" />
+    <Message Importance="High" Text="  -> %(RepoManifestArtifact)" />
+  </Target>
+
   <!-- Copy restored packages from inner build to ensure they're included in the
        main build prebuilt check -->
   <Target Name="CopyInnerBuildRestoredPackages"
@@ -548,6 +567,7 @@
           DependsOnTargets="
     BuildRepoReferences;
     RepoBuild;
+    LogRepoArtifacts;
     CopyInnerBuildRestoredPackages;
     ExtractToolPackage;
     DiscoverSymbolsArchiveFile;
