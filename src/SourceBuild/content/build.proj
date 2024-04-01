@@ -12,6 +12,7 @@
     <ScenarioTestsLocalFeedDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'feed'))</ScenarioTestsLocalFeedDir>
     <ScenarioTestsPackageExtractDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'pkg'))</ScenarioTestsPackageExtractDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
+    <ScenarioTestsProjectName>Microsoft.DotNet.ScenarioTests.SdkTemplateTests</ScenarioTestsProjectName>
   </PropertyGroup>
 
   <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.AddSourceToNuGetConfig" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
@@ -142,12 +143,18 @@
     <Unzip SourceFiles="@(_ScenarioTestPackage)" DestinationFolder="$(ScenarioTestsPackageExtractDir)" />
 
     <ItemGroup>
-      <_ScenarioTestDll Include="$(ScenarioTestsPackageExtractDir)tools/**/Microsoft.DotNet.ScenarioTests.SdkTemplateTests.dll" />
+      <_ScenarioTestDll Include="$(ScenarioTestsPackageExtractDir)tools/**/$(ScenarioTestsProjectName).dll" />
     </ItemGroup>
   </Target>
 
-  <Target Name="Test"
-          DependsOnTargets="ExtractDotNetSdkArchive;ExtractScenarioTestsPackage">
+  <PropertyGroup>
+    <RunTestsTargets>$(RunTestsTargets);RunScenarioTests</RunTestsTargets>
+  </PropertyGroup>
+
+  <Target Name="Test" DependsOnTargets="ExtractDotNetSdkArchive;ExtractScenarioTestsPackage;$(RunTestsTargets)" />
+
+  <Target Name="RunScenarioTests"
+          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(ScenarioTestsProjectName)'))">
     <Message Text="Running scenario tests: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <ItemGroup>

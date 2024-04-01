@@ -1,7 +1,9 @@
 <Project>
 
   <PropertyGroup>
-    <SmokeTestsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'test', 'Microsoft.DotNet.SourceBuild.SmokeTests'))</SmokeTestsDir>
+    <SmokeTestProjectName>Microsoft.DotNet.SourceBuild.SmokeTests</SmokeTestProjectName>
+    <SmokeTestsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'test', '$(SmokeTestProjectName)'))</SmokeTestsDir>
+    <RunTestsTargets>$(RunTestsTargets);RunSmokeTest</RunTestsTargets>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(EnablePoison)' == 'true'">
@@ -122,7 +124,8 @@
     </Touch>
   </Target>
 
-  <Target Name="RunSmokeTest">
+  <Target Name="RunSmokeTest"
+          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(SmokeTestProjectName)'))">
     <ItemGroup>
       <SdkTarballItem Include="$(ArtifactsAssetsDir)dotnet-sdk*$(ArchiveExtension)" />
       <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
@@ -145,6 +148,7 @@
             SMOKE_TESTS_TARGET_RID=$(TargetRid);
             SMOKE_TESTS_PORTABLE_RID=$(PortableRid);
             SMOKE_TESTS_CUSTOM_PACKAGES_PATH=$(CustomSourceBuiltPackagesPath);
+            NUGET_PACKAGES=$(NUGET_PACKAGES)/smoke-tests
             $(CustomTestEnvVars)" />
   </Target>
 
