@@ -30,15 +30,6 @@
     <IntermediateSymbolsRepoDir>$(IntermediateSymbolsRootDir)$(RepositoryName)</IntermediateSymbolsRepoDir>
   </PropertyGroup>
 
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateJson" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateNuGetConfigPackageSourcesMappings" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ValidateUsageAgainstBaseline" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageVersionsProps" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WritePackageUsageData" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
-
   <!-- Returns the repository references of this project and all the projects this project references, recursively -->
   <Target Name="GetTransitiveRepositoryReferences" Outputs="@(TransitiveRepositoryReference)">
     <ItemGroup>
@@ -63,11 +54,8 @@
 
     <!-- Exclude repositories that currently don't build when not building source-only. -->
     <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
-      <TransitiveRepositoryReference Remove="roslyn" />
-      <TransitiveRepositoryReference Remove="aspnetcore" />
       <TransitiveRepositoryReference Remove="nuget-client" />
       <TransitiveRepositoryReference Remove="fsharp" />
-      <TransitiveRepositoryReference Remove="vstest" />
     </ItemGroup>
   </Target>
 
@@ -78,8 +66,8 @@
     <ItemGroup Condition="'@(TransitiveRepositoryReference)' != ''">
       <RepositoryReferenceInfo Include="@(TransitiveRepositoryReference)"
                                Exclude="source-build-reference-packages">
-        <ShippingSourceName>source-built-%(Identity)</ShippingSourceName>
-        <NonShippingSourceName>source-built-transport-%(Identity)</NonShippingSourceName>
+        <ShippingSourceName>$(SourceBuiltSourceNamePrefix)%(Identity)</ShippingSourceName>
+        <NonShippingSourceName>$(SourceBuiltSourceNamePrefix)transport-%(Identity)</NonShippingSourceName>
         <ShippingPackagesPath>$(ArtifactsShippingPackagesDir)/%(Identity)/</ShippingPackagesPath>
         <NonShippingPackagesPath>$(ArtifactsNonShippingPackagesDir)/%(Identity)/</NonShippingPackagesPath>
       </RepositoryReferenceInfo>
@@ -107,6 +95,9 @@
     </Copy>
   </Target>
 
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.AddSourceToNuGetConfig" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.RemoveInternetSourcesFromNuGetConfig" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UpdateNuGetConfigPackageSourcesMappings" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="UpdateNuGetConfig"
           DependsOnTargets="CopyNuGetConfig;GetRepositoryReferenceInfo"
           Condition="'$(NuGetConfigFile)' != ''"
@@ -199,7 +190,12 @@
       NuGetConfigFile="$(NuGetConfigFile)"
       BuildWithOnlineFeeds="$(DotNetBuildWithOnlineFeeds)"
       SourceBuildSources="@(_BuildSources)"
-      SbrpRepoSrcPath="$(SbrpRepoSrcPath)" />
+      SbrpRepoSrcPath="$(SbrpRepoSrcPath)"
+      SbrpCacheSourceName="$(SbrpCacheNuGetSourceName)"
+      ReferencePackagesSourceName="$(ReferencePackagesNuGetSourceName)"
+      PreviouslySourceBuiltSourceName="$(PreviouslySourceBuiltNuGetSourceName)"
+      SourceBuiltSourceNamePrefix="$(SourceBuiltSourceNamePrefix)"
+      CustomSources="$(NetSdkSupportingFeedName)" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)UpdateNuGetConfig.complete" AlwaysCreate="true">
@@ -215,6 +211,7 @@
 
   <!-- Update the SDK version in the repo's global.json file.
        This guarantees that all repositories build with the VMR's SDK version. -->
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UpdateJson" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="UpdateGlobalJsonVersions"
           Condition="'$(GlobalJsonFile)' != ''"
           Inputs="$(MSBuildProjectFullPath);$(MSBuildThisFileFullPath)"
@@ -254,6 +251,7 @@
 
   <!-- Before a repository builds, set up the version property files that override the repo's defaults.
        There are 3 files generated -->
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.WritePackageVersionsProps" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="CreateBuildInputProps"
           DependsOnTargets="GetRepositoryReferenceInfo"
           Inputs="$(MSBuildProjectFullPath)"
@@ -600,12 +598,6 @@
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(SourceBuiltSdksDir)/" />
 
-    <!-- When unpacking, this executable file has the wrong permissions on
-         non-windows systems: https://github.com/NuGet/Home/issues/13121. -->
-    <Exec Command="chmod 755 git-clone-to-dir.sh"
-      Condition=" '%(_ToolPackage.Id)' == 'Microsoft.DotNet.Arcade.Sdk' and !$([MSBuild]::IsOSPlatform(Windows))"
-      WorkingDirectory="$(SourceBuiltSdksDir)%(_ToolPackage.Id)/tools/SourceBuild/" />
-
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
     <Touch Files="$(BaseIntermediateOutputPath)ExtractToolPackage.complete" AlwaysCreate="true">
       <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
@@ -649,6 +641,7 @@
     ExtractSymbolsArchiveFile;
     CleanupRepo" />
 
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UsageReport.WritePackageUsageData" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="WritePrebuiltUsageData"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)WritePrebuiltUsageData.complete">
@@ -723,6 +716,8 @@
     </Touch>
   </Target>
 
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UsageReport.ValidateUsageAgainstBaseline" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UsageReport.WriteUsageReports" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="ReportPrebuiltUsage"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ReportPrebuiltUsage.complete">
