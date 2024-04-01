@@ -18,7 +18,7 @@ usage()
   echo "Actions:"
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
-  echo "  --test                          Run scenario tests (short: -t)"
+  echo "  --test                          Run tests (repo tests omitted by default) (short: -t)"
   echo "                                  Use in conjunction with --testnobuild to run tests without building"
   echo ""
 
@@ -40,7 +40,7 @@ usage()
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
-  echo "  --testnobuild                   Run scenario tests without building when invoked with --test"
+  echo "  --testnobuild                   Run tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
