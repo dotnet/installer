@@ -18,7 +18,7 @@ parameters:
   enablePublishUsingPipelines: true
 
 phases:
-- template: /eng/common/templates-official/job/job.yml
+- template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
       name: PGO_${{ parameters.agentOs }}
@@ -146,7 +146,7 @@ phases:
       continueOnError: true
       condition: always()
 
-    - task: 1ES.PublishBuildArtifacts@1
+    - task: PublishBuildArtifacts@1
       displayName: Publish Logs to VSTS
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
