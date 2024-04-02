@@ -24,7 +24,6 @@
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <ProjectAssetsJsonArchiveFile>$(PackageReportDir)all-project-assets-json-files.zip</ProjectAssetsJsonArchiveFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
-    <RepoAssetsSymbolsArchive>$(ArtifactsAssetsSymbolsDir)Symbols.$(RepositoryName)$(ArchiveExtension)</RepoAssetsSymbolsArchive>
 
     <IntermediateSymbolsRepoDir>$(IntermediateSymbolsRootDir)$(RepositoryName)</IntermediateSymbolsRepoDir>
   </PropertyGroup>
@@ -425,7 +424,7 @@
     </XmlPeek>
 
     <Message Importance="High" Text="New artifact(s) after building $(RepositoryName):" />
-    <Message Importance="High" Text="  -> %(RepoManifestArtifact)" />
+    <Message Importance="High" Text="  -> %(RepoManifestArtifact.Identity)" />
   </Target>
 
   <!-- Copy restored packages from inner build to ensure they're included in the
@@ -501,6 +500,7 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
+          DependsOnTargets="RepoBuild"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
@@ -540,15 +540,18 @@
 
   <Target Name="DiscoverSymbolsArchiveFile"
           Condition="'$(DotNetBuildSourceOnly)' == 'true' and
-                     '$(IsUtilityProject)' != 'true' and
-                     Exists('$(RepoAssetsSymbolsArchive)')">
+                     '$(IsUtilityProject)' != 'true'">
+    <PropertyGroup>
+      <RepoAssetsSymbolsArchive>$(ArtifactsAssetsSymbolsDir)Symbols.$(RepositoryName)$(ArchiveExtension)</RepoAssetsSymbolsArchive>
+    </PropertyGroup>
+
     <ItemGroup>
-      <RepoSymbolsArchive Include="$(RepoAssetsSymbolsArchive)" />
+      <RepoSymbolsArchive Include="$(RepoAssetsSymbolsArchive)" Condition="Exists('$(RepoAssetsSymbolsArchive)')" />
     </ItemGroup>
   </Target>
 
   <Target Name="ExtractSymbolsArchiveFile"
-          DependsOnTargets="DiscoverSymbolsArchiveFile"
+          DependsOnTargets="RepoBuild;DiscoverSymbolsArchiveFile"
           Condition="'$(DotNetBuildSourceOnly)' == 'true' and
                      '$(IsUtilityProject)' != 'true' and
                      '@(RepoSymbolsArchive)' != ''"
