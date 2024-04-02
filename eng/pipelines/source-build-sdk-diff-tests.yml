@@ -23,22 +23,15 @@ parameters:
 jobs:
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
-    buildName: CentOSStream8_Offline_MsftSdk
-    targetRid: centos.8-x64
-    architecture: x64
-    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
-
-- template: templates/jobs/sdk-diff-tests.yml
-  parameters:
     buildName: CentOSStream9_Offline_MsftSdk
-    targetRid: centos.9-x64
+    targetRid: centos-stream.9-x64
     architecture: x64
     dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
-    buildName: Alpine317_Offline_MsftSdk
-    targetRid: alpine.3.17-x64
+    buildName: Alpine319_Offline_MsftSdk
+    targetRid: alpine.3.19-x64
     architecture: x64
     dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 
