@@ -6,8 +6,8 @@
 # This list is processed using FileSystemName.MatchesSimpleExpression
 #
 # Examples
-# 'folder/*' matches 'folder/' and 'folder/abc'
-# 'folder/?*' matches 'folder/abc' but not 'folder/'
+# 'folder/*' matches 'folder/' and 'folder/abc' but not folder/abc/def/'
+# 'folder/' is equivalent to folder/**. It matches 'folder/', 'folder/abc', and 'folder/abc/def/'
 #
 # We do not want to filter-out folder entries, therefore, we should use: '?*' and not just '*'
 

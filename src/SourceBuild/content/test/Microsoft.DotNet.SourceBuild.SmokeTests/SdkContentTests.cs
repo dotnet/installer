@@ -17,12 +17,16 @@ using Xunit.Abstractions;
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 [Trait("Category", "SdkContent")]
-public class SdkContentTests : SdkTests
+public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperFixture>
 {
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
+    private SdkTestsExclusionsHelperFixture _exclusionsFixture;
 
-    public SdkContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+    public SdkContentTests(ITestOutputHelper outputHelper, SdkTestsExclusionsHelperFixture exclusionsFixture) : base(outputHelper)
+    {
+        _exclusionsFixture = exclusionsFixture;
+    }
 
     /// <Summary>
     /// Verifies the file layout of the source built sdk tarball to the Microsoft build.
@@ -49,7 +53,7 @@ public class SdkContentTests : SdkTests
     {
         Assert.NotNull(Config.MsftSdkTarballPath);
         Assert.NotNull(Config.SdkTarballPath);
-
+        
         DirectoryInfo tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
         try
         {
@@ -80,7 +84,7 @@ public class SdkContentTests : SdkTests
         }
     }
 
-    private static void RemoveExcludedAssemblyVersionPaths(Dictionary<string, Version?> sbSdkAssemblyVersions, Dictionary<string, Version?> msftSdkAssemblyVersions)
+    private void RemoveExcludedAssemblyVersionPaths(Dictionary<string, Version?> sbSdkAssemblyVersions, Dictionary<string, Version?> msftSdkAssemblyVersions)
     {
         // Remove any excluded files as long as SB SDK's file has the same or greater assembly version compared to the corresponding
         // file in the MSFT SDK. If the version is less, the file will show up in the results as this is not a scenario
@@ -95,7 +99,7 @@ public class SdkContentTests : SdkTests
             if (sbVersion is not null &&
                 msftVersion is not null &&
                 sbVersion >= msftVersion &&
-                ExclusionsHelper.IsFileExcluded(assemblyPath, "SdkAssemblyVersionDiffExclusions.txt"))
+                _exclusionsFixture.AssemblyExclusionContext.IsFileExcluded(assemblyPath))
             {
                 sbSdkAssemblyVersions.Remove(assemblyPath);
                 msftSdkAssemblyVersions.Remove(assemblyPath);
@@ -177,7 +181,7 @@ public class SdkContentTests : SdkTests
                 string relativePath = Path.GetRelativePath(sbSdkPath, file);
                 string normalizedPath = BaselineHelper.RemoveVersions(relativePath);
 
-                if(!ExclusionsHelper.IsFileExcluded(normalizedPath, "SdkFileDiffExclusions.txt", SourceBuildSdkType))
+                if(!_exclusionsFixture.SdkExclusionContext.IsFileExcluded(normalizedPath, SourceBuildSdkType))
                 {
                     sbSdkAssemblyVersions.Add(normalizedPath, GetVersion(assemblyName));
                 }
@@ -197,7 +201,7 @@ public class SdkContentTests : SdkTests
         fileListing = BaselineHelper.RemoveRids(fileListing, isPortable);
         fileListing = BaselineHelper.RemoveVersions(fileListing);
         IEnumerable<string> files = fileListing.Split(Environment.NewLine).OrderBy(path => path);
-        files = files.Where(item => !ExclusionsHelper.IsFileExcluded(item, "SdkFileDiffExclusions.txt", sdkType));
+        files = files.Where(item => !_exclusionsFixture.SdkExclusionContext.IsFileExcluded(item, sdkType));
 
         File.WriteAllLines(outputFileName, files);
     }
@@ -209,5 +213,23 @@ public class SdkContentTests : SdkTests
 
         Regex diffSegmentRegex = new("^@@ .* @@", RegexOptions.Multiline);
         return diffSegmentRegex.Replace(result, "@@ ------------ @@");
+    }
+}
+
+public class SdkTestsExclusionsHelperFixture : IDisposable
+{
+    internal ExclusionsHelper SdkExclusionContext { get; private set; }
+    internal ExclusionsHelper AssemblyExclusionContext { get; private set; }
+
+    public SdkTestsExclusionsHelperFixture()
+    {
+        SdkExclusionContext = new ExclusionsHelper("SdkFileDiffExclusions.txt");
+        AssemblyExclusionContext = new ExclusionsHelper("SdkAssemblyVersionDiffExclusions.txt");
+    }
+
+    public void Dispose()
+    {
+        SdkExclusionContext.GenerateNewBaselineFile();
+        AssemblyExclusionContext.GenerateNewBaselineFile();
     }
 }

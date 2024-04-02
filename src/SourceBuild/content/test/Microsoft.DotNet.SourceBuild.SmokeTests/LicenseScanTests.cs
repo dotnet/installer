@@ -185,9 +185,9 @@ public class LicenseScanTests : TestBase
         // Once the license expression filtering has been applied, if a file has any licenses left, it will be included in the baseline.
         // In that case, the baseline will list all of the licenses for that file, even if some were originally excluded during this processing.
         // In other words, the baseline will be fully representative of the licenses that apply to the files that are listed there.
-
+        
         // We only care about the license expressions that are in the target repo.
-        ExclusionsHelper.ExclusionRegex = new Regex(_targetRepo);
+        ExclusionsHelper exclusionsHelper = new("LicenseExclusions.txt", _targetRepo);
 
         for (int i = scancodeResults.Files.Count - 1; i >= 0; i--)
         {
@@ -222,7 +222,7 @@ public class LicenseScanTests : TestBase
                 // target repo within the VMR. So we need to add back the beginning part of the path.
                 string fullRelativePath = Path.Combine(_relativeRepoPath, file.Path);
 
-                var remainingLicenses = disallowedLicenses.Where(license => !ExclusionsHelper.IsFileExcluded(fullRelativePath, "LicenseExclusions.txt", license));
+                var remainingLicenses = disallowedLicenses.Where(license => !exclusionsHelper.IsFileExcluded(fullRelativePath, license));
 
                 if (!remainingLicenses.Any())
                 {
@@ -230,9 +230,8 @@ public class LicenseScanTests : TestBase
                 }
             }
         }
+        exclusionsHelper.GenerateNewBaselineFile();
     }
-
-    private record LicenseExclusion(string Repo, string Path, IEnumerable<string> LicenseExpressions);
 
     private class ScancodeResults
     {
