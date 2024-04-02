@@ -53,7 +53,7 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
     {
         Assert.NotNull(Config.MsftSdkTarballPath);
         Assert.NotNull(Config.SdkTarballPath);
-        
+
         DirectoryInfo tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
         try
         {
