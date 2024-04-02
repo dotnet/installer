@@ -117,7 +117,7 @@
   </Target>
 
   <PropertyGroup>
-    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkTarball</ExtractDotNetSdkArchiveDependsOn>
+    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkArchive</ExtractDotNetSdkArchiveDependsOn>
     <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.zip'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkZip</ExtractDotNetSdkArchiveDependsOn>
     <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.tar.gz'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkTarball</ExtractDotNetSdkArchiveDependsOn>
   </PropertyGroup>
@@ -127,12 +127,12 @@
 
   <Target Name="ExtractDotNetSdkTarball">
     <MakeDir Directories="$(DotNetInstallDir)" />
-    <Exec Command="tar -xzf @(SdkTarballItem) -C $(DotNetInstallDir)" />
+    <Exec Command="tar -xzf @(SdkArchiveItem) -C $(DotNetInstallDir)" />
   </Target>
 
   <Target Name="ExtractDotNetSdkZip">
     <MakeDir Directories="$(DotNetInstallDir)" />
-    <Unzip SourceFiles="@(SdkTarballItem)" DestinationFolder="$(DotNetInstallDir)" />
+    <Unzip SourceFiles="@(SdkArchiveItem)" DestinationFolder="$(DotNetInstallDir)" />
   </Target>
 
   <Target Name="ExtractScenarioTestsPackage">

@@ -142,7 +142,7 @@
           AfterTargets="Build"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
 
-    <Copy SourceFiles="@(SdkTarballItem)"
+    <Copy SourceFiles="@(SdkArchiveItem)"
           DestinationFolder="$(ArtifactsAssetsDir)"
           SkipUnchangedFiles="true"
           UseHardlinksIfPossible="true" />

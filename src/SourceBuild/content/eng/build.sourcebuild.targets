@@ -42,7 +42,7 @@
 
       <IntermediateSdkSymbolsLayout>$(BaseIntermediateOutputPath)SdkSymbols</IntermediateSdkSymbolsLayout>
       <IntermediateSdkLayout>$(BaseIntermediateOutputPath)Sdk</IntermediateSdkLayout>
-      <SdkTarball>%(SdkTarballItem.Identity)</SdkTarball>
+      <SdkTarball>%(SdkArchiveItem.Identity)</SdkTarball>
     </PropertyGroup>
 
     <MakeDir Directories="$(IntermediateSdkLayout)" />
@@ -127,13 +127,13 @@
   <Target Name="RunSmokeTest"
           Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(SmokeTestProjectName)'))">
     <ItemGroup>
-      <SdkTarballItem Include="$(ArtifactsAssetsDir)dotnet-sdk*$(ArchiveExtension)" />
+      <SdkArchiveItem Include="$(ArtifactsAssetsDir)dotnet-sdk*$(ArchiveExtension)" />
       <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
     </ItemGroup>
 
     <PropertyGroup>
       <CustomTestEnvVars Condition="'$(EnablePoison)' == 'true'">SMOKE_TESTS_POISON_REPORT_PATH=$(PoisonUsageReportFile);</CustomTestEnvVars>
-      <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
+      <SdkTarballPath>%(SdkArchiveItem.Identity)</SdkTarballPath>
       <SourceBuiltArtifactsPath>%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
       <SmokeTestConsoleVerbosity Condition="'$(SmokeTestConsoleVerbosity)' == ''">normal</SmokeTestConsoleVerbosity>
     </PropertyGroup>

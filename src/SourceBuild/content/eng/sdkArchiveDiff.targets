@@ -11,7 +11,7 @@
       <Message Text="Comparing built SDK against closest official build"
                Importance="High"/>
 
-      <GetValidArchiveItems ArchiveItems="@(SdkTarballItem)"
+      <GetValidArchiveItems ArchiveItems="@(SdkArchiveItem)"
                             ArchiveName="dotnet-sdk">
         <Output TaskParameter="ValidArchiveItems"
                 ItemName="_BuiltSdkArchivePath"/>
