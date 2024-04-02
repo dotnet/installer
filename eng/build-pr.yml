@@ -18,7 +18,7 @@ parameters:
   enablePublishUsingPipelines: true
 
 phases:
-- template: /eng/common/templates-official/job/job.yml
+- template: /eng/common/templates/job/job.yml
   parameters:
     ${{ if parameters.pgoInstrument }}:
       name: PGO_${{ parameters.agentOs }}
@@ -126,9 +126,10 @@ phases:
         displayName: Build
 
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(parameters.agentOs, 'Windows_NT'), ne(variables['PostBuildSign'], 'true')) }}:
-      - task: 1ES.PublishNuget@1
+      - task: NuGetCommand@2
         displayName: Push Visual Studio NuPkgs
         inputs:
+          command: push
           packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/$(_BuildConfig)/NonShipping/VS.*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: 'DevDiv - VS package feed'
@@ -155,7 +156,7 @@ phases:
       continueOnError: true
       condition: always()
 
-    - task: 1ES.PublishBuildArtifacts@1
+    - task: PublishBuildArtifacts@1
       displayName: Publish Logs to VSTS
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
