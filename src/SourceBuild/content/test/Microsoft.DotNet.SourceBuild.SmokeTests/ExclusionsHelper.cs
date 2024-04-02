@@ -18,18 +18,18 @@ internal class ExclusionsHelper
 {
     private const string NullSuffix = "NULL_SUFFIX";
 
-    private string _exclusionsFileName = string.Empty;
+    private readonly string _exclusionsFileName;
 
     // Use this to narrow down the scope of exclusions to a specific category.
     // For instance, setting this to "test-templates" will consider 
     // "src/test-templates/exclusions.txt" but not "src/arcade/exclusions.txt".
-    private Regex? _exclusionRegex;
+    private readonly Regex? _exclusionRegex;
 
-    private Dictionary<string, HashSet<string>> _suffixToExclusions;
+    private readonly Dictionary<string, HashSet<string>> _suffixToExclusions;
 
-    private Dictionary<string, HashSet<string>> _suffixToUnusedExclusions;
+    private readonly Dictionary<string, HashSet<string>> _suffixToUnusedExclusions;
 
-    public ExclusionsHelper(string exclusionsFileName, string? exclusionRegexString = "")
+    public ExclusionsHelper(string exclusionsFileName, string? exclusionRegexString = null)
     {
         if (exclusionsFileName is null)
         {
@@ -55,7 +55,7 @@ internal class ExclusionsHelper
             (suffix != NullSuffix && CheckAndRemoveIfExcluded(filePath, NullSuffix));
     }
 
-    internal void GenerateNewBaselineFile()
+    internal void GenerateNewBaselineFile(string? updatedFileTag = null)
     {
         string exclusionsFilePath = Path.Combine(BaselineHelper.GetAssetsDirectory(), _exclusionsFileName);
 
@@ -63,10 +63,12 @@ internal class ExclusionsHelper
 
         var newLines = lines
             .Select(line => UpdateExclusionsLine(line))
-            .Where(line => line is not null)
-            .ToArray() ?? Array.Empty<string>();
+            .Where(line => line is not null);
 
-        string actualFilePath = Path.Combine(TestBase.LogsDirectory, $"Updated{_exclusionsFileName}");
+        string updatedFileName = updatedFileTag is null
+            ? $"Updated{_exclusionsFileName}"
+            : $"Updated{Path.GetFileNameWithoutExtension(_exclusionsFileName)}.{updatedFileTag}{Path.GetExtension(_exclusionsFileName)}";
+        string actualFilePath = Path.Combine(TestBase.LogsDirectory, updatedFileName);
         File.WriteAllLines(actualFilePath, newLines!);
     }
 
@@ -105,25 +107,16 @@ internal class ExclusionsHelper
                 // Only include exclusions that match the exclusion regex
                 return _exclusionRegex is null || _exclusionRegex.IsMatch(parts[0]);
             })
-            .Select(parts => new
-            {
-                // Split the line into the exclusion and the suffixes
-                Line = parts[0],
-                Suffixes = parts.Length > 1
-                    ? parts[1].Split(',').Select(suffix => suffix.Trim())
-                    : new string[] { NullSuffix }
-            })
             .SelectMany(parts =>
+            {
                 // Create a new object for each suffix
-                parts.Suffixes.Select(suffix => new
-                {
-                    parts.Line,
-                    Suffix = suffix
-                })
-            )
+                return parts.Length == 1
+                    ? new[] { new { Exclusion = parts[0], Suffix = NullSuffix } }
+                    : parts[1].Split(',').Select(suffix => new { Exclusion = parts[0], Suffix = suffix.Trim() });
+            })
             .GroupBy(
                 parts => parts.Suffix,
-                parts => parts.Line
+                parts => parts.Exclusion
             )
             .ToDictionary(
                 group => group.Key,

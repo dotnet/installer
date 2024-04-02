@@ -17,16 +17,12 @@ using Xunit.Abstractions;
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 [Trait("Category", "SdkContent")]
-public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperFixture>
+public class SdkContentTests : SdkTests
 {
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
-    private SdkTestsExclusionsHelperFixture _exclusionsFixture;
 
-    public SdkContentTests(ITestOutputHelper outputHelper, SdkTestsExclusionsHelperFixture exclusionsFixture) : base(outputHelper)
-    {
-        _exclusionsFixture = exclusionsFixture;
-    }
+    public SdkContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     /// <Summary>
     /// Verifies the file layout of the source built sdk tarball to the Microsoft build.
@@ -40,8 +36,11 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
     {
         const string msftFileListingFileName = "msftSdkFiles.txt";
         const string sbFileListingFileName = "sbSdkFiles.txt";
-        WriteTarballFileList(Config.MsftSdkTarballPath, msftFileListingFileName, isPortable: true, MsftSdkType);
-        WriteTarballFileList(Config.SdkTarballPath, sbFileListingFileName, isPortable: false, SourceBuildSdkType);
+
+        ExclusionsHelper exclusionsHelper = new ExclusionsHelper("SdkFileDiffExclusions.txt");
+        WriteTarballFileList(Config.MsftSdkTarballPath, msftFileListingFileName, isPortable: true, MsftSdkType, exclusionsHelper);
+        WriteTarballFileList(Config.SdkTarballPath, sbFileListingFileName, isPortable: false, SourceBuildSdkType, exclusionsHelper);
+        exclusionsHelper.GenerateNewBaselineFile("FileList");
 
         string diff = BaselineHelper.DiffFiles(msftFileListingFileName, sbFileListingFileName, OutputHelper);
         diff = RemoveDiffMarkers(diff);
@@ -89,6 +88,7 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
         // Remove any excluded files as long as SB SDK's file has the same or greater assembly version compared to the corresponding
         // file in the MSFT SDK. If the version is less, the file will show up in the results as this is not a scenario
         // that is valid for shipping.
+        ExclusionsHelper exclusionsHelper = new ExclusionsHelper("SdkAssemblyVersionDiffExclusions.txt");
         string[] sbSdkFileArray = sbSdkAssemblyVersions.Keys.ToArray();
         for (int i = sbSdkFileArray.Length - 1; i >= 0; i--)
         {
@@ -99,12 +99,13 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
             if (sbVersion is not null &&
                 msftVersion is not null &&
                 sbVersion >= msftVersion &&
-                _exclusionsFixture.AssemblyExclusionContext.IsFileExcluded(assemblyPath))
+                exclusionsHelper.IsFileExcluded(assemblyPath))
             {
                 sbSdkAssemblyVersions.Remove(assemblyPath);
                 msftSdkAssemblyVersions.Remove(assemblyPath);
             }
         }
+        exclusionsHelper.GenerateNewBaselineFile();
     }
 
     private static void WriteAssemblyVersionsToFile(Dictionary<string, Version?> assemblyVersions, string outputPath)
@@ -170,6 +171,7 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
 
     private Dictionary<string, Version?> GetSbSdkAssemblyVersions(string sbSdkPath)
     {
+        ExclusionsHelper exclusionsHelper = new("SdkFileDiffExclusions.txt");
         Dictionary<string, Version?> sbSdkAssemblyVersions = new();
         foreach (string file in Directory.EnumerateFiles(sbSdkPath, "*", SearchOption.AllDirectories))
         {
@@ -181,16 +183,17 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
                 string relativePath = Path.GetRelativePath(sbSdkPath, file);
                 string normalizedPath = BaselineHelper.RemoveVersions(relativePath);
 
-                if(!_exclusionsFixture.SdkExclusionContext.IsFileExcluded(normalizedPath, SourceBuildSdkType))
+                if(!exclusionsHelper.IsFileExcluded(normalizedPath, SourceBuildSdkType))
                 {
                     sbSdkAssemblyVersions.Add(normalizedPath, GetVersion(assemblyName));
                 }
             }
         }
+        exclusionsHelper.GenerateNewBaselineFile("AssemblyVersions");
         return sbSdkAssemblyVersions;
     }
 
-    private void WriteTarballFileList(string? tarballPath, string outputFileName, bool isPortable, string sdkType)
+    private void WriteTarballFileList(string? tarballPath, string outputFileName, bool isPortable, string sdkType, ExclusionsHelper exclusionsHelper)
     {
         if (!File.Exists(tarballPath))
         {
@@ -201,7 +204,7 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
         fileListing = BaselineHelper.RemoveRids(fileListing, isPortable);
         fileListing = BaselineHelper.RemoveVersions(fileListing);
         IEnumerable<string> files = fileListing.Split(Environment.NewLine).OrderBy(path => path);
-        files = files.Where(item => !_exclusionsFixture.SdkExclusionContext.IsFileExcluded(item, sdkType));
+        files = files.Where(item => !exclusionsHelper.IsFileExcluded(item, sdkType));
 
         File.WriteAllLines(outputFileName, files);
     }
@@ -213,23 +216,5 @@ public class SdkContentTests : SdkTests, IClassFixture<SdkTestsExclusionsHelperF
 
         Regex diffSegmentRegex = new("^@@ .* @@", RegexOptions.Multiline);
         return diffSegmentRegex.Replace(result, "@@ ------------ @@");
-    }
-}
-
-public class SdkTestsExclusionsHelperFixture : IDisposable
-{
-    internal ExclusionsHelper SdkExclusionContext { get; private set; }
-    internal ExclusionsHelper AssemblyExclusionContext { get; private set; }
-
-    public SdkTestsExclusionsHelperFixture()
-    {
-        SdkExclusionContext = new ExclusionsHelper("SdkFileDiffExclusions.txt");
-        AssemblyExclusionContext = new ExclusionsHelper("SdkAssemblyVersionDiffExclusions.txt");
-    }
-
-    public void Dispose()
-    {
-        SdkExclusionContext.GenerateNewBaselineFile();
-        AssemblyExclusionContext.GenerateNewBaselineFile();
     }
 }

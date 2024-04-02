@@ -230,7 +230,7 @@ public class LicenseScanTests : TestBase
                 }
             }
         }
-        exclusionsHelper.GenerateNewBaselineFile();
+        exclusionsHelper.GenerateNewBaselineFile(_targetRepo);
     }
 
     private class ScancodeResults
