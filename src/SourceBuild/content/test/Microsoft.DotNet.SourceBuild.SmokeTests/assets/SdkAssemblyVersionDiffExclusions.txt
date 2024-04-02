@@ -5,11 +5,14 @@
 #
 # This list is processed using FileSystemName.MatchesSimpleExpression
 #
-# Examples
-# 'folder/*' matches 'folder/' and 'folder/abc' but not 'folder/abc/def/'
-# 'folder/' is equivalent to folder/**. It matches 'folder/', 'folder/abc', and 'folder/abc/def/'
+# '*' in exclusions match zero or more characters.
+# '*' will match files and directory names but it will not match separator characters.
 #
-# We do not want to filter-out folder entries, therefore, we should use: '?*' and not just '*'
+# '/' will be evaluated as '/**' if it is the last character.
+#
+# Examples
+# 'folder/*' matches all files and directories in 'folder/'. It will not match 'folder/abc/def'
+# 'folder/' is equivalent to 'folder/**. It matches 'folder/', 'folder/abc', and 'folder/abc/def/'
 
 # Referenced 6.0/7.0 assemblies (https://github.com/dotnet/sdk/issues/34245)
 ./sdk/x.y.z/Microsoft.Extensions.FileProviders.Abstractions.dll

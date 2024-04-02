@@ -8,11 +8,14 @@
 #   msft = Microsoft built SDK
 #   sb   = source-built SDK
 #
-# Examples
-# 'folder/*' matches 'folder/' and 'folder/abc' but not 'folder/abc/def/'
-# 'folder/' is equivalent to folder/**. It matches 'folder/', 'folder/abc', and 'folder/abc/def/'
+# '*' in exclusions match zero or more characters.
+# '*' will match files and directory names but it will not match separator characters.
 #
-# We do not want to filter-out folder entries, therefore, we should use: '?*' and not just '*'
+# '/' will be evaluated as '/**' if it is the last character.
+#
+# Examples
+# 'folder/*' matches all files and directories in 'folder/'. It will not match 'folder/abc/def'
+# 'folder/' is equivalent to 'folder/**. It matches 'folder/', 'folder/abc', and 'folder/abc/def/'
 
 ./sdk/x.y.z/TestHostNetFramework/|msft   # Intentional - MSFT build includes test-host that targets netcoreapp3.1
 ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.WindowsDesktop/|msft   # Intentional - explicitly excluded from source-build
