@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Wed, 3 Apr 2024 21:20:52 +0000
+Subject: [PATCH] Pass SourceBuiltSymbolsDir property to inner build
+
+---
+ eng/DotNetBuild.props | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/eng/DotNetBuild.props b/eng/DotNetBuild.props
+index 56609e6046a..06ea2ee0466 100644
+--- a/eng/DotNetBuild.props
++++ b/eng/DotNetBuild.props
+@@ -75,11 +75,12 @@
+       <InnerBuildArgs Condition="'$(PortableBuild)' != ''">$(InnerBuildArgs) /p:PortableBuild=$(PortableBuild)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(RestoreConfigFile)' != ''">$(InnerBuildArgs) /p:RestoreConfigFile=$(RestoreConfigFile)</InnerBuildArgs>
+ 
+-      <!-- Pass locations for assets and packages -->
++      <!-- Pass locations for assets, packages and symbols -->
+       <InnerBuildArgs Condition="'$(SourceBuiltAssetsDir)' != ''">$(InnerBuildArgs) /p:SourceBuiltAssetsDir=$(SourceBuiltAssetsDir)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(SourceBuiltShippingPackagesDir)' != ''">$(InnerBuildArgs) /p:SourceBuiltShippingPackagesDir=$(SourceBuiltShippingPackagesDir)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(SourceBuiltNonShippingPackagesDir)' != ''">$(InnerBuildArgs) /p:SourceBuiltNonShippingPackagesDir=$(SourceBuiltNonShippingPackagesDir)</InnerBuildArgs>
+       <InnerBuildArgs Condition="'$(SourceBuiltAssetManifestsDir)' != ''">$(InnerBuildArgs) /p:SourceBuiltAssetManifestsDir=$(SourceBuiltAssetManifestsDir)</InnerBuildArgs>
++      <InnerBuildArgs Condition="'$(SourceBuiltSymbolsDir)' != ''">$(InnerBuildArgs) /p:SourceBuiltSymbolsDir=$(SourceBuiltSymbolsDir)</InnerBuildArgs>
+     </PropertyGroup>
+   </Target>
+ 

@@ -59,6 +59,8 @@
     <VMRGlobalJsonContents>$([System.IO.File]::ReadAllText($(RepoRoot)global.json))</VMRGlobalJsonContents>
     <NoTargetsSdkVersion>$([System.Text.RegularExpressions.Regex]::Match($(VMRGlobalJsonContents), '"Microsoft.Build.NoTargets": "([^"]*)"').Groups.get_Item(1))</NoTargetsSdkVersion>
     <TraversalSdkVersion>$([System.Text.RegularExpressions.Regex]::Match($(VMRGlobalJsonContents), '"Microsoft.Build.Traversal": "([^"]*)"').Groups.get_Item(1))</TraversalSdkVersion>
+
+    <IntermediateSymbolsRepoDir>$([MSBuild]::NormalizeDirectory('$(IntermediateSymbolsRootDir)', '$(RepositoryName)'))</IntermediateSymbolsRepoDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildOS)' == 'windows'">
@@ -99,6 +101,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <BuildArgs>$(BuildArgs) /p:SourceBuiltSymbolsDir=$(IntermediateSymbolsRepoDir)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:ArcadeBuildFromSource=true</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:DotNetBuildSourceOnly=true</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:PreviouslySourceBuiltNupkgCacheDir="$(PrebuiltSourceBuiltPackagesPath)"</BuildArgs>
