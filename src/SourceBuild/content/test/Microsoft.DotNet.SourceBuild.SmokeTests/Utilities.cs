@@ -160,14 +160,6 @@ public static class Utilities
         outputHelper.WriteLine("##vso[task.complete result=SucceededWithIssues;]");
     }
 
-    public static void ValidateNotNullOrWhiteSpace(string? variable, string variableName)
-    {
-        if (string.IsNullOrWhiteSpace(variable))
-        {
-            throw new ArgumentException($"{variableName} is null, empty, or whitespace.");
-        }
-    }
-
     public static string GetFile(string path, string pattern)
     {
         string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);

@@ -1,20 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>$(NetCurrent)</TargetFramework>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
+    <!-- Set manually as the project name doesn't follow the Arcade conventions. -->
+    <IsTestProject>true</IsTestProject>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
+    <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings
+         Workaround https://github.com/dotnet/source-build/issues/4003 by disabling VSTestUseMSBuildOutput -->
+    <VSTestUseMSBuildOutput>false</VSTestUseMSBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="7.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="xunit" Version="2.5.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1" />
-
-    <!-- Pin transitive package versions -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +21,99 @@
              CopyToOutputDirectory="Always" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\..\packages\smoke-test-prereqs\*"
-             CopyToOutputDirectory="Always"
-             Link="assets\smoke-tests\prereq-packages\%(Filename)%(Extension)" />
-  </ItemGroup>
+  <Target Name="SetRuntimeConfigOptions"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion"
+          BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
+    <ItemGroup>
+      <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <SourceBuiltArtifactsPath>%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Required values -->
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.DotNetDirectory">
+        <Value>$(TargetDir)extracted-sdk</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.TargetRid">
+        <Value>$(TargetRid)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PortableRid">
+        <Value>$(PortableRid)</Value>
+      </RuntimeHostConfigurationOption>
+
+      <!-- Optional values -->
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.CustomPackagesPath">
+        <Value>$(SmokeTestsCustomSourceBuiltPackagesPath)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.ExcludeOmniSharpTests">
+        <Value>$(SmokeTestsExcludeOmniSharpTests)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.IncludeArtifactsSize">
+        <Value>$(SmokeTestsIncludeArtifactsSize)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.MsftSdkTarballPath">
+        <Value>$(MsftSdkTarballPath)</Value>
+      </RuntimeHostConfigurationOption>      
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PoisonReportPath"
+                                      Condition="'$(EnablePoison)' == 'true' and Exists('$(PoisonUsageReportFile)')">
+        <Value>$(PoisonUsageReportFile)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PrereqsPath">
+        <Value>$(SmokeTestsPrereqsPath)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.SdkTarballPath">
+        <Value>$(SdkTarballPath)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.SourceBuiltArtifactsPath">
+        <Value>$(SourceBuiltArtifactsPath)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.WarnOnLicenseScanDiffs">
+        <Value>$(SmokeTestsWarnOnLicenseScanDiffs)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.WarnOnSdkContentDiffs">
+        <Value>$(SmokeTestsWarnOnSdkContentDiffs)</Value>
+      </RuntimeHostConfigurationOption>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CheckIfCreateSmokeTestPrereqsExistToPack"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion">
+    <PropertyGroup>
+      <!-- NuGet package cache directory -->
+      <SmokeTestsPackagesDir>$(TargetDir)packages/</SmokeTestsPackagesDir>
+      <SmokeTestPrereqsArchive>$(ArtifactsAssetsDir)dotnet-smoke-test-prereqs.$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SmokeTestPrereqsArchive>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SmokeTestsPrereq Include="$(SmokeTestsPackagesDir)**/*.nupkg" />
+    </ItemGroup>
+
+    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(SmokeTestsPackagesDir)'." Importance="High" />
+  </Target>
+
+  <!-- The target is automatically skipped when @(SmokeTestsPrereq) is empty. -->
+  <Target Name="CreateSmokeTestPrereqsArchiveIfPrereqsExist"
+          Condition="'$(SkipSmokeTestPrereqsArchiveCreation)' != 'true'"
+          DependsOnTargets="CheckIfCreateSmokeTestPrereqsExistToPack"
+          AfterTargets="Test"
+          Inputs="@(SmokeTestsPrereq)"
+          Outputs="$(SmokeTestPrereqsArchive)">
+    <PropertyGroup>
+      <SmokeTestsIntermediatePrereqPackagesDir>$(IntermediateOutputPath)prereq-packages/</SmokeTestsIntermediatePrereqPackagesDir>
+    </PropertyGroup>
+
+    <Copy SourceFiles="@(SmokeTestsPrereq)"
+          DestinationFolder="$(SmokeTestsIntermediatePrereqPackagesDir)"
+          SkipUnchangedFiles="true" />
+
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(SmokeTestPrereqsArchive)'))" />
+    <Exec Command="tar --numeric-owner -czf $(SmokeTestPrereqsArchive) ."
+          WorkingDirectory="$(SmokeTestsIntermediatePrereqPackagesDir)" />
+
+    <Message Importance="High" Text="Packaged smoke-test prereqs in '$(SmokeTestPrereqsArchive)'" />
+  </Target>
 
 </Project>

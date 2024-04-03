@@ -112,13 +112,15 @@ public class LicenseScanTests : TestBase
 
     private readonly string _targetRepo;
 
+    public bool ShouldScanForLicenses => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
+
     public LicenseScanTests(ITestOutputHelper outputHelper) : base(outputHelper)
     {
         Assert.NotNull(Config.LicenseScanPath);
         _targetRepo = new DirectoryInfo(Config.LicenseScanPath).Name;
     }
 
-    [SkippableFact(Config.LicenseScanPathEnv, skipOnNullOrWhiteSpaceEnv: true)]
+    [ConditionalFact(typeof(typeof(LicenseScanTests), nameof(ShouldScanForLicenses))]
     public void ScanForLicenses()
     {
         Assert.NotNull(Config.LicenseScanPath);

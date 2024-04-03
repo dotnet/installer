@@ -72,7 +72,7 @@ internal class DotNetHelper
             if (!Directory.Exists(Config.PrereqsPath))
             {
                 throw new InvalidOperationException(
-                    $"Prereqs path '{Config.PrereqsPath}' specified in {Config.PrereqsPathEnv} does not exist.");
+                    $"Prereqs path '{Config.PrereqsPath}' specified via /p:SmokeTestsPrereqsPath='...' does not exist.");
             }
 
             string nugetConfig = File.ReadAllText(nugetConfigPath);

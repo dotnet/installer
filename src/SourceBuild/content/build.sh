@@ -113,7 +113,7 @@ while [[ $# > 0 ]]; do
       ;;
     -test|-t)
       export NUGET_PACKAGES=$NUGET_PACKAGES/smoke-tests
-      properties="$properties /t:RunSmokeTest"
+      properties="$properties /t:Test"
       test=true
       ;;
 

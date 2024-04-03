@@ -23,9 +23,11 @@ public class OmniSharpTests : SdkTests
 
     private string OmniSharpDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(OmniSharpTests));
 
+    public bool ShouldVerifyScenario => !Config.ExcludeOmniSharp && Config.TargetArchitecture != "ppc64le" && Config.TargetArchitecture != "s390x";
+
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [SkippableTheory(Config.ExcludeOmniSharpEnv, skipOnTrueEnv: true, skipArchitectures: new[] { "ppc64le", "s390x" })]
+    [ConditionalTheoryAttribute(typeof(OmniSharpTests), nameof(ShouldVerifyScenario))]
     [InlineData(DotNetTemplate.BlazorWasm)]
     [InlineData(DotNetTemplate.ClassLib)]
     [InlineData(DotNetTemplate.Console)]

@@ -42,13 +42,9 @@ public class ArtifactsSizeTest : SdkTests
         }
     }
 
-    [SkippableFact(Config.IncludeArtifactsSizeEnv, skipOnFalseEnv: true)]
+    [ConditionalFact(typeof(Config), nameOf(IncludeArtifactsSize))]
     public void CompareArtifactsToBaseline()
     {
-        Utilities.ValidateNotNullOrWhiteSpace(Config.SourceBuiltArtifactsPath, Config.SourceBuiltArtifactsPathEnv);
-        Utilities.ValidateNotNullOrWhiteSpace(Config.SdkTarballPath, Config.SdkTarballPathEnv);
-        Utilities.ValidateNotNullOrWhiteSpace(Config.TargetRid, Config.TargetRidEnv);
-
         var tarEntries = ProcessSdkAndArtifactsTarballs();
         ScanForDifferences(tarEntries);
         UpdateBaselineFile();
