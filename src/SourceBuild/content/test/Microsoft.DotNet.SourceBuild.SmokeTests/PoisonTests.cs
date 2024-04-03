@@ -11,11 +11,11 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests
 {
     public class PoisonTests : SdkTests
     {
-        public bool ShouldRunPoisonTests => !string.IsNullOrWhiteSpace(Config.PoisonReportPath);
+        public bool IncludePoisonTests => !string.IsNullOrWhiteSpace(Config.PoisonReportPath);
 
         public PoisonTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
         
-        [ConditionalFact(typeof(PoisonTests), nameof(ShouldRunPoisonTests))]
+        [ConditionalFact(typeof(PoisonTests), nameof(IncludePoisonTests))]
         public void VerifyUsage()
         {
             if (!File.Exists(Config.PoisonReportPath))

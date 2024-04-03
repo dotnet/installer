@@ -42,7 +42,7 @@ public class ArtifactsSizeTest : SdkTests
         }
     }
 
-    [ConditionalFact(typeof(Config), nameOf(IncludeArtifactsSize))]
+    [ConditionalFact(typeof(Config), nameof(IncludeArtifactsSizeTests))]
     public void CompareArtifactsToBaseline()
     {
         Assert.False(string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath));

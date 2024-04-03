@@ -11,7 +11,7 @@ The following properties are automatically available during test execution but c
 Optional msbuild properties:
 - SmokeTestsCustomSourceBuiltPackagesPath
 - SmokeTestsExcludeOmniSharpTests
-- SmokeTestsIncludeArtifactsSize
+- SmokeTestsIncludeArtifactsSizeTests
 - SmokeTestsPrereqsPath
 - SmokeTestsWarnOnLicenseScanDiffs
 - SmokeTestsWarnOnSdkContentDiffs

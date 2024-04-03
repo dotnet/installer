@@ -15,11 +15,11 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class SourceBuiltArtifactsTests : SdkTests
 {
-    public bool ShouldVerifyVersionFile => !string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath);
+    public bool IncludeSourceBuiltArtifactsTests => !string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath);
     
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    [ConditionalFact(typeof(SourceBuiltArtifactsTests), nameof(ShouldVerifyVersionFile))]
+    [ConditionalFact(typeof(SourceBuiltArtifactsTests), nameof(IncludeSourceBuiltArtifactsTests))]
     public void VerifyVersionFile()
     {
         Assert.NotNull(Config.SourceBuiltArtifactsPath);
