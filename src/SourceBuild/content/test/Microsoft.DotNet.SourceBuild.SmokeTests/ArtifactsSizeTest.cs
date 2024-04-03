@@ -45,6 +45,9 @@ public class ArtifactsSizeTest : SdkTests
     [ConditionalFact(typeof(Config), nameOf(IncludeArtifactsSize))]
     public void CompareArtifactsToBaseline()
     {
+        Assert.False(string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath));
+        Assert.False(string.IsNullOrWhiteSpace(Config.SdkTarballPath));
+
         var tarEntries = ProcessSdkAndArtifactsTarballs();
         ScanForDifferences(tarEntries);
         UpdateBaselineFile();

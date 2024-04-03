@@ -112,7 +112,7 @@ public class LicenseScanTests : TestBase
 
     private readonly string _targetRepo;
 
-    public bool ShouldScanForLicenses => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
+    public bool IncludeLicenseScanTests => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
 
     public LicenseScanTests(ITestOutputHelper outputHelper) : base(outputHelper)
     {
@@ -120,7 +120,7 @@ public class LicenseScanTests : TestBase
         _targetRepo = new DirectoryInfo(Config.LicenseScanPath).Name;
     }
 
-    [ConditionalFact(typeof(typeof(LicenseScanTests), nameof(ShouldScanForLicenses))]
+    [ConditionalFact(typeof(typeof(LicenseScanTests), nameof(IncludeLicenseScanTests))]
     public void ScanForLicenses()
     {
         Assert.NotNull(Config.LicenseScanPath);
