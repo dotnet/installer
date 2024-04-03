@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.Build.Traversal">
 
   <ItemGroup>
-    <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" />
-    <!-- TODO: condition the test projects on something like "$(BuildTest)' == 'true'". -->
-    <ProjectReference Include="test\Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj" />
+    <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" Test="false" />
+
+    <!-- TODO: Condition the test projects on something like "$(BuildTest)' == 'true'" eventually. -->
+    <ProjectReference Include="test\Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj"
+                      Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <ProjectReference Include="test\Microsoft.DotNet.UnifiedBuild.Tests\Microsoft.DotNet.UnifiedBuild.Tests.csproj"
                       Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" />
   </ItemGroup>

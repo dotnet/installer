@@ -216,6 +216,6 @@
     <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
   </PropertyGroup>
 
-  <Import Project="$(GitInfoAllRepoPropsFile)" />
+  <Import Project="$(GitInfoAllRepoPropsFile)" Condition="Exists('$(GitInfoAllRepoPropsFile)')" />
 
 </Project>
