@@ -3,24 +3,15 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
   <Target Name="DetermineSourceBuiltSdkVersion">
-    <PropertyGroup>
-      <SdkFilenamePrefix>dotnet-sdk-</SdkFilenamePrefix>
-    </PropertyGroup>
-    <ItemGroup>
-      <SdkTarballItem Include="$(ArtifactsAssetsDir)Sdk/**/$(SdkFilenamePrefix)*$(ArchiveExtension)" />
-    </ItemGroup>
+    <MSBuild Projects="$(RepoProjectsDir)installer.proj"
+             Targets="GetProductVersion">
+      <Output TaskParameter="TargetOutputs" PropertyName="SourceBuiltSdkVersion" />
+    </MSBuild>
 
-    <!--
-      Extract SDK version from SDK tarball filename.
-
-      Example:
-      dotnet-sdk-9.0.100-alpha.1.24057.1-fedora.38-x64.tar.gz
-      dotnet-sdk-<SdkVersion>-<TargetRid><ArchiveExtension>
-    -->
+    <!-- Keep in sync with dotnet-sdk's archive location and filename.
+         Example: artifacts\assets\<config>\Sdk\9.0.100-alpha.1.24057.1\dotnet-sdk-9.0.100-alpha.1.24057.1-fedora.38-x64.tar.gz -->
     <PropertyGroup>
-      <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
-      <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
-      <SourceBuiltSdkVersion>$(SdkFilename.Replace('$(SdkFilenamePrefix)','').Replace('-$(TargetRid)$(ArchiveExtension)',''))</SourceBuiltSdkVersion>
+      <SdkTarballPath>$([MSBuild]::NormalizePath('$(ArtifactsAssetsDir)', 'Sdk', '$(SourceBuiltSdkVersion)', 'dotnet-sdk-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)'))</SdkTarballPath>
     </PropertyGroup>
   </Target>
 

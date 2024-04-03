@@ -78,6 +78,8 @@
     <EnvironmentVariables Include="PublishWindowsPdb=false" />
   </ItemGroup>
 
+  <Target Name="GetProductVersion" Returns="$(Version)" />
+
   <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <!-- Inputs: Packages to include in the tarball -->
@@ -142,7 +144,7 @@
           AfterTargets="Build"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
 
-    <Copy SourceFiles="@(SdkTarballItem)"
+    <Copy SourceFiles="$(SdkTarballPath)"
           DestinationFolder="$(ArtifactsAssetsDir)"
           SkipUnchangedFiles="true"
           UseHardlinksIfPossible="true" />
