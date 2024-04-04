@@ -58,7 +58,7 @@ function Build {
   $btst = if ($buildTests) { '/p:DotNetBuildTests=true' } else { '' }
   $buildProj = Join-Path $RepoRoot 'build.proj'
 
-  MSBuild $buildProj `
+  MSBuild -restore $buildProj `
     $bl `
     /p:Configuration=$configuration `
     $cwb `

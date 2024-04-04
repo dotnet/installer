@@ -207,7 +207,7 @@ function Build {
       bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
-    MSBuild "$scriptroot/build.proj" \
+    MSBuild -restore "$scriptroot/build.proj" \
       $bl \
       /p:Configuration=$configuration \
       $properties
@@ -223,7 +223,7 @@ function Build {
     "$CLI_ROOT/dotnet" build-server shutdown
 
     if [ "$test" == "true" ]; then
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildTests.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/BuildTests.log" -clp:v=m $properties
+      "$CLI_ROOT/dotnet" msbuild -restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildTests.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/BuildTests.log" -clp:v=m $properties
     else
       "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
 
@@ -233,7 +233,7 @@ function Build {
       # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
       export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
+      "$CLI_ROOT/dotnet" msbuild -restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
     fi
 
   fi
