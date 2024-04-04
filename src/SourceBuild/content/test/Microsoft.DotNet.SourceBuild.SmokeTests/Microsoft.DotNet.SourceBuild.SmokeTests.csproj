@@ -14,6 +14,11 @@
     <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'smoke-tests'))</RestorePackagesPath>
   </PropertyGroup>
 
+  <!-- This test project depends on the output of installer.proj if SdkTarballPath isn't already provided and SmokeTestsUseLiveBuild isn't false. -->
+  <ItemGroup Condition="'$(SmokeTestsUseLiveBuild)' != 'false' and '$(SdkTarballPath)' == ''">
+    <ProjectReference Include="$(RepoProjectsDir)installer.proj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="Newtonsoft.Json" />

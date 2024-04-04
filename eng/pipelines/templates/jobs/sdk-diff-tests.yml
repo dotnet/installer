@@ -122,7 +122,8 @@ jobs:
       -c Release
       -bl:$(Build.SourcesDirectory)/artifacts/log/Debug/BuildTests_$(date +"%m%d%H%M%S").binlog 
       -flp:LogFile=$(Build.SourcesDirectory)/artifacts/logs/BuildTests_$(date +"%m%d%H%M%S").log
-      -clp:v=m
+      -clp:v=mg
+      /p:SmokeTestsUseLiveBuild=false
       /p:MsftSdkTarballPath=$(MsftSdkTarballPath)
       /p:SdkTarballPath=$(SdkTarballPath)
       /p:SourceBuiltArtifactsPath=$(SourceBuiltArtifactsPath)
