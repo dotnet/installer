@@ -90,8 +90,6 @@
     <ItemGroup>
       <SmokeTestsPrereq Include="$(SmokeTestsPackagesDir)**/*.nupkg" />
     </ItemGroup>
-
-    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(SmokeTestsPackagesDir)'." Importance="High" />
   </Target>
 
   <!-- The target is automatically skipped when @(SmokeTestsPrereq) is empty. -->
@@ -101,6 +99,8 @@
           AfterTargets="Test"
           Inputs="@(SmokeTestsPrereq)"
           Outputs="$(SmokeTestPrereqsArchive)">
+    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(SmokeTestsPackagesDir)'." Importance="High" />
+
     <PropertyGroup>
       <SmokeTestsIntermediatePrereqPackagesDir>$(IntermediateOutputPath)prereq-packages/</SmokeTestsIntermediatePrereqPackagesDir>
     </PropertyGroup>

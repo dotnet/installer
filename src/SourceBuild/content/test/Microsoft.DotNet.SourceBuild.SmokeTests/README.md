@@ -1,6 +1,6 @@
 # Source Build Smoke Tests
 
-* Run these tests via `build.sh --projects test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --test`
+* Run these tests via `build.sh --test`
 
 The following properties are automatically available during test execution but can be overwritten:
 - MsftSdkTarballPath

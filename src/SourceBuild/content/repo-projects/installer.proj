@@ -1,6 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="ContinuousIntegrationBuild">
 
   <PropertyGroup>
+    <!-- Keep in sync with VersionPrefix in installer's Versions.props.
+         TODO: Find a better way to retrieve that information. -->
+    <VersionPrefix>9.0.100</VersionPrefix>
+    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration>4</PreReleaseVersionIteration>
+    <!-- TODO: Remove when the env var in repo-projects/Directory.Build.props is correctly conditioned. -->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
     <!-- Need to set to false to calculate RepositoryCommit. -->
     <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
 
