@@ -210,7 +210,7 @@ function Build {
 
     MSBuild --restore \
       "$scriptroot/build.proj" \
-      $targets
+      $targets \
       $bl \
       /p:Configuration=$configuration \
       $properties
