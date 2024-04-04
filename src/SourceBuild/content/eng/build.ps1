@@ -47,16 +47,16 @@ function Get-Usage() {
 # They should be pulled from the local feeds.
 $env:NUGET_PACKAGES="$RepoRoot\.packages\"
 
-# Handle actions
-$action = '-restore /t:Build'
-if ($test) {
-  # This repo uses the VSTest integration instead of the Arcade Test target
-  $action += ';VSTest'
-}
-
 if ($help) {
   Get-Usage
   exit 0
+}
+
+# Handle targets
+$targets = '/t:Build'
+if ($test) {
+  # This repo uses the VSTest integration instead of the Arcade Test target
+  $targets += ';VSTest'
 }
 
 function Build {
@@ -67,9 +67,10 @@ function Build {
   $btst = if ($buildTests) { '/p:DotNetBuildTests=true' } else { '' }
   $buildProj = Join-Path $RepoRoot 'build.proj'
 
-  MSBuild $buildProj `
-    $action `
+  MSBuild -restore `
+    $buildProj `
     $bl `
+    $targets `
     /p:Configuration=$configuration `
     $cwb `
     $btst `

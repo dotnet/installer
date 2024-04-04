@@ -86,7 +86,7 @@ ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
 
-action='--restore /t:Build'
+targets='/t:Build'
 properties=''
 while [[ $# > 0 ]]; do
   opt="$(echo "${1/#--/-}" | tr "[:upper:]" "[:lower:]")"
@@ -114,7 +114,7 @@ while [[ $# > 0 ]]; do
       ;;
     -test|-t)
       # This repo uses the VSTest integration instead of the Arcade Test target
-      action="$action;VSTest"
+      targets="$targets;VSTest"
       test=true
       ;;
 
@@ -208,7 +208,9 @@ function Build {
       bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
-    MSBuild $action "$scriptroot/build.proj" \
+    MSBuild --restore \
+      "$scriptroot/build.proj" \
+      $targets
       $bl \
       /p:Configuration=$configuration \
       $properties
@@ -231,7 +233,7 @@ function Build {
     # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
     export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
-    "$CLI_ROOT/dotnet" msbuild $action "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
+    "$CLI_ROOT/dotnet" msbuild --restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" $targets -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
   fi
 }
 
