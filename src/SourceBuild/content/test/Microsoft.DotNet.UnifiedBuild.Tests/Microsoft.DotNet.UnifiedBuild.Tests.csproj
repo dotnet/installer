@@ -4,7 +4,7 @@
     <TargetFramework>$(NetCurrent)</TargetFramework>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
     <UBTestsWarnOnSdkContentDiffs>true</UBTestsWarnOnSdkContentDiffs>
-    <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic%3bLogFileName=$(MSBuildProjectName).xml</VSTestLogger>
+    <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic</VSTestLogger>
   </PropertyGroup>
 
   <!-- This test project depends on the output of installer.proj and its transitive dependencies. -->
