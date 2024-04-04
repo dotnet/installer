@@ -31,5 +31,5 @@ The following programs are used by some tests:
 ## Prereq Packages
 
 Some prerelease scenarios, usually security updates, require non-source-built packages which are not publicly available.
-Specify the directory where these packages can be found via the `SmokeTestsPrereqsPath` msbuild property when running tests via `build.sh --projects test/Microsoft.DotNet.SourceBuild.SmokeTests/Microsoft.DotNet.SourceBuild.SmokeTests.csproj --test` e.g.
+Specify the directory where these packages can be found via the `SmokeTestsPrereqsPath` msbuild property when running tests via `build.sh ---test` e.g.
 `/p:SmokeTestsPrereqsPath=prereqs/packages/smoke-test-prereqs`.
