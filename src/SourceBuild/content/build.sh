@@ -366,7 +366,7 @@ if [[ "$sourceOnly" == "true" ]]; then
     # projects overwrite this so that they use the source-built Arcade SDK instad.
     export SOURCE_BUILT_SDK_ID_ARCADE=Microsoft.DotNet.Arcade.Sdk
     export SOURCE_BUILT_SDK_VERSION_ARCADE=$ARCADE_BOOTSTRAP_VERSION
-    export SOURCE_BUILT_SDK_DIR_ARCADE=$packagesRestoredDir/ArcadeBootstrapPackage/microsoft.dotnet.arcade.sdk/$ARCADE_BOOTSTRAP_VERSION
+    export SOURCE_BUILT_SDK_DIR_ARCADE=$scriptroot/.packages/ArcadeBootstrapPackage/microsoft.dotnet.arcade.sdk/$ARCADE_BOOTSTRAP_VERSION
   fi
 
   echo "Found bootstrap SDK $SDK_VERSION, bootstrap Arcade $ARCADE_BOOTSTRAP_VERSION"
