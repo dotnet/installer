@@ -11,11 +11,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.DotNet.UnifiedBuild.BaselineTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselinTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
 
 [Trait("Category", "SdkContent")]
 public class SdkContentTests : TestBase, IClassFixture<Config>
