@@ -42,11 +42,10 @@
 
       <IntermediateSdkSymbolsLayout>$(BaseIntermediateOutputPath)SdkSymbols</IntermediateSdkSymbolsLayout>
       <IntermediateSdkLayout>$(BaseIntermediateOutputPath)Sdk</IntermediateSdkLayout>
-      <SdkTarball>%(SdkArchiveItem.Identity)</SdkTarball>
     </PropertyGroup>
 
     <MakeDir Directories="$(IntermediateSdkLayout)" />
-    <Exec Command="tar -xzf $(SdkTarball) -C $(IntermediateSdkLayout)" />
+    <Exec Command="tar -xzf $(SdkArchivePath) -C $(IntermediateSdkLayout)" />
 
     <CreateSdkSymbolsLayout SdkLayoutPath="$(IntermediateSdkLayout)"
                             AllSymbolsPath="$(IntermediateSymbolsRootDir)"
@@ -125,15 +124,14 @@
   </Target>
 
   <Target Name="RunSmokeTest"
-          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(SmokeTestProjectName)'))">
+          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(SmokeTestProjectName)'))"
+          DependsOnTargets="GetDotNetSdkArchive">
     <ItemGroup>
-      <SdkArchiveItem Include="$(ArtifactsAssetsDir)dotnet-sdk*$(ArchiveExtension)" />
       <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
     </ItemGroup>
 
     <PropertyGroup>
       <CustomTestEnvVars Condition="'$(EnablePoison)' == 'true'">SMOKE_TESTS_POISON_REPORT_PATH=$(PoisonUsageReportFile);</CustomTestEnvVars>
-      <SdkTarballPath>%(SdkArchiveItem.Identity)</SdkTarballPath>
       <SourceBuiltArtifactsPath>%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
       <SmokeTestConsoleVerbosity Condition="'$(SmokeTestConsoleVerbosity)' == ''">normal</SmokeTestConsoleVerbosity>
     </PropertyGroup>
@@ -143,7 +141,7 @@
     <Exec Command="$(DotnetTool) test $(SmokeTestsDir) --logger:trx --logger:'console;verbosity=$(SmokeTestConsoleVerbosity)' -c $(Configuration) -p:VSTestUseMSBuildOutput=false"
           IgnoreStandardErrorWarningFormat="true"
           EnvironmentVariables="
-            SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkTarballPath);
+            SMOKE_TESTS_SDK_TARBALL_PATH=$(SdkArchivePath);
             SMOKE_TESTS_SOURCEBUILT_ARTIFACTS_PATH=$(SourceBuiltArtifactsPath);
             SMOKE_TESTS_TARGET_RID=$(TargetRid);
             SMOKE_TESTS_PORTABLE_RID=$(PortableRid);

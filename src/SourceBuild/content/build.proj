@@ -54,7 +54,7 @@
   </Target>
 
   <PropertyGroup>
-    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkArtifactPath</ExtractDotNetSdkArchiveDependsOn>
+    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkArchive</ExtractDotNetSdkArchiveDependsOn>
     <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.zip'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkZip</ExtractDotNetSdkArchiveDependsOn>
     <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.tar.gz'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkTarball</ExtractDotNetSdkArchiveDependsOn>
   </PropertyGroup>
@@ -101,12 +101,28 @@
     <!-- Define Directory.Build.* files in the scenario tests artifacts directory to prevent the test run from
          picking up the configuration from the VMR's Directory.Build.* files. We need an isolated configuration
          from which to test. -->
-    <ItemGroup>
-      <_DirectoryProjFiles Include="$(ScenarioTestsArtifactsDir)Directory.Build.props" />
-      <_DirectoryProjFiles Include="$(ScenarioTestsArtifactsDir)Directory.Build.targets" />
-    </ItemGroup>
-    <WriteLinesToFile File="%(_DirectoryProjFiles.FullPath)"
+    <WriteLinesToFile File="$(ScenarioTestsArtifactsDir)Directory.Build.targets"
                       Lines="&lt;Project /&gt;"
+                      Overwrite="true" />
+    <!-- Because the VMR is configured to use CPM (https://github.com/dotnet/installer/pull/19286), it will
+         cause the scenario tests to fail with the following error:
+           Projects that use central package version management should not define the version on the PackageReference items but on the PackageVersion items: ...
+         To work around this, we explicitly disable CPM. Note that this can't be solved by including a stub Directory.Packages.props file because the default
+         behavior is to automatically default ManagePackageVersionsCentrally to true when it finds such a file.
+         https://github.com/NuGet/NuGet.Client/blob/ca13cf0a281b9774dd0238a43ab98c1927056cc2/src/NuGet.Core/NuGet.Build.Tasks/NuGet.props#L25-L33 -->
+    <PropertyGroup>
+      <_DirectoryBuildPropsContent>
+&lt;Project&gt;
+  &lt;PropertyGroup&gt;
+    &lt;ManagePackageVersionsCentrally&gt;
+      false
+    &lt;/ManagePackageVersionsCentrally&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+      </_DirectoryBuildPropsContent>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(ScenarioTestsArtifactsDir)Directory.Build.props"
+                      Lines="$(_DirectoryBuildPropsContent)"
                       Overwrite="true" />
   </Target>  
 
@@ -127,12 +143,12 @@
 
   <Target Name="ExtractDotNetSdkTarball">
     <MakeDir Directories="$(DotNetInstallDir)" />
-    <Exec Command="tar -xzf @(SdkArchiveItem) -C $(DotNetInstallDir)" />
+    <Exec Command="tar -xzf $(SdkArchivePath) -C $(DotNetInstallDir)" />
   </Target>
 
   <Target Name="ExtractDotNetSdkZip">
     <MakeDir Directories="$(DotNetInstallDir)" />
-    <Unzip SourceFiles="@(SdkArchiveItem)" DestinationFolder="$(DotNetInstallDir)" />
+    <Unzip SourceFiles="$(SdkArchivePath)" DestinationFolder="$(DotNetInstallDir)" />
   </Target>
 
   <Target Name="ExtractScenarioTestsPackage">

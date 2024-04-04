@@ -10,6 +10,10 @@
     <ItemGroup>
       <SdkArchiveItem Include="$(ArtifactsAssetsDir)Sdk/**/$(DotNetSdkFilenamePrefix)*$(ArchiveExtension)" />
     </ItemGroup>
+    
+    <PropertyGroup>
+      <SdkArchivePath>%(SdkArchiveItem.Identity)</SdkArchivePath>
+    </PropertyGroup>
   </Target>
 
   <Target Name="DetermineSourceBuiltSdkVersion"
