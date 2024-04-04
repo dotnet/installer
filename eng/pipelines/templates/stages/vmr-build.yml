@@ -732,6 +732,7 @@ stages:
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: arm64
             pool: ${{ parameters.pool_Linux }}
+            container: ${{ variables.marinerArm64CrossContainer }}
             crossRootFs: '/crossrootfs/arm64'
             targetOS: linux
             targetArchitecture: arm64
