@@ -13,7 +13,7 @@
          Workaround https://github.com/dotnet/source-build/issues/4003 by disabling VSTestUseMSBuildOutput -->
     <VSTestUseMSBuildOutput>false</VSTestUseMSBuildOutput>
     <!-- Use a custom package cache to then collect all restored packages and put them into an archive. -->
-    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'smoke-tests'))</RestorePackagesPath>
+    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(RestorePackagesPath)', 'smoke-tests'))</RestorePackagesPath>
   </PropertyGroup>
 
   <!-- This test project depends on the output of installer.proj only when SdkTarballPath, SourceBuiltArtifactsPath

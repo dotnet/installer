@@ -362,7 +362,8 @@ jobs:
           poisonArg='--poison'
         fi
 
-        docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
+      # TODO: Replace BuildProjectReferences with --testnobuild when that flag is implemented.
+        docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --bl artifacts/log/Release/Test.binlog --source-only $poisonArg --test $(additionalBuildArgs) /p:BuildProjectReferences=false /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
       displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
@@ -387,9 +388,6 @@ jobs:
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.diff"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
-        CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"
-        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.diff"
-        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.txt"
 
         # check if we have assets to publish
         if (Test-Path "artifacts/assets/Release/*") {
@@ -418,9 +416,6 @@ jobs:
         fi
         find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.diff" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
 
         # check if we have assets to publish
         if [ -n "$(ls -A 'artifacts/assets/Release/')" ]; then
@@ -445,7 +440,7 @@ jobs:
       continueOnError: true
       inputs:
         testRunner: vSTest
-        testResultsFiles: 'test/**/*.trx'
+        testResultsFiles: 'artifacts/TestResults/Release/*.trx'
         searchFolder: $(sourcesPath)
         mergeTestResults: true
         publishRunAttachments: true

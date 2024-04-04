@@ -56,11 +56,6 @@ while [[ -h "$source" ]]; do
 done
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
-# Set the NUGET_PACKAGES dir so that we don't accidentally pull some packages from the global location,
-# They should be pulled from the local feeds.
-packagesRestoredDir="$scriptroot/.packages/"
-export NUGET_PACKAGES=$packagesRestoredDir/
-
 # Common settings
 binary_log=false
 configuration='Release'
@@ -233,7 +228,12 @@ function Build {
     # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
     export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
-    "$CLI_ROOT/dotnet" msbuild --restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" $targets -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
+    local bl=""
+    if [[ "$binary_log" == true ]]; then
+      bl="/bl:\"$log_dir/Build.binlog\""
+    fi
+
+    "$CLI_ROOT/dotnet" msbuild --restore "$scriptroot/build.proj" $bl $targets -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
   fi
 }
 
