@@ -18,7 +18,7 @@ usage()
   echo "Actions:"
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
-  echo "  --test                          Run smoke tests (short: -t)"
+  echo "  --test                          Run tests (short: -t)"
   echo ""
 
   echo "Source-only settings:"
@@ -86,6 +86,7 @@ ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
 
+action='--restore /t:Build'
 properties=''
 while [[ $# > 0 ]]; do
   opt="$(echo "${1/#--/-}" | tr "[:upper:]" "[:lower:]")"
@@ -112,8 +113,7 @@ while [[ $# > 0 ]]; do
       exit 0
       ;;
     -test|-t)
-      export NUGET_PACKAGES=$NUGET_PACKAGES/smoke-tests
-      properties="$properties /t:Test"
+      action="$action;Test"
       test=true
       ;;
 
@@ -207,7 +207,7 @@ function Build {
       bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
-    MSBuild -restore "$scriptroot/build.proj" \
+    MSBuild $action "$scriptroot/build.proj" \
       $bl \
       /p:Configuration=$configuration \
       $properties
@@ -222,20 +222,15 @@ function Build {
 
     "$CLI_ROOT/dotnet" build-server shutdown
 
-    if [ "$test" == "true" ]; then
-      "$CLI_ROOT/dotnet" msbuild -restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildTests.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/BuildTests.log" -clp:v=m $properties
-    else
-      "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
+    "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
 
-      # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
-      "$CLI_ROOT/dotnet" build-server shutdown
+    # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
+    "$CLI_ROOT/dotnet" build-server shutdown
 
-      # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
-      export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
+    # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
+    export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
 
-      "$CLI_ROOT/dotnet" msbuild -restore "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
-    fi
-
+    "$CLI_ROOT/dotnet" msbuild $action "$scriptroot/build.proj" -bl:"$scriptroot/artifacts/log/$configuration/Build.binlog" -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
   fi
 }
 

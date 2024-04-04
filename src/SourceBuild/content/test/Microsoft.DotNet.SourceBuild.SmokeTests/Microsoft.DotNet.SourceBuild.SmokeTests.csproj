@@ -9,6 +9,7 @@
     <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings
          Workaround https://github.com/dotnet/source-build/issues/4003 by disabling VSTestUseMSBuildOutput -->
     <VSTestUseMSBuildOutput>false</VSTestUseMSBuildOutput>
+    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'smoke-tests'))</RestorePackagesPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,12 +25,12 @@
   <Target Name="SetRuntimeConfigOptions"
           DependsOnTargets="DetermineSourceBuiltSdkVersion"
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
-    <ItemGroup>
+    <ItemGroup Condition="'$(SourceBuiltArtifactsPath)' == ''">
       <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />
     </ItemGroup>
 
     <PropertyGroup>
-      <SourceBuiltArtifactsPath>%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
+      <SourceBuiltArtifactsPath Condition="'$(SourceBuiltArtifactsPath)' == ''">%(SourceBuiltArtifactsItem.Identity)</SourceBuiltArtifactsPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -53,6 +54,9 @@
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.IncludeArtifactsSizeTests">
         <Value>$(SmokeTestsIncludeArtifactsSizeTests)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.LicenseScanPath">
+        <Value>$(SmokeTestsLicenseScanPath)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.MsftSdkTarballPath">
         <Value>$(MsftSdkTarballPath)</Value>
@@ -83,12 +87,11 @@
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <PropertyGroup>
       <!-- NuGet package cache directory -->
-      <SmokeTestsPackagesDir>$(TargetDir)packages/</SmokeTestsPackagesDir>
       <SmokeTestPrereqsArchive>$(ArtifactsAssetsDir)dotnet-smoke-test-prereqs.$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SmokeTestPrereqsArchive>
     </PropertyGroup>
 
     <ItemGroup>
-      <SmokeTestsPrereq Include="$(SmokeTestsPackagesDir)**/*.nupkg" />
+      <SmokeTestsPrereq Include="$(RestorePackagesPath)**/*.nupkg" />
     </ItemGroup>
   </Target>
 
@@ -99,7 +102,7 @@
           AfterTargets="Test"
           Inputs="@(SmokeTestsPrereq)"
           Outputs="$(SmokeTestPrereqsArchive)">
-    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(SmokeTestsPackagesDir)'." Importance="High" />
+    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(RestorePackagesPath)'." Importance="High" />
 
     <PropertyGroup>
       <SmokeTestsIntermediatePrereqPackagesDir>$(IntermediateOutputPath)prereq-packages/</SmokeTestsIntermediatePrereqPackagesDir>

@@ -8,6 +8,7 @@ Param(
   # Actions
   [switch]$clean,
   [switch][Alias('h')]$help,
+  [switch][Alias('t')]$test,
 
   # Advanced settings
   [switch]$buildTests,
@@ -28,6 +29,7 @@ function Get-Usage() {
   Write-Host "Actions:"
   Write-Host "  -clean                  Clean the solution"
   Write-Host "  -help                   Print help and exit (short: -h)"
+  Write-Host "  -test                   Run tests (short: -t)"
   Write-Host ""
 
   Write-Host "Advanced settings:"
@@ -45,6 +47,12 @@ function Get-Usage() {
 # They should be pulled from the local feeds.
 $env:NUGET_PACKAGES="$RepoRoot\.packages\"
 
+# Handle actions
+$action = '-restore /t:Build'
+if ($test) {
+  $action += ';Test'
+}
+
 if ($help) {
   Get-Usage
   exit 0
@@ -58,7 +66,7 @@ function Build {
   $btst = if ($buildTests) { '/p:DotNetBuildTests=true' } else { '' }
   $buildProj = Join-Path $RepoRoot 'build.proj'
 
-  MSBuild -restore $buildProj `
+  MSBuild $action $buildProj `
     $bl `
     /p:Configuration=$configuration `
     $cwb `

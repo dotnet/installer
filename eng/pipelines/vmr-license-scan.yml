@@ -93,11 +93,10 @@ jobs:
       -bl:$(Build.SourcesDirectory)/artifacts/log/Debug/BuildTests_$(date +"%m%d%H%M%S").binlog 
       -flp:LogFile=$(Build.SourcesDirectory)/artifacts/logs/BuildTests_$(date +"%m%d%H%M%S").log
       -clp:v=m
-      -e SMOKE_TESTS_LICENSE_SCAN_PATH=$(repoPath)
-      -e SMOKE_TESTS_RUNNING_IN_CI=true
-      -e SMOKE_TESTS_WARN_LICENSE_SCAN_DIFFS=false
-      -e SMOKE_TESTS_TARGET_RID=linux-x64
-      -e SMOKE_TESTS_PORTABLE_RID=linux-x64
+      /p:SmokeTestsLicenseScanPath=$(repoPath)
+      /p:SmokeTestsWarnOnLicenseScanDiffs=false
+      /p:TargetRid=linux-x64
+      /p:PortableRid=linux-x64
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 

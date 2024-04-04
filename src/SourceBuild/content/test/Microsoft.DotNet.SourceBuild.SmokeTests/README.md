@@ -3,15 +3,16 @@
 * Run these tests via `build.sh --test`
 
 The following properties are automatically available during test execution but can be overwritten:
-- MsftSdkTarballPath
 - PoisonUsageReportFile
 - SdkTarballPath
 - SourceBuiltArtifactsPath
 
 Optional msbuild properties:
+- MsftSdkTarballPath
 - SmokeTestsCustomSourceBuiltPackagesPath
 - SmokeTestsExcludeOmniSharpTests
 - SmokeTestsIncludeArtifactsSizeTests
+- SmokeTestsLicenseScanPath
 - SmokeTestsPrereqsPath
 - SmokeTestsWarnOnLicenseScanDiffs
 - SmokeTestsWarnOnSdkContentDiffs
