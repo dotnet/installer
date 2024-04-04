@@ -167,7 +167,7 @@ stages:
             buildFromArchive: true             # ✅
             buildSourceOnly: true              # ✅
             enablePoison: false                # 🚫
-            excludeOmniSharpTests: true        # ✅
+            excludeOmniSharpTests: false       # 🚫
             runOnline: false                   # 🚫
             runTests: true                     # ✅
             useMonoRuntime: false              # 🚫
@@ -180,13 +180,13 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            artifactsRid: centos.8-x64
+            artifactsRid: centos.9-x64
             pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream9Container }}
             buildFromArchive: false            # 🚫
             buildSourceOnly: true              # ✅
             enablePoison: false                # 🚫
-            excludeOmniSharpTests: true        # ✅
+            excludeOmniSharpTests: false       # 🚫
             runOnline: true                    # ✅
             runTests: true                     # ✅
             useMonoRuntime: false              # 🚫
@@ -199,7 +199,7 @@ stages:
             isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
             vmrBranch: ${{ variables.VmrBranch }}
             architecture: x64
-            artifactsRid: centos.8-x64
+            artifactsRid: centos.9-x64
             pool: ${{ parameters.pool_Linux }}
             container: ${{ variables.centOSStream9Container }}
             buildFromArchive: false            # 🚫
@@ -227,24 +227,6 @@ stages:
             runOnline: false                   # 🚫
             runTests: true                     # ✅
             useMonoRuntime: true               # ✅
-            withPreviousSDK: false             # 🚫
-
-        - template: ../jobs/vmr-build.yml
-          parameters:
-            # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-            buildName: CentOSStream9_Offline_MsftSdk
-            isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-            vmrBranch: ${{ variables.VmrBranch }}
-            architecture: x64
-            pool: ${{ parameters.pool_Linux }}
-            container: ${{ variables.centOSStream9Container }}
-            buildFromArchive: true             # ✅
-            buildSourceOnly: true              # ✅
-            enablePoison: false                # 🚫
-            excludeOmniSharpTests: false       # 🚫
-            runOnline: false                   # 🚫
-            runTests: true                     # ✅
-            useMonoRuntime: false              # 🚫
             withPreviousSDK: false             # 🚫
 
         - template: ../jobs/vmr-build.yml
