@@ -78,8 +78,6 @@
     <EnvironmentVariables Include="PublishWindowsPdb=false" />
   </ItemGroup>
 
-  <Target Name="GetProductVersion" Returns="$(Version)" />
-
   <Target Name="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive"
           DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <!-- Inputs: Packages to include in the tarball -->
