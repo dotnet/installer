@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- This project is built and run as part of the VMR and from installer by the sdk-diff-tests.yml and vmr-license-scan.yml. -->
+
   <PropertyGroup>
     <TargetFramework>$(NetCurrent)</TargetFramework>
     <!-- Set manually as the project name doesn't follow the Arcade conventions. -->
@@ -8,6 +10,7 @@
     <!-- Multiple loggers are specified so that results are captured in trx and pipelines can fail with AzDO pipeline warnings
          Workaround https://github.com/dotnet/source-build/issues/4003 by disabling VSTestUseMSBuildOutput -->
     <VSTestUseMSBuildOutput>false</VSTestUseMSBuildOutput>
+    <!-- Use a custom package cache to then collect all restored packages and put them into an archive. -->
     <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'smoke-tests'))</RestorePackagesPath>
   </PropertyGroup>
 
@@ -34,49 +37,49 @@
 
     <ItemGroup>
       <!-- Required values -->
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.DotNetDirectory">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).DotNetDirectory">
         <Value>$(TargetDir)extracted-sdk</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.TargetRid">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).TargetRid">
         <Value>$(TargetRid)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PortableRid">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).PortableRid">
         <Value>$(PortableRid)</Value>
       </RuntimeHostConfigurationOption>
 
       <!-- Optional values -->
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.CustomPackagesPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).CustomPackagesPath">
         <Value>$(SmokeTestsCustomSourceBuiltPackagesPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.ExcludeOmniSharpTests">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).ExcludeOmniSharpTests">
         <Value>$(SmokeTestsExcludeOmniSharpTests)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.IncludeArtifactsSizeTests">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).IncludeArtifactsSizeTests">
         <Value>$(SmokeTestsIncludeArtifactsSizeTests)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.LicenseScanPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LicenseScanPath">
         <Value>$(SmokeTestsLicenseScanPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.MsftSdkTarballPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).MsftSdkTarballPath">
         <Value>$(MsftSdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>      
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PoisonReportPath"
-                                      Condition="'$(EnablePoison)' == 'true' and Exists('$(PoisonUsageReportFile)')">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).PoisonReportPath"
+                                      Condition="'$(EnablePoison)' == 'true'">
         <Value>$(PoisonUsageReportFile)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.PrereqsPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).PrereqsPath">
         <Value>$(SmokeTestsPrereqsPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.SdkTarballPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).SdkTarballPath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.SourceBuiltArtifactsPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).SourceBuiltArtifactsPath">
         <Value>$(SourceBuiltArtifactsPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.WarnOnLicenseScanDiffs">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).WarnOnLicenseScanDiffs">
         <Value>$(SmokeTestsWarnOnLicenseScanDiffs)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.SourceBuild.SmokeTests.WarnOnSdkContentDiffs">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).WarnOnSdkContentDiffs">
         <Value>$(SmokeTestsWarnOnSdkContentDiffs)</Value>
       </RuntimeHostConfigurationOption>
     </ItemGroup>
