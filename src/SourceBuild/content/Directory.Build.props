@@ -77,7 +77,7 @@
 
   <!-- Init basic Arcade props, if the project importing this file doesn't use Arcade.
        Keep in sync with props/targets in the Arcade.Sdk. -->
-  <PropertyGroup Condition="'$(SkipArcadeSdkImport)' == 'true'">  
+  <PropertyGroup Condition="'$(SkipArcadeSdkImport)' == 'true'">
     <!-- RepoLayout.props -->
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' != ''">$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)'))</NuGetPackageRoot>
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == '' and '$(NUGET_PACKAGES)' != ''">$([MSBuild]::NormalizeDirectory('$(NUGET_PACKAGES)'))</NuGetPackageRoot>
