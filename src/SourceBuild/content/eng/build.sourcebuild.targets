@@ -124,7 +124,6 @@
   </Target>
 
   <Target Name="RunSmokeTest"
-          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(SmokeTestProjectName)'))"
           DependsOnTargets="GetDotNetSdkArchive">
     <ItemGroup>
       <SourceBuiltArtifactsItem Include="$(ArtifactsAssetsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)" />

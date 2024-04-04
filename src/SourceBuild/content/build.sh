@@ -41,7 +41,6 @@ usage()
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
   echo "  --testnobuild                   Run tests without building when invoked with --test"
-  echo "  --test-projects <NAMES>         Run tests for the specified projects"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -184,12 +183,6 @@ while [[ $# > 0 ]]; do
       ;;
     -testnobuild)
       test_no_build=true
-      ;;
-    -test-projects)
-      # In order to support multiple values delimited by semicolons, it needs to be properly quoted so that
-      # MSBuild can parse it correctly. See https://github.com/dotnet/sdk/issues/8792#issuecomment-393756980
-      properties="$properties /p:DotNetTestProjectsToRun='\"$2\"'"
-      shift
       ;;
     *)
       properties="$properties $1"

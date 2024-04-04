@@ -13,7 +13,6 @@ Param(
   # Advanced settings
   [switch]$buildRepoTests,
   [switch]$testNoBuild,
-  [string]$testProjects,
   [switch]$ci,
   [switch][Alias('cwb')]$cleanWhileBuilding,
   [switch][Alias('nobl')]$excludeCIBinarylog,
@@ -78,12 +77,10 @@ function Test {
   InitializeToolset
 
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'ScenarioTests.binlog') } else { '' }
-  $tp = if ($testProjects) { '/p:DotNetTestProjectsToRun="' + $testProjects + '"' } else { '' }
 
   MSBuild $buildProj `
     $bl `
     /t:Test `
-    $tp `
     @properties
 }
 
