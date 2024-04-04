@@ -21,7 +21,7 @@ public class SdkContentTests : SdkTests
 {
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
-    public bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPathEnv);
+    public bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPath);
 
     public SdkContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -49,7 +49,7 @@ public class SdkContentTests : SdkTests
         exclusionsHelper.GenerateNewBaselineFile("FileList");
     }
 
-    [ConditionalFact(typeof(SdkContentTests), nameof(ShouldCompareSdkContent))]
+    [ConditionalFact(typeof(SdkContentTests), nameof(IncludeSdkContentTests))]
     public void CompareMsftToSbAssemblyVersions()
     {
         Assert.NotNull(Config.MsftSdkTarballPath);

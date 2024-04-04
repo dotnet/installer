@@ -124,7 +124,7 @@ public class LicenseScanTests : TestBase
         _relativeRepoPath = relativeRepoPathMatch.Value;
     }
 
-    [ConditionalFact(typeof(typeof(LicenseScanTests), nameof(IncludeLicenseScanTests))]
+    [ConditionalFact(typeof(LicenseScanTests), nameof(IncludeLicenseScanTests))]
     public void ScanForLicenses()
     {
         Assert.NotNull(Config.LicenseScanPath);

@@ -33,7 +33,8 @@ public class Config : IDisposable
         string? noDiagnosticMessages = (string?)AppContext.GetData(NoDiagnosticMessagesSwitch);
         NoDiagnosticMessages = string.IsNullOrEmpty(noDiagnosticMessages) ? false : bool.Parse(noDiagnosticMessages);
         UbBuildVersion = (string)(AppContext.GetData(BuildVersionSwitch) ?? throw new InvalidOperationException("Unified Build version must be specified"));
-        TargetRid = (string)(AppContext.GetData(TargetRidSwitch) ?? throw new InvalidOperationException("Target RID must be specified"));
+        TargetRid = (string)(AppContext.GetData(TargetRidSwitch) ?? throw new Inva
+        dOperationException("Target RID must be specified"));
         PortableRid = (string)(AppContext.GetData(PortableRidSwitch) ?? throw new InvalidOperationException("Portable RID must be specified"));
         UbSdkArchivePath = (string)(AppContext.GetData(UbSdkArchivePathSwitch) ?? throw new InvalidOperationException("Unified Build SDK archive path must be specified"));
         TargetArchitecture = TargetRid.Split('-')[1];

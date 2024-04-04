@@ -42,7 +42,7 @@ public class ArtifactsSizeTest : SdkTests
         }
     }
 
-    [ConditionalFact(typeof(Config), nameof(IncludeArtifactsSizeTests))]
+    [ConditionalFact(typeof(Config), nameof(Config.IncludeArtifactsSizeTests))]
     public void CompareArtifactsToBaseline()
     {
         Assert.False(string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath));
@@ -62,8 +62,8 @@ public class ArtifactsSizeTest : SdkTests
         string tempTarballDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         Directory.CreateDirectory(tempTarballDir);
 
-        Utilities.ExtractTarball(Config.SdkTarballPath, tempTarballDir, OutputHelper);
-        Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, tempTarballDir, OutputHelper);
+        Utilities.ExtractTarball(Config.SdkTarballPath!, tempTarballDir, OutputHelper);
+        Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath!, tempTarballDir, OutputHelper);
 
         Dictionary<string, long> tarEntries = Directory.EnumerateFiles(tempTarballDir, "*", SearchOption.AllDirectories)
             .Where(filePath => !filePath.Contains("SourceBuildReferencePackages"))

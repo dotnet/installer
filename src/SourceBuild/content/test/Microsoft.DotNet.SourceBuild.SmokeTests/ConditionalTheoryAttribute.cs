@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using Xunit;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests;
@@ -13,6 +14,6 @@ internal sealed class ConditionalTheoryAttribute : TheoryAttribute
 {
     public ConditionalTheoryAttribute(Type calleeType, string memberName, string? reason = null)
     {
-        ConditionalFactAttribute.EvaluateSkip(calleeType, memberName, reason, (skip) => Skip = skip);
+        ConditionalFactAttribute.EvaluateSkip(calleeType, memberName, (skip) => Skip = skip, reason);
     }
 }

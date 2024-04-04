@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Reflection;
 using Xunit;
 
@@ -14,10 +15,10 @@ internal sealed class ConditionalFactAttribute : FactAttribute
 {
     public ConditionalFactAttribute(Type calleeType, string memberName, string? reason = null)
     {
-        EvaluateSkip(calleeType, memberName, reason, (skip) => Skip = skip);
+        EvaluateSkip(calleeType, memberName, (skip) => Skip = skip, reason);
     }
 
-    internal static void EvaluateSkip(Type calleeType, string memberName, string? reason = null, Action<string> setSkip)
+    internal static void EvaluateSkip(Type calleeType, string memberName, Action<string> setSkip, string? reason = null)
     {
         TypeInfo typeInfo = calleeType.GetTypeInfo();
         bool shouldRun = (bool?)typeInfo.GetProperty(memberName)?.GetValue(null) ?? false;
