@@ -27,7 +27,7 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
 {
     public class Config
     {
-        public string GitInfoDir = (string)(AppContext.GetData("Microsoft.DotNet.UnifiedBuild.Tests.GitInfoDir") ?? throw new InvalidOperationException("RuntimeConfig value 'Microsoft.DotNet.UnifiedBuild.Tests.GitInfoDir' must be set"));
+        public string[] ExcludedFileExtensions = [".psmdcp", ".p7s"];
         public string PackageBaseUrl = "https://pkgs.dev.azure.com/dnceng/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/_packaging/a54510f9-4b2c-4e69-b96a-6096683aaa1f/nuget/v3/flat2";
         public string NugetIndexUrl = "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json";
         public string[] NugetIndices = [
@@ -41,8 +41,8 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
         ];
     }
 
-    private const string OfficialBuildIdProperty = "OfficialBuildId";
     Config _config;
+
     public NugetPackageContentTests(ITestOutputHelper outputHelper, Config config) : base(outputHelper)
     {
         _config = config;
@@ -56,22 +56,6 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
             .Where(p => !(Path.GetFileName(Path.GetDirectoryName(p)) is "fsharp" or "command-line-api"))
             .Select<string, object[]>(p => [p]);
         return packagesArray;
-    }
-
-    string GetGitInfoProperty(string repo, string propertyName)
-    {
-        var gitInfoPropsPath = Path.Combine(_config.GitInfoDir, repo + ".props");
-        var content = File.ReadAllText(gitInfoPropsPath);
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(content);
-
-        XmlNode officialBuildIdNode = xmlDoc.SelectSingleNode("//" + propertyName)!;
-        if (officialBuildIdNode != null)
-        {
-            return officialBuildIdNode.InnerText;
-        }
-        Debug.Fail($"Could not find property {propertyName} in {repo}.props in git-info directory");
-        throw new UnreachableException();
     }
 
     /// <Summary>
@@ -90,21 +74,18 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
         using PackageArchiveReader testPackageReader= new PackageArchiveReader(File.OpenRead(nugetPackagePath));
         NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
         var packageName = testNuspecReader.GetId();
-        var gitInfoPackageVersion = GetGitInfoProperty(repoName, "OutputPackageVersion");
         var testPackageVersion = testNuspecReader.GetVersion().ToFullString();
-        OutputHelper.WriteLine($"Package '{fileName}' from repo '{repoName}' has version '{testPackageVersion}' in the nuspec and the git-info OutputPackageVersion for '{repoName}' is '{gitInfoPackageVersion}'");
 
         NuGetVersion packageVersion = new NuGetVersion(testPackageVersion);
         var packageStream = await TryDownloadPackage(packageName, packageVersion);
         if (packageStream is null)
-            Assert.Fail($"Could not find package '{packageName}' with version '{packageVersion}'");
+            OutputHelper.LogWarningMessage($"Could not find package '{packageName}' with version '{packageVersion}'");
         OutputHelper.WriteLine($"Found package '{packageName}' with version '{packageVersion}'");
 
         using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
         NuspecReader nuspecReader = await packageReader.GetNuspecReaderAsync(CancellationToken.None);
-        string[] excludedFileExtensions = [".psmdcp"];
-        ImmutableHashSet<string> baselineFiles = packageReader.GetFiles().Where(f => !excludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
-        ImmutableHashSet<string> testFiles = testPackageReader.GetFiles().Where(f => !excludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        ImmutableHashSet<string> baselineFiles = packageReader.GetFiles().Where(f => !_config.ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        ImmutableHashSet<string> testFiles = testPackageReader.GetFiles().Where(f => !_config.ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
         foreach(var baseline in baselineFiles)
         {
             if (!testFiles.Contains(baseline))

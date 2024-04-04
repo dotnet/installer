@@ -27,6 +27,7 @@
       <_ProducedPackages Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
     </ItemGroup>
     <ItemGroup>
+      <!-- SDK archive test configs -->
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
@@ -46,14 +47,13 @@
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.MsftSdkArchivePath">
         <Value>$(UBTestsMsftSdkArchivePath)</Value>
       </RuntimeHostConfigurationOption>
+
+      <!-- Nuget package test configs -->
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.NoDiagnosticMessages">
         <Value>$(VSTestUseMSBuildOutput)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.Packages">
         <Value>@(_ProducedPackages->'%(Identity)')</Value>
-      </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.GitInfoDir">
-        <Value>$(GitInfoDir)</Value>
       </RuntimeHostConfigurationOption>
     </ItemGroup>
   </Target>
