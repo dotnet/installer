@@ -335,6 +335,33 @@
              RunEachTargetSeparately="$(RunEachTargetSeparately)" />
   </Target>
 
+  <!-- Discover the Arcade SDKs built from the live Arcade source and set them as overrides here. -->
+  <Target Name="DiscoverArcadeSourceBuiltSdkOverrides"
+          DependsOnTargets="GetRepositoryReferenceInfo"
+          Condition="'$(UseBootstrapArcade)' != 'true'">
+    <PropertyGroup>
+      <_ArcadeSdkName>Microsoft.DotNet.Arcade.Sdk</_ArcadeSdkName>
+    </PropertyGroup>
+    <ItemGroup>
+      <_BuiltArcadeSdkPackage Include="@(DependentRepoPackageFile)"
+                              Condition="!$([System.String]::new('%(Identity)').EndsWith('.symbols.nupkg')) and $([System.String]::new('%(Identity)').Contains($(_ArcadeSdkName)))" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_BuiltArcadeSdkPackageVersion>$([System.String]::new('%(_BuiltArcadeSdkPackage.FileName)').Substring($([MSBuild]::Add($(_ArcadeSdkName.Length), 1))))</_BuiltArcadeSdkPackageVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(_BuiltArcadeSdkPackageVersion)" />
+      <ArcadeSharedFrameworkSdkOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Group="ARCADE_SHARED_FX_SDK" Version="$(_BuiltArcadeSdkPackageVersion)" />
+      <ArcadeCMakeSdkOverride Include="Microsoft.DotNet.CMake.Sdk" Group="ARCADE_CMAKE_SDK" Version="$(_BuiltArcadeSdkPackageVersion)" />
+  
+      <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+      <SourceBuiltSdkOverride Include="@(ArcadeCMakeSdkOverride)" />
+      <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="SetSourceBuiltSdkOverrides"
           Condition="'@(SourceBuiltSdkOverride)' != ''">
     <ItemGroup>
@@ -356,6 +383,7 @@
                             UpdateGlobalJsonVersions;
                             UpdateEngCommonFiles;
                             CreateBuildInputProps;
+                            DiscoverArcadeSourceBuiltSdkOverrides;
                             SetSourceBuiltSdkOverrides">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
     <Message Importance="High" Text="Running command:" />
