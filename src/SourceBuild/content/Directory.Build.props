@@ -84,7 +84,7 @@
 
   <!-- Init basic Arcade props, if the project importing this file doesn't use Arcade.
        Keep in sync with props/targets in the Arcade.Sdk. -->
-  <PropertyGroup Condition="'$(SkipArcadeSdkImport)' == 'true'">  
+  <PropertyGroup Condition="'$(SkipArcadeSdkImport)' == 'true'">
     <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::NormalizeDirectory('$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'global.json'))'))</RepoRoot>
 
     <!-- Respect environment variable for the .NET install directory if set; otherwise, use the repo default location -->
