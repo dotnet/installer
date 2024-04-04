@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.Build.Traversal">
 
   <ItemGroup>
+    <ProjectReference Include="$(ToolsDir)init-build.proj" Test="false" />
     <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" Test="false" />
 
     <ProjectReference Include="test\Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj"
@@ -19,14 +20,10 @@
     <Message Text="Build Environment: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
   </Target>
 
-  <Target Name="InitBuild" BeforeTargets="Build">
-    <MSBuild Projects="$(ToolsDir)init-build.proj" Targets="Build" />
-  </Target>
-
   <!-- Create a merge manifest from the individual repository manifest files. -->
-  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
   <Target Name="MergeAssetManifests" AfterTargets="Build">
-    <PropertyGroup>      
+    <PropertyGroup>
       <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
     </PropertyGroup>
 
