@@ -90,14 +90,14 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
         {
             if (!testFiles.Contains(baseline))
             {
-                OutputHelper.LogWarningMessage($"Unified build built package is missing file '{baseline}'");
+                OutputHelper.LogWarningMessage($"Unified build package '{packageName}' is missing file '{baseline}'");
             }
         }
         foreach(var testFile in testFiles)
         {
             if (!baselineFiles.Contains(testFile))
             {
-                OutputHelper.LogWarningMessage($"Unified build built package has additional file '{testFile}'");
+                OutputHelper.LogWarningMessage($"Unified build package '{packageName}' has additional file '{testFile}'");
             }
         }
     }
