@@ -7,23 +7,24 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.IO.Enumeration;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.DotNet.UnifiedBuild.BaselineTests;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.SourceBuild.SmokeTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselinTests;
 
 [Trait("Category", "SdkContent")]
-public class SdkContentTests : TestBase
+public class SdkContentTests : TestBase, IClassFixture<Config>
 {
     Exclusions Exclusions;
-    public SdkContentTests(ITestOutputHelper outputHelper, Config config) : base(outputHelper, config)
+    Config Config;
+    public SdkContentTests(ITestOutputHelper outputHelper, Config config) : base(outputHelper)
     {
+        Config = config;
         Exclusions = new(Config.TargetRid);
     }
 

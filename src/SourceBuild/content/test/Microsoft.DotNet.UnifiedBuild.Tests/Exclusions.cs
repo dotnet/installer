@@ -8,7 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Enumeration;
 using System.Linq;
-using Microsoft.DotNet.SourceBuild.SmokeTests;
+
+namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
 
 public class Exclusions
 {

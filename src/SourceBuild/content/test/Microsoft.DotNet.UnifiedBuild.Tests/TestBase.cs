@@ -6,19 +6,17 @@ using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.SourceBuild.SmokeTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
 
-public abstract class TestBase : IClassFixture<Config>
+public abstract class TestBase 
 {
-    protected Config Config;
     public static string LogsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "logs");
 
     public ITestOutputHelper OutputHelper { get; }
 
-    public TestBase(ITestOutputHelper outputHelper, Config config)
+    public TestBase(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
-        Config = config;
         if (!Directory.Exists(LogsDirectory))
         {
             Directory.CreateDirectory(LogsDirectory);

@@ -8,21 +8,24 @@
     <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic%3bLogFileName=Microsoft.DotNet.UnifiedBuild.Tests.xml</VSTestLogger>
     <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
     <VsTestUseMSBuildOutput>true</VsTestUseMSBuildOutput>
-    <VSTestCLIRunSettings>$(VSTestCLIRunSettings);RunConfiguration.DotNetHostPath=$(DotnetTool)</VSTestCLIRunSettings>
+    <VSTestCLIRunSettings>$(VSTestCLIRunSettings);RunConfiguration.DotNetHostPath=$(DotnetTool);xUnit.DiagnosticMessages=true</VSTestCLIRunSettings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+    <PackageReference Include="Nuget.Protocol" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="assets\**" CopyToOutputDirectory="Always" />
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Target Name="SetRuntimeConfigOptions"
           DependsOnTargets="DetermineSourceBuiltSdkVersion"
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
+    <ItemGroup>
+      <_ProducedPackages Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
+    </ItemGroup>
     <ItemGroup>
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
@@ -45,6 +48,12 @@
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.NoDiagnosticMessages">
         <Value>$(VSTestUseMSBuildOutput)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.Packages">
+        <Value>@(_ProducedPackages->'%(Identity)')</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.GitInfoDir">
+        <Value>$(GitInfoDir)</Value>
       </RuntimeHostConfigurationOption>
     </ItemGroup>
   </Target>
