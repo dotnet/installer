@@ -1,0 +1,11 @@
+<Project>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
+    <VSTestCLIRunSettings>$(VSTestCLIRunSettings);RunConfiguration.DotNetHostPath=$(DotnetTool)</VSTestCLIRunSettings>
+  </PropertyGroup>
+
+</Project>

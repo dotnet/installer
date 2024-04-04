@@ -50,7 +50,8 @@ $env:NUGET_PACKAGES="$RepoRoot\.packages\"
 # Handle actions
 $action = '-restore /t:Build'
 if ($test) {
-  $action += ';Test'
+  # This repo uses the VSTest integration instead of the Arcade Test target
+  $action += ';VSTest'
 }
 
 if ($help) {

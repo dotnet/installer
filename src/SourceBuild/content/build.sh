@@ -113,7 +113,8 @@ while [[ $# > 0 ]]; do
       exit 0
       ;;
     -test|-t)
-      action="$action;Test"
+      # This repo uses the VSTest integration instead of the Arcade Test target
+      action="$action;VSTest"
       test=true
       ;;
 
