@@ -126,7 +126,6 @@ jobs:
       /p:SmokeTestsIncludeArtifactsSizeTests=${{ parameters.includeArtifactsSize }}
       /p:TargetRid=${{ parameters.targetRid }}
       /p:PortableRid=$(Platform)-${{ parameters.architecture }}
-
     displayName: Run Tests
     workingDirectory: $(Build.SourcesDirectory)
 
