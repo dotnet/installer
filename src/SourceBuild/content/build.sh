@@ -191,12 +191,19 @@ if [[ "$ci" == true ]]; then
   fi
 fi
 
+# Never use the global nuget cache folder
+use_global_nuget_cache=false
+
 . "$scriptroot/eng/common/tools.sh"
 
 function Build {
   if [[ "$sourceOnly" != "true" ]]; then
 
     InitializeToolset
+
+    # Manually unset NUGET_PACKAGES as InitializeToolset sets it unconditionally.
+    # The env var shouldn't be set so that the RestorePackagesPath msbuild property is respected.
+    unset NUGET_PACKAGES
 
     local bl=""
     if [[ "$binary_log" == true ]]; then

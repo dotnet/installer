@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.Build.Traversal">
 
   <ItemGroup>
-    <ProjectReference Include="$(ToolsDir)init-build.proj" Test="false" />
-    <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" Test="false" />
+    <ProjectReference Include="$(ToolsDir)init-build.proj" Test="false" BuildInParallel="false" />
+    <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" Test="false" BuildInParallel="false" />
 
     <ProjectReference Include="test\Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj"
                       Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
