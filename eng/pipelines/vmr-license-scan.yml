@@ -93,7 +93,6 @@ jobs:
       -bl:$(Build.SourcesDirectory)/artifacts/log/Debug/BuildTests_$(date +"%m%d%H%M%S").binlog 
       -flp:LogFile=$(Build.SourcesDirectory)/artifacts/logs/BuildTests_$(date +"%m%d%H%M%S").log
       -clp:v=m
-      /p:SmokeTestsUseLiveBuild=false
       /p:SmokeTestsLicenseScanPath=$(repoPath)
       /p:SmokeTestsWarnOnLicenseScanDiffs=false
       /p:TargetRid=linux-x64

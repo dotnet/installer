@@ -14,8 +14,9 @@
     <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'smoke-tests'))</RestorePackagesPath>
   </PropertyGroup>
 
-  <!-- This test project depends on the output of installer.proj if SdkTarballPath isn't already provided and SmokeTestsUseLiveBuild isn't false. -->
-  <ItemGroup Condition="'$(SmokeTestsUseLiveBuild)' != 'false' and '$(SdkTarballPath)' == ''">
+  <!-- This test project depends on the output of installer.proj only when SdkTarballPath, SourceBuiltArtifactsPath
+       and LicenseScanPath properties aren't externally provided. -->
+  <ItemGroup Condition="'$(SdkTarballPath)' == '' and '$(SourceBuiltArtifactsPath)' == '' and '$(LicenseScanPath)' == ''">
     <ProjectReference Include="$(RepoProjectsDir)installer.proj" ReferenceOutputAssembly="false" PrivateAssets="all" />
   </ItemGroup>
 
