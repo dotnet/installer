@@ -33,9 +33,9 @@ parameters:
 - name: ubuntu2204Container
   type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
-- name: mariner20CrossArm64Container
+- name: ubuntu2204ArmContainer
   type: string
-  default: mcr.microsoft.com/dotnet-buildtools/prereqs:mariner-2.0-cross-arm64
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-arm64
 
 # These are not expected to be passed it but rather just object variables reused below
 - name: pool_Linux
@@ -215,7 +215,7 @@ stages:
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: arm64
         pool: ${{ parameters.pool_LinuxArm64 }}
-        container: ${{ parameters.mariner20CrossArm64Container }}
+        container: ${{ parameters.ubuntu2204ArmContainer }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
