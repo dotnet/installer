@@ -21,7 +21,7 @@
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
     <ItemGroup>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LogsDirectory">
-        <Value>$(ArtifactsLogDir)</Value>
+        <Value>$(ArtifactsTestResultsDir)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>

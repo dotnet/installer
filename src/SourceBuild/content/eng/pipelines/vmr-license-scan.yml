@@ -105,17 +105,19 @@ jobs:
       targetFolder=$(Build.StagingDirectory)/BuildLogs/
       mkdir -p ${targetFolder}
       cd "$(Build.SourcesDirectory)"
-      find artifacts/log/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/log/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/log/ -type f -name "BuildTests*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/log/ -type f -name "BuildTests*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
       echo "Updated:"
-      find artifacts/log/ -type f -name "UpdatedLicenseExclusions*.txt"
-      find artifacts/log/ -type f -name "UpdatedLicenseExclusions*.txt" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/log/ -type f -name "Updated*.json"
-      find artifacts/log/ -type f -name "Updated*.json" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "UpdatedLicenseExclusions*.txt"
+      find artifacts/TestResults/ -type f -name "UpdatedLicenseExclusions*.txt" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "Updated*.json"
+      find artifacts/TestResults/ -type f -name "Updated*.json" -exec cp {} --parents -t ${targetFolder} \;
       echo "Results:"
-      find artifacts/log/ -type f -name "scancode-results*.json" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "scancode-results*.json" -exec cp {} --parents -t ${targetFolder} \;
       echo "All:"
-      ls -R artifacts/log/
+      ls -R artifacts/TestResults/
       echo "BuildLogs:"
       ls -R ${targetFolder}
     displayName: Prepare BuildLogs staging directory

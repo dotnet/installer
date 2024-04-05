@@ -387,10 +387,11 @@ jobs:
 
         cd "$(sourcesPath)"
 
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.diff"
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "Updated*.txt"
+        CopyWithRelativeFolders "artifacts/log/"             $targetFolder "*.binlog"
+        CopyWithRelativeFolders "artifacts/log/"             $targetFolder "*.log"
+        CopyWithRelativeFolders "artifacts/TestResults/      $targetFolder "*.binlog"
+        CopyWithRelativeFolders "artifacts/TestResults/      $targetFolder "*.diff"
+        CopyWithRelativeFolders "artifacts/TestResults/      $targetFolder "Updated*.txt"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
 
@@ -414,12 +415,15 @@ jobs:
         cd "$(sourcesPath)"
         find artifacts/log/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find artifacts/log/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/log/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/log/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
+
         if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
           find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
           find artifacts/log/binary-report/ -exec rsync -R {} -t ${targetFolder} \;
         fi
+
         find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
 

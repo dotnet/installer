@@ -138,10 +138,12 @@ jobs:
       targetFolder=$(Build.StagingDirectory)/BuildLogs/
       mkdir -p ${targetFolder}
       cd "$(Build.SourcesDirectory)"
-      find artifacts/log/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/log/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/log/ -type f -name "*.diff" -exec cp {} --parents -t ${targetFolder} \;
-      find artifacts/log/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/log/ -type f -name "BuildTests*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/log/ -type f -name "BuildTests*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "*.binlog" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "*.log" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "*.diff" -exec cp {} --parents -t ${targetFolder} \;
+      find artifacts/TestResults/ -type f -name "Updated*.txt" -exec cp {} --parents -t ${targetFolder} \;
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
