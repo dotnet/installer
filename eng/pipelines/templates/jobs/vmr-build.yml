@@ -412,10 +412,10 @@ jobs:
         mkdir -p ${targetFolder}
 
         cd "$(sourcesPath)"
-        find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
         if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
           find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
           find artifacts/log/binary-report/ -exec rsync -R {} -t ${targetFolder} \;
