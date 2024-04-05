@@ -79,7 +79,10 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
         NuGetVersion packageVersion = new NuGetVersion(testPackageVersion);
         var packageStream = await TryDownloadPackage(packageName, packageVersion);
         if (packageStream is null)
+        {
             OutputHelper.LogWarningMessage($"Could not find package '{packageName}' with version '{packageVersion}'");
+            return;
+        }
         OutputHelper.WriteLine($"Found package '{packageName}' with version '{packageVersion}'");
 
         using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
