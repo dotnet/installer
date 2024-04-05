@@ -11,6 +11,15 @@
   <PropertyGroup>
     <!-- Force use of dotnet msbuild (ignoring global.json contents) unless ForceDotNetMSBuildEngine is explicitly set in the repo project. -->
     <BuildArgs Condition="'$(BuildOS)' == 'windows' and '$(ForceDotNetMSBuildEngine)' != 'false'">$(BuildArgs) $(FlagParameterPrefix)msbuildEngine dotnet</BuildArgs>
+    <!-- Add the overrides for the shipping and non-shipping packages here to allow repo projects to identify a project as reference-only -->
+    <RepoArtifactsShippingPackagesDir Condition="'$(ReferenceOnlyRepoArtifacts)' != 'true'">$([MSBuild]::NormalizeDirectory('$(ArtifactsShippingPackagesDir)', '$(RepositoryName)'))</RepoArtifactsShippingPackagesDir>
+    <RepoArtifactsShippingPackagesDir Condition="'$(ReferenceOnlyRepoArtifacts)' == 'true'">$(ReferencePackagesDir)</RepoArtifactsShippingPackagesDir>
+    <RepoArtifactsNonShippingPackagesDir Condition="'$(ReferenceOnlyRepoArtifacts)' != 'true'">$([MSBuild]::NormalizeDirectory('$(ArtifactsNonShippingPackagesDir)', '$(RepositoryName)'))</RepoArtifactsNonShippingPackagesDir>
+    <RepoArtifactsNonShippingPackagesDir Condition="'$(ReferenceOnlyRepoArtifacts)' == 'true'">$(ReferencePackagesDir)</RepoArtifactsNonShippingPackagesDir>
+    <!-- Pass location for packages -->
+    <BuildArgs>$(BuildArgs) /p:SourceBuiltShippingPackagesDir=$(RepoArtifactsShippingPackagesDir)</BuildArgs>
+    <!-- Trim the trailing slash as it breaks argument parsing on Windows if this is the last argument. -->
+    <BuildArgs>$(BuildArgs) /p:SourceBuiltNonShippingPackagesDir=$(RepoArtifactsNonShippingPackagesDir.TrimEnd('\'))</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,8 +33,6 @@
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <ProjectAssetsJsonArchiveFile>$(PackageReportDir)all-project-assets-json-files.zip</ProjectAssetsJsonArchiveFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
-
-    <IntermediateSymbolsRepoDir>$(IntermediateSymbolsRootDir)$(RepositoryName)</IntermediateSymbolsRepoDir>
   </PropertyGroup>
 
   <!-- Returns the repository references of this project and all the projects this project references, recursively -->
@@ -539,8 +546,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
     <PropertyGroup>
-      <_ToolPackagesRoot Condition="'$(ReferenceOnlyRepoArtifacts)' != 'true'">$(RepoArtifactsNonShippingPackagesDir)</_ToolPackagesRoot>
-      <_ToolPackagesRoot Condition="'$(ReferenceOnlyRepoArtifacts)' == 'true'">$(ReferencePackagesDir)</_ToolPackagesRoot>
+      <_ToolPackagesRoot>$(RepoArtifactsNonShippingPackagesDir)</_ToolPackagesRoot>
     </PropertyGroup>
 
     <ItemGroup>
@@ -572,34 +578,6 @@
     </Touch>
   </Target>
 
-  <Target Name="DiscoverSymbolsArchiveFile"
-          Condition="'$(DotNetBuildSourceOnly)' == 'true' and
-                     '$(IsUtilityProject)' != 'true'">
-    <PropertyGroup>
-      <RepoAssetsSymbolsArchive>$(ArtifactsAssetsSymbolsDir)Symbols.$(RepositoryName)$(ArchiveExtension)</RepoAssetsSymbolsArchive>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <RepoSymbolsArchive Include="$(RepoAssetsSymbolsArchive)" Condition="Exists('$(RepoAssetsSymbolsArchive)')" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="ExtractSymbolsArchiveFile"
-          DependsOnTargets="RepoBuild;DiscoverSymbolsArchiveFile"
-          Condition="'$(DotNetBuildSourceOnly)' == 'true' and
-                     '$(IsUtilityProject)' != 'true' and
-                     '@(RepoSymbolsArchive)' != ''"
-          Inputs="@(RepoSymbolsArchive)"
-          Outputs="$(IntermediateSymbolsRepoDir)">
-
-    <Error Text="There must only be a single repository symbols archive file. Found: @(RepoSymbolsArchive)"
-           Condition="@(RepoSymbolsArchive->Count()) &gt; 1" />
-
-    <!-- Extract repo symbols tarball -->
-    <MakeDir Directories="$(IntermediateSymbolsRepoDir)" />
-    <Exec Command="tar -xzf %(RepoSymbolsArchive.Identity) -C $(IntermediateSymbolsRepoDir)" />
-  </Target>
-
   <Target Name="Build"
           DependsOnTargets="
     BuildRepoReferences;
@@ -607,8 +585,6 @@
     LogRepoArtifacts;
     CopyInnerBuildRestoredPackages;
     ExtractToolPackage;
-    DiscoverSymbolsArchiveFile;
-    ExtractSymbolsArchiveFile;
     CleanupRepo" />
 
   <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.UsageReport.WritePackageUsageData" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />

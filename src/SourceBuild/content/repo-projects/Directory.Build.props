@@ -39,13 +39,9 @@
     <NuGetConfigFile Condition="'$(OriginalNuGetConfigFile)' != ''">$(BaseIntermediateOutputPath)$([System.IO.Path]::GetFileName('$(OriginalNuGetConfigFile)'))</NuGetConfigFile>
 
     <RepoAssetManifestsDir>$([MSBuild]::NormalizeDirectory('$(AssetManifestsIntermediateDir)', '$(RepositoryName)'))</RepoAssetManifestsDir>
+    <IntermediateSymbolsRepoDir>$([MSBuild]::NormalizeDirectory('$(IntermediateSymbolsRootDir)', '$(RepositoryName)'))</IntermediateSymbolsRepoDir>
 
     <SourceBuiltSdksDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'source-built-sdks'))</SourceBuiltSdksDir>
-
-    <RepoArtifactsShippingPackagesDir Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$([MSBuild]::NormalizeDirectory('$(ArtifactsShippingPackagesDir)', '$(RepositoryName)'))</RepoArtifactsShippingPackagesDir>
-    <RepoArtifactsShippingPackagesDir Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</RepoArtifactsShippingPackagesDir>
-    <RepoArtifactsNonShippingPackagesDir Condition="'$(RepositoryName)' != 'source-build-reference-packages'">$([MSBuild]::NormalizeDirectory('$(ArtifactsNonShippingPackagesDir)', '$(RepositoryName)'))</RepoArtifactsNonShippingPackagesDir>
-    <RepoArtifactsNonShippingPackagesDir Condition="'$(RepositoryName)' == 'source-build-reference-packages'">$(ReferencePackagesDir)</RepoArtifactsNonShippingPackagesDir>
 
     <SbrpCacheNuGetSourceName>source-build-reference-package-cache</SbrpCacheNuGetSourceName>
     <SourceBuiltSourceNamePrefix>source-built-</SourceBuiltSourceNamePrefix>
@@ -84,14 +80,13 @@
     <BuildArgs Condition="'$(NuGetConfigFile)' != ''">$(BuildArgs) /p:RestoreConfigFile=$(NuGetConfigFile)</BuildArgs>
     <!-- TODO rename this property https://github.com/dotnet/source-build/issues/4165 -->
     <BuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(BuildArgs) /p:SourceBuildUseMonoRuntime=$(SourceBuildUseMonoRuntime)</BuildArgs>
-    <!-- Pass locations for assets and packages -->
+    <!-- Pass locations for assets -->
     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetsDir=$(ArtifactsAssetsDir)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:SourceBuiltShippingPackagesDir=$(RepoArtifactsShippingPackagesDir)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:SourceBuiltNonShippingPackagesDir=$(RepoArtifactsNonShippingPackagesDir)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetManifestsDir=$(RepoAssetManifestsDir)</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+    <BuildArgs>$(BuildArgs) /p:SourceBuiltSymbolsDir=$(IntermediateSymbolsRepoDir)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:ArcadeBuildFromSource=true</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:DotNetBuildSourceOnly=true</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:PreviouslySourceBuiltNupkgCacheDir="$(PrebuiltSourceBuiltPackagesPath)"</BuildArgs>
