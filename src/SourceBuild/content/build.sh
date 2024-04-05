@@ -225,12 +225,12 @@ function Build {
       properties="$properties /p:ContinuousIntegrationBuild=true"
     fi
 
-    "$CLI_ROOT/dotnet" build-server shutdown
-
-    "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
-
-    # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
-    "$CLI_ROOT/dotnet" build-server shutdown
+    if [ "$test" == "true" ]; then
+      "$CLI_ROOT/dotnet" build-server shutdown
+      "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolPackage,BuildMSBuildSdkResolver $properties
+      # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
+      "$CLI_ROOT/dotnet" build-server shutdown
+    fi
 
     # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
     export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
