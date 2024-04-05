@@ -53,25 +53,25 @@ if ($help) {
   exit 0
 }
 
-$arguments = ""
+$arguments = @()
 $targets = "/t:Build"
 
 # This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
   if ($testNoBuild) {
     $targets = "/t:VSTest"
-    arguments += " /p:VSTestNoBuild=true"
+    $arguments += "/p:VSTestNoBuild=true"
   } else {
     $targets += ";VSTest"
   }
 }
 
 if ($buildRepoTests) {
-  $arguments += " /p:DotNetBuildTests=true"
+  $arguments += "/p:DotNetBuildTests=true"
 }
 
 if ($cleanWhileBuilding) {
-  $arguments += " /p:CleanWhileBuilding=true"
+  $arguments += "/p:CleanWhileBuilding=true"
 }
 
 function Build {
@@ -90,7 +90,7 @@ function Build {
     $targets `
     /p:Configuration=$configuration `
     @properties `
-    $arguments
+    @arguments
 }
 
 try {
