@@ -363,7 +363,7 @@ jobs:
         fi
 
         # TODO: Replace BuildProjectReferences with --testnobuild when that flag is implemented.
-        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh --bl artifacts/log/Release/Test.binlog --source-only $poisonArg --test $(additionalBuildArgs) /p:BuildProjectReferences=false /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
+        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --source-only $poisonArg --test $(additionalBuildArgs) /p:BuildProjectReferences=false /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
       displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
