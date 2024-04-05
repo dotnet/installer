@@ -18,7 +18,8 @@
     <RepoArtifactsNonShippingPackagesDir Condition="'$(ReferenceOnlyRepoArtifacts)' == 'true'">$(ReferencePackagesDir)</RepoArtifactsNonShippingPackagesDir>
     <!-- Pass location for packages -->
     <BuildArgs>$(BuildArgs) /p:SourceBuiltShippingPackagesDir=$(RepoArtifactsShippingPackagesDir)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:SourceBuiltNonShippingPackagesDir=$(RepoArtifactsNonShippingPackagesDir)</BuildArgs>
+    <!-- Trim the trailing slash as it breaks argument parsing on Windows if this is the last argument. -->
+    <BuildArgs>$(BuildArgs) /p:SourceBuiltNonShippingPackagesDir=$(RepoArtifactsNonShippingPackagesDir.TrimEnd('\))</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup>
