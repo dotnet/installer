@@ -18,7 +18,8 @@ usage()
   echo "Actions:"
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
-  echo "  --test                          Run tests (short: -t)"
+  echo "  --test                          Run tests (repo tests omitted by default) (short: -t)"
+  echo "                                  Use in conjunction with --test-no-build to run tests without building"
   echo ""
 
   echo "Source-only settings:"
@@ -33,12 +34,13 @@ usage()
   echo ""
 
   echo "Advanced settings:"
-  echo "  --build-tests                   Build repository tests. May not be supported with --source-only"
+  echo "  --build-repo-tests              Build repository tests. May not be supported with --source-only"
   echo "  --ci                            Set when running on CI server"
   echo "  --clean-while-building          Cleans each repo after building (reduces disk space usage, short: -cwb)"
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
+  echo "  --test-no-build                 Run tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -80,8 +82,8 @@ packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
+test_no_build=false
 
-targets='/t:Build'
 properties=''
 while [[ $# > 0 ]]; do
   opt="$(echo "${1/#--/-}" | tr "[:upper:]" "[:lower:]")"
@@ -108,8 +110,6 @@ while [[ $# > 0 ]]; do
       exit 0
       ;;
     -test|-t)
-      # This repo uses the VSTest integration instead of the Arcade Test target
-      targets="$targets;VSTest"
       test=true
       ;;
 
@@ -176,6 +176,9 @@ while [[ $# > 0 ]]; do
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
+    -test-no-build)
+      test_no_build=true
+      ;;
 
     *)
       properties="$properties $1"
@@ -195,6 +198,18 @@ fi
 use_global_nuget_cache=false
 
 . "$scriptroot/eng/common/tools.sh"
+
+targets="/t:Build"
+
+# This repo uses the VSTest integration instead of the Arcade Test target
+if [[ "$test" == true ]]; then
+  if [[ "$testnobuild" == true ]]; then
+    targets="/t:VSTest"
+    properties="$properties /p:VSTestNoBuild=true"
+  else
+    targets="$targets;VSTest"
+  fi
+fi
 
 function Build {
   if [[ "$sourceOnly" != "true" ]]; then

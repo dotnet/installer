@@ -11,7 +11,8 @@ Param(
   [switch][Alias('t')]$test,
 
   # Advanced settings
-  [switch]$buildTests,
+  [switch]$buildRepoTests,
+  [switch]$testNoBuild,
   [switch]$ci,
   [switch][Alias('cwb')]$cleanWhileBuilding,
   [switch][Alias('nobl')]$excludeCIBinarylog,
@@ -29,11 +30,13 @@ function Get-Usage() {
   Write-Host "Actions:"
   Write-Host "  -clean                  Clean the solution"
   Write-Host "  -help                   Print help and exit (short: -h)"
-  Write-Host "  -test                   Run tests (short: -t)"
+  Write-Host "  -test                   Run tests (repo tests omitted by default) (short: -t)"
+  Write-Host "                          Use in conjunction with -testNoBuild to run tests without building"
   Write-Host ""
 
   Write-Host "Advanced settings:"
-  Write-Host "  -build-tests            Build repository tests"
+  Write-Host "  -buildRepoTests         Build repository tests"
+  Write-Host "  -testNoBuild            Run tests without building when invoked with -test"
   Write-Host "  -ci                     Set when running on CI server"
   Write-Host "  -cleanWhileBuilding     Cleans each repo after building (reduces disk space usage, short: -cwb)"
   Write-Host "  -excludeCIBinarylog     Don't output binary log (short: -nobl)"
@@ -50,11 +53,25 @@ if ($help) {
   exit 0
 }
 
-# Handle targets
-$targets = '/t:Build'
+$arguments = ""
+$targets = "/t:Build"
+
+# This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
-  # This repo uses the VSTest integration instead of the Arcade Test target
-  $targets += ';VSTest'
+  if ($testNoBuild) {
+    $targets = "/t:VSTest"
+    arguments += " /p:VSTestNoBuild=true"
+  } else {
+    $targets += ";VSTest"
+  }
+}
+
+if ($buildRepoTests) {
+  $arguments += " /p:DotNetBuildTests=true"
+}
+
+if ($cleanWhileBuilding) {
+  $arguments += " /p:CleanWhileBuilding=true"
 }
 
 function Build {
@@ -65,18 +82,15 @@ function Build {
   $env:NUGET_PACKAGES=''
 
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'Build.binlog') } else { '' }
-  $cwb = if ($cleanWhileBuilding) { '/p:CleanWhileBuilding=true' } else { '' }
-  $btst = if ($buildTests) { '/p:DotNetBuildTests=true' } else { '' }
-  $buildProj = Join-Path $RepoRoot 'build.proj'
 
+  $buildProj = Join-Path $RepoRoot 'build.proj'
   MSBuild -restore `
     $buildProj `
     $bl `
     $targets `
     /p:Configuration=$configuration `
-    $cwb `
-    $btst `
-    @properties
+    @properties `
+    $arguments
 }
 
 try {

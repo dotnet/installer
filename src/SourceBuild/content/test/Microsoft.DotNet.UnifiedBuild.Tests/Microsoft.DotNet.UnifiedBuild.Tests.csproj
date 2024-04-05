@@ -7,11 +7,6 @@
     <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic</VSTestLogger>
   </PropertyGroup>
 
-  <!-- This test project depends on the output of installer.proj and its transitive dependencies. -->
-  <ItemGroup>
-    <ProjectReference Include="$(RepoProjectsDir)installer.proj" ReferenceOutputAssembly="false" PrivateAssets="all" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
   </ItemGroup>
