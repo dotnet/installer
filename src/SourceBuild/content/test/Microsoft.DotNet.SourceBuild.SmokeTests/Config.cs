@@ -17,6 +17,7 @@ internal static class Config
     public static string DotNetDirectory => (string)AppContext.GetData(ConfigSwitchPrefix + nameof(DotNetDirectory))! ?? throw new InvalidOperationException("DotNetDirectory must be specified");
     public static string PortableRid => (string)AppContext.GetData(ConfigSwitchPrefix + nameof(PortableRid))! ?? throw new InvalidOperationException("Portable RID must be specified");
     public static string TargetRid => (string)AppContext.GetData(ConfigSwitchPrefix + nameof(TargetRid))! ?? throw new InvalidOperationException("Target RID must be specified");
+    public static string LogsDirectory => (string)AppContext.GetData(ConfigSwitchPrefix + nameof(LogsDirectory))! ?? throw new InvalidOperationException("Logs directory must be specified");
 
     public static string? CustomPackagesPath => (string)AppContext.GetData(ConfigSwitchPrefix + nameof(CustomPackagesPath))!;
     public static bool ExcludeOmniSharpTests => bool.TryParse((string)AppContext.GetData(ConfigSwitchPrefix + nameof(ExcludeOmniSharpTests))!, out bool excludeOmniSharpTests) && excludeOmniSharpTests;

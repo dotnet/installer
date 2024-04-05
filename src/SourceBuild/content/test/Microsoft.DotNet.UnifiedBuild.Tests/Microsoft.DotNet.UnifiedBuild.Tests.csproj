@@ -20,6 +20,9 @@
           DependsOnTargets="DetermineSourceBuiltSdkVersion"
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
     <ItemGroup>
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LogsDirectory">
+        <Value>$(ArtifactsLogDir)</Value>
+      </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>

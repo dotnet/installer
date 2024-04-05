@@ -37,6 +37,9 @@
 
     <ItemGroup>
       <!-- Required values -->
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LogsDirectory">
+        <Value>$(ArtifactsLogDir)</Value>
+      </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).DotNetDirectory">
         <Value>$(TargetDir)extracted-sdk</Value>
       </RuntimeHostConfigurationOption>

@@ -253,7 +253,7 @@ internal class DotNetHelper
             fileName += $"-{differentiator}";
         }
 
-        return $"/bl:{Path.Combine(TestBase.LogsDirectory, $"{fileName}.binlog")}";
+        return $"/bl:{Path.Combine(Config.LogsDirectory, $"{fileName}.binlog")}";
     }
 
     private static bool DetermineIsMonoRuntime(string dotnetRoot)

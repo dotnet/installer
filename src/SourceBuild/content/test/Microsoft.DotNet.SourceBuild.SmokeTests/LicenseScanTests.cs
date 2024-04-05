@@ -132,7 +132,7 @@ public class LicenseScanTests : TestBase
         // Indicates how long until a timeout occurs for scanning a given file
         const int FileScanTimeoutSeconds = 240;
 
-        string scancodeResultsPath = Path.Combine(LogsDirectory, "scancode-results.json");
+        string scancodeResultsPath = Path.Combine(Config.LogsDirectory, "scancode-results.json");
 
         // Scancode Doc: https://scancode-toolkit.readthedocs.io/en/latest/index.html
         string ignoreOptions = string.Join(" ", s_ignoredFilePatterns.Select(pattern => $"--ignore {pattern}"));
@@ -156,7 +156,7 @@ public class LicenseScanTests : TestBase
         string baselineName = $"Licenses.{_targetRepo}.json";
 
         string baselinePath = BaselineHelper.GetBaselineFilePath(baselineName, BaselineSubDir);
-        string expectedFilePath = Path.Combine(LogsDirectory, baselineName);
+        string expectedFilePath = Path.Combine(Config.LogsDirectory, baselineName);
         if (File.Exists(baselinePath))
         {
             File.Copy(baselinePath, expectedFilePath, overwrite: true);
@@ -169,7 +169,7 @@ public class LicenseScanTests : TestBase
             File.WriteAllText(expectedFilePath, defaultResultsJson);
         }
 
-        string actualFilePath = Path.Combine(TestBase.LogsDirectory, $"Updated{baselineName}");
+        string actualFilePath = Path.Combine(Config.LogsDirectory, $"Updated{baselineName}");
         File.WriteAllText(actualFilePath, json);
 
         BaselineHelper.CompareFiles(expectedFilePath, actualFilePath, OutputHelper, Config.WarnOnLicenseScanDiffs);
