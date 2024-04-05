@@ -481,6 +481,29 @@
                       Overwrite="true" />
   </Target>
 
+  <Target Name="FixNewtonsoftInTesthostDepsJson" >
+
+    <!-- Patch version of Newtonsoft.Json in testhost.deps.json, because it is picked up by 
+    compliance checking scripts as a false-positive vulnerability. -->
+
+    <ItemGroup>
+      <NewtonSoftJsonVersionReplacement Include="%22Newtonsoft.Json%22: %2213.0.0.0%22">
+        <ReplacementString>"Newtonsoft.Json": "13.0.1.0"</ReplacementString>
+      </NewtonSoftJsonVersionReplacement>
+      <NewtonSoftJsonVersionReplacement Include="Newtonsoft.Json/13.0.0.0">
+        <ReplacementString>Newtonsoft.Json/13.0.1.0</ReplacementString>
+      </NewtonSoftJsonVersionReplacement>
+    </ItemGroup>
+
+    <ItemGroup>
+      <TestHostDepsJsonPath Include="$(OutputPath)/**/testhost.deps.json" />
+    </ItemGroup>
+    <ReplaceFileContents
+      InputFiles="@(TestHostDepsJsonPath)"
+      DestinationFiles="@(TestHostDepsJsonPath)"
+      ReplacementItems="@(NewtonSoftJsonVersionReplacement)" />
+  </Target>
+
   <Target Name="CopyIncludedWorkloadManifestFile" >
 
     <ItemGroup>
@@ -573,6 +596,7 @@
                             LayoutWorkloadUserLocalMarker;
                             LayoutBundledTools;
                             RetargetTools;
+                            FixNewtonsoftInTesthostDepsJson;
                             CrossgenLayout;
                             LayoutAppHostTemplate;
                             GeneratePrecomputedRarCache;
