@@ -588,7 +588,8 @@
     <Copy SourceFiles="@(PackageVersionPropsSnapshotFiles)" DestinationFolder="$(PackageReportDir)snapshots/" />
 
     <ItemGroup>
-      <RestoredPackageFile Include="$(NuGetPackageRoot)**/*.nupkg" />
+      <RestoredPackageFile Include="$(NuGetPackageRoot)**/*.nupkg"
+                           Exclude="$(NuGetPackageRoot)smoke-tests/**/*.nupkg" />
 
       <!-- Only contains packages when building. -->
       <TarballPrebuiltPackageFile Include="$(PrebuiltPackagesPath)*.nupkg" />
