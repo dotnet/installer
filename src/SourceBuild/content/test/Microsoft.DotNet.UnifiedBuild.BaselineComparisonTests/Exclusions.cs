@@ -9,7 +9,7 @@ using System.IO;
 using System.IO.Enumeration;
 using System.Linq;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public class Exclusions
 {

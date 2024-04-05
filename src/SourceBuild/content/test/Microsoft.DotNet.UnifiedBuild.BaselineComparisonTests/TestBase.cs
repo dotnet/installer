@@ -6,9 +6,9 @@ using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
-public abstract class TestBase 
+public abstract class TestBase
 {
     public static string LogsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "logs");
 

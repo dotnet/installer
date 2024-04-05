@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public class Config : IDisposable
 {
@@ -58,7 +58,7 @@ public class Config : IDisposable
             """);
     }
 
-    const string ConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.Tests.";
+    const string ConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.";
     const string BuildVersionSwitch = ConfigSwitchPrefix + nameof(UbBuildVersion);
     const string TargetRidSwitch = ConfigSwitchPrefix + nameof(TargetRid);
     const string PortableRidSwitch = ConfigSwitchPrefix + nameof(PortableRid);

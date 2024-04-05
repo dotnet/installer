@@ -468,7 +468,7 @@ jobs:
         searchFolder: $(sourcesPath)
         mergeTestResults: true
         publishRunAttachments: true
-        testRunTitle: UnifiedBuild_BaselineComparisonTests_$(Agent.JobName)
+        testRunTitle: UnifiedBuild_BaselineComparison.Tests_$(Agent.JobName)
 
   - task: CopyFiles@2
     inputs:

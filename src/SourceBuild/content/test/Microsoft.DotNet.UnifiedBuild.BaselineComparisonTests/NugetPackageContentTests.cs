@@ -19,38 +19,28 @@ using System.Xml;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 
 [Trait("Category", "SdkContent")]
-public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageContentTests.Config>
+public class NugetPackageContentTests : TestBase
 {
-    public class Config
-    {
-        public string[] ExcludedFileExtensions = [".psmdcp", ".p7s"];
-        public string PackageBaseUrl = "https://pkgs.dev.azure.com/dnceng/9ee6d478-d288-47f7-aacc-f6e6d082ae6d/_packaging/a54510f9-4b2c-4e69-b96a-6096683aaa1f/nuget/v3/flat2";
-        public string NugetIndexUrl = "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json";
-        public string[] NugetIndices = [
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries-transport/nuget/v3/index.json",
-            "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-transport/nuget/v3/index.json",
-        ];
-    }
+    public static readonly ImmutableArray<string> ExcludedFileExtensions = [".psmdcp", ".p7s"];
+    public static readonly ImmutableArray<string> NugetIndices = [
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries-transport/nuget/v3/index.json",
+        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-transport/nuget/v3/index.json",
+    ];
 
-    Config _config;
-
-    public NugetPackageContentTests(ITestOutputHelper outputHelper, Config config) : base(outputHelper)
-    {
-        _config = config;
-    }
+    public NugetPackageContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
     public static IEnumerable<object[]> GetPackagePaths()
     {
-        var packages = (string)(AppContext.GetData("Microsoft.DotNet.UnifiedBuild.Tests.Packages") ?? throw new InvalidOperationException("RuntimeConfig value 'Microsoft.DotNet.UnifiedBuild.Tests.Packages' must be set"));
+        var packages = (string)(AppContext.GetData("Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.Packages") ?? throw new InvalidOperationException("RuntimeConfig value 'Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.Packages' must be set"));
         var packagesArray = packages.Split(";")
             // Nuget is unable to find fsharp or command-line-api packages for some reason
             .Where(p => !(Path.GetFileName(Path.GetDirectoryName(p)) is "fsharp" or "command-line-api"))
@@ -87,8 +77,8 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
 
         using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
         NuspecReader nuspecReader = await packageReader.GetNuspecReaderAsync(CancellationToken.None);
-        ImmutableHashSet<string> baselineFiles = packageReader.GetFiles().Where(f => !_config.ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
-        ImmutableHashSet<string> testFiles = testPackageReader.GetFiles().Where(f => !_config.ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        ImmutableHashSet<string> baselineFiles = packageReader.GetFiles().Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        ImmutableHashSet<string> testFiles = testPackageReader.GetFiles().Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
         foreach(var baseline in baselineFiles)
         {
             if (!testFiles.Contains(baseline))
@@ -112,7 +102,7 @@ public class NugetPackageContentTests : TestBase, IClassFixture<NugetPackageCont
         CancellationToken cancellationToken = CancellationToken.None;
         SourceCacheContext cache = new SourceCacheContext();
         MemoryStream? packageStream = null;
-        foreach (var nugetRepository in _config.NugetIndices)
+        foreach (var nugetRepository in NugetIndices)
         {
             SourceRepository repository = Repository.Factory.GetCoreV3(nugetRepository);
             FindPackageByIdResource resource = await repository.GetResourceAsync<FindPackageByIdResource>();

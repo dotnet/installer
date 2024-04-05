@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 internal static class ExecuteHelper
 {

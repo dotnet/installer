@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
     <UBTestsWarnOnSdkContentDiffs>true</UBTestsWarnOnSdkContentDiffs>
-    <VSTestLogger>console%3bverbosity=quiet;trx%3bverbosity=diagnostic%3bLogFileName=Microsoft.DotNet.UnifiedBuild.Tests.trx</VSTestLogger>
+    <VSTestLogger>console%3bverbosity=quiet;trx%3bverbosity=diagnostic</VSTestLogger>
     <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
     <!-- There's a lot of logging that bloats the build's console output if this is set to true, and logs will be logged to the trx file if we need them -->
     <VsTestUseMSBuildOutput>false</VsTestUseMSBuildOutput>
@@ -29,31 +29,31 @@
     </ItemGroup>
     <ItemGroup>
       <!-- SDK archive test configs -->
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.UbSdkArchivePath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.TargetRid">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).TargetRid">
         <Value>$(TargetRid)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.PortableRid">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).PortableRid">
         <Value>$(PortableRid)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.UbBuildVersion">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbBuildVersion">
         <Value>$(SourceBuiltSdkVersion)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.WarnOnSdkContentDiffs">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).WarnOnSdkContentDiffs">
         <Value>$(UBTestsWarnOnSdkContentDiffs)</Value>
       </RuntimeHostConfigurationOption>
       <!-- Set for local testing to avoid downloading a new SDK each test -->
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.MsftSdkArchivePath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).MsftSdkArchivePath">
         <Value>$(UBTestsMsftSdkArchivePath)</Value>
       </RuntimeHostConfigurationOption>
 
       <!-- Nuget package test configs -->
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.NoDiagnosticMessages">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).NoDiagnosticMessages">
         <Value>$(VSTestUseMSBuildOutput)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="Microsoft.DotNet.UnifiedBuild.Tests.Packages">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).Packages">
         <Value>@(_ProducedPackages->'%(Identity)')</Value>
       </RuntimeHostConfigurationOption>
     </ItemGroup>

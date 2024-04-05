@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests;
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 [Trait("Category", "SdkContent")]
 public class SdkContentTests : TestBase, IClassFixture<Config>

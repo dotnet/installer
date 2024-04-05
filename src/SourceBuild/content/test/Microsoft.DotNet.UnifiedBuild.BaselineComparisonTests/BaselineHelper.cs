@@ -12,7 +12,7 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineTests
+namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests
 {
     internal class BaselineHelper
     {

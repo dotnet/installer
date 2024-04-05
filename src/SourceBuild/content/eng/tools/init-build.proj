@@ -115,7 +115,7 @@
 
   <Target Name="RestoreUnifiedBuildValidationTests"
           Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" >
-    <MSBuild Projects="../../test/Microsoft.DotNet.UnifiedBuild.Tests/Microsoft.DotNet.UnifiedBuild.Tests.csproj"
+    <MSBuild Projects="../../test/Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests/Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.csproj"
              Targets="Restore"
              Properties="MSBuildRestoreSessionId=$([System.Guid]::NewGuid())" />
   </Target>
