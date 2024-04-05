@@ -203,7 +203,7 @@ targets="/t:Build"
 
 # This repo uses the VSTest integration instead of the Arcade Test target
 if [[ "$test" == true ]]; then
-  if [[ "$testnobuild" == true ]]; then
+  if [[ "$test_no_build" == true ]]; then
     targets="/t:VSTest"
     properties="$properties /p:VSTestNoBuild=true"
   else
