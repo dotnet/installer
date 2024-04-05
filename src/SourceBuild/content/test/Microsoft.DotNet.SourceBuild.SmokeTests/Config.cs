@@ -32,7 +32,6 @@ internal static class Config
 
     // Indicates whether the tests are being run in the context of a CI pipeline
     public static bool RunningInCI => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DOTNET_CI")) ||
-        !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HELIX_WORKITEM_ROOT")) ||
         !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AGENT_OS"));
 
     public static string TargetArchitecture => TargetRid.Split('-')[1];

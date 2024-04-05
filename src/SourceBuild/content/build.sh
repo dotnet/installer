@@ -18,7 +18,7 @@ usage()
   echo "Actions:"
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
-  echo "  --test                          Run tests (repo tests omitted by default) (short: -t)"
+  echo "  --test                          Run tests (short: -t)"
   echo "                                  Use in conjunction with --test-no-build to run tests without building"
   echo ""
 

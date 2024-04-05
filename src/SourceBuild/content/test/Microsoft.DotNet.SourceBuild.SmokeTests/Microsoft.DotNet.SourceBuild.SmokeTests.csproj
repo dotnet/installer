@@ -85,40 +85,4 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CheckIfCreateSmokeTestPrereqsExistToPack"
-          DependsOnTargets="DetermineSourceBuiltSdkVersion">
-    <PropertyGroup>
-      <!-- NuGet package cache directory -->
-      <SmokeTestPrereqsArchive>$(ArtifactsAssetsDir)dotnet-smoke-test-prereqs.$(SourceBuiltSdkVersion).$(TargetRid)$(ArchiveExtension)</SmokeTestPrereqsArchive>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <SmokeTestsPrereq Include="$(RestorePackagesPath)**/*.nupkg" />
-    </ItemGroup>
-  </Target>
-
-  <!-- The target is automatically skipped when @(SmokeTestsPrereq) is empty. -->
-  <Target Name="CreateSmokeTestPrereqsArchiveIfPrereqsExist"
-          Condition="'$(SkipSmokeTestPrereqsArchiveCreation)' != 'true'"
-          DependsOnTargets="CheckIfCreateSmokeTestPrereqsExistToPack"
-          AfterTargets="VSTest"
-          Inputs="@(SmokeTestsPrereq)"
-          Outputs="$(SmokeTestPrereqsArchive)">
-    <Message Text="Found @(SmokeTestsPrereq->Count()) prereqs in '$(RestorePackagesPath)'." Importance="High" />
-
-    <PropertyGroup>
-      <SmokeTestsIntermediatePrereqPackagesDir>$(IntermediateOutputPath)prereq-packages/</SmokeTestsIntermediatePrereqPackagesDir>
-    </PropertyGroup>
-
-    <Copy SourceFiles="@(SmokeTestsPrereq)"
-          DestinationFolder="$(SmokeTestsIntermediatePrereqPackagesDir)"
-          SkipUnchangedFiles="true" />
-
-    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(SmokeTestPrereqsArchive)'))" />
-    <Exec Command="tar --numeric-owner -czf $(SmokeTestPrereqsArchive) ."
-          WorkingDirectory="$(SmokeTestsIntermediatePrereqPackagesDir)" />
-
-    <Message Importance="High" Text="Packaged smoke-test prereqs in '$(SmokeTestPrereqsArchive)'" />
-  </Target>
-
 </Project>

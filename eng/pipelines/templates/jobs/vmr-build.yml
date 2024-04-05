@@ -390,6 +390,7 @@ jobs:
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
         CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.diff"
+        CopyWithRelativeFolders "artifacts/"                 $targetFolder "Updated*.txt"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
 
@@ -414,6 +415,7 @@ jobs:
         find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
         find artifacts/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
         if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
           find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
           find artifacts/log/binary-report/ -exec rsync -R {} -t ${targetFolder} \;
