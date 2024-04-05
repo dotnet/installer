@@ -71,6 +71,8 @@
     <TargetRid Condition="'$(PortableBuild)' == 'true' and '$(PortableRid)' != ''">$(PortableRid)</TargetRid>
     <TargetRid Condition="'$(ShortStack)' == 'true' and '$(TargetOS)' != 'windows'">$(TargetOS)-$(TargetArchitecture)</TargetRid>
     <TargetRid Condition="'$(ShortStack)' == 'true' and '$(TargetOS)' == 'windows'">win-$(TargetArchitecture)</TargetRid>
+
+    <TargetsMusl Condition="$(PortableRid.StartsWith('linux-musl'))">true</TargetsMusl>
   </PropertyGroup>
 
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
