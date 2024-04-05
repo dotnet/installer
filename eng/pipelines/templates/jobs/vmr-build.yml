@@ -152,12 +152,6 @@ jobs:
       displayName: Publish Artifacts
       condition: always()
 
-    - output: pipelineArtifact
-      path: $(Build.ArtifactStagingDirectory)/TestResults
-      artifact: $(Agent.JobName)_TestResults
-      displayName: Publish Artifacts
-      condition: ${{ parameters.publishTestResults }}
-
     - ${{ if not(parameters.isBuiltFromVmr) }}:
       - output: pipelineArtifact
         displayName: Upload failed patches
@@ -461,6 +455,20 @@ jobs:
         mergeTestResults: true
         publishRunAttachments: true
         testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+
+  # Only upload test results if enabled
+  - ${{ if eq(parameters.publishTestResults, 'True') }}:
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      condition: succeededOrFailed()
+      continueOnError: true
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: 'artifacts/TestResults/*.trx'
+        searchFolder: $(sourcesPath)
+        mergeTestResults: true
+        publishRunAttachments: true
+        testRunTitle: UnifiedBuild_BaselineComparisonTests_$(Agent.JobName)
 
   - task: CopyFiles@2
     inputs:

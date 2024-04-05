@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
     <UBTestsWarnOnSdkContentDiffs>true</UBTestsWarnOnSdkContentDiffs>
-    <VSTestLogger>console%3bverbosity=quiet;trx%3bverbosity=diagnostic%3bLogFileName=Microsoft.DotNet.UnifiedBuild.Tests.xml</VSTestLogger>
+    <VSTestLogger>console%3bverbosity=quiet;trx%3bverbosity=diagnostic%3bLogFileName=Microsoft.DotNet.UnifiedBuild.Tests.trx</VSTestLogger>
     <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
     <!-- There's a lot of logging that bloats the build's console output if this is set to true, and logs will be logged to the trx file if we need them -->
     <VsTestUseMSBuildOutput>false</VsTestUseMSBuildOutput>
