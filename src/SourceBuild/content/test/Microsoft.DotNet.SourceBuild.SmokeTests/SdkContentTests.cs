@@ -21,6 +21,7 @@ public class SdkContentTests : SdkTests
 {
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
+    public bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPath);
 
     public SdkContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -31,7 +32,7 @@ public class SdkContentTests : SdkTests
     /// This makes the baseline durable between releases.  This does mean however, entries
     /// in the baseline may appear identical if the diff is version specific.
     /// </Summary>
-    [SkippableFact(new[] { Config.MsftSdkTarballPathEnv, Config.SdkTarballPathEnv }, skipOnNullOrWhiteSpaceEnv: true)]
+    [ConditionalFact(typeof(SdkContentTests), nameof(IncludeSdkContentTests))]
     public void CompareMsftToSbFileList()
     {
         const string msftFileListingFileName = "msftSdkFiles.txt";
@@ -48,7 +49,7 @@ public class SdkContentTests : SdkTests
         exclusionsHelper.GenerateNewBaselineFile("FileList");
     }
 
-    [SkippableFact(new[] { Config.MsftSdkTarballPathEnv, Config.SdkTarballPathEnv }, skipOnNullOrWhiteSpaceEnv: true)]
+    [ConditionalFact(typeof(SdkContentTests), nameof(IncludeSdkContentTests))]
     public void CompareMsftToSbAssemblyVersions()
     {
         Assert.NotNull(Config.MsftSdkTarballPath);

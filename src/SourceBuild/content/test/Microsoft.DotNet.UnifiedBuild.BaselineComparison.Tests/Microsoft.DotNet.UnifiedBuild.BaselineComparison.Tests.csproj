@@ -2,14 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetCurrent)</TargetFramework>
-    <Nullable>enable</Nullable>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
     <UBTestsWarnOnSdkContentDiffs>true</UBTestsWarnOnSdkContentDiffs>
-    <VSTestLogger>console%3bverbosity=quiet;trx%3bverbosity=diagnostic</VSTestLogger>
-    <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
-    <!-- There's a lot of logging that bloats the build's console output if this is set to true, and logs will be logged to the trx file if we need them -->
     <VsTestUseMSBuildOutput>false</VsTestUseMSBuildOutput>
-    <VSTestCLIRunSettings>$(VSTestCLIRunSettings);RunConfiguration.DotNetHostPath=$(DotnetTool);xUnit.DiagnosticMessages=true</VSTestCLIRunSettings>
+    <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic</VSTestLogger>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +25,9 @@
     </ItemGroup>
     <ItemGroup>
       <!-- SDK archive test configs -->
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LogsDirectory">
+        <Value>$(ArtifactsTestResultsDir)</Value>
+      </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>

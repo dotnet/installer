@@ -10,7 +10,9 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public abstract class TestBase
 {
-    public static string LogsDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), "logs");
+    const string LogsDirectorySwitch = Config.ConfigSwitchPrefix + nameof(LogsDirectory);
+
+    public static string LogsDirectory { get; } = (string)(AppContext.GetData(LogsDirectorySwitch) ?? throw new InvalidOperationException("Logs directory must be specified"));
 
     public ITestOutputHelper OutputHelper { get; }
 
@@ -19,7 +21,7 @@ public abstract class TestBase
         OutputHelper = outputHelper;
         if (!Directory.Exists(LogsDirectory))
         {
-            Directory.CreateDirectory(LogsDirectory);
+            Directory.CreateDirectory(Config.LogsDirectory);
         }
     }
 }

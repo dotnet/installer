@@ -14,6 +14,7 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public class Config : IDisposable
 {
+    public string LogsDirectory { get; } = TestBase.LogsDirectory;
     public string MsftSdkArchivePath { get; }
     public string UbBuildVersion { get; }
     public string PortableRid { get; }
@@ -47,6 +48,7 @@ public class Config : IDisposable
         }
         LogMessage($$"""
             Test config values:
+            {{nameof(LogsDirectory)}}='{{LogsDirectory}}'
             {{nameof(UbBuildVersion)}}='{{UbBuildVersion}}'
             {{nameof(TargetRid)}}='{{TargetRid}}'
             {{nameof(PortableRid)}}='{{PortableRid}}'
@@ -58,7 +60,7 @@ public class Config : IDisposable
             """);
     }
 
-    const string ConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.";
+    public const string ConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.";
     const string BuildVersionSwitch = ConfigSwitchPrefix + nameof(UbBuildVersion);
     const string TargetRidSwitch = ConfigSwitchPrefix + nameof(TargetRid);
     const string PortableRidSwitch = ConfigSwitchPrefix + nameof(PortableRid);
