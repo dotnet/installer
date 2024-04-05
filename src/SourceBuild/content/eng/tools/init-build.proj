@@ -139,8 +139,19 @@
           DependsOnTargets="UnpackTarballs"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
+    <!-- Microsoft.DotNet.Arcade.Sdk -->
     <Unzip SourceFiles="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
-           DestinationFolder="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
+           DestinationFolder="$(BootstrapPackagesDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
+           SkipUnchangedFiles="true" />
+
+    <!-- Microsoft.Build.NoTargets -->
+    <Unzip SourceFiles="$(ReferencePackagesDir)Microsoft.Build.NoTargets.$(NOTARGETS_BOOTSTRAP_VERSION).nupkg"
+           DestinationFolder="$(BootstrapPackagesDir)microsoft.build.notargets/$(NOTARGETS_BOOTSTRAP_VERSION)/"
+           SkipUnchangedFiles="true" />
+
+    <!-- Microsoft.Build.Traversal -->
+    <Unzip SourceFiles="$(ReferencePackagesDir)Microsoft.Build.Traversal.$(TRAVERSAL_BOOTSTRAP_VERSION).nupkg"
+           DestinationFolder="$(BootstrapPackagesDir)microsoft.build.traversal/$(TRAVERSAL_BOOTSTRAP_VERSION)/"
            SkipUnchangedFiles="true" />
 
     <MakeDir Directories="$(BaseIntermediateOutputPath)" />
