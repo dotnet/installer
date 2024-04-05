@@ -36,6 +36,10 @@ parameters:
   type: boolean
   default: false
 
+- name: publishTestResults
+  type: boolean
+  default: false
+
 #### SOURCE-ONLY parameters ####
 
 # Instead of building the VMR directly, exports the sources into a tarball and builds from that
@@ -147,6 +151,12 @@ jobs:
       artifact: $(Agent.JobName)_Artifacts
       displayName: Publish Artifacts
       condition: always()
+
+    - output: pipelineArtifact
+      path: $(Build.ArtifactStagingDirectory)/TestResults
+      artifact: $(Agent.JobName)_TestResults
+      displayName: Publish Artifacts
+      condition: ${{ parameters.publishTestResults }}
 
     - ${{ if not(parameters.isBuiltFromVmr) }}:
       - output: pipelineArtifact

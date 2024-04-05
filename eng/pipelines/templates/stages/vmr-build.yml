@@ -341,7 +341,7 @@ stages:
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
-        enablePublishTestResults: true
+        publishTestResults: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -352,7 +352,7 @@ stages:
         pool: ${{ parameters.pool_Windows }}
         targetOS: windows
         targetArchitecture: x64
-        enablePublishTestResults: true
+        publishTestResults: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
