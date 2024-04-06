@@ -53,12 +53,13 @@ if ($help) {
   exit 0
 }
 
+$project = Join-Path $RepoRoot "build.proj"
 $arguments = @()
 $targets = "/t:Build"
 
 # This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
-  $arguments += "/p:Test=true"
+  $project = Join-Path (Join-Path $RepoRoot "test") "tests.proj"
 
   if ($testNoBuild) {
     $targets = "/t:VSTest"
@@ -85,9 +86,8 @@ function Build {
 
   $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'Build.binlog') } else { '' }
 
-  $buildProj = Join-Path $RepoRoot 'build.proj'
   MSBuild -restore `
-    $buildProj `
+    $project `
     $bl `
     $targets `
     /p:Configuration=$configuration `
