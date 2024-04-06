@@ -20,9 +20,9 @@ public class ConditionalTheoryDiscoverer : TheoryDiscoverer
     {
         if (ConditionalTestDiscoverer.TryEvaluateSkipConditions(discoveryOptions, DiagnosticMessageSink, testMethod, theoryAttribute.GetConstructorArguments().ToArray(), out string skipReason, out ExecutionErrorTestCase errorTestCase))
         {
-            return skipReason != null
-                ? new[] { new SkippedTestCase(skipReason, DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod) }
-                : new IXunitTestCase[] { new SkippedTheoryTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod) }; // Theory skippable at runtime.
+            return skipReason != null ?
+                new[] { new SkippedTestCase(skipReason, DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod) } :
+                base.CreateTestCasesForTheory(discoveryOptions, testMethod, theoryAttribute);
         }
 
         return new IXunitTestCase[] { errorTestCase };
@@ -50,7 +50,7 @@ public class ConditionalTheoryDiscoverer : TheoryDiscoverer
         }
 
         return skipReason != null ?
-            (IEnumerable<IXunitTestCase>)skippedTestCase
-            : new [] { new SkippedFactTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, dataRow) }; // Test case skippable at runtime.
+            (IEnumerable<IXunitTestCase>)skippedTestCase :
+            base.CreateTestCasesForDataRow(discoveryOptions, testMethod, theoryAttribute, dataRow);
     }
 }

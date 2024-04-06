@@ -20,7 +20,7 @@ public class ConditionalFactDiscoverer : FactDiscoverer
         {
             return skipReason != null
                 ? (IXunitTestCase) new SkippedTestCase(skipReason, DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod)
-                : new SkippedFactTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod); // Test case skippable at runtime.
+                : base.CreateTestCase(discoveryOptions, testMethod, factAttribute);
         }
 
         return errorTestCase;
