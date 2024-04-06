@@ -243,7 +243,7 @@ jobs:
 
     - ${{ if eq(parameters.runTests, 'True') }}:
       - script: |
-          call $(sourcesPath)\build.cmd -ci -prepareMachine -test -testNoBuild ${{ parameters.extraProperties }}
+          call $(sourcesPath)\build.cmd -ci -prepareMachine -test ${{ parameters.extraProperties }}
         displayName: Run Tests
 
   - ${{ else }}:
@@ -367,7 +367,7 @@ jobs:
           poisonArg='--poison'
         fi
 
-        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --source-only --test --test-no-build $poisonArg $(additionalBuildArgs) /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
+        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --source-only --test $poisonArg $(additionalBuildArgs) /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
       displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:

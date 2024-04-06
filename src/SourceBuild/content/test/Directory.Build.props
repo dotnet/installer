@@ -5,6 +5,8 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <VSTestResultsDirectory>$(ArtifactsTestResultsDir)</VSTestResultsDirectory>
+    <!-- Use custom package cache for tests -->
+    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(RestorePackagesPath)', 'tests'))</RestorePackagesPath>
   </PropertyGroup>
 
 </Project>

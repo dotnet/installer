@@ -58,6 +58,8 @@ $targets = "/t:Build"
 
 # This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
+  $arguments += "/p:Test=true"
+
   if ($testNoBuild) {
     $targets = "/t:VSTest"
     $arguments += "/p:VSTestNoBuild=true"

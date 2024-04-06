@@ -113,6 +113,7 @@ while [[ $# > 0 ]]; do
       ;;
     -test|-t)
       test=true
+      properties="$properties /p:Test=true"
       ;;
 
     # Source-only settings
