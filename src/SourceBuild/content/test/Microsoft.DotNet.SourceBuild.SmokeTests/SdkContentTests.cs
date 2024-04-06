@@ -21,7 +21,7 @@ public class SdkContentTests : SdkTests
 {
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
-    public bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPath);
+    public static bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPath);
 
     public SdkContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 

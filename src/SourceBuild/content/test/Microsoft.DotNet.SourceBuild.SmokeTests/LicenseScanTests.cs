@@ -112,7 +112,7 @@ public class LicenseScanTests : TestBase
 
     private readonly string _targetRepo;
     private readonly string _relativeRepoPath;
-    public bool IncludeLicenseScanTests => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
+    public static bool IncludeLicenseScanTests => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
 
     public LicenseScanTests(ITestOutputHelper outputHelper) : base(outputHelper)
     {

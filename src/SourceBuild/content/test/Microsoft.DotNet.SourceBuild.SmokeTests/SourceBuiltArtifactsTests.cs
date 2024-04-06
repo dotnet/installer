@@ -15,7 +15,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class SourceBuiltArtifactsTests : SdkTests
 {
-    public bool IncludeSourceBuiltArtifactsTests => !string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath);
+    public static bool IncludeSourceBuiltArtifactsTests => !string.IsNullOrWhiteSpace(Config.SourceBuiltArtifactsPath);
     
     public SourceBuiltArtifactsTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 

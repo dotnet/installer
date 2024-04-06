@@ -5,13 +5,14 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.SourceBuild.SmokeTests
 {
     public class PoisonTests : SdkTests
     {
-        public bool IncludePoisonTests => !string.IsNullOrWhiteSpace(Config.PoisonReportPath);
+        public static bool IncludePoisonTests => !string.IsNullOrWhiteSpace(Config.PoisonReportPath);
 
         public PoisonTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
         

@@ -23,7 +23,7 @@ public class OmniSharpTests : SdkTests
 
     private string OmniSharpDirectory { get; } = Path.Combine(Directory.GetCurrentDirectory(), nameof(OmniSharpTests));
 
-    public bool IncludeOmniSharpTests => !Config.ExcludeOmniSharpTests && Config.TargetArchitecture != "ppc64le" && Config.TargetArchitecture != "s390x";
+    public static bool IncludeOmniSharpTests => !Config.ExcludeOmniSharpTests && Config.TargetArchitecture != "ppc64le" && Config.TargetArchitecture != "s390x";
 
     public OmniSharpTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -39,7 +39,7 @@ public class OmniSharpTests : SdkTests
     [InlineData(DotNetTemplate.WebApi)]
     [InlineData(DotNetTemplate.Worker)]
     [InlineData(DotNetTemplate.XUnit)]
-    public async void VerifyScenario(DotNetTemplate template)
+    public async Task VerifyScenario(DotNetTemplate template)
     {
         await InitializeOmniSharp();
 
