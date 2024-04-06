@@ -599,7 +599,7 @@
 
     <ItemGroup>
       <RestoredPackageFile Include="$(NuGetPackageRoot)**/*.nupkg"
-                           Exclude="$(NuGetPackageRoot)smoke-tests/**/*.nupkg" />
+                           Exclude="$(NuGetPackageRoot)tests/**/*.nupkg" />
 
       <!-- Only contains packages when building. -->
       <TarballPrebuiltPackageFile Include="$(PrebuiltPackagesPath)*.nupkg" />

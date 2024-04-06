@@ -76,7 +76,7 @@
   <!-- Set NuGetPackageRoot before Arcade SDK sets it. -->
   <PropertyGroup>
     <!-- Set RestorePackagesPath so that we don't accidentally pull some packages from the global location. -->
-    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '.packages'))</RestorePackagesPath>
+    <RestorePackagesPath Condition="'$(RestorePackagesPath)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '.packages'))</RestorePackagesPath>
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == ''">$(RestorePackagesPath)</NuGetPackageRoot>
   </PropertyGroup>
 

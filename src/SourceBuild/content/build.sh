@@ -259,7 +259,7 @@ function Build {
       bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
-    "$CLI_ROOT/dotnet" msbuild --restore "$project" $bl $targets -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
+    "$CLI_ROOT/dotnet" msbuild --restore "$project" $bl $targets $properties
   fi
 }
 
