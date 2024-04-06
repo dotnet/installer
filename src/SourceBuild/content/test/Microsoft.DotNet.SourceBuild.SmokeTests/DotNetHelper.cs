@@ -130,6 +130,10 @@ internal class DotNetHelper
         process.StartInfo.EnvironmentVariables["DOTNET_ROOT"] = Config.DotNetDirectory;
         process.StartInfo.EnvironmentVariables["NUGET_PACKAGES"] = PackagesDirectory;
         process.StartInfo.EnvironmentVariables["PATH"] = $"{Config.DotNetDirectory}:{Environment.GetEnvironmentVariable("PATH")}";
+        // Don't use the repo infrastructure
+        process.StartInfo.EnvironmentVariables["ImportDirectoryBuildProps"] = "false";
+        process.StartInfo.EnvironmentVariables["ImportDirectoryBuildTargets"] = "false";
+        process.StartInfo.EnvironmentVariables["ImportDirectoryPackagesProps"] = "false";
     }
 
     public void ExecuteBuild(string projectName) =>
