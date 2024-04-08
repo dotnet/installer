@@ -19,7 +19,6 @@ usage()
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
   echo "  --test                          Run tests (short: -t)"
-  echo "                                  Use in conjunction with --test-no-build to run tests without building"
   echo ""
 
   echo "Source-only settings:"
@@ -40,7 +39,6 @@ usage()
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
-  echo "  --test-no-build                 Run tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -84,7 +82,6 @@ packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
-test_no_build=false
 
 properties=''
 while [[ $# > 0 ]]; do
@@ -178,10 +175,6 @@ while [[ $# > 0 ]]; do
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
-    -test-no-build)
-      test_no_build=true
-      ;;
-
     *)
       properties="$properties $1"
       ;;
@@ -207,12 +200,7 @@ targets="/t:Build"
 # This repo uses the VSTest integration instead of the Arcade Test target
 if [[ "$test" == true ]]; then
   project="$scriptroot/test/tests.proj"
-  if [[ "$test_no_build" == true ]]; then
-    targets="/t:VSTest"
-    properties="$properties /p:VSTestNoBuild=true"
-  else
-    targets="$targets;VSTest"
-  fi
+  targets="$targets;VSTest"
 fi
 
 function Build {

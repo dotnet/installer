@@ -12,7 +12,6 @@ Param(
 
   # Advanced settings
   [switch]$buildRepoTests,
-  [switch]$testNoBuild,
   [switch]$ci,
   [switch][Alias('cwb')]$cleanWhileBuilding,
   [switch][Alias('nobl')]$excludeCIBinarylog,
@@ -31,12 +30,10 @@ function Get-Usage() {
   Write-Host "  -clean                  Clean the solution"
   Write-Host "  -help                   Print help and exit (short: -h)"
   Write-Host "  -test                   Run tests (repo tests omitted by default) (short: -t)"
-  Write-Host "                          Use in conjunction with -testNoBuild to run tests without building"
   Write-Host ""
 
   Write-Host "Advanced settings:"
   Write-Host "  -buildRepoTests         Build repository tests"
-  Write-Host "  -testNoBuild            Run tests without building when invoked with -test"
   Write-Host "  -ci                     Set when running on CI server"
   Write-Host "  -cleanWhileBuilding     Cleans each repo after building (reduces disk space usage, short: -cwb)"
   Write-Host "  -excludeCIBinarylog     Don't output binary log (short: -nobl)"
@@ -60,13 +57,7 @@ $targets = "/t:Build"
 # This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
   $project = Join-Path (Join-Path $RepoRoot "test") "tests.proj"
-
-  if ($testNoBuild) {
-    $targets = "/t:VSTest"
-    $arguments += "/p:VSTestNoBuild=true"
-  } else {
-    $targets += ";VSTest"
-  }
+  $targets += ";VSTest"
 }
 
 if ($buildRepoTests) {
