@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
+using TestUtilities;
 using Xunit;
 using Xunit.Abstractions;
 
