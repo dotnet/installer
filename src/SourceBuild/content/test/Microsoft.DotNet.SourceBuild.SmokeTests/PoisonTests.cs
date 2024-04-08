@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using TestUtilities;
 using Xunit;
 using Xunit.Abstractions;
 

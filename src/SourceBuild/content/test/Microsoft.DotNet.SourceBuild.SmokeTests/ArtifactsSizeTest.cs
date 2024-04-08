@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Formats.Tar;
 using System.Text;
 using System.Threading.Tasks;
+using TestUtilities;
 using Xunit;
 using Xunit.Abstractions;
 

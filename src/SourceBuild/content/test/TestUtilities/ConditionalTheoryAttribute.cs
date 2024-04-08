@@ -8,9 +8,9 @@ using System.Linq;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Xunit;
+namespace TestUtilities;
 
-[XunitTestCaseDiscoverer("Xunit.ConditionalTheoryDiscoverer", "TestUtilities")]
+[XunitTestCaseDiscoverer("TestUtilities.ConditionalTheoryDiscoverer", "TestUtilities")]
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public sealed class ConditionalTheoryAttribute : TheoryAttribute
 {

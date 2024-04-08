@@ -8,9 +8,9 @@ using System.Linq;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Xunit;
+namespace TestUtilities;
 
-[XunitTestCaseDiscoverer("Xunit.ConditionalFactDiscoverer", "TestUtilities")]
+[XunitTestCaseDiscoverer("TestUtilities.ConditionalFactDiscoverer", "TestUtilities")]
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public sealed class ConditionalFactAttribute : FactAttribute
 {

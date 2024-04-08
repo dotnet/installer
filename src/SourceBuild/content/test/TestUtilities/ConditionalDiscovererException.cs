@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Xunit;
+namespace TestUtilities;
 
 internal class ConditionalDiscovererException : Exception
 {

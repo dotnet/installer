@@ -8,7 +8,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Xunit;
+namespace TestUtilities;
 
 public class ConditionalFactDiscoverer : FactDiscoverer
 {
