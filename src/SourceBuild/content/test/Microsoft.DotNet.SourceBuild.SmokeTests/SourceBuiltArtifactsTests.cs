@@ -23,12 +23,14 @@ public class SourceBuiltArtifactsTests : SdkTests
     [ConditionalFact(typeof(SourceBuiltArtifactsTests), nameof(IncludeSourceBuiltArtifactsTests))]
     public void VerifyVersionFile()
     {
+        Assert.NotNull(Config.SourceBuiltArtifactsPath);
+
         string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "sourcebuilt-artifacts");
         Directory.CreateDirectory(outputDir);
         try
         {
             // Extract the .version file
-            Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath!, outputDir, ".version");
+            Utilities.ExtractTarball(Config.SourceBuiltArtifactsPath, outputDir, ".version");
 
             string[] versionLines = File.ReadAllLines(Path.Combine(outputDir, ".version"));
             Assert.Equal(2, versionLines.Length);
@@ -50,6 +52,7 @@ public class SourceBuiltArtifactsTests : SdkTests
             }
 
             // Verify the SDK version
+
             string sdkVersion = versionLines[1];
 
             // Find the expected SDK version by getting it from the SDK tarball
