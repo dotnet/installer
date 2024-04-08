@@ -21,7 +21,7 @@
     -->
     <PropertyGroup>
       <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
-      <SdkTarballPath>%(SdkTarballItem.Identity)</SdkTarballPath>
+      <SdkTarballPath Condition="'$(SdkTarballPath)' == ''">%(SdkTarballItem.Identity)</SdkTarballPath>
       <SourceBuiltSdkVersion>$(SdkFilename.Replace('$(SdkFilenamePrefix)','').Replace('-$(TargetRid)$(ArchiveExtension)',''))</SourceBuiltSdkVersion>
     </PropertyGroup>
   </Target>

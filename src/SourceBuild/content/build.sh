@@ -19,7 +19,6 @@ usage()
   echo "  --clean                         Clean the solution"
   echo "  --help                          Print help and exit (short: -h)"
   echo "  --test                          Run tests (short: -t)"
-  echo "                                  Use in conjunction with --test-no-build to run tests without building"
   echo ""
 
   echo "Source-only settings:"
@@ -40,7 +39,6 @@ usage()
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
-  echo "  --test-no-build                 Run tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -84,7 +82,6 @@ packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
-test_no_build=false
 
 properties=''
 while [[ $# > 0 ]]; do
@@ -178,10 +175,6 @@ while [[ $# > 0 ]]; do
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
       ;;
-    -test-no-build)
-      test_no_build=true
-      ;;
-
     *)
       properties="$properties $1"
       ;;
@@ -201,16 +194,13 @@ use_global_nuget_cache=false
 
 . "$scriptroot/eng/common/tools.sh"
 
+project="$scriptroot/build.proj"
 targets="/t:Build"
 
 # This repo uses the VSTest integration instead of the Arcade Test target
 if [[ "$test" == true ]]; then
-  if [[ "$test_no_build" == true ]]; then
-    targets="/t:VSTest"
-    properties="$properties /p:VSTestNoBuild=true"
-  else
-    targets="$targets;VSTest"
-  fi
+  project="$scriptroot/test/tests.proj"
+  targets="$targets;VSTest"
 fi
 
 function Build {
@@ -228,7 +218,7 @@ function Build {
     fi
 
     MSBuild --restore \
-      "$scriptroot/build.proj" \
+      $project \
       $targets \
       $bl \
       /p:Configuration=$configuration \
@@ -242,7 +232,7 @@ function Build {
       properties="$properties /p:ContinuousIntegrationBuild=true"
     fi
 
-    if [ "$test" == "true" ]; then
+    if [ "$test" != "true" ]; then
       "$CLI_ROOT/dotnet" build-server shutdown
       "$CLI_ROOT/dotnet" msbuild "$scriptroot/eng/tools/init-build.proj" -bl:"$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.binlog" -flp:LogFile="$scriptroot/artifacts/log/$configuration/BuildMSBuildSdkResolver.log" /t:ExtractToolsetPackages,BuildMSBuildSdkResolver $properties
       # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
@@ -257,7 +247,7 @@ function Build {
       bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
-    "$CLI_ROOT/dotnet" msbuild --restore "$scriptroot/build.proj" $bl $targets -flp:"LogFile=$scriptroot/artifacts/log/$configuration/Build.log" $properties
+    "$CLI_ROOT/dotnet" msbuild --restore "$project" $bl $targets $properties
   fi
 }
 

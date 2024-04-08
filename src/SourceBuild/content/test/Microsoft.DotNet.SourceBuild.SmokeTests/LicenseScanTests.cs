@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using TestUtilities;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -112,7 +113,7 @@ public class LicenseScanTests : TestBase
 
     private readonly string _targetRepo;
     private readonly string _relativeRepoPath;
-    public bool IncludeLicenseScanTests => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
+    public static bool IncludeLicenseScanTests => !string.IsNullOrWhiteSpace(Config.LicenseScanPath);
 
     public LicenseScanTests(ITestOutputHelper outputHelper) : base(outputHelper)
     {

@@ -4,8 +4,7 @@
     <TargetFramework>$(NetCurrent)</TargetFramework>
     <DefaultExcludesInProjectFolder>$(DefaultExcludesInProjectFolder);assets/**/*</DefaultExcludesInProjectFolder>
     <UBTestsWarnOnSdkContentDiffs>true</UBTestsWarnOnSdkContentDiffs>
-    <VsTestUseMSBuildOutput>false</VsTestUseMSBuildOutput>
-    <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic</VSTestLogger>
+    <VSTestLogger>console%3bverbosity=diagnostic;trx%3bverbosity=diagnostic%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
   </PropertyGroup>
 
   <ItemGroup>

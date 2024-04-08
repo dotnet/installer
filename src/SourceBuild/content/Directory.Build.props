@@ -76,7 +76,7 @@
   <!-- Set NuGetPackageRoot before Arcade SDK sets it. -->
   <PropertyGroup>
     <!-- Set RestorePackagesPath so that we don't accidentally pull some packages from the global location. -->
-    <RestorePackagesPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '.packages'))</RestorePackagesPath>
+    <RestorePackagesPath Condition="'$(RestorePackagesPath)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '.packages'))</RestorePackagesPath>
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == ''">$(RestorePackagesPath)</NuGetPackageRoot>
   </PropertyGroup>
 
@@ -189,7 +189,6 @@
     <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomPrebuiltSourceBuiltPackagesPath)'))</PrebuiltSourceBuiltPackagesPath>
 
     <GitInfoDir>$([MSBuild]::NormalizeDirectory('$(PrereqsDir)', 'git-info'))</GitInfoDir>
-    <GitInfoAllRepoPropsFile>$(GitInfoDir)AllRepoVersions.props</GitInfoAllRepoPropsFile>
 
     <PackageReportDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'prebuilt-report'))</PackageReportDir>
     <ResultingPrebuiltPackagesDir>$([MSBuild]::NormalizeDirectory('$(PackageReportDir)', 'prebuilt-packages'))</ResultingPrebuiltPackagesDir>
@@ -218,7 +217,5 @@
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
   </PropertyGroup>
-
-  <Import Project="$(GitInfoAllRepoPropsFile)" Condition="Exists('$(GitInfoAllRepoPropsFile)')" />
 
 </Project>

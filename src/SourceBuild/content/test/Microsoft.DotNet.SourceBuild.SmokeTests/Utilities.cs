@@ -35,8 +35,8 @@ public static class Utilities
         using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
         using TarReader reader = new(decompressorStream);
 
-        TarEntry entry;
-        while ((entry = reader.GetNextEntry()!) is not null)
+        TarEntry? entry;
+        while ((entry = reader.GetNextEntry()) is not null)
         {
             if (matcher.Match(entry.Name).HasMatches)
             {
@@ -45,9 +45,11 @@ public static class Utilities
 
                 using FileStream outputFileStream = File.Create(outputPath);
                 entry.DataStream!.CopyTo(outputFileStream);
-                break;
+                return;
             }
         }
+
+        throw new FileNotFoundException($"Could not find {targetFilePath} in {tarballPath}.");
     }
 
     public static IEnumerable<string> GetTarballContentNames(string tarballPath)
@@ -56,8 +58,8 @@ public static class Utilities
         using GZipStream decompressorStream = new(fileStream, CompressionMode.Decompress);
         using TarReader reader = new(decompressorStream);
 
-        TarEntry entry;
-        while ((entry = reader.GetNextEntry()!) is not null)
+        TarEntry? entry;
+        while ((entry = reader.GetNextEntry()) is not null)
         {
             yield return entry.Name;
         }
