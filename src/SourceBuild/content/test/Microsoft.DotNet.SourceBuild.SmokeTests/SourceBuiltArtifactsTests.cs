@@ -49,19 +49,16 @@ public class SourceBuiltArtifactsTests : SdkTests
             }
 
             // Verify the SDK version
-            if (!string.IsNullOrWhiteSpace(Config.SdkTarballPath))
-            {
-                string sdkVersion = versionLines[1];
+            string sdkVersion = versionLines[1];
 
-                // Find the expected SDK version by getting it from the SDK tarball
-                Utilities.ExtractTarball(Config.SdkTarballPath, outputDir, "./sdk/*/.version");
-                DirectoryInfo sdkDir = new DirectoryInfo(Path.Combine(outputDir, "sdk"));
-                string sdkVersionPath = sdkDir.GetFiles(".version", SearchOption.AllDirectories).Single().FullName;
-                string[] sdkVersionLines = File.ReadAllLines(Path.Combine(outputDir, sdkVersionPath));
-                string expectedSdkVersion = sdkVersionLines[3];  // Get the unique, non-stable, SDK version
+            // Find the expected SDK version by getting it from the SDK tarball
+            Utilities.ExtractTarball(Config.SdkTarballPath, outputDir, "./sdk/*/.version");
+            DirectoryInfo sdkDir = new DirectoryInfo(Path.Combine(outputDir, "sdk"));
+            string sdkVersionPath = sdkDir.GetFiles(".version", SearchOption.AllDirectories).Single().FullName;
+            string[] sdkVersionLines = File.ReadAllLines(Path.Combine(outputDir, sdkVersionPath));
+            string expectedSdkVersion = sdkVersionLines[3];  // Get the unique, non-stable, SDK version
 
-                Assert.Equal(expectedSdkVersion, sdkVersion);
-            }
+            Assert.Equal(expectedSdkVersion, sdkVersion);
         }
         finally
         {
