@@ -26,12 +26,8 @@ public class Config
 
     public static string TargetArchitecture { get; } = TargetRid.Split('-')[1];
 
-    public static bool WarnOnSdkContentDiffs { get; } = TryGetRuntimeConfig(WarnOnSdkContentDiffsSwitch, out bool value) ? value : false;
-    const string WarnOnSdkContentDiffsSwitch = RuntimeConfigSwitchPrefix + nameof(WarnOnSdkContentDiffs);
-
-    public static bool NoDiagnosticMessages { get; } = TryGetRuntimeConfig(NoDiagnosticMessagesSwitch, out bool value) ? value : false;
-    const string NoDiagnosticMessagesSwitch = RuntimeConfigSwitchPrefix + nameof(NoDiagnosticMessages);
-
+    public static bool WarnOnContentDiffs { get; } = TryGetRuntimeConfig(WarnOnContentDiffsSwitch, out bool value) ? value : false;
+    const string WarnOnContentDiffsSwitch = RuntimeConfigSwitchPrefix + nameof(WarnOnContentDiffs);
 
     public const string RuntimeConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.Tests.";
 

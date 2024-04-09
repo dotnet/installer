@@ -102,14 +102,14 @@ public class NugetPackageContentTests : TestBase
         IEnumerable<string> baselineFiles = (await packageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
         IEnumerable<string> testFiles = (await testPackageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
 
-        var testPackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_ub_files.txt");
+        var testPackageContentsFileName = Path.Combine(Config.LogsDirectory, packageName + "_ub_files.txt");
         await File.WriteAllLinesAsync(testPackageContentsFileName, testFiles);
-        var baselinePackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_msft_files.txt");
+        var baselinePackageContentsFileName = Path.Combine(Config.LogsDirectory, packageName + "_msft_files.txt");
         await File.WriteAllLinesAsync(testPackageContentsFileName, baselineFiles);
 
         string diff = BaselineHelper.DiffFiles(baselinePackageContentsFileName, testPackageContentsFileName, OutputHelper);
         diff = SdkContentTests.RemoveDiffMarkers(diff);
-        BaselineHelper.CompareBaselineContents($"MsftToUb-{packageName}-Files.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
+        BaselineHelper.CompareBaselineContents($"MsftToUb-{packageName}-Files.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnContentDiffs);
     }
 
     [Theory]
@@ -169,7 +169,7 @@ public class NugetPackageContentTests : TestBase
 
         string diff = BaselineHelper.DiffFiles(MsftVersionsFileName, UbVersionsFileName, OutputHelper);
         diff = SdkContentTests.RemoveDiffMarkers(diff);
-        BaselineHelper.CompareBaselineContents($"MsftToUb_{packageName}.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
+        BaselineHelper.CompareBaselineContents($"MsftToUb_{packageName}.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnContentDiffs);
     }
 
     public async Task<MemoryStream?> TryDownloadPackage(string packageId, NuGetVersion packageVersion)
