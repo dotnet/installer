@@ -1,13 +1,8 @@
-<Project>
-    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+<Project Sdk="Microsoft.Build.NoTargets">
 
     <PropertyGroup>
-        <!-- Fake, to satisfy the SDK. -->
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <TargetFramework>$(NetCurrent)</TargetFramework>
     </PropertyGroup>
-
-    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
     <Target Name="Build">
         <MSBuild Projects="$(ToolsDir)init-build.proj"
