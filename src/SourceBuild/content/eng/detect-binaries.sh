@@ -115,7 +115,7 @@ function ParseBinaryArgs
     # Check the packages directory
     if [ -z "$packagesDir" ]; then
         # Use dotnet-public and dotnet-libraries feeds as the default packages source feeds
-        restoreSources="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json;https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json"
+        restoreSources="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json"
     else
         restoreSources=$(realpath ${packagesDir})
     fi
