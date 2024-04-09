@@ -275,7 +275,12 @@
                                ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                                VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                                VersionDetails="$(_VersionDetailsXml)"
-                               OutputPath="$(CurrentSourceBuiltPackageVersionPropsPath)" />
+                               OutputPath="$(CurrentSourceBuiltPackageVersionPropsPath)"
+                               Condition="'@(_DependencyProducedPackage->Count()) != 0" />
+    
+    <WriteLinesToFile File="$(CurrentSourceBuiltPackageVersionPropsPath)"
+                      Lines="&lt;Project&gt;&lt;/Project&gt;" 
+                      Condition="'@(_DependencyProducedPackage->Count()) == 0" />
 
     <!-- Create previously source-built inputs info -->
     <WritePackageVersionsProps NuGetPackages="@(_PreviouslyBuiltSourceBuiltPackages)"
@@ -294,7 +299,8 @@
          A key element of this algorith is that we must write the full package version props and not the filtered version. -->
     <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage)"
                                VersionPropsFlowType="AllPackages"
-                               OutputPath="$(SnapshotPackageVersionPropsPath)" />
+                               OutputPath="$(SnapshotPackageVersionPropsPath)"
+                               Condition="'@(_DependencyProducedPackage->Count()) != 0" />
 
     <!-- Write a single file that contains imports for both the current and previously built packages -->
     <PropertyGroup>
