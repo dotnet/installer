@@ -383,6 +383,7 @@ jobs:
         if [[ -n "${{ parameters.container }}" ]]; then
           docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
         else
+          cd $(sourcesPath)
           ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs)
         fi
 
