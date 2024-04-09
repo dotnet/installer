@@ -123,22 +123,17 @@ public class AzureDevOpsClient : IDisposable
             ?? throw new ArgumentException($"Couldn't parse AzDo response {response.Content} to {nameof(AzureDevOpsArtifactInformation)}");
 
         _logger.LogMessage(MessageImportance.High, $"Downloading artifact zip from {azdoArtifactInformation.Resource.DownloadUrl}");
-        response = await _httpClient.GetAsync(azdoArtifactInformation.Resource.DownloadUrl);
+        response = await _httpClient.GetAsync(azdoArtifactInformation.Resource.DownloadUrl, HttpCompletionOption.ResponseHeadersRead);
 
         if (!response.IsSuccessStatusCode)
         {
             throw new HttpRequestException($"Failed to download artifact zip. Status code: {response.StatusCode} Reason: {response.ReasonPhrase}");
         }
 
-        using Stream stream = await response.Content.ReadAsStreamAsync();
-        using FileStream fileStream = File.Create(downloadPath);
+        using Stream readStream = await response.Content.ReadAsStreamAsync();
+        using FileStream writeStream = File.Create(downloadPath);
 
-        byte[] buffer = new byte[_downloadBufferSize];
-        int bytesRead;
-        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-        {
-            await fileStream.WriteAsync(buffer, 0, bytesRead);
-        }
+        await readStream.CopyToAsync(writeStream, _downloadBufferSize);
     }
 
     private void CopyFiles(List<string> fileNamesToCopy, List<string> sourceFiles, string sourceDirectory, string destinationFolder, bool flatCopy)
