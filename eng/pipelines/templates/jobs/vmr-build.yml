@@ -362,12 +362,17 @@ jobs:
 
         dockerVolumeArgs="-v $(sourcesPath):/vmr"
         poisonArg=''
+        sourceOnlyArgs=''
 
         if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
           poisonArg='--poison'
         fi
 
-        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --source-only --test $poisonArg $(additionalBuildArgs) /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}
+        if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
+          sourceOnlyArgs='--source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}'
+        fi
+
+        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $poisonArg $sourceOnlyArgs $(additionalBuildArgs) 
       displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
