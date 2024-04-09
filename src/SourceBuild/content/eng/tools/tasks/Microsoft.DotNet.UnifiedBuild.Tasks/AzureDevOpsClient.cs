@@ -30,8 +30,8 @@ public class AzureDevOpsClient : IDisposable
     // download in 100 MB chunks
     private readonly int _downloadBufferSize = 1024 * 1024 * 100;
     private readonly int _httpTimeoutSeconds = 300;
-    private readonly string _assetsFolderName = "assets"
-    private readonly string _packagesFolderName = "packages"
+    private readonly string _assetsFolderName = "assets";
+    private readonly string _packagesFolderName = "packages";
 
     public AzureDevOpsClient(
         string azureDevOpsToken,
