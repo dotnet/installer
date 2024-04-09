@@ -363,6 +363,14 @@ jobs:
         dockerVolumeArgs="-v $(sourcesPath):/vmr"
         sourceOnlyArgs=''
 
+        if [[ ! -z '${{ parameters.targetOS }}' ]]; then
+          extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
+        fi
+
+        if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
+          extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
+        fi
+
         if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
           if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
             sourceOnlyArgs='--poison'
@@ -370,7 +378,7 @@ jobs:
           sourceOnlyArgs='$sourceOnlyArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}'
         fi
 
-        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $(additionalBuildArgs) 
+        docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
       displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
