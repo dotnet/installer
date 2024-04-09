@@ -97,13 +97,13 @@ public class JoinVerticals : Microsoft.Build.Utilities.Task
         if (!string.IsNullOrEmpty(VerticalSubSet))
         {
             var verticalSubSet = VerticalSubSet.Split(';');
-            verticalManifests = verticalManifests.Where(manifest => verticalSubSet.Contains(manifest.Root?.Attribute(_verticalNameAttribute)?.Value ?? string.Empty)).ToList();
+            verticalManifests = verticalManifests.Where(manifest => verticalSubSet.Contains(GetRequiredRootAttribute(manifest, _verticalNameAttribute))).ToList();
         }
 
         // Find the main manifest, and put it on the beginning of the list
-        XDocument mainVerticalManifest = verticalManifests.FirstOrDefault(manifest => (manifest.Root?.Attribute(_verticalNameAttribute)?.Value ?? string.Empty) == MainVertical)
+        XDocument mainVerticalManifest = verticalManifests.FirstOrDefault(manifest => GetRequiredRootAttribute(manifest, _verticalNameAttribute) == MainVertical)
             ?? throw new ArgumentException($"Couldn't find main vertical manifest {MainVertical} in vertical manifest list");
-        verticalManifests = verticalManifests.Where(manifest => manifest.Root?.Attribute(_verticalNameAttribute)?.Value != MainVertical).ToList();
+        verticalManifests = verticalManifests.Where(manifest => GetRequiredRootAttribute(manifest, _verticalNameAttribute) != MainVertical).ToList();
         verticalManifests.Insert(0, mainVerticalManifest);
 
         Dictionary<string, XElement> packageElements = new();
@@ -113,8 +113,7 @@ public class JoinVerticals : Microsoft.Build.Utilities.Task
 
         foreach(XDocument verticalManifest in verticalManifests)
         {
-            string verticalName = verticalManifest.Root?.Attribute(_verticalNameAttribute)?.Value 
-                ?? throw new ArgumentException($"Required attribute '{_verticalNameAttribute}' not found in root element.");
+            string verticalName = GetRequiredRootAttribute(verticalManifest, _verticalNameAttribute);
 
             List<string> addedPackageIds = AddMissingElements(packageElements, verticalManifest, _packageElementName);
             List<string> addedBlobIds = AddMissingElements(blobElements, verticalManifest, _blobElementName);
@@ -168,5 +167,11 @@ public class JoinVerticals : Microsoft.Build.Utilities.Task
         }
 
         return addedIds;
+    }
+
+    private static string GetRequiredRootAttribute(XDocument document, string attributeName)
+    {
+        return document.Root?.Attribute(attributeName)?.Value 
+            ?? throw new ArgumentException($"Required attribute '{attributeName}' not found in root element.");
     }
 }

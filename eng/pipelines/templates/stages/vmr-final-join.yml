@@ -48,6 +48,7 @@ stages:
     - powershell: |
         . $(Build.SourcesDirectory)/eng/common/tools.ps1
         InitializeToolset
+        ./.dotnet/dotnet restore $(Build.SourcesDirectory)/eng/tools/join-verticals.proj
         MSbuild $(Build.SourcesDirectory)/eng/tools/join-verticals.proj `
           /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests `
           /p:MainVertical=$(parameters.mainVertical) `
