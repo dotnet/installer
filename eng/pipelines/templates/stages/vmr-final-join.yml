@@ -56,5 +56,5 @@ stages:
           /p:AzureDevOpsOrg=dnceng `
           /p:AzureDevOpsProject=internal `
           /p:TmpFolder=$(Agent.TempDirectory) `
-          /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
+          /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts `
           /p:FlatCopy=true

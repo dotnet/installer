@@ -189,4 +189,8 @@
     <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <VerticalName Condition="'$(VerticalName)' == ''">DefaultVertical</VerticalName>
+    <MergedAssetManifestOutputPath>$(ArtifactsDir)$(VerticalName).xml</MergedAssetManifestOutputPath>
+  </PropertyGroup>
 </Project>
