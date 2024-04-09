@@ -19,18 +19,19 @@
   <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
   <Target Name="MergeAssetManifests" AfterTargets="Build">
     <PropertyGroup>
-      <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
+      <MergedAssetManifestOutputPath>$(ArtifactsDir)$(VerticalName).xml</MergedAssetManifestOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
       <RepoAssetManifest Include="$(AssetManifestsIntermediateDir)\**\*.xml" />
     </ItemGroup>
 
-    <!-- It's OK for the VmrBuildNumber to be empty -->
+    <!-- It's OK for the VmrBuildNumber and VerticalName to be empty -->
     <Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests 
       AssetManifest="@(RepoAssetManifest)" 
       MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
-      VmrBuildNumber="$(BUILD_BUILDNUMBER)" />
+      VmrBuildNumber="$(BUILD_BUILDNUMBER)"
+      VerticalName="$(VerticalName)" />
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />

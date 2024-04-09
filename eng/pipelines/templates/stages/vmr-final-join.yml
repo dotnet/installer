@@ -1,0 +1,56 @@
+parameters:
+# Branch of the VMR to use (to push to for internal builds)
+- name: vmrBranch
+  type: string
+  default: $(Build.SourceBranch)
+
+- name: pool_Windows
+  type: object
+  default:
+    name: $(defaultPoolName)
+    image: $(poolImage_Windows)
+    demands: ImageOverride -equals $(poolImage_Windows)
+    os: windows
+    
+stages:
+- stage: VMR_Final_Join
+  displayName: VMR Final Join
+  dependsOn: VMR_Vertical_Build
+  variables:
+  - group: Publish-Build-Assets
+  - template: ../variables/vmr-build.yml
+    parameters:
+      vmrBranch: ${{ parameters.vmrBranch }}
+
+  jobs:
+  - job: VMR_Final_Join
+    pool: ${{ parameters.pool_Windows }}
+
+    templateContext:
+      outputs:
+      - output: pipelineArtifact
+        path: $(Build.ArtifactStagingDirectory)/artifacts
+        artifact: JoinedArtifacts
+        condition: succeededOrFailed()
+
+    steps:
+    - checkout: self
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: 'VerticalManifests'
+        targetPath: $(Build.ArtifactStagingDirectory)/VerticalManifests
+
+    - powershell: |
+        . $(Build.SourcesDirectory)/eng/common/tools.ps1
+        InitializeToolset
+        MSbuild $(Build.SourcesDirectory)/eng/tools/join-verticals.proj `
+          /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests `
+          /p:MainVertical=Windows_x64 `
+          /p:BuildId=$(Build.BuildId) `
+          /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw) `
+          /p:AzureDevOpsOrg=dnceng `
+          /p:AzureDevOpsProject=internal `
+          /p:TmpFolder=$(Agent.TempDirectory) `
+          /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
+          /p:FlatCopy=true

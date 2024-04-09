@@ -148,6 +148,11 @@ jobs:
       displayName: Publish Artifacts
       condition: always()
 
+    - output: buildArtifacts
+      PathtoPublish: $(sourcesPath)/artifacts/$(Agent.JobName).xml
+      ArtifactName: VerticalManifests
+      displayName: Publish Vertical Manifest
+
     - ${{ if not(parameters.isBuiltFromVmr) }}:
       - output: pipelineArtifact
         displayName: Upload failed patches
@@ -238,7 +243,7 @@ jobs:
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
     - script: |
-        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine /p:TargetOS=${{ parameters.targetOS }} /p:TargetArchitecture=${{ parameters.targetArchitecture }} ${{ parameters.extraProperties }}
+        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine /p:VerticalName=$(Agent.JobName) /p:TargetOS=${{ parameters.targetOS }} /p:TargetArchitecture=${{ parameters.targetArchitecture }} ${{ parameters.extraProperties }}
       displayName: Build
 
     - ${{ if eq(parameters.runTests, 'True') }}:
@@ -325,6 +330,8 @@ jobs:
         if [[ -n "${{ parameters.extraProperties }}" ]]; then
           extraBuildProperties="$extraBuildProperties ${{ parameters.extraProperties }}"
         fi
+
+        extraBuildProperties="$extraBuildProperties /p:VerticalName=$(Agent.JobName)"
 
         buildArgs="$(additionalBuildArgs) $customBuildArgs $extraBuildProperties"
 
@@ -463,11 +470,8 @@ jobs:
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: $(sourcesPath)/artifacts
-      Contents: |
-        VerticalManifest.xml
-        assets/**
-      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
+      SourceFolder: $(sourcesPath)/artifacts/assets
+      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing/assets
     displayName: Copy artifacts to Artifact Staging Directory
     condition: succeededOrFailed()
 

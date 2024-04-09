@@ -1,0 +1,46 @@
+<Project>
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+    <PropertyGroup>
+        <!-- Fake, to satisfy the SDK. -->
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    </PropertyGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+    <Target Name="Build">
+        <MSBuild Projects="$(ToolsDir)init-build.proj"
+             Targets="Build"
+             StopOnFirstFailure="true" />
+    </Target>
+
+    <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
+    <Target Name="JoinVerticals " AfterTargets="Build">
+        <Error Condition="'$(MainVertical)' == ''" Text="MainVertical is not set." />
+        <Error Condition="'$(VerticalManifestsPath)' == ''" Text="VerticalManifestsPath is not set." />
+        <Error Condition="'$(FlatCopy)' == ''" Text="FlatCopy property is not set, set to true for final vertical join, otherwise flase"/>
+    
+        <ItemGroup>
+            <VerticalManifest Include="$(VerticalManifestsPath)\*.xml"/>
+        </ItemGroup>
+
+        <PropertyGroup>
+            <FlatCopy Condition="'$(FlatCopy)' == ''">true</FlatCopy>
+        </PropertyGroup>
+        
+        <Message Importance="High" Text="Joining verticals $(VerticalSubSet)" Condition="'$(VerticalSubSet)' != ''"/>
+        <Message Importance="High" Text="VerticalSubSet not set, joining all verticals @(VerticalManifest)" Condition="'$(VerticalSubSet)' == ''"/>
+        <Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals 
+            VerticalManifest="@(VerticalManifest)"
+            MainVertical="$(MainVertical)"
+            BuildId="$(BuildId)"
+            AzureDevOpsToken="$(AzureDevOpsToken)"
+            AzureDevOpsOrg="$(AzureDevOpsOrg)"
+            AzureDevOpsProject="$(AzureDevOpsProject)"
+            TmpFolder="$(TmpFolder)"
+            OutputFolder="$(OutputFolder)"
+            VerticalSubSet="$(VerticalSubSet)"
+            FlatCopy="$(FlatCopy)" />
+    </Target>
+</Project>
