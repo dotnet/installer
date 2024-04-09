@@ -1,11 +1,15 @@
-<Project Sdk="Microsoft.Build.Traversal">
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
-  <ItemGroup>
-    <ProjectReference Include="$(ToolsDir)init-build.proj" BuildInParallel="false" />
-    <ProjectReference Include="$(RepoProjectsDir)$(RootRepo).proj" BuildInParallel="false" />
-  </ItemGroup>
+  <PropertyGroup>
+    <!-- Fake, to satisfy the SDK. -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
 
-  <Target Name="PrintInfo" BeforeTargets="Build">
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <Target Name="Build">
     <PropertyGroup>
       <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">source-build</BuildModeInfoText>
       <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' != 'true'">non-source-build</BuildModeInfoText>
@@ -13,12 +17,18 @@
 
     <Message Text="Build Mode: $(BuildModeInfoText)" Importance="high" />
     <Message Text="Build Environment: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
+
+    <MSBuild Projects="$(ToolsDir)init-build.proj;
+                       $(RepoProjectsDir)$(RootRepo).proj"
+             Targets="Build"
+             BuildInParallel="false"
+             StopOnFirstFailure="true" />
   </Target>
 
   <!-- Create a merge manifest from the individual repository manifest files. -->
-  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
   <Target Name="MergeAssetManifests" AfterTargets="Build">
-    <PropertyGroup>
+    <PropertyGroup>      
       <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
     </PropertyGroup>
 
@@ -27,8 +37,8 @@
     </ItemGroup>
 
     <!-- It's OK for the VmrBuildNumber to be empty -->
-    <Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests
-      AssetManifest="@(RepoAssetManifest)"
+    <Microsoft.DotNet.UnifiedBuild.Tasks.MergeAssetManifests 
+      AssetManifest="@(RepoAssetManifest)" 
       MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
       VmrBuildNumber="$(BUILD_BUILDNUMBER)" />
   </Target>
@@ -38,8 +48,8 @@
   <!-- Intentionally below the import to appear at the end. -->
   <Target Name="LogBuildOutputFolders"
           AfterTargets="Build">
-    <Message Importance="high" Text="Shipping packages are located in '$(ArtifactsShippingPackagesDir)'." />
-    <Message Importance="high" Text="Shipping assets are located in '$(ArtifactsAssetsDir)'." />
+   <Message Importance="high" Text="Shipping packages are located in '$(ArtifactsShippingPackagesDir)'." />
+   <Message Importance="high" Text="Shipping assets are located in '$(ArtifactsAssetsDir)'." />
   </Target>
 
 </Project>

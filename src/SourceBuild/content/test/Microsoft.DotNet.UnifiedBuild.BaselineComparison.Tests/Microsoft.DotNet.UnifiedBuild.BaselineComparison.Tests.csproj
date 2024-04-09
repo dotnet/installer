@@ -23,12 +23,9 @@
       <_ProducedPackages Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
     </ItemGroup>
     <ItemGroup>
-      <!-- SDK archive test configs -->
+      <!-- General configs -->
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).LogsDirectory">
         <Value>$(ArtifactsTestResultsDir)</Value>
-      </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
-        <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).TargetRid">
         <Value>$(TargetRid)</Value>
@@ -36,11 +33,16 @@
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).PortableRid">
         <Value>$(PortableRid)</Value>
       </RuntimeHostConfigurationOption>
-      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbBuildVersion">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkVersion">
         <Value>$(SourceBuiltSdkVersion)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).WarnOnSdkContentDiffs">
         <Value>$(UBTestsWarnOnSdkContentDiffs)</Value>
+      </RuntimeHostConfigurationOption>
+
+      <!-- SDK archive test configs -->
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
+        <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
       <!-- Set for local testing to avoid downloading a new SDK each test -->
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).MsftSdkArchivePath">

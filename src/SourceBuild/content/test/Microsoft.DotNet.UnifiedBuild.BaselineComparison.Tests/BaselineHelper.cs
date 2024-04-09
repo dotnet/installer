@@ -53,6 +53,10 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests
 
         public static void CompareFiles(string expectedFilePath, string actualFilePath, ITestOutputHelper outputHelper, bool warnOnDiffs = false)
         {
+            if (!File.Exists(expectedFilePath))
+            {
+                throw new InvalidOperationException($"Missing baseline file '{expectedFilePath}'");
+            }
             string baselineFileText = File.ReadAllText(expectedFilePath).Trim();
             string actualFileText = File.ReadAllText(actualFilePath).Trim();
 

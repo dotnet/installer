@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -25,6 +27,27 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 [Trait("Category", "SdkContent")]
 public class NugetPackageContentTests : TestBase
 {
+    public class ExtractedPackage : IDisposable
+    {
+        public string _extractedFolder;
+
+        public ExtractedPackage(ZipArchive archive)
+        {
+            _extractedFolder = Path.GetTempFileName();
+            Directory.CreateDirectory(_extractedFolder);
+            archive.ExtractToDirectory(_extractedFolder);
+        }
+
+        public IEnumerable<string> GetFilePaths()
+        {
+            return Directory.EnumerateFiles(_extractedFolder, "*", SearchOption.AllDirectories);
+        }
+
+        public void Dispose()
+        {
+            Directory.Delete(_extractedFolder, true);
+        }
+    }
     public static readonly ImmutableArray<string> ExcludedFileExtensions = [".psmdcp", ".p7s"];
     public static readonly ImmutableArray<string> NugetIndices = [
         "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json",
@@ -40,7 +63,8 @@ public class NugetPackageContentTests : TestBase
 
     public static IEnumerable<object[]> GetPackagePaths()
     {
-        var packages = (string)(AppContext.GetData("Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.Packages") ?? throw new InvalidOperationException("RuntimeConfig value 'Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.Packages' must be set"));
+        var packagesSwitch = Config.RuntimeConfigSwitchPrefix + "Packages";
+        var packages = Config.GetRuntimeConfig(packagesSwitch) ?? throw new InvalidOperationException($"RuntimeConfig value '{packagesSwitch}' must be set");
         var packagesArray = packages.Split(";")
             // Nuget is unable to find fsharp or command-line-api packages for some reason
             .Where(p => !(Path.GetFileName(Path.GetDirectoryName(p)) is "fsharp" or "command-line-api"))
@@ -57,11 +81,9 @@ public class NugetPackageContentTests : TestBase
     /// </Summary>
     [Theory]
     [MemberData(nameof(GetPackagePaths))]
-    public async Task CompareFileContents(string nugetPackagePath)
+    public async Task CompareFileContents(string nugetPackagePath, CancellationToken ct)
     {
-        var fileName = Path.GetFileName(nugetPackagePath);
-        var repoName = Path.GetFileName(Path.GetDirectoryName(nugetPackagePath))!;
-        using PackageArchiveReader testPackageReader= new PackageArchiveReader(File.OpenRead(nugetPackagePath));
+        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(nugetPackagePath));
         NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
         var packageName = testNuspecReader.GetId();
         var testPackageVersion = testNuspecReader.GetVersion().ToFullString();
@@ -76,23 +98,71 @@ public class NugetPackageContentTests : TestBase
         OutputHelper.WriteLine($"Found package '{packageName}' with version '{packageVersion}'");
 
         using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
-        NuspecReader nuspecReader = await packageReader.GetNuspecReaderAsync(CancellationToken.None);
-        ImmutableHashSet<string> baselineFiles = packageReader.GetFiles().Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
-        ImmutableHashSet<string> testFiles = testPackageReader.GetFiles().Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
-        foreach(var baseline in baselineFiles)
+        ImmutableHashSet<string> baselineFiles = (await packageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        ImmutableHashSet<string> testFiles = (await testPackageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        var testPackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_ub_files.txt");
+        await File.WriteAllLinesAsync(testPackageContentsFileName, testFiles);
+        var baselinePackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_msft_files.txt");
+        await File.WriteAllLinesAsync(testPackageContentsFileName, baselineFiles);
+
+        string diff = BaselineHelper.DiffFiles(baselinePackageContentsFileName, testPackageContentsFileName, OutputHelper);
+        diff = SdkContentTests.RemoveDiffMarkers(diff);
+        BaselineHelper.CompareBaselineContents($"MsftToUb-{packageName}-Files", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetPackagePaths))]
+    public async Task CompareAssemblyVersions(string nugetPackagePath)
+    {
+        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(nugetPackagePath));
+        NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
+        var packageName = testNuspecReader.GetId();
+        var testPackageVersion = testNuspecReader.GetVersion().ToFullString();
+
+        NuGetVersion packageVersion = new NuGetVersion(testPackageVersion);
+        var packageStream = await TryDownloadPackage(packageName, packageVersion);
+        if (packageStream is null)
         {
-            if (!testFiles.Contains(baseline))
-            {
-                OutputHelper.LogWarningMessage($"Unified build package '{packageName}' is missing file '{baseline}'");
-            }
+            OutputHelper.LogWarningMessage($"Could not find package '{packageName}' with version '{packageVersion}'");
+            return;
         }
-        foreach(var testFile in testFiles)
+
+        using PackageArchiveReader baselinePackageReader = new PackageArchiveReader(packageStream);
+        IEnumerable<string> baselineFiles = (await baselinePackageReader.GetFilesAsync(CancellationToken.None)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
+        IEnumerable<string> testFiles = (await testPackageReader.GetFilesAsync(CancellationToken.None)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
+        Dictionary<string, Version?> baselineAssemblyVersions = new();
+        Dictionary<string, Version?> testAssemblyVersions = new();
+        foreach (var fileName in baselineFiles.Intersect(testFiles))
         {
-            if (!baselineFiles.Contains(testFile))
+            string baselineFileName = Path.GetTempFileName();
+            string testFileName = Path.GetFileName(baselineFileName);
+            using FileStream baselineFile = File.Open(baselineFileName, FileMode.CreateNew, FileAccess.ReadWrite);
+            using FileStream testFile = File.Open(testFileName, FileMode.CreateNew, FileAccess.ReadWrite);
+            await baselinePackageReader.GetEntry(fileName).Open().CopyToAsync(baselineFile);
+            await testPackageReader.GetEntry(fileName).Open().CopyToAsync(testFile);
+
+            try
             {
-                OutputHelper.LogWarningMessage($"Unified build package '{packageName}' has additional file '{testFile}'");
+                var baselineAssemblyVersion = AssemblyName.GetAssemblyName(testFileName);
+                baselineAssemblyVersions.Add(fileName, baselineAssemblyVersion.Version);
             }
+            catch (BadImageFormatException)
+            {
+                Assert.Throws<BadImageFormatException>(() => AssemblyName.GetAssemblyName(baselineFileName));
+                break;
+            }
+            var testAssemblyVersion = AssemblyName.GetAssemblyName(baselineFileName);
+            testAssemblyVersions.Add(fileName, testAssemblyVersion.Version);
         }
+        string UbVersionsFileName = packageName + "_ub_assemblyversions.txt";
+        SdkContentTests.WriteAssemblyVersionsToFile(testAssemblyVersions, UbVersionsFileName);
+
+        string MsftVersionsFileName = packageName + "_msft_assemblyversions.txt";
+        SdkContentTests.WriteAssemblyVersionsToFile(baselineAssemblyVersions, MsftVersionsFileName);
+
+        string diff = BaselineHelper.DiffFiles(MsftVersionsFileName, UbVersionsFileName, OutputHelper);
+        diff = SdkContentTests.RemoveDiffMarkers(diff);
+        BaselineHelper.CompareBaselineContents($"MsftToUb_{packageName}.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
     }
 
     public async Task<MemoryStream?> TryDownloadPackage(string packageId, NuGetVersion packageVersion)

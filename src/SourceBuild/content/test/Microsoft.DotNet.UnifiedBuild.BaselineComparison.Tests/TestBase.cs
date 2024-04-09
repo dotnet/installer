@@ -11,7 +11,7 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public abstract class TestBase
 {
-    const string LogsDirectorySwitch = Config.ConfigSwitchPrefix + nameof(LogsDirectory);
+    const string LogsDirectorySwitch = Config.RuntimeConfigSwitchPrefix + nameof(LogsDirectory);
 
     public static string LogsDirectory { get; } = (string)(AppContext.GetData(LogsDirectorySwitch) ?? throw new InvalidOperationException("Logs directory must be specified"));
 

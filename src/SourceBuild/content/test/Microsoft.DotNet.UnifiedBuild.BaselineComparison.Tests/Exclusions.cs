@@ -53,18 +53,6 @@ public class Exclusions
         return files.Where(condition);
     }
 
-    //public List<string> UbFileExclusions => _ubFileExclusions ??= GetFileExclusions(UbPrefix);
-    //List<string>? _ubFileExclusions = null;
-
-    //public List<string> UbAssemblyVersionExclusions => _ubAssemblyVersionExclusions ??= UbFileExclusions.Concat(GetAssemblyVersionExclusions(UbPrefix)).Concat(GetNativeDllExclusions(UbPrefix)).ToList();
-    //List<string>? _ubAssemblyVersionExclusions = null;
-
-    //public List<string> MsftFileExclusions => _msftFileExclusions ??= GetFileExclusions(MsftPrefix);
-    //List<string>? _msftFileExclusions = null;
-
-    //public List<string> MsftAssemblyVersionExclusions => _msftAssemblyVersionExclusions ??= MsftFileExclusions.Concat(GetAssemblyVersionExclusions(MsftPrefix)).Concat(GetNativeDllExclusions(MsftPrefix)).ToList();
-    //List<string>? _msftAssemblyVersionExclusions = null;
-
     public List<string> GetFileExclusions(string? prefix = null) => GetRidSpecificExclusionFileNames("SdkFileDiffExclusions.txt").SelectMany(f => Utilities.TryParseExclusionsFile(f, prefix)).ToList();
     public List<string> GetAssemblyVersionExclusions(string? prefix = null) => GetRidSpecificExclusionFileNames("SdkAssemblyVersionDiffExclusions.txt").SelectMany(f => Utilities.TryParseExclusionsFile(f, prefix)).ToList();
     public List<string> GetNativeDllExclusions(string? prefix = null) => GetRidSpecificExclusionFileNames("NativeDlls.txt").SelectMany(f => Utilities.TryParseExclusionsFile(f, prefix)).ToList();
