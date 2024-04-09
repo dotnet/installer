@@ -11,6 +11,10 @@ parameters:
     image: $(poolImage_Windows)
     demands: ImageOverride -equals $(poolImage_Windows)
     os: windows
+
+- name: mainVertical
+  type: string
+  default: Windows_x64
     
 stages:
 - stage: VMR_Final_Join
@@ -46,7 +50,7 @@ stages:
         InitializeToolset
         MSbuild $(Build.SourcesDirectory)/eng/tools/join-verticals.proj `
           /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests `
-          /p:MainVertical=Windows_x64 `
+          /p:MainVertical=$(parameters.mainVertical) `
           /p:BuildId=$(Build.BuildId) `
           /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw) `
           /p:AzureDevOpsOrg=dnceng `
