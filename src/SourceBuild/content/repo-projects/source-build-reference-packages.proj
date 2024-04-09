@@ -8,16 +8,24 @@
     <!-- SBRP builds before Arcade so it also needs the bootstrap Arcade version -->
     <UseBootstrapArcade>true</UseBootstrapArcade>
 
+    <!-- SBRP builds the reference SDKs so it needs the bootstrap SDK versions -->
+    <UseBootstrapSdks>true</UseBootstrapSdks>
+    
+    <ExtractToolPackageDependsOn>_DiscoverToolPackages</ExtractToolPackageDependsOn>
+
     <LocalNuGetPackageCacheDirectory>$(ArtifactsObjDir)source-build-reference-package-cache</LocalNuGetPackageCacheDirectory>
 
     <BuildArgs>$(BuildArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:LocalNuGetPackageCacheDirectory=$(LocalNuGetPackageCacheDirectory)</BuildArgs>
   </PropertyGroup>
-
-  <ItemGroup>
-    <BuiltSdkPackageOverride Include="@(NoTargetsSdkOverride)" />
-    <BuiltSdkPackageOverride Include="@(TraversalSdkOverride)" />
-  </ItemGroup>
+  
+  <Target Name="_DiscoverToolPackages" 
+          DependsOnTargets="RepoBuild;GetProducedPackages">
+    <ItemGroup>
+      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.NoTargets'))" />
+      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.Traversal'))" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="AddLocalNuGetPackageCacheDirectory"
           AfterTargets="CopyNuGetConfig"

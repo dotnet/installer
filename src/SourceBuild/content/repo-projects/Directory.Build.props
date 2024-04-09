@@ -204,9 +204,7 @@
       RestoreConfigFile property and uses NuGet.config file from repo's root which has online feeds.
     -->
     <NoTargetsSdkOverride Include="Microsoft.Build.NoTargets" Group="NOTARGETS" Version="$(NOTARGETS_BOOTSTRAP_VERSION)" />
-    <TraversalSdkOverride Include="Microsoft.Build.Traversal" Group="TRAVERSAL" Version="$(TRAVERSAL_BOOTSTRAP_VERSION)" />
     <SourceBuiltSdkOverride Include="@(NoTargetsSdkOverride)" Condition="'$(DotNetBuildSourceOnly)' == 'true' and '$(RepositoryName)' != 'source-build-reference-packages'" />
-    <SourceBuiltSdkOverride Include="@(TraversalSdkOverride)" Condition="'$(DotNetBuildSourceOnly)' == 'true' and '$(RepositoryName)' != 'source-build-reference-packages'" />
   </ItemGroup>
 
     <!-- CLI internal version is statically set by us to a version that will never show up in the wild.

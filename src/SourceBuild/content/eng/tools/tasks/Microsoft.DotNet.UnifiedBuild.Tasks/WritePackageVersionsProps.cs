@@ -52,8 +52,15 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         /// <summary>
         /// Set of input nuget package files to generate version properties for.
         /// </summary>
-        [Required]
         public ITaskItem[] NuGetPackages { get; set; }
+
+        /// <summary>
+        /// Set of packages built by dependencies of this repo during this build.
+        ///
+        /// %(Identity): Package identity.
+        /// %(Version): Package version.
+        /// </summary>
+        public ITaskItem[] KnownPackages { get; set; }
 
         /// <summary>
         /// File where the version properties should be written.
@@ -63,7 +70,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
 
         /// <summary>
         /// Properties to add to the build output props, which may not exist as nupkgs.
-        /// FOr example, this is used to pass the version of the CLI toolset archives.
+        /// For example, this is used to pass the version of the CLI toolset archives.
         /// 
         /// %(Identity): Package identity.
         /// %(Version): Package version.
@@ -169,6 +176,15 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                 return !Log.HasLoggedErrors;
             }
 
+            if (KnownPackages is null or [] && NuGetPackages is null or [])
+            {
+                Log.LogError("KnownPackages or NuGetPackages supplied with package information.");
+                return !Log.HasLoggedErrors;
+            }
+
+            NuGetPackages ??= Array.Empty<ITaskItem>();
+            KnownPackages ??= Array.Empty<ITaskItem>();
+
             // First, obtain version information from the packages and additional assets that
             // are provided.
             var latestPackages = NuGetPackages
@@ -187,8 +203,15 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                         Name = identity.Id,
                         Version = identity.Version.ToString()
                     });
+                
+            var knownPackages = KnownPackages
+                .Select(item => new VersionEntry()
+                    {
+                        Name = item.GetMetadata("Identity"),
+                        Version = item.GetMetadata("Version")
+                    });
 
-            var packageElementsToWrite = latestPackages;
+            var packageElementsToWrite = latestPackages.Concat(knownPackages);
 
             // Then, if version flow type is "DependenciesOnly", filter those
             // dependencies that do not appear in the version.details.xml file.

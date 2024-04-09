@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Use a prebuilt Arcade to build Arcade -->
     <UseBootstrapArcade>true</UseBootstrapArcade>
+    <ExtractToolPackageDependsOn>_DiscoverToolPackages</ExtractToolPackageDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,13 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <BuiltSdkPackageOverride Include="Microsoft.DotNet.Arcade.Sdk" Version="$(OutputPackageVersion)" />
-    <BuiltSdkPackageOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Version="$(OutputPackageVersion)" />
-    <BuiltSdkPackageOverride Include="Microsoft.DotNet.CMake.Sdk" Version="$(OutputPackageVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="NuGetVersion" Version="%24(NuGetPackagingVersion)" />
   </ItemGroup>
 
+  <Target Name="_DiscoverToolPackages" 
+          DependsOnTargets="RepoBuild;GetProducedPackages">
+    <ItemGroup>
+      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.Arcade.Sdk'))" />
+      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.SharedFramework.Sdk'))" />
+      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.CMake.Sdk'))" />
+    </ItemGroup>
+  </Target>
 </Project>
