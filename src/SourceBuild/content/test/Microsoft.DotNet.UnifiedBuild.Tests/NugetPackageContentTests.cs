@@ -21,7 +21,7 @@ using System.Xml;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
+namespace Microsoft.DotNet.UnifiedBuild.Tests;
 
 
 [Trait("Category", "SdkContent")]

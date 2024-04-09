@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
+namespace Microsoft.DotNet.UnifiedBuild.Tests;
 
 public class Config
 {
@@ -33,7 +33,7 @@ public class Config
     const string NoDiagnosticMessagesSwitch = RuntimeConfigSwitchPrefix + nameof(NoDiagnosticMessages);
 
 
-    public const string RuntimeConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests.";
+    public const string RuntimeConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.Tests.";
 
     public static string GetRuntimeConfig(string key)
     {

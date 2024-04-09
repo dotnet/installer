@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
+namespace Microsoft.DotNet.UnifiedBuild.Tests;
 
 public static class AssemblyVersionHelpers
 {
