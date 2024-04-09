@@ -11,18 +11,14 @@ namespace Microsoft.DotNet.UnifiedBuild.BaselineComparison.Tests;
 
 public abstract class TestBase
 {
-    const string LogsDirectorySwitch = Config.RuntimeConfigSwitchPrefix + nameof(LogsDirectory);
-
-    public static string LogsDirectory { get; } = (string)(AppContext.GetData(LogsDirectorySwitch) ?? throw new InvalidOperationException("Logs directory must be specified"));
-
     public ITestOutputHelper OutputHelper { get; }
 
     public TestBase(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
-        if (!Directory.Exists(LogsDirectory))
+        if (!Directory.Exists(Config.LogsDirectory))
         {
-            Directory.CreateDirectory(LogsDirectory);
+            Directory.CreateDirectory(Config.LogsDirectory);
         }
     }
 }

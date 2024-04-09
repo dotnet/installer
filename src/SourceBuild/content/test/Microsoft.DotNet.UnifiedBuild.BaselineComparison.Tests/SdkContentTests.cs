@@ -82,10 +82,10 @@ public class SdkContentTests : TestBase
             RemoveExcludedAssemblyVersionPaths(ubSdkAssemblyVersions, msftSdkAssemblyVersions);
 
             const string UbVersionsFileName = "ub_assemblyversions.txt";
-            WriteAssemblyVersionsToFile(ubSdkAssemblyVersions, UbVersionsFileName);
+            AssemblyVersionHelpers.WriteAssemblyVersionsToFile(ubSdkAssemblyVersions, UbVersionsFileName);
 
             const string MsftVersionsFileName = "msft_assemblyversions.txt";
-            WriteAssemblyVersionsToFile(msftSdkAssemblyVersions, MsftVersionsFileName);
+            AssemblyVersionHelpers.WriteAssemblyVersionsToFile(msftSdkAssemblyVersions, MsftVersionsFileName);
 
             string diff = BaselineHelper.DiffFiles(MsftVersionsFileName, UbVersionsFileName, OutputHelper);
             diff = RemoveDiffMarkers(diff);
@@ -136,27 +136,6 @@ public class SdkContentTests : TestBase
         }
     }
 
-    public static void WriteAssemblyVersionsToFile(Dictionary<string, Version?> assemblyVersions, string outputPath)
-    {
-        string[] lines = assemblyVersions
-            .Select(kvp => $"{kvp.Key} - {kvp.Value}")
-            .Order()
-            .ToArray();
-        File.WriteAllLines(outputPath, lines);
-    }
-
-    // It's known that assembly versions can be different between builds in their revision field. Disregard that difference
-    // by excluding that field in the output.
-    private static Version? GetVersion(AssemblyName assemblyName)
-    {
-        if (assemblyName.Version is not null)
-        {
-            return new Version(assemblyName.Version.ToString(3));
-        }
-
-        return null;
-    }
-
     private Dictionary<string, Version?> GetSdkAssemblyVersions(string ubSdkPath, string? prefix = null)
     {
         Exclusions ex = Exclusions;
@@ -183,7 +162,7 @@ public class SdkContentTests : TestBase
                             try
                             {
                                 AssemblyName assemblyName = AssemblyName.GetAssemblyName(file);
-                                Assert.True(ubSdkAssemblyVersions.TryAdd(normalizedPath, GetVersion(assemblyName)));
+                                Assert.True(ubSdkAssemblyVersions.TryAdd(normalizedPath, AssemblyVersionHelpers.GetVersion(assemblyName)));
                             }
                             catch (BadImageFormatException)
                             {

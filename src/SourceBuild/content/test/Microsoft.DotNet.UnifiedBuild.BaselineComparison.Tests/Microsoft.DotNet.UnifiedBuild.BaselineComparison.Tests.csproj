@@ -50,9 +50,6 @@
       </RuntimeHostConfigurationOption>
 
       <!-- Nuget package test configs -->
-      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).NoDiagnosticMessages">
-        <Value>$(VSTestUseMSBuildOutput)</Value>
-      </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).Packages">
         <Value>@(_ProducedPackages->'%(Identity)')</Value>
       </RuntimeHostConfigurationOption>

@@ -81,8 +81,9 @@ public class NugetPackageContentTests : TestBase
     /// </Summary>
     [Theory]
     [MemberData(nameof(GetPackagePaths))]
-    public async Task CompareFileContents(string nugetPackagePath, CancellationToken ct)
+    public async Task CompareFileContents(string nugetPackagePath)
     {
+        var ct = CancellationToken.None;
         using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(nugetPackagePath));
         NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
         var packageName = testNuspecReader.GetId();
@@ -98,8 +99,9 @@ public class NugetPackageContentTests : TestBase
         OutputHelper.WriteLine($"Found package '{packageName}' with version '{packageVersion}'");
 
         using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
-        ImmutableHashSet<string> baselineFiles = (await packageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
-        ImmutableHashSet<string> testFiles = (await testPackageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f))).ToImmutableHashSet();
+        IEnumerable<string> baselineFiles = (await packageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
+        IEnumerable<string> testFiles = (await testPackageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
+
         var testPackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_ub_files.txt");
         await File.WriteAllLinesAsync(testPackageContentsFileName, testFiles);
         var baselinePackageContentsFileName = Path.Combine(LogsDirectory, packageName + "_msft_files.txt");
@@ -107,7 +109,7 @@ public class NugetPackageContentTests : TestBase
 
         string diff = BaselineHelper.DiffFiles(baselinePackageContentsFileName, testPackageContentsFileName, OutputHelper);
         diff = SdkContentTests.RemoveDiffMarkers(diff);
-        BaselineHelper.CompareBaselineContents($"MsftToUb-{packageName}-Files", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
+        BaselineHelper.CompareBaselineContents($"MsftToUb-{packageName}-Files.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnSdkContentDiffs);
     }
 
     [Theory]
@@ -135,12 +137,13 @@ public class NugetPackageContentTests : TestBase
         foreach (var fileName in baselineFiles.Intersect(testFiles))
         {
             string baselineFileName = Path.GetTempFileName();
-            string testFileName = Path.GetFileName(baselineFileName);
-            using FileStream baselineFile = File.Open(baselineFileName, FileMode.CreateNew, FileAccess.ReadWrite);
-            using FileStream testFile = File.Open(testFileName, FileMode.CreateNew, FileAccess.ReadWrite);
-            await baselinePackageReader.GetEntry(fileName).Open().CopyToAsync(baselineFile);
-            await testPackageReader.GetEntry(fileName).Open().CopyToAsync(testFile);
-
+            string testFileName = Path.GetTempFileName();
+            using (FileStream baselineFile = File.OpenWrite(baselineFileName))
+            using (FileStream testFile = File.OpenWrite(testFileName))
+            {
+                await baselinePackageReader.GetEntry(fileName).Open().CopyToAsync(baselineFile);
+                await testPackageReader.GetEntry(fileName).Open().CopyToAsync(testFile);
+            }
             try
             {
                 var baselineAssemblyVersion = AssemblyName.GetAssemblyName(testFileName);
@@ -153,12 +156,16 @@ public class NugetPackageContentTests : TestBase
             }
             var testAssemblyVersion = AssemblyName.GetAssemblyName(baselineFileName);
             testAssemblyVersions.Add(fileName, testAssemblyVersion.Version);
+
+            File.Delete(baselineFileName);
+            File.Delete(testFileName);
         }
+
         string UbVersionsFileName = packageName + "_ub_assemblyversions.txt";
-        SdkContentTests.WriteAssemblyVersionsToFile(testAssemblyVersions, UbVersionsFileName);
+        AssemblyVersionHelpers.WriteAssemblyVersionsToFile(testAssemblyVersions, UbVersionsFileName);
 
         string MsftVersionsFileName = packageName + "_msft_assemblyversions.txt";
-        SdkContentTests.WriteAssemblyVersionsToFile(baselineAssemblyVersions, MsftVersionsFileName);
+        AssemblyVersionHelpers.WriteAssemblyVersionsToFile(baselineAssemblyVersions, MsftVersionsFileName);
 
         string diff = BaselineHelper.DiffFiles(MsftVersionsFileName, UbVersionsFileName, OutputHelper);
         diff = SdkContentTests.RemoveDiffMarkers(diff);
