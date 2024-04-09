@@ -362,6 +362,7 @@ jobs:
 
         dockerVolumeArgs="-v $(sourcesPath):/vmr"
         sourceOnlyArgs=''
+        extraBuildProperties=''
 
         if [[ ! -z '${{ parameters.targetOS }}' ]]; then
           extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
