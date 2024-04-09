@@ -5,7 +5,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
-    <ProjectReference Include="BinaryToolKit\BinaryToolKit.csproj" />
     <ProjectReference Include="$(TasksDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj" />
   </ItemGroup>
 
