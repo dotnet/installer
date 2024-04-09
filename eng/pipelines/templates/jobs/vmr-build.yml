@@ -243,7 +243,7 @@ jobs:
 
     - ${{ if eq(parameters.runTests, 'True') }}:
       - script: |
-          call $(sourcesPath)\build.cmd -ci -prepareMachine -test ${{ parameters.extraProperties }}
+          call $(sourcesPath)\build.cmd -ci -prepareMachine -test /p:TargetOS=${{ parameters.targetOS }} /p:TargetArchitecture=${{ parameters.targetArchitecture }} ${{ parameters.extraProperties }}
         displayName: Run Tests
 
   - ${{ else }}:
