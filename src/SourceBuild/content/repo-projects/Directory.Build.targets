@@ -455,7 +455,7 @@
 
   <Target Name="GetRepoAssetManifests" Returns="@(RepoAssetManifest)">
     <ItemGroup>
-      <RepoAssetManifest Include="$(ArtifactsAssetsDir)*.xml" />
+      <RepoAssetManifest Include="$(RepoAssetManifestsDir)*.xml" />
     </ItemGroup>
   </Target>
 
