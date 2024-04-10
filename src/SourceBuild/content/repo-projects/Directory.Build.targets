@@ -598,7 +598,12 @@
     <Copy SourceFiles="@(PackageVersionPropsSnapshotFiles)" DestinationFolder="$(PackageReportDir)snapshots/" />
 
     <ItemGroup>
-      <RestoredPackageFile Include="$(NuGetPackageRoot)**/*.nupkg" />
+      <!--
+        Note the usage of */*/*.nupkg and not **/*.nupkg. The latter would include nupkgs
+        carried as content, i.e. in Microsoft.FSharp.Compiler nupkg, and cause false positives.
+        Content nupkgs were not restored and should not be used in prebuit detection.
+      -->
+      <RestoredPackageFile Include="$(NuGetPackageRoot)*/*/*.nupkg" />
 
       <!-- Only contains packages when building. -->
       <TarballPrebuiltPackageFile Include="$(PrebuiltPackagesPath)*.nupkg" />
