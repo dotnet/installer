@@ -48,10 +48,12 @@ public class AzureDevOpsClient : IDisposable
 
         _httpClient.Timeout = TimeSpan.FromSeconds(_httpTimeoutSeconds);
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Basic",
-            Convert.ToBase64String(Encoding.UTF8.GetBytes($":{azureDevOpsToken}"))
-        );
+        if (string.IsNullOrEmpty(azureDevOpsToken))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Basic",
+                Convert.ToBase64String(Encoding.UTF8.GetBytes($":{azureDevOpsToken}")));
+        }       
     }
 
     /// <summary>

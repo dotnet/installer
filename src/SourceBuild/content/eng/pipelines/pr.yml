@@ -51,3 +51,8 @@ stages:
       scope: lite
     ${{ else }}:
       scope: full
+
+- template: /src/installer/eng/pipelines/templates/stages/vmr-final-join.yml@self
+  parameters:
+    azureDevOpsOrg: dnceng-public
+    azureDevOpsProject: public

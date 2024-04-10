@@ -13,7 +13,6 @@
         <Error Condition="'$(MainVertical)' == ''" Text="MainVertical is not set." />
         <Error Condition="'$(VerticalManifestsPath)' == ''" Text="VerticalManifestsPath is not set." />
         <Error Condition="'$(BuildId)' == ''" Text="BuildId is not set." />
-        <Error Condition="'$(AzureDevOpsToken)' == ''" Text="AzureDevOpsToken is not set." />
         <Error Condition="'$(AzureDevOpsOrg)' == ''" Text="AzureDevOpsOrg is not set." />
         <Error Condition="'$(AzureDevOpsProject)' == ''" Text="AzureDevOpsProject is not set." />
         <Error Condition="'$(TmpFolder)' == ''" Text="TmpFolder is not set." />
@@ -30,6 +29,8 @@
         
         <Message Importance="High" Text="Joining verticals $(VerticalSubSet)" Condition="'$(VerticalSubSet)' != ''"/>
         <Message Importance="High" Text="VerticalSubSet not set, joining all verticals @(VerticalManifest)" Condition="'$(VerticalSubSet)' == ''"/>
+
+        <!-- AzureDevOpsToken shouldn't be set when running in dnceng-public -->
         <Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals 
             VerticalManifest="@(VerticalManifest)"
             MainVertical="$(MainVertical)"

@@ -43,10 +43,9 @@ public class JoinVerticals : Microsoft.Build.Utilities.Task
     public required string BuildId { get; init; }
 
     /// <summary>
-    /// Azure DevOps token, required scopes: "Build (read)"
+    /// Azure DevOps token, required scopes: "Build (read)", allowed to be empty when running in a public project
     /// </summary>
-    [Required]
-    public required string AzureDevOpsToken { get; init; }
+    public string AzureDevOpsToken { get; set; }
 
     /// <summary>
     /// Azure DevOps organization

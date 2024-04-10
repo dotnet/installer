@@ -509,3 +509,11 @@ jobs:
       displayName: Publish Artifacts
       condition: succeededOrFailed()
       continueOnError: true
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: $(sourcesPath)/artifacts/$(Agent.JobName).xml
+        ArtifactName: VerticalManifests
+      displayName: Publish Vertical Manifest
+      condition: succeededOrFailed()
+

@@ -15,13 +15,26 @@ parameters:
 - name: mainVertical
   type: string
   default: Windows_x64
+
+- name: azureDevOpsOrg
+  type: string
+  default: dnceng
+
+- name: azureDevOpsProject
+  type: string
+  default: internal
     
 stages:
 - stage: VMR_Final_Join
   displayName: VMR Final Join
   dependsOn: VMR_Vertical_Build
   variables:
-  - group: Publish-Build-Assets
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    - group: Publish-Build-Assets
+  - ${{ else }}:
+    - name: dn-bot-dnceng-build-rw-code-rw
+      value: ''
+
   - template: ../variables/vmr-build.yml
     parameters:
       vmrBranch: ${{ parameters.vmrBranch }}
@@ -52,7 +65,15 @@ stages:
         /p:MainVertical=$(parameters.mainVertical)
         /p:BuildId=$(Build.BuildId)
         /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw)
-        /p:AzureDevOpsOrg=dnceng
-        /p:AzureDevOpsProject=internal
+        /p:AzureDevOpsOrg=$(parameters.azureDevOpsOrg)
+        /p:AzureDevOpsProject=$(parameters.azureDevOpsProject)
         /p:TmpFolder=$(Agent.TempDirectory)
         /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
+      displayName: 'VMR Final Join'
+
+    - ${{ if or(ne(variables['System.TeamProject'], 'internal'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+      - publish: $(Build.ArtifactStagingDirectory)/artifacts
+        artifact: JoinedArtifacts
+        displayName: Publish Artifacts
+        condition: succeededOrFailed()
+        continueOnError: true
