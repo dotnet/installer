@@ -12,7 +12,7 @@ parameters:
     demands: ImageOverride -equals $(poolImage_Windows)
     os: windows
 
-- name: mainVertical
+- name: primaryDependentJob
   type: string
   default: Windows_x64
 
@@ -62,7 +62,7 @@ stages:
         -ci
         /p:DotNetBuildPass=final
         /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
-        /p:MainVertical=$(parameters.mainVertical)
+        /p:MainVertical=$(parameters.primaryDependentJob)
         /p:BuildId=$(Build.BuildId)
         /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw)
         /p:AzureDevOpsOrg=$(parameters.azureDevOpsOrg)

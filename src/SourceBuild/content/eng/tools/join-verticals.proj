@@ -1,46 +1,47 @@
 <Project Sdk="Microsoft.Build.NoTargets">
 
-    <PropertyGroup>
-        <TargetFramework>$(NetCurrent)</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>$(NetCurrent)</TargetFramework>
+  </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="$(TasksDir)Microsoft.DotNet.UnifiedBuild.Tasks\Microsoft.DotNet.UnifiedBuild.Tasks.csproj" />
+  </ItemGroup>
+
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
+  <Target Name="JoinVerticals " AfterTargets="Build">
+    <Error Condition="'$(MainVertical)' == ''" Text="MainVertical is not set." />
+    <Error Condition="'$(VerticalManifestsPath)' == ''" Text="VerticalManifestsPath is not set." />
+    <Error Condition="'$(BuildId)' == ''" Text="BuildId is not set." />
+    <Error Condition="'$(AzureDevOpsOrg)' == ''" Text="AzureDevOpsOrg is not set." />
+    <Error Condition="'$(AzureDevOpsProject)' == ''" Text="AzureDevOpsProject is not set." />
+    <Error Condition="'$(TmpFolder)' == ''" Text="TmpFolder is not set." />
+    <Error Condition="'$(OutputFolder)' == ''" Text="OutputFolder is not set." />
+    
     <ItemGroup>
-        <ProjectReference Include="$(TasksDir)Microsoft.DotNet.UnifiedBuild.Tasks\Microsoft.DotNet.UnifiedBuild.Tasks.csproj" />
+      <VerticalManifest Include="$(VerticalManifestsPath)\*.xml"/>
     </ItemGroup>
 
-    <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
-    <Target Name="JoinVerticals " AfterTargets="Build">
-        <Error Condition="'$(MainVertical)' == ''" Text="MainVertical is not set." />
-        <Error Condition="'$(VerticalManifestsPath)' == ''" Text="VerticalManifestsPath is not set." />
-        <Error Condition="'$(BuildId)' == ''" Text="BuildId is not set." />
-        <Error Condition="'$(AzureDevOpsOrg)' == ''" Text="AzureDevOpsOrg is not set." />
-        <Error Condition="'$(AzureDevOpsProject)' == ''" Text="AzureDevOpsProject is not set." />
-        <Error Condition="'$(TmpFolder)' == ''" Text="TmpFolder is not set." />
-        <Error Condition="'$(OutputFolder)' == ''" Text="OutputFolder is not set." />
-    
-        <ItemGroup>
-            <VerticalManifest Include="$(VerticalManifestsPath)\*.xml"/>
-        </ItemGroup>
-
-        <PropertyGroup>
-            <FlatCopy Condition="'$(DotNetBuildPass)' == 'final'">true</FlatCopy>
-            <FlatCopy Condition="'$(DotNetBuildPass)' != 'final'">false</FlatCopy>
-        </PropertyGroup>
+    <PropertyGroup>
+      <FlatCopy Condition="'$(DotNetBuildPass)' == 'final'">true</FlatCopy>
+      <FlatCopy Condition="'$(DotNetBuildPass)' != 'final'">false</FlatCopy>
+    </PropertyGroup>
         
-        <Message Importance="High" Text="Joining verticals $(VerticalSubSet)" Condition="'$(VerticalSubSet)' != ''"/>
-        <Message Importance="High" Text="VerticalSubSet not set, joining all verticals @(VerticalManifest)" Condition="'$(VerticalSubSet)' == ''"/>
+    <Message Importance="High" Text="Joining verticals $(VerticalSubSet)" Condition="'$(VerticalSubSet)' != ''"/>
+    <Message Importance="High" Text="VerticalSubSet not set, joining all verticals @(VerticalManifest)" Condition="'$(VerticalSubSet)' == ''"/>
 
-        <!-- AzureDevOpsToken shouldn't be set when running in dnceng-public -->
-        <Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals 
-            VerticalManifest="@(VerticalManifest)"
-            MainVertical="$(MainVertical)"
-            BuildId="$(BuildId)"
-            AzureDevOpsToken="$(AzureDevOpsToken)"
-            AzureDevOpsOrg="$(AzureDevOpsOrg)"
-            AzureDevOpsProject="$(AzureDevOpsProject)"
-            TmpFolder="$(TmpFolder)"
-            OutputFolder="$(OutputFolder)"
-            VerticalSubSet="$(VerticalSubSet)"
-            FlatCopy="$(FlatCopy)" />
-    </Target>
+    <!-- AzureDevOpsToken shouldn't be set when running in dnceng-public -->
+    <Microsoft.DotNet.UnifiedBuild.Tasks.JoinVerticals 
+      VerticalManifest="@(VerticalManifest)"
+      MainVertical="$(MainVertical)"
+      BuildId="$(BuildId)"
+      AzureDevOpsToken="$(AzureDevOpsToken)"
+      AzureDevOpsOrg="$(AzureDevOpsOrg)"
+      AzureDevOpsProject="$(AzureDevOpsProject)"
+      TmpFolder="$(TmpFolder)"
+      OutputFolder="$(OutputFolder)"
+      VerticalSubSet="$(VerticalSubSet)"
+      FlatCopy="$(FlatCopy)" />
+  </Target>
+    
 </Project>
