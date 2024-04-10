@@ -20,7 +20,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
     public class VersionEntry
     {
         public string Name;
-        public string Version;
+        public NuGetVersion Version;
     }
 
     /// <summary>
@@ -189,23 +189,26 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                         return reader.GetIdentity();
                     }
                 })
-                .GroupBy(identity => identity.Id)
-                .Select(g => g.OrderBy(id => id.Version).Last())
-                .OrderBy(id => id.Id)
                 .Select(identity => new VersionEntry()
-                    {
-                        Name = identity.Id,
-                        Version = identity.Version.ToString()
-                    });
+                {
+                    Name = identity.Id,
+                    Version = identity.Version
+                });
                 
             var knownPackages = KnownPackages
                 .Select(item => new VersionEntry()
                     {
                         Name = item.GetMetadata("Identity"),
-                        Version = item.GetMetadata("Version")
+                        Version = new NuGetVersion(item.GetMetadata("Version"))
                     });
 
-            var packageElementsToWrite = latestPackages.Concat(knownPackages);
+            // We may have multiple versions of the same package. We'll keep the latest one.
+            // This can even happen in the KnownPackages list, as a repo (such as source-build-reference-packages)
+            // may have multiple versions of the same package.
+            IEnumerable<VersionEntry> packageElementsToWrite = latestPackages.Concat(knownPackages)
+                .GroupBy(identity => identity.Name)
+                .Select(g => g.OrderByDescending(id => id.Version).First())
+                .OrderBy(id => id.Name);
 
             // Then, if version flow type is "DependenciesOnly", filter those
             // dependencies that do not appear in the version.details.xml file.
