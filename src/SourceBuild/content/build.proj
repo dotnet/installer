@@ -9,10 +9,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
 
-  <PropertyGroup>
-    <DotNetBuildPass Condition="'$(DotNetBuildPass)' == ''">1</DotNetBuildPass>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(DotNetBuildPass)' != 'final'">
     <!-- Pre-build: Init tools-->
     <ProjectReference Include="$(RepositoryEngineeringDir)init-cross-build.proj"
