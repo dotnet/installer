@@ -464,7 +464,7 @@ jobs:
         condition: succeededOrFailed()
         continueOnError: true
         inputs:
-          testRunner: vSTest
+          testRunner: VSTest
           testResultsFiles: 'test/**/*.trx'
           searchFolder: $(sourcesPath)
           mergeTestResults: true
