@@ -564,7 +564,7 @@
     <Exec Command="df -h $(RepoRoot)" Condition="'$(BuildOS)' != 'windows'and '@(DirsToDeleteWithTrailingSeparator)' != ''" />
   </Target>
 
-  <Target Name="ExtractToolPackage"
+  <Target Name="ExtractToolPackageCore"
           DependsOnTargets="RepoBuild;$(ExtractToolPackageDependsOn)"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
@@ -601,6 +601,9 @@
       <Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
     </Touch>
   </Target>
+
+  <Target Name="ExtractToolPackage"
+          DependsOnTargets="RepoBuild;$(ExtractToolPackageDependsOn);ExtractToolPackageCore" />
 
   <Target Name="Build"
           DependsOnTargets="
