@@ -25,13 +25,13 @@ public class AzureDevOpsClient : IDisposable
     private readonly HttpClient _httpClient;
     private readonly TaskLoggingHelper _logger;
 
-    private readonly string _azureDevOpsBaseUri = "https://dev.azure.com";
-    private readonly string _azureDevOpsApiVersion = "7.1-preview.5";
+    private const string _azureDevOpsBaseUri = "https://dev.azure.com";
+    private const string _azureDevOpsApiVersion = "7.1-preview.5";
     // download in 100 MB chunks
-    private readonly int _downloadBufferSize = 1024 * 1024 * 100;
-    private readonly int _httpTimeoutSeconds = 300;
-    private readonly string _assetsFolderName = "assets";
-    private readonly string _packagesFolderName = "packages";
+    private const int _downloadBufferSize = 1024 * 1024 * 100;
+    private const int _httpTimeoutSeconds = 300;
+    private const string _assetsFolderName = "assets";
+    private const string _packagesFolderName = "packages";
 
     public AzureDevOpsClient(
         string azureDevOpsToken,
@@ -161,7 +161,7 @@ public class AzureDevOpsClient : IDisposable
         }
     }
 
-    private string GetRelativeDestinationPath(string sourceFilePath, string sourceDirectory, string destinationFolder)
+    private static string GetRelativeDestinationPath(string sourceFilePath, string sourceDirectory, string destinationFolder)
     {
         string relativeFilePath = string.Empty;
 
@@ -178,7 +178,7 @@ public class AzureDevOpsClient : IDisposable
         return Path.Combine(destinationFolder, relativeFilePath);;
     }
 
-    private string GetFlatDestinationPath(string sourceFilePath, string destinationFolder)
+    private static string GetFlatDestinationPath(string sourceFilePath, string destinationFolder)
     {
         return Path.Combine(destinationFolder, Path.GetFileName(sourceFilePath));
     }

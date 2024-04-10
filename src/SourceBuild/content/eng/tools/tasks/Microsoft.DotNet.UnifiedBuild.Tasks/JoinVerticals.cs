@@ -78,11 +78,11 @@ public class JoinVerticals : Microsoft.Build.Utilities.Task
     /// </summary>
     public required bool FlatCopy { get; init; }
 
-    private readonly string _packageElementName = "Package";
-    private readonly string _blobElementName = "Blob";
-    private readonly string _idAttribute = "Id";
-    private readonly string _verticalNameAttribute = "VerticalName";
-    private readonly string _artifactNameSuffix = "_Artifacts";
+    private const string _packageElementName = "Package";
+    private const string _blobElementName = "Blob";
+    private const string _idAttribute = "Id";
+    private const string _verticalNameAttribute = "VerticalName";
+    private const string _artifactNameSuffix = "_Artifacts";
 
     public override bool Execute()
     {
