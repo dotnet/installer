@@ -276,11 +276,11 @@
                                VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                                VersionDetails="$(_VersionDetailsXml)"
                                OutputPath="$(CurrentSourceBuiltPackageVersionPropsPath)"
-                               Condition="'@(_DependencyProducedPackage->Count()) != 0" />
+                               Condition="@(_DependencyProducedPackage->Count()) != 0" />
     
     <WriteLinesToFile File="$(CurrentSourceBuiltPackageVersionPropsPath)"
                       Lines="&lt;Project&gt;&lt;/Project&gt;" 
-                      Condition="'@(_DependencyProducedPackage->Count()) == 0" />
+                      Condition="@(_DependencyProducedPackage->Count()) == 0" />
 
     <!-- Create previously source-built inputs info -->
     <WritePackageVersionsProps NuGetPackages="@(_PreviouslyBuiltSourceBuiltPackages)"
@@ -300,7 +300,7 @@
     <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage)"
                                VersionPropsFlowType="AllPackages"
                                OutputPath="$(SnapshotPackageVersionPropsPath)"
-                               Condition="'@(_DependencyProducedPackage->Count()) != 0" />
+                               Condition="@(_DependencyProducedPackage->Count()) != 0" />
 
     <!-- Write a single file that contains imports for both the current and previously built packages -->
     <PropertyGroup>
