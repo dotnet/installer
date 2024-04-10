@@ -9,7 +9,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
 
-  <ItemGroup>
+  <PropertyGroup>
+    <DotNetBuildPass Condition="'$(DotNetBuildPass)' == ''">1</DotNetBuildPass>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildPass)' != 'final'">
     <!-- Pre-build: Init tools-->
     <ProjectReference Include="$(RepositoryEngineeringDir)init-cross-build.proj"
                       Condition="'$(BuildOS)' != 'windows' and '$(CrossBuild)' == 'true' and '$(ROOTFS_DIR)' == ''"
@@ -26,7 +30,12 @@
     <ProjectReference Include="$(RepositoryEngineeringDir)publish.proj" />
   </ItemGroup>
 
-  <Target Name="PrintInfo">
+  <ItemGroup Condition="'$(DotNetBuildPass)' == 'final'">
+    <ProjectReference Include="$(ToolsDir)join-verticals.proj" />
+  </ItemGroup>
+
+  <Target Name="PrintInfo"
+          Condition="'$(DotNetBuildPass)' != 'final'">
     <PropertyGroup>
       <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' == 'true'">source-build</BuildModeInfoText>
       <BuildModeInfoText Condition="'$(DotNetBuildSourceOnly)' != 'true'">non-source-build</BuildModeInfoText>
@@ -37,7 +46,8 @@
   </Target>
 
   <Target Name="LogBuildOutputFolders"
-          AfterTargets="Build">
+          AfterTargets="Build"
+          Condition="'$(DotNetBuildPass)' != 'final'">
     <Message Importance="high" Text="Shipping packages are located in '$(ArtifactsShippingPackagesDir)'." />
     <Message Importance="high" Text="Shipping assets are located in '$(ArtifactsAssetsDir)'." />
   </Target>

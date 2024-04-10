@@ -12,14 +12,20 @@
     <Target Name="JoinVerticals " AfterTargets="Build">
         <Error Condition="'$(MainVertical)' == ''" Text="MainVertical is not set." />
         <Error Condition="'$(VerticalManifestsPath)' == ''" Text="VerticalManifestsPath is not set." />
-        <Error Condition="'$(FlatCopy)' == ''" Text="FlatCopy property is not set, set to true for final vertical join, otherwise flase"/>
+        <Error Condition="'$(BuildId)' == ''" Text="BuildId is not set." />
+        <Error Condition="'$(AzureDevOpsToken)' == ''" Text="AzureDevOpsToken is not set." />
+        <Error Condition="'$(AzureDevOpsOrg)' == ''" Text="AzureDevOpsOrg is not set." />
+        <Error Condition="'$(AzureDevOpsProject)' == ''" Text="AzureDevOpsProject is not set." />
+        <Error Condition="'$(TmpFolder)' == ''" Text="TmpFolder is not set." />
+        <Error Condition="'$(OutputFolder)' == ''" Text="OutputFolder is not set." />
     
         <ItemGroup>
             <VerticalManifest Include="$(VerticalManifestsPath)\*.xml"/>
         </ItemGroup>
 
         <PropertyGroup>
-            <FlatCopy Condition="'$(FlatCopy)' == ''">true</FlatCopy>
+            <FlatCopy Condition="'$(DotNetBuildPass)' == 'final'">true</FlatCopy>
+            <FlatCopy Condition="'$(DotNetBuildPass)' != 'final'">false</FlatCopy>
         </PropertyGroup>
         
         <Message Importance="High" Text="Joining verticals $(VerticalSubSet)" Condition="'$(VerticalSubSet)' != ''"/>

@@ -45,17 +45,14 @@ stages:
         artifactName: 'VerticalManifests'
         targetPath: $(Build.ArtifactStagingDirectory)/VerticalManifests
 
-    - powershell: |
-        . $(Build.SourcesDirectory)/eng/common/tools.ps1
-        InitializeToolset
-        ./.dotnet/dotnet restore $(Build.SourcesDirectory)/eng/tools/join-verticals.proj
-        MSbuild $(Build.SourcesDirectory)/eng/tools/join-verticals.proj `
-          /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests `
-          /p:MainVertical=$(parameters.mainVertical) `
-          /p:BuildId=$(Build.BuildId) `
-          /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw) `
-          /p:AzureDevOpsOrg=dnceng `
-          /p:AzureDevOpsProject=internal `
-          /p:TmpFolder=$(Agent.TempDirectory) `
-          /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts `
-          /p:FlatCopy=true
+    - script: $(Build.SourcesDirectory)/build.cmd 
+        -ci
+        /p:DotNetBuildPass=final
+        /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
+        /p:MainVertical=$(parameters.mainVertical)
+        /p:BuildId=$(Build.BuildId)
+        /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw)
+        /p:AzureDevOpsOrg=dnceng
+        /p:AzureDevOpsProject=internal
+        /p:TmpFolder=$(Agent.TempDirectory)
+        /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
