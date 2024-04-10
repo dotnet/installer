@@ -286,7 +286,12 @@
     <WritePackageVersionsProps NuGetPackages="@(_PreviouslyBuiltSourceBuiltPackages)"
                                VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                                VersionDetails="$(_VersionDetailsXml)"
-                               OutputPath="$(PreviouslySourceBuiltPackageVersionPropsPath)" />
+                               OutputPath="$(PreviouslySourceBuiltPackageVersionPropsPath)"
+                               Condition="@(_PreviouslyBuiltSourceBuiltPackages->Count()) != 0" />
+
+    <WriteLinesToFile File="$(CurrentSourceBuiltPackageVersionPropsPath)"
+                      Lines="&lt;Project&gt;&lt;/Project&gt;" 
+                      Condition="@(_PreviouslyBuiltSourceBuiltPackages->Count()) == 0" />
 
     <!-- Write a full package version props (unfiltered) that will be used to track which repo creates a package.
          Because not all repos implement the repo API (e.g. some are external), it's difficult to consistently gather
