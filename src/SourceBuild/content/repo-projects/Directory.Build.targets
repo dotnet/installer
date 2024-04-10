@@ -384,8 +384,8 @@
       RestoreConfigFile property and uses NuGet.config file from repo's root which has online feeds.
     -->
     <ItemGroup>
-      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.Traversal')" Group="TRAVERSAL" />
-      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.NoTargets')" Group="NOTARGETS" />
+      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.Traversal'))" Group="TRAVERSAL" />
+      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.NoTargets'))" Group="NOTARGETS" />
     </ItemGroup>
   </Target>
 
