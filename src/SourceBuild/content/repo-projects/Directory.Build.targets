@@ -342,21 +342,9 @@
           DependsOnTargets="BuildRepoReferences;GetProducedPackagesFromTransitiveReferences"
           Condition="'$(UseBootstrapArcade)' != 'true'">
     <ItemGroup>
-      <_BuiltArcadeSdkPackage Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.Arcade.Sdk'))" />
-    </ItemGroup>
-
-    <PropertyGroup>
-      <_BuiltArcadeSdkPackageVersion>@(_BuiltArcadeSdkPackage->MetadataValue('Version'))</_BuiltArcadeSdkPackageVersion>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <SourceBuiltSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(_BuiltArcadeSdkPackageVersion)" />
-      <SourceBuiltSdkOverride Include="Microsoft.DotNet.SharedFramework.Sdk" Group="ARCADE_SHARED_FX_SDK" Version="$(_BuiltArcadeSdkPackageVersion)" />
-      <SourceBuiltSdkOverride Include="Microsoft.DotNet.CMake.Sdk" Group="ARCADE_CMAKE_SDK" Version="$(_BuiltArcadeSdkPackageVersion)" />
-  
-      <SourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-      <SourceBuiltSdkOverride Include="@(ArcadeCMakeSdkOverride)" />
-      <SourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
+      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.Arcade.Sdk'))" Group="ARCADE" />
+      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.SharedFramework.Sdk'))" Group="ARCADE_SHARED_FX_SDK" />
+      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.CMake.Sdk'))" Group="ARCADE_CMAKE_SDK" />
     </ItemGroup>
   </Target>
 
