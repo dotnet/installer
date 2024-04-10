@@ -6,7 +6,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
-    <DotNetInstallDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTmpDir)', 'extracted-dotnet-sdk'))</DotNetInstallDir>
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
     <ScenarioTestsRunsDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'runs'))</ScenarioTestsRunsDir>
     <ScenarioTestsLocalFeedDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'feed'))</ScenarioTestsLocalFeedDir>
@@ -52,15 +51,6 @@
       MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
       VmrBuildNumber="$(BUILD_BUILDNUMBER)" />
   </Target>
-
-  <PropertyGroup>
-    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkArchive</ExtractDotNetSdkArchiveDependsOn>
-    <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.zip'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkZip</ExtractDotNetSdkArchiveDependsOn>
-    <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.tar.gz'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkTarball</ExtractDotNetSdkArchiveDependsOn>
-  </PropertyGroup>
-
-  <Target Name="ExtractDotNetSdkArchive"
-          DependsOnTargets="$(ExtractDotNetSdkArchiveDependsOn)" />
 
   <PropertyGroup>
     <_ScenarioTestsNuGetConfig>$(ScenarioTestsArtifactsDir)NuGet.config</_ScenarioTestsNuGetConfig>
@@ -132,25 +122,6 @@
                             CreateScenarioTestsDirectoryBuildFiles">
   </Target>
 
-  <PropertyGroup>
-    <ExtractDotNetSdkArchiveDependsOn>SetupScenarioTestsArtifacts;GetDotNetSdkArchive</ExtractDotNetSdkArchiveDependsOn>
-    <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.zip'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkZip</ExtractDotNetSdkArchiveDependsOn>
-    <ExtractDotNetSdkArchiveDependsOn Condition="'$(ArchiveExtension)' == '.tar.gz'">$(ExtractDotNetSdkArchiveDependsOn);ExtractDotNetSdkTarball</ExtractDotNetSdkArchiveDependsOn>
-  </PropertyGroup>
-
-  <Target Name="ExtractDotNetSdkArchive"
-          DependsOnTargets="$(ExtractDotNetSdkArchiveDependsOn)" />
-
-  <Target Name="ExtractDotNetSdkTarball">
-    <MakeDir Directories="$(DotNetInstallDir)" />
-    <Exec Command="tar -xzf $(SdkArchivePath) -C $(DotNetInstallDir)" />
-  </Target>
-
-  <Target Name="ExtractDotNetSdkZip">
-    <MakeDir Directories="$(DotNetInstallDir)" />
-    <Unzip SourceFiles="$(SdkArchivePath)" DestinationFolder="$(DotNetInstallDir)" />
-  </Target>
-
   <Target Name="ExtractScenarioTestsPackage">
     <ItemGroup>
       <_ScenarioTestPackage Include="$(ArtifactsShippingPackagesDir)scenario-tests/**/*.nupkg" />
@@ -167,20 +138,20 @@
     <RunTestsTargets>$(RunTestsTargets);RunScenarioTests</RunTestsTargets>
   </PropertyGroup>
 
-  <Target Name="Test" DependsOnTargets="ExtractDotNetSdkArchive;ExtractScenarioTestsPackage;$(RunTestsTargets)" />
+  <Target Name="Test" DependsOnTargets="SetupScenarioTestsArtifacts;GetDotNetSdkArchive;ExtractScenarioTestsPackage;$(RunTestsTargets)" />
 
   <Target Name="RunScenarioTests"
           Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(ScenarioTestsProjectName)'))">
     <Message Text="Running scenario tests: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
 
     <ItemGroup>
-      <_DotNetPath Include="$(DotNetInstallDir)sdk/**/dotnet.dll" />
+      <_DotNetPath Include="$(DotNetSdkExtractDir)sdk/**/dotnet.dll" />
     </ItemGroup>
 
     <PropertyGroup>
       <_CurrentDateTime>$([System.DateTime]::Now.ToString("yyyy-MM-dd_HH_mm_ss"))</_CurrentDateTime>
       <_TestXmlOutputPath>$(ScenarioTestsResultsDir)$(_CurrentDateTime).xml</_TestXmlOutputPath>
-      <_ScenarioTestsArgs>--dotnet-root $(DotNetInstallDir) --xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --test-root $(ScenarioTestsRunsDir)$(_CurrentDateTime) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsArgs>
+      <_ScenarioTestsArgs>--dotnet-root $(DotNetSdkExtractDir) --xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --test-root $(ScenarioTestsRunsDir)$(_CurrentDateTime) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsArgs>
       <_MSBuildSdksDir>/%(_DotNetPath.Directory)Sdks</_MSBuildSdksDir>
     </PropertyGroup>
 

@@ -140,12 +140,20 @@
   <!-- Copy SDK archive to assets root. -->
   <Target Name="CopySdkArchive"
           AfterTargets="Build"
-          DependsOnTargets="DetermineSourceBuiltSdkVersion">
+          DependsOnTargets="GetDotNetSdkArchive">
 
     <Copy SourceFiles="$(SdkArchivePath)"
           DestinationFolder="$(ArtifactsAssetsDir)"
           SkipUnchangedFiles="true"
           UseHardlinksIfPossible="true" />
+
+    <!-- Extract the SDK archive so its contents can be used downstream -->
+    <MakeDir Directories="$(DotNetSdkExtractDir)" />
+    <Exec Condition="'$(ArchiveExtension)' == '.tar.gz'"
+          Command="tar -xzf $(SdkArchivePath) -C $(DotNetSdkExtractDir)" />
+    <Unzip Condition="'$(ArchiveExtension)' == '.zip'"
+           SourceFiles="$(SdkArchivePath)"
+           DestinationFolder="$(DotNetSdkExtractDir)" />
   </Target>
 
   <Target Name="RunUnifiedBuildValidation"

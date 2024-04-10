@@ -41,13 +41,9 @@
       <SdkSymbolsTarball>$(ArtifactsAssetsDir)dotnet-symbols-sdk-$(SourceBuiltSdkVersion)-$(TargetRid)$(ArchiveExtension)</SdkSymbolsTarball>
 
       <IntermediateSdkSymbolsLayout>$(BaseIntermediateOutputPath)SdkSymbols</IntermediateSdkSymbolsLayout>
-      <IntermediateSdkLayout>$(BaseIntermediateOutputPath)Sdk</IntermediateSdkLayout>
     </PropertyGroup>
 
-    <MakeDir Directories="$(IntermediateSdkLayout)" />
-    <Exec Command="tar -xzf $(SdkArchivePath) -C $(IntermediateSdkLayout)" />
-
-    <CreateSdkSymbolsLayout SdkLayoutPath="$(IntermediateSdkLayout)"
+    <CreateSdkSymbolsLayout SdkLayoutPath="$(DotNetSdkExtractDir)"
                             AllSymbolsPath="$(IntermediateSymbolsRootDir)"
                             SdkSymbolsLayoutPath="$(IntermediateSdkSymbolsLayout)"
                             FailOnMissingPDBs="false" />
@@ -59,7 +55,6 @@
 
     <RemoveDir Directories="$(IntermediateSymbolsRootDir)" />
     <RemoveDir Directories="$(IntermediateSdkSymbolsLayout)" />
-    <RemoveDir Directories="$(IntermediateSdkLayout)" />
   </Target>
 
   <!--
