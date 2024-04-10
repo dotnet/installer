@@ -8,7 +8,6 @@
 
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
     <ScenarioTestsRunsDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'runs'))</ScenarioTestsRunsDir>
-    <ScenarioTestsLocalFeedDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'feed'))</ScenarioTestsLocalFeedDir>
     <ScenarioTestsPackageExtractDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'pkg'))</ScenarioTestsPackageExtractDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
     <ScenarioTestsProjectName>Microsoft.DotNet.ScenarioTests.SdkTemplateTests</ScenarioTestsProjectName>
@@ -64,26 +63,6 @@
     <Copy SourceFiles="$(_InstallerNuGetConfig)"
           DestinationFiles="$(_ScenarioTestsNuGetConfig)" />
 
-    <AddSourceToNuGetConfig NuGetConfigFile="$(_ScenarioTestsNuGetConfig)"
-                            SourceName="local-feed"
-                            SourcePath="$(ScenarioTestsLocalFeedDir)" />
-  </Target>
-
-  <ItemGroup>
-    <_ArtifactsPackage Include="$(ArtifactsShippingPackagesDir)**;
-                                $(ArtifactsNonShippingPackagesDir)**"
-                       Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
-  </ItemGroup>
-
-  <Target Name="CreateScenarioTestsLocalFeed">
-
-    <RemoveDir Directories="$(ScenarioTestsLocalFeedDir)" />
-    <MakeDir Directories="$(ScenarioTestsLocalFeedDir)" />
-    <!-- Combine all packages into a single directory with symlinks so that we can have a single feed that points to them all. -->
-    <Copy SourceFiles="@(_ArtifactsPackage)"
-          DestinationFolder="$(ScenarioTestsLocalFeedDir)"
-          UseSymbolicLinksIfPossible="true" />
-
   </Target>
 
   <Target Name="CreateScenarioTestsDirectoryBuildFiles"
@@ -118,7 +97,6 @@
 
   <Target Name="SetupScenarioTestsArtifacts"
           DependsOnTargets="SetupNuGetConfig;
-                            CreateScenarioTestsLocalFeed;
                             CreateScenarioTestsDirectoryBuildFiles">
   </Target>
 
