@@ -10,7 +10,6 @@ using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -23,53 +22,17 @@ using Xunit.Abstractions;
 
 namespace Microsoft.DotNet.UnifiedBuild.Tests;
 
-
 [Trait("Category", "SdkContent")]
 public class NugetPackageContentTests : TestBase
 {
-    public class ExtractedPackage : IDisposable
-    {
-        public string _extractedFolder;
+    static readonly ImmutableArray<string> ExcludedFileExtensions = [".psmdcp", ".p7s"];
 
-        public ExtractedPackage(ZipArchive archive)
-        {
-            _extractedFolder = Path.GetTempFileName();
-            Directory.CreateDirectory(_extractedFolder);
-            archive.ExtractToDirectory(_extractedFolder);
-        }
-
-        public IEnumerable<string> GetFilePaths()
-        {
-            return Directory.EnumerateFiles(_extractedFolder, "*", SearchOption.AllDirectories);
-        }
-
-        public void Dispose()
-        {
-            Directory.Delete(_extractedFolder, true);
-        }
-    }
-    public static readonly ImmutableArray<string> ExcludedFileExtensions = [".psmdcp", ".p7s"];
-    public static readonly ImmutableArray<string> NugetIndices = [
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries-transport/nuget/v3/index.json",
-        "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-transport/nuget/v3/index.json",
-    ];
-
+    static ImmutableArray<string[]>? _packages = null;
     public NugetPackageContentTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
-    public static IEnumerable<object[]> GetPackagePaths()
+    public static IEnumerable<object[]> GetPackages()
     {
-        var packagesSwitch = Config.RuntimeConfigSwitchPrefix + "Packages";
-        var packages = Config.GetRuntimeConfig(packagesSwitch) ?? throw new InvalidOperationException($"RuntimeConfig value '{packagesSwitch}' must be set");
-        var packagesArray = packages.Split(";")
-            // Nuget is unable to find fsharp or command-line-api packages for some reason
-            .Where(p => !(Path.GetFileName(Path.GetDirectoryName(p)) is "fsharp" or "command-line-api"))
-            .Select<string, object[]>(p => [p]);
-        return packagesArray;
+        return _packages ??= NugetPackageDownloadHelper.DownloadPackages();
     }
 
     /// <Summary>
@@ -80,25 +43,13 @@ public class NugetPackageContentTests : TestBase
     /// in the baseline may appear identical if the diff is version specific.
     /// </Summary>
     [Theory]
-    [MemberData(nameof(GetPackagePaths))]
-    public async Task CompareFileContents(string nugetPackagePath)
+    [MemberData(nameof(GetPackages))]
+    public async Task CompareFileContents(string packageName, string testPackageVersion, string testNugetPackagePath, string baselineNugetPackagePath)
     {
         var ct = CancellationToken.None;
-        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(nugetPackagePath));
-        NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
-        var packageName = testNuspecReader.GetId();
-        var testPackageVersion = testNuspecReader.GetVersion().ToFullString();
+        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(testNugetPackagePath));
 
-        NuGetVersion packageVersion = new NuGetVersion(testPackageVersion);
-        var packageStream = await TryDownloadPackage(packageName, packageVersion);
-        if (packageStream is null)
-        {
-            OutputHelper.LogWarningMessage($"Could not find package '{packageName}' with version '{packageVersion}'");
-            return;
-        }
-        OutputHelper.WriteLine($"Found package '{packageName}' with version '{packageVersion}'");
-
-        using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
+        using PackageArchiveReader packageReader = new PackageArchiveReader(baselineNugetPackagePath);
         IEnumerable<string> baselineFiles = (await packageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
         IEnumerable<string> testFiles = (await testPackageReader.GetFilesAsync(ct)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
 
@@ -113,23 +64,12 @@ public class NugetPackageContentTests : TestBase
     }
 
     [Theory]
-    [MemberData(nameof(GetPackagePaths))]
-    public async Task CompareAssemblyVersions(string nugetPackagePath)
+    [MemberData(nameof(GetPackages))]
+    public async Task CompareAssemblyVersions(string packageName, string testPackageVersion, string testNugetPackagePath, string baselineNugetPackagePath)
     {
-        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(nugetPackagePath));
-        NuspecReader testNuspecReader = await testPackageReader.GetNuspecReaderAsync(CancellationToken.None);
-        var packageName = testNuspecReader.GetId();
-        var testPackageVersion = testNuspecReader.GetVersion().ToFullString();
+        using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(testNugetPackagePath));
 
-        NuGetVersion packageVersion = new NuGetVersion(testPackageVersion);
-        var packageStream = await TryDownloadPackage(packageName, packageVersion);
-        if (packageStream is null)
-        {
-            OutputHelper.LogWarningMessage($"Could not find package '{packageName}' with version '{packageVersion}'");
-            return;
-        }
-
-        using PackageArchiveReader baselinePackageReader = new PackageArchiveReader(packageStream);
+        using PackageArchiveReader baselinePackageReader = new PackageArchiveReader(baselineNugetPackagePath);
         IEnumerable<string> baselineFiles = (await baselinePackageReader.GetFilesAsync(CancellationToken.None)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
         IEnumerable<string> testFiles = (await testPackageReader.GetFilesAsync(CancellationToken.None)).Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f)));
         Dictionary<string, Version?> baselineAssemblyVersions = new();
@@ -170,40 +110,6 @@ public class NugetPackageContentTests : TestBase
         string diff = BaselineHelper.DiffFiles(MsftVersionsFileName, UbVersionsFileName, OutputHelper);
         diff = SdkContentTests.RemoveDiffMarkers(diff);
         BaselineHelper.CompareBaselineContents($"MsftToUb_{packageName}.diff", diff, Config.LogsDirectory, OutputHelper, Config.WarnOnContentDiffs);
-    }
-
-    public async Task<MemoryStream?> TryDownloadPackage(string packageId, NuGetVersion packageVersion)
-    {
-        bool found = false;
-        ILogger logger = NullLogger.Instance;
-        CancellationToken cancellationToken = CancellationToken.None;
-        SourceCacheContext cache = new SourceCacheContext();
-        MemoryStream? packageStream = null;
-        foreach (var nugetRepository in NugetIndices)
-        {
-            SourceRepository repository = Repository.Factory.GetCoreV3(nugetRepository);
-            FindPackageByIdResource resource = await repository.GetResourceAsync<FindPackageByIdResource>();
-            packageStream = new MemoryStream();
-
-            found = await resource.CopyNupkgToStreamAsync(
-                packageId,
-                packageVersion,
-                packageStream,
-                cache,
-                logger,
-                cancellationToken);
-
-            if (found)
-            {
-                OutputHelper.WriteLine($"Found '{packageId}' in '{nugetRepository}'");
-                break;
-            }
-            packageStream.Dispose();
-        }
-        if (!found)
-            packageStream = null;
-
-        return packageStream;
     }
 }
 

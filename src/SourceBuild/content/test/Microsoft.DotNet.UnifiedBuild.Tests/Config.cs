@@ -31,6 +31,8 @@ public class Config
 
     public const string RuntimeConfigSwitchPrefix = "Microsoft.DotNet.UnifiedBuild.Tests.";
 
+    public static string DownloadCacheDirectory { get; } = Path.Combine(Config.LogsDirectory, "Microsoft.DotNet.UnifiedBuild.Tests", "DownloadCache");
+
     public static string GetRuntimeConfig(string key)
     {
         return TryGetRuntimeConfig(key, out string? value) ? value : throw new InvalidOperationException($"Runtime config setting '{key}' must be specified");

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <Target Name="SetRuntimeConfigOptions"
-          DependsOnTargets="DetermineSourceBuiltSdkVersion"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion;MergeAssetManifests"
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
     <ItemGroup>
       <_ProducedPackages Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
@@ -35,6 +35,9 @@
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).WarnOnContentDiffs">
         <Value>$(UBTestsWarnOnContentDiffs)</Value>
+      </RuntimeHostConfigurationOption>
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).AssetManifestPath">
+        <Value>$(MergedAssetManifestOutputPath)</Value>
       </RuntimeHostConfigurationOption>
 
       <!-- SDK archive test configs -->

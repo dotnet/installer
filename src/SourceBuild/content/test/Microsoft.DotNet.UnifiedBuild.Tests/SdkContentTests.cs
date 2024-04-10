@@ -214,6 +214,8 @@ public class SdkContentTests : TestBase
 
     static async Task<string> DownloadMsftSdkArchive()
     {
+        string downloadCacheDir = Path.Combine(Config.DownloadCacheDirectory, "Sdks");
+        Directory.CreateDirectory(downloadCacheDir);
         var client = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false });
         var channel = UbSdkVersion[..5] + "xx";
         var akaMsUrl = $"https://aka.ms/dotnet/{channel}/daily/dotnet-sdk-{Config.TargetRid}{GetArchiveExtension(UbSdkArchivePath)}";
@@ -228,7 +230,7 @@ public class SdkContentTests : TestBase
         var closestUrl = redirectResponse.Headers.Location!.ToString();
         var msftSdkFileName = Path.GetFileName(redirectResponse.Headers.Location.LocalPath);
 
-        var localMsftSdkPath = Path.Combine(Config.LogsDirectory, msftSdkFileName);
+        var localMsftSdkPath = Path.Combine(downloadCacheDir, msftSdkFileName);
 
         if (File.Exists(localMsftSdkPath))
         {
