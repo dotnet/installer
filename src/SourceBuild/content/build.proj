@@ -100,7 +100,7 @@
                             CreateScenarioTestsDirectoryBuildFiles">
   </Target>
 
-  <Target Name="ExtractScenarioTestsPackage">
+  <Target Name="ExtractScenarioTestsPackages">
     <ItemGroup>
       <_ScenarioTestPackage Include="$(ArtifactsShippingPackagesDir)scenario-tests/**/*.nupkg" />
     </ItemGroup>
@@ -116,7 +116,7 @@
     <RunTestsTargets>$(RunTestsTargets);RunScenarioTests</RunTestsTargets>
   </PropertyGroup>
 
-  <Target Name="Test" DependsOnTargets="SetupScenarioTestsArtifacts;GetDotNetSdkArchive;ExtractScenarioTestsPackage;$(RunTestsTargets)" />
+  <Target Name="Test" DependsOnTargets="SetupScenarioTestsArtifacts;GetDotNetSdkArchive;ExtractScenarioTestsPackages;$(RunTestsTargets)" />
 
   <Target Name="RunScenarioTests"
           Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(ScenarioTestsProjectName)'))">
