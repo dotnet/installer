@@ -289,7 +289,7 @@
                                OutputPath="$(PreviouslySourceBuiltPackageVersionPropsPath)"
                                Condition="@(_PreviouslyBuiltSourceBuiltPackages->Count()) != 0" />
 
-    <WriteLinesToFile File="$(CurrentSourceBuiltPackageVersionPropsPath)"
+    <WriteLinesToFile File="$(PreviouslySourceBuiltPackageVersionPropsPath)"
                       Lines="&lt;Project&gt;&lt;/Project&gt;" 
                       Condition="@(_PreviouslyBuiltSourceBuiltPackages->Count()) == 0" />
 
