@@ -176,12 +176,6 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
                 return !Log.HasLoggedErrors;
             }
 
-            if (KnownPackages is null or [] && NuGetPackages is null or [])
-            {
-                Log.LogError("KnownPackages or NuGetPackages supplied with package information.");
-                return !Log.HasLoggedErrors;
-            }
-
             NuGetPackages ??= Array.Empty<ITaskItem>();
             KnownPackages ??= Array.Empty<ITaskItem>();
 
