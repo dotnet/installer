@@ -355,39 +355,39 @@ jobs:
         fi
       displayName: Build
 
-  # Only run tests if enabled
-  - ${{ if eq(parameters.runTests, 'True') }}:
-    - script: |
-        set -ex
+    # Only run tests if enabled
+    - ${{ if eq(parameters.runTests, 'True') }}:
+      - script: |
+          set -ex
 
-        dockerVolumeArgs="-v $(sourcesPath):/vmr"
-        sourceOnlyArgs=''
-        extraBuildProperties=''
+          dockerVolumeArgs="-v $(sourcesPath):/vmr"
+          sourceOnlyArgs=''
+          extraBuildProperties=''
 
-        if [[ ! -z '${{ parameters.targetOS }}' ]]; then
-          extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
-        fi
-
-        if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
-          extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
-        fi
-
-        if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
-          if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
-            sourceOnlyArgs='--poison'
+          if [[ ! -z '${{ parameters.targetOS }}' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
           fi
-          sourceOnlyArgs="$sourceOnlyArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}"
-        fi
 
-        # Only use Docker when a container is specified
-        if [[ -n "${{ parameters.container }}" ]]; then
-          docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
-        else
-          cd $(sourcesPath)
-          ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs)
-        fi
+          if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
+          fi
 
-      displayName: Run Tests
+          if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
+            if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
+              sourceOnlyArgs='--poison'
+            fi
+            sourceOnlyArgs="$sourceOnlyArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}"
+          fi
+
+          # Only use Docker when a container is specified
+          if [[ -n "${{ parameters.container }}" ]]; then
+            docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
+          else
+            cd $(sourcesPath)
+            ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs)
+          fi
+
+        displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
 
