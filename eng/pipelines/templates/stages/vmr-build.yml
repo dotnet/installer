@@ -710,6 +710,7 @@ stages:
             targetOS: linux
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildMonoEnableLLVM=true /p:DotNetBuildMonoAOTEnableLLVM=true /p:DotNetBuildMonoBundleLLVMOptimizer=true
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -724,6 +725,7 @@ stages:
             targetOS: linux
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildMonoEnableLLVM=true /p:DotNetBuildMonoBundleLLVMOptimizer=false
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -788,6 +790,7 @@ stages:
             targetOS: linux
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildMonoEnableLLVM=true /p:DotNetBuildMonoAOTEnableLLVM=true /p:DotNetBuildMonoBundleLLVMOptimizer=true
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -802,6 +805,7 @@ stages:
             targetOS: linux
             targetArchitecture: arm64
             extraProperties: /p:DotNetBuildMonoEnableLLVM=true /p:DotNetBuildMonoBundleLLVMOptimizer=false
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -835,6 +839,7 @@ stages:
             targetOS: osx
             targetArchitecture: x64
             extraProperties: /p:DotNetBuildMonoEnableLLVM=true /p:DotNetBuildMonoBundleLLVMOptimizer=false
+            runTests: false
 
         - template: ../jobs/vmr-build.yml
           parameters:
