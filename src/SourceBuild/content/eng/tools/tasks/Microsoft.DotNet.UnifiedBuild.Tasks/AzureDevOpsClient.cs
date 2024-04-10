@@ -34,7 +34,7 @@ public class AzureDevOpsClient : IDisposable
     private const string _packagesFolderName = "packages";
 
     public AzureDevOpsClient(
-        string azureDevOpsToken,
+        string? azureDevOpsToken,
         string azureDevOpsOrg,
         string azureDevOpsProject,
         TaskLoggingHelper logger)
