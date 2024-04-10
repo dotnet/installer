@@ -140,7 +140,7 @@ public class AzureDevOpsClient : IDisposable
     {
         foreach (string file in fileNamesToCopy)
         {
-            string sourceFilePath = sourceFiles.FirstOrDefault(f => f.Contains(file))
+            string sourceFilePath = sourceFiles.FirstOrDefault(f => f.Contains(file, StringComparison.OrdinalIgnoreCase))
                 ?? throw new ArgumentException($"File {file} not found in source files.");
 
             string destinationFilePath = flatCopy
