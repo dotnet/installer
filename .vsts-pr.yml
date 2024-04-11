@@ -100,8 +100,8 @@ stages:
     - template: eng/build-pr.yml
       parameters:
         agentOs: Linux
-        jobName: Build_Debian_Bullseye_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11'
+        jobName: Build_Debian_11_Debug_x64
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64'
         buildConfiguration: Debug
         buildArchitecture: x64
         additionalBuildParameters: '/p:BuildSdkDeb=true'
