@@ -271,7 +271,7 @@
     </PropertyGroup>
 
     <!-- Write the build input properties, then save off a copy that will be used for generating usage reports later -->
-    <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage)"
+    <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage->WithMetadataValue('ReferenceOnly', 'false'))"
                                ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                                VersionPropsFlowType="$(PackageVersionPropsFlowType)"
                                VersionDetails="$(_VersionDetailsXml)"
@@ -292,7 +292,7 @@
          A B and C.
 
          A key element of this algorith is that we must write the full package version props and not the filtered version. -->
-    <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage)"
+    <WritePackageVersionsProps KnownPackages="@(_DependencyProducedPackage->WithMetadataValue('ReferenceOnly', 'false'))"
                                VersionPropsFlowType="AllPackages"
                                OutputPath="$(SnapshotPackageVersionPropsPath)" />
 
@@ -478,7 +478,7 @@
     </XmlPeek>
 
     <ItemGroup>
-      <ProducedPackage Include="$(ProducedPackageId)" Version="$(ProducedPackageVersion)" />
+      <ProducedPackage Include="$(ProducedPackageId)" Version="$(ProducedPackageVersion)" ReferenceOnly="$([MSBuild]::ValueOrDefault('$(ReferenceOnlyRepoArtifacts)', 'false'))" />
     </ItemGroup>
   </Target>
 
