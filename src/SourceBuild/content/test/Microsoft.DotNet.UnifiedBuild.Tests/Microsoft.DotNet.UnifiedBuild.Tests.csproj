@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="NuGet.Protocol" />
-        <ProjectReference Include="$(RepositoryEngineeringDir)publish.proj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <ProjectReference Include="$(RepositoryEngineeringDir)publish.proj" ReferenceOutputAssembly="false" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <Target Name="SetRuntimeConfigOptions"
-          DependsOnTargets="DetermineSourceBuiltSdkVersion;MergeAssetManifests"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion"
           BeforeTargets="_GenerateRuntimeConfigurationFilesInputCache">
     <ItemGroup>
       <_ProducedPackages Include="$(ArtifactsShippingPackagesDir)**/*.nupkg" />
@@ -39,7 +39,7 @@
         <Value>$(UBTestsWarnOnContentDiffs)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).AssetManifestPath">
-        <Value>$(MergedAssetManifestOutputPath)</Value>
+        <Value>$(ArtifactsDir)VerticalManifest.xml</Value>
       </RuntimeHostConfigurationOption>
 
       <!-- SDK archive test configs -->
