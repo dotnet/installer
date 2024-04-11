@@ -53,6 +53,7 @@
   </Target>
 
   <!-- Create the SourceBuilt.Private.Artifacts archive when building source-only. -->
+  <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.WritePackageVersionsProps" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" TaskFactory="TaskHostFactory" />
   <Target Name="CreatePrivateSourceBuiltArtifactsArchive"
           AfterTargets="Build"
           DependsOnTargets="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive;MergeAssetManifests"
