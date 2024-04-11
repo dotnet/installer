@@ -7,10 +7,7 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
-    <ScenarioTestsRunsDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'runs'))</ScenarioTestsRunsDir>
-    <ScenarioTestsPackageExtractDir>$([MSBuild]::NormalizeDirectory('$(ScenarioTestsArtifactsDir)', 'pkg'))</ScenarioTestsPackageExtractDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
-    <ScenarioTestsProjectName>Microsoft.DotNet.ScenarioTests.SdkTemplateTests</ScenarioTestsProjectName>
   </PropertyGroup>
 
   <UsingTask TaskName="Microsoft.DotNet.UnifiedBuild.Tasks.AddSourceToNuGetConfig" AssemblyFile="$(MicrosoftDotNetUnifiedBuildTasksAssembly)" />
@@ -65,83 +62,31 @@
 
   </Target>
 
-  <Target Name="CreateScenarioTestsDirectoryBuildFiles"
-          Outputs="@(_DirectoryProjFiles)">
-    <!-- Define Directory.Build.* files in the scenario tests artifacts directory to prevent the test run from
-         picking up the configuration from the VMR's Directory.Build.* files. We need an isolated configuration
-         from which to test. -->
-    <WriteLinesToFile File="$(ScenarioTestsArtifactsDir)Directory.Build.targets"
-                      Lines="&lt;Project /&gt;"
-                      Overwrite="true" />
-    <!-- Because the VMR is configured to use CPM (https://github.com/dotnet/installer/pull/19286), it will
-         cause the scenario tests to fail with the following error:
-           Projects that use central package version management should not define the version on the PackageReference items but on the PackageVersion items: ...
-         To work around this, we explicitly disable CPM. Note that this can't be solved by including a stub Directory.Packages.props file because the default
-         behavior is to automatically default ManagePackageVersionsCentrally to true when it finds such a file.
-         https://github.com/NuGet/NuGet.Client/blob/ca13cf0a281b9774dd0238a43ab98c1927056cc2/src/NuGet.Core/NuGet.Build.Tasks/NuGet.props#L25-L33 -->
-    <PropertyGroup>
-      <_DirectoryBuildPropsContent>
-&lt;Project&gt;
-  &lt;PropertyGroup&gt;
-    &lt;ManagePackageVersionsCentrally&gt;
-      false
-    &lt;/ManagePackageVersionsCentrally&gt;
-  &lt;/PropertyGroup&gt;
-&lt;/Project&gt;
-      </_DirectoryBuildPropsContent>
-    </PropertyGroup>
-    <WriteLinesToFile File="$(ScenarioTestsArtifactsDir)Directory.Build.props"
-                      Lines="$(_DirectoryBuildPropsContent)"
-                      Overwrite="true" />
-  </Target>  
-
-  <Target Name="SetupScenarioTestsArtifacts"
-          DependsOnTargets="SetupNuGetConfig;
-                            CreateScenarioTestsDirectoryBuildFiles">
-  </Target>
-
-  <Target Name="ExtractScenarioTestsPackages">
-    <ItemGroup>
-      <_ScenarioTestPackage Include="$(ArtifactsShippingPackagesDir)scenario-tests/**/*.nupkg" />
-    </ItemGroup>
-    
-    <Unzip SourceFiles="@(_ScenarioTestPackage)" DestinationFolder="$(ScenarioTestsPackageExtractDir)" />
-
-    <ItemGroup>
-      <_ScenarioTestDll Include="$(ScenarioTestsPackageExtractDir)tools/**/$(ScenarioTestsProjectName).dll" />
-    </ItemGroup>
-  </Target>
-
   <PropertyGroup>
     <RunTestsTargets>$(RunTestsTargets);RunScenarioTests</RunTestsTargets>
   </PropertyGroup>
 
-  <Target Name="Test" DependsOnTargets="SetupScenarioTestsArtifacts;GetDotNetSdkArchive;ExtractScenarioTestsPackages;$(RunTestsTargets)" />
+  <Target Name="Test" DependsOnTargets="SetupNuGetConfig;GetDotNetSdkArchive;$(RunTestsTargets)" />
 
   <Target Name="RunScenarioTests"
-          Condition="'$(DotNetTestProjectsToRun)' == '' or $(DotNetTestProjectsToRun.Contains('$(ScenarioTestsProjectName)'))">
+          DependsOnTargets="DetermineSourceBuiltSdkVersion">
     <Message Text="Running scenario tests: $(TargetArchitecture) $(Configuration) $(TargetOS) $(TargetRid)" Importance="high" />
-
-    <ItemGroup>
-      <_DotNetPath Include="$(DotNetSdkExtractDir)sdk/**/dotnet.dll" />
-    </ItemGroup>
-
     <PropertyGroup>
       <_CurrentDateTime>$([System.DateTime]::Now.ToString("yyyy-MM-dd_HH_mm_ss"))</_CurrentDateTime>
       <_TestXmlOutputPath>$(ScenarioTestsResultsDir)$(_CurrentDateTime).xml</_TestXmlOutputPath>
-      <_ScenarioTestsArgs>--dotnet-root $(DotNetSdkExtractDir) --xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --test-root $(ScenarioTestsRunsDir)$(_CurrentDateTime) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsArgs>
-      <_MSBuildSdksDir>/%(_DotNetPath.Directory)Sdks</_MSBuildSdksDir>
+      <_ScenarioTestsAdditionalArgs>--xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsAdditionalArgs>
+
+      <!-- Define the test root as a sub-directory of the scenario test artifacts directory. It needs to be a sub-directory because the scenario test execution
+           will clean that directory. Since we need the NuGet.config file that we copied in to be preserved, that's stored in the directory above the test root. -->
+      <_TestRoot>$(ScenarioTestsArtifactsDir)artifacts/</_TestRoot>
     </PropertyGroup>
 
-    <ItemGroup>
-      <_ScenarioTestsEnvVars Include="LOCAL_FEED_PATH=$(ArtifactsShippingPackagesDir)" />
-      <_ScenarioTestsEnvVars Include="MSBuildSDKsPath=$(_MSBuildSdksDir)" />
-    </ItemGroup>
+    <MakeDir Directories="$(ScenarioTestsResultsDir)" />
 
-    <MakeDir Directories="$(ScenarioTestsResultsDir);$(ScenarioTestsRunsDir)" />
+    <Message Text="NETCoreSdkVersion=$(NETCoreSdkVersion)" Importance="high" />
 
-    <Exec Command="$(DotnetTool) @(_ScenarioTestDll) $(_ScenarioTestsArgs)"
-          EnvironmentVariables="@(_ScenarioTestsEnvVars)" />
+    <Exec Command="$(RepoRoot)src/scenario-tests/build$(ShellExtension) /bl --configuration $(Configuration) --test /p:TestRoot=$(_TestRoot) /p:DotNetRoot=$(DotNetSdkExtractDir) /p:NETCoreSdkVersion=$(SourceBuiltSdkVersion)"
+          EnvironmentVariables="AdditionalTestArgs=$(_ScenarioTestsAdditionalArgs);DOTNET_INSTALL_DIR=$(DotNetRoot)"/>
   </Target>
 
   <Import Project="$(RepositoryEngineeringDir)build.sourcebuild.targets" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
