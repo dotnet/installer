@@ -32,7 +32,7 @@ public class NugetPackageContentTests : TestBase
 
     public static IEnumerable<object[]> GetPackages()
     {
-        return _packages ??= NugetPackageDownloadHelper.DownloadPackages();
+        return _packages ??= NugetPackageDownloadHelpers.DownloadPackages();
     }
 
     /// <Summary>
@@ -44,7 +44,7 @@ public class NugetPackageContentTests : TestBase
     /// </Summary>
     [Theory]
     [MemberData(nameof(GetPackages))]
-    public async Task CompareFileContents(string packageName, string testPackageVersion, string testNugetPackagePath, string baselineNugetPackagePath)
+    public async Task CompareFileContents(string packageName, string testNugetPackagePath, string baselineNugetPackagePath)
     {
         var ct = CancellationToken.None;
         using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(testNugetPackagePath));
@@ -65,7 +65,7 @@ public class NugetPackageContentTests : TestBase
 
     [Theory]
     [MemberData(nameof(GetPackages))]
-    public async Task CompareAssemblyVersions(string packageName, string testPackageVersion, string testNugetPackagePath, string baselineNugetPackagePath)
+    public async Task CompareAssemblyVersions(string packageName, string testNugetPackagePath, string baselineNugetPackagePath)
     {
         using PackageArchiveReader testPackageReader = new PackageArchiveReader(File.OpenRead(testNugetPackagePath));
 

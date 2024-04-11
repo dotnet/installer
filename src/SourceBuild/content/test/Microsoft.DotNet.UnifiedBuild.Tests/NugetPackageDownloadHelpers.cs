@@ -18,7 +18,7 @@ using System.Xml;
 
 namespace Microsoft.DotNet.UnifiedBuild.Tests;
 
-public static class NugetPackageDownloadHelper
+public static class NugetPackageDownloadHelpers
 {
     static string[] NugetIndices = [
         "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json",
@@ -57,7 +57,7 @@ public static class NugetPackageDownloadHelper
             var id = node.Attributes!["Id"]!.Value;
             var version = node.Attributes["Version"]!.Value;
             var path = PackagesPaths.Where(path => Path.GetFileName(path) == $"{id}.{version}.nupkg").Single();
-            packagesInfo.Add([id, version, path, null!]);
+            packagesInfo.Add([id,  path, null!]);
             downloadPackageTasks.Add(DownloadPackage(id, new NuGetVersion(version)));
         }
         var packageDownloadTasks = downloadPackageTasks.ToArray();
@@ -65,9 +65,9 @@ public static class NugetPackageDownloadHelper
         for (int i = 0; i < packageDownloadTasks.Length; i++)
         {
             var task = packageDownloadTasks[i];
-            packagesInfo[i][3] = task.Result!;
+            packagesInfo[i][2] = task.Result!;
         }
-        return packagesInfo.Where(p => p[3] is not null).ToImmutableArray();
+        return packagesInfo.Where(p => p[2] is not null).ToImmutableArray();
     }
 
     static async Task<string?> DownloadPackage(string packageId, NuGetVersion packageVersion)
