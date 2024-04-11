@@ -1,0 +1,45 @@
+parameters:
+- name: dotNetBuildPass
+  type: string
+  default: final
+
+- name: primaryDependentJob
+  type: string
+  default: Windows_x64
+
+- name: azureDevOpsToken
+  type: string
+
+- name: azureDevOpsOrg
+  type: string
+
+- name: azureDevOpsProject
+  type: string
+
+- name: outputFolder
+  type: string
+  default: $(Build.ArtifactStagingDirectory)/artifacts
+
+- name: dependsOn
+  type: object
+  default: []
+
+steps:
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifactName: 'VerticalManifests'
+    targetPath: $(Build.ArtifactStagingDirectory)/VerticalManifests
+
+- script: $(Build.SourcesDirectory)/build.cmd 
+    -ci
+    /p:DotNetBuildPass=${{ parameters.dotNetBuildPass }}
+    /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
+    /p:MainVertical=${{ parameters.primaryDependentJob }}
+    /p:BuildId=$(Build.BuildId)
+    /p:AzureDevOpsToken=${{ parameters.azureDevOpsToken }}
+    /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }}
+    /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }}
+    /p:TmpFolder=$(Agent.TempDirectory)
+    /p:OutputFolder=${{ parameters.outputFolder }}
+    /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }}
+  displayName: Join Verticals

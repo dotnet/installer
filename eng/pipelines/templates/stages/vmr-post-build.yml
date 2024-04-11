@@ -11,29 +11,23 @@ parameters:
     image: $(poolImage_Windows)
     demands: ImageOverride -equals $(poolImage_Windows)
     os: windows
-
-- name: primaryDependentJob
-  type: string
-  default: Windows_x64
-
-- name: azureDevOpsOrg
-  type: string
-  default: dnceng
-
-- name: azureDevOpsProject
-  type: string
-  default: internal
     
 stages:
-- stage: VMR_Final_Join
-  displayName: VMR Final Join
+- stage: VMR_Post_build
+  displayName: VMR Post Build
   dependsOn: VMR_Vertical_Build
   variables:
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: Publish-Build-Assets
+    - name: azureDevOpsOrg
+      value: dnceng
+    - name: azureDevOpsProject
+      value: internal
   - ${{ else }}:
-    - name: dn-bot-dnceng-build-rw-code-rw
-      value: ''
+    - name: azureDevOpsOrg
+      value: dnceng-public
+    - name: azureDevOpsProject
+      value: public
 
   - template: ../variables/vmr-build.yml
     parameters:
@@ -41,6 +35,7 @@ stages:
 
   jobs:
   - job: VMR_Final_Join
+    displayName: VMR Final Vertical Join
     pool: ${{ parameters.pool_Windows }}
 
     templateContext:
@@ -53,23 +48,14 @@ stages:
     steps:
     - checkout: self
 
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: 'VerticalManifests'
-        targetPath: $(Build.ArtifactStagingDirectory)/VerticalManifests
-
-    - script: $(Build.SourcesDirectory)/build.cmd 
-        -ci
-        /p:DotNetBuildPass=final
-        /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
-        /p:MainVertical=${{ parameters.primaryDependentJob }}
-        /p:BuildId=$(Build.BuildId)
-        /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw)
-        /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }}
-        /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }}
-        /p:TmpFolder=$(Agent.TempDirectory)
-        /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
-      displayName: 'VMR Final Join'
+    - template: ../steps/vmr-join-verticals.yml@self
+      parameters:
+        dotNetBuildPass: final
+        primaryDependentJob: Windows_x64
+        azureDevOpsToken: $(dn-bot-dnceng-build-rw-code-rw)
+        azureDevOpsOrg: $(azureDevOpsOrg)
+        azureDevOpsProject: $(azureDevOpsProject)
+        outputFolder: $(Build.ArtifactStagingDirectory)/artifacts
 
     - ${{ if or(ne(variables['System.TeamProject'], 'internal'), eq(variables['Build.Reason'], 'PullRequest')) }}:
       - publish: $(Build.ArtifactStagingDirectory)/artifacts

@@ -52,7 +52,5 @@ stages:
     ${{ else }}:
       scope: full
 
-- template: /src/installer/eng/pipelines/templates/stages/vmr-final-join.yml@self
-  parameters:
-    azureDevOpsOrg: dnceng-public
-    azureDevOpsProject: public
+- ${{ if eq(variables['isSourceOnlyBuild'], `false`) }}:
+  - template: /src/installer/eng/pipelines/templates/stages/vmr-post-build.yml@self

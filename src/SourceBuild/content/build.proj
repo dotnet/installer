@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildPass)' == 'final'">
-    <ProjectReference Include="$(ToolsDir)join-verticals.proj" />
+    <ProjectReference Include="$((RepositoryEngineeringDir))join-verticals.proj" />
   </ItemGroup>
 
   <Target Name="PrintInfo"
