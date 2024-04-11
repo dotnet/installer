@@ -62,11 +62,11 @@ stages:
         -ci
         /p:DotNetBuildPass=final
         /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
-        /p:MainVertical=$(parameters.primaryDependentJob)
+        /p:MainVertical=${{ parameters.primaryDependentJob }}
         /p:BuildId=$(Build.BuildId)
         /p:AzureDevOpsToken=$(dn-bot-dnceng-build-rw-code-rw)
-        /p:AzureDevOpsOrg=$(parameters.azureDevOpsOrg)
-        /p:AzureDevOpsProject=$(parameters.azureDevOpsProject)
+        /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }}
+        /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }}
         /p:TmpFolder=$(Agent.TempDirectory)
         /p:OutputFolder=$(Build.ArtifactStagingDirectory)/artifacts
       displayName: 'VMR Final Join'
