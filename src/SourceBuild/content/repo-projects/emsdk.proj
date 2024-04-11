@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
     <!-- Use the repo root build script -->
@@ -6,7 +6,7 @@
 
     <BuildArgs>$(BuildArgs) /p:PackageRid=$(TargetRid)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:AssetManifestOS=$(TargetOS)</BuildArgs>
-    <BuildArgs>$(BuildArgs) /p:PlatformName=$(TargetArch)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:PlatformName=$(TargetArchitecture)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:ForceBuildManifestOnly=true</BuildArgs>
   </PropertyGroup>
 

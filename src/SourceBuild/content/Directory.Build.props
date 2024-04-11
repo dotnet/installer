@@ -30,6 +30,8 @@
     <ShortStack Condition="'$(TargetOS)' == 'maccatalyst'">true</ShortStack>
     <ShortStack Condition="'$(TargetOS)' == 'android'">true</ShortStack>
     <ShortStack Condition="'$(TargetOS)' == 'linux-bionic'">true</ShortStack>
+    <!-- NativeAOT Mac builds are short -->
+    <ShortStack Condition="'$(TargetOS)' == 'osx' and '$(DotNetBuildRuntimeNativeAOTRuntimePack)' == 'true'">true</ShortStack>
     <!-- Short stack builds stop at runtime, not the whole SDK -->
     <RootRepo Condition="'$(ShortStack)' == 'true'">runtime</RootRepo>
   </PropertyGroup>
@@ -73,35 +75,24 @@
     <TargetRid Condition="'$(ShortStack)' == 'true' and '$(TargetOS)' == 'windows'">win-$(TargetArchitecture)</TargetRid>
   </PropertyGroup>
 
+  <!-- Set NuGetPackageRoot before Arcade SDK sets it. -->
+  <PropertyGroup>
+    <!-- Set RestorePackagesPath so that we don't accidentally pull some packages from the global location. -->
+    <RestorePackagesPath Condition="'$(RestorePackagesPath)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '.packages'))</RestorePackagesPath>
+    <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == ''">$(RestorePackagesPath)</NuGetPackageRoot>
+  </PropertyGroup>
+
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
   <!-- Init basic Arcade props, if the project importing this file doesn't use Arcade.
        Keep in sync with props/targets in the Arcade.Sdk. -->
   <PropertyGroup Condition="'$(SkipArcadeSdkImport)' == 'true'">
     <!-- RepoLayout.props -->
-    <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' != ''">$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)'))</NuGetPackageRoot>
-    <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == '' and '$(NUGET_PACKAGES)' != ''">$([MSBuild]::NormalizeDirectory('$(NUGET_PACKAGES)'))</NuGetPackageRoot>
-
     <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::NormalizeDirectory('$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'global.json'))'))</RepoRoot>
-
-    <!-- Respect environment variable for the .NET install directory if set; otherwise, use the repo default location -->
-    <DotNetRoot Condition="'$(DOTNET_INSTALL_DIR)' != ''">$(DOTNET_INSTALL_DIR)</DotNetRoot>
-    <DotNetRoot Condition="'$(DotNetRoot)' != ''">$([MSBuild]::NormalizeDirectory('$(DotNetRoot)'))</DotNetRoot>
-    <DotNetRoot Condition="'$(DotNetRoot)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.dotnet'))</DotNetRoot>
-
-    <!-- Let the exec task find dotnet on PATH -->
-    <DotNetRoot Condition="!Exists($(DotNetRoot))"/>
-
-    <DotNetTool Condition="'$(OS)' == 'Windows_NT'">$(DotNetRoot)dotnet.exe</DotNetTool>
-    <DotNetTool Condition="'$(OS)' != 'Windows_NT'">$(DotNetRoot)dotnet</DotNetTool>
 
     <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts'))</ArtifactsDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
     <ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
-    <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log', '$(Configuration)'))</ArtifactsLogDir>
-    <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages', '$(Configuration)'))</ArtifactsPackagesDir>
-    <ArtifactsNonShippingPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPackagesDir)', 'NonShipping'))</ArtifactsNonShippingPackagesDir>
-    <ArtifactsShippingPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPackagesDir)', 'Shipping'))</ArtifactsShippingPackagesDir>
     <RepositoryEngineeringDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'eng'))</RepositoryEngineeringDir>
 
     <!-- ProjectLayout.props -->
@@ -118,11 +109,6 @@
 
     <!-- TargetFrameworkDefaults.props -->
     <NetCurrent>net9.0</NetCurrent>
-
-    <!-- Set up the build phase since the orchestrator switch is passed.
-         From RepoDefaults.props. -->
-    <DotNetBuild>true</DotNetBuild>
-    <DotNetBuildPhase>Orchestrator</DotNetBuildPhase>
   </PropertyGroup>
 
   <!-- Manually import the Versions.props file when the Arcade SDK isn't used. -->
@@ -137,17 +123,11 @@
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <!-- By default, the VMR builds with online sources when not building source-only. -->
     <DotNetBuildWithOnlineFeeds Condition="'$(DotNetBuildWithOnlineFeeds)' == '' and '$(DotNetBuildSourceOnly)' != 'true'">true</DotNetBuildWithOnlineFeeds>
-
+    <!-- Don't use Arcade's ExcludeFrom* build infra in the VMR orchestrator. -->
     <DisableArcadeExcludeFromBuildSupport>true</DisableArcadeExcludeFromBuildSupport>
   </PropertyGroup>
 
   <PropertyGroup>
-    <!--
-      '.proj' has no DefaultLanguageSourceExtension, causing **/* to be collected
-      in Compile items! Avoid this by disabling the default items.
-    -->
-    <EnableDefaultItems Condition="'$(MSBuildProjectExtension)' == '.proj'">false</EnableDefaultItems>
-
     <LogVerbosity Condition="'$(LogVerbosity)'==''">minimal</LogVerbosity>
 
     <ShellExtension Condition="'$(BuildOS)' == 'windows'">.cmd</ShellExtension>
@@ -178,7 +158,6 @@
     <IntermediateSymbolsRootDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'Symbols'))</IntermediateSymbolsRootDir>
     <AssetManifestsIntermediateDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'AssetManifests'))</AssetManifestsIntermediateDir>
     <ArtifactsAssetsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'assets', '$(Configuration)'))</ArtifactsAssetsDir>
-    <ArtifactsAssetsSymbolsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsAssetsDir)', 'Symbols'))</ArtifactsAssetsSymbolsDir>
 
     <PrebuiltPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'prebuilt'))</PrebuiltPackagesPath>
     <PreviouslyRestoredPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'previouslyRestored'))</PreviouslyRestoredPackagesPath>
@@ -186,17 +165,11 @@
     <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomPrebuiltSourceBuiltPackagesPath)'))</PrebuiltSourceBuiltPackagesPath>
 
     <GitInfoDir>$([MSBuild]::NormalizeDirectory('$(PrereqsDir)', 'git-info'))</GitInfoDir>
-    <GitInfoAllRepoPropsFile>$(GitInfoDir)AllRepoVersions.props</GitInfoAllRepoPropsFile>
 
     <PackageReportDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'prebuilt-report'))</PackageReportDir>
     <ResultingPrebuiltPackagesDir>$([MSBuild]::NormalizeDirectory('$(PackageReportDir)', 'prebuilt-packages'))</ResultingPrebuiltPackagesDir>
-    <PackageListsDir>$([MSBuild]::NormalizeDirectory('$(PackageReportDir)', 'packagelists'))</PackageListsDir>
-
-    <!-- The prefix needs to match what's defined in Arcade's source-build infra. Consider using a single property, in the future. -->
-    <NonShippingPackagesListPrefix>NonShipping.Packages.</NonShippingPackagesListPrefix>
 
     <ReferencePackagesDir>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'reference'))</ReferencePackagesDir>
-    <ReferenceAssetsDir>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'reference-assets'))</ReferenceAssetsDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
     <SourceBuiltPrebuiltsTarballName>Private.SourceBuilt.Prebuilts</SourceBuiltPrebuiltsTarballName>
 
@@ -213,8 +186,7 @@
     <PoisonMarkerFile>.prebuilt.xml</PoisonMarkerFile>
     <PoisonReportDataFile>$(PackageReportDir)poison-catalog.xml</PoisonReportDataFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
+    <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
   </PropertyGroup>
-
-  <Import Project="$(GitInfoAllRepoPropsFile)" />
 
 </Project>
