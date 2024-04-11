@@ -53,7 +53,7 @@ public class AzureDevOpsClient : IDisposable
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 "Basic",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes($":{azureDevOpsToken}")));
-        }       
+        }
     }
 
     /// <summary>
@@ -154,9 +154,10 @@ public class AzureDevOpsClient : IDisposable
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationFilePath)!);
             }
 
+            _logger.LogMessage(MessageImportance.High, $"Copying {sourceFilePath} to {destinationFilePath}");
             if (File.Exists(destinationFilePath))
             {
-                _logger.LogWarning($"File {destinationFilePath} already exists. Overwriting.");
+                _logger.LogMessage(MessageImportance.High, $"File {destinationFilePath} already exists. Overwriting.");
             }
 
             File.Copy(sourceFilePath, destinationFilePath, true);
