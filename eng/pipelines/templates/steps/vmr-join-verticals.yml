@@ -63,5 +63,5 @@ steps:
       /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }} \
       /p:TmpFolder=$(Agent.TempDirectory) \
       /p:OutputFolder=${{ parameters.outputFolder }} \
-      /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }} \
+      /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }}
     displayName: Join Verticals
