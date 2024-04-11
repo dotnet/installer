@@ -485,7 +485,7 @@
   <Target Name="GetProducedPackages" DependsOnTargets="GetRepoAssetManifests;DiscoverProducedPackages;ProcessPackageEntries" Returns="@(ProducedPackage)" />
 
   <Target Name="GetProducedPackagesFromTransitiveReferences" DependsOnTargets="GetTransitiveRepositoryReferences" Returns="@(_DependencyProducedPackage)">
-    <MSBuild Projects="@(RepositoryReference->'%(Identity).proj')"
+    <MSBuild Projects="@(TransitiveRepositoryReference->'%(Identity).proj')"
              Targets="GetProducedPackages"
              BuildInParallel="true">
       <Output TaskParameter="TargetOutputs" ItemName="_DependencyProducedPackage" />
