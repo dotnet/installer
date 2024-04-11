@@ -175,7 +175,5 @@ jobs:
       parameters:
         pipelineId: $(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)
         pullRequestTitle: "Update SDK Diff Tests Baselines"
-        pullRequestTargetBranch: "main"
         testResultsPath: '$(Build.StagingDirectory)/BuildLogs'
         testResultsTargetPath: 'src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets'
-        displayName: Upload Test Results PR
