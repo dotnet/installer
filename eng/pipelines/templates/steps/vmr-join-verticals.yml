@@ -24,22 +24,44 @@ parameters:
   type: object
   default: []
 
+- name: targetOS
+  type: string
+  default: 'windows'
+
 steps:
 - task: DownloadPipelineArtifact@2
   inputs:
     artifactName: 'VerticalManifests'
     targetPath: $(Build.ArtifactStagingDirectory)/VerticalManifests
 
-- script: $(Build.SourcesDirectory)/build.cmd 
-    -ci
-    /p:DotNetBuildPass=${{ parameters.dotNetBuildPass }}
-    /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
-    /p:MainVertical=${{ parameters.primaryDependentJob }}
-    /p:BuildId=$(Build.BuildId)
-    /p:AzureDevOpsToken=${{ parameters.azureDevOpsToken }}
-    /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }}
-    /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }}
-    /p:TmpFolder=$(Agent.TempDirectory)
-    /p:OutputFolder=${{ parameters.outputFolder }}
-    /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }}
-  displayName: Join Verticals
+- ${{ if eq(parameters.targetOS, 'windows') }}:
+  - script: $(Build.SourcesDirectory)/build.cmd 
+      -ci
+      -prepareMachine
+      /p:DotNetBuildPass=${{ parameters.dotNetBuildPass }}
+      /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests
+      /p:MainVertical=${{ parameters.primaryDependentJob }}
+      /p:BuildId=$(Build.BuildId)
+      /p:AzureDevOpsToken=${{ parameters.azureDevOpsToken }}
+      /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }}
+      /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }}
+      /p:TmpFolder=$(Agent.TempDirectory)
+      /p:OutputFolder=${{ parameters.outputFolder }}
+      /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }}
+    displayName: Join Verticals
+
+- ${{ else }}:
+  - script: $(Build.SourcesDirectory)/build.sh \
+      --ci \
+      --prepareMachine \
+      /p:DotNetBuildPass=${{ parameters.dotNetBuildPass }} \
+      /p:VerticalManifestsPath=$(Build.ArtifactStagingDirectory)/VerticalManifests \
+      /p:MainVertical=${{ parameters.primaryDependentJob }} \
+      /p:BuildId=$(Build.BuildId) \
+      /p:AzureDevOpsToken=${{ parameters.azureDevOpsToken }} \
+      /p:AzureDevOpsOrg=${{ parameters.azureDevOpsOrg }} \
+      /p:AzureDevOpsProject=${{ parameters.azureDevOpsProject }} \
+      /p:TmpFolder=$(Agent.TempDirectory) \
+      /p:OutputFolder=${{ parameters.outputFolder }} \
+      /p:VerticalSubSet=${{ join(';', parameters.dependsOn) }} \
+    displayName: Join Verticals

@@ -6,27 +6,8 @@
 
 namespace Microsoft.DotNet.UnifiedBuild.Tasks;
 
-public class AzureDevOpsArtifactInformation
-{
-    public required int Id { get; init; }
-    public required string Name { get; init; }
-    public required string Source { get; init; }
-    public required AzdoArtifactResources Resource { get; init; }
-}
+public record AzureDevOpsArtifactInformation(int Id, string Name, string Source, AzdoArtifactResources Resource);
 
-public class AzdoArtifactResources
-{
-    public required string Type { get; init; }
-    public required string Data { get; init; }
-    public required AzdoArtifactProperties Properties { get; init; }
-    public required string Url { get; init; }
-    public required string DownloadUrl { get; init; }
-}
+public record AzdoArtifactResources(string Type, string Data, AzdoArtifactProperties Properties, string Url, string DownloadUrl);
 
-public class AzdoArtifactProperties
-{
-    public required string RootId { get; init; }
-    public required string Artifactsize { get; init; }
-    public required string HashType { get; init; }
-    public required string DomainId { get; init; }
-}
+public record AzdoArtifactProperties(string RootId, string Artifactsize, string HashType, string DomainId);
