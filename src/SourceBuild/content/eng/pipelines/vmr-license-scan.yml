@@ -141,3 +141,20 @@ jobs:
       mergeTestResults: true
       publishRunAttachments: true
       testRunTitle: $(Agent.JobName)
+
+- job: Publish_Test_Results_PR
+  dependsOn: LicenseScan
+  pool:
+    name: NetCore1ESPool-Svc-Internal
+    demands: ImageOverride -equals 1es-ubuntu-2004
+  variables:
+  - template: templates/variables/pipelines.yml
+  steps:
+  - template: templates/steps/publish-test-results-pr.yml
+    parameters:
+      pipelineId: $(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)
+      pullRequestTargetBranch: 'main'
+      pullRequestTitle: "Update SDK Diff Tests Baselines"
+      testResultsPath: '$(Build.StagingDirectory)/BuildLogs'
+      testResultsTargetPath: 'src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets'
+      displayName: Upload Test Results PR

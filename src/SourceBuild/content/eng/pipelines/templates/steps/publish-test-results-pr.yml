@@ -1,0 +1,214 @@
+parameters:
+- name: pipelineId
+  type: string
+
+- name: pullRequestTitle
+  type: string
+  default: Update Test Baselines 
+
+- name: pullRequestTargetBranch
+  type: string
+  default: $(Build.SourceBranchName)
+
+- name: testResultsPath
+  type: string
+  default: $(Pipeline.Workspace)/Artifacts
+
+- name: testResultsTargetPath
+  type: string
+
+- name: displayName
+  type: string
+  default: Publish Test Results PR
+
+steps:
+  - script: |
+      set -euo pipefail
+      declare -g body="Updates baselines from pipeline ${{ parameters.pipelineId }} build [$(Build.BuildId)](https://dev.azure.com/dnceng/internal/_build/results?buildId=$(Build.BuildId)&view=results) (internal Microsoft link)."
+      declare -g fork_repo
+      declare -g target_repo
+      declare -g target_branch
+      declare -g new_branch_name
+
+      function CheckParameters() {
+        # Pipeline ID must be either the SDK diff tests pipeline ID or the license scan pipeline ID
+        if [[ "${{ parameters.pipelineId }}" != "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]] && [[ "$pipelineId" != "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
+          echo "This template does not support pipeline ${{ parameters.pipelineId }}."
+          exit 1
+        fi
+
+        if [[ ! -d "${{ parameters.testResultsPath }}" ]]; then
+          echo "Test results path ${{ parameters.testResultsPath }} does not exist."
+          exit 1
+        fi
+
+        # Target branch must include "main" or "release"
+        if [[ ! "${{ parameters.pullRequestTargetBranch }}" =~ ^(main|release) ]]; then
+          echo "Target branch ${{ parameters.pullRequestTargetBranch }} is not a valid target branch."
+          echo "Skipping PR publication."
+          exit 0
+        fi
+      }
+
+      function ConfigureGitRepo() {
+        time=$(date +%s)
+        monthDayYear=$(date +"%m-%d-%y")
+
+        gh auth setup-git
+
+        fork_repo="maestro-auth-test/private-installer"
+        target_repo="maestro-auth-test/private-installer"
+        fork_url="https://github.com/${fork_repo}"
+        target_url="https://github.com/${target_repo}"
+
+        repo_dir="repo-${time}"
+        git clone "${fork_url}" "${repo_dir}" --depth 1
+        cd "${repo_dir}"
+        git remote add upstream "${target_url}"
+
+        target_branch=$(echo "${{ parameters.pullRequestTargetBranch }}" | sed 's/internal\///')
+        git fetch upstream "${target_branch}"
+
+        new_branch_name="${monthDayYear}-source-build-tests-${time}"
+        git checkout -b "${new_branch_name}" "upstream/${target_branch}"
+
+        git config --global user.name "dotnet-sb-bot"
+        git config --global user.email "dotnet-sb-bot@microsoft.com"
+      }
+
+      function IsSdkDiffTestsPipeline() {
+        if [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]]; then
+          echo "true"
+        else
+          echo "false"
+        fi
+      }
+
+      function IsLicenseTestsPipeline() {
+        if [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
+          echo "true"
+        else
+          echo "false"
+        fi
+      }
+
+      function UnionExclusions() {
+        old_baseline_file=$1
+        shift
+        updated_baseline_files="$@"
+
+        cat $updated_baseline_files | sort | uniq > temp.txt
+        awk 'NR==FNR { lines[$0] = 1; next } $0 in lines' temp.txt $old_baseline_file > temp2.txt && mv temp2.txt $old_baseline_file
+        
+        git add $old_baseline_file
+      }
+
+      function IntersectionExclusions() {
+        old_baseline_file=$1
+        shift
+        updated_baseline_files="$@"
+
+        for file in $updated_baseline_files; do
+            grep -F -x -f $file $old_baseline_file > temp.txt && mv temp.txt $old_baseline_file
+        done
+        
+        git add $old_baseline_file
+      }
+
+      function CopyFilesAndUpdateGit() {
+        destination_path=$1
+        shift
+        updated_files="$@"
+
+        for updated_file in $updated_files; do
+          old_filename=$(basename $updated_file | sed 's/Updated//g')
+          touch $destination_path/$old_filename
+          cp $updated_file $destination_path/$old_filename
+          git add $destination_path/$old_filename
+        done
+      }
+
+      function MakePrChanges() {
+        target_path=$(realpath ${{ parameters.testResultsTargetPath }})
+        declare -A files
+        updated_baseline_files=$(find "${{ parameters.testResultsPath }}" -name "Updated*");
+        
+        for baseline_file in $updated_baseline_files; do
+          filename=$(basename "$baseline_file" | sed 's/Updated//g' | sed 's/\..*$//')
+          files["$filename"]+=" $baseline_file"
+        done
+
+        for filename in "${!files[@]}"; do
+          updated_baseline_files="${files[$filename]}"
+
+          if [[ $filename == *"Exclusions"* ]]; then
+            old_baseline_file=$(find "$target_path" -name "${filename}.*")
+
+            if [ -z "$old_baseline_file" ]; then
+              body+=$'\n\n - Could not find "$filename" in ${{ parameters.testResultsTargetPath }}. Adding all related updated exclusions files to this PR.\n\n'
+              CopyFilesAndUpdateGit $target_path $updated_baseline_files
+            elif [[ $(IsSdkDiffTestsPipeline) == 'true' ]]; then
+              UnionExclusions $old_baseline_file $updated_baseline_files
+            elif [[ $(IsLicenseTestsPipeline) == 'true' ]]; then
+              IntersectionExclusions $old_baseline_file $updated_baseline_files
+            else
+              echo "Unsure of how to combine exclusions files for pipeline type. Exiting."
+              exit 1
+            fi
+          else
+            for updated_baseline_file in $updated_baseline_files; do
+              old_baseline_filename=$(basename $updated_baseline_file | sed 's/Updated//g')
+              old_baseline_file=$(find "$target_path" -name "$old_baseline_filename")
+      
+              if [ -z "$old_baseline_file" ]; then
+                body+=$'\n\n - Could not find "$old_baseline_filename" in ${{ parameters.testResultsTargetPath }}. The file has been added in this PR.\n\n'
+  
+                if [[ $(IsLicenseTestsPipeline) == 'true' ]] && [[ "$(cat $updated_baseline_file)" != $'{\n  "files": []\n}' ]]; then
+                  # License baseline is not the default and needs to be updated
+                  CopyFilesAndUpdateGit "$target_path/baselines/licenses" $updated_baseline_file
+                else
+                  CopyFilesAndUpdateGit $target_path $updated_baseline_file
+                fi
+              else
+                  cp $updated_baseline_file $old_baseline_file
+                  git add $old_baseline_file
+              fi
+            done
+          fi
+        done
+      }
+
+      function CreatePr() {
+        if [[ -z $(git status --porcelain) ]]; then
+          echo "No changes to commit. Exiting."
+          exit 0
+        fi
+
+        git commit -m "Update test baselines from pipeline ${{ parameters.pipelineId }} build $(Build.BuildId)"
+        git push -u origin "${new_branch_name}"
+
+        readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
+        fork_owner="${fork_repo_split[0]}"
+
+        title="${{ parameters.pullRequestTitle }}"
+
+        echo "TargetRepo: $target_repo"
+        echo "ForkRepo: $fork_repo"
+        echo "Title: $title"
+        echo "Body: $body"
+
+        # create pull request
+        gh pr create \
+          --head "${fork_owner}:${new_branch_name}" \
+          --repo "${target_repo}" \
+          --base "${target_branch}" \
+          --title "${title}" \
+          --body "${body}"
+      }
+
+      CheckParameters
+      ConfigureGitRepo
+      MakePrChanges
+      CreatePr
+    displayName: ${{ parameters.displayName }}
+    workingDirectory: $(Build.SourcesDirectory)

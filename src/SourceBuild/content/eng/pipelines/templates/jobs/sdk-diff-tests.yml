@@ -15,6 +15,10 @@ parameters:
   type: boolean
   default: false
 
+- name: publishTestResultsPr
+  type: boolean
+  default: false
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -165,3 +169,13 @@ jobs:
       mergeTestResults: true
       publishRunAttachments: true
       testRunTitle: $(Agent.JobName)
+
+  - ${{ if eq(parameters.publishTestResultsPr, 'true') }}:
+    - template: ../steps/publish-test-results-pr.yml
+      parameters:
+        pipelineId: $(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)
+        pullRequestTitle: "Update SDK Diff Tests Baselines"
+        pullRequestTargetBranch: "main"
+        testResultsPath: '$(Build.StagingDirectory)/BuildLogs'
+        testResultsTargetPath: 'src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets'
+        displayName: Upload Test Results PR
