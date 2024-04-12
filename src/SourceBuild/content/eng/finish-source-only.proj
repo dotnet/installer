@@ -205,8 +205,7 @@
           AfterTargets="Build"
           DependsOnTargets="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive;MergeAssetManifests"
           Inputs="@(ArtifactsPackageToBundle);@(ReferencePackageToBundle);$(MergedAssetManifestOutputPath)"
-          Outputs="$(SourceBuiltTarballName);$(SourceBuiltVersionName);$(AllPackageVersionsPropsName);$(SourceBuiltMergedAssetManifestName)"
-          Condition="'$(DotNetBuildSourceOnly)' == 'true'">
+          Outputs="$(SourceBuiltTarballName);$(SourceBuiltVersionName);$(AllPackageVersionsPropsName);$(SourceBuiltMergedAssetManifestName)">
     <!-- Copy packages to layout directory. Since there are a large number of files,
           this will use symlinks instead of copying files to make this execute quickly. -->
     <Copy SourceFiles="@(ArtifactsPackageToBundle)"
