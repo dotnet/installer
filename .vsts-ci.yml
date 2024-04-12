@@ -372,11 +372,6 @@ extends:
 
       - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml@self
 
-      - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-        - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml@self
-          parameters:
-            dependsOn: Source_Build_Create_Tarball
-
       - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
         - template: /eng/common/templates-official/job/publish-build-assets.yml@self
           parameters:
