@@ -36,7 +36,7 @@
   </PropertyGroup>
 
   <!-- Returns the repository references of this project and all the projects this project references, recursively -->
-  <Target Name="GetTransitiveRepositoryReferences" Outputs="@(TransitiveRepositoryReference)">
+  <Target Name="GetTransitiveRepositoryReferences" Returns="@(TransitiveRepositoryReference)">
     <ItemGroup>
       <_TransitiveRepositoryReference Include="@(RepositoryReference)" />
     </ItemGroup>
@@ -742,7 +742,7 @@
   <!-- Recursively walks the repo dependency graph gathering each repo's dependencies which are returned as a YAML string representation -->
   <Target Name="GetDependencyGraphString"
           DependsOnTargets="GetTransitiveRepositoryReferences"
-          Outputs="$(DependencyGraphString)">
+          Returns="$(DependencyGraphString)">
     <PropertyGroup>
       <!-- Each step deeper in the graph builds up the indentation used for the YAML representation.
            Use '_' as a placeholder for the space ' ' character since trailing spaces aren't handled well as property values. -->
