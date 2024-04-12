@@ -933,6 +933,7 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x86
+            extraProperties: /p:PgoInstrument=true
 
         - template: ../jobs/vmr-build.yml
           parameters:
