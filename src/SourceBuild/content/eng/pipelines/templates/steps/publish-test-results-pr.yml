@@ -113,7 +113,7 @@ steps:
         shift
         updated_files="$@"
 
-        $relative_path=$(realpath --relative-to="$(pwd)" "$destination_path")
+        relative_path=$(realpath --relative-to="$(pwd)" "$destination_path")
 
         body+=$'\n'
         body+=" - Could not find $filename in $relative_path."
