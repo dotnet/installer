@@ -12,14 +12,6 @@ parameters:
 
 - name: testResultsPath
   type: string
-  default: $(Pipeline.Workspace)/Artifacts
-
-- name: testResultsTargetPath
-  type: string
-
-- name: displayName
-  type: string
-  default: Publish Test Results PR
 
 steps:
   - script: |
@@ -32,7 +24,7 @@ steps:
 
       function CheckParameters() {
         # Pipeline ID must be either the SDK diff tests pipeline ID or the license scan pipeline ID
-        if [[ "${{ parameters.pipelineId }}" != "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]] && [[ "$pipelineId" != "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
+        if [[ "${{ parameters.pipelineId }}" != "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]] && [[ "${{ parameters.pipelineId }}" != "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
           echo "This template does not support pipeline ${{ parameters.pipelineId }}."
           exit 1
         fi
@@ -56,8 +48,8 @@ steps:
 
         gh auth setup-git
 
-        fork_repo="dotnet/installer"
-        target_repo="dotnet/installer"
+        fork_repo="maestro-auth-test/private-installer"
+        target_repo="maestro-auth-test/private-installer"
         fork_url="https://github.com/${fork_repo}"
         target_url="https://github.com/${target_repo}"
 
@@ -115,10 +107,18 @@ steps:
         git add $old_baseline_file
       }
 
-      function CopyFilesAndUpdateGit() {
+      function CopyNewFilesAndUpdateGit() {
+        filename=$1
         destination_path=$1
         shift
         updated_files="$@"
+
+        $relative_path=$(realpath --relative-to="$(pwd)" "$destination_path")
+
+        body+=$'\n'
+        body+=" - Could not find $filename in $relative_path."
+        body+=" The updated file(s) has been added in this PR."
+        body+=$'\n'
 
         for updated_file in $updated_files; do
           old_filename=$(basename $updated_file | sed 's/Updated//g')
@@ -129,7 +129,8 @@ steps:
       }
 
       function MakePrChanges() {
-        target_path=$(realpath ${{ parameters.testResultsTargetPath }})
+        relative_target_path="src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets"
+        absolute_target_path=$(realpath $relative_target_path)
         declare -A files
         updated_baseline_files=$(find "${{ parameters.testResultsPath }}" -name "Updated*");
         
@@ -142,11 +143,10 @@ steps:
           updated_baseline_files="${files[$filename]}"
 
           if [[ $filename == *"Exclusions"* ]]; then
-            old_baseline_file=$(find "$target_path" -name "${filename}.*")
+            old_baseline_file=$(find "$absolute_target_path" -name "${filename}.*")
 
             if [ -z "$old_baseline_file" ]; then
-              body+=$'\n\n - Could not find "$filename" in ${{ parameters.testResultsTargetPath }}. Adding all related updated exclusions files to this PR.\n\n'
-              CopyFilesAndUpdateGit $target_path $updated_baseline_files
+              CopyNewFilesAndUpdateGit $filename $absolute_target_path $updated_baseline_files
             elif [[ $(IsSdkDiffTestsPipeline) == 'true' ]]; then
               UnionExclusions $old_baseline_file $updated_baseline_files
             elif [[ $(IsLicenseTestsPipeline) == 'true' ]]; then
@@ -158,16 +158,14 @@ steps:
           else
             for updated_baseline_file in $updated_baseline_files; do
               old_baseline_filename=$(basename $updated_baseline_file | sed 's/Updated//g')
-              old_baseline_file=$(find "$target_path" -name "$old_baseline_filename")
+              old_baseline_file=$(find "$absolute_target_path" -name "$old_baseline_filename")
       
               if [ -z "$old_baseline_file" ]; then
-                body+=$'\n\n - Could not find "$old_baseline_filename" in ${{ parameters.testResultsTargetPath }}. The file has been added in this PR.\n\n'
-  
                 if [[ $(IsLicenseTestsPipeline) == 'true' ]] && [[ "$(cat $updated_baseline_file)" != $'{\n  "files": []\n}' ]]; then
                   # License baseline is not the default and needs to be updated
-                  CopyFilesAndUpdateGit "$target_path/baselines/licenses" $updated_baseline_file
-                else
-                  CopyFilesAndUpdateGit $target_path $updated_baseline_file
+                  CopyNewFilesAndUpdateGit $old_baseline_file "$absolute_target_path/baselines/licenses" $updated_baseline_file
+                elif [[ $(IsSdkDiffTestsPipeline) == 'true' ]]; then
+                  CopyNewFilesAndUpdateGit $old_baseline_file $absolute_target_path $updated_baseline_file
                 fi
               else
                   cp $updated_baseline_file $old_baseline_file
@@ -210,5 +208,8 @@ steps:
       ConfigureGitRepo
       MakePrChanges
       CreatePr
-    displayName: ${{ parameters.displayName }}
+    displayName: Publish Test Results PR
     workingDirectory: $(Build.SourcesDirectory)
+    condition: succeededOrFailed()
+    env:
+      GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
