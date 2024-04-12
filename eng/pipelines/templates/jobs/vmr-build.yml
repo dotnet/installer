@@ -180,7 +180,7 @@ jobs:
       displayName: Export VMR sources
       workingDirectory: $(Build.StagingDirectory)
 
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(parameters.runTests, 'True')) }}:
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(parameters.runTests, 'True'), eq(parameters.buildSourceOnly, 'true')) }}:
     - script: cp "$(sourcesPath)/src/installer/NuGet.config" "$(sourcesPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config"
       displayName: Copy Test NuGet Config
 
