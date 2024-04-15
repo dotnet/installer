@@ -33,13 +33,6 @@ steps:
           echo "Test results path ${{ parameters.testResultsPath }} does not exist."
           exit 1
         fi
-
-        # Target branch must include "main" or "release"
-        if [[ ! "${{ parameters.pullRequestTargetBranch }}" =~ ^(main|release) ]]; then
-          echo "Target branch ${{ parameters.pullRequestTargetBranch }} is not a valid target branch."
-          echo "Skipping PR publication."
-          exit 0
-        fi
       }
 
       function ConfigureGitRepo() {

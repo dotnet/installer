@@ -171,8 +171,9 @@ jobs:
       testRunTitle: $(Agent.JobName)
 
   - ${{ if eq(parameters.publishTestResultsPr, 'true') }}:
-    - template: ../steps/publish-test-results-pr.yml
-      parameters:
-        pipelineId: $(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)
-        pullRequestTitle: "Update SDK Diff Tests Baselines and Exclusions"
-        testResultsPath: '$(Build.StagingDirectory)/BuildLogs'
+    - ${{ if or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'release')) }}:
+      - template: ../steps/publish-test-results-pr.yml
+        parameters:
+          pipelineId: $(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)
+          pullRequestTitle: "Update SDK Diff Tests Baselines and Exclusions"
+          testResultsPath: '$(Build.StagingDirectory)/BuildLogs'
