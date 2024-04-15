@@ -68,108 +68,107 @@ steps:
         git config --global user.email "dotnet-sb-bot@microsoft.com"
       }
 
-      function IsSdkDiffTestsPipeline() {
-        if [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]]; then
-          echo "true"
-        else
-          echo "false"
-        fi
-      }
-
-      function IsLicenseTestsPipeline() {
-        if [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
-          echo "true"
-        else
-          echo "false"
-        fi
-      }
-
       function UnionExclusions() {
-        old_baseline_file=$1
+        original_test_file=$1
         shift
-        updated_baseline_files="$@"
+        updated_test_files="$@"
 
-        cat $updated_baseline_files | sort | uniq > temp.txt
-        awk 'NR==FNR { lines[$0] = 1; next } $0 in lines' temp.txt $old_baseline_file > temp2.txt && mv temp2.txt $old_baseline_file
-        
-        git add $old_baseline_file
+        cat $updated_test_files | sort | uniq > temp.txt
+        awk 'NR==FNR { lines[$0] = 1; next } $0 in lines' temp.txt $original_test_file > temp2.txt && mv temp2.txt $original_test_file
+
+        rm temp.txt
+
+        git add $original_test_file
       }
 
       function IntersectionExclusions() {
-        old_baseline_file=$1
+        original_test_file=$1
         shift
-        updated_baseline_files="$@"
+        updated_test_files="$@"
 
-        for file in $updated_baseline_files; do
-            grep -F -x -f $file $old_baseline_file > temp.txt && mv temp.txt $old_baseline_file
+        for file in $updated_test_files; do
+          grep -F -x -f $file $original_test_file > temp.txt && mv temp.txt $original_test_file
         done
-        
-        git add $old_baseline_file
+
+        git add $original_test_file
       }
 
       function CopyNewFilesAndUpdateGit() {
-        filename=$1
         destination_path=$1
         shift
         updated_files="$@"
 
         relative_path=$(realpath --relative-to="$(pwd)" "$destination_path")
 
-        body+=$'\n'
-        body+=" - Could not find $filename in $relative_path."
-        body+=" The updated file(s) has been added in this PR."
-        body+=$'\n'
-
         for updated_file in $updated_files; do
-          old_filename=$(basename $updated_file | sed 's/Updated//g')
-          touch $destination_path/$old_filename
-          cp $updated_file $destination_path/$old_filename
-          git add $destination_path/$old_filename
+          original_filename=$(basename $updated_file | sed 's/Updated//g')
+          touch $destination_path/$original_filename
+          cp $updated_file $destination_path/$original_filename
+          git add $destination_path/$original_filename
+
+          body+=$'\n'
+          body+=" - Could not find $original_filename in $relative_path."
+          body+=" The updated file has been added in this PR."
+          body+=$'\n'
         done
+      }
+
+      function CreateLicenseBaseline() {
+        destination_path=$1
+        updated_test_file=$2
+        default_baseline_content=$'{\n  "files": []\n}'
+        baseline_path="$destination_path/baselines/licenses"
+
+        if [[ "$(cat $updated_test_file)" != $default_baseline_content ]]; then
+          CopyNewFilesAndUpdateGit $baseline_path $updated_test_file
+        fi
       }
 
       function MakePrChanges() {
         relative_target_path="src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets"
         absolute_target_path=$(realpath $relative_target_path)
         declare -A files
-        updated_baseline_files=$(find "${{ parameters.testResultsPath }}" -name "Updated*");
-        
-        for baseline_file in $updated_baseline_files; do
-          filename=$(basename "$baseline_file" | sed 's/Updated//g' | sed 's/\..*$//')
-          files["$filename"]+=" $baseline_file"
+        updated_test_files=$(find "${{ parameters.testResultsPath }}" -name "Updated*");
+
+        for test_file in $updated_test_files; do
+          filename=$(basename "$test_file" | sed 's/Updated//g' | sed 's/\..*$//')
+          files["$filename"]+=" $test_file"
         done
 
         for filename in "${!files[@]}"; do
-          updated_baseline_files="${files[$filename]}"
+          updated_test_files="${files[$filename]}"
 
           if [[ $filename == *"Exclusions"* ]]; then
-            old_baseline_file=$(find "$absolute_target_path" -name "${filename}.*")
+            # Exclusion files get combined.
+            # There can only be one exclusion file per key, so we need to check for a file matching the key.
 
-            if [ -z "$old_baseline_file" ]; then
-              CopyNewFilesAndUpdateGit $filename $absolute_target_path $updated_baseline_files
-            elif [[ $(IsSdkDiffTestsPipeline) == 'true' ]]; then
-              UnionExclusions $old_baseline_file $updated_baseline_files
-            elif [[ $(IsLicenseTestsPipeline) == 'true' ]]; then
-              IntersectionExclusions $old_baseline_file $updated_baseline_files
+            original_test_file=$(find "$absolute_target_path" -name "${filename}.*")
+            if [ -z "$original_test_file" ]; then
+              CopyNewFilesAndUpdateGit $absolute_target_path $updated_test_files
+            elif [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID)" ]]; then
+              UnionExclusions $original_test_file $updated_test_files
+            elif [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
+              IntersectionExclusions $original_test_file $updated_test_files
             else
               echo "Unsure of how to combine exclusions files for pipeline type. Exiting."
               exit 1
             fi
           else
-            for updated_baseline_file in $updated_baseline_files; do
-              old_baseline_filename=$(basename $updated_baseline_file | sed 's/Updated//g')
-              old_baseline_file=$(find "$absolute_target_path" -name "$old_baseline_filename")
-      
-              if [ -z "$old_baseline_file" ]; then
-                if [[ $(IsLicenseTestsPipeline) == 'true' ]] && [[ "$(cat $updated_baseline_file)" != $'{\n  "files": []\n}' ]]; then
-                  # License baseline is not the default and needs to be updated
-                  CopyNewFilesAndUpdateGit $old_baseline_file "$absolute_target_path/baselines/licenses" $updated_baseline_file
-                elif [[ $(IsSdkDiffTestsPipeline) == 'true' ]]; then
-                  CopyNewFilesAndUpdateGit $old_baseline_file $absolute_target_path $updated_baseline_file
+            for updated_test_file in $updated_test_files; do
+              # Non-exclusion files get copied over.
+              # There can be multiple files per key, so we need to check for a file matching each updated file.
+
+              original_test_filename=$(basename $updated_test_file | sed 's/Updated//g')
+              original_test_filepath=$(find "$absolute_target_path" -name "$original_test_filename")
+              if [ -z "$original_test_filepath" ]; then
+                if [[ "${{ parameters.pipelineId }}" == "$(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)" ]]; then
+                  CreateLicenseBaseline $absolute_target_path $updated_test_file
+                else
+                  CopyNewFilesAndUpdateGit $absolute_target_path $updated_test_file
                 fi
               else
-                  cp $updated_baseline_file $old_baseline_file
-                  git add $old_baseline_file
+                cp $updated_test_file $original_test_filepath
+                git add $original_test_filepath
               fi
             done
           fi
