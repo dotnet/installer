@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetCurrent)</TargetFramework>
-    <MergedAssetManifestOutputPath>$(ArtifactsDir)VerticalManifest.xml</MergedAssetManifestOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +22,4 @@
       MergedAssetManifestOutputPath="$(MergedAssetManifestOutputPath)"
       VmrBuildNumber="$(BUILD_BUILDNUMBER)" />
   </Target>
-  
-  <Target Name="GetMergedManifestPath" DependsOnTargets="MergeAssetManifests" Returns="$(MergedAssetManifestOutputPath)" />
 </Project>

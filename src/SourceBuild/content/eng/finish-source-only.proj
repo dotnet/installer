@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="$(TasksDir)Microsoft.DotNet.UnifiedBuild.Tasks\Microsoft.DotNet.UnifiedBuild.Tasks.csproj" />
     <ProjectReference Include="$(TasksDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj" />
-    <ProjectReference Include="$(RepositoryEngineeringDir)publish.proj" Targets="Build;GetMergedManifestPath" OutputItemType="MergedAssetManifest" />
+    <ProjectReference Include="$(RepositoryEngineeringDir)publish.proj" />
   </ItemGroup>
 
   <!-- After building, generate a prebuilt usage report. -->
@@ -185,6 +185,7 @@
                                 Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
       <ReferencePackageToBundle Include="$(ReferencePackagesDir)**"
                                 Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
+      <MergedAssetManifest Include="$(MergedAssetManifestOutputPath)" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -204,7 +205,7 @@
   <Target Name="CreatePrivateSourceBuiltArtifactsArchive"
           AfterTargets="Build"
           DependsOnTargets="GetInputsOutputForCreatePrivateSourceBuiltArtifactsArchive"
-          Inputs="@(ArtifactsPackageToBundle);@(ReferencePackageToBundle);$(MergedAssetManifestOutputPath)"
+          Inputs="@(ArtifactsPackageToBundle);@(ReferencePackageToBundle);@(MergedAssetManifest)"
           Outputs="$(SourceBuiltTarballName);$(SourceBuiltVersionName);$(AllPackageVersionsPropsName);$(SourceBuiltMergedAssetManifestName)">
     <!-- Copy packages to layout directory. Since there are a large number of files,
           this will use symlinks instead of copying files to make this execute quickly. -->
@@ -239,9 +240,9 @@
 
     <!-- Create a PackageVersions.props file that includes entries for all packages. -->
     <WritePackageVersionsProps NuGetPackages="@(ArtifactsPackageToBundle)"
-                                ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
-                                VersionPropsFlowType="AllPackages"
-                                OutputPath="$(AllPackageVersionsPropsName)" />
+                               ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
+                               VersionPropsFlowType="AllPackages"
+                               OutputPath="$(AllPackageVersionsPropsName)" />
 
     <Exec Command="tar --numeric-owner -czhf $(SourceBuiltTarballName) $([System.IO.Path]::GetFileName('$(SourceBuiltVersionName)')) *"
           WorkingDirectory="$(SourceBuiltLayoutDir)" />
