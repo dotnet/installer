@@ -396,7 +396,7 @@
                             UpdateGlobalJsonVersions;
                             UpdateEngCommonFiles;
                             CreateBuildInputProps;
-                            DiscoverArcadeSourceBuiltSdkOverrides;
+                            DiscoverBuiltSdkOverrides;
                             SetSourceBuiltSdkOverrides">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(RepositoryName)" />
     <Message Importance="High" Text="Running command:" />
@@ -449,7 +449,7 @@
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)') and '$(MinimalConsoleLogOutput)' == 'true'" />
   </Target>
 
-  <Target Name="GetRepoAssetManifests" Returns="@(RepoAssetManifest)">
+  <Target Name="GetRepoAssetManifests" DependsOnTargets="RepoBuild" Returns="@(RepoAssetManifest)">
     <ItemGroup>
       <RepoAssetManifest Include="$(RepoAssetManifestsDir)*.xml" />
     </ItemGroup>
@@ -457,7 +457,7 @@
 
   <!-- Log the new repo artifacts -->
   <Target Name="LogRepoArtifacts"
-          DependsOnTargets="RepoBuild;GetRepoAssetManifests"
+          DependsOnTargets="GetRepoAssetManifests"
           Condition="'$(IsUtilityProject)' != 'true'">
     <Error Text="Repo manifest files don't exist." Condition="'@(RepoAssetManifest)' == ''" />
 
@@ -572,7 +572,7 @@
     <Exec Command="df -h $(RepoRoot)" Condition="'$(BuildOS)' != 'windows'and '@(DirsToDeleteWithTrailingSeparator)' != ''" />
   </Target>
 
-  <Target Name="DiscoverToolPackageVersions" DependsOnTargets="RepoBuild;GetProducedPackages">
+  <Target Name="DiscoverToolPackageVersions" DependsOnTargets="GetProducedPackages">
     <JoinItems Left="@(ProducedPackage)"
                Right="@(BuiltSdkPackage)"
                LeftMetadata="*">
@@ -580,8 +580,8 @@
     </JoinItems>
   </Target>
 
-  <Target Name="ExtractToolPackageCore"
-          DependsOnTargets="RepoBuild;$(ExtractToolPackageDependsOn)"
+  <Target Name="ExtractToolPackage"
+          DependsOnTargets="RepoBuild;DiscoverToolPackageVersions"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)ExtractToolPackage.complete">
@@ -619,7 +619,7 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
-          DependsOnTargets="RepoBuild;$(ExtractToolPackageDependsOn);ExtractToolPackageCore" />
+          DependsOnTargets="DiscoverToolPackageVersions;ExtractToolPackageCore" />
 
   <Target Name="Build"
           DependsOnTargets="
