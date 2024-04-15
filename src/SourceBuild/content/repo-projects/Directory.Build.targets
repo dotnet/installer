@@ -337,22 +337,30 @@
              RunEachTargetSeparately="$(RunEachTargetSeparately)" />
   </Target>
 
-  <!-- Discover the Arcade SDKs built from the live Arcade source and set them as overrides here. -->
-  <Target Name="DiscoverArcadeSourceBuiltSdkOverrides"
-          DependsOnTargets="BuildRepoReferences;GetProducedPackagesFromTransitiveReferences"
-          Condition="'$(UseBootstrapArcade)' != 'true'">
+  <Target Name="DiscoverBuiltSdkOverrides"
+          DependsOnTargets="BuildRepoReferences;GetProducedPackagesFromTransitiveReferences">
+
+    <!--
+      Discover the Arcade SDKs built from the live Arcade source and set them as overrides here.
+      This will automatically no-op for Arcade and SBRP, as these packages will not have been produced yet.
+    -->
     <ItemGroup>
-      <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.Arcade.Sdk'))" Group="ARCADE" />
+      <ArcadeBuiltArcadeSdk Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.Arcade.Sdk'))" />
+    </ItemGroup>
+
+    <Error Text="The source-built Arcade SDK should be available for any repository that does not explicitly set UseBootstrapArcade to true." Condition="'@(ArcadeBuiltArcadeSdk)' == '' and '$(UseBootstrapArcade)' != 'true'" />
+
+    <ItemGroup Condition="'@(ArcadeBuiltArcadeSdk)' == ''">
+      <SourceBuiltSdkOverride Include="@(BootstrapArcadeSdkOverride)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <SourceBuiltSdkOverride Include="@(ArcadeBuiltArcadeSdk)" Group="ARCADE" />
       <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.SharedFramework.Sdk'))" Group="ARCADE_SHARED_FX_SDK" />
       <SourceBuiltSdkOverride Include="@(_DependencyProducedPackage->WithMetadataValue('Identity', 'Microsoft.DotNet.CMake.Sdk'))" Group="ARCADE_CMAKE_SDK" />
     </ItemGroup>
-  </Target>
-
-  <Target Name="DiscoverReferencePackageBuiltSdkOverrides"
-          DependsOnTargets="BuildRepoReferences;GetProducedPackagesFromTransitiveReferences"
-          Condition="'$(UseBootstrapSdks)' != 'true'">
     <!--
-      Add Microsoft.Build.NoTargets and Microsoft.Build.Traversal SDK overrides, for all repos (except the one that builds this one, which opts out).
+      Add Microsoft.Build.NoTargets and Microsoft.Build.Traversal SDK overrides, for all repos that have it built (ie. excluding SBRP as it builds the SDKs).
 
       We need to override all SDK packages that are used by repos, to prevent NuGet SDK Resolver from trying to
       restore these packages from online feeds. In offline build we only want to use local source-build feeds.
@@ -367,7 +375,7 @@
   </Target>
 
   <Target Name="SetSourceBuiltSdkOverrides"
-          DependsOnTargets="DiscoverArcadeSourceBuiltSdkOverrides;DiscoverReferencePackageBuiltSdkOverrides"
+          DependsOnTargets="DiscoverBuiltSdkOverrides"
           Condition="'@(SourceBuiltSdkOverride)' != ''">
     <ItemGroup>
       <!-- Set the environment variables for MSBuild to look for our additional SDK Resolvers and or our resolver to find our source-built SDKs. -->

@@ -182,14 +182,12 @@
   </ItemGroup>
 
   <!-- If we're using the bootstrapped arcade, we can set the override here. -->
-  <ItemGroup Condition="'$(UseBootstrapArcade)' == 'true'">
-    <SourceBuiltSdkOverride Include="Microsoft.DotNet.Arcade.Sdk"
-                            Group="ARCADE"
-                            Version="$(ArcadeBootstrapVersion)"
-                            Location="$(BootstrapPackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
-  </ItemGroup>
-
   <ItemGroup>
+    <!-- Configure the bootstrapped Arcade version here. Repositories that build before arcade (and arcade itself) will use the bootstrapped SDK. -->
+    <BootstrapArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk"
+                                Group="ARCADE"
+                                Version="$(ArcadeBootstrapVersion)"
+                                Location="$(BootstrapPackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
     <!-- Make the WindowsDesktop SDK override opt-in for repos that need it. -->
     <WindowsDesktopSdkOverride Include="Microsoft.Net.Sdk.WindowsDesktop" Group="WINDOWS_DESKTOP" Location="$(ToolsDir)EmptySdk" Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
   </ItemGroup>

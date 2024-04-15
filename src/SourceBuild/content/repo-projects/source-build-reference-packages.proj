@@ -8,9 +8,6 @@
     <!-- SBRP builds before Arcade so it also needs the bootstrap Arcade version -->
     <UseBootstrapArcade>true</UseBootstrapArcade>
 
-    <!-- SBRP builds the reference SDKs so it needs the bootstrap SDK versions -->
-    <UseBootstrapSdks>true</UseBootstrapSdks>
-
     <LocalNuGetPackageCacheDirectory>$(ArtifactsObjDir)source-build-reference-package-cache</LocalNuGetPackageCacheDirectory>
 
     <BuildArgs>$(BuildArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildArgs>
