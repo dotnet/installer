@@ -10,22 +10,17 @@
 
     <!-- SBRP builds the reference SDKs so it needs the bootstrap SDK versions -->
     <UseBootstrapSdks>true</UseBootstrapSdks>
-    
-    <ExtractToolPackageDependsOn>_DiscoverToolPackages</ExtractToolPackageDependsOn>
 
     <LocalNuGetPackageCacheDirectory>$(ArtifactsObjDir)source-build-reference-package-cache</LocalNuGetPackageCacheDirectory>
 
     <BuildArgs>$(BuildArgs) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(NETCoreSdkRuntimeIdentifier)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:LocalNuGetPackageCacheDirectory=$(LocalNuGetPackageCacheDirectory)</BuildArgs>
   </PropertyGroup>
-  
-  <Target Name="_DiscoverToolPackages" 
-          DependsOnTargets="RepoBuild;GetProducedPackages">
-    <ItemGroup>
-      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.NoTargets'))" />
-      <BuiltSdkPackageOverride Include="@(ProducedPackage->WithMetadataValue('Identity', 'Microsoft.Build.Traversal'))" />
-    </ItemGroup>
-  </Target>
+
+  <ItemGroup>
+    <BuiltSdkPackage Include="Microsoft.Build.NoTargets" />
+    <BuiltSdkPackage Include="Microsoft.Build.Traversal" />
+  </ItemGroup>
 
   <Target Name="AddLocalNuGetPackageCacheDirectory"
           AfterTargets="CopyNuGetConfig"

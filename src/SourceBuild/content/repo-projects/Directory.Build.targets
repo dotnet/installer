@@ -564,6 +564,14 @@
     <Exec Command="df -h $(RepoRoot)" Condition="'$(BuildOS)' != 'windows'and '@(DirsToDeleteWithTrailingSeparator)' != ''" />
   </Target>
 
+  <Target Name="DiscoverToolPackageVersions" DependsOnTargets="RepoBuild;GetProducedPackages">
+    <JoinItems Left="@(ProducedPackage)"
+               Right="@(BuiltSdkPackage)"
+               LeftMetadata="*">
+      <Output TaskParameter="JoinResult" ItemName="BuiltSdkPackageOverride" />
+    </JoinItems>
+  </Target>
+
   <Target Name="ExtractToolPackageCore"
           DependsOnTargets="RepoBuild;$(ExtractToolPackageDependsOn)"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
