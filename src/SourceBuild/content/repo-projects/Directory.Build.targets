@@ -580,7 +580,7 @@
     </JoinItems>
   </Target>
 
-  <Target Name="ExtractToolPackage"
+  <Target Name="ExtractToolPackageCore"
           DependsOnTargets="RepoBuild;DiscoverToolPackageVersions"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
