@@ -39,6 +39,7 @@ usage()
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
+  echo "  --dev                           Use -dev or -ci versioning instead of Microsoft official build versions. Ignored when --source-only is specified."
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -174,6 +175,9 @@ while [[ $# > 0 ]]; do
       ;;
     -use-mono-runtime)
       properties="$properties /p:SourceBuildUseMonoRuntime=true"
+      ;;
+    -dev)
+      properties="$properties /p:UseOfficialBuildVersioning=false"
       ;;
     *)
       properties="$properties $1"
