@@ -311,6 +311,7 @@ stages:
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
+        useDevVersions: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
