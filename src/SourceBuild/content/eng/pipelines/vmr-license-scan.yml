@@ -166,6 +166,5 @@ jobs:
     displayName: Move Artifacts to root
   - template: templates/steps/publish-test-results-pr.yml
     parameters:
-      pipelineId: $(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)
       pullRequestTitle: "Update License Scan Baselines and Exclusions"
-      testResultsPath: $(Pipeline.Workspace)/Artifacts
+      updatedTestResultsPath: $(Pipeline.Workspace)/Artifacts
