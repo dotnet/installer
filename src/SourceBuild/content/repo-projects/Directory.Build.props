@@ -83,6 +83,7 @@
     <!-- Pass locations for assets -->
     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetsDir=$(ArtifactsAssetsDir)</BuildArgs>
     <BuildArgs>$(BuildArgs) /p:SourceBuiltAssetManifestsDir=$(RepoAssetManifestsDir)</BuildArgs>
+    <BuildArgs>$(BuildArgs) /p:RepositoryName=$(RepositoryName)</BuildArgs>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
