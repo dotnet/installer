@@ -26,7 +26,6 @@
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="runtime" />
     <RepositoryReference Include="xdt" />
-    <RepositoryReference Include="efcore" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DotNetBuildSourceOnly)' == 'true'">
@@ -35,6 +34,10 @@
     <RepositoryReference Include="source-build-externals" />
     <RepositoryReference Include="source-build-reference-packages" />
     <RepositoryReference Include="symreader" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
+    <RepositoryReference Include="efcore" />
   </ItemGroup>
 
   <ItemGroup>
