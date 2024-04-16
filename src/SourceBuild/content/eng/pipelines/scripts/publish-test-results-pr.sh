@@ -168,9 +168,6 @@ function GetOriginalFileName() {
     echo $(basename $updated_file | sed 's/Updated//g')
 }
 
-# Combines all the lines from the updated test files removes duplicates, and 
-# removes any lines from the original test file that are in the updated test files.
-# Assumes that the original test file exists and all updated files are subsets of the original file.
 function UnionExclusions() {
     original_test_file=$1
     shift
@@ -179,7 +176,7 @@ function UnionExclusions() {
     # Combine all the lines from the updated test files and remove duplicates.
     cat "${updated_test_files[@]}" | sort | uniq > temp.txt
 
-    # Remove any lines from the original test file that are in the updated test files.
+    # Remove any lines from the original test file that are not the updated test files.
     awk 'NR==FNR { lines[$0] = 1; next } $0 in lines' temp.txt $original_test_file > temp2.txt && mv temp2.txt $original_test_file
 
     rm temp.txt
@@ -187,8 +184,6 @@ function UnionExclusions() {
     git add $original_test_file
 }
 
-# Removes lines from the original test file that are not in all the updated test files.
-# Assumes that the original test file exists and all updated files are subsets of the original file.
 function IntersectionExclusions() {
     original_test_file=$1
     shift
@@ -202,9 +197,6 @@ function IntersectionExclusions() {
     git add $original_test_file
 }
 
-# Copy new files to the destination path and update git.
-# Assumes that the updated files are named "Updated<original_filename>"
-# and that the original file does not exist in the destination path.
 function CopyNewFilesAndUpdateGit() {
     destination_path=$1
     shift
@@ -224,7 +216,6 @@ function CopyNewFilesAndUpdateGit() {
     done
 }
 
-# Create a new license baseline file if the updated test file is not the default baseline content.
 function CreateLicenseBaseline() {
     destination_path=$1
     updated_test_file=$2
@@ -237,11 +228,10 @@ function CreateLicenseBaseline() {
 }
 
 function MakePrChanges() {
-    relative_target_path="src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets"
-    absolute_target_path=$(realpath $relative_target_path)
+    absolute_target_path=$(realpath $target_results_path)
 
     # Create an associative array to group updated test files by their original filename.
-    # The key is the original filename before the first period (e.g. "Exclusions" for "Exclusions.Sample.txt")
+    # The key is the original filename before the first period (e.g. "Exclusions" for "UpdatedExclusions.Sample.txt")
     declare -A files
     updated_test_files=$(find "$updated_results_path" -name "Updated*");
     for test_file in $updated_test_files; do
