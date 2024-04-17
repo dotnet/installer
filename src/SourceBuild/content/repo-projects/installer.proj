@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
     <!-- Need to set to false to calculate RepositoryCommit. -->
@@ -154,14 +154,6 @@
     <Unzip Condition="'$(ArchiveExtension)' == '.zip'"
            SourceFiles="$(SdkArchivePath)"
            DestinationFolder="$(DotNetSdkExtractDir)" />
-  </Target>
-
-  <Target Name="RunUnifiedBuildValidation"
-          AfterTargets="Build"
-          Condition="'$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true' and '$(DotNetBuildSourceOnly)' != 'true'">
-    <MSBuild Projects="../test/Microsoft.DotNet.UnifiedBuild.Tests/Microsoft.DotNet.UnifiedBuild.Tests.csproj"
-             Targets="VSTest"
-             ContinueOnError="true" />
   </Target>
 
 </Project>
