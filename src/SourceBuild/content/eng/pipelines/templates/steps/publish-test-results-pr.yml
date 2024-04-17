@@ -9,7 +9,7 @@ parameters:
 steps:
   - script: |
       echo "Publishing test results to PR"
-      ../scripts/publish-test-results-pr.sh \
+      ../../scripts/publish-test-results-pr.sh \
         --pipelineId $(System.DefinitionId) \
         --buildId $(Build.BuildId) \
         --title "${{ parameters.pullRequestTitle }}" \

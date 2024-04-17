@@ -39,6 +39,9 @@ body="Updates baselines from an internal Microsoft build."
 updated_results_path=''
 target_results_path='src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets'
 
+# Needed values for an existing PR
+pr_number=''
+
 function IsSdkDiffTestsPipeline() {
     if [[ "$pipeline_id" == "$SOURCE_BUILD_SDK_DIFF_TESTS_PIPELINE_ID" ]]; then
         echo "true"
@@ -60,33 +63,33 @@ while :; do
   if [ $# -le 0 ]; then
     break
   fi
-  lowerI="$(echo "$1" | awk '{print tolower($0)}')"
-  case $lowerI in
+
+  case $1 in
     "-?"|-h|--help)
       print_help
       exit 0
       ;;
     --pipelineId|-p)
-      pipeline_id=$2
-      shift
-      if [[ $(IsSdkDiffTestsPipeline) == 'false' ]] && [[ $(IsLicenseScanPipeline) == 'false' ]]; then
-        echo "This script does not support pipeline $pipeline_id."
-        exit 1
-      fi
-      ;;
+        pipeline_id=$2
+        shift
+        if [[ $(IsSdkDiffTestsPipeline) == 'false' ]] && [[ $(IsLicenseScanPipeline) == 'false' ]]; then
+            echo "This script does not support pipeline $pipeline_id."
+            exit 1
+        fi
+        ;;
     --buildId|-b)
-      build_id=$2
-      shift
-      ;;
+        build_id=$2
+        shift
+        ;;
     --title|-T)
-      pullRequestTitle=$2
-      shift
-      ;;
+        title=$2
+        shift
+        ;;
     --targetBranch|-B)
-      # Removes the internal/ prefix from the target branch if it is present.
-      target_branch=$(echo "$2" | sed 's/internal\///')
-      shift
-      ;;
+        # Removes the internal/ prefix from the target branch if it is present.
+        target_branch=$(echo "$2" | sed 's/internal\///')
+        shift
+        ;;
     --updatedResultsPath|-u)
         updated_results_path=$2
         if [[ ! -d "$updated_results_path" ]]; then
@@ -152,7 +155,14 @@ function ConfigureGitRepo() {
         exit 1
     fi
 
-    pr_branch_name="${monthDayYear}-source-build-tests-${time}"
+    # Check for an existing PR with the same title.
+    pr_number=$(gh pr list --state open --base "$target_branch" --search "$title" --json number --jq '.[0].number')
+    if [[ -n "$pr_number" ]]; then
+        echo "PR with title '$title' already exists. Updating this PR instead of creating a new one."
+        pr_branch_name=$(gh pr view $pr_number --json headRefName --jq '.headRefName')
+    else
+        pr_branch_name="${monthDayYear}-source-build-tests-${time}"
+    fi
     git checkout -b "${pr_branch_name}" "upstream/${target_branch}"
 
     git config --global user.name "dotnet-sb-bot"
@@ -280,13 +290,7 @@ function MakePrChanges() {
 }
 
 function CreatePr() {
-    if [[ -z $(git status --porcelain) ]]; then
-        echo "No changes to commit. Exiting."
-        exit 0
-    fi
-
     git commit -m "Update test baselines from pipeline $pipeline_id build $build_id."
-    git push -u origin "${pr_branch_name}"
 
     readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
     fork_owner="${fork_repo_split[0]}"
@@ -296,13 +300,26 @@ function CreatePr() {
     echo "Title: $title"
     echo "Body: $body"
 
-    # create pull request
-    gh pr create \
-        --head "${fork_owner}:${pr_branch_name}" \
-        --repo "${target_repo}" \
-        --base "${target_branch}" \
-        --title "${title}" \
-        --body "${body}"
+    # Either update the existing PR or create a new one.
+    if [[ -n "$pr_number" ]]; then
+        gh pr edit $pr_number --body "$body"
+        git push -u origin "${pr_branch_name}" -f
+    else
+        if [[ -z $(git status --porcelain) ]]; then
+            echo "No changes to commit. Exiting."
+            exit 0
+        fi
+
+        git push -u origin "${pr_branch_name}"
+
+        # create pull request
+        gh pr create \
+            --head "${fork_owner}:${pr_branch_name}" \
+            --repo "${target_repo}" \
+            --base "${target_branch}" \
+            --title "${title}" \
+            --body "${body}"
+    fi
 }
 
 ConfigureGitRepo
