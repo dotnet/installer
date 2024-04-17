@@ -14,8 +14,8 @@
   <ItemGroup>
     <FrameworkReference Update="Microsoft.NETCore.App" TargetingPackVersion="$(MicrosoftNETCoreAppRefPackageVersion)" RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)" />
 
-    <ProjectReference Include="projects\SdkResolver.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildSourceOnly)' != 'true'" />
-    <ProjectReference Include="projects\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildSourceOnly)' != 'true'" />
+    <ProjectReference Include="projects\SdkResolver.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuild)' != 'true'" />
+    <ProjectReference Include="projects\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>
