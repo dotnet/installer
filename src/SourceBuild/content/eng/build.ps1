@@ -57,7 +57,7 @@ $targets = "/t:Build"
 # This repo uses the VSTest integration instead of the Arcade Test target
 if ($test) {
   $project = Join-Path (Join-Path $RepoRoot "test") "tests.proj"
-  $targets += ";VSTest"
+  $targets = "/t:RunTests"
 }
 
 if ($buildRepoTests) {

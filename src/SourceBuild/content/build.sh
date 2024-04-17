@@ -39,7 +39,6 @@ usage()
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
-  echo "  --testnobuild                   Run tests without building when invoked with --test"
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
@@ -83,7 +82,6 @@ packagesPreviouslySourceBuiltDir="${packagesDir}previously-source-built/"
 ci=false
 exclude_ci_binary_log=false
 prepare_machine=false
-test_no_build=false
 
 properties=''
 while [[ $# > 0 ]]; do
@@ -189,8 +187,6 @@ if [[ "$ci" == true ]]; then
   if [[ "$exclude_ci_binary_log" == false ]]; then
     binary_log=true
   fi
-
-  properties="$properties /p:ContinuousIntegrationBuild=true"
 fi
 
 # Never use the global nuget cache folder
@@ -204,43 +200,12 @@ targets="/t:Build"
 # This repo uses the VSTest integration instead of the Arcade Test target
 if [[ "$test" == true ]]; then
   project="$scriptroot/test/tests.proj"
-  targets="$targets;VSTest"
+  targets="/t:RunTests"
 fi
 
 function Build {
-  if [[ "$sourceOnly" == "true" ]]; then
-    "$CLI_ROOT/dotnet" build-server shutdown
+  if [[ "$sourceOnly" != "true" ]]; then
 
-    InvokeMsBuild "$scriptroot/eng/tools/init-build.proj" "ExtractToolPackage,BuildMSBuildSdkResolver" "BuildMSBuildSdkResolver"
-
-    # kill off the MSBuild server so that on future invocations we pick up our custom SDK Resolver
-    "$CLI_ROOT/dotnet" build-server shutdown
-
-    # Point MSBuild to the custom SDK resolvers folder, so it will pick up our custom SDK Resolver
-    export MSBUILDADDITIONALSDKRESOLVERSFOLDER="$scriptroot/artifacts/toolset/VSSdkResolvers/"
-    
-  fi
-
-  InvokeMsBuild "$scriptroot/build.proj" "Build" "Build"
-}
-
-function Test {
-  InvokeMsBuild "$scriptroot/build.proj" "Test" "Test"
-}
-
-function InvokeMsBuild {
-  local projectPath="$1"
-  local target="$2"
-  local logName="$3"
-
-  if [[ "$sourceOnly" == "true" ]]; then
-    "$CLI_ROOT/dotnet" msbuild "$projectPath" \
-      -t:$target \
-      -bl:"$scriptroot/artifacts/log/$configuration/$logName.binlog" \
-      -flp:LogFile="$scriptroot/artifacts/log/$configuration/$logName.log" \
-      -clp:v=m \
-      $properties
-  else
     InitializeToolset
 
     # Manually unset NUGET_PACKAGES as InitializeToolset sets it unconditionally.
@@ -249,7 +214,7 @@ function InvokeMsBuild {
 
     local bl=""
     if [[ "$binary_log" == true ]]; then
-      bl="/bl:\"$log_dir/$logName.binlog\""
+      bl="/bl:\"$log_dir/Build.binlog\""
     fi
 
     MSBuild --restore \
@@ -445,11 +410,4 @@ if [[ "$sourceOnly" == "true" ]]; then
   echo "Found bootstrap versions: SDK $SDK_VERSION, Arcade $ARCADE_BOOTSTRAP_VERSION, NoTargets $NOTARGETS_BOOTSTRAP_VERSION and Traversal $TRAVERSAL_BOOTSTRAP_VERSION"
 fi
 
-# Run the build as long as we're not only running tests
-if [[ !("$test" == "true" && "$test_no_build" == "true") ]]; then
-  Build
-fi
-
-if [ "$test" == "true" ]; then
-  Test
-fi
+Build

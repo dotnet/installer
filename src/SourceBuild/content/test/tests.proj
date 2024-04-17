@@ -7,4 +7,32 @@
                       Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" />
   </ItemGroup>
 
+  <Target Name="RunCoreTests">
+    <MSBuild Projects="$(MSBuildThisFileFullPath)"
+             Properties="Configuration=$(Configuration)"
+             ContinueOnError="true"
+             Targets="Build;VSTest" />
+
+    <PropertyGroup>
+      <CoreTestsResult>$(MSBuildLastTaskResult)</CoreTestsResult>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Scenarios tests are handled separately from the other test projects. This is because the output of the scenario tests is
+       an executable that is used to run the tests and so using the VSTest runner doesn't work with them. They also require
+       some setup steps to be configured with the VMR. -->
+  <Target Name="RunScenarioTests">
+    <MSBuild Projects="$(MSBuildThisProjectDirectory)scenario-tests.proj"
+             ContinueOnError="true"
+             Properties="Configuration=$(Configuration)"
+             Targets="RunScenarioTests" />
+    
+    <PropertyGroup>
+      <ScenarioTestsResult>$(MSBuildLastTaskResult)</ScenarioTestsResult>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="RunTests" DependsOnTargets="RunCoreTests;RunScenarioTests">
+    <Error Condition="'$(CoreTestsResult)' == 'false' or '$(ScenarioTestsResult)' == 'false'" Text="Test failures occurred." />
+  </Target>
 </Project>
