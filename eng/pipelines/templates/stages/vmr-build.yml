@@ -24,12 +24,15 @@ parameters:
 - name: alpine319Container
   type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19
+- name: centOSStream8Container
+  type: string
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
 - name: centOSStream9Container
   type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
-- name: fedora39Container
+- name: fedora38Container
   type: string
-  default: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+  default: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
 - name: ubuntu2204Container
   type: string
   default: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
@@ -76,12 +79,12 @@ stages:
   - template: ../jobs/vmr-build.yml@self
     parameters:
       # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-      buildName: CentOSStream9_Online_MsftSdk
+      buildName: CentOSStream8_Online_MsftSdk
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
       pool: ${{ parameters.pool_Linux }}
-      container: ${{ parameters.centOSStream9Container }}
+      container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: false            # 🚫
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
@@ -92,12 +95,12 @@ stages:
   - template: ../jobs/vmr-build.yml@self
     parameters:
       # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-      buildName: CentOSStream9_Offline_MsftSdk
+      buildName: CentOSStream8_Offline_MsftSdk
       isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
       vmrBranch: ${{ variables.VmrBranch }}
       architecture: x64
       pool: ${{ parameters.pool_Linux }}
-      container: ${{ parameters.centOSStream9Container }}
+      container: ${{ parameters.centOSStream8Container }}
       buildFromArchive: true             # ✅
       enablePoison: false                # 🚫
       excludeOmniSharpTests: true        # ✅
@@ -128,12 +131,12 @@ stages:
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: CentOSStream9_Online_PreviousSourceBuiltSdk
+        buildName: CentOSStream8_Online_PreviousSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.centOSStream9Container }}
+        container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
@@ -144,12 +147,12 @@ stages:
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: CentOSStream9_Offline_PreviousSourceBuiltSdk
+        buildName: CentOSStream8_Offline_PreviousSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.centOSStream9Container }}
+        container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
@@ -160,12 +163,12 @@ stages:
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: CentOSStream9_Mono_Offline_MsftSdk
+        buildName: CentOSStream8_Mono_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.centOSStream9Container }}
+        container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: true             # ✅
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
@@ -176,12 +179,28 @@ stages:
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: Fedora39_Offline_MsftSdk
+        buildName: CentOSStream9_Offline_MsftSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.fedora39Container }}
+        container: ${{ parameters.centOSStream9Container }}
+        buildFromArchive: true             # ✅
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: Fedora38_Offline_MsftSdk
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ parameters.fedora38Container }}
         buildFromArchive: true             # ✅
         enablePoison: true                 # ✅
         excludeOmniSharpTests: false       # 🚫
@@ -228,33 +247,33 @@ stages:
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: CentOSStream9_Online_CurrentSourceBuiltSdk
+        buildName: CentOSStream8_Online_CurrentSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.centOSStream9Container }}
+        container: ${{ parameters.centOSStream8Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
-        reuseBuildArtifactsFrom: CentOSStream9_Online_MsftSdk
+        reuseBuildArtifactsFrom: CentOSStream8_Online_MsftSdk
 
     - template: ../jobs/vmr-build.yml@self
       parameters:
         # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-        buildName: Fedora39_Offline_CurrentSourceBuiltSdk
+        buildName: Fedora38_Offline_CurrentSourceBuiltSdk
         isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
         vmrBranch: ${{ variables.VmrBranch }}
         architecture: x64
         pool: ${{ parameters.pool_Linux }}
-        container: ${{ parameters.fedora39Container }}
+        container: ${{ parameters.fedora38Container }}
         buildFromArchive: false            # 🚫
         enablePoison: false                # 🚫
         excludeOmniSharpTests: false       # 🚫
         runOnline: false                   # 🚫
         useMonoRuntime: false              # 🚫
         withPreviousSDK: false             # 🚫
-        reuseBuildArtifactsFrom: Fedora39_Offline_MsftSdk
+        reuseBuildArtifactsFrom: Fedora38_Offline_MsftSdk

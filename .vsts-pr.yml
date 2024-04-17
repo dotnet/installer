@@ -82,8 +82,8 @@ stages:
     - template: eng/build-pr.yml
       parameters:
         agentOs: Linux
-        jobName: Build_Fedora_39_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39'
+        jobName: Build_Fedora_36_Debug_x64
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36'
         buildConfiguration: Debug
         buildArchitecture: x64
         linuxPortable: true
@@ -91,8 +91,8 @@ stages:
     - template: eng/build-pr.yml
       parameters:
         agentOs: Linux
-        jobName: Build_CentOS_Stream_9_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9'
+        jobName: Build_CentOS_8_Stream_Debug_x64
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8'
         buildConfiguration: Debug
         buildArchitecture: x64
         linuxPortable: false

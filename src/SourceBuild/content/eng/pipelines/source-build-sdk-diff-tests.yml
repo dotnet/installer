@@ -33,6 +33,13 @@ parameters:
 jobs:
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
+    buildName: CentOSStream8_Offline_MsftSdk
+    targetRid: centos.8-x64
+    architecture: x64
+    dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
+
+- template: templates/jobs/sdk-diff-tests.yml
+  parameters:
     buildName: CentOSStream9_Offline_MsftSdk
     targetRid: centos.9-x64
     architecture: x64
@@ -47,8 +54,8 @@ jobs:
 
 - template: templates/jobs/sdk-diff-tests.yml
   parameters:
-    buildName: Fedora39_Offline_MsftSdk
-    targetRid: fedora.39-x64
+    buildName: Fedora38_Offline_MsftSdk
+    targetRid: fedora.38-x64
     architecture: x64
     dotnetDotnetRunId: ${{ parameters.dotnetDotnetRunId }}
 

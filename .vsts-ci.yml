@@ -56,12 +56,12 @@ extends:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
       cblMariner20Fpm:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
-      centosStream9:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
+      centosStream8:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
       debian11:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
-      fedora39:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+      fedora36:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-36
       ubuntu2204:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
       mariner20CrossArm:
@@ -123,8 +123,8 @@ extends:
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
-            jobName: Build_Fedora_39_Debug_x64
-            container: fedora39
+            jobName: Build_Fedora_36_Debug_x64
+            container: fedora36
             buildConfiguration: Debug
             buildArchitecture: x64
             linuxPortable: true
@@ -132,8 +132,8 @@ extends:
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
-            jobName: Build_CentOS_Stream_9_Debug_x64
-            container: centosStream9
+            jobName: Build_CentOS_8_Stream_Debug_x64
+            container: centosStream8
             buildConfiguration: Debug
             buildArchitecture: x64
             linuxPortable: false
