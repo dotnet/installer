@@ -1,0 +1,30 @@
+From 26b16792d5c6bf37f2e4461c5fd96f9070cb3f16 Mon Sep 17 00:00:00 2001
+From: Jeremy Koritzinsky <jekoritz@microsoft.com>
+Date: Tue, 16 Apr 2024 17:21:56 -0700
+Subject: [PATCH] Only pack as tool shim in VMR builds when signing is possible
+
+Backport: https://github.com/dotnet/sdk/pull/40262
+---
+ src/BuiltInTools/dotnet-format/dotnet-format.csproj | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/BuiltInTools/dotnet-format/dotnet-format.csproj b/src/BuiltInTools/dotnet-format/dotnet-format.csproj
+index 14323f64e97a..e71139ce8b4c 100644
+--- a/src/BuiltInTools/dotnet-format/dotnet-format.csproj
++++ b/src/BuiltInTools/dotnet-format/dotnet-format.csproj
+@@ -18,11 +18,14 @@
+     <!-- Copy nuget assemblies to build directory. -->
+     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+ 
++    <SignableShimRuntimeIdentifiers>win-x64;win-x86;osx-x64</SignableShimRuntimeIdentifiers>
++
+     <!--
+       These identifiers are for generating the shim'd core executables for signing. Not all options
+       from $(RoslynPortableRuntimeIdentifiers) work or make sense in this context.
+     -->
+-    <PackAsToolShimRuntimeIdentifiers Condition=" '$(DotnetBuildFromSource)' != 'true' ">win-x64;win-x86;osx-x64</PackAsToolShimRuntimeIdentifiers>
++    <PackAsToolShimRuntimeIdentifiers Condition="'$(DotNetBuild)' != 'true'">win-x64;win-x86;osx-x64</PackAsToolShimRuntimeIdentifiers>
++    <PackAsToolShimRuntimeIdentifiers Condition="'$(DotNetBuild)' == 'true' and $(SignableShimRuntimeIdentifier.Contains('$(TargetRid)'))">$(TargetRid)</PackAsToolShimRuntimeIdentifiers>
+   </PropertyGroup>
+ 
+   <ItemGroup>
