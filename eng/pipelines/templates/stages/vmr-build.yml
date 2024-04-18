@@ -48,7 +48,7 @@ parameters:
 - name: pool_LinuxArm64
   type: object
   default:
-    name: $(defaultPoolName)
+    name: $(poolName_LinuxArm64)
     image: $(poolImage_LinuxArm64)
     demands: ImageOverride -equals $(poolImage_LinuxArm64)
     hostArchitecture: Arm64
