@@ -35,7 +35,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
             const char Delimiter = ':';
 
             string json = File.ReadAllText(JsonFilePath);
-            string newLineChars = FileUtilities.DetectNewLineChars(json);
+            string newLineChars = Utilities.DetectNewLineChars(json);
             JObject jsonObj = JObject.Parse(json);
 
             string[] escapedPathToAttributeParts = PathToAttribute.Split(Delimiter);
@@ -45,7 +45,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
             }
             UpdateAttribute(jsonObj, escapedPathToAttributeParts, NewAttributeValue);
 
-            File.WriteAllText(JsonFilePath, FileUtilities.NormalizeNewLineChars(jsonObj.ToString(), newLineChars));
+            File.WriteAllText(JsonFilePath, Utilities.NormalizeNewLineChars(jsonObj.ToString(), newLineChars));
             return true;
         }
 
