@@ -108,22 +108,6 @@ stages:
       useMonoRuntime: false              # 🚫
       withPreviousSDK: false             # 🚫
 
-  - template: ../jobs/vmr-build.yml@self
-    parameters:
-      # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
-      buildName: Ubuntu2204Arm64_Offline_MsftSdk
-      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
-      vmrBranch: ${{ variables.VmrBranch }}
-      architecture: arm64
-      pool: ${{ parameters.pool_LinuxArm64 }}
-      container: ${{ parameters.ubuntu2204ArmContainer }}
-      buildFromArchive: false            # 🚫
-      enablePoison: false                # 🚫
-      excludeOmniSharpTests: false       # 🚫
-      runOnline: false                   # 🚫
-      useMonoRuntime: false              # 🚫
-      withPreviousSDK: false             # 🚫
-
   - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
 
     # CI - Stage 1 x64 legs ------------------------------------
