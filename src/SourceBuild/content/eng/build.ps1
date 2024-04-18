@@ -86,17 +86,6 @@ function Build {
     @arguments
 }
 
-function Test {
-  InitializeToolset
-
-  $bl = if ($binaryLog) { '/bl:' + (Join-Path $LogDir 'ScenarioTests.binlog') } else { '' }
-
-  MSBuild $buildProj `
-    $bl `
-    /t:Test `
-    @properties
-}
-
 try {
   if ($clean) {
     if (Test-Path $ArtifactsDir) {
@@ -112,13 +101,7 @@ try {
     }
   }
 
-  if (-not ($test -and $testNoBuild)) {
-    Build
-  }
-  
-  if ($test) {
-    Test
-  }
+  Build
 }
 catch {
   Write-Host $_.ScriptStackTrace
