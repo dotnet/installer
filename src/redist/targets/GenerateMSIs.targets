@@ -474,7 +474,7 @@
 
   <Target Name="GenerateVSToolsResolverNupkg"
           DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs"
-          Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86' "
+          Condition=" '$(OS)' == 'Windows_NT' and '$(Architecture)' == 'x86' And '$(DotNetBuild)' != 'true'"
           Inputs="$(SdkResolverLayoutPath)/**/*;
                   $(VSToolsResolverNuspecFile);
                   $(GenerateNupkgPowershellScript)"
@@ -510,7 +510,7 @@
 
   <Target Name="GenerateVSTemplateLocatorNupkg"
           DependsOnTargets="GenerateLayout;MsiTargetsSetupInputOutputs"
-          Condition=" '$(OS)' == 'Windows_NT' And '$(Architecture)' == 'x64' "
+          Condition=" '$(OS)' == 'Windows_NT' And '$(Architecture)' == 'x64' And '$(DotNetBuild)' != 'true'"
           Inputs="$(MSBuildExtensionsLayoutDirectory)/**/*;
                     $(VSTemplateLocatorNuspecFile);
                     $(GenerateNupkgPowershellScript)"

@@ -142,7 +142,6 @@
     <EnvironmentVariables Include="PackageVersionStamp=$(PreReleaseVersionLabel)" />
 
     <!-- Give build access to commit info without necessarily requiring git queries. -->
-    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="SourceRevisionId=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
@@ -153,6 +152,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="DeterministicSourcePaths=true" Condition="'$(DeterministicBuildOptOut)' != 'true'" />
     <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
 
