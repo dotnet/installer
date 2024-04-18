@@ -474,7 +474,7 @@ jobs:
           testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
     - task: PublishTestResults@2
-      displayName: Publish Scenario Test Results
+      displayName: Publish Test Results
       condition: succeededOrFailed()
       continueOnError: true
       inputs:
@@ -484,6 +484,7 @@ jobs:
         mergeTestResults: true
         publishRunAttachments: true
         testRunTitle: Tests_$(Agent.JobName)
+
     - task: PublishTestResults@2
       displayName: Publish Scenario Test Results
       condition: succeededOrFailed()

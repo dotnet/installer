@@ -311,7 +311,6 @@ stages:
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
-        runTests: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -322,7 +321,6 @@ stages:
         pool: ${{ parameters.pool_Windows }}
         targetOS: windows
         targetArchitecture: x64
-        runTests: true
 
     - template: ../jobs/vmr-build.yml
       parameters:
@@ -662,7 +660,6 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: x64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -674,7 +671,6 @@ stages:
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: x64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -687,7 +683,6 @@ stages:
             crossRootFs: '/crossrootfs/x64'
             targetOS: linux
             targetArchitecture: x64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -714,7 +709,6 @@ stages:
             useMonoRuntime: true
             targetOS: linux
             targetArchitecture: x64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -841,7 +835,6 @@ stages:
             pool: ${{ parameters.pool_Mac }}
             targetOS: osx
             targetArchitecture: arm64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -853,7 +846,6 @@ stages:
             useMonoRuntime: true
             targetOS: osx
             targetArchitecture: arm64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -888,7 +880,6 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: arm64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -900,7 +891,6 @@ stages:
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x64
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -911,7 +901,6 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x86
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -923,7 +912,6 @@ stages:
             useMonoRuntime: true
             targetOS: windows
             targetArchitecture: x86
-            runTests: true
 
         - template: ../jobs/vmr-build.yml
           parameters:
@@ -934,7 +922,6 @@ stages:
             pool: ${{ parameters.pool_Windows }}
             targetOS: windows
             targetArchitecture: x64
-            runTests: true
             extraProperties: /p:PgoInstrument=true
 
         - template: ../jobs/vmr-build.yml
