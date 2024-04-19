@@ -36,7 +36,7 @@ variables:
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - group: DotNetBuilds storage account read tokens
   - name: _InternalRuntimeDownloadArgs
-    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal 
+    value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 
@@ -237,7 +237,7 @@ stages:
               _TestArg: ''
             Build_Linux_musl_Debug_x64:
               _BuildConfig: Debug
-              _DockerParameter: '--docker alpine.3.13'
+              _DockerParameter: '--docker alpine.3.15'
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
@@ -282,7 +282,7 @@ stages:
               _TestArg: ''
             Build_Linux_musl_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker alpine.3.13'
+              _DockerParameter: '--docker alpine.3.15'
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-musl-x64'
               _BuildArchitecture: 'x64'
@@ -374,11 +374,6 @@ stages:
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball-pr.yml
 
-  - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
-    - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build-pr.yml
-      parameters:
-        dependsOn: Source_Build_Create_Tarball
-
   - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
     - template: /eng/common/templates/job/publish-build-assets.yml
       parameters:
@@ -388,6 +383,8 @@ stages:
           - Darwin
           - Source_Build_Managed
           - Source_Build_Create_Tarball
+          - PGO_Linux
+          - PGO_Windows_NT
         publishUsingPipelines: true
         pool:
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
