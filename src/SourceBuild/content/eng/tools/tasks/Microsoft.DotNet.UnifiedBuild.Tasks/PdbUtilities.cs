@@ -25,6 +25,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         }
 
         // Checks if a file has debug data indicating an external companion Pdb.
+        // Also returns the Pdb GUID, if one was found in PE.
         private static bool FileHasCompanionPdbInfo(string file, out string guid)
         {
             guid = string.Empty;
