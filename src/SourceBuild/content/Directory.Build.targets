@@ -2,22 +2,15 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" Condition="'$(SkipArcadeSdkImport)' != 'true'" />
 
-  <Target Name="GetDotNetSdkArchive">
+  <Target Name="DetermineSourceBuiltSdkVersion">
     <PropertyGroup>
-      <DotNetSdkFilenamePrefix>dotnet-sdk-</DotNetSdkFilenamePrefix>
+      <SdkFilenamePrefix>dotnet-sdk-</SdkFilenamePrefix>
     </PropertyGroup>
 
     <ItemGroup>
-      <SdkArchiveItem Include="$(ArtifactsAssetsDir)Sdk/**/$(DotNetSdkFilenamePrefix)*$(ArchiveExtension)" />
+      <SdkTarballItem Include="$(ArtifactsAssetsDir)Sdk/**/$(SdkFilenamePrefix)*$(ArchiveExtension)" />
     </ItemGroup>
-    
-    <PropertyGroup>
-      <SdkArchivePath>%(SdkArchiveItem.Identity)</SdkArchivePath>
-    </PropertyGroup>
-  </Target>
 
-  <Target Name="DetermineSourceBuiltSdkVersion"
-          DependsOnTargets="GetDotNetSdkArchive">
     <!--
       Extract SDK version from SDK tarball filename.
       Keep in sync with dotnet-sdk's archive location and filename.
@@ -27,8 +20,9 @@
       artifacts\assets\<config>\Sdk\<SdkVersion>\dotnet-sdk-<SdkVersion>-<TargetRid><ArchiveExtension>
     -->
     <PropertyGroup>
-      <_DotNetSdkArtifactFileName>%(SdkArchiveItem.Filename)%(SdkArchiveItem.Extension)</_DotNetSdkArtifactFileName>
-      <SourceBuiltSdkVersion>$(_DotNetSdkArtifactFileName.Replace('$(DotNetSdkFilenamePrefix)','').Replace('-$(TargetRid)$(ArchiveExtension)',''))</SourceBuiltSdkVersion>
+      <SdkFilename>%(SdkTarballItem.Filename)%(SdkTarballItem.Extension)</SdkFilename>
+      <SdkTarballPath Condition="'$(SdkTarballPath)' == ''">%(SdkTarballItem.Identity)</SdkTarballPath>
+      <SourceBuiltSdkVersion>$(SdkFilename.Replace('$(SdkFilenamePrefix)','').Replace('-$(TargetRid)$(ArchiveExtension)',''))</SourceBuiltSdkVersion>
     </PropertyGroup>
   </Target>
 

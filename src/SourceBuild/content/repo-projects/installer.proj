@@ -78,9 +78,9 @@
   <!-- Copy SDK archive to assets root. -->
   <Target Name="CopySdkArchive"
           AfterTargets="Build"
-          DependsOnTargets="GetDotNetSdkArchive">
+          DependsOnTargets="DetermineSourceBuiltSdkVersion">
 
-    <Copy SourceFiles="$(SdkArchivePath)"
+    <Copy SourceFiles="$(SdkTarballPath)"
           DestinationFolder="$(ArtifactsAssetsDir)"
           SkipUnchangedFiles="true"
           UseHardlinksIfPossible="true" />
@@ -88,9 +88,9 @@
     <!-- Extract the SDK archive so its contents can be used downstream -->
     <MakeDir Directories="$(DotNetSdkExtractDir)" />
     <Exec Condition="'$(ArchiveExtension)' == '.tar.gz'"
-          Command="tar -xzf $(SdkArchivePath) -C $(DotNetSdkExtractDir)" />
+          Command="tar -xzf $(SdkTarballPath) -C $(DotNetSdkExtractDir)" />
     <Unzip Condition="'$(ArchiveExtension)' == '.zip'"
-           SourceFiles="$(SdkArchivePath)"
+           SourceFiles="$(SdkTarballPath)"
            DestinationFolder="$(DotNetSdkExtractDir)" />
   </Target>
 
