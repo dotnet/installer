@@ -32,14 +32,17 @@ usage()
   echo "  --with-sdk <DIR>                Use the SDK in the specified directory for bootstrapping"
   echo ""
 
+  echo "Non-source-only settings:"
+  echo "  --build-repo-tests              Build repository tests"
+  echo "  --dev                           Use -dev or -ci versioning instead of Microsoft official build versions"
+
+
   echo "Advanced settings:"
-  echo "  --build-repo-tests              Build repository tests. May not be supported with --source-only"
   echo "  --ci                            Set when running on CI server"
   echo "  --clean-while-building          Cleans each repo after building (reduces disk space usage, short: -cwb)"
   echo "  --excludeCIBinarylog            Don't output binary log (short: -nobl)"
   echo "  --prepareMachine                Prepare machine for CI run, clean up processes after build"
   echo "  --use-mono-runtime              Output uses the mono runtime"
-  echo "  --dev                           Use -dev or -ci versioning instead of Microsoft official build versions. Ignored when --source-only is specified."
   echo ""
   echo "Command line arguments not listed above are passed thru to msbuild."
   echo "Arguments can also be passed in with a single hyphen."
