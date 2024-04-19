@@ -311,7 +311,7 @@ stages:
         container: ${{ variables.ubuntu2204Container }}
         targetOS: linux
         targetArchitecture: x64
-        useDevVersions: true
+        useDevVersions: true # Use dev versions for CI validation of the experience. If we decide to ship assets from this leg, then we should remove this option.
 
     - template: ../jobs/vmr-build.yml
       parameters:

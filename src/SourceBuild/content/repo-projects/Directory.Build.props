@@ -1,4 +1,4 @@
-<Project TreatAsLocalProperty="UseOfficialBuildVersioning">
+<Project>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.props, $(MSBuildThisFileDirectory)..))" />
 
@@ -99,10 +99,6 @@
 
     <AspNetRazorBuildServerLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'aspnet-debug'))</AspNetRazorBuildServerLogDir>
     <AspNetRazorBuildServerLogFile>$(AspNetRazorBuildServerLogDir)razor-build-server.log</AspNetRazorBuildServerLogFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <UseOfficialBuildVersioning Condition="'$(DotNetBuildSourceOnly)' == 'true'">true</UseOfficialBuildVersioning>
   </PropertyGroup>
 
   <ItemGroup>
