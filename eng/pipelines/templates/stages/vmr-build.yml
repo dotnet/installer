@@ -13,7 +13,7 @@ parameters:
 
   # The following parameters aren't expected to be passed in rather they are used for encapsulation
   # -----------------------------------------------------------------------------------------------
-  alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
+  alpine319Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19
   centOSStream8Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
   fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
@@ -119,7 +119,7 @@ stages:
         pool:
           name: ${{ variables.defaultPoolName }}
           demands: ${{ variables.defaultPoolDemands }}
-        container: ${{ parameters.alpine317Container }}
+        container: ${{ parameters.alpine319Container }}
         buildFromArchive: false            # ✅
         enablePoison: false                # 🚫
         excludeOmniSharpTests: true        # ✅
