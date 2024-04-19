@@ -267,7 +267,7 @@ jobs:
     continueOnError: true
     condition: succeededOrFailed()
 
-  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - publish: '$(Build.StagingDirectory)/BuildLogs'
       artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
       displayName: Publish BuildLogs
