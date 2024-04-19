@@ -78,7 +78,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
 
             foreach (string file in Directory.GetFiles(SdkLayoutPath, "*", SearchOption.AllDirectories))
             {
-                if (Utilities.FileInSdkLayoutRequiresAPdb(file, out string guid))
+                if (PdbUtilities.FileInSdkLayoutRequiresAPdb(file, out string guid))
                 {
                     string debugId = GetDebugId(guid, file);
                     if (!allPdbGuids.ContainsKey(debugId))
@@ -101,7 +101,6 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
 
             return filesWithoutPDBs;
         }
-
 
         public Hashtable IndexAllSymbols()
         {

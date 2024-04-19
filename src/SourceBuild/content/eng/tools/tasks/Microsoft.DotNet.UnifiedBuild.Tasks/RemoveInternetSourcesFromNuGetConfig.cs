@@ -38,7 +38,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         public override bool Execute()
         {
             string xml = File.ReadAllText(NuGetConfigFile);
-            string newLineChars = Utilities.DetectNewLineChars(xml);
+            string newLineChars = FileUtilities.DetectNewLineChars(xml);
             XDocument d = XDocument.Parse(xml);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
             XElement disabledPackageSourcesElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "disabledPackageSources");

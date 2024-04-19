@@ -71,7 +71,7 @@ namespace Microsoft.DotNet.UnifiedBuild.Tasks
         public override bool Execute()
         {
             string xml = File.ReadAllText(NuGetConfigFile);
-            string newLineChars = Utilities.DetectNewLineChars(xml);
+            string newLineChars = FileUtilities.DetectNewLineChars(xml);
             XDocument document = XDocument.Parse(xml);
             XElement pkgSourcesElement = document.Root.Descendants().FirstOrDefault(e => e.Name == "packageSources");
             if (pkgSourcesElement == null)
