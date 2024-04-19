@@ -85,13 +85,6 @@
           SkipUnchangedFiles="true"
           UseHardlinksIfPossible="true" />
 
-    <!-- Extract the SDK archive so its contents can be used downstream -->
-    <MakeDir Directories="$(DotNetSdkExtractDir)" />
-    <Exec Condition="'$(ArchiveExtension)' == '.tar.gz'"
-          Command="tar -xzf $(SdkTarballPath) -C $(DotNetSdkExtractDir)" />
-    <Unzip Condition="'$(ArchiveExtension)' == '.zip'"
-           SourceFiles="$(SdkTarballPath)"
-           DestinationFolder="$(DotNetSdkExtractDir)" />
   </Target>
 
 </Project>
