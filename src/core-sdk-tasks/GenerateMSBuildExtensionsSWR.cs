@@ -61,8 +61,6 @@ namespace Microsoft.DotNet.Cli.Build
                     if (ngenAssemblies && file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                     {
                         sb.Append(@" vs.file.ngenApplications=""[installDir]\Common7\IDE\vsn.exe""");
-                        sb.Append(@" vs.file.ngenApplications=""[installDir]\MSBuild\Current\Bin\MSBuild.exe""");
-                        sb.Append(" vs.file.ngenArchitecture=all");
                     }
 
                     sb.AppendLine();

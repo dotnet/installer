@@ -1,4 +1,5 @@
 <Project>
+
   <PropertyGroup>
     <RedistLayoutPath>$(BaseOutputPath)$(Configuration)\dotnet\</RedistLayoutPath>
     <SdkInternalLayoutPath>$(BaseOutputPath)$(Configuration)\internal\</SdkInternalLayoutPath>
@@ -102,23 +103,18 @@
     </PropertyGroup>
 
     <!-- Generate the version specific URLs to the targeting packs, runtime packs, etc. -->
-    <!-- VMR builds currently use a flat layout under the provided PublicBaseURL -->
     <PropertyGroup>
       <NetRuntimeRootUrl>$(PublicBaseURL)Runtime/$(NetRuntimeBlobVersion)</NetRuntimeRootUrl>
-      <NetRuntimeRootUrl Condition=" '$(DotNetBuildOrchestrator)' == 'true' ">$(PublicBaseURL)</NetRuntimeRootUrl>
 
       <NetStandardTargetingPackRootUrl>$(OfficialBaseURL)Runtime/$(NETStandardTargetingPackBlobVersion)</NetStandardTargetingPackRootUrl>
 
       <AspNetCoreSharedFxRootUrl>$(PublicBaseURL)aspnetcore/Runtime/$(AspNetCoreBlobVersion)</AspNetCoreSharedFxRootUrl>
-      <AspNetCoreSharedFxRootUrl Condition=" '$(DotNetBuildOrchestrator)' == 'true' and '$(DotNetBuildSourceOnly)' == 'true'">$(PublicBaseURL)</AspNetCoreSharedFxRootUrl>
       <!-- Aspnet is not currently built in the VMR. Remove this line when https://github.com/dotnet/source-build/issues/4022 is complete. -->
       <AspNetCoreSharedFxRootUrl Condition=" '$(DotNetBuildOrchestrator)' == 'true' and '$(DotNetBuildSourceOnly)' != 'true'">$(FallbackPublicBaseURL)aspnetcore/Runtime/$(AspNetCoreBlobVersion)</AspNetCoreSharedFxRootUrl>
 
       <WinFormsAndWpfSharedFxRootUrl>$(PublicBaseURL)WindowsDesktop/$(WindowsDesktopBlobVersion)</WinFormsAndWpfSharedFxRootUrl>
-      <WinFormsAndWpfSharedFxRootUrl Condition=" '$(DotNetBuildOrchestrator)' == 'true' ">$(PublicBaseURL)</WinFormsAndWpfSharedFxRootUrl>
 
       <ToolsetArchiveRootUrl>$(PublicBaseURL)Sdk/$(MicrosoftDotnetToolsetInternalPackageVersion)</ToolsetArchiveRootUrl>
-      <ToolsetArchiveRootUrl Condition=" '$(DotNetBuildOrchestrator)' == 'true' ">$(PublicBaseURL)</ToolsetArchiveRootUrl>
 
       <NetRuntimeDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(MicrosoftNETCoreAppRuntimePackageVersion)</NetRuntimeDownloadDirectory>
       <CombinedSharedHostAndFrameworkArchive>$(NetRuntimeDownloadDirectory)/combinedSharedHostAndFrameworkArchive$(ArchiveExtension)</CombinedSharedHostAndFrameworkArchive>
@@ -357,7 +353,6 @@
         <DownloadFileName>$(DownloadedWinFormsAndWpfSharedFrameworkInstallerFileName)</DownloadFileName>
       </BundledInstallerComponent>
     </ItemGroup>
-
   </Target>
 
   <Target Name="DownloadBundledComponents" DependsOnTargets="SetupBundledComponents">
@@ -408,17 +403,16 @@
       </UrisToDownload>
     </ItemGroup>
 
-    <DownloadFile Condition=" '@(UrisToDownload)' != '' and %(ShouldDownload)"
+    <DownloadFile Condition="'@(UrisToDownload)' != '' and %(ShouldDownload)"
                   Uris="@(UrisToDownload)"
                   DestinationPath="%(DownloadDestination)" />
 
     <ItemGroup>
-      <BundledLayoutPackageDownloadProject Include="$(MSBuildThisFileDirectory)DownloadPackage.csproj">
+      <BundledLayoutPackageDownloadProject Include="$(MSBuildThisFileDirectory)..\projects\DownloadPackage.csproj">
         <Properties>
           PackageToRestore=%(BundledLayoutPackage.PackageName);
           PackageVersionToRestore=%(BundledLayoutPackage.PackageVersion);
-          TargetFramework=%(BundledLayoutPackage.TargetFramework);
-          LayoutPackageDescription=%(BundledLayoutPackage.Identity)
+          TargetFramework=%(BundledLayoutPackage.TargetFramework)
         </Properties>
       </BundledLayoutPackageDownloadProject>
     </ItemGroup>
@@ -452,7 +446,7 @@
 
       <!-- Creating a new item here isn't strictly necessary, but makes it easier to see what's going on in the .binlog,
            since the metadata updates don't show up there -->
-      <BundledLayoutPackageDownloadFilesWithDestination Include="@(BundledLayoutPackageDownloadFiles)"/>
+      <BundledLayoutPackageDownloadFilesWithDestination Include="@(BundledLayoutPackageDownloadFiles)" />
     </ItemGroup>
   </Target>
 
@@ -465,13 +459,12 @@
   <Target Name="LayoutBundledComponents">
     <ExtractArchiveToDirectory SourceArchive="%(BundledLayoutComponent.DownloadDestination)"
                                DestinationDirectory="$(RedistLayoutPath)/%(BundledLayoutComponent.RelativeLayoutPath)"
-                               DirectoriesToCopy="%(BundledLayoutComponent.DirectoriesToCopy)"/>
+                               DirectoriesToCopy="%(BundledLayoutComponent.DirectoriesToCopy)" />
 
     <Copy SourceFiles="@(BundledLayoutPackageDownloadFilesWithDestination)"
           DestinationFiles="@(BundledLayoutPackageDownloadFilesWithDestination->'%(DestinationPath)')"
           SkipUnchangedFiles="true"
           />
-
   </Target>
 
   <Target Name="RetargetTools">
@@ -487,9 +480,9 @@
   </Target>
 
   <Target Name="GenerateVersionFile"
-          DependsOnTargets="SetupBundledComponents;GetCommitHash;GenerateFullNuGetVersion">
+          DependsOnTargets="SetupBundledComponents;GenerateFullNuGetVersion">
     <WriteLinesToFile File="$(SdkOutputDirectory).version"
-                      Lines="$(GitCommitHash);$(Version);$(Rid);$(FullNugetVersion);$(SdkFeatureBand)"
+                      Lines="$(SourceRevisionId);$(Version);$(Rid);$(FullNugetVersion);$(SdkFeatureBand)"
                       Overwrite="true" />
 
     <!-- This is a hack to make the full nuget version available during the publishing step -->
@@ -498,8 +491,7 @@
                       Overwrite="true" />
   </Target>
 
-  <Target Name="CopyKnownWorkloadManifestFile" >
-
+  <Target Name="CopyKnownWorkloadManifestFile">
     <ItemGroup>
       <WorkloadManifestFilesContent Include="$([MSBuild]::ValueOrDefault('%(BundledManifests.Identity)', '').ToLower())" />
     </ItemGroup>
@@ -523,7 +515,6 @@
 
 
   <Target Name="LayoutAppHostTemplate" DependsOnTargets="RunResolvePackageDependencies">
-
     <PropertyGroup>
       <NETCoreAppHostPackageName>Microsoft.NETCore.App.Host.$(SharedFrameworkRid)</NETCoreAppHostPackageName>
       <AppHostRestorePath>$(IntermediateOutputPath)AppHostRestore\</AppHostRestorePath>
@@ -534,7 +525,7 @@
     <MakeDir Directories="$(AppHostRestorePath)" />
 
     <ItemGroup>
-      <AppHostTemplateDownloadPackageProject Include="$(MSBuildThisFileDirectory)DownloadPackage.csproj">
+      <AppHostTemplateDownloadPackageProject Include="$(MSBuildThisFileDirectory)..\projects\DownloadPackage.csproj">
         <Properties>
           PackageToRestore=$(NETCoreAppHostPackageName);
           PackageVersionToRestore=$(MicrosoftNETCoreAppHostPackageVersion);
@@ -555,7 +546,7 @@
       <AllFileOfRestoredAppHostPackage Include="$(AppHostRestorePath)\**\*.*" />
       <NativeRestoredAppHostNETCore
           Include="@(AllFileOfRestoredAppHostPackage)"
-          Condition="'%(FileName)%(Extension)' == '$(AppHostExecutableName)'"/>
+          Condition="'%(FileName)%(Extension)' == '$(AppHostExecutableName)'" />
     </ItemGroup>
 
     <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
@@ -567,7 +558,6 @@
 
     <Message Text="Copy from @(NativeRestoredAppHostNETCore) to $(AppHostTemplatePath)."
              Importance="High" />
-
   </Target>
 
   <Target Name="GeneratePrecomputedRarCache" DependsOnTargets="LayoutTemplates;LayoutManifests;LayoutBundledTools">
@@ -603,24 +593,21 @@
                             LayoutAppHostTemplate;
                             GeneratePrecomputedRarCache;
                             ReplaceBundledRuntimePackFilesWithSymbolicLinks"
-          BeforeTargets="AfterBuild">
-
-  </Target>
+          BeforeTargets="AfterBuild" />
 
   <Target Name="GenerateInternalLayout"
           DependsOnTargets="GenerateLayout"
           BeforeTargets="AfterBuild">
-
     <RemoveDir Directories="$(SdkInternalLayoutPath)" />
     <MakeDir Directories="$(SdkInternalLayoutPath)" />
 
     <!-- Create "SDK Internal" layout to create the MSI to bundle -->
     <ItemGroup>
-      <SdkInternalFiles Include="$(RedistLayoutPath)sdk/$(Version)/**/*.*"/>
+      <SdkInternalFiles Include="$(RedistLayoutPath)sdk/$(Version)/**/*.*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(SdkInternalFiles)"
-          DestinationFiles="@(SdkInternalFiles -> '$(SdkInternalLayoutPath)sdk\$(Version)\%(RecursiveDir)%(Filename)%(Extension)')"/>
-
+          DestinationFiles="@(SdkInternalFiles -> '$(SdkInternalLayoutPath)sdk\$(Version)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
+
 </Project>

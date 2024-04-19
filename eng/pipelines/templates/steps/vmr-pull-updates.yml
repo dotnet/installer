@@ -66,6 +66,10 @@ steps:
   condition: ne(variables['Agent.OS'], 'Windows_NT')
   workingDirectory: $(Agent.BuildDirectory)/installer
 
+- script: git config --global diff.astextplain.textconv echo
+  displayName: Disable astextplain in git diff (Windows)
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+
 - powershell: >
     ./eng/vmr-sync.ps1 `
     -vmr ${{ parameters.vmrPath }} `
@@ -88,7 +92,8 @@ steps:
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   workingDirectory: $(Agent.BuildDirectory)/installer
 
-- publish: $(Agent.TempDirectory)
-  artifact: $(System.JobDisplayName)_FailedPatches
-  displayName: Upload failed patches
-  condition: failed()
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - publish: $(Agent.TempDirectory)
+    artifact: $(System.JobDisplayName)_FailedPatches
+    displayName: Upload failed patches
+    condition: failed()

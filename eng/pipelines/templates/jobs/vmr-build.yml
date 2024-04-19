@@ -69,7 +69,7 @@ parameters:
 
 - name: runTests
   type: boolean
-  default: false
+  default: true
 
 # Freeform field for extra values to pass to build.sh for special build modes
 - name: extraProperties
@@ -93,18 +93,24 @@ parameters:
 
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
-  timeoutInMinutes: 150
   pool: ${{ parameters.pool }}
+
+  # Currently, CodeQL slows the build down too much
+  # https://github.com/dotnet/source-build/issues/4276
+  ${{ if and(parameters.isBuiltFromVmr, startswith(parameters.buildName, 'Windows'), eq(variables['System.TeamProject'], 'internal'), ne(variables['Build.Reason'], 'PullRequest')) }}:
+    timeoutInMinutes: 720
+  ${{ else }}:
+    timeoutInMinutes: 240
+
   ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     # Always attempt to run the bootstrap leg (e.g. even when stage 1 tests fail) in order to get a complete accessment of the build status.
     # The build shortcuts when stage 1 build fails and doesn't produce the SDK.
     condition: succeededOrFailed()
     dependsOn: ${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}
   variables:
-  - template: /eng/common/templates/variables/pool-providers.yml
   - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - group: AzureDevOps-Artifact-Feeds-Pats
-  - ${{ if and(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal'), not(startswith(parameters.vmrBranch, 'internal/release/')), not(eq(variables['Build.Reason'], 'PullRequest'))) }}:
+  - ${{ if and(not(parameters.isBuiltFromVmr), eq(variables['System.TeamProject'], 'internal'), not(startswith(parameters.vmrBranch, 'internal/release/')), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - group: DotNetBot-GitHub
   - ${{ else }}:
     - name: BotAccount-dotnet-bot-repo-PAT
@@ -128,9 +134,30 @@ jobs:
     - name: sourcesPath
       value: $(vmrPath)
 
+  templateContext:
+    outputs:
+    - output: pipelineArtifact
+      displayName: Publish BuildLogs
+      condition: succeededOrFailed()
+      targetPath: $(Build.StagingDirectory)/BuildLogs
+      artifactName: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+
+    - output: pipelineArtifact
+      path: $(Build.ArtifactStagingDirectory)/publishing
+      artifact: $(Agent.JobName)_Artifacts
+      displayName: Publish Artifacts
+      condition: always()
+
+    - ${{ if not(parameters.isBuiltFromVmr) }}:
+      - output: pipelineArtifact
+        displayName: Upload failed patches
+        condition: failed()
+        targetPath: $(Agent.TempDirectory)
+        artifactName: $(System.JobDisplayName)_FailedPatches
+
   steps:
   - ${{ if not(parameters.isBuiltFromVmr) }}:
-    - template: ../steps/vmr-prepare.yml
+    - template: ../steps/vmr-prepare.yml@self
       parameters:
         ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
           vmrBranch: $(System.PullRequest.TargetBranch)
@@ -139,7 +166,7 @@ jobs:
 
     # Synchronize new content in the VMR during PRs (we expect this to come
     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-      - template: ../steps/vmr-pull-updates.yml
+      - template: ../steps/vmr-pull-updates.yml@self
         parameters:
           vmrPath: $(vmrPath)
           vmrBranch: ${{ parameters.vmrBranch }}
@@ -153,18 +180,6 @@ jobs:
       displayName: Export VMR sources
       workingDirectory: $(Build.StagingDirectory)
 
-  - ${{ if and(ne(variables['System.TeamProject'], 'public'), eq(parameters.runTests, 'True')) }}:
-    - script: cp "$(sourcesPath)/src/installer/NuGet.config" "$(sourcesPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config"
-      displayName: Copy Test NuGet Config
-
-    - task: Bash@3
-      displayName: Setup Private Feeds Credentials
-      inputs:
-        filePath: $(sourcesPath)/src/installer/eng/common/SetupNugetSources.sh
-        arguments: $(sourcesPath)/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets/online.NuGet.Config $Token
-      env:
-        Token: $(dn-bot-dnceng-artifact-feeds-rw)
-
   - ${{ if ne(parameters.reuseBuildArtifactsFrom, '') }}:
     - download: current
       artifact: ${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
@@ -176,7 +191,7 @@ jobs:
     - task: CopyFiles@2
       displayName: Copy Previous Build
       inputs:
-        SourceFolder: $(Pipeline.Workspace)/${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts
+        SourceFolder: $(Pipeline.Workspace)/${{ parameters.reuseBuildArtifactsFrom }}_${{ parameters.architecture }}_Artifacts/assets/Release
         Contents: '*.tar.gz'
         TargetFolder: $(sourcesPath)/prereqs/packages/archive/
 
@@ -208,11 +223,16 @@ jobs:
           exit 1
         fi
       displayName: Setup Previously Source-Built SDK
-  
+
   - ${{ if eq(parameters.targetOS, 'windows') }}:
     - script: |
-        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine ${{ parameters.extraProperties }}
+        call $(sourcesPath)\build.cmd -ci -cleanWhileBuilding -prepareMachine /p:TargetOS=${{ parameters.targetOS }} /p:TargetArchitecture=${{ parameters.targetArchitecture }} ${{ parameters.extraProperties }}
       displayName: Build
+
+    - ${{ if eq(parameters.runTests, 'True') }}:
+      - script: |
+          call $(sourcesPath)\build.cmd -ci -prepareMachine -test /bl:artifacts/log/Release/Test.binlog /p:TargetOS=${{ parameters.targetOS }} /p:TargetArchitecture=${{ parameters.targetArchitecture }} ${{ parameters.extraProperties }}
+        displayName: Run Tests
 
   - ${{ else }}:
     - ${{ if eq(parameters.buildSourceOnly, 'true') }}:
@@ -245,7 +265,7 @@ jobs:
             echo "##vso[task.setvariable variable=additionalBuildArgs]--with-sdk /vmr/.dotnet"
           fi
 
-          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep.sh $customPrepArgs
+          docker run --rm -v "$(sourcesPath):/vmr" -w /vmr ${{ parameters.container }} ./prep-source-build.sh $customPrepArgs
         displayName: Prep the Build
 
     - script: |
@@ -278,7 +298,7 @@ jobs:
         if [[ -n "${{ parameters.crossRootFs }}" ]]; then
           customEnvVars="$customEnvVars ROOTFS_DIR=${{ parameters.crossRootFs}}"
           if [[ '${{ parameters.targetArchitecture }}' != 'wasm' ]]; then
-            customEnvVars="$customEnvVars CROSSCOMPILE=1"
+            extraBuildProperties="$extraBuildProperties /p:CrossBuild=true"
           fi
         fi
 
@@ -301,11 +321,13 @@ jobs:
           # Allows Arcade to have access to the commit for the build, pass it through to the container
           customEnvVars="$customEnvVars BUILD_SOURCEVERSION=$BUILD_SOURCEVERSION"
 
+          customEnvVars="$customEnvVars BUILD_BUILDNUMBER=$(Build.BuildNumber)"
+
           customDockerRunArgs=""
           for envVar in $customEnvVars; do
             customDockerRunArgs="$customDockerRunArgs -e $envVar"
           done
-          
+
           if [[ '${{ parameters.runOnline }}' == 'False' ]]; then
             customDockerRunArgs="$customDockerRunArgs --network none"
           fi
@@ -321,31 +343,53 @@ jobs:
         fi
       displayName: Build
 
-  # Only run tests if enabled
-  - ${{ if eq(parameters.runTests, 'True') }}:
-    - script: |
-        set -ex
+    # Only run tests if enabled
+    - ${{ if eq(parameters.runTests, 'True') }}:
+      - script: |
+          set -ex
 
-        dockerVolumeArgs="-v $(sourcesPath):/vmr"
-        dockerEnvArgs="-e SMOKE_TESTS_EXCLUDE_OMNISHARP=${{ parameters.excludeOmniSharpTests }} -e SMOKE_TESTS_WARN_SDK_CONTENT_DIFFS=true -e SMOKE_TESTS_RUNNING_IN_CI=true"
-        poisonArg=''
+          dockerVolumeArgs="-v $(sourcesPath):/vmr"
+          sourceOnlyArgs=''
+          extraBuildProperties=''
 
-        if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
-          poisonArg='--poison'
-        fi
+          if [[ ! -z '${{ parameters.targetOS }}' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:TargetOS=${{ parameters.targetOS }}"
+          fi
 
-        docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh --source-only $poisonArg --test $(additionalBuildArgs) /p:SmokeTestConsoleVerbosity=detailed
-      displayName: Run Tests
+          if [[ ! -z '${{ parameters.targetArchitecture }}' ]]; then
+            extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
+          fi
+
+          if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
+            if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
+              sourceOnlyArgs='--poison'
+            fi
+            sourceOnlyArgs="$sourceOnlyArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}"
+          fi
+
+          if [[ -n "${{ parameters.extraProperties }}" ]]; then
+            extraBuildProperties="$extraBuildProperties ${{ parameters.extraProperties }}"
+          fi
+
+          # Only use Docker when a container is specified
+          if [[ -n "${{ parameters.container }}" ]]; then
+            docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
+          else
+            cd $(sourcesPath)
+            ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs)
+          fi
+
+        displayName: Run Tests
 
   - ${{ if eq(parameters.targetOS, 'windows') }}:
 
     # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
     - powershell: |
         function CopyWithRelativeFolders($sourcePath, $targetFolder, $filter) {
-          Get-ChildItem -Path $sourcePath -Filter $filter -Recurse | ForEach-Object { 
+          Get-ChildItem -Path $sourcePath -Filter $filter -Recurse | ForEach-Object {
             $targetPath = Join-Path $targetFolder (Resolve-Path -Relative $_.FullName)
             New-Item -ItemType Directory -Path (Split-Path -Parent $targetPath) -Force | Out-Null
-            Copy-Item $_.FullName -Destination $targetPath -Force 
+            Copy-Item $_.FullName -Destination $targetPath -Force
           }
         }
 
@@ -354,13 +398,17 @@ jobs:
 
         cd "$(sourcesPath)"
 
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.binlog"
-        CopyWithRelativeFolders "artifacts/"                 $targetFolder "*.log"
+        CopyWithRelativeFolders "artifacts/log/"             $targetFolder "*.binlog"
+        CopyWithRelativeFolders "artifacts/log/"             $targetFolder "*.log"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
-        CopyWithRelativeFolders "test/"                      $targetFolder "*.binlog"
-        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.diff"
-        CopyWithRelativeFolders "test/"                      $targetFolder "Updated*.txt"
+
+        if (Test-Path "artifacts/TestResults/*") {
+            CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "*.binlog"
+            CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "*.diff"
+            CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "Updated*.txt"
+            CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "*.trx"
+        }
 
         # check if we have assets to publish
         if (Test-Path "artifacts/assets/Release/*") {
@@ -380,16 +428,20 @@ jobs:
         mkdir -p ${targetFolder}
 
         cd "$(sourcesPath)"
-        find artifacts/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
-        find artifacts/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/log/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "*.diff" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
+        find artifacts/TestResults/ -type f -name "*.trx" -exec rsync -R {} -t ${targetFolder} \;
+
         if [[ "${{ parameters.buildSourceOnly }}" == "True" ]]; then
           find artifacts/prebuilt-report/ -exec rsync -R {} -t ${targetFolder} \;
+          find artifacts/log/binary-report/ -exec rsync -R {} -t ${targetFolder} \;
         fi
+
         find src/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
         find src/ -type f -name "*.log" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "*.binlog" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.diff" -exec rsync -R {} -t ${targetFolder} \;
-        find test/ -type f -name "Updated*.txt" -exec rsync -R {} -t ${targetFolder} \;
 
         # check if we have assets to publish
         if [ -n "$(ls -A 'artifacts/assets/Release/')" ]; then
@@ -399,11 +451,12 @@ jobs:
       continueOnError: true
       condition: succeededOrFailed()
 
-  - publish: '$(Build.StagingDirectory)/BuildLogs'
-    artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
-    displayName: Publish BuildLogs
-    continueOnError: true
-    condition: succeededOrFailed()
+  - ${{ if or(ne(variables['System.TeamProject'], 'internal'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+    - publish: $(Build.StagingDirectory)/BuildLogs
+      artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+      displayName: Publish BuildLogs
+      continueOnError: true
+      condition: always()
 
   # Only upload test results if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
@@ -413,20 +466,34 @@ jobs:
       continueOnError: true
       inputs:
         testRunner: vSTest
-        testResultsFiles: 'test/**/*.trx'
+        testResultsFiles: 'artifacts/TestResults/Release/*.trx'
         searchFolder: $(sourcesPath)
         mergeTestResults: true
         publishRunAttachments: true
-        testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
+        testRunTitle: Tests_$(Agent.JobName)
 
-  - publish: '$(sourcesPath)/artifacts/assets/Release/'
-    artifact: $(Agent.JobName)_Artifacts
-    displayName: Publish Artifacts
-    condition: and(succeededOrFailed(), eq(variables['hasAssets'], 'true'))
-    continueOnError: true
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: $(sourcesPath)/artifacts
+      Contents: |
+        VerticalManifest.xml
+        assets/**
+      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
+    displayName: Copy artifacts to Artifact Staging Directory
+    condition: succeededOrFailed()
 
   # When building from source, the Private.SourceBuilt.Artifacts archive already contains the nuget packages
   - ${{ if ne(parameters.buildSourceOnly, 'true') }}:
-    - publish: '$(sourcesPath)/artifacts/packages/Release/'
-      artifact: $(Agent.JobName)_Packages
-      displayName: Publish Packages
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(sourcesPath)/artifacts/packages
+        TargetFolder: $(Build.ArtifactStagingDirectory)/publishing/packages
+      displayName: Copy packages to Artifact Staging Directory
+      condition: succeededOrFailed()
+
+  - ${{ if or(ne(variables['System.TeamProject'], 'internal'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+    - publish: $(Build.ArtifactStagingDirectory)/publishing
+      artifact: $(Agent.JobName)_Artifacts
+      displayName: Publish Artifacts
+      condition: succeededOrFailed()
+      continueOnError: true

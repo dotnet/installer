@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
     <!-- Use a prebuilt Arcade to build Arcade -->
@@ -10,13 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
-    <BuiltSdkPackageOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
-    <BuiltSdkPackageOverride Include="@(ArcadeCMakeSdkOverride)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="NuGetVersion" Version="%24(NuGetPackagingVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <BuiltSdkPackage Include="Microsoft.DotNet.Arcade.Sdk" />
+    <BuiltSdkPackage Include="Microsoft.DotNet.SharedFramework.Sdk" />
+    <BuiltSdkPackage Include="Microsoft.DotNet.CMake.Sdk" />
+  </ItemGroup>
 </Project>

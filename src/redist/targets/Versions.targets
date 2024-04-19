@@ -1,4 +1,5 @@
 <Project>
+
   <Target Name="GenerateFullNuGetVersion">
     <PropertyGroup>
       <FullNugetVersion>$(VersionPrefix)-$(PreReleaseVersionLabel)</FullNugetVersion>
@@ -7,11 +8,4 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="GetCommitHash">
-    <Exec Command="git rev-parse HEAD"
-          ConsoleToMSBuild="true"
-          Condition=" '$(GitCommitHash)' == '' ">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
-    </Exec>
-  </Target>
 </Project>
