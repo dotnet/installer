@@ -479,7 +479,7 @@ jobs:
       continueOnError: true
       inputs:
         testRunner: xUnit
-        testResultsFiles: 'artifacts/TestResults/**/*.xml'
+        testResultsFiles: 'artifacts/TestResults/**/scenario-tests/*.xml'
         searchFolder: $(sourcesPath)
         mergeTestResults: true
         publishRunAttachments: true
