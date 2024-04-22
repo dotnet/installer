@@ -19,10 +19,13 @@ parameters:
 
 jobs:
 - job: Synchronize_VMR
-  displayName: Synchronize dotnet/dotnet
+  displayName: Synchronize VMR's ${{ parameters.vmrBranch }}
   timeoutInMinutes: 120
   variables:
-  - template: /eng/common/templates/variables/pool-providers.yml
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - template: /eng/common/templates/variables/pool-providers.yml
+  - ${{ else }}:
+    - template: /eng/common/templates-official/variables/pool-providers.yml
   - name: vmrPath
     value: $(Agent.BuildDirectory)/vmr
   - ${{ if not(parameters.noPush) }}:
@@ -32,17 +35,20 @@ jobs:
       - name: vmrPublicUrl
         value: https://github.com/dotnet/dotnet
     - ${{ if and( eq(variables['System.TeamProject'], 'internal'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/')) }}:
+      # https://dev.azure.com/dnceng/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=172&path=DotNetBot-AzDO-PAT
       - group: DotNetBot-AzDO-PAT
       - name: vmrInternalUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
-  
+
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: $(DncEngPublicBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64.Open
-    ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+      image: 1es-ubuntu-2004-open
+      os: linux
+    ${{ else }}:
       name: $(DncEngInternalBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
+      demands: ImageOverride -equals 1es-ubuntu-2004
+      os: linux
 
   steps:
   - template: ../steps/vmr-prepare.yml
@@ -56,7 +62,6 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
       targetRef: ${{ parameters.targetRef }}
 
-  
   - ${{ if and(not(parameters.noPush), not(in(variables['Build.Reason'], 'PullRequest')), eq(variables['System.TeamProject'], 'internal')) }}:
     # Push main and release branches to the public VMR
     - ${{ if or(eq(parameters.vmrBranch, 'main'), startsWith(parameters.vmrBranch, 'release/')) }}:
