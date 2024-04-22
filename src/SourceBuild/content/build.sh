@@ -34,7 +34,7 @@ usage()
 
   echo "Non-source-only settings:"
   echo "  --build-repo-tests              Build repository tests"
-  echo "  --dev                           Use -dev or -ci versioning instead of Microsoft official build versions"
+  echo "  --dev                           Use -dev or -ci versioning instead of .NET official build versions"
 
 
   echo "Advanced settings:"

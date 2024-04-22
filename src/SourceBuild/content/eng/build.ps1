@@ -39,7 +39,7 @@ function Get-Usage() {
   Write-Host "  -cleanWhileBuilding     Cleans each repo after building (reduces disk space usage, short: -cwb)"
   Write-Host "  -excludeCIBinarylog     Don't output binary log (short: -nobl)"
   Write-Host "  -prepareMachine         Prepare machine for CI run, clean up processes after build"
-  Write-Host "  -dev                    Use -dev or -ci versioning instead of Microsoft official build versions"
+  Write-Host "  -dev                    Use -dev or -ci versioning instead of .NET official build versions"
   Write-Host ""
 }
 
