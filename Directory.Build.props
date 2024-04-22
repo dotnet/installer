@@ -31,6 +31,8 @@
          This is a prevalent problem in building the precomputed assembly reference cache. Limiting the assemblies resolved
          to those outside the culture folders would work, but that is a nontrivial problem. -->
     <NoWarn>NU5125;NU5105;NU1701;MSB3243;MSB3247</NoWarn>
+
+    <UseVSTestRunner>true</UseVSTestRunner>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DisableSourceLink)' == 'true'">
