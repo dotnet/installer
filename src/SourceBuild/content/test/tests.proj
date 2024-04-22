@@ -39,7 +39,7 @@
     </PropertyGroup>
 
     <MSBuild Condition="$(_RunScenarioTests)"
-             Projects="$(MSBuildThisProjectDirectory)scenario-tests.proj"
+             Projects="$(RepoProjectsDir)scenario-tests.proj"
              ContinueOnError="true"
              Properties="Configuration=$(Configuration)"
              Targets="RunScenarioTests" />
