@@ -460,18 +460,6 @@ jobs:
 
   # Only upload test results if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
-    - ${{ if eq(parameters.buildSourceOnly, 'True') }}:
-      - task: PublishTestResults@2
-        displayName: Publish Source Build Smoke Test Results
-        condition: succeededOrFailed()
-        continueOnError: true
-        inputs:
-          testRunner: VSTest
-          testResultsFiles: 'test/**/*.trx'
-          searchFolder: $(sourcesPath)
-          mergeTestResults: true
-          publishRunAttachments: true
-          testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
     - task: PublishTestResults@2
       displayName: Publish Test Results
