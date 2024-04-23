@@ -1,55 +1,26 @@
 <Project Sdk="Microsoft.Build.Traversal">
 
+  <PropertyGroup>
+    <_RunScenarioTests>true</_RunScenarioTests>
+
+    <!-- Skip scenario tests if the host architecture is different from the target architecture since the tests
+        require the ability to execute the built SDK. But the CLI is not capable of running on a host with a 
+        different architecture (i.e. "cannot execute binary file: Exec format error"). -->
+    <_RunScenarioTests Condition="'$(BuildArchitecture.ToLower())' != '$(TargetArchitecture.ToLower())'">false</_RunScenarioTests>
+
+    <!-- Skip scenario tests if the portable OS (determined from the host machine) is different from the target OS
+        since the tests require the ability to execute the built SDK. An example of where this would be disabled is
+        cross-build of using Mariner to build for Alpine (linux vs linux-musl). -->
+    <_RunScenarioTests Condition="'$(__PortableTargetOS.ToLower())' != '$(TargetOS.ToLower())'">false</_RunScenarioTests>
+  </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="$(RepositoryEngineeringDir)extract-sdk-archive.proj" />
     <ProjectReference Include="Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj"
                       Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
     <ProjectReference Include="Microsoft.DotNet.UnifiedBuild.Tests\Microsoft.DotNet.UnifiedBuild.Tests.csproj"
                       Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" />
-    <ProjectReference Include="$(RepositoryEngineeringDir)extract-sdk-archive.proj" />
+    <ProjectReference Include="scenario-tests\scenario-tests.proj" Condition="'$(_RunScenarioTests)' == 'true'" />
   </ItemGroup>
 
-  <Target Name="RunCoreTests">
-    <MSBuild Projects="$(MSBuildThisFileFullPath)"
-             Properties="Configuration=$(Configuration)"
-             ContinueOnError="true"
-             Targets="Build;VSTest" />
-
-    <PropertyGroup>
-      <CoreTestsResult>$(MSBuildLastTaskResult)</CoreTestsResult>
-    </PropertyGroup>
-  </Target>
-
-  <!-- Scenarios tests are handled separately from the other test projects. This is because the output of the scenario tests is
-       an executable that is used to run the tests and so using the VSTest runner doesn't work with them. They also require
-       some setup steps to be configured with the VMR. -->
-  <Target Name="RunScenarioTests">
-    <PropertyGroup>
-      <_RunScenarioTests>true</_RunScenarioTests>
-
-      <!-- Skip scenario tests if the host architecture is different from the target architecture since the tests
-           require the ability to execute the built SDK. But the CLI is not capable of running on a host with a 
-           different architecture (i.e. "cannot execute binary file: Exec format error"). -->
-      <_RunScenarioTests Condition="'$(BuildArchitecture.ToLower())' != '$(TargetArchitecture.ToLower())'">false</_RunScenarioTests>
-
-      <!-- Skip scenario tests if the portable OS (determined from the host machine) is different from the target OS
-           since the tests require the ability to execute the built SDK. An example of where this would be disabled is
-           cross-build of using Mariner to build for Alpine (linux vs linux-musl). -->
-      <_RunScenarioTests Condition="'$(__PortableTargetOS.ToLower())' != '$(TargetOS.ToLower())'">false</_RunScenarioTests>
-    </PropertyGroup>
-
-    <MSBuild Condition="$(_RunScenarioTests)"
-             Projects="$(RepoProjectsDir)scenario-tests.proj"
-             ContinueOnError="true"
-             Properties="Configuration=$(Configuration)"
-             Targets="RunScenarioTests" />
-    
-    <PropertyGroup>
-      <ScenarioTestsResult>true</ScenarioTestsResult>
-      <ScenarioTestsResult Condition="$(_RunScenarioTests)">$(MSBuildLastTaskResult)</ScenarioTestsResult>
-    </PropertyGroup>
-  </Target>
-
-  <Target Name="RunTests" DependsOnTargets="RunCoreTests;RunScenarioTests">
-    <Error Condition="'$(CoreTestsResult)' == 'false' or '$(ScenarioTestsResult)' == 'false'" Text="Test failures occurred." />
-  </Target>
 </Project>
