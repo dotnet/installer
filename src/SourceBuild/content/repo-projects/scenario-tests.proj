@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <!-- Force cleaning to be disabled for scenario tests because its Test target relies on being able to reference the output produced
+         by the repos build (locally within the repo). A clean would otherwise delete those necessary files. -->
+    <CleanWhileBuilding>false</CleanWhileBuilding>
+
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
     <_ScenarioTestsNuGetConfig>$(ScenarioTestsArtifactsDir)NuGet.config</_ScenarioTestsNuGetConfig>
