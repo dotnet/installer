@@ -40,8 +40,8 @@
 
       <!-- It's necessary to explicitly define the path to the dotnet tool to prevent Arcade from attempting to derive it. Otherwise, it will run the dotnet
            install script to get a new one. We must use the locally built SDK instead in order to support non-portable RIDs for source build. -->
-      <_DotNetTool Condition="'$(BuildOS)' == 'windows'">$(DotNetSdkExtractDir)dotnet.exe</DotNetTool>
-      <_DotNetTool Condition="'$(BuildOS)' != 'windows'">$(DotNetSdkExtractDir)dotnet</DotNetTool>
+      <_DotNetTool Condition="'$(BuildOS)' == 'windows'">$(DotNetSdkExtractDir)dotnet.exe</_DotNetTool>
+      <_DotNetTool Condition="'$(BuildOS)' != 'windows'">$(DotNetSdkExtractDir)dotnet</_DotNetTool>
     </PropertyGroup>
 
     <MakeDir Directories="$(ScenarioTestsResultsDir)" />
