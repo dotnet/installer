@@ -43,15 +43,15 @@
       </RuntimeHostConfigurationOption>
 
       <!-- SDK archive test configs -->
-      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkTarballPath">
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkArchivePath">
         <Value>$(SdkTarballPath)</Value>
       </RuntimeHostConfigurationOption>
       <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).UbSdkVersion">
         <Value>$(SourceBuiltSdkVersion)</Value>
       </RuntimeHostConfigurationOption>
       <!-- Set for local testing to avoid downloading a new SDK each test -->
-      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).MsftSdkTarballPath">
-        <Value>$(UBTestsMsftSdkTarballPath)</Value>
+      <RuntimeHostConfigurationOption Include="$(MSBuildProjectName).MsftSdkArchivePath">
+        <Value>$(UBTestsMsftSdkArchivePath)</Value>
       </RuntimeHostConfigurationOption>
 
       <!-- Nuget package test configs -->
