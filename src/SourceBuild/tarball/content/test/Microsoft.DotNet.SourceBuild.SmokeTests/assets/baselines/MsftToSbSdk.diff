@@ -14,20 +14,7 @@ index ------------
  ./packs/Microsoft.AspNetCore.App.Ref/
  ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/
 @@ ------------ @@
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/Microsoft.JSInterop.xml
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/Microsoft.Net.Http.Headers.dll
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/Microsoft.Net.Http.Headers.xml
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Diagnostics.DiagnosticSource.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Diagnostics.DiagnosticSource.xml
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Diagnostics.EventLog.dll
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Diagnostics.EventLog.xml
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Formats.Asn1.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Formats.Asn1.xml
- ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.IO.Pipelines.dll
  ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.IO.Pipelines.xml
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Runtime.CompilerServices.Unsafe.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Security.AccessControl.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Security.AccessControl.xml
  ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Security.Cryptography.Xml.dll
  ./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Security.Cryptography.Xml.xml
 -./packs/Microsoft.NETCore.App.Host.portable-rid/
@@ -42,10 +29,6 @@ index ------------
 -./packs/Microsoft.NETCore.App.Host.portable-rid/x.y.z/runtimes/portable-rid/native/libnethost.so
 -./packs/Microsoft.NETCore.App.Host.portable-rid/x.y.z/runtimes/portable-rid/native/nethost.h
 -./packs/Microsoft.NETCore.App.Host.portable-rid/x.y.z/runtimes/portable-rid/native/singlefilehost
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Text.Encodings.Web.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Text.Encodings.Web.xml
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Text.Json.dll
-+./packs/Microsoft.AspNetCore.App.Ref/x.y.z/ref/netx.y/System.Text.Json.xml
 +./packs/Microsoft.NETCore.App.Host.banana-rid/
 +./packs/Microsoft.NETCore.App.Host.banana-rid/x.y.z/
 +./packs/Microsoft.NETCore.App.Host.banana-rid/x.y.z/runtimes/
@@ -199,30 +182,33 @@ index ------------
  ./sdk/x.y.z/FSharp/pl/FSharp.Build.resources.dll
  ./sdk/x.y.z/FSharp/pl/FSharp.Compiler.Interactive.Settings.resources.dll
 @@ ------------ @@
- ./sdk/x.y.z/FSharp/ru/FSharp.Compiler.Service.resources.dll
  ./sdk/x.y.z/FSharp/ru/FSharp.Core.resources.dll
  ./sdk/x.y.z/FSharp/ru/FSharp.DependencyManager.Nuget.resources.dll
--./sdk/x.y.z/FSharp/runtimes/
+ ./sdk/x.y.z/FSharp/runtimes/
 -./sdk/x.y.z/FSharp/runtimes/unix/
 -./sdk/x.y.z/FSharp/runtimes/unix/lib/
 -./sdk/x.y.z/FSharp/runtimes/unix/lib/netcoreapp3.0/
 -./sdk/x.y.z/FSharp/runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll
--./sdk/x.y.z/FSharp/runtimes/win/
--./sdk/x.y.z/FSharp/runtimes/win/lib/
+ ./sdk/x.y.z/FSharp/runtimes/win/
+ ./sdk/x.y.z/FSharp/runtimes/win/lib/
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netcoreapp3.0/
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll
--./sdk/x.y.z/FSharp/runtimes/win/lib/netcoreapp3.0/System.Security.Cryptography.Pkcs.dll
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netstandard2.0/
 -./sdk/x.y.z/FSharp/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+ ./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/
++./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/System.Security.AccessControl.dll
+ ./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/System.Security.Cryptography.Pkcs.dll
 -./sdk/x.y.z/FSharp/System.CodeDom.dll
 -./sdk/x.y.z/FSharp/System.Configuration.ConfigurationManager.dll
 -./sdk/x.y.z/FSharp/System.Drawing.Common.dll
++./sdk/x.y.z/FSharp/System.Formats.Asn1.dll
  ./sdk/x.y.z/FSharp/System.Resources.Extensions.dll
--./sdk/x.y.z/FSharp/System.Security.Cryptography.Pkcs.dll
++./sdk/x.y.z/FSharp/System.Security.AccessControl.dll
+ ./sdk/x.y.z/FSharp/System.Security.Cryptography.Pkcs.dll
 -./sdk/x.y.z/FSharp/System.Security.Cryptography.ProtectedData.dll
--./sdk/x.y.z/FSharp/System.Security.Cryptography.Xml.dll
+ ./sdk/x.y.z/FSharp/System.Security.Cryptography.Xml.dll
 -./sdk/x.y.z/FSharp/System.Security.Permissions.dll
 -./sdk/x.y.z/FSharp/System.Windows.Extensions.dll
  ./sdk/x.y.z/FSharp/tr/
@@ -304,9 +290,10 @@ index ------------
  ./sdk/x.y.z/ref/
 +./sdk/x.y.z/ref/Microsoft.TestPlatform.PlatformAbstractions.dll
 +./sdk/x.y.z/ref/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
- ./sdk/x.y.z/ref/MSBuild.dll
++./sdk/x.y.z/ref/MSBuild.dll
  ./sdk/x.y.z/ref/mscorlib.dll
  ./sdk/x.y.z/ref/netstandard.dll
+ ./sdk/x.y.z/Roslyn/
 @@ ------------ @@
  ./sdk/x.y.z/Roslyn/bincore/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
  ./sdk/x.y.z/Roslyn/bincore/ru/Microsoft.CodeAnalysis.resources.dll
@@ -354,6 +341,7 @@ index ------------
  ./sdk/x.y.z/runtimes/win/lib/netx.y/
  ./sdk/x.y.z/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.dll
  ./sdk/x.y.z/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.Messages.dll
++./sdk/x.y.z/runtimes/win/lib/netx.y/System.Security.AccessControl.dll
  ./sdk/x.y.z/runtimes/win/lib/netx.y/System.Security.Cryptography.Pkcs.dll
 +./sdk/x.y.z/runtimes/win/lib/netx.y/System.Security.Cryptography.ProtectedData.dll
  ./sdk/x.y.z/runtimes/win/lib/netx.y/System.ServiceProcess.ServiceController.dll
@@ -434,9 +422,10 @@ index ------------
 +./sdk/x.y.z/System.Formats.Asn1.dll
  ./sdk/x.y.z/System.Resources.Extensions.dll
 +./sdk/x.y.z/System.Runtime.CompilerServices.Unsafe.dll
++./sdk/x.y.z/System.Security.AccessControl.dll
  ./sdk/x.y.z/System.Security.Cryptography.Pkcs.dll
  ./sdk/x.y.z/System.Security.Cryptography.ProtectedData.dll
--./sdk/x.y.z/System.Security.Cryptography.Xml.dll
+ ./sdk/x.y.z/System.Security.Cryptography.Xml.dll
 -./sdk/x.y.z/System.Security.Permissions.dll
  ./sdk/x.y.z/System.ServiceProcess.ServiceController.dll
 -./sdk/x.y.z/System.Windows.Extensions.dll
