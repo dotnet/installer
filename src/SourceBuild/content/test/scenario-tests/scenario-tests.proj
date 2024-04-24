@@ -9,7 +9,6 @@
        some setup steps to be configured with the VMR. -->
   <Target Name="RunScenarioTests">
     <MSBuild Projects="$(RepoProjectsDir)scenario-tests.proj"
-             ContinueOnError="true"
              Properties="Configuration=$(Configuration)"
              Targets="RunScenarioTests" />
   </Target>
