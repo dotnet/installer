@@ -517,7 +517,7 @@
        by the repos build (locally within the repo). A clean would otherwise delete those necessary files. -->
   <Target Name="CleanupRepo"
           Condition="'$(IsUtilityProject)' != 'true' and
-                     '$(RepoName)' != 'scenario-tests' and
+                     '$(RepositoryName)' != 'scenario-tests' and
                      '$(CleanWhileBuilding)' == 'true' and
                      Exists('$(ProjectDirectory)artifacts')">
     <!--
