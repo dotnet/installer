@@ -37,6 +37,11 @@
       <!-- Define the test root as a sub-directory of the scenario test artifacts directory. It needs to be a sub-directory because the scenario test execution
            will clean that directory. Since we need the NuGet.config file that we copied in to be preserved, that's stored in the directory above the test root. -->
       <_TestRoot>$(ScenarioTestsArtifactsDir)artifacts/</_TestRoot>
+
+      <!-- It's necessary to explicitly define the path to the dotnet tool to prevent Arcade from attempting to derive it. Otherwise, it will run the dotnet
+           install script to get a new one. We must use the locally built SDK instead in order to support non-portable RIDs for source build. -->
+      <_DotNetTool Condition="'$(BuildOS)' == 'windows'">$(DotNetSdkExtractDir)dotnet.exe</DotNetTool>
+      <_DotNetTool Condition="'$(BuildOS)' != 'windows'">$(DotNetSdkExtractDir)dotnet</DotNetTool>
     </PropertyGroup>
 
     <MakeDir Directories="$(ScenarioTestsResultsDir)" />
@@ -45,9 +50,9 @@
       <_ScenarioTestEnvVars Include="
         TestRoot=$(_TestRoot);
         DotNetRoot=$(DotNetSdkExtractDir);
-        NETCoreSdkVersion=$(SourceBuiltSdkVersion);
+        TestSdkVersion=$(SourceBuiltSdkVersion);
         AdditionalTestArgs=$(_ScenarioTestsAdditionalArgs);
-        DOTNET_INSTALL_DIR=$(DotNetRoot)" />
+        DotNetTool=$(_DotNetTool)" />
     </ItemGroup>
 
     <Exec Command="$(TestCommand)"
