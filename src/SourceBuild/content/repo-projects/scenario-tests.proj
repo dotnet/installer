@@ -52,7 +52,8 @@
         DotNetRoot=$(DotNetSdkExtractDir);
         TestSdkVersion=$(SourceBuiltSdkVersion);
         AdditionalTestArgs=$(_ScenarioTestsAdditionalArgs);
-        DotNetTool=$(_DotNetTool)" />
+        DotNetTool=$(_DotNetTool);
+        _InitializeDotNetCli=$(DotNetSdkExtractDir)" />
     </ItemGroup>
 
     <Exec Command="$(TestCommand)"
