@@ -27,10 +27,6 @@
     <Copy SourceFiles="$(_InstallerNuGetConfig)"
           DestinationFiles="$(_ScenarioTestsNuGetConfig)" />
 
-    <AddSourceToNuGetConfig Condition="'$(DotNetBuildSourceOnly)' != 'true'"
-                            NuGetConfigFile="$(_ScenarioTestsNuGetConfig)"
-                            SourceName="local-feed"
-                            SourcePath="$(ConsolidatedLocalFeedDir)" />
   </Target>
 
   <Target Name="RunScenarioTests"

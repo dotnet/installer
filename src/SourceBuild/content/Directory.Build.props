@@ -161,7 +161,6 @@
     <AssetManifestsIntermediateDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'AssetManifests'))</AssetManifestsIntermediateDir>
     <ArtifactsAssetsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'assets', '$(Configuration)'))</ArtifactsAssetsDir>
     <DotNetSdkExtractDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'extracted-dotnet-sdk'))</DotNetSdkExtractDir>
-    <ConsolidatedLocalFeedDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsObjDir)', 'package-feed'))</ConsolidatedLocalFeedDir>
 
     <PrebuiltPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'prebuilt'))</PrebuiltPackagesPath>
     <PreviouslyRestoredPackagesPath>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'previouslyRestored'))</PreviouslyRestoredPackagesPath>
