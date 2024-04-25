@@ -12,6 +12,9 @@
         since the tests require the ability to execute the built SDK. An example of where this would be disabled is
         cross-build of using Mariner to build for Alpine (linux vs linux-musl). -->
     <_RunScenarioTests Condition="'$(BuildOS)' != 'windows' and '$(__PortableTargetOS.ToLower())' != '$(TargetOS.ToLower())'">false</_RunScenarioTests>
+
+    <!-- The scenario tests are not supported when unofficial build versioning is used. -->
+    <_RunScenarioTests Condition="'$(UseOfficialBuildVersioning)' == 'false'">false</_RunScenarioTests>
   </PropertyGroup>
 
   <ItemGroup>

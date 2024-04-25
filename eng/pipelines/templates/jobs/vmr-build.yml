@@ -363,7 +363,7 @@ jobs:
           set -ex
 
           dockerVolumeArgs="-v $(sourcesPath):/vmr"
-          sourceOnlyArgs=''
+          customBuildArgs=''
           extraBuildProperties=''
 
           if [[ ! -z '${{ parameters.targetOS }}' ]]; then
@@ -374,11 +374,15 @@ jobs:
             extraBuildProperties="$extraBuildProperties /p:TargetArchitecture=${{ parameters.targetArchitecture }}"
           fi
 
+          if [[ '${{ parameters.useDevVersions }}' == 'True' ]]; then
+            customBuildArgs="$customBuildArgs --dev"
+          fi
+
           if [[ '${{ parameters.buildSourceOnly }}' == 'True' ]]; then
             if [[ '${{ parameters.enablePoison }}' == 'True' ]]; then
-              sourceOnlyArgs='--poison'
+              customBuildArgs="$customBuildArgs --poison"
             fi
-            sourceOnlyArgs="$sourceOnlyArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}"
+            customBuildArgs="$customBuildArgs --source-only /p:SmokeTestsWarnOnSdkContentDiffs=true /p:SmokeTestsExcludeOmniSharpTests=${{ parameters.excludeOmniSharpTests }}"
           fi
 
           if [[ -n "${{ parameters.extraProperties }}" ]]; then
@@ -387,10 +391,10 @@ jobs:
 
           # Only use Docker when a container is specified
           if [[ -n "${{ parameters.container }}" ]]; then
-            docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs) 
+            docker run --rm $dockerVolumeArgs -w /vmr ${{ parameters.container }} ./build.sh /bl:artifacts/log/Release/Test.binlog --test $customBuildArgs $extraBuildProperties $(additionalBuildArgs) 
           else
             cd $(sourcesPath)
-            ./build.sh /bl:artifacts/log/Release/Test.binlog --test $sourceOnlyArgs $extraBuildProperties $(additionalBuildArgs)
+            ./build.sh /bl:artifacts/log/Release/Test.binlog --test $customBuildArgs $extraBuildProperties $(additionalBuildArgs)
           fi
 
         displayName: Run Tests
