@@ -31,11 +31,11 @@
 
   <Target Name="RunScenarioTests"
           DependsOnTargets="SetupNuGetConfig;DetermineSourceBuiltSdkVersion">
-
+    
     <PropertyGroup>
       <_CurrentDateTime>$([System.DateTime]::Now.ToString("yyyy-MM-dd_HH_mm_ss"))</_CurrentDateTime>
       <_TestXmlOutputPath>$(ScenarioTestsResultsDir)$(_CurrentDateTime).xml</_TestXmlOutputPath>
-      <_ScenarioTestsAdditionalTestArgs>--xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsAdditionalTestArgs>
+      <_ScenarioTestsAdditionalArgs>--xml $(_TestXmlOutputPath) --target-rid $(TargetRid) --no-cleanup --no-traits Category=MultiTFM</_ScenarioTestsAdditionalArgs>
 
       <!-- Define the test root as a sub-directory of the scenario test artifacts directory. It needs to be a sub-directory because the scenario test execution
            will clean that directory. Since we need the NuGet.config file that we copied in to be preserved, that's stored in the directory above the test root. -->
@@ -47,22 +47,6 @@
       <_DotNetTool Condition="'$(BuildOS)' != 'windows'">$(DotNetSdkExtractDir)dotnet</_DotNetTool>
     </PropertyGroup>
 
-    <Exec Command="$(_DotNetTool) --list-runtimes"
-          ConsoleToMsBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="_Runtimes" />
-    </Exec>
-
-    <PropertyGroup>
-      <_RuntimeVersion>$([System.Text.RegularExpressions.Regex]::Match($(_Runtimes), 'Microsoft\.NETCore\.App\s+(.*)\s+\[').Groups[1].Value)</_RuntimeVersion>
-
-      <!-- This is necessary to account for the DevVersions UB VMR leg which builds the product with an unofficial build version (e.g. 9.0.0-ci).
-           Since the scenario tests DLL was built with an official version, the built dotnet CLI with the unofficial runtime version isn't capable
-           of running the scenario tests DLL because the unofficial runtime version is treated as being older. So roll-forward doesn't help with this
-           either. Instead, we call dotnet by explicitly setting the runtime framework version. This forces the host to not look for the runtime version
-           used by the scenario tests DLL. -->
-      <_ScenarioTestsAdditionalDotNetArgs>--fx-version $(_RuntimeVersion)</_ScenarioTestsAdditionalDotNetArgs>
-    </PropertyGroup>
-
     <MakeDir Directories="$(ScenarioTestsResultsDir)" />
 
     <ItemGroup>
@@ -70,8 +54,7 @@
         TestRoot=$(_TestRoot);
         DotNetRoot=$(DotNetSdkExtractDir);
         TestSdkVersion=$(SourceBuiltSdkVersion);
-        AdditionalDotNetArgs=$(_ScenarioTestsAdditionalDotNetArgs);
-        AdditionalTestArgs=$(_ScenarioTestsAdditionalTestArgs);
+        AdditionalTestArgs=$(_ScenarioTestsAdditionalArgs);
         DotNetTool=$(_DotNetTool);
         _InitializeDotNetCli=$(DotNetSdkExtractDir)" />
     </ItemGroup>
