@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.Build.NoTargets">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCurrent)</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Creates a directory that consolidates all of the shipping packages into a single flat list. This is useful for tests
+       that need access to all the packages. The shipping packages directory has sub-directories for each repo that
+       produced those packages. So to consume all of them, you'd either have to consolidate them all into one directory
+       or list each one as a separate feed target in the NuGet.config file. Consolidation is the simplest approach. -->
+  <Target Name="CreateConsolidatedLocalFeed" BeforeTargets="AfterBuild">
+
+    <ItemGroup>
+        <_ArtifactsPackage Include="$(ArtifactsShippingPackagesDir)**"
+                           Condition="!$([System.String]::Copy('%(Identity)').EndsWith('.symbols.nupkg'))" />
+    </ItemGroup>
+
+    <RemoveDir Directories="$(ConsolidatedLocalFeedDir)" />
+    <MakeDir Directories="$(ConsolidatedLocalFeedDir)" />
+    <!-- Combine all packages into a single directory with symlinks so that we can have a single feed that points to them all. -->
+    <Copy SourceFiles="@(_ArtifactsPackage)"
+          DestinationFolder="$(ConsolidatedLocalFeedDir)"
+          UseSymbolicLinksIfPossible="true" />
+
+  </Target>
+
+</Project>
