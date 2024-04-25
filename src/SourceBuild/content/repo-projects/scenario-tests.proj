@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.Build.NoTargets">
+<Project Sdk="Microsoft.Build.NoTargets" TreatAsLocalProperty="CleanWhileBuilding">
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <!-- The scenario-tests repo shouldn't be cleaned after building as we run tests from it. -->
+    <CleanWhileBuilding>false</CleanWhileBuilding>
+
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
     <_ScenarioTestsNuGetConfig>$(ScenarioTestsArtifactsDir)NuGet.config</_ScenarioTestsNuGetConfig>
