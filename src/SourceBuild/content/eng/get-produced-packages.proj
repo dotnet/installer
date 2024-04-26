@@ -1,0 +1,30 @@
+<Project DefaultTargets="GetProducedPackages">
+  <Target Name="GetAssetManifests" Returns="@(AssetManifest)">
+    <Error Text="AssetManifestsDir must be non-empty or AssetManifestPath must be non-empty" Condition="'$(AssetManifestsDir)' == '' and '$(AssetManifestPath)' != ''" />
+    <ItemGroup>
+      <AssetManifest Condition="'$(AssetManifestsDir)' != ''" Include="$(AssetManifestsDir)*.xml" />
+      <AssetManifest Condition="'$(AssetManifestPath)' != ''" Include="$(AssetManifestPath)" />
+    </ItemGroup>
+  </Target>
+  <!-- Discover the produced packages from all repo asset manifests for this repository. -->
+  <Target Name="DiscoverProducedPackages" DependsOnTargets="GetAssetManifests" Inputs="@(AssetManifest)" Outputs="%(Identity).ForBatching">
+    <XmlPeek XmlInputPath="%(AssetManifest.Identity)" Query="/Build/*[self::Package]">
+      <Output TaskParameter="Result" ItemName="ProducedPackageEntry" />
+    </XmlPeek>
+  </Target>
+  
+  <Target Name="ProcessPackageEntries" DependsOnTargets="DiscoverProducedPackages" Inputs="@(ProducedPackageEntry)" Outputs="%(Identity).ForBatching">
+    <XmlPeek XmlContent="%(ProducedPackageEntry.Identity)" Query="/Package/@Id">
+      <Output TaskParameter="Result" PropertyName="ProducedPackageId" />
+    </XmlPeek>
+    <XmlPeek XmlContent="%(ProducedPackageEntry.Identity)" Query="/Package/@Version">
+      <Output TaskParameter="Result" PropertyName="ProducedPackageVersion" />
+    </XmlPeek>
+
+    <ItemGroup>
+      <ProducedPackage Include="$(ProducedPackageId)" Version="$(ProducedPackageVersion)" ReferenceOnly="$([MSBuild]::ValueOrDefault('$(ReferenceOnlyRepoArtifacts)', 'false'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GetProducedPackages" DependsOnTargets="GetAssetManifests;DiscoverProducedPackages;ProcessPackageEntries" Returns="@(ProducedPackage)" />
+</Project>

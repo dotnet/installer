@@ -260,14 +260,8 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(BaseIntermediateOutputPath)CreateBuildInputProps.complete">
 
-    <ItemGroup>
-      <_PrebuiltAssetManifestProject Include="$(MSBuildProjectFullPath)" AdditionalProperties="RepoAssetManifestsDir=$(PrebuiltSourceBuiltPackagesPath)" />
-    </ItemGroup>
-
     <!-- Get the previously-built-source-built package information from the manifest from that build. -->
-    <MSBuild Projects="@(_PrebuiltAssetManifestProject)"
-             Targets="GetProducedPackages"
-             BuildInParallel="true">
+    <MSBuild Projects="$(RepositoryEngineeringDir)get-produced-packages.proj" Properties="AssetManifestsDir=$(PrebuiltSourceBuiltPackagesPath)">
       <Output TaskParameter="TargetOutputs" ItemName="_PreviouslyBuiltSourceBuiltPackages" />
     </MSBuild>
 
@@ -478,27 +472,11 @@
     <Message Importance="High" Text="  -> %(RepoManifestArtifact.Identity)" />
   </Target>
 
-  <!-- Discover the produced packages from all repo asset manifests for this repository. -->
-  <Target Name="DiscoverProducedPackages" DependsOnTargets="GetRepoAssetManifests" Inputs="@(RepoAssetManifest)" Outputs="%(Identity).ForBatching">
-    <XmlPeek XmlInputPath="%(RepoAssetManifest.Identity)" Query="/Build/*[self::Package]">
-      <Output TaskParameter="Result" ItemName="ProducedPackageEntry" />
-    </XmlPeek>
+  <Target Name="GetProducedPackages" Returns="@(ProducedPackage)">
+    <MSBuild Projects="$(RepositoryEngineeringDir)get-produced-packages.proj" Properties="AssetManifestsDir=$(RepoAssetManifestsDir)">
+      <Output TaskParameter="TargetOutputs" ItemName="ProducedPackage" />
+    </MSBuild>
   </Target>
-  
-  <Target Name="ProcessPackageEntries" DependsOnTargets="DiscoverProducedPackages" Inputs="@(ProducedPackageEntry)" Outputs="%(Identity).ForBatching">
-    <XmlPeek XmlContent="%(ProducedPackageEntry.Identity)" Query="/Package/@Id">
-      <Output TaskParameter="Result" PropertyName="ProducedPackageId" />
-    </XmlPeek>
-    <XmlPeek XmlContent="%(ProducedPackageEntry.Identity)" Query="/Package/@Version">
-      <Output TaskParameter="Result" PropertyName="ProducedPackageVersion" />
-    </XmlPeek>
-
-    <ItemGroup>
-      <ProducedPackage Include="$(ProducedPackageId)" Version="$(ProducedPackageVersion)" ReferenceOnly="$([MSBuild]::ValueOrDefault('$(ReferenceOnlyRepoArtifacts)', 'false'))" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="GetProducedPackages" DependsOnTargets="GetRepoAssetManifests;DiscoverProducedPackages;ProcessPackageEntries" Returns="@(ProducedPackage)" />
 
   <Target Name="GetProducedPackagesFromTransitiveReferences" DependsOnTargets="GetTransitiveRepositoryReferences" Returns="@(_DependencyProducedPackage)">
     <MSBuild Projects="@(TransitiveRepositoryReference->'%(Identity).proj')"
