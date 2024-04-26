@@ -17,7 +17,7 @@
     <ScenarioTestsArtifactsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'scenario-tests'))</ScenarioTestsArtifactsDir>
     <ScenarioTestsResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestResultsDir)', 'scenario-tests'))</ScenarioTestsResultsDir>
     <_ScenarioTestsNuGetConfig>$(ScenarioTestsArtifactsDir)NuGet.config</_ScenarioTestsNuGetConfig>
-    <_InstallerNuGetConfig>$(RepoRoot)src/installer/NuGet.config</_InstallerNuGetConfig>
+    <_InstallerNuGetConfig>$([MSBuild]::NormalizePath('$(SrcDir)', 'installer', 'NuGet.config'))</_InstallerNuGetConfig>
   </PropertyGroup>
 
   <Target Name="SetupNuGetConfig"
@@ -43,8 +43,7 @@
 
       <!-- It's necessary to explicitly define the path to the dotnet tool to prevent Arcade from attempting to derive it. Otherwise, it will run the dotnet
            install script to get a new one. We must use the locally built SDK instead in order to support non-portable RIDs for source build. -->
-      <_DotNetTool Condition="'$(BuildOS)' == 'windows'">$(DotNetSdkExtractDir)dotnet.exe</_DotNetTool>
-      <_DotNetTool Condition="'$(BuildOS)' != 'windows'">$(DotNetSdkExtractDir)dotnet</_DotNetTool>
+      <_DotNetTool>$(DotNetSdkExtractDir)$([System.IO.Path]::GetFileName('$(DotNetTool)'))</_DotNetTool>
     </PropertyGroup>
 
     <MakeDir Directories="$(ScenarioTestsResultsDir)" />

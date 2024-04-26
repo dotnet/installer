@@ -98,7 +98,7 @@
     <TestActions>$(FlagParameterPrefix)restore</TestActions>
     <TestActions>$(TestActions) $(FlagParameterPrefix)test</TestActions>
 
-    <TestArgs>$(FlagParameterPrefix)ci</TestArgs>
+    <TestArgs Condition="'$(UseOfficialBuildVersioning)' != 'false'">$(FlagParameterPrefix)ci</TestArgs>
     <TestArgs>$(TestArgs) $(FlagParameterPrefix)configuration $(Configuration)</TestArgs>
     <TestArgs>$(TestArgs) -bl:artifacts/log/$(Configuration)/Test.binlog</TestArgs>
 

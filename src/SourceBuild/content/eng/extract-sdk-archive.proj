@@ -4,15 +4,17 @@
     <TargetFramework>$(NetCurrent)</TargetFramework>
   </PropertyGroup>
 
-  <Target Name="ExtractSdkArchive" BeforeTargets="AfterBuild" DependsOnTargets="DetermineSourceBuiltSdkVersion">
-
+  <Target Name="ExtractSdkArchive"
+          BeforeTargets="AfterBuild"
+          DependsOnTargets="DetermineSourceBuiltSdkVersion"
+          Inputs="$(SdkTarballPath)"
+          Outputs="$(DotNetSdkExtractDir)">
     <MakeDir Directories="$(DotNetSdkExtractDir)" />
     <Exec Condition="'$(ArchiveExtension)' == '.tar.gz'"
           Command="tar -xzf $(SdkTarballPath) -C $(DotNetSdkExtractDir)" />
     <Unzip Condition="'$(ArchiveExtension)' == '.zip'"
            SourceFiles="$(SdkTarballPath)"
            DestinationFolder="$(DotNetSdkExtractDir)" />
-
   </Target>
 
 </Project>

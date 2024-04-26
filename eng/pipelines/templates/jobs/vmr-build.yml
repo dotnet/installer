@@ -478,7 +478,6 @@ jobs:
 
   # Only upload test results if enabled
   - ${{ if eq(parameters.runTests, 'True') }}:
-
     - task: PublishTestResults@2
       displayName: Publish Test Results
       condition: succeededOrFailed()
