@@ -428,6 +428,10 @@ jobs:
         CopyWithRelativeFolders "src/"                       $targetFolder "*.binlog"
         CopyWithRelativeFolders "src/"                       $targetFolder "*.log"
 
+        if (Test-Path "artifacts/scenario-tests/") {
+            CopyWithRelativeFolders "artifacts/scenario-tests/" $targetFolder "*.binlog"
+        }
+
         if (Test-Path "artifacts/TestResults/*") {
             CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "*.binlog"
             CopyWithRelativeFolders "artifacts/TestResults/"     $targetFolder "*.diff"
