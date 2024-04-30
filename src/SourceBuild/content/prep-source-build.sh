@@ -240,7 +240,7 @@ if [ "$removeBinaries" == true ]; then
         echo "  Unpacking Asset manifests into $packagesDir..."
         tar --wildcards --exclude='*/*' -xzf "$sourceBuiltArchive" -C "$packagesDir" '*.xml'
       fi
-    else; then
+    else
       echo "  ERROR: Private.SourceBuilt.Artifacts.*.tar.gz does not exist..."\
             "Cannot remove non-SB allowed binaries. Either pass --with-packages or download the artifacts."
       exit 1
