@@ -1,4 +1,7 @@
 parameters:
+- name: pipelineMode
+  type: string
+
 - name: pullRequestTitle
   type: string
   default: Update Test Baselines 
@@ -8,13 +11,17 @@ parameters:
 
 steps:
   - script: |
-      echo "Publishing test results to PR"
-      ../../scripts/publish-test-results-pr.sh \
-        --pipelineId $(System.DefinitionId) \
-        --buildId $(Build.BuildId) \
+     restoreSources="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json"
+     restoreSources+="%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json"
+
+     .dotnet/dotnet run \
+        --project eng/tools/PrBaselinePublisher/ \
+        --property:RestoreSources="$restoreSources" \
+        "${{ parameters.pipelineMode }}" \
+        "${{ parameters.updatedTestResultsPath }}" \
+        "$(Build.BuildId)" \
         --title "${{ parameters.pullRequestTitle }}" \
-        --targetBranch "$(Build.SourceBranchName)" \
-        --updatedTestResultsPath "${{ parameters.updatedTestResultsPath }}"
+        --branch "$(Build.SourceBranchName)"
     displayName: Publish Test Results PR
     workingDirectory: $(Build.SourcesDirectory)
     condition: succeededOrFailed()

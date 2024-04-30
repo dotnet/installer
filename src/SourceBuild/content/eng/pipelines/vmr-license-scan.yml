@@ -147,7 +147,7 @@ jobs:
 
 - job: Publish_Test_Results_PR
   dependsOn: LicenseScan
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'release'))
+  condition: or(eq(variables['Build.SourceBranchName'], 'main'), contains(variables['Build.SourceBranchName'], 'release'))
   pool:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals 1es-ubuntu-2004
@@ -166,5 +166,6 @@ jobs:
     displayName: Move Artifacts to root
   - template: templates/steps/publish-test-results-pr.yml
     parameters:
+      pipelineMode: "license"
       pullRequestTitle: "Update License Scan Baselines and Exclusions"
       updatedTestResultsPath: $(Pipeline.Workspace)/Artifacts
