@@ -247,4 +247,12 @@ if [ "$removeBinaries" == true ]; then
   --with-packages $packagesDir \
   --with-sdk $dotnetSdk \
 
+
+  # If --with-packages is not passed, delete original tarball after deleting binaries
+  if [[ "$packagesDir" == "$defaultPackagesDir" ]]; then
+    if [ -f "$sourceBuiltArchive" ]; then
+      rm -f "$sourceBuiltArchive"
+    fi
+  fi
+
 fi

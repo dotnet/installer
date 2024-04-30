@@ -24,12 +24,13 @@
           Outputs="$(BaseIntermediateOutputPath)UnpackTarballs.complete" >
     <PropertyGroup>
       <ExternalTarballsDir>$([MSBuild]::NormalizeDirectory('$(PrereqsPackagesDir)', 'archive'))</ExternalTarballsDir>
+      <SourceBuiltArtifactsTarballPath>$(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)</SourceBuiltArtifactsTarballPath>
     </PropertyGroup>
 
     <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
-    <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*$(ArchiveExtension)"
+    <Exec Command="tar -xzf $(SourceBuiltArtifactsTarballPath)"
           WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)"
-          Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
+          Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == '' and Exists('$(SourceBuiltArtifactsTarballPath)')" />
 
     <!--
       Check for a prebuilt dependency tarball and extract if exists. If there isn't one, we expect
