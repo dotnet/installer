@@ -17,7 +17,7 @@ index 9d68b8265b0..387ff9082dc 100644
        <InnerBuildArgs Condition="'$(GitHubRepositoryName)' != ''">$(InnerBuildArgs) /p:GitHubRepositoryName=$(GitHubRepositoryName)</InnerBuildArgs>
 +
 +      <!-- TODO: Remove this when a new source-build product build got produced. -->
-+      <InnerBuildArgs>$(InnerBuildArgs) /p:DisablePackageBaselineValidation=true</InnerBuildArgs>
++      <InnerBuildArgs>$(InnerBuildArgs) /p:EnablePackageValidation=false</InnerBuildArgs>
 +      <InnerBuildArgs>$(InnerBuildArgs) /p:ApiCompatValidateAssemblies=false</InnerBuildArgs>
      </PropertyGroup>
    </Target>
