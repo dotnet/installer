@@ -482,6 +482,9 @@
     <GetKnownPackagesFromAssetManifests AssetManifests="@(RepoAssetManifest)">
       <Output TaskParameter="KnownPackages" ItemName="ProducedPackage" />
     </GetKnownPackagesFromAssetManifests>
+    <ItemGroup>
+      <ProducedPackage ReferenceOnly="$([MSBuild]::ValueOrDefault('$(ReferenceOnlyRepoArtifacts)', 'false'))" />
+    </ItemGroup>
   </Target>
 
   <Target Name="GetProducedPackagesFromTransitiveReferences" DependsOnTargets="GetTransitiveRepositoryReferences" Returns="@(_DependencyProducedPackage)">
