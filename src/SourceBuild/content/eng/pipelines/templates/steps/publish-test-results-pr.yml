@@ -25,7 +25,7 @@ steps:
         --property:RestoreSources="$restoreSources" \
         "${{ parameters.pipelineMode }}" \
         "${{ parameters.repo }}" \
-        "${{ parameters.originalTestResultsPath }}"
+        "${{ parameters.originalTestResultsPath }}" \
         "${{ parameters.updatedTestResultsPath }}" \
         "$(Build.BuildId)" \
         --title "${{ parameters.pullRequestTitle }}" \
