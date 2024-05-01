@@ -17,7 +17,7 @@ public class Publisher
     public Publisher(string repo, string gitHubToken)
     {
         // Create a new GitHub client
-        _client = new GitHubClient(new ProductHeaderValue("PrBaselinePublisher"));
+        _client = new GitHubClient(new ProductHeaderValue(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name));
         var authToken = new Credentials(gitHubToken);
         _client.Credentials = authToken;
         _repoOwner = repo.Split('/')[0];

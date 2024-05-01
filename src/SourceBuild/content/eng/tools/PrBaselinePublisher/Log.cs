@@ -48,7 +48,7 @@ public static class Log
                     options.UseUtcTimestamp = true;
                 })
                 .SetMinimumLevel(Level));
-        return loggerFactory.CreateLogger("PrBaselinePublisher");
+        return loggerFactory.CreateLogger(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name!);
     }
 
     public static int GetExitCode()
