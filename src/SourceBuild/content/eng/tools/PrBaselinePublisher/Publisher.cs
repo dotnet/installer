@@ -13,6 +13,8 @@ public class Publisher
     private readonly string _repoOwner;
     private readonly string _repoName;
     private readonly GitHubClient _client;
+    private const string BuildLink = "https://dev.azure.com/dnceng/internal/_build/results?buildId=";
+    private const string TreeMode = "040000";
 
     public Publisher(string repo, string gitHubToken)
     {
@@ -25,7 +27,6 @@ public class Publisher
     }
 
     private static readonly string DefaultLicenseBaselineContent = "{\n  \"files\": []\n}";
-    private record ChangedFile(string Path, string Content);
 
     public async Task<int> ExecuteAsync(
         string originalTestResultsPath,
@@ -70,10 +71,10 @@ public class Publisher
             throw new InvalidOperationException(errorMessage);
         }
 
-        var testResultsTreeResponse = await CreateTreeFromItems(testResultsTreeItems);
-        var parentTreeResponse = await CreateParentTree(testResultsTreeResponse, originalTreeResponse, originalTestResultsPath);
+        var testResultsTreeResponse = await CreateTreeFromItemsAsync(testResultsTreeItems);
+        var parentTreeResponse = await CreateParentTreeAsync(testResultsTreeResponse, originalTreeResponse, originalTestResultsPath);
 
-        await CreateOrUpdatePullRequest(parentTreeResponse, buildId, title, targetBranch);
+        await CreateOrUpdatePullRequestAsync(parentTreeResponse, buildId, title, targetBranch);
 
         return Log.GetExitCode();
     }
@@ -104,7 +105,7 @@ public class Publisher
                 }
                 string? content = parsedFile.Any() ? string.Join("\n", parsedFile) : null;
                 string updatedFilePath = updatedFile.Key + ".txt";
-                tree = await UpdateFile(tree, content, updatedFile.Key, updatedFilePath);
+                tree = await UpdateFileAsync(tree, content, updatedFile.Key, updatedFilePath);
             }
             else
             {
@@ -118,7 +119,7 @@ public class Publisher
                     }
                     string originalFileName = Path.GetFileName(ParseUpdatedFileName(filePath));
                     string updatedFilePath = Path.Combine("baselines/licenses", originalFileName);
-                    tree = await UpdateFile(tree, content, originalFileName, updatedFilePath);
+                    tree = await UpdateFileAsync(tree, content, originalFileName, updatedFilePath);
                 }
             }
         }
@@ -163,7 +164,7 @@ public class Publisher
                     content = parsedFile.Any() ? string.Join("\n", parsedFile) : null;
                 }
                 string updatedFilePath = updatedFile.Key + ".txt";
-                tree = await UpdateFile(tree, content, updatedFile.Key, updatedFilePath);
+                tree = await UpdateFileAsync(tree, content, updatedFile.Key, updatedFilePath);
             }
             else
             {
@@ -173,14 +174,14 @@ public class Publisher
                     var content = File.ReadAllText(filePath);
                     string originalFileName = Path.GetFileName(ParseUpdatedFileName(filePath));
                     string updatedFilePath = Path.Combine("baselines", originalFileName);
-                    tree = await UpdateFile(tree, content, originalFileName, updatedFilePath);
+                    tree = await UpdateFileAsync(tree, content, originalFileName, updatedFilePath);
                 }
             }
         }
         return tree;
     }
 
-    private async Task<List<NewTreeItem>> UpdateFile(List<NewTreeItem> tree, string? content, string searchFileName, string updatedPath)
+    private async Task<List<NewTreeItem>> UpdateFileAsync(List<NewTreeItem> tree, string? content, string searchFileName, string updatedPath)
     {
         var originalTreeItem = tree
             .Where(item => item.Path.Contains(searchFileName))
@@ -197,7 +198,7 @@ public class Publisher
         else if (originalTreeItem == null)
         {
             // Path not in the tree, add a new tree item
-            var blob = await CreateBlob(content);
+            var blob = await CreateBlobAsync(content);
             tree.Add(new NewTreeItem
             {
                 Type = TreeType.Blob,
@@ -209,13 +210,13 @@ public class Publisher
         else
         {
             // Path in the tree, update the sha and the content
-            var blob = await CreateBlob(content);
+            var blob = await CreateBlobAsync(content);
             originalTreeItem.Sha = blob.Sha;
         }
         return tree;
     }
 
-    private async Task<BlobReference> CreateBlob(string content)
+    private async Task<BlobReference> CreateBlobAsync(string content)
     {
         var blob = new NewBlob
         {
@@ -225,12 +226,9 @@ public class Publisher
         return await _client.Git.Blob.Create(_repoOwner, _repoName, blob);
     }
 
-    private string ParseUpdatedFileName(string updatedFile)
-    {
-        return updatedFile.Split("Updated")[1];
-    }
+    private string ParseUpdatedFileName(string updatedFile) => updatedFile.Split("Updated")[1];
 
-    private async Task<TreeResponse> CreateTreeFromItems(List<NewTreeItem> items, string path = "")
+    private async Task<TreeResponse> CreateTreeFromItemsAsync(List<NewTreeItem> items, string path = "")
     {
         var newTreeItems = new List<NewTreeItem>();
 
@@ -257,11 +255,11 @@ public class Publisher
             else
             {
                 // These items are in a subdirectory, so recursively create a tree for them
-                var subtreeResponse = await CreateTreeFromItems(group.ToList(), group.Key);
+                var subtreeResponse = await CreateTreeFromItemsAsync(group.ToList(), group.Key);
                 newTreeItems.Add(new NewTreeItem
                 {
                     Path = group.Key,
-                    Mode = "040000",
+                    Mode = TreeMode,
                     Type = TreeType.Tree,
                     Sha = subtreeResponse.Sha
                 });
@@ -276,7 +274,7 @@ public class Publisher
         return await _client.Git.Tree.Create(_repoOwner, _repoName, newTree);
     }
 
-    private async Task<TreeResponse> CreateParentTree(TreeResponse testResultsTreeResponse, TreeResponse originalTreeResponse, string originalTestResultsPath)
+    private async Task<TreeResponse> CreateParentTreeAsync(TreeResponse testResultsTreeResponse, TreeResponse originalTreeResponse, string originalTestResultsPath)
     {
         // Create a new tree for the parent directory
         // excluding anything in the updated test results tree
@@ -299,7 +297,7 @@ public class Publisher
         parentTree.Tree.Add(new NewTreeItem
         {
             Path = originalTestResultsPath,
-            Mode = "040000",
+            Mode = TreeMode,
             Type = TreeType.Tree,
             Sha = testResultsTreeResponse.Sha
         });
@@ -307,7 +305,7 @@ public class Publisher
         return await _client.Git.Tree.Create(_repoOwner, _repoName, parentTree);
     }
 
-    private async Task CreateOrUpdatePullRequest(TreeResponse parentTreeResponse, int buildId, string title, string targetBranch)
+    private async Task CreateOrUpdatePullRequestAsync(TreeResponse parentTreeResponse, int buildId, string title, string targetBranch)
     {
         // Look for a pre-existing pull request
         var request = new PullRequestRequest
@@ -333,15 +331,24 @@ public class Publisher
         }
 
         // Create the commit
-        string commitMessage = $"Update baselines for build https://dev.azure.com/dnceng/internal/_build/results?buildId={buildId}&view=results";
+        string commitMessage = $"Update baselines for build {BuildLink}{buildId} (internal Microsoft link)";
         var newCommit = new NewCommit(commitMessage, parentTreeResponse.Sha, headReference.Object.Sha);
         var commitResponse = await _client.Git.Commit.Create(_repoOwner, _repoName, newCommit);
 
+        string pullRequestBody = $"This PR was created by the PR baseline publisher tool for build {buildId}. \n\n" +
+                                 $"The updated test results can be found at {BuildLink}{buildId} (internal Microsoft link)";
         if (matchingPullRequest != null)
         {
-            // Update the existing pull request
+            // Update the existing pull request with the new commit
             var referenceUpdate = new ReferenceUpdate(commitResponse.Sha);
             await _client.Git.Reference.Update(_repoOwner, _repoName, $"heads/{newBranchName}", referenceUpdate);
+
+            // Update the body of the pull request
+            var pullRequestUpdate = new PullRequestUpdate
+            {
+                Body = pullRequestBody
+            };
+            await _client.PullRequest.Update(_repoOwner, _repoName, matchingPullRequest.Number, pullRequestUpdate);
 
             Log.LogInformation($"Updated existing pull request #{matchingPullRequest.Number}. URL: {matchingPullRequest.HtmlUrl}");
         }
@@ -353,8 +360,7 @@ public class Publisher
 
             var newPullRequest = new NewPullRequest(title, newBranchName, targetBranch)
             {
-                Body = $"This PR was created by the PR baseline publisher tool for build {buildId}. \n\n" +
-                       $"The updated test results can be found at https://dev.azure.com/dnceng/internal/_build/results?buildId={buildId}&view=results",
+                Body = pullRequestBody
             };
             var pullRequest = await _client.PullRequest.Create(_repoOwner, _repoName, newPullRequest);
 
