@@ -1,0 +1,29 @@
+From 00f956e84a194492593ab4f6e00d5946961d6067 Mon Sep 17 00:00:00 2001
+From: Viktor Hofer <viktor.hofer@microsoft.com>
+Date: Wed, 1 May 2024 14:59:13 +0000
+Subject: [PATCH] Fix PublicBaseURL
+
+---
+ src/Installer/redist-installer/targets/GenerateLayout.targets | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/Installer/redist-installer/targets/GenerateLayout.targets b/src/Installer/redist-installer/targets/GenerateLayout.targets
+index a69101f0c4..7db3fa0ace 100644
+--- a/src/Installer/redist-installer/targets/GenerateLayout.targets
++++ b/src/Installer/redist-installer/targets/GenerateLayout.targets
+@@ -1,4 +1,4 @@
+-<Project>
++<Project TreatAsLocalProperty="PublicBaseURL">
+ 
+   <PropertyGroup>
+     <RedistLayoutPath>$(BaseOutputPath)$(Configuration)\dotnet\</RedistLayoutPath>
+@@ -31,6 +31,8 @@
+       <!-- Base url for official releases. Used to obtain some assets from older releases when necessary. -->
+       <OfficialBaseURL>https://dotnetcli.blob.core.windows.net/dotnet/</OfficialBaseURL>
+       <PublicBaseURL Condition="'$(PublicBaseURL)' == ''">$(OfficialBaseURL)</PublicBaseURL>
++      <!-- MSBuild removes the '//' slashes when passing PublicBaseURL from the outer to the inner build. -->
++      <PublicBaseURL Condition="$(PublicBaseURL.StartsWith('file:')) and '$(OS)' != 'Windows_NT'">$([System.Text.RegularExpressions.Regex]::Replace('$(PublicBaseURL)', '%28file:\/{1,}%29%28.+%29', 'file:///%242'))</PublicBaseURL>
+ 
+       <NetRuntimeRid Condition="'$(NetRuntimeRid)' == ''">$(HostRid)</NetRuntimeRid>
+       <NetRuntimeRid Condition=" ('$(OSName)' == 'win' or '$(OSName)' == 'osx' or '$(OSName)' == 'freebsd') and '$(DotNetBuildSourceOnly)' != 'true' ">$(OSName)-$(Architecture)</NetRuntimeRid>
+-- 
