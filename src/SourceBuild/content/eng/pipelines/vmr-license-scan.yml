@@ -154,6 +154,13 @@ jobs:
   variables:
   - template: templates/variables/pipelines.yml
   steps:
+
+  - script: |
+      source ./eng/common/tools.sh
+      InitializeDotNetCli true
+    displayName: Install .NET SDK
+    workingDirectory: $(Build.SourcesDirectory)
+
   - template: templates/steps/download-pipeline-artifact.yml
     parameters:
       pipeline: $(SOURCE_BUILD_LICENSE_SCAN_PIPELINE_ID)
@@ -161,9 +168,11 @@ jobs:
       artifact: ''
       patterns: '**/Updated*'
       displayName: Download Updated Test Files
+  
   - script: |
       find $(Pipeline.Workspace)/Artifacts -type f -exec mv {} $(Pipeline.Workspace)/Artifacts \;
     displayName: Move Artifacts to root
+
   - template: templates/steps/publish-test-results-pr.yml
     parameters:
       pipelineMode: license
