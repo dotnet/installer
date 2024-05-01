@@ -166,6 +166,8 @@ jobs:
     displayName: Move Artifacts to root
   - template: templates/steps/publish-test-results-pr.yml
     parameters:
-      pipelineMode: "license"
-      pullRequestTitle: "Update License Scan Baselines and Exclusions"
+      pipelineMode: license
+      repo: dotnet/installer
+      originalTestResultsPath: $(Build.SourcesDirectory)/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets
       updatedTestResultsPath: $(Pipeline.Workspace)/Artifacts
+      pullRequestTitle: Update License Scan Baselines and Exclusions

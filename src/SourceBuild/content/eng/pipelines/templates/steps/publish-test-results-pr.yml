@@ -2,12 +2,18 @@ parameters:
 - name: pipelineMode
   type: string
 
-- name: pullRequestTitle
+- name: repo
   type: string
-  default: Update Test Baselines 
+
+- name: originalTestResultsPath
+  type: string
 
 - name: updatedTestResultsPath
   type: string
+
+- name: pullRequestTitle
+  type: string
+  default: Update Test Baselines
 
 steps:
   - script: |
@@ -18,6 +24,8 @@ steps:
         --project eng/tools/PrBaselinePublisher/ \
         --property:RestoreSources="$restoreSources" \
         "${{ parameters.pipelineMode }}" \
+        "${{ parameters.repo }}" \
+        "${{ parameters.originalTestResultsPath }}"
         "${{ parameters.updatedTestResultsPath }}" \
         "$(Build.BuildId)" \
         --title "${{ parameters.pullRequestTitle }}" \

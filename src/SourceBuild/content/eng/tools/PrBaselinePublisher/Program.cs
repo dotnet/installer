@@ -9,6 +9,18 @@ namespace PrBaselinePublisher;
 
 public class Program
 {
+    public static readonly CliArgument<string> Repo = new("repo")
+    {
+        Description = "The repository to create the PR in.",
+        Arity = ArgumentArity.ExactlyOne
+    };
+
+    public static readonly CliArgument<string> OriginalTestResultsPath = new("original-test-results-path")
+    {
+        Description = "The directory where the original test files are located.",
+        Arity = ArgumentArity.ExactlyOne
+    };
+
     public static readonly CliArgument<string> UpdatedTestsResultsPath = new("updated-test-results-path")
     {
         Description = "The directory containing the updated test files published by the associated test.",
@@ -33,20 +45,6 @@ public class Program
         Description = "The target branch of the PR.",
         Arity = ArgumentArity.ZeroOrOne,
         DefaultValueFactory = _ => "main"
-    };
-
-    public static readonly CliOption<string> Repo = new("--repo", "-r")
-    {
-        Description = "The repository to create the PR in.",
-        Arity = ArgumentArity.ZeroOrOne,
-        DefaultValueFactory = _ => "dotnet/installer"
-    };
-
-    public static readonly CliOption<string> OriginalTestResultsPath = new("--original-test-results-path", "-o")
-    {
-        Description = "The directory where the original test files are located.",
-        Arity = ArgumentArity.ExactlyOne,
-        DefaultValueFactory = _ => "src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets"
     };
 
     public static readonly CliOption<string> GitHubToken = new("--github-token", "-g")
@@ -90,12 +88,12 @@ public class Program
     {
         return new CliCommand(name, description)
         {
+            Repo,
+            OriginalTestResultsPath,
             UpdatedTestsResultsPath,
             BuildId,
             Title,
             Branch,
-            Repo,
-            OriginalTestResultsPath,
             GitHubToken
         };
     }
@@ -109,11 +107,11 @@ public class Program
             var publisher = new Publisher(result.GetValue(Repo)!, result.GetValue(GitHubToken)!);
 
             ExitCode = await publisher.ExecuteAsync(
+                result.GetValue(OriginalTestResultsPath)!,
                 result.GetValue(UpdatedTestsResultsPath)!,
                 result.GetValue(BuildId)!,
                 result.GetValue(Title)!,
                 result.GetValue(Branch)!,
-                result.GetValue(OriginalTestResultsPath)!,
                 pipeline);
         });
     }

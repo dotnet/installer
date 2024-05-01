@@ -28,11 +28,11 @@ public class Publisher
     private record ChangedFile(string Path, string Content);
 
     public async Task<int> ExecuteAsync(
+        string originalTestResultsPath,
         string updatedTestsResultsPath,
         int buildId,
         string title,
         string targetBranch,
-        string originalTestResultsPath,
         Pipelines pipeline)
     {
         DateTime startTime = DateTime.Now;
