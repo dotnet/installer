@@ -103,7 +103,7 @@ public class Publisher
                     var updatedFileLines = File.ReadAllLines(filePath);
                     parsedFile = parsedFile.Any() ? parsedFile.Where(parsedLine => updatedFileLines.Contains(parsedLine)) : updatedFileLines;
                 }
-                string? content = parsedFile.Any() ? string.Join("\n", parsedFile) : null;
+                string? content = parsedFile.Any() ? string.Join("\n", parsedFile) + "\n" : null;
                 string updatedFilePath = updatedFile.Key + ".txt";
                 tree = await UpdateFileAsync(tree, content, updatedFile.Key, updatedFilePath);
             }
@@ -161,7 +161,7 @@ public class Publisher
                 }
                 else
                 {
-                    content = parsedFile.Any() ? string.Join("\n", parsedFile) : null;
+                    content = parsedFile.Any() ? string.Join("\n", parsedFile) + "\n" : null;
                 }
                 string updatedFilePath = updatedFile.Key + ".txt";
                 tree = await UpdateFileAsync(tree, content, updatedFile.Key, updatedFilePath);
@@ -354,6 +354,14 @@ public class Publisher
         }
         else
         {
+            var comparison = await _client.Repository.Commit.Compare(_repoOwner, _repoName, headReference.Object.Sha, commitResponse.Sha);
+            if (!comparison.Files.Any())
+            {
+                // No changes to commit
+                Log.LogInformation("No changes to commit. Skipping PR creation.");
+                return;
+            }
+
             // Create a new pull request
             var newReference = new NewReference("refs/heads/" + newBranchName, commitResponse.Sha);
             await _client.Git.Reference.Create(_repoOwner, _repoName, newReference);
