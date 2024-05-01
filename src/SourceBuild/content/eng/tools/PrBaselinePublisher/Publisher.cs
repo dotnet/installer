@@ -65,7 +65,9 @@ public class Publisher
         }
         else
         {
-            Log.LogError("Invalid pipeline.");
+            string errorMessage = "Invalid pipeline.";
+            Log.LogError(errorMessage);
+            throw new InvalidOperationException(errorMessage);
         }
 
         var testResultsTreeResponse = await CreateTreeFromItems(testResultsTreeItems);
