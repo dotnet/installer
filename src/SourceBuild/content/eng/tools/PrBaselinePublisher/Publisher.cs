@@ -35,9 +35,9 @@ public class Publisher
         string targetBranch,
         Pipelines pipeline)
     {
-        DateTime startTime = DateTime.Now;
+        DateTime startTime = DateTime.Now.ToUniversalTime();
 
-        Log.LogInformation($"Starting PR baseline publisher at {startTime} for pipeline {pipeline}.");
+        Log.LogInformation($"Starting PR baseline publisher at {startTime} UTC for pipeline {pipeline}.");
 
         var updatedTestsFiles = GetUpdatedFiles(updatedTestsResultsPath);
 
