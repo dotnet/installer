@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 public class Publisher
 {
-    private string _repoOwner;
-    private string _repoName;
-    private GitHubClient _client;
+    private readonly string _repoOwner;
+    private readonly string _repoName;
+    private readonly GitHubClient _client;
 
     public Publisher(string repo, string gitHubToken)
     {
