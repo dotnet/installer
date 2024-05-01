@@ -42,21 +42,17 @@ public class Publisher
         var updatedTestsFiles = GetUpdatedFiles(updatedTestsResultsPath);
 
         // Create a new tree for the originalTestResultsPath based on the target branch
-        var testResultsTreeItems = new List<NewTreeItem>();
         var originalTreeResponse = await _client.Git.Tree.GetRecursive(_repoOwner, _repoName, targetBranch);
-        foreach (var file in originalTreeResponse.Tree)
-        {
-            if (file.Path.Contains(originalTestResultsPath) && file.Path != originalTestResultsPath)
+        var testResultsTreeItems = originalTreeResponse.Tree
+            .Where(file => file.Path.Contains(originalTestResultsPath) && file.Path != originalTestResultsPath)
+            .Select(file => new NewTreeItem
             {
-                testResultsTreeItems.Add(new NewTreeItem
-                {
-                    Path = Path.GetRelativePath(originalTestResultsPath, file.Path),
-                    Mode = file.Mode,
-                    Type = file.Type.Value,
-                    Sha = file.Sha
-                });
-            }
-        }
+                Path = Path.GetRelativePath(originalTestResultsPath, file.Path),
+                Mode = file.Mode,
+                Type = file.Type.Value,
+                Sha = file.Sha
+            })
+            .ToList();
 
         // Update the test results tree based on the pipeline
         if (pipeline == Pipelines.Sdk)
@@ -80,24 +76,16 @@ public class Publisher
         return Log.GetExitCode();
     }
 
-    private Dictionary<string, HashSet<string>> GetUpdatedFiles(string updatedTestsResultsPath)
-    {
-        // Store in a dictionary using the filename without the 
-        // "Updated" prefix and anything after the first '.' as the key
-        Dictionary<string, HashSet<string>> updatedFiles = new();
-
-        var updatedTestsFiles = Directory.GetFiles(updatedTestsResultsPath, "Updated*", SearchOption.AllDirectories);
-        foreach (string updatedTestsFile in updatedTestsFiles)
-        {
-            string updatedFileKey = ParseUpdatedFileName(updatedTestsFile).Split('.')[0];
-            if (!updatedFiles.ContainsKey(updatedFileKey))
-            {
-                updatedFiles[updatedFileKey] = new HashSet<string>();
-            }
-            updatedFiles[updatedFileKey].Add(updatedTestsFile);
-        }
-        return updatedFiles;
-    }
+    // Return a dictionary using the filename without the 
+    // "Updated" prefix and anything after the first '.' as the key
+    private Dictionary<string, HashSet<string>> GetUpdatedFiles(string updatedTestsResultsPath) =>
+        Directory
+            .GetFiles(updatedTestsResultsPath, "Updated*", SearchOption.AllDirectories)
+            .GroupBy(updatedTestsFile => ParseUpdatedFileName(updatedTestsFile).Split('.')[0])
+            .ToDictionary(
+                group => group.Key,
+                group => new HashSet<string>(group)
+            );
 
     private async Task<List<NewTreeItem>> UpdateLicenseScanFilesAsync(Dictionary<string, HashSet<string>> updatedFiles, List<NewTreeItem> tree)
     {
