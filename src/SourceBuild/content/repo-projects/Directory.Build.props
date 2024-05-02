@@ -79,6 +79,13 @@
     <!-- Only pass when enabled to reduce command line noise. -->
     <BuildArgs Condition="'$(DotNetBuildTests)' == 'true'">$(BuildArgs) /p:DotNetBuildTests=true</BuildArgs>
     <BuildArgs Condition="'$(NuGetConfigFile)' != ''">$(BuildArgs) /p:RestoreConfigFile=$(NuGetConfigFile)</BuildArgs>
+
+    <BuildArgs Condition="'$(UseSystemBrotli)' != ''">$(BuildArgs) /p:UseSystemBrotli=$(UseSystemBrotli)</BuildArgs>
+    <BuildArgs Condition="'$(UseSystemLibunwind)' != ''">$(BuildArgs) /p:UseSystemLibunwind=$(UseSystemLibunwind)</BuildArgs>
+    <BuildArgs Condition="'$(UseSystemLlvmLibunwind)' != ''">$(BuildArgs) /p:UseSystemLlvmLibunwind=$(UseSystemLlvmLibunwind)</BuildArgs>
+    <BuildArgs Condition="'$(UseSystemRapidjson)' != ''">$(BuildArgs) /p:UseSystemRapidjson=$(UseSystemRapidjson)</BuildArgs>
+    <BuildArgs Condition="'$(UseSystemZlib)' != ''">$(BuildArgs) /p:UseSystemZlib=$(UseSystemZlib)</BuildArgs>
+
     <!-- TODO rename this property https://github.com/dotnet/source-build/issues/4165 -->
     <BuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(BuildArgs) /p:SourceBuildUseMonoRuntime=$(SourceBuildUseMonoRuntime)</BuildArgs>
     <!-- Pass locations for assets -->
