@@ -10,7 +10,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 
 public class DotNetFormatTests : SdkTests
 {
-    private const string BaselineSubDir = "DotNetFormatTests";
+    private const string BaselineSubDir = nameof(DotNetFormatTests);
     private const string TestFileName = "FormatTest.cs";
     private const string UnformattedFileName = "FormatTestUnformatted.cs";
     private const string ExpectedFormattedFileName = "FormatTestFormatted.cs";

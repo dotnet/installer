@@ -20,7 +20,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 [Trait("Category", "SdkContent")]
 public class SdkContentTests : SdkTests
 {
-    private const string BaselineSubDir = "SdkContentTests";
+    private const string BaselineSubDir = nameof(SdkContentTests);
     private const string MsftSdkType = "msft";
     private const string SourceBuildSdkType = "sb";
     public static bool IncludeSdkContentTests => !string.IsNullOrWhiteSpace(Config.MsftSdkTarballPath) && !string.IsNullOrWhiteSpace(Config.SdkTarballPath);

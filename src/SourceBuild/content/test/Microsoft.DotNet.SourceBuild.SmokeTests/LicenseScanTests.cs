@@ -41,7 +41,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 /// </remarks>
 public class LicenseScanTests : TestBase
 {
-    private const string BaselineSubDir = "LicenseScanTests";
+    private const string BaselineSubDir = nameof(LicenseScanTests);
 
     private static readonly string[] s_allowedLicenseExpressions = new string[]
     {

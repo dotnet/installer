@@ -21,7 +21,7 @@ namespace Microsoft.DotNet.SourceBuild.SmokeTests;
 public class ArtifactsSizeTest : SdkTests
 {
     private const int SizeThresholdPercentage = 25;
-    private static readonly string BaselineFilePath = BaselineHelper.GetBaselineFilePath($"{Config.TargetRid}.txt", "SdkContentTests");
+    private static readonly string BaselineFilePath = BaselineHelper.GetBaselineFilePath($"{Config.TargetRid}.txt", nameof(ArtifactsSizeTest));
     private readonly Dictionary<string, long> Baseline = new();
     private Dictionary<string, int> FilePathCountMap = new();
     private StringBuilder Differences = new();
