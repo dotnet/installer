@@ -62,7 +62,7 @@ internal class DotNetHelper
         string nugetConfigPrefix = useLocalPackages ? "local" : "online";
         string nugetConfigPath = Path.Combine(ProjectsDirectory, "NuGet.Config");
         File.Copy(
-            Path.Combine(BaselineHelper.GetAssetsDirectory(), $"{nugetConfigPrefix}.NuGet.Config"),
+            BaselineHelper.GetBaselineFilePath($"{nugetConfigPrefix}.NuGet.Config", "DotNetHelper"),
             nugetConfigPath);
 
         if (useLocalPackages)
