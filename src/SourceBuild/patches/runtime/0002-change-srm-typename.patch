@@ -22,7 +22,7 @@ Subject: [PATCH] Change S.R.M.TypeName to be consumed from
  14 files changed, 118 insertions(+), 143 deletions(-)
 
 diff --git a/eng/Version.Details.xml b/eng/Version.Details.xml
-index 0da8b34bb017..7626973e31e9 100644
+index 3473e1d653c..6055b495f30 100644
 --- a/eng/Version.Details.xml
 +++ b/eng/Version.Details.xml
 @@ -282,43 +282,43 @@
@@ -85,10 +85,10 @@ index 0da8b34bb017..7626973e31e9 100644
 -      <Sha>85fbd98765c47a867564fff6ae18cc92423cdc66</Sha>
 +      <Sha>b8fe1d0ccb60926d6e7ef5d42e2398c178c9ee5c</Sha>
      </Dependency>
-     <Dependency Name="Microsoft.DotNet.XHarness.TestRunners.Common" Version="9.0.0-prerelease.24224.1">
+     <Dependency Name="Microsoft.DotNet.XHarness.TestRunners.Common" Version="9.0.0-prerelease.24208.1">
        <Uri>https://github.com/dotnet/xharness</Uri>
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 223c05b25607..168e86e4e81b 100644
+index 5e732a3a2e1..d2fc3abbcfb 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -104,10 +104,10 @@
@@ -130,12 +130,12 @@ index 223c05b25607..168e86e4e81b 100644
      <SystemTextJsonToolsetVersion>8.0.0</SystemTextJsonToolsetVersion>
 @@ -210,7 +210,7 @@
      <!-- Mono Cecil -->
-     <MicrosoftDotNetCecilVersion>0.11.4-alpha.24222.1</MicrosoftDotNetCecilVersion>
+     <MicrosoftDotNetCecilVersion>0.11.4-alpha.24215.1</MicrosoftDotNetCecilVersion>
      <!-- ILCompiler -->
 -    <MicrosoftDotNetILCompilerVersion>9.0.0-preview.4.24215.1</MicrosoftDotNetILCompilerVersion>
 +    <MicrosoftDotNetILCompilerVersion>9.0.0-preview.4.24227.6</MicrosoftDotNetILCompilerVersion>
      <!-- ICU -->
-     <MicrosoftNETCoreRuntimeICUTransportVersion>9.0.0-preview.5.24223.2</MicrosoftNETCoreRuntimeICUTransportVersion>
+     <MicrosoftNETCoreRuntimeICUTransportVersion>9.0.0-preview.4.24215.1</MicrosoftNETCoreRuntimeICUTransportVersion>
      <!-- MsQuic -->
 diff --git a/src/coreclr/tools/Common/TypeSystem/Common/Utilities/CustomAttributeTypeNameParser.cs b/src/coreclr/tools/Common/TypeSystem/Common/Utilities/CustomAttributeTypeNameParser.cs
 index 72779375f469..33a86023ced2 100644
