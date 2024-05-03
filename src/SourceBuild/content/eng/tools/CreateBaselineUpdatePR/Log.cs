@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace PrBaselinePublisher;
+namespace CreateBaselineUpdatePR;
 
 public static class Log
 {

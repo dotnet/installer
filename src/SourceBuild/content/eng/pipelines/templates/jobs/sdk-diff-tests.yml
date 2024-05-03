@@ -172,7 +172,7 @@ jobs:
 
   - ${{ if eq(parameters.publishTestResultsPr, 'true') }}:
     - ${{ if or(eq(variables['Build.SourceBranchName'], 'main'), contains(variables['Build.SourceBranchName'], 'release')) }}:
-      - template: ../steps/publish-test-results-pr.yml
+      - template: ../steps/create-baseline-update-pr.yml
         parameters:
           pipelineMode: sdk
           repo: dotnet/installer

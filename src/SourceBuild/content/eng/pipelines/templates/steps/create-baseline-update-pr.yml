@@ -21,7 +21,7 @@ steps:
      restoreSources+="%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json"
 
      .dotnet/dotnet run \
-        --project eng/tools/PrBaselinePublisher/ \
+        --project eng/tools/CreateBaselineUpdatePR/ \
         --property:RestoreSources="$restoreSources" \
         "${{ parameters.pipelineMode }}" \
         "${{ parameters.repo }}" \

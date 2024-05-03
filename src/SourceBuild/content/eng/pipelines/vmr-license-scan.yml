@@ -173,7 +173,7 @@ jobs:
       find $(Pipeline.Workspace)/Artifacts -type f -exec mv {} $(Pipeline.Workspace)/Artifacts \;
     displayName: Move Artifacts to root
 
-  - template: templates/steps/publish-test-results-pr.yml
+  - template: templates/steps/create-baseline-update-pr.yml
     parameters:
       pipelineMode: license
       repo: dotnet/installer

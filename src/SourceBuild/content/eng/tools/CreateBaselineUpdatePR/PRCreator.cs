@@ -1,14 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace PrBaselinePublisher;
+namespace CreateBaselineUpdatePR;
 
 using Octokit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public class Publisher
+public class PRCreator
 {
     private readonly string _repoOwner;
     private readonly string _repoName;
@@ -16,7 +16,7 @@ public class Publisher
     private const string BuildLink = "https://dev.azure.com/dnceng/internal/_build/results?buildId=";
     private const string TreeMode = "040000";
 
-    public Publisher(string repo, string gitHubToken)
+    public PRCreator(string repo, string gitHubToken)
     {
         // Create a new GitHub client
         _client = new GitHubClient(new ProductHeaderValue(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name));
@@ -38,7 +38,7 @@ public class Publisher
     {
         DateTime startTime = DateTime.Now.ToUniversalTime();
 
-        Log.LogInformation($"Starting PR baseline publisher at {startTime} UTC for pipeline {pipeline}.");
+        Log.LogInformation($"Starting PR creation at {startTime} UTC for pipeline {pipeline}.");
 
         var updatedTestsFiles = GetUpdatedFiles(updatedTestsResultsPath);
 
@@ -335,7 +335,7 @@ public class Publisher
         var newCommit = new NewCommit(commitMessage, parentTreeResponse.Sha, headReference.Object.Sha);
         var commitResponse = await _client.Git.Commit.Create(_repoOwner, _repoName, newCommit);
 
-        string pullRequestBody = $"This PR was created by the PR baseline publisher tool for build {buildId}. \n\n" +
+        string pullRequestBody = $"This PR was created by the `CreateBaselineUpdatePR` tool for build {buildId}. \n\n" +
                                  $"The updated test results can be found at {BuildLink}{buildId} (internal Microsoft link)";
         if (matchingPullRequest != null)
         {

@@ -5,7 +5,7 @@ using System;
 using System.CommandLine;
 using Microsoft.Extensions.Logging;
 
-namespace PrBaselinePublisher;
+namespace CreateBaselineUpdatePR;
 
 public class Program
 {
@@ -66,10 +66,10 @@ public class Program
 
     public static async Task<int> Main(string[] args)
     {
-        var sdkDiffTestsCommand = CreateCommand("sdk", "Updates baselines and exclusion files published by the sdk diff tests.");
-        var licenseScanTestsCommand = CreateCommand("license", "Updates baselines and exclusion files published by the license scan tests.");
+        var sdkDiffTestsCommand = CreateCommand("sdk", "Creates a PR that updates baselines and exclusion files published by the sdk diff tests.");
+        var licenseScanTestsCommand = CreateCommand("license", "Creates a PR that updates baselines and exclusion files published by the license scan tests.");
 
-        var rootCommand = new CliRootCommand("Tool for updating baselines and exclusion files published by the sdk diff tests and license scan tests.")
+        var rootCommand = new CliRootCommand("Tool for creating PRs that update baselines and exclusion files.")
         {
             Level,
             sdkDiffTestsCommand,
@@ -104,9 +104,9 @@ public class Program
         {
             Log.Level = result.GetValue(Level);
 
-            var publisher = new Publisher(result.GetValue(Repo)!, result.GetValue(GitHubToken)!);
+            var creator = new PRCreator(result.GetValue(Repo)!, result.GetValue(GitHubToken)!);
 
-            ExitCode = await publisher.ExecuteAsync(
+            ExitCode = await creator.ExecuteAsync(
                 result.GetValue(OriginalTestResultsPath)!,
                 result.GetValue(UpdatedTestsResultsPath)!,
                 result.GetValue(BuildId)!,
