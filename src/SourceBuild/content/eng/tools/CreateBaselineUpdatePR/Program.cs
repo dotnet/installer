@@ -11,7 +11,7 @@ public class Program
 {
     public static readonly CliArgument<string> Repo = new("repo")
     {
-        Description = "The repository to create the PR in.",
+        Description = "The GitHub repository to create the PR in.",
         Arity = ArgumentArity.ExactlyOne
     };
 
