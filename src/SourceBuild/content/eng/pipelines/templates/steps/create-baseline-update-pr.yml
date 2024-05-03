@@ -1,5 +1,8 @@
 parameters:
-- name: pipelineMode
+# The pipeline that is being run
+# Used to determine the correct baseline update tool to run
+# Currently only supports "sdk" and "license"
+- name: pipeline
   type: string
 
 - name: repo
@@ -23,7 +26,7 @@ steps:
      .dotnet/dotnet run \
         --project eng/tools/CreateBaselineUpdatePR/ \
         --property:RestoreSources="$restoreSources" \
-        "${{ parameters.pipelineMode }}" \
+        "${{ parameters.pipeline }}" \
         "${{ parameters.repo }}" \
         "${{ parameters.originalTestResultsPath }}" \
         "${{ parameters.updatedTestResultsPath }}" \

@@ -175,7 +175,7 @@ jobs:
 
   - template: templates/steps/create-baseline-update-pr.yml
     parameters:
-      pipelineMode: license
+      pipeline: license
       repo: dotnet/installer
       originalTestResultsPath: src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/assets
       updatedTestResultsPath: $(Pipeline.Workspace)/Artifacts
