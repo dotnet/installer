@@ -1,0 +1,23 @@
+From 8f96fb2b9cc1935a6893b021c035905b277682c0 Mon Sep 17 00:00:00 2001
+From: Viktor Hofer <viktor.hofer@microsoft.com>
+Date: Fri, 3 May 2024 05:51:06 +0000
+Subject: [PATCH] Disable sdk Installer portion
+
+---
+ source-build.slnf | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/source-build.slnf b/source-build.slnf
+index dd00078d19..9c7531bebe 100644
+--- a/source-build.slnf
++++ b/source-build.slnf
+@@ -21,8 +21,6 @@
+       "src\\Compatibility\\Microsoft.DotNet.ApiSymbolExtensions\\Microsoft.DotNet.ApiSymbolExtensions.csproj",
+       "src\\Containers\\Microsoft.NET.Build.Containers\\Microsoft.NET.Build.Containers.csproj",
+       "src\\Containers\\packaging\\package.csproj",
+-      "src\\Installer\\redist-installer\\redist-installer.csproj",
+-      "src\\Installer\\core-sdk-tasks\\core-sdk-tasks.csproj",
+       "src\\Layout\\redist\\redist.csproj",
+       "src\\Layout\\tool_fsharp\\tool_fsc.csproj",
+       "src\\Layout\\tool_msbuild\\tool_msbuild.csproj",
+--
