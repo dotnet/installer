@@ -365,7 +365,8 @@ jobs:
       displayName: Build
 
     # Only run tests if enabled
-    - ${{ if eq(parameters.runTests, 'True') }}:
+    # TODO: Remove the PullRequest condition after the next re-bootstrap: https://github.com/dotnet/source-build/issues/4362
+    - ${{ if and(eq(parameters.runTests, 'True'), eq(variables['Build.Reason'], 'PullRequest')) }}:
       - script: |
           set -ex
 
