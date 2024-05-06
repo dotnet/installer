@@ -19,6 +19,11 @@
 
   <ItemGroup>
     <ProjectReference Include="$(RepositoryEngineeringDir)extract-sdk-archive.proj" />
+    <ProjectReference Include="Microsoft.DotNet.SourceBuild.SmokeTests\Microsoft.DotNet.SourceBuild.SmokeTests.csproj"
+                      Condition="'$(DotNetBuildSourceOnly)' == 'true'" />
+    <ProjectReference Include="Microsoft.DotNet.UnifiedBuild.Tests\Microsoft.DotNet.UnifiedBuild.Tests.csproj"
+                      Condition="'$(ShortStack)' != 'true' and '$(PortableBuild)' == 'true' and '$(PgoInstrument)' != 'true'" />
+    <ProjectReference Include="scenario-tests\scenario-tests.proj" Condition="'$(_RunScenarioTests)' == 'true'" />
   </ItemGroup>
 
 </Project>
