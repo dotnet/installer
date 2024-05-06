@@ -15,19 +15,36 @@ variables:
 - name: NuGetSecurityAnalysisWarningLevel
   value: none
 
-jobs:
-- template: ../../src/installer/src/SourceBuild/Arcade/eng/common/templates/job/source-build-build-tarball.yml
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Unofficial.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    architecture: x64
-    excludeSdkContentTests: true
-    matrix:
-      Ubuntu1804-Offline:
-        _BootstrapPrep: false
-        _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04
-        _EnablePoison: false
-        _ExcludeOmniSharpTests: false
-        _RunOnline: false
-    name: Build_Tarball_x64
     pool:
       name: NetCore1ESPool-Svc-Internal
-      demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+      image: 1es-windows-2022
+      os: windows
+    stages:
+    - stage: stage
+      jobs:
+      - template: /src/installer/src/SourceBuild/Arcade/eng/common/templates/job/source-build-build-tarball.yml@self
+        parameters:
+          architecture: x64
+          excludeSdkContentTests: true
+          matrix:
+            Ubuntu1804-Offline:
+              _BootstrapPrep: false
+              _Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04
+              _EnablePoison: false
+              _ExcludeOmniSharpTests: false
+              _RunOnline: false
+          name: Build_Tarball_x64
+          pool:
+            name: NetCore1ESPool-Svc-Internal
+            image: 1es-ubuntu-2004
+            os: linux
