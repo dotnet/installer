@@ -372,9 +372,6 @@ extends:
             linuxPortable: true
             runTests: false
 
-        # Source Build
-        - template: /eng/common/templates-official/jobs/source-build.yml@self
-
     - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
       - stage: Publish
         dependsOn:

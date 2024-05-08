@@ -3,12 +3,6 @@ function InitializeCustomSDKToolset {
     return
   fi
 
-  # The following frameworks and tools are used only for testing.
-  # Do not attempt to install them in source build.
-  if [[ $product_build == true || $properties == *"DotNetBuildRepo=true"* ]]; then
-    return
-  fi
-  
   #InstallDotNetSharedFramework "1.0.5"
   #InstallDotNetSharedFramework "1.1.2"
 

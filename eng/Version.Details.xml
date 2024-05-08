@@ -1,9 +1,5 @@
 <Dependencies>
   <ProductDependencies>
-    <!--
-      Source-build uses transitive dependency resolution to determine correct build SHA of all product contributing repos.
-      The order of dependencies is important and should not be modified without approval from dotnet/source-build-internal.
-    -->
     <Dependency Name="Microsoft.WindowsDesktop.App.Ref" Version="9.0.0-preview.5.24256.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/windowsdesktop</Uri>
       <Sha>436e9a8e566984a5ffe5f022de266f18d9aa9c4b</Sha>
@@ -50,12 +46,6 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>84b33395057737db3ea342a5151feb6b90c1b6f6</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.runtime.linux-x64" Version="9.0.0-preview.5.24256.1" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>84b33395057737db3ea342a5151feb6b90c1b6f6</Sha>
-      <SourceBuild RepoName="runtime" ManagedOnly="false" />
-    </Dependency>
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="9.0.0-preview.5.24256.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>da3aa27233a2cec2f6780884f71934b2f5e686ce</Sha>
@@ -84,12 +74,6 @@
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>da3aa27233a2cec2f6780884f71934b2f5e686ce</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.aspnetcore" Version="9.0.0-preview.5.24256.2" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>da3aa27233a2cec2f6780884f71934b2f5e686ce</Sha>
-      <SourceBuild RepoName="aspnetcore" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="9.0.100-preview.5.24256.14">
       <Uri>https://github.com/dotnet/sdk</Uri>
       <Sha>a1863f126667b4fdcd37b451b4cd3c10abf19e10</Sha>
@@ -105,12 +89,6 @@
     <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="9.0.100-preview.5.24256.14">
       <Uri>https://github.com/dotnet/sdk</Uri>
       <Sha>a1863f126667b4fdcd37b451b4cd3c10abf19e10</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.sdk" Version="9.0.100-preview.5.24256.14">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>a1863f126667b4fdcd37b451b4cd3c10abf19e10</Sha>
-      <SourceBuild RepoName="sdk" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4.22406.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/test-templates</Uri>
@@ -136,12 +114,6 @@
       <Uri>https://github.com/dotnet/test-templates</Uri>
       <Sha>36e4339a33f9bdf3680591e2a3fcbc421aabc22c</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.test-templates" Version="1.1.0-rc.24252.2" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>36e4339a33f9bdf3680591e2a3fcbc421aabc22c</Sha>
-      <SourceBuild RepoName="test-templates" ManagedOnly="true" />
-    </Dependency>
     <!-- For coherency purposes, these versions should be gated by the versions of winforms and wpf routed via windowsdesktop -->
     <Dependency Name="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="9.0.0-preview.5.24253.4" CoherentParentDependency="Microsoft.WindowsDesktop.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/winforms</Uri>
@@ -155,21 +127,9 @@
       <Uri>https://github.com/dotnet/fsharp</Uri>
       <Sha>3ef1cb25ffb292b5c87f9604d1a09b032277bf76</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.fsharp" Version="8.0.400-beta.24229.4" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/fsharp</Uri>
-      <Sha>3ef1cb25ffb292b5c87f9604d1a09b032277bf76</Sha>
-      <SourceBuild RepoName="fsharp" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.NET.Test.Sdk" Version="17.11.0-preview-24253-02" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/microsoft/vstest</Uri>
       <Sha>b521aa2c9c981f53b85af7c923175a850986173a</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.vstest" Version="17.11.0-preview-24253-02" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/microsoft/vstest</Uri>
-      <Sha>b521aa2c9c981f53b85af7c923175a850986173a</Sha>
-      <SourceBuild RepoName="vstest" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="9.0.0-preview.5.24256.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -179,62 +139,25 @@
       <Uri>https://github.com/dotnet/roslyn</Uri>
       <Sha>062ad3db597a8096b5da2b188dbbbcc7f6137275</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.roslyn" Version="4.11.0-2.24255.2" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/roslyn</Uri>
-      <Sha>062ad3db597a8096b5da2b188dbbbcc7f6137275</Sha>
-      <SourceBuild RepoName="roslyn" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.Build" Version="17.11.0-preview-24256-01" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/msbuild</Uri>
       <Sha>66dcc32c3344eb76a422917dcb8c9e8f621e18fd</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.msbuild" Version="17.11.0-preview-24256-01" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/msbuild</Uri>
-      <Sha>66dcc32c3344eb76a422917dcb8c9e8f621e18fd</Sha>
-      <SourceBuild RepoName="msbuild" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="NuGet.Build.Tasks" Version="6.11.0-preview.1.35" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/nuget/nuget.client</Uri>
       <Sha>12d5c661b77d4933f82a293008c0d56d1d6ce32b</Sha>
-      <SourceBuildTarball RepoName="nuget-client" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.5.24223.2" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>53288f87c588907e8ff01f129786820fe998573c</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.emsdk" Version="9.0.0-preview.5.24223.2" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
-      <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>53288f87c588907e8ff01f129786820fe998573c</Sha>
-      <SourceBuild RepoName="emsdk" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.Deployment.DotNet.Releases" Version="2.0.0-preview.1.24176.3" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/deployment-tools</Uri>
       <Sha>6b80783f6743ee9f18940eb6acb7135e5c111d4b</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.deployment-tools" Version="9.0.0-preview.1.24176.3" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/deployment-tools</Uri>
-      <Sha>6b80783f6743ee9f18940eb6acb7135e5c111d4b</Sha>
-      <SourceBuild RepoName="deployment-tools" ManagedOnly="true" />
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-externals" Version="9.0.0-alpha.1.24256.2">
-      <Uri>https://github.com/dotnet/source-build-externals</Uri>
-      <Sha>94b5dd594f49b5b38e28e4d5c733caa8555947a4</Sha>
-      <SourceBuild RepoName="source-build-externals" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="System.CommandLine" Version="2.0.0-beta4.24209.3" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/command-line-api</Uri>
       <Sha>963d34b1fb712c673bfb198133d7e988182c9ef4</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.command-line-api" Version="0.1.520903" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/command-line-api</Uri>
-      <Sha>963d34b1fb712c673bfb198133d7e988182c9ef4</Sha>
-      <SourceBuild RepoName="command-line-api" ManagedOnly="true" />
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
@@ -262,30 +185,13 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>020255bcf7d0b8beed7de05338d97396982ae527</Sha>
     </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="9.0.0-beta.24253.1">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>020255bcf7d0b8beed7de05338d97396982ae527</Sha>
-      <SourceBuild RepoName="arcade" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.Extensions.Logging.Console" Version="9.0.0-alpha.1.23612.13">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>ab1a8224cdf115b65e0db5dc88d11f205068f444</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="9.0.0-alpha.1.24252.1">
-      <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>9c1cc994f8123ec2a923c5179c238c13da1b4ab7</Sha>
-      <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
-    </Dependency>
     <Dependency Name="Microsoft.DotNet.ScenarioTests.SdkTemplateTests" Version="9.0.0-preview.24222.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/scenario-tests</Uri>
       <Sha>4ab07002cb46cf169c85a09a546709a20642c65b</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.scenario-tests" Version="9.0.0-preview.24222.1" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/scenario-tests</Uri>
-      <Sha>4ab07002cb46cf169c85a09a546709a20642c65b</Sha>
-      <SourceBuild RepoName="scenario-tests" ManagedOnly="true" />
     </Dependency>
     <!-- Aspire isn't really a toolset dependency. However, it only inserts a baseline manifest in installer,
          and if you squint at it, this means we can say that its specific dependency versions don't matter to installer.
@@ -297,12 +203,6 @@
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-9.0.100-preview.1" Version="9.0.0-preview.4.24229.9" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/aspire</Uri>
       <Sha>0514ea9e12ece4dd764824ce925ae0eae6fcbd86</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.aspire" Version="9.0.0-preview.4.24229.9" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>0514ea9e12ece4dd764824ce925ae0eae6fcbd86</Sha>
-      <SourceBuild RepoName="aspire" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
