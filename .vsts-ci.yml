@@ -63,8 +63,8 @@ extends:
     template: v1/1ES.Unofficial.PipelineTemplate.yml@1esPipelines
   parameters:
     containers:
-      fedora38:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
+      fedora40:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-40
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
