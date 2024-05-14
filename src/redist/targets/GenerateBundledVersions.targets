@@ -247,16 +247,11 @@
       <NetCoreRuntimePackRids Include="@(Net90RuntimePackRids)" />
 
       <!--
-        In source-only builds, we build the current RID from source, which may be
-        non-portable and/or not an official RID.
         These packs for the non-portable RID are distributed with the SDK:
         - NETCore.App.Host
         - NETCore.App.Runtime    (when BundleRuntimePacks)
         - AspNetCore.App.Runtime (when BundleRuntimePacks)
       -->
-      <NetCoreAppHostRids
-        Condition="'$(DotNetBuildSourceOnly)' == 'true'"
-        Include="$(ProductMonikerRid)" />
 
       <NetCoreRuntimePackRids
         Condition="'$(BundleRuntimePacks)' == 'true'"
@@ -441,10 +436,10 @@
       <WindowsDesktopRuntimePackRids Include="@(WindowsDesktop50RuntimePackRids)" />
 
       <_KnownRuntimeIdentiferPlatforms Include="any;aot;freebsd;illumos;solaris;unix" />
-      <_ExcludedKnownRuntimeIdentiferPlatforms Include="rhel.6;tizen.4.0.0;tizen.5.0.0" Condition="'$(DotNetBuildSourceOnly)' != 'true'" />
-      <_ExcludedKnownRuntimeIdentiferPlatforms Include="rhel.6" Condition="'$(DotNetBuildSourceOnly)' == 'true' and !$(ProductMonikerRid.StartsWith('rhel.6-'))" />
-      <_ExcludedKnownRuntimeIdentiferPlatforms Include="tizen.4.0.0" Condition="'$(DotNetBuildSourceOnly)' == 'true' and !$(ProductMonikerRid.StartsWith('tizen.4.0.0-'))" />
-      <_ExcludedKnownRuntimeIdentiferPlatforms Include="tizen.5.0.0" Condition="'$(DotNetBuildSourceOnly)' == 'true' and !$(ProductMonikerRid.StartsWith('tizen.5.0.0-'))" />
+      <_ExcludedKnownRuntimeIdentiferPlatforms Include="rhel.6;tizen.4.0.0;tizen.5.0.0" />
+      <_ExcludedKnownRuntimeIdentiferPlatforms Include="rhel.6" />
+      <_ExcludedKnownRuntimeIdentiferPlatforms Include="tizen.4.0.0" />
+      <_ExcludedKnownRuntimeIdentiferPlatforms Include="tizen.5.0.0" />
     </ItemGroup>
 
     <!--

@@ -46,7 +46,6 @@ The repository contains native code project required for the Windows installer. 
 
 # Build .NET from source (source-build)
 
-This repo also contains code to help you build the entire .NET product end-to-end from source (often referred to as source-build), even in disconnected/offline mode.
 Please see the [dotnet/source-build](https://github.com/dotnet/source-build) repo for more information.
 
 ## Support
@@ -55,24 +54,11 @@ Please see the [dotnet/source-build](https://github.com/dotnet/source-build) rep
 For example, if .NET 6.0.1xx, 6.0.2xx, and 7.0.1xx feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support 6.0.1xx and 7.0.1xx.
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
-## Prerequisites
-
-The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md).
-
 ## Building .NET 8.0
 
 .NET 8.0 (currently in prerelease) and newer will be built from the [dotnet/dotnet](https://github.com/dotnet/dotnet) repo.
 Clone the dotnet/dotnet repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/dotnet's README](https://github.com/dotnet/dotnet/blob/main/README.md#dev-instructions) to build .NET from source.
-
-### Codespaces
-
-It is also possible to utilize [GitHub Codespaces](https://github.com/features/codespaces) and build .NET from the `dotnet/dotnet` repository from source that way.
-You can either create a Codespace in `dotnet/dotnet` directly or you can also make one from a PR branch in `dotnet/installer`. This will give you an environment with the VMR checked out and containing all of new changes from the PR.
-This can be especially valuable for investigations of source-build failures during PRs.
-
-To create a Codespace for a `dotnet/installer` PR, use the `vmr-source-build` devcontainer configuration (select this when "newing the Codespace with options" under the three-dots-menu).
-Further instructions on how to build inside of the Codespace will be available upon launch.
 
 ## Building .NET 7.0 and .NET 6.0
 
