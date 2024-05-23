@@ -2,7 +2,7 @@
 
 jobs:
 - job: Source_Build_Create_Tarball
-  container: fedora38
+  container: fedora39
   displayName: Source-Build Create Tarball
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
