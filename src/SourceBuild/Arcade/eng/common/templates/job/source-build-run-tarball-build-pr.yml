@@ -12,9 +12,8 @@ parameters:
   alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
   centOS7Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-source-build
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
-  debian11Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-arm64v8
-  fedora38Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-38
-  ubuntu1804Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04
+  fedora39Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+  ubuntu2004Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04-arm64
   poolInternalAmd64:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
@@ -64,17 +63,10 @@ jobs:
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: true
           _RunOnline: false
-        Fedora38-Offline:
+        Fedora39-Offline:
           _BootstrapPrep: false
-          _Container: ${{ parameters.fedora38Container }}
+          _Container: ${{ parameters.fedora39Container }}
           _EnablePoison: true
-          _ExcludeOmniSharpTests: false
-          _OverrideDistroDisablingSha1: false
-          _RunOnline: false
-        Ubuntu1804-Offline:
-          _BootstrapPrep: false
-          _Container: ${{ parameters.ubuntu1804Container }}
-          _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: false
           _RunOnline: false
@@ -95,9 +87,9 @@ jobs:
       dependsOn: ${{ parameters.dependsOn }}
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       matrix:
-        Debian11-Offline:
+        Ubuntu2004-Offline:
           _BootstrapPrep: true
-          _Container: ${{ parameters.debian11Arm64Container }}
+          _Container: ${{ parameters.ubuntu2004Arm64Container }}
           _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: false
@@ -116,9 +108,9 @@ jobs:
       excludeSdkContentTests: true
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       matrix:
-        Fedora38-Offline:
-          _PreviousSourceBuildArtifact: Build_Tarball_x64 Fedora38-Offline_Artifacts
-          _Container: ${{ parameters.fedora38Container }}
+        Fedora39-Offline:
+          _PreviousSourceBuildArtifact: Build_Tarball_x64 Fedora39-Offline_Artifacts
+          _Container: ${{ parameters.fedora39Container }}
           _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: false
