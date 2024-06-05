@@ -70,6 +70,9 @@ extends:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2019
         os: windows
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        componentgovernance:
+          ignoreDirectories: artifacts, .packages
     stages:
     - stage: build
       jobs:
