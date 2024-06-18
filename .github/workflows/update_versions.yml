@@ -1,0 +1,30 @@
+name: Update Versions
+
+on:
+  push:
+    paths:
+      - 'Versions.props'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Check if MicrosoftBuildPackageVersion has changed
+        id: check_version
+        # Fetch the remote repository, get the old and new version, and set 'changed' to true if the version has changed
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          VERSION_OLD=$(git show origin/${{ github.base_ref }}:Versions.props | grep '<MicrosoftBuildPackageVersion>' | sed 's/<[^>]*>//g')
+          VERSION_NEW=$(cat Versions.props | grep '<MicrosoftBuildPackageVersion>' | sed 's/<[^>]*>//g')
+          if [ "$VERSION_OLD" != "$VERSION_NEW" ]; then
+            echo "::set-output name=changed::true"
+          fi
+
+      - name: Run script
+        if: steps.check_version.outputs.changed == 'true'
+        # Run the PowerShell script
+        run: pwsh .github/workflows/update_versions.ps1
