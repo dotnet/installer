@@ -65,7 +65,7 @@ extends:
       ubuntu2204:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
       mariner20CrossArm:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:mariner-2.0-cross-arm
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-cross-arm-alpine
       ubuntu2204DebPkg:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
@@ -73,6 +73,9 @@ extends:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        componentgovernance:
+          ignoreDirectories: artifacts, .packages
       # Temporary to workaround MicroBuild issues.
       credscan:
         enabled: false
@@ -327,53 +330,6 @@ extends:
             runtimeIdentifier: 'osx-arm64'
             buildConfiguration: Release
             buildArchitecture: arm64
-            runTests: false
-
-        # Windows PGO Instrumentation builds
-        - template: eng/build.yml@self
-          parameters:
-            agentOs: Windows_NT
-            pgoInstrument: true
-            jobName: Build_Release_x64
-            buildConfiguration: Release
-            buildArchitecture: x64
-            additionalBuildParameters: '/p:PublishInternalAsset=true'
-            runTests: false
-        - template: eng/build.yml@self
-          parameters:
-            agentOs: Windows_NT
-            pgoInstrument: true
-            jobName: Build_Release_x86
-            buildConfiguration: Release
-            buildArchitecture: x86
-            runTests: false
-        - template: eng/build.yml@self
-          parameters:
-            agentOs: Windows_NT
-            pgoInstrument: true
-            jobName: Build_Release_arm64
-            buildConfiguration: Release
-            buildArchitecture: arm64
-            runTests: false
-
-        # Linux PGO Instrumentation builds
-        - template: eng/build.yml@self
-          parameters:
-            agentOs: Linux
-            pgoInstrument: true
-            jobName: Build_LinuxPortable_Release_x64
-            buildConfiguration: Release
-            buildArchitecture: x64
-            linuxPortable: true
-            runTests: false
-        - template: eng/build.yml@self
-          parameters:
-            agentOs: Linux
-            pgoInstrument: true
-            jobName: Build_Release_arm64
-            buildConfiguration: Release
-            buildArchitecture: arm64
-            linuxPortable: true
             runTests: false
 
       # Source Build

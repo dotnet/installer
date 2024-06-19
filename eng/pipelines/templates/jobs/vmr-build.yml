@@ -164,8 +164,8 @@ jobs:
         notFoundMessage="No source-built SDK found to download..."
 
         echo "Looking for source-built SDK to download..."
-        archiveUrlLine=`grep -m 1 "<PrivateSourceBuiltSdkUrl_CentOS8Stream>" "$packageVersionsPath" || :`
-        urlPattern="<PrivateSourceBuiltSdkUrl_CentOS8Stream>(.*)</PrivateSourceBuiltSdkUrl_CentOS8Stream>"
+        archiveUrlLine=`grep -m 1 "<PrivateSourceBuiltSdkUrl>" "$packageVersionsPath" || :`
+        urlPattern="<PrivateSourceBuiltSdkUrl>(.*)</PrivateSourceBuiltSdkUrl>"
 
         if [[ $archiveUrlLine =~ $urlPattern ]]; then
           archiveUrl="${BASH_REMATCH[1]}"
@@ -266,6 +266,20 @@ jobs:
     displayName: Prepare BuildLogs staging directory
     continueOnError: true
     condition: succeededOrFailed()
+
+  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    - publish: '$(Build.StagingDirectory)/BuildLogs'
+      artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
+      displayName: Publish BuildLogs
+      continueOnError: true
+      condition: succeededOrFailed()
+
+    - publish: '${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/'
+      artifact: $(Agent.JobName)_Artifacts
+      displayName: Publish Artifacts
+      condition: succeededOrFailed()
+      continueOnError: true
+
   - task: PublishTestResults@2
     displayName: Publish Test Results
     condition: succeededOrFailed()
