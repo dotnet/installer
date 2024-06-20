@@ -42,7 +42,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<CommandResultAssertions> HaveStdOut()
         {
             Execute.Assertion.ForCondition(!string.IsNullOrEmpty(_commandResult.StdOut))
-                .FailWith(AppendDiagnosticsTo("Command did not output anything to stdout"));
+                .FailWith(AppendDiagnosticsTo($"Command did not output anything to stdout"));
             return new AndConstraint<CommandResultAssertions>(this);
         }
 
@@ -97,7 +97,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<CommandResultAssertions> HaveStdErr()
         {
             Execute.Assertion.ForCondition(!string.IsNullOrEmpty(_commandResult.StdErr))
-                .FailWith(AppendDiagnosticsTo("Command did not output anything to stderr."));
+                .FailWith(AppendDiagnosticsTo($"Command did not output anything to stderr."));
             return new AndConstraint<CommandResultAssertions>(this);
         }
 
@@ -132,7 +132,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         public AndConstraint<CommandResultAssertions> NotHaveStdErr()
         {
             Execute.Assertion.ForCondition(string.IsNullOrEmpty(_commandResult.StdErr))
-                .FailWith(AppendDiagnosticsTo("Expected command to not output to stderr but it was not:"));
+                .FailWith(AppendDiagnosticsTo($"Expected command to not output to stderr but it was not:"));
             return new AndConstraint<CommandResultAssertions>(this);
         }
 
