@@ -66,6 +66,7 @@ phases:
     steps:
     - checkout: self
       clean: true
+    - template: /eng/common/templates/steps/enable-internal-runtimes.yml
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - ${{ if ne(variables['System.TeamProject'], 'public') }}:
         - task: PowerShell@2
@@ -96,7 +97,6 @@ phases:
             arguments: $(Build.SourcesDirectory)/NuGet.config $Token
           env:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
-
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: ./build.sh
                   $(_TestArg) $(_PackArg)
