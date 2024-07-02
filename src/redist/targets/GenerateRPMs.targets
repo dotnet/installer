@@ -331,17 +331,17 @@
 
     <!-- Install Dependencies and SDK Packages -->
     <Exec Command="sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc" />
-    <Exec Command="sudo rpm -Uv $(DownloadedRuntimeDepsInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedNetCoreAppHostPackInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedNetStandardTargetingPackInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedAspNetTargetingPackInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedSharedHostInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedHostFxrInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(DownloadedSharedFrameworkInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedRuntimeDepsInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedNetCoreAppHostPackInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedNetCoreAppTargetingPackInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedNetStandardTargetingPackInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedAspNetTargetingPackInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedSharedHostInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedHostFxrInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(DownloadedSharedFrameworkInstallerFile)" />
     <!-- Ignore dependencies, which may have an incoherent dependency on dotnet-runtime -->
-    <Exec Command="sudo rpm -Uv --nodeps $(DownloadedAspNetCoreSharedFxInstallerFile)" />
-    <Exec Command="sudo rpm -Uv $(SdkRPMInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --nodeps --oldpackage $(DownloadedAspNetCoreSharedFxInstallerFile)" />
+    <Exec Command="sudo rpm -Uv --oldpackage $(SdkRPMInstallerFile)" />
 
     <!-- Run End-2-end Tests https://github.com/dotnet/core-sdk/issues/1174
     <DotNetRestore ProjectPath="$(EndToEndTestProject)"
