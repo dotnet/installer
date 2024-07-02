@@ -417,6 +417,8 @@ extends:
                 _TestArg: ''
 
       - template: /eng/common/templates-official/jobs/source-build.yml@self
+        parameters:
+          enableInternalSources: true
 
       - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml@self
 

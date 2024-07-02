@@ -17,7 +17,6 @@ variables:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: Codeql.Enabled
     value: true
-  - group: DotNet-DotNetCli-Storage
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
@@ -370,6 +369,8 @@ stages:
             _TestArg: ''
 
   - template: /eng/common/templates/jobs/source-build.yml
+    parameters:
+      enableInternalSources: true
 
   - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball-pr.yml
 
