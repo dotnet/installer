@@ -27,7 +27,7 @@ namespace EndToEnd.Tests
             {
                 foreach (var manifestDir in manifestVersionDir.EnumerateDirectories())
                 {
-                    var manifestId = manifestDir.Name;
+                    var manifestId = manifestVersionDir.Name;
 
                     string manifestFile = manifestDir.GetFile("WorkloadManifest.json").FullName;
 
