@@ -36,7 +36,7 @@ namespace EndToEnd.Tests
                         new FileInfo(manifestFile).Exists.Should().BeTrue();
                         using var fileStream = new FileStream(manifestFile, FileMode.Open, FileAccess.Read);
                         Action readManifest = () => WorkloadManifestReader.ReadWorkloadManifest(manifestId, fileStream, manifestFile);
-                        readManifest.ShouldNotThrow("manifestId:" + manifestId + " manifestFile:" + manifestFile + "is invalid");
+                        readManifest.Should().NotThrow("manifestId:" + manifestId + " manifestFile:" + manifestFile + "is invalid");
                     }
                 }
             }
