@@ -19,7 +19,6 @@ variables:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: Codeql.Enabled
     value: true
-  - group: DotNet-DotNetCli-Storage
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
@@ -36,7 +35,6 @@ variables:
 - name: _InternalRuntimeDownloadArgs
   value: ''
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-  - group: DotNetBuilds storage account read tokens
   - name: _InternalRuntimeDownloadArgs
     value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal 
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
@@ -210,13 +208,6 @@ extends:
                   _BuildConfig: Debug
                   _DockerParameter: '--docker fedora.29'
                   _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_CentOS_7_1_Debug_x64:
-                  _BuildConfig: Debug
-                  _DockerParameter: '--docker centos'
-                  _LinuxPortable: ''
                   _RuntimeIdentifier: ''
                   _BuildArchitecture: 'x64'
                   _TestArg: $(_NonWindowsTestArg)
@@ -419,6 +410,8 @@ extends:
                 _TestArg: ''
 
       - template: /eng/common/templates-official/jobs/source-build.yml@self
+        parameters:
+          enableInternalSources: true
 
       - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml@self
 
