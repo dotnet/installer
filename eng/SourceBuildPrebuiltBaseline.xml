@@ -11,7 +11,13 @@
     -->
     <UsagePattern IdentityGlob="NuGet.*/*" />
 
+    <!-- These MSBuild packages are allowed for installer repo build. The live version will be flowed in for the VMR build. -->
+    <UsagePattern IdentityGlob="Microsoft.Build*/17.10.4" />
+    <UsagePattern IdentityGlob="Microsoft.NET.StringTools/17.10.4" />
+
     <!-- These are coming in via runtime but the source-build infra isn't able to automatically pick up the right intermediate. -->
     <UsagePattern IdentityGlob="Microsoft.NETCore.App.Crossgen2.linux-x64/*8.0.*" />
+
+    <UsagePattern IdentityGlob="System.Threading.Tasks.Dataflow/*8.0.0*" />
   </IgnorePatterns>
 </UsageData>
