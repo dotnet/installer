@@ -12,7 +12,7 @@ parameters:
   alpine317Container: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.17
   centOS7Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-source-build
   centOSStream9Container: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
-  fedora39Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-39
+  fedora40Container: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-40
   ubuntu2004Arm64Container: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-20.04-arm64
   poolInternalAmd64:
     name: NetCore1ESPool-Svc-Internal
@@ -69,9 +69,9 @@ jobs:
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: true
           _RunOnline: false
-        Fedora39-Offline:
+        fedora40-Offline:
           _BootstrapPrep: false
-          _Container: ${{ parameters.fedora39Container }}
+          _Container: ${{ parameters.fedora40Container }}
           _EnablePoison: true
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: false
@@ -114,9 +114,9 @@ jobs:
       excludeSdkContentTests: true
       installerBuildResourceId: ${{ parameters.installerBuildResourceId }}
       matrix:
-        Fedora39-Offline:
-          _PreviousSourceBuildArtifact: Build_Tarball_x64 Fedora39-Offline_Artifacts
-          _Container: ${{ parameters.fedora39Container }}
+        fedora40-Offline:
+          _PreviousSourceBuildArtifact: Build_Tarball_x64 fedora40-Offline_Artifacts
+          _Container: ${{ parameters.fedora40Container }}
           _EnablePoison: false
           _ExcludeOmniSharpTests: false
           _OverrideDistroDisablingSha1: false
