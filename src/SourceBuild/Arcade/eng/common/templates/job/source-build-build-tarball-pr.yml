@@ -216,7 +216,14 @@ jobs:
       publishRunAttachments: true
       testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '$(tarballDir)/artifacts/${{ parameters.architecture}}/Release/'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: $(tarballDir)/artifacts/${{ parameters.architecture}}/Release/
+      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
+    displayName: Copy artifacts to Artifact Staging Directory
+    condition: succeededOrFailed()
+
+  - publish: $(Build.ArtifactStagingDirectory)/publishing
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
     condition: succeededOrFailed()
