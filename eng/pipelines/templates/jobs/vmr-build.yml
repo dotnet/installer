@@ -235,7 +235,12 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs ${{ parameters.extraProperties }}
+      extraProperties="${{ parameters.extraProperties }}"
+      if [[ -n "$extraProperties" ]]; then
+        extraProperties="-- $extraProperties"
+      fi
+
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraProperties
     displayName: Build
 
   - script: |
