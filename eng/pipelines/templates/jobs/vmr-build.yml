@@ -283,7 +283,7 @@ jobs:
       publishRunAttachments: true
       testRunTitle: SourceBuild_SmokeTests_$(Agent.JobName)
 
-  - publish: '${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/'
+  - publish: $(Build.ArtifactStagingDirectory)/publishing
     artifact: $(Agent.JobName)_Artifacts
     displayName: Publish Artifacts
     condition: succeededOrFailed()
