@@ -324,9 +324,12 @@
     </ItemGroup>
     <PropertyGroup>
       <LatestTemplateMsiInstallerFile>@(LatestTemplateInstallerComponent->'%(MSIInstallerFile)')</LatestTemplateMsiInstallerFile>
+
+      <UpgradePoliciesSrcPath>$(PkgMicrosoft_DotNet_Build_Tasks_Installers)\build\wix\bundle\upgradePolicies.wxs</UpgradePoliciesSrcPath>
     </PropertyGroup>
     
     <Exec Command="powershell -NoProfile -NoLogo $(SdkGenerateBundlePowershellScript) ^
+                      '$(UpgradePoliciesSrcPath)' ^
                       '$(WorkloadManifestsWxsPath)' ^
                       '$(SdkMSIInstallerFile)' ^
                       '$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxWixLibFileName)' ^
@@ -361,6 +364,7 @@
     <ItemGroup>
         <BundleMsiWixSrcFiles Include="$(WixRoot)\bundle.wixobj" />
         <BundleMsiWixSrcFiles Include="$(WixRoot)\WorkloadManifests.wixobj" />
+        <BundleMsiWixSrcFiles Include="$(WixRoot)\upgradePolicies.wixobj" />
         <BundleMsiWixSrcFiles Include="$(DownloadsFolder)$(DownloadedAspNetCoreSharedFxWixLibFileName)" />
     </ItemGroup>
     <CreateLightCommandPackageDrop
@@ -371,7 +375,7 @@
       InstallerFile="$(CombinedFrameworkSdkHostMSIInstallerFile)"
       WixExtensions="WixBalExtension;WixUtilExtension;WixTagExtension"
       WixSrcFiles="@(BundleMsiWixSrcFiles)"
-      AdditionalBasePaths="$(MSBuildThisFileDirectory)packaging/windows/clisdk">
+      AdditionalBasePaths="$(MSBuildThisFileDirectory)packaging/windows/clisdk;$(PkgMicrosoft_DotNet_Build_Tasks_Installers)\build\wix\bundle">
       <Output TaskParameter="OutputFile" PropertyName="_LightCommandPackageNameOutput" />
     </CreateLightCommandPackageDrop>
   </Target>

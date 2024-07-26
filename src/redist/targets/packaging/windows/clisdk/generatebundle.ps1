@@ -2,6 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 param(
+    [Parameter(Mandatory=$true)][string]$UpgradePoliciesWxsFile,
     [Parameter(Mandatory=$true)][string]$WorkloadManifestWxsFile,
     [Parameter(Mandatory=$true)][string]$CLISDKMSIFile,
     [Parameter(Mandatory=$true)][string]$ASPNETRuntimeWixLibFile,
@@ -74,11 +75,13 @@ function RunCandleForBundle
         -dDotNetRuntimeVersion="$DotNetRuntimeVersion" `
         -dAspNetCoreVersion="$AspNetCoreVersion" `
         -dLocalizedContentDirs="$LocalizedContentDirs" `
+        -dMajorVersion="$($DotnetCLINugetVersion.Split(".")[0])" `
+        -dMinorVersion="$($DotnetCLINugetVersion.Split(".")[1])" `
         -arch "$Architecture" `
         -ext WixBalExtension.dll `
         -ext WixUtilExtension.dll `
         -ext WixTagExtension.dll `
-        "$AuthWsxRoot\bundle.wxs" "$WorkloadManifestWxsFile"
+        "$AuthWsxRoot\bundle.wxs" "$WorkloadManifestWxsFile" "$UpgradePoliciesWxsFile"
 
     Write-Information "Candle output: $candleOutput"
 
@@ -98,6 +101,7 @@ function RunLightForBundle
     pushd "$WixRoot"
 
     $WorkloadManifestWixobjFile = [System.IO.Path]::GetFileNameWithoutExtension($WorkloadManifestWxsFile) + ".wixobj"
+    $UpgradePoliciesWixobjFile = [System.IO.Path]::GetFileNameWithoutExtension($UpgradePoliciesWxsFile) + ".wixobj"
 
     Write-Information "Running light for bundle.."
 
@@ -105,6 +109,7 @@ function RunLightForBundle
         -cultures:en-us `
         bundle.wixobj `
         $WorkloadManifestWixobjFile `
+        $UpgradePoliciesWixobjFile `
         $ASPNETRuntimeWixlibFile `
         -ext WixBalExtension.dll `
         -ext WixUtilExtension.dll `
