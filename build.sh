@@ -29,11 +29,6 @@ args=
 while [[ $# > 0 ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
-        --docker)
-            export BUILD_IN_DOCKER=1
-            export DOCKER_IMAGENAME=$2
-            shift
-            ;;
         --noprettyprint)
             export DOTNET_CORESDK_NOPRETTYPRINT=1
             ;;
@@ -44,14 +39,4 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-dockerbuild()
-{
-    BUILD_COMMAND=$DIR/run-build.sh $DIR/eng/dockerrun.sh --non-interactive "$@"
-}
-
-# Check if we need to build in docker
-if [ ! -z "$BUILD_IN_DOCKER" ]; then
-    dockerbuild $args
-else
-    $DIR/run-build.sh $args
-fi
+$DIR/run-build.sh $args
