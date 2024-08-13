@@ -42,6 +42,7 @@ jobs:
         arguments: $(Build.SourcesDirectory)/NuGet.config $Token
       env:
         Token: $(dn-bot-dnceng-artifact-feeds-rw)
+    - template: /eng/common/templates-official/steps/enable-internal-runtimes.yml
   - script: |
       set -x
       df -h
