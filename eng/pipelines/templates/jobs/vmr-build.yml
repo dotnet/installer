@@ -57,6 +57,11 @@ parameters:
   type: boolean
   default: false
 
+# Freeform field for extra values to pass to build.sh for special build modes
+- name: extraProperties
+  type: string
+  default: ''
+
 jobs:
 - job: ${{ parameters.buildName }}_${{ parameters.architecture }}
   timeoutInMinutes: 150
@@ -100,7 +105,7 @@ jobs:
     - output: pipelineArtifact
       displayName: 'Publish Artifacts'
       condition: succeededOrFailed()
-      targetPath: '${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/'
+      targetPath: $(Build.ArtifactStagingDirectory)/publishing
       artifactName: $(Agent.JobName)_Artifacts
 
   steps:
@@ -230,7 +235,12 @@ jobs:
         customBuildArgs="$customBuildArgs --use-mono-runtime"
       fi
 
-      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs
+      extraProperties="${{ parameters.extraProperties }}"
+      if [[ -n "$extraProperties" ]]; then
+        extraProperties="-- $extraProperties"
+      fi
+
+      docker run --rm -v "$(sourcesPath):/vmr" -w /vmr $customRunArgs ${{ parameters.container }} ./build.sh --clean-while-building $(additionalBuildArgs) $customBuildArgs $extraProperties
     displayName: Build
 
   - script: |
@@ -244,7 +254,7 @@ jobs:
         poisonArg='--poison'
       fi
 
-      docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) -- -p:SmokeTestConsoleVerbosity=detailed
+      docker run --rm $dockerVolumeArgs -w /vmr $dockerEnvArgs ${{ parameters.container }} ./build.sh $poisonArg --run-smoke-test $(additionalBuildArgs) -- -p:SmokeTestConsoleVerbosity=detailed ${{ parameters.extraProperties }}
     displayName: Run Tests
 
   # Don't use CopyFiles@2 as it encounters permissions issues because it indexes all files in the source directory graph.
@@ -267,6 +277,13 @@ jobs:
     continueOnError: true
     condition: succeededOrFailed()
 
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: ${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/
+      TargetFolder: $(Build.ArtifactStagingDirectory)/publishing
+    displayName: Copy artifacts to Artifact Staging Directory
+    condition: succeededOrFailed()
+
   - ${{ if eq(variables['System.TeamProject'], 'public') }}:
     - publish: '$(Build.StagingDirectory)/BuildLogs'
       artifact: $(Agent.JobName)_BuildLogs_Attempt$(System.JobAttempt)
@@ -274,7 +291,7 @@ jobs:
       continueOnError: true
       condition: succeededOrFailed()
 
-    - publish: '${{ variables.sourcesPath }}/artifacts/${{ parameters.architecture }}/Release/'
+    - publish: $(Build.ArtifactStagingDirectory)/publishing
       artifact: $(Agent.JobName)_Artifacts
       displayName: Publish Artifacts
       condition: succeededOrFailed()
