@@ -175,16 +175,16 @@ stages:
               _BuildArchitecture: 'x64'
               _AdditionalBuildParameters: '/p:BuildSdkDeb=true'
               _TestArg: $(_NonWindowsTestArg)
-            Build_CentOS_7_2_Release_x64:
+            Build_Rhel_7_2_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker centos'
+              _DockerParameter: '--docker rhel'
               _LinuxPortable: ''
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
               _TestArg: $(_NonWindowsTestArg)
-            Build_CentOS_7_2_Release_Arm64:
+            Build_Rhel_7_2_Release_Arm64:
               _BuildConfig: Release
-              _DockerParameter: '--docker centos'
+              _DockerParameter: '--docker rhel'
               _LinuxPortable: ''
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
@@ -291,7 +291,7 @@ stages:
               _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_x64:
               _BuildConfig: Release
-              _DockerParameter: '--docker centos'
+              _DockerParameter: '--docker rhel'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: ''
               _BuildArchitecture: 'x64'
@@ -301,7 +301,7 @@ stages:
               _TestArg: $(_NonWindowsTestArg)
             Build_Linux_Portable_Rpm_Release_Arm64:
               _BuildConfig: Release
-              _DockerParameter: '--docker centos'
+              _DockerParameter: '--docker rhel'
               _LinuxPortable: '--linux-portable'
               _RuntimeIdentifier: '--runtime-id linux-arm64'
               _BuildArchitecture: 'arm64'
