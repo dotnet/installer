@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright (c) .NET Foundation and contributors. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
@@ -62,5 +62,9 @@ while [[ $# > 0 ]]; do
 
     shift
 done
+
+source $REPOROOT/eng/common/native/init-os-and-arch.sh
+source $REPOROOT/eng/common/native/init-distro-rid.sh
+initDistroRidGlobal "$os" "$arch" ""
 
 . "$REPOROOT/eng/common/build.sh" --build --restore "${args[@]}"
