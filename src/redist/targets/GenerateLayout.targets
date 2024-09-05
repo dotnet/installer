@@ -496,7 +496,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <TestHostDepsJsonPath Include="$(OutputPath)/**/testhost.deps.json" />
+      <TestHostDepsJsonPath Include="$(RedistLayoutPath)/**/testhost.deps.json" />
     </ItemGroup>
     <ReplaceFileContents
       InputFiles="@(TestHostDepsJsonPath)"
