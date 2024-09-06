@@ -4,7 +4,7 @@
 #
 
 # Dockerfile that creates a container suitable to build dotnet-cli
-FROM mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-b46d863-20180719033416
+FROM mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-rpmpkg
 
 RUN yum -q -y install sudo
 
@@ -16,7 +16,7 @@ RUN echo 'code_executor ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # With the User Change, we need to change permissions on these directories
 RUN chmod -R a+rwx /usr/local
 RUN chmod -R a+rwx /home
-RUN chmod -R 755 /usr/bin/sudo
+RUN chmod -R 4755  /usr/bin/sudo
 
 # Set user to the one we just created
 USER ${USER_ID}
