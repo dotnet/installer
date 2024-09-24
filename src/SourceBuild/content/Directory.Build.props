@@ -123,6 +123,7 @@
     <GitInfoRepoPropsFile>$(GitInfoDir)$(RepositoryName).props</GitInfoRepoPropsFile>
     <GitInfoAllRepoPropsFile>$(GitInfoDir)AllRepoVersions.props</GitInfoAllRepoPropsFile>
     <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
+    <DotNetBuildPrebuiltReportDir>$(PackageReportDir)$(MSBuildProjectName)</DotNetBuildPrebuiltReportDir>
     <RepoProjectsDir>$(ProjectDir)/repo-projects/</RepoProjectsDir>
     <ResultingPrebuiltPackagesDir>$(PackageReportDir)prebuilt-packages/</ResultingPrebuiltPackagesDir>
     <PackageListsDir>$(PackageReportDir)packagelists/</PackageListsDir>

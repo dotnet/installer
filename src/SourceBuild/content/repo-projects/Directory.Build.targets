@@ -415,6 +415,21 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
   </Target>
 
+  <Target Name="MoveDotNetBuildLogs"
+          AfterTargets="Build"
+          BeforeTargets="CleanupRepo"
+          Condition="'$(IsUtilityProject)' != 'true' and
+            Exists('$(ProjectDirectory)artifacts')">
+    <ItemGroup>
+      <PrebuiltReportsToMove Include="$(ProjectDirectory)artifacts/source-build/self/prebuilt-report/*" />
+    </ItemGroup>
+
+    <!-- Move the prebuilt reports -->
+    <Move SourceFiles="@(PrebuiltReportsToMove)"
+          DestinationFolder="$(DotNetBuildPrebuiltReportDir)"
+          Condition="'@(PrebuiltReportsToMove)' != ''" />
+  </Target>
+
   <Target Name="DisplayDirSizeBeforeBuild"
           BeforeTargets="Build"
           Condition=" '$(CleanWhileBuilding)' == 'true' ">
