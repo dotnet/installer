@@ -7,31 +7,23 @@ trigger:
     - main
     - master
     - release/*
-    - internal/release/3.*
-    - internal/release/5.*
-    - internal/release/6.*
+    - internal/release/*
 
 variables:
 - name: _PublishUsingPipelines
   value: false
-- name: PostBuildSign
-  value: true
+- ${{ if or(startswith(variables['Build.SourceBranch'], 'refs/heads/release/'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/'), eq(variables['Build.Reason'], 'Manual')) }}:
+  - name: PostBuildSign
+    value: false
+- ${{ else }}:
+  - name: PostBuildSign
+    value: true
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: Codeql.Enabled
     value: true
   - group: DotNet-Installer-SDLValidation-Params
   - name: _PublishUsingPipelines
     value: true
-# Default to running tests in PRs and public CI, but not in official builds
-- name: _WindowsTestArg
-  value: '-test'
-- name: _NonWindowsTestArg
-  value: '--test'
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - name: _WindowsTestArg
-    value: ''
-  - name: _NonWindowsTestArg
-    value: ''
 - name: _InternalRuntimeDownloadArgs
   value: ''
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
@@ -39,10 +31,7 @@ variables:
     value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
-- name: DncEngPublicBuildPool
-  value: NetCore-Svc-Public
-- name: DncEngInternalBuildPool
-  value: NetCore1ESPool-Svc-Internal
+- template: /eng/common/templates/variables/pool-providers.yml
 # Set the MicroBuild plugin installation directory to the agent temp directory to avoid SDL tool scanning.
 - name: MicroBuildOutputFolderOverride
   value: $(Agent.TempDirectory)
@@ -61,395 +50,299 @@ extends:
     template: v1/1ES.Unofficial.PipelineTemplate.yml@1esPipelines
   parameters:
     containers:
+      alpine319WithNode:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:alpine-3.19-WithNode
+      cblMariner20Fpm:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
+      centosStream8:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
+      debian11:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
       fedora40:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-40
+      ubuntu2204:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
+      mariner20CrossArm:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-cross-arm-alpine
+      ubuntu2204DebPkg:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
-        image: 1es-windows-2019
+        image: 1es-windows-2022
         os: windows
       ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         componentgovernance:
           ignoreDirectories: artifacts, .packages
+      # Temporary to workaround MicroBuild issues.
+      credscan:
+        enabled: false
+        justificationForDisabling: 'CredScan is failing on the MicroBuild signing plugin. "MicroBuild/Plugins/nuget.config" has changing content and thus cannot be baselined.'
     stages:
-    - stage: build
+    - stage: Build
       jobs:
       # Build Retry Configuration
       - job: Publish_Build_Configuration
         pool:
           ${{ if eq(variables['System.TeamProject'], 'public') }}:
             name: $(DncEngPublicBuildPool)
-            image: 1es-windows-2019-open
+            image: 1es-windows-2022-open
             os: windows
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
             name: $(DncEngInternalBuildPool)
-            image: 1es-windows-2019
+            image: 1es-windows-2022
             os: windows
         steps:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: Publish Build Config
           inputs:
-            targetPath: $(Build.SourcesDirectory)\eng\BuildConfiguration
-            artifactName: BuildConfiguration
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Windows_NT
-          pool:
-            ${{ if eq(variables['System.TeamProject'], 'public') }}:
-              name: $(DncEngPublicBuildPool)
-              image: 1es-windows-2019-open
-              os: windows
-            ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-              name: $(DncEngInternalBuildPool)
-              image: 1es-windows-2019
-              os: windows
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              # Public-only builds
-              ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-                Build_Debug_x86:
-                  _BuildConfig: Debug
-                  _BuildArchitecture: x86
-                  _DOTNET_CLI_UI_LANGUAGE: ''
-                  _AdditionalBuildParameters: ''
-                  _TestArg: $(_WindowsTestArg)
-                Build_ES_Debug_x64:
-                  _BuildConfig: Debug
-                  _BuildArchitecture: x64
-                  _DOTNET_CLI_UI_LANGUAGE: es
-                  _AdditionalBuildParameters: ''
-                  _TestArg: ''
-              # Internal-only builds
-              ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-                Build_Release_x86:
-                  _BuildConfig: Release
-                  _BuildArchitecture: x86
-                  _DOTNET_CLI_UI_LANGUAGE: ''
-                  _AdditionalBuildParameters: ''
-                  _TestArg: $(_WindowsTestArg)
-              # Always run builds
-              Build_Release_x64:
-                _BuildConfig: Release
-                _BuildArchitecture: x64
-                _DOTNET_CLI_UI_LANGUAGE: ''
-                _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
-                _TestArg: $(_WindowsTestArg)
-              Build_Release_arm:
-                _BuildConfig: Release
-                _BuildArchitecture: arm
-                _DOTNET_CLI_UI_LANGUAGE: ''
-                _AdditionalBuildParameters: ''
-                # Never run tests on arm64
-                _TestArg: ''
-              Build_Release_arm64:
-                _BuildConfig: Release
-                _BuildArchitecture: arm64
-                _DOTNET_CLI_UI_LANGUAGE: ''
-                _AdditionalBuildParameters: ''
-                # Never run tests on arm64
-                _TestArg: ''
+            targetPath: $(Build.SourcesDirectory)\eng\buildConfiguration
+            artifactName: buildConfiguration
 
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Windows_NT
-          pool:
-            ${{ if eq(variables['System.TeamProject'], 'public') }}:
-              name: $(DncEngPublicBuildPool)
-              image: 1es-windows-2019-open
-              os: windows
-            ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-              name: $(DncEngInternalBuildPool)
-              image: 1es-windows-2019
-              os: windows
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              # Always run builds
-              Build_Release_x64:
-                _BuildConfig: Release
-                _BuildArchitecture: x64
-                _DOTNET_CLI_UI_LANGUAGE: ''
-                _AdditionalBuildParameters: '/p:PublishInternalAsset=true'
-                # Never run tests on PGO bits
-                _TestArg: ''
-              Build_Release_x86:
-                _BuildConfig: Release
-                _BuildArchitecture: x86
-                _DOTNET_CLI_UI_LANGUAGE: ''
-                _AdditionalBuildParameters: ''
-                _TestArg: ''
-          pgoInstrument: true
+      # PR-only jobs
+      - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
+        # Windows
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Windows_NT
+            jobName: Build_Debug_x64
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            additionalBuildParameters: '/p:PublishInternalAsset=true'
+            runTests: true
+        # Linux
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Ubuntu_22_04_Debug_x64
+            container: ubuntu2204
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            linuxPortable: true
+            runTests: true
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Fedora_40_Debug_x64
+            container: fedora40
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            linuxPortable: true
+            runTests: true
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_CentOS_8_Stream_Debug_x64
+            container: centosStream8
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            linuxPortable: false
+            runTests: true
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Debian_11_Debug_x64
+            container: debian11
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            additionalBuildParameters: '/p:BuildSdkDeb=true'
+            linuxPortable: false
+            runTests: true
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Arm64_Debug
+            buildConfiguration: Debug
+            buildArchitecture: arm64
+            runtimeIdentifier: 'linux-arm64'
+            linuxPortable: true
+            # Never run tests on arm64
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_musl_Debug_x64
+            container: alpine319WithNode
+            buildConfiguration: Debug
+            buildArchitecture: x64
+            runtimeIdentifier: 'linux-musl-x64'
+            # Pass in HostOSName when running on alpine
+            additionalBuildParameters: '/p:HostOSName="linux-musl"'
+            linuxPortable: false
+            runTests: true
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_LinuxPortable_Release_x64
+            buildConfiguration: Release
+            buildArchitecture: x64
+            linuxPortable: true
+            runTests: true
 
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Linux
-          pool:
-            ${{ if eq(variables['System.TeamProject'], 'public') }}:
-              name: $(DncEngPublicBuildPool)
-              image: 1es-ubuntu-2004-open
-              os: linux
-            ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-              name: $(DncEngInternalBuildPool)
-              image: 1es-ubuntu-2004
-              os: linux
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-                Build_Ubuntu_18_04_Debug_x64:
-                  _BuildConfig: Debug
-                  _DockerParameter: '--docker ubuntu.18.04'
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Fedora_29_Debug_x64:
-                  _BuildConfig: Debug
-                  _DockerParameter: '--docker fedora.29'
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Debian_11_Debug_x64:
-                  _BuildConfig: Debug
-                  _DockerParameter: '--docker debian'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  _AdditionalBuildParameters: '/p:BuildSdkDeb=true'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Rhel_7_2_Release_x64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker rhel'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Rhel_7_2_Release_Arm64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker rhel'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-arm64'
-                  _BuildArchitecture: 'arm64'
-                  # Never run tests on arm
-                  _TestArg: ''
-                  _AdditionalBuildParameters: '/p:CLIBUILD_SKIP_TESTS=true'
-                Build_Arm_Debug:
-                  _BuildConfig: Debug
-                  _DockerParameter: ''
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: '--runtime-id linux-arm'
-                  _BuildArchitecture: 'arm'
-                  # Never run tests on arm
-                  _TestArg: ''
-                Build_Arm64_Debug:
-                  _BuildConfig: Debug
-                  _DockerParameter: ''
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: '--runtime-id linux-arm64'
-                  _BuildArchitecture: 'arm64'
-                  # Never run tests on arm64
-                  _TestArg: ''
-                Build_Linux_musl_Debug_arm:
-                  _BuildConfig: Debug
-                  # linux-musl-arm cross gen depends on glibc 2.27 (this OS has it)
-                  _DockerParameter: '--docker ubuntu.18.04'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-arm'
-                  _BuildArchitecture: 'arm'
-                  _AdditionalBuildParameters: '/p:OSName="linux-musl"'
-                  # Never run tests on arm
-                  _TestArg: ''
-                Build_Linux_musl_Debug_arm64:
-                  _BuildConfig: Debug
-                  _DockerParameter: ''
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-arm64'
-                  _BuildArchitecture: 'arm64'
-                  _AdditionalBuildParameters: '/p:OSName="linux-musl"'
-                  # Never run tests on arm64
-                  _TestArg: ''
-                Build_Linux_musl_Debug_x64:
-                  _BuildConfig: Debug
-                  _DockerParameter: '--docker alpine.3.15'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-x64'
-                  _BuildArchitecture: 'x64'
-                  # Pass in HostOSName when running on alpine
-                  _AdditionalBuildParameters: '/p:HostOSName="linux-musl"'
-                  _TestArg: $(_NonWindowsTestArg)
-              ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-                Build_Arm_Release:
-                  _BuildConfig: Release
-                  _DockerParameter: ''
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: '--runtime-id linux-arm'
-                  _BuildArchitecture: 'arm'
-                  # Never run tests on arm
-                  _TestArg: ''
-                Build_Arm64_Release:
-                  _BuildConfig: Release
-                  _DockerParameter: ''
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: '--runtime-id linux-arm64'
-                  _BuildArchitecture: 'arm64'
-                  # Never run tests on arm64
-                  _TestArg: ''
-                Build_Linux_musl_Release_arm:
-                  _BuildConfig: Release
-                  # linux-musl-arm cross gen depends on glibc 2.27 (this OS has it)
-                  _DockerParameter: '--docker ubuntu.18.04'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-arm'
-                  _BuildArchitecture: 'arm'
-                  _AdditionalBuildParameters: '/p:OSName="linux-musl"'
-                  # Never run tests on arm
-                  _TestArg: ''
-                Build_Linux_musl_Release_arm64:
-                  _BuildConfig: Release
-                  _DockerParameter: ''
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-arm64'
-                  _BuildArchitecture: 'arm64'
-                  _AdditionalBuildParameters: '/p:OSName="linux-musl"'
-                  # Never run tests on arm64
-                  _TestArg: ''
-                Build_Linux_musl_Release_x64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker alpine.3.15'
-                  _LinuxPortable: ''
-                  _RuntimeIdentifier: '--runtime-id linux-musl-x64'
-                  _BuildArchitecture: 'x64'
-                  # Pass in HostOSName when running on alpine
-                  _AdditionalBuildParameters: '/p:HostOSName="linux-musl"'
-                Build_Linux_Portable_Deb_Release_x64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker ubuntu.18.04'
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  # Do not publish zips and tarballs. The linux-x64 binaries are
-                  # already published by Build_LinuxPortable_Release_x64
-                  _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Linux_Portable_Rpm_Release_x64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker rhel'
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: ''
-                  _BuildArchitecture: 'x64'
-                  # Do not publish zips and tarballs. The linux-x64 binaries are
-                  # already published by Build_LinuxPortable_Release_x64
-                  _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false'
-                  _TestArg: $(_NonWindowsTestArg)
-                Build_Linux_Portable_Rpm_Release_Arm64:
-                  _BuildConfig: Release
-                  _DockerParameter: '--docker rhel'
-                  _LinuxPortable: '--linux-portable'
-                  _RuntimeIdentifier: '--runtime-id linux-arm64'
-                  _BuildArchitecture: 'arm64'
-                  # Do not publish zips and tarballs. The linux-x64 binaries are
-                  # already published by Build_LinuxPortable_Release_x64
-                  _AdditionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true'
-                  # Never run tests on arm64
-                  _TestArg: ''
-              Build_LinuxPortable_Release_x64:
-                _BuildConfig: Release
-                _DockerParameter: ''
-                _LinuxPortable: '--linux-portable'
-                _RuntimeIdentifier: ''
-                _BuildArchitecture: 'x64'
-                _TestArg: $(_NonWindowsTestArg)
+        # MacOS
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Darwin
+            jobName: Build_Release_x64
+            buildConfiguration: Release
+            buildArchitecture: x64
+            runTests: true
 
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Linux
-          pool:
-            ${{ if eq(variables['System.TeamProject'], 'public') }}:
-              name: $(DncEngPublicBuildPool)
-              image: 1es-ubuntu-2004-open
-              os: linux
-            ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-              name: $(DncEngInternalBuildPool)
-              image: 1es-ubuntu-2004
-              os: linux
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              # Always run builds
-              Build_LinuxPortable_Release_x64:
-                _BuildConfig: Release
-                _DockerParameter: ''
-                _LinuxPortable: '--linux-portable'
-                _RuntimeIdentifier: ''
-                _BuildArchitecture: 'x64'
-                _TestArg: ''
-          pgoInstrument: true
+      # Official/PGO instrumentation Builds
+      - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+        # Windows
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Windows_NT
+            jobName: Build_Release_x64
+            buildConfiguration: Release
+            buildArchitecture: x64
+            additionalBuildParameters: '/p:PublishInternalAsset=true'
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Windows_NT
+            jobName: Build_Release_x86
+            buildConfiguration: Release
+            buildArchitecture: x86
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Windows_NT
+            jobName: Build_Release_arm64
+            buildConfiguration: Release
+            buildArchitecture: arm64
+            runTests: false
+        # Linux
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Arm_Release
+            buildConfiguration: Release
+            buildArchitecture: arm
+            runtimeIdentifier: 'linux-arm'
+            linuxPortable: true
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Arm64_Release
+            buildConfiguration: Release
+            buildArchitecture: arm64
+            runtimeIdentifier: 'linux-arm64'
+            linuxPortable: true
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_musl_Release_arm
+            container: mariner20CrossArm
+            buildConfiguration: Release
+            buildArchitecture: arm
+            runtimeIdentifier: 'linux-musl-arm'
+            additionalBuildParameters: '/p:OSName="linux-musl"'
+            linuxPortable: false
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_musl_Release_arm64
+            buildConfiguration: Release
+            buildArchitecture: arm64
+            runtimeIdentifier: 'linux-musl-arm64'
+            additionalBuildParameters: '/p:OSName="linux-musl"'
+            linuxPortable: false
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_musl_Release_x64
+            container: alpine319WithNode
+            buildConfiguration: Release
+            buildArchitecture: x64
+            runtimeIdentifier: 'linux-musl-x64'
+            # Pass in HostOSName when running on alpine
+            additionalBuildParameters: '/p:HostOSName="linux-musl"'
+            linuxPortable: false
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_Portable_Deb_Release_x64
+            container: ubuntu2204DebPkg
+            buildConfiguration: Release
+            buildArchitecture: x64
+            # Do not publish zips and tarballs. The linux-x64 binaries are
+            # already published by Build_LinuxPortable_Release_x64
+            additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:BuildSdkDeb=true'
+            linuxPortable: true
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_Portable_Rpm_Release_x64
+            container: cblMariner20Fpm
+            buildConfiguration: Release
+            buildArchitecture: x64
+            # Do not publish zips and tarballs. The linux-x64 binaries are
+            # already published by Build_LinuxPortable_Release_x64
+            additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:IsRPMBasedDistro=true'
+            linuxPortable: true
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_Linux_Portable_Rpm_Release_Arm64
+            container: cblMariner20Fpm
+            buildConfiguration: Release
+            buildArchitecture: arm64
+            runtimeIdentifier: 'linux-arm64'
+            # Do not publish zips and tarballs. The linux-x64 binaries are
+            # already published by Build_LinuxPortable_Release_x64
+            additionalBuildParameters: '/p:PublishBinariesAndBadge=false /p:CLIBUILD_SKIP_TESTS=true  /p:IsRPMBasedDistro=true'
+            linuxPortable: true
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Linux
+            jobName: Build_LinuxPortable_Release_x64
+            buildConfiguration: Release
+            buildArchitecture: x64
+            linuxPortable: true
+            runTests: false
 
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Darwin
-          pool:
-            name: Azure Pipelines
-            image: macos-13
-            os: macOS
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              Build_Release_x64:
-                _BuildConfig: Release
-                _RuntimeIdentifier: ''
-                _BuildArchitecture: 'x64'
-                _TestArg: $(_NonWindowsTestArg)
-              Build_Release_arm64:
-                _BuildConfig: Release
-                _RuntimeIdentifier: '--runtime-id osx-arm64'
-                _BuildArchitecture: 'arm64'
-                # Never run tests on arm64
-                _TestArg: ''
+        # MacOS
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Darwin
+            jobName: Build_Release_x64
+            buildConfiguration: Release
+            buildArchitecture: x64
+            runTests: false
+        - template: eng/build.yml@self
+          parameters:
+            agentOs: Darwin
+            jobName: Build_Release_arm64
+            runtimeIdentifier: 'osx-arm64'
+            buildConfiguration: Release
+            buildArchitecture: arm64
+            runTests: false
 
+      # Source Build
       - template: /eng/common/templates-official/jobs/source-build.yml@self
         parameters:
           enableInternalSources: true
 
-      - template: /src/SourceBuild/Arcade/eng/common/templates/job/source-build-create-tarball.yml@self
-
-      - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      - stage: Publish
+        dependsOn:
+        - Build
+        jobs:
         - template: /eng/common/templates-official/job/publish-build-assets.yml@self
           parameters:
-            dependsOn:
-            - Windows_NT
-            - Linux
-            - Darwin
-            - Source_Build_Managed
-            - Source_Build_Create_Tarball
-            - PGO_Linux
-            - PGO_Windows_NT
             publishUsingPipelines: true
+            publishAssetsImmediately: true
             pool:
               name: $(DncEngInternalBuildPool)
-              image: 1es-windows-2019
+              image: 1es-windows-2022
               os: windows
-
-    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: /eng/common/templates-official/post-build/post-build.yml@self
-        parameters:
-          publishingInfraVersion: 3
-          enableSymbolValidation: false
-          enableSigningValidation: false
-          enableNugetValidation: false
-          enableSourceLinkValidation: false
-          publishInstallersAndChecksums: true
-          SDLValidationParameters:
-            enable: false
-            params: ' -SourceToolsList @("policheck","credscan")
-            -TsaInstanceURL $(_TsaInstanceURL)
-            -TsaProjectName $(_TsaProjectName)
-            -TsaNotificationEmail $(_TsaNotificationEmail)
-            -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
-            -TsaBugAreaPath $(_TsaBugAreaPath)
-            -TsaIterationPath $(_TsaIterationPath)
-            -TsaRepositoryName "dotnet-installer"
-            -TsaCodebaseName "dotnet-installer"
-            -TsaPublish $True'
