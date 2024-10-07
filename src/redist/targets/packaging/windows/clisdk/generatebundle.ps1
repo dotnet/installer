@@ -54,7 +54,9 @@ function RunCandleForBundle
         -dSDKProductBandVersion="$SDKProductBandVersion" `
         -dNugetVersion="$DotnetCLINugetVersion" `
         -dVersionMajor="$VersionMajor" `
+        -dMajorVersion="$VersionMajor" `
         -dVersionMinor="$VersionMinor" `
+        -dMinorVersion="$VersionMinor" `
         -dCLISDKMsiSourcePath="$CLISDKMSIFile" `
         -dDependencyKeyName="$DependencyKeyName" `
         -dUpgradeCode="$UpgradeCode" `
