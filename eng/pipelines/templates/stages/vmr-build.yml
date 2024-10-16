@@ -1,0 +1,260 @@
+### This stage source-builds https://github.com/dotnet/dotnet with varying parameters
+### If run in a PR, new changes are applied to a local copy of the VMR, then it is source-built and tested
+
+parameters:
+- name: dependsOn
+  type: object
+  default: []
+- name: condition
+  type: string
+  default: always()
+
+  # Branch of the VMR to use (to push to for internal builds)
+- name: vmrBranch
+  type: string
+  default: $(Build.SourceBranch)
+
+  # True when build is running from dotnet/dotnet directly
+- name: isBuiltFromVmr
+  type: boolean
+  default: false
+
+# These are not expected to be passed it but rather just object variables reused below
+- name: pool_Linux
+  type: object
+  default:
+    name: $(defaultPoolName)
+    image: $(poolImage_Linux)
+    demands: ImageOverride -equals $(poolImage_Linux)
+    os: linux
+
+- name: pool_LinuxArm64
+  type: object
+  default:
+    name: $(poolName_LinuxArm64)
+    image: $(poolImage_LinuxArm64)
+    demands: ImageOverride -equals $(poolImage_LinuxArm64)
+    hostArchitecture: Arm64
+    os: linux
+
+stages:
+- stage: VMR_Source_Build
+  displayName: VMR Source-Build
+  dependsOn: ${{ parameters.dependsOn }}
+  condition: ${{ parameters.condition }}
+  variables:
+  - template: ../variables/vmr-build.yml@self
+  - ${{ if ne(parameters.vmrBranch, '') }}:
+    - name: VmrBranch
+      value: ${{ parameters.vmrBranch }}
+  - ${{ else }}:
+    - name: VmrBranch
+      value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), 'refs/pull/', '') }}
+
+  jobs:
+
+  # PR and CI legs ------------------------------------
+
+  - template: ../jobs/vmr-build.yml@self
+    parameters:
+      # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+      buildName: ${{ format('{0}_Online_MsftSdk', variables.centOSStreamName) }}
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool: ${{ parameters.pool_Linux }}
+      container: ${{ variables.centOSStreamContainer }}
+      buildFromArchive: false            # 🚫
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      runOnline: true                    # ✅
+      useMonoRuntime: false              # 🚫
+      withPreviousSDK: false             # 🚫
+
+  - template: ../jobs/vmr-build.yml@self
+    parameters:
+      # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+      buildName: ${{ format('{0}_Offline_MsftSdk', variables.centOSStreamName) }}
+      isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+      vmrBranch: ${{ variables.VmrBranch }}
+      architecture: x64
+      pool: ${{ parameters.pool_Linux }}
+      container: ${{ variables.centOSStreamContainer }}
+      buildFromArchive: true             # ✅
+      enablePoison: false                # 🚫
+      excludeOmniSharpTests: true        # ✅
+      runOnline: false                   # 🚫
+      useMonoRuntime: false              # 🚫
+      withPreviousSDK: false             # 🚫
+
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+
+    # CI - Stage 1 x64 legs ------------------------------------
+
+    # This AlmaLinux leg is intended to build with the min supported glibc version
+    - template: ../jobs/vmr-build.yml
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_MsftSdk', variables.almaLinuxName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.almaLinuxContainer }}
+        extraProperties: /p:TargetRID=${{ variables.almaLinuxX64Rid }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_MsftSdk', variables.alpineName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.alpineContainer }}
+        buildFromArchive: false            # ✅
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Online_PreviousSourceBuiltSdk', variables.centOSStreamName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.centOSStreamContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: true                    # ✅
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: true              # ✅
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_PreviousSourceBuiltSdk', variables.centOSStreamName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.centOSStreamContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: true              # ✅
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Mono_Offline_MsftSdk', variables.centOSStreamName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.centOSStreamContainer }}
+        buildFromArchive: true             # ✅
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: false                   # 🚫
+        useMonoRuntime: true               # ✅
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_MsftSdk', variables.fedoraName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.fedoraContainer }}
+        buildFromArchive: true             # ✅
+        enablePoison: true                 # ✅
+        excludeOmniSharpTests: false       # 🚫
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_MsftSdk', variables.ubuntuName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.ubuntuContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    # CI - Stage 1 arm64 Legs ------------------------------------
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}Arm64_Offline_MsftSdk', variables.ubuntuName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: arm64
+        pool: ${{ parameters.pool_LinuxArm64 }}
+        container: ${{ variables.ubuntuArmContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+
+    # CI - Stage 2 x64 Legs ------------------------------------
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Online_CurrentSourceBuiltSdk', variables.centOSStreamName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.centOSStreamContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: true        # ✅
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+        reuseBuildArtifactsFrom: ${{ format('{0}_Online_MsftSdk', variables.centOSStreamName) }}
+
+    - template: ../jobs/vmr-build.yml@self
+      parameters:
+        # Changing the build name requires updating the referenced name in the source-build-sdk-diff-tests.yml pipeline
+        buildName: ${{ format('{0}_Offline_CurrentSourceBuiltSdk', variables.fedoraName) }}
+        isBuiltFromVmr: ${{ parameters.isBuiltFromVmr }}
+        vmrBranch: ${{ variables.VmrBranch }}
+        architecture: x64
+        pool: ${{ parameters.pool_Linux }}
+        container: ${{ variables.fedoraContainer }}
+        buildFromArchive: false            # 🚫
+        enablePoison: false                # 🚫
+        excludeOmniSharpTests: false       # 🚫
+        runOnline: false                   # 🚫
+        useMonoRuntime: false              # 🚫
+        withPreviousSDK: false             # 🚫
+        reuseBuildArtifactsFrom: ${{ format('{0}_Offline_MsftSdk', variables.fedoraName) }}
