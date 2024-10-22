@@ -145,6 +145,7 @@ index ------------
 -./sdk/x.y.z/Containers/containerize/System.Reflection.MetadataLoadContext.dll
 -./sdk/x.y.z/Containers/containerize/System.Security.Cryptography.Pkcs.dll
 -./sdk/x.y.z/Containers/containerize/System.Security.Cryptography.ProtectedData.dll
+-./sdk/x.y.z/Containers/containerize/System.Text.Json.dll
 -./sdk/x.y.z/Containers/containerize/tr/
 -./sdk/x.y.z/Containers/containerize/tr/Microsoft.DotNet.Cli.Utils.resources.dll
 -./sdk/x.y.z/Containers/containerize/tr/Microsoft.NET.Build.Containers.resources.dll
@@ -270,6 +271,38 @@ index ------------
  ./sdk/x.y.z/Containers/tasks/netx.y/Newtonsoft.Json.dll
  ./sdk/x.y.z/Containers/tasks/netx.y/NuGet.Common.dll
 @@ ------------ @@
+ ./sdk/x.y.z/Containers/tasks/netx.y/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.dll
+ ./sdk/x.y.z/Containers/tasks/netx.y/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.Messages.dll
+ ./sdk/x.y.z/Containers/tasks/netx.y/runtimes/win/lib/netx.y/System.Security.Cryptography.Pkcs.dll
++./sdk/x.y.z/Containers/tasks/netx.y/System.Collections.Immutable.dll
+ ./sdk/x.y.z/Containers/tasks/netx.y/System.CommandLine.dll
+ ./sdk/x.y.z/Containers/tasks/netx.y/System.Configuration.ConfigurationManager.dll
+ ./sdk/x.y.z/Containers/tasks/netx.y/System.Diagnostics.EventLog.dll
+@@ ------------ @@
+ ./sdk/x.y.z/DotnetTools/dotnet-user-jwts/x.y.z/tools/netx.y/any/Microsoft.IdentityModel.Logging.dll
+ ./sdk/x.y.z/DotnetTools/dotnet-user-jwts/x.y.z/tools/netx.y/any/Microsoft.IdentityModel.Tokens.dll
+ ./sdk/x.y.z/DotnetTools/dotnet-user-jwts/x.y.z/tools/netx.y/any/System.IdentityModel.Tokens.Jwt.dll
++./sdk/x.y.z/DotnetTools/dotnet-user-jwts/x.y.z/tools/netx.y/any/System.Text.Json.dll
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/tools/
+@@ ------------ @@
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/tools/netx.y/any/Microsoft.Extensions.FileSystemGlobbing.dll
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/tools/netx.y/any/Microsoft.Extensions.Primitives.dll
+ ./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/tools/netx.y/any/Newtonsoft.Json.dll
++./sdk/x.y.z/DotnetTools/dotnet-user-secrets/x.y.z/tools/netx.y/any/System.Text.Json.dll
+ ./sdk/x.y.z/es/
+ ./sdk/x.y.z/es/dotnet.resources.dll
+ ./sdk/x.y.z/es/Microsoft.Build.resources.dll
+@@ ------------ @@
+ ./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.Messages.dll
+ ./sdk/x.y.z/FSharp/runtimes/win/lib/netx.y/System.Security.Cryptography.Pkcs.dll
+ ./sdk/x.y.z/FSharp/System.CodeDom.dll
++./sdk/x.y.z/FSharp/System.Collections.Immutable.dll
+ ./sdk/x.y.z/FSharp/System.Configuration.ConfigurationManager.dll
+ ./sdk/x.y.z/FSharp/System.Diagnostics.EventLog.dll
+ ./sdk/x.y.z/FSharp/System.Resources.Extensions.dll
+@@ ------------ @@
  ./sdk/x.y.z/Microsoft.Build.NuGetSdkResolver.dll
  ./sdk/x.y.z/Microsoft.Build.Tasks.Core.dll
  ./sdk/x.y.z/Microsoft.Build.Utilities.Core.dll
@@ -286,6 +319,22 @@ index ------------
  ./sdk/x.y.z/Microsoft.VisualStudio.TestPlatform.Common.dll
  ./sdk/x.y.z/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
 @@ ------------ @@
+ ./sdk/x.y.z/runtimes/win/lib/netx.y/System.Diagnostics.EventLog.Messages.dll
+ ./sdk/x.y.z/runtimes/win/lib/netx.y/System.Security.Cryptography.Pkcs.dll
+ ./sdk/x.y.z/runtimes/win/lib/netx.y/System.ServiceProcess.ServiceController.dll
++./sdk/x.y.z/runtimes/win/lib/netx.y/System.Text.Encoding.CodePages.dll
+ ./sdk/x.y.z/SDKPrecomputedAssemblyReferences.cache
+ ./sdk/x.y.z/SdkResolvers/
+ ./sdk/x.y.z/SdkResolvers/Microsoft.Build.NuGetSdkResolver/
+@@ ------------ @@
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Razor/tools/rzc.deps.json
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Razor/tools/rzc.dll
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Razor/tools/rzc.runtimeconfig.json
++./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Razor/tools/System.Collections.Immutable.dll
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.StaticWebAssets/
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.StaticWebAssets/Sdk/
+ ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.StaticWebAssets/Sdk/Sdk.props
+@@ ------------ @@
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.WebAssembly/tools/
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.WebAssembly/tools/netx.y/
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.WebAssembly/tools/netx.y/Microsoft.NET.Sdk.WebAssembly.Tasks.dll
@@ -293,6 +342,26 @@ index ------------
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Worker/
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Worker/Sdk/
  ./sdk/x.y.z/Sdks/Microsoft.NET.Sdk.Worker/Sdk/Sdk.props
+@@ ------------ @@
+ ./sdk/x.y.z/Sdks/Microsoft.SourceLink.GitLab/tools/core/zh-Hant/Microsoft.SourceLink.GitLab.resources.dll
+ ./sdk/x.y.z/Sdks/NuGet.Build.Tasks.Pack/
+ ./sdk/x.y.z/System.CodeDom.dll
++./sdk/x.y.z/System.Collections.Immutable.dll
+ ./sdk/x.y.z/System.CommandLine.dll
+ ./sdk/x.y.z/System.ComponentModel.Composition.dll
+ ./sdk/x.y.z/System.Configuration.ConfigurationManager.dll
+ ./sdk/x.y.z/System.Diagnostics.EventLog.dll
++./sdk/x.y.z/System.Formats.Asn1.dll
+ ./sdk/x.y.z/System.Reflection.MetadataLoadContext.dll
+ ./sdk/x.y.z/System.Resources.Extensions.dll
+ ./sdk/x.y.z/System.Security.Cryptography.Pkcs.dll
+ ./sdk/x.y.z/System.Security.Cryptography.ProtectedData.dll
+ ./sdk/x.y.z/System.Security.Cryptography.Xml.dll
+ ./sdk/x.y.z/System.ServiceProcess.ServiceController.dll
++./sdk/x.y.z/System.Text.Encoding.CodePages.dll
+ ./sdk/x.y.z/System.Text.Json.dll
+ ./sdk/x.y.z/testhost-1.0.runtimeconfig.json
+ ./sdk/x.y.z/testhost-1.1.runtimeconfig.json
 @@ ------------ @@
  ./sdk/x.y.z/testhost-latest.runtimeconfig.json
  ./sdk/x.y.z/testhost.deps.json
