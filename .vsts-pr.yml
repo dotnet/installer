@@ -341,26 +341,6 @@ stages:
             _TestArg: ''
       pgoInstrument: true
 
-  - template: /eng/build-pr.yml
-    parameters:
-      agentOs: Darwin
-      pool:
-        vmImage: 'macos-13'
-      timeoutInMinutes: 180
-      strategy:
-        matrix:
-          Build_Release_x64:
-            _BuildConfig: Release
-            _RuntimeIdentifier: ''
-            _BuildArchitecture: 'x64'
-            _TestArg: $(_NonWindowsTestArg)
-          Build_Release_arm64:
-            _BuildConfig: Release
-            _RuntimeIdentifier: '--runtime-id osx-arm64'
-            _BuildArchitecture: 'arm64'
-            # Never run tests on arm64
-            _TestArg: ''
-
   - template: /eng/common/templates/jobs/source-build.yml
     parameters:
       enableInternalSources: true

@@ -387,28 +387,6 @@ extends:
                 _TestArg: ''
           pgoInstrument: true
 
-      - template: /eng/build.yml@self
-        parameters:
-          agentOs: Darwin
-          pool:
-            name: Azure Pipelines
-            image: macos-13
-            os: macOS
-          timeoutInMinutes: 180
-          strategy:
-            matrix:
-              Build_Release_x64:
-                _BuildConfig: Release
-                _RuntimeIdentifier: ''
-                _BuildArchitecture: 'x64'
-                _TestArg: $(_NonWindowsTestArg)
-              Build_Release_arm64:
-                _BuildConfig: Release
-                _RuntimeIdentifier: '--runtime-id osx-arm64'
-                _BuildArchitecture: 'arm64'
-                # Never run tests on arm64
-                _TestArg: ''
-
       - template: /eng/common/templates-official/jobs/source-build.yml@self
         parameters:
           enableInternalSources: true
