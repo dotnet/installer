@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -21,7 +22,7 @@ namespace EndToEnd.Tests
             var directory = TestAssets.CreateTestDirectory();
             string projectDirectory = directory.FullName;
 
-            string newArgs = "console --debug:ephemeral-hive --no-restore";
+            string newArgs = "console --no-restore";
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(newArgs)
@@ -59,7 +60,7 @@ namespace EndToEnd.Tests
             var directory = TestAssets.CreateTestDirectory();
             string projectDirectory = directory.FullName;
 
-            string newArgs = "console --debug:ephemeral-hive --no-restore";
+            string newArgs = "console --no-restore";
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(newArgs)
@@ -71,7 +72,6 @@ namespace EndToEnd.Tests
             var ns = project.Root.Name.Namespace;
 
             project.Root.Attribute("Sdk").Value = "Microsoft.NET.Sdk.Web";
-
             project.Save(projectPath);
 
             new BuildCommand()
@@ -85,56 +85,83 @@ namespace EndToEnd.Tests
                 .Should().Pass().And.HaveStdOutContaining("Hello, World!");
         }
 
-        [WindowsOnlyFact]
-        public void ItCanPublishArm64Winforms()
+        [WindowsOnlyTheory]
+        // [InlineData("net6.0", true)]
+        // [InlineData("net6.0", false)]
+        [InlineData("current", true)]
+        [InlineData("current", false)]
+        public void ItCanPublishArm64Winforms(string TargetFramework, bool selfContained)
         {
             DirectoryInfo directory = TestAssets.CreateTestDirectory();
             string projectDirectory = directory.FullName;
+            string TargetFrameworkParameter = "";
 
-            string newArgs = "winforms --no-restore";
+            if (TargetFramework != "current")
+            {
+                TargetFrameworkParameter = $"-f {TargetFramework}";
+            }
+            string newArgs = $"winforms {TargetFrameworkParameter} --no-restore";
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(newArgs)
                 .Should().Pass();
 
-            string publishArgs="-r win-arm64";
+            string selfContainedArgs = selfContained ? " --self-contained" : "";
+            string publishArgs = "-r win-arm64" + selfContainedArgs;
             new PublishCommand()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(publishArgs)
                 .Should().Pass();
 
             var selfContainedPublishDir = new DirectoryInfo(projectDirectory)
-                .Sub("bin").Sub("Debug").GetDirectories().FirstOrDefault()
+                .Sub("bin").Sub(TargetFramework != "current" ? "Debug" : "Release").GetDirectories().FirstOrDefault()
                 .Sub("win-arm64").Sub("publish");
 
-            selfContainedPublishDir.Should().HaveFilesMatching("System.Windows.Forms.dll", SearchOption.TopDirectoryOnly);
+            if (selfContained)
+            {
+                selfContainedPublishDir.Should().HaveFilesMatching("System.Windows.Forms.dll", SearchOption.TopDirectoryOnly);
+            }
             selfContainedPublishDir.Should().HaveFilesMatching($"{directory.Name}.dll", SearchOption.TopDirectoryOnly);
         }
 
-        [WindowsOnlyFact]
-        public void ItCanPublishArm64Wpf()
+        [WindowsOnlyTheory]
+        // [InlineData("net6.0", true)]
+        // [InlineData("net6.0", false)]
+        [InlineData("current", true)]
+        [InlineData("current", false)]
+        public void ItCanPublishArm64Wpf(string TargetFramework, bool selfContained)
         {
             DirectoryInfo directory = TestAssets.CreateTestDirectory();
             string projectDirectory = directory.FullName;
+            string TargetFrameworkParameter = "";
 
-            string newArgs = "wpf --no-restore";
+            if (TargetFramework != "current")
+            {
+                TargetFrameworkParameter = $"-f {TargetFramework}";
+            }
+
+            string newArgs = $"wpf {TargetFrameworkParameter} --no-restore";
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(newArgs)
                 .Should().Pass();
 
-            string publishArgs="-r win-arm64";
+            string selfContainedArgs = selfContained ? " --self-contained" : "";
+            string publishArgs = "-r win-arm64" + selfContainedArgs;
             new PublishCommand()
                 .WithWorkingDirectory(projectDirectory)
                 .Execute(publishArgs)
                 .Should().Pass();
 
             var selfContainedPublishDir = new DirectoryInfo(projectDirectory)
-                .Sub("bin").Sub("Debug").GetDirectories().FirstOrDefault()
+                .Sub("bin").Sub(TargetFramework != "current" ? "Debug" : "Release").GetDirectories().FirstOrDefault()
                 .Sub("win-arm64").Sub("publish");
 
-            selfContainedPublishDir.Should().HaveFilesMatching("PresentationCore.dll", SearchOption.TopDirectoryOnly);
-            selfContainedPublishDir.Should().HaveFilesMatching("PresentationNative_*.dll", SearchOption.TopDirectoryOnly);
+            if (selfContained)
+            {
+                selfContainedPublishDir.Should().HaveFilesMatching("PresentationCore.dll", SearchOption.TopDirectoryOnly);
+                selfContainedPublishDir.Should().HaveFilesMatching("PresentationNative_*.dll", SearchOption.TopDirectoryOnly);
+            }
             selfContainedPublishDir.Should().HaveFilesMatching($"{directory.Name}.dll", SearchOption.TopDirectoryOnly);
         }
 
@@ -175,17 +202,16 @@ namespace EndToEnd.Tests
 
             string expectedOutput =
 @"[\-\s]+
-[\w \.]+webapp,razor\s+\[C#\][\w\ \/]+
-[\w \.]+blazorserver\s+\[C#\][\w\ \/]+
-[\w \.]+classlib\s+\[C#\],F#,VB[\w\ \/]+
-[\w \.]+console\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.\(\)]+blazor\s+\[C#\][\w\ \/]+
+[\w \.\(\)]+classlib\s+\[C#\],F#,VB[\w\ \/]+
+[\w \.\(\)]+console\s+\[C#\],F#,VB[\w\ \/]+
 ";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 expectedOutput +=
-@"[\w \.]+winforms\s+\[C#\],VB[\w\ \/]+
-[\w \.]+\wpf\s+\[C#\],VB[\w\ \/]+
+@"[\w \.\(\)]+winforms\s+\[C#\],VB[\w\ \/]+
+[\w \.\(\)]+\wpf\s+\[C#\],VB[\w\ \/]+
 ";
             }
             //list should end with new line
@@ -210,7 +236,7 @@ namespace EndToEnd.Tests
             DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: templateName);
             string projectDirectory = directory.FullName;
 
-            string newArgs = $"{templateName} --debug:ephemeral-hive";
+            string newArgs = $"{templateName}";
 
             new NewCommandShim()
                 .WithWorkingDirectory(projectDirectory)
@@ -220,21 +246,68 @@ namespace EndToEnd.Tests
             //check if the template created files
             Assert.True(directory.Exists);
             Assert.True(directory.EnumerateFileSystemInfos().Any());
+
+            // delete test directory for some tests so we aren't leaving behind non-compliant nuget files
+            if (templateName.Equals("nugetconfig"))
+            {
+                directory.Delete(true);
+            }
+        }
+
+        [Theory]
+        // microsoft.dotnet.common.itemtemplates templates
+        [InlineData("class")]
+        [InlineData("struct")]
+        [InlineData("enum")]
+        [InlineData("record")]
+        [InlineData("interface")]
+        [InlineData("class", "C#")]
+        [InlineData("class", "VB")]
+        [InlineData("struct", "VB")]
+        [InlineData("enum", "VB")]
+        [InlineData("interface", "VB")]
+        public void ItCanCreateItemTemplateWithProjectRestriction(string templateName, string language = "")
+        {
+            var languageExtensionMap = new Dictionary<string, string>()
+            {
+                { "", ".cs" },
+                { "C#", ".cs" },
+                { "VB", ".vb" }
+            };
+
+            DirectoryInfo directory = InstantiateProjectTemplate("classlib", language, withNoRestore: false);
+            string projectDirectory = directory.FullName;
+            string expectedItemName = $"TestItem_{templateName}";
+            string newArgs = $"{templateName} --name {expectedItemName} --debug:ephemeral-hive";
+            if (!string.IsNullOrWhiteSpace(language))
+            {
+                newArgs += $" --language {language}";
+            }
+
+            new NewCommandShim()
+                .WithWorkingDirectory(projectDirectory)
+                .Execute(newArgs)
+                .Should().Pass();
+
+            //check if the template created files
+            Assert.True(directory.Exists);
+            Assert.True(directory.EnumerateFileSystemInfos().Any());
+            Assert.True(directory.GetFile($"{expectedItemName}.{languageExtensionMap[language]}") != null);
         }
 
         [WindowsOnlyTheory]
-        [InlineData("wpf", Skip = "https://github.com/dotnet/wpf/issues/2363")]
-        [InlineData("winforms", Skip = "https://github.com/dotnet/wpf/issues/2363")]
+        [InlineData("wpf")]
+        [InlineData("winforms")]
         public void ItCanBuildDesktopTemplates(string templateName)
         {
             TestTemplateCreateAndBuild(templateName);
         }
 
         [WindowsOnlyTheory]
-        [InlineData("wpf", Skip = "https://github.com/dotnet/wpf/issues/2363")]
+        [InlineData("wpf")]
         public void ItCanBuildDesktopTemplatesSelfContained(string templateName)
         {
-            TestTemplateCreateAndBuild(templateName);
+            TestTemplateCreateAndBuild(templateName, selfContained: true);
         }
 
         [Theory]
@@ -273,7 +346,6 @@ namespace EndToEnd.Tests
         [InlineData("xunit", "C#")]
         [InlineData("xunit", "VB")]
         [InlineData("xunit", "F#")]
-        [InlineData("blazorserver")]
         [InlineData("blazorwasm")]
         [InlineData("web")]
         [InlineData("web", "C#")]
@@ -288,22 +360,8 @@ namespace EndToEnd.Tests
         [InlineData("razorclasslib")]
         public void ItCanCreateAndBuildTemplatesWithDefaultFramework(string templateName, string language = "")
         {
-            string framework = DetectExpectedDefaultFramework();
-            TestTemplateCreateAndBuild(templateName, selfContained: true, language: language, framework: framework);
-        }
-
-        /// <summary>
-        /// The test checks if the template creates the template for correct framework by default.
-        /// For .NET 6 the templates should create the projects targeting net6.0.
-        /// These templates require node.js to be built, so we just check if TargetFramework is present in csproj files
-        /// </summary>
-        [Theory]
-        [InlineData("angular")]
-        [InlineData("react")]
-        public void ItCanCreateTemplateWithDefaultFramework(string templateName)
-        {
-            string framework = DetectExpectedDefaultFramework();
-            TestTemplateCreateAndBuild(templateName, build: false, framework: framework);
+            string framework = DetectExpectedDefaultFramework(templateName);
+            TestTemplateCreateAndBuild(templateName, selfContained: false, language: language, framework: framework);
         }
 
         /// <summary>
@@ -335,8 +393,8 @@ namespace EndToEnd.Tests
         [InlineData("winformscontrollib", "VB")]
         public void ItCanCreateAndBuildTemplatesWithDefaultFramework_Windows(string templateName, string language = "")
         {
-            string framework = DetectExpectedDefaultFramework();
-            TestTemplateCreateAndBuild(templateName, selfContained: true, language: language, framework: $"{framework}-windows");
+            string framework = DetectExpectedDefaultFramework(templateName);
+            TestTemplateCreateAndBuild(templateName, selfContained: false, language: language, framework: $"{framework}-windows");
         }
 
         /// <summary>
@@ -348,9 +406,9 @@ namespace EndToEnd.Tests
         [InlineData("grpc")]
         public void ItCanCreateAndBuildTemplatesWithDefaultFramework_DisableBuildOnLinuxMusl(string templateName)
         {
-            string framework = DetectExpectedDefaultFramework();
+            string framework = DetectExpectedDefaultFramework(templateName);
 
-            if (RuntimeInformation.RuntimeIdentifier.StartsWith("alpine")) //linux musl
+            if (RuntimeInformation.RuntimeIdentifier.StartsWith("linux-musl"))
             {
                 TestTemplateCreateAndBuild(templateName, build: false, framework: framework);
             }
@@ -360,34 +418,24 @@ namespace EndToEnd.Tests
             }
         }
 
-        private static string DetectExpectedDefaultFramework()
+        private static string DetectExpectedDefaultFramework(string template = "")
         {
             string dotnetFolder = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
             string[] runtimeFolders = Directory.GetDirectories(Path.Combine(dotnetFolder, "shared", "Microsoft.NETCore.App"));
 
             int latestMajorVersion = runtimeFolders.Select(folder => int.Parse(Path.GetFileName(folder).Split('.').First())).Max();
-            if (latestMajorVersion == 6)
+            if (latestMajorVersion == 8)
             {
-                return "net6.0";
+                return $"net{latestMajorVersion}.0";
             }
+
             throw new Exception("Unsupported version of SDK");
         }
 
-        private static void TestTemplateCreateAndBuild(string templateName, bool build = true, bool selfContained = false, string language = "", string framework = "")
+        private static void TestTemplateCreateAndBuild(string templateName, bool build = true, bool selfContained = false, string language = "", string framework = "", bool deleteTestDirectory = false)
         {
-            DirectoryInfo directory = TestAssets.CreateTestDirectory(identifier: string.IsNullOrWhiteSpace(language) ? templateName : $"{templateName}[{language}]");
+            DirectoryInfo directory = InstantiateProjectTemplate(templateName, language);
             string projectDirectory = directory.FullName;
-
-            string newArgs = $"{templateName} --debug:ephemeral-hive --no-restore";
-            if (!string.IsNullOrWhiteSpace(language))
-            {
-                newArgs += $" --language {language}";
-            }
-
-            new NewCommandShim()
-                .WithWorkingDirectory(projectDirectory)
-                .Execute(newArgs)
-                .Should().Pass();
 
             if (!string.IsNullOrWhiteSpace(framework))
             {
@@ -407,18 +455,18 @@ namespace EndToEnd.Tests
 
             if (build)
             {
-                string buildArgs = selfContained ? "" : $"-r {RuntimeInformation.RuntimeIdentifier}";
+                string buildArgs = selfContained ? $"-r {RuntimeInformation.RuntimeIdentifier} --self-contained" : "";
                 if (!string.IsNullOrWhiteSpace(framework))
                 {
                     buildArgs += $" --framework {framework}";
                 }
-                
+
                 // Remove this (or formalize it) after https://github.com/dotnet/installer/issues/12479 is resolved.
                 if (language == "F#")
                 {
                     buildArgs += $" /p:_NETCoreSdkIsPreview=true";
                 }
-            
+
                 string dotnetRoot = Path.GetDirectoryName(RepoDirectoriesProvider.DotnetUnderTest);
                 new BuildCommand()
                      .WithEnvironmentVariable("PATH", dotnetRoot) // override PATH since razor rely on PATH to find dotnet
@@ -426,6 +474,34 @@ namespace EndToEnd.Tests
                      .Execute(buildArgs)
                      .Should().Pass();
             }
+
+            // delete test directory for some tests so we aren't leaving behind non-compliant package files
+            if (deleteTestDirectory)
+            {
+                directory.Delete(true);
+            }
+        }
+
+        private static DirectoryInfo InstantiateProjectTemplate(string templateName, string language = "", bool withNoRestore = true)
+        {
+            DirectoryInfo directory = TestAssets.CreateTestDirectory(
+                identifier: string.IsNullOrWhiteSpace(language)
+                ? templateName
+                : $"{templateName}[{language}]");
+            string projectDirectory = directory.FullName;
+
+            string newArgs = $"{templateName} --debug:ephemeral-hive {(withNoRestore ? "--no-restore" : "")}";
+            if (!string.IsNullOrWhiteSpace(language))
+            {
+                newArgs += $" --language {language}";
+            }
+
+            new NewCommandShim()
+                .WithWorkingDirectory(projectDirectory)
+                .Execute(newArgs)
+                .Should().Pass();
+
+            return directory;
         }
     }
 }
