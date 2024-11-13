@@ -31,7 +31,7 @@ variables:
     value: /p:DotNetRuntimeSourceFeed=https://dotnetbuilds.blob.core.windows.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
-- template: /eng/common/templates/variables/pool-providers.yml
+- template: /eng/common/templates-official/variables/pool-providers.yml
 # Set the MicroBuild plugin installation directory to the agent temp directory to avoid SDL tool scanning.
 - name: MicroBuildOutputFolderOverride
   value: $(Agent.TempDirectory)
@@ -56,7 +56,7 @@ extends:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:cbl-mariner-2.0-fpm
       centosStream8:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8
-      debian11:
+      debian11Amd64:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-11-amd64
       fedora40:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-40
@@ -71,13 +71,6 @@ extends:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
-      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        componentgovernance:
-          ignoreDirectories: artifacts, .packages
-      # Temporary to workaround MicroBuild issues.
-      credscan:
-        enabled: false
-        justificationForDisabling: 'CredScan is failing on the MicroBuild signing plugin. "MicroBuild/Plugins/nuget.config" has changing content and thus cannot be baselined.'
     stages:
     - stage: Build
       jobs:
@@ -99,7 +92,7 @@ extends:
             targetPath: $(Build.SourcesDirectory)\eng\buildConfiguration
             artifactName: buildConfiguration
 
-      # PR-only jobs
+        # PR-only jobs
       - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
         # Windows
         - template: eng/build.yml@self
@@ -142,7 +135,7 @@ extends:
           parameters:
             agentOs: Linux
             jobName: Build_Debian_11_Debug_x64
-            container: debian11
+            container: debian11Amd64
             buildConfiguration: Debug
             buildArchitecture: x64
             additionalBuildParameters: '/p:BuildSdkDeb=true'
