@@ -15,9 +15,19 @@
     <UsagePattern IdentityGlob="Microsoft.Build*/17.11.*" />
     <UsagePattern IdentityGlob="Microsoft.NET.StringTools/17.11.*" />
 
+    <!-- These emsdk packages are allowed for installer repo build. The live version will be flowed in for the VMR build. -->
+    <UsagePattern IdentityGlob="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100/8.0.*" />
+    <UsagePattern IdentityGlob="Microsoft.NET.Workload.Emscripten.net6.Manifest-8.0.100/8.0.*" />
+    <UsagePattern IdentityGlob="Microsoft.NET.Workload.Emscripten.net7.Manifest-8.0.100/8.0.*" />
+
     <!-- These are coming in via runtime but the source-build infra isn't able to automatically pick up the right intermediate. -->
     <UsagePattern IdentityGlob="Microsoft.NETCore.App.Crossgen2.linux-x64/*8.0.*" />
 
+    <UsagePattern IdentityGlob="System.Configuration.ConfigurationManager/*8.0.0*" />
+    <UsagePattern IdentityGlob="System.Diagnostics.EventLog/*8.0.0*" />
+    <UsagePattern IdentityGlob="System.Formats.Asn1/*8.0.1*" />
+    <UsagePattern IdentityGlob="System.Reflection.Metadata/*8.0.0*" />
+    <UsagePattern IdentityGlob="System.Reflection.MetadataLoadContext/*8.0.0*" />
     <UsagePattern IdentityGlob="System.Threading.Tasks.Dataflow/*8.0.0*" />
   </IgnorePatterns>
 </UsageData>
