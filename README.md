@@ -12,7 +12,7 @@
 
 This repo contains the source code for the cross-platform [.NET](http://github.com/dotnet/core) SDK. It aggregates the .NET toolchain, the .NET runtime, the templates, and the .NET  Windows Desktop runtime. It produces zip, tarballs, and native packages for various supported platforms.
 
-For the latest daily builds, see [.NET SDK daily builds table](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
+For the latest daily builds, see the [.NET SDK daily builds table](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
 
 Looking for released versions of the .NET tooling?
 ----------------------------------------
