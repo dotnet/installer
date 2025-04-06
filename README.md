@@ -12,6 +12,8 @@
 
 This repo contains the source code for the cross-platform [.NET](http://github.com/dotnet/core) SDK. It aggregates the .NET toolchain, the .NET runtime, the templates, and the .NET  Windows Desktop runtime. It produces zip, tarballs, and native packages for various supported platforms.
 
+For the latest daily builds, see [.NET SDK daily builds table](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
+
 Looking for released versions of the .NET tooling?
 ----------------------------------------
 
@@ -154,9 +156,9 @@ With development builds, internal NuGet feeds are necessary for some scenarios (
 
 Do not directly edit the table below. Use https://github.com/dotnet/installer/tree/main/tools/sdk-readme-table-generator to help you generate it. Make sure to run the table generator test and make any changes to the generator along with your changes to the table. Daily servicing builds aren't shown here because they may contain upcoming security fixes. All public servicing builds can be downloaded at http://aka.ms/dotnet-download.
 
-### Table
+### .NET SDK daily builds table
 
-Latest builds table is in [here](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
+[.NET SDK daily builds table](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
 
 Looking for dotnet-install sources?
 -----------------------------------
