@@ -14,17 +14,17 @@ parameters:
   # Internal builds
   poolInternalAmd64:
     name: NetCore1ESPool-Svc-Internal
-    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+    demands: ImageOverride -equals Build.Ubuntu.2204.Amd64
   poolInternalAmd64PR:
     name: NetCore1ESPool-Internal-XL
-    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+    demands: ImageOverride -equals Build.Ubuntu.2204.Amd64
   poolInternalArm64:
     name: Docker-Linux-Arm-Internal
 
   # Public builds / PRs
   poolPublicAmd64:
     name: NetCore-Public-XL
-    demands: ImageOverride -equals Build.Ubuntu.1804.Amd64.Open
+    demands: ImageOverride -equals Build.Ubuntu.2204.Amd64.Open
 
 stages:
 - stage: VMR_Source_Build
