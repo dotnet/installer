@@ -1,0 +1,20 @@
+# This yml is used by these pipelines and triggers:
+#
+# - dotnet-source-build (internal)
+#   https://dev.azure.com/dnceng/internal/_build?definitionId=1219
+#   - CI: release/* and internal/release/* only, every batched commit, full build
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - release/8.0.1xx
+    - internal/release/8.0.1xx
+
+stages:
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: templates/stages/vmr-scan.yml
+
+- template: /src/installer/eng/pipelines/templates/stages/vmr-build.yml
+  parameters:
+    isBuiltFromVmr: true
