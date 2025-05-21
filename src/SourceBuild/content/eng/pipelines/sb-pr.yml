@@ -5,9 +5,8 @@ trigger: none
 pr:
   branches:
     include:
-    - main
-    - release/*
-    - internal/release/*
+    - release/8.0.1xx
+    - internal/release/8.0.1xx
 
 stages:
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
