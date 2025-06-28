@@ -156,7 +156,7 @@ Do not directly edit the table below. Use https://github.com/dotnet/installer/tr
 
 ### Table
 
-Latest builds table is in [here](https://github.com/dotnet/sdk/blob/main/documentation/package-table.md#table).
+Latest builds table is in [here](https://github.com/dotnet/dotnet/blob/main/docs/builds-table.md).
 
 Looking for dotnet-install sources?
 -----------------------------------
