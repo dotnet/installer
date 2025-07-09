@@ -15,7 +15,8 @@
 # False positive
 src/arcade/Documentation/UnifiedBuild/Foundational-Concepts.md
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/src/BuildFPMToolPreReqs.cs|json
-src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/rpm_templates/copyright|cecill-c
+src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/deb-package-tool/templates/debian/copyright|unknown-license-reference
+src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/rpm_templates/copyright|unknown-license-reference
 src/arcade/src/SignCheck/SignCheck/THIRD-PARTY-NOTICES.TXT
 
 # Doesn't apply to code
@@ -23,12 +24,13 @@ src/arcade/src/Microsoft.DotNet.Arcade.Sdk/tools/Licenses/*
 
 # Applies to installer, not source
 src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/wix/eula.rtf
-src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/deb-package-tool/templates/debian/copyright|unknown-license-reference
-src/arcade/src/Microsoft.DotNet.Build.Tasks.Installers/build/rpm_templates/copyright|unknown-license-reference
 
 #
 # aspnetcore
 #
+
+# False positive
+src/aspnetcore/src/Installers/Debian/tools/templates/debian/copyright|unknown-license-reference
 
 # A generic statement about license applicability that is being detected as "unknown"
 src/aspnetcore/src/Components/THIRD-PARTY-NOTICES.txt|unknown
@@ -37,7 +39,6 @@ src/aspnetcore/THIRD-PARTY-NOTICES.txt|unknown
 # Windows installer files that have a reference to a URL for license
 src/aspnetcore/src/Installers/Windows/**/*.wxl|unknown-license-reference
 src/aspnetcore/src/Installers/Windows/**/*.wxs|unknown-license-reference
-src/aspnetcore/src/Installers/Debian/tools/templates/debian/copyright|unknown-license-reference
 
 # License reference used in configuration, but not applying to code
 src/aspnetcore/src/Mvc/Settings.StyleCop|unknown-license-reference
