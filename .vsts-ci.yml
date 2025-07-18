@@ -135,6 +135,7 @@ extends:
             buildArchitecture: x64
             linuxPortable: false
             runTests: true
+            additionalBuildParameters: '/p:OSName=centos.8'
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
