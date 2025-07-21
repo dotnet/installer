@@ -93,7 +93,6 @@ stages:
         buildArchitecture: x64
         linuxPortable: false
         runTests: true
-        additionalBuildParameters: '/p:OSName=centos.8'
     - template: eng/build-pr.yml
       parameters:
         agentOs: Linux
