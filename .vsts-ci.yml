@@ -54,9 +54,9 @@ extends:
       centosStream9:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream9
       debian12:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-amd64
-      fedora42:
-        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-42
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-helix-amd64
+      fedora41:
+        image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-41
       ubuntu2204:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04
       azureLinux30CrossArm:
@@ -120,8 +120,8 @@ extends:
         - template: eng/build.yml@self
           parameters:
             agentOs: Linux
-            jobName: Build_Fedora_42_Debug_x64
-            container: fedora42
+            jobName: Build_Fedora_41_Debug_x64
+            container: fedora41
             buildConfiguration: Debug
             buildArchitecture: x64
             linuxPortable: true
