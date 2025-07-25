@@ -97,7 +97,7 @@ stages:
       parameters:
         agentOs: Linux
         jobName: Build_Debian_12_Debug_x64
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-helix-amd64'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-gcc15-amd64'
         buildConfiguration: Debug
         buildArchitecture: x64
         additionalBuildParameters: '/p:BuildSdkDeb=true'
