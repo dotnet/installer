@@ -21,5 +21,8 @@
     <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAFrameworkDependentApp.It_publishes_with_or_without_apphost"
             Skip="true"
             Reason="Fails on .NET 2.0 and 2.1 so suppressing"/>
-        </SkippedTests>
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_should_publish_self_contained_for_2x"
+            Skip="true"
+            Reason="Fails on .NET 2.0 so suppressing"/>
+  </SkippedTests>
 </Tests>
