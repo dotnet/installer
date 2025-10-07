@@ -116,7 +116,7 @@ jobs:
     helixRepo: dotnet/installer
     workspace:
       clean: all
-    ${{ if ne(variables['Build.DefinitionName'], 'dotnet-installer-official-ci')) }}:
+    ${{ if ne(variables['Build.DefinitionName'], 'dotnet-installer-official-ci') }}:
       microbuildUseESRP: false
 
     variables:
