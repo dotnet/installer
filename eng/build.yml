@@ -93,7 +93,7 @@ jobs:
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: $(DncEngPublicBuildPool)
-          image: 1es-ubuntu-2004-open
+          image: 1es-ubuntu-2204-open
           os: linux
         ${{ if eq(variables['System.TeamProject'], 'internal') }}:
           name: $(DncEngInternalBuildPool)
