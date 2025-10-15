@@ -79,7 +79,8 @@ jobs:
 
     # Set up the pool/machine info to be used based on the Agent OS
     ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-      enableMicrobuild: true
+      ${{ if eq(variables['Build.DefinitionName'], 'dotnet-installer-official-ci') }}:
+        enableMicrobuild: true
       pool:
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
           name: $(DncEngPublicBuildPool)
@@ -116,9 +117,9 @@ jobs:
     helixRepo: dotnet/installer
     workspace:
       clean: all
-    ${{ if ne(variables['Build.DefinitionName'], 'dotnet-installer-official-ci') }}:
+    # ${{ if ne(variables['Build.DefinitionName'], 'dotnet-installer-official-ci') }}:
       # microbuildUseESRP: false
-      enableMicrobuild: false
+      # enableMicrobuild: false
 
     variables:
     # Test variables
