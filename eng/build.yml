@@ -117,7 +117,8 @@ jobs:
     workspace:
       clean: all
     ${{ if ne(variables['Build.DefinitionName'], 'dotnet-installer-official-ci') }}:
-      microbuildUseESRP: false
+      # microbuildUseESRP: false
+      enableMicrobuild: false
 
     variables:
     # Test variables
