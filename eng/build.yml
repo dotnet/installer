@@ -179,12 +179,9 @@ jobs:
 
     - template: /eng/common/templates-official/variables/pool-providers.yml
 
-    steps:
-    - checkout: self
-      clean: true
-    - template: /eng/common/templates/steps/enable-internal-runtimes.yml
-    - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
-      - ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
+    ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
+      presteps:
+      - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
         - task: PowerShell@2
           displayName: Setup Private Feeds Credentials
           inputs:
@@ -192,6 +189,20 @@ jobs:
             arguments: -ConfigFile $(installerRoot)/NuGet.config -Password $Env:Token
           env:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
+      - ${{ else }}:
+        - task: Bash@3
+          displayName: Setup Private Feeds Credentials
+          inputs:
+            filePath: $(installerRoot)/eng/common/SetupNugetSources.sh
+            arguments: $(installerRoot)/NuGet.config $Token
+          env:
+            Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
+    steps:
+    - checkout: self
+      clean: true
+    - template: /eng/common/templates/steps/enable-internal-runtimes.yml
+    - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: $(installerRoot)/build.cmd
                   $(_TestArg) $(_PackArg)
                   -publish -ci -sign
@@ -204,15 +215,6 @@ jobs:
         env:
           DOTNET_CLI_UI_LANGUAGE: ${{ parameters.dotnetCLIUILanguage }}
 
-    - ${{ if ne(parameters.agentOs, 'Windows_NT') }}:
-      - ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
-        - task: Bash@3
-          displayName: Setup Private Feeds Credentials
-          inputs:
-            filePath: $(installerRoot)/eng/common/SetupNugetSources.sh
-            arguments: $(installerRoot)/NuGet.config $Token
-          env:
-            Token: $(dn-bot-dnceng-artifact-feeds-rw)
     - ${{ if eq(parameters.agentOs, 'Linux') }}:
       - script: $(installerRoot)/build.sh
                   $(_TestArg) $(_PackArg)
