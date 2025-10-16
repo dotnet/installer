@@ -269,3 +269,11 @@ jobs:
         publishLocation: Container
       continueOnError: true
       condition: always()
+    - task: 1ES.PublishBuildArtifacts@1
+      displayName: Publish NuGet.config to VSTS
+      inputs:
+        PathtoPublish: '$(installerRoot)/NuGet.config'
+        ArtifactName: '$(_AgentOSName)_$(Agent.JobName)_$(Build.BuildNumber)_NuGetConfig'
+        publishLocation: Container
+      continueOnError: true
+      condition: always()
