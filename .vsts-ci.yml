@@ -197,7 +197,7 @@ extends:
             runTests: true
 
       # Official/PGO instrumentation Builds
-      - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      - ${{ else }}:
         # Windows
         - template: eng/build.yml@self
           parameters:
