@@ -108,7 +108,7 @@ extends:
             artifactName: buildConfiguration
 
       # PR-only jobs
-      - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'), eq(parameters.runTestBuild, true)) }}:
+      - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'), eq(parameters.runPrBuild, true)) }}:
         # Windows
         - template: eng/build.yml@self
           parameters:
