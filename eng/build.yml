@@ -199,8 +199,6 @@ jobs:
             Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
     steps:
-    - checkout: self
-      clean: true
     - template: /eng/common/templates/steps/enable-internal-runtimes.yml
     - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
       - script: $(installerRoot)/build.cmd
