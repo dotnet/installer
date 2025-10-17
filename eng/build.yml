@@ -181,6 +181,33 @@ jobs:
 
     ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
       presteps:
+      # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
+      - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
+        - powershell: |
+            # Download the latest PowerShell tar.gz for Linux x64.
+            $pwshLatest = 'https://github.com/PowerShell/PowerShell/releases/latest'
+            $response = Invoke-WebRequest -Uri $pwshLatest -MaximumRedirection 15
+            # Get the final redirected URL and parse the version number out of the tag value.
+            # Example final URL: https://github.com/PowerShell/PowerShell/releases/tag/v7.5.3
+            # Example tag value: v7.5.3
+            $tag = ($response.BaseResponse.ResponseUri.AbsoluteUri -split '/')[-1]
+            # Parse the version number out of the tag value.
+            # Example tag value: v7.5.3
+            # Example version value: 7.5.3
+            $version = $tag -replace '^v', ''
+            # Example download URL: https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/powershell-7.5.3-linux-x64.tar.gz
+            $fileName = "powershell-$version-linux-x64.tar.gz"
+            $downloadUrl = "https://github.com/PowerShell/PowerShell/releases/download/$tag/$fileName"
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $fileName
+
+            # Silently install PowerShell tar.gz on Linux (requires root or sudo).
+            # 1. Create versioned install directory
+            sudo mkdir -p /opt/microsoft/powershell/$version
+            # 2. Extract archive contents into the versioned directory
+            sudo tar -xzf $fileName -C /opt/microsoft/powershell/$version
+            # 3. Create/update global symlink so 'pwsh' is on PATH
+            sudo ln -sf /opt/microsoft/powershell/$version/pwsh /usr/bin/pwsh
+          displayName: Install PowerShell on Linux x64
       - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
         - task: PowerShell@2
           displayName: Setup Private Feeds Credentials
