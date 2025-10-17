@@ -183,30 +183,45 @@ jobs:
       presteps:
       # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
       - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
-        - powershell: |
-            # Download the latest PowerShell tar.gz for Linux x64.
-            $pwshLatest = 'https://github.com/PowerShell/PowerShell/releases/latest'
-            $response = Invoke-WebRequest -Uri $pwshLatest -MaximumRedirection 15
-            # Get the final redirected URL and parse the version number out of the tag value.
-            # Example final URL: https://github.com/PowerShell/PowerShell/releases/tag/v7.5.3
-            # Example tag value: v7.5.3
-            $tag = ($response.BaseResponse.ResponseUri.AbsoluteUri -split '/')[-1]
-            # Parse the version number out of the tag value.
-            # Example tag value: v7.5.3
-            # Example version value: 7.5.3
-            $version = $tag -replace '^v', ''
-            # Example download URL: https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/powershell-7.5.3-linux-x64.tar.gz
-            $fileName = "powershell-$version-linux-x64.tar.gz"
-            $downloadUrl = "https://github.com/PowerShell/PowerShell/releases/download/$tag/$fileName"
-            Invoke-WebRequest -Uri $downloadUrl -OutFile $fileName
+        - script: |
+            #!/usr/bin/env bash
+            set -euo pipefail
 
-            # Silently install PowerShell tar.gz on Linux (requires root or sudo).
-            # 1. Create versioned install directory
-            sudo mkdir -p /opt/microsoft/powershell/$version
-            # 2. Extract archive contents into the versioned directory
-            sudo tar -xzf $fileName -C /opt/microsoft/powershell/$version
-            # 3. Create/update global symlink so 'pwsh' is on PATH
-            sudo ln -sf /opt/microsoft/powershell/$version/pwsh /usr/bin/pwsh
+            # Download and install the latest PowerShell release for Linux x64.
+            # Mirrors logic from PwshDownload.ps1.
+            # Requirements: curl, tar, sudo (for system-wide install), bash >= 4 (for reliability)
+
+            # Resolve the final redirected release URL to extract the tag (e.g. v7.5.3)
+            LATEST_URL="https://github.com/PowerShell/PowerShell/releases/latest"
+            FINAL_URL=$(curl -Ls -o /dev/null -w '%{url_effective}' "$LATEST_URL")
+            TAG="${FINAL_URL##*/}"          # e.g. v7.5.3
+            VERSION="${TAG#v}"              # strip leading v -> 7.5.3
+            ARCH="x64"                      # Could be enhanced to auto-detect; left static to match original
+            FILE_NAME="powershell-${VERSION}-linux-${ARCH}.tar.gz"
+            DOWNLOAD_URL="https://github.com/PowerShell/PowerShell/releases/download/${TAG}/${FILE_NAME}"
+
+            printf 'Latest PowerShell tag: %s\n' "$TAG"
+            printf 'Resolved version: %s\n' "$VERSION"
+            printf 'Downloading: %s\n' "$DOWNLOAD_URL"
+
+            curl -L "$DOWNLOAD_URL" -o "$FILE_NAME"
+
+            # Install to versioned directory under /opt and symlink pwsh into /usr/bin
+            INSTALL_ROOT="/opt/microsoft/powershell"
+            VERSION_DIR="${INSTALL_ROOT}/${VERSION}"
+
+            echo "Installing to: ${VERSION_DIR}" 
+
+            sudo mkdir -p "$VERSION_DIR"
+            sudo tar -xzf "$FILE_NAME" -C "$VERSION_DIR"
+
+            # The extracted archive contains the 'pwsh' executable at the root of the expanded directory.
+            sudo ln -sf "${VERSION_DIR}/pwsh" /usr/bin/pwsh
+
+            echo "PowerShell ${VERSION} installed. Run: pwsh --version"
+
+            # Verify
+            pwsh --version
           displayName: Install PowerShell on Linux x64
       - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
         - task: PowerShell@2
