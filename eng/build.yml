@@ -183,44 +183,37 @@ jobs:
       presteps:
       # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
       - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
+        # Script from here: https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.5#installation-via-package-repository-the-package-repository
         - script: |
-            #!/usr/bin/env bash
-            set -euo pipefail
+            ###################################
+            # Prerequisites
 
-            # Download and install the latest PowerShell release for Linux x64.
-            # Mirrors logic from PwshDownload.ps1.
-            # Requirements: curl, tar, sudo (for system-wide install), bash >= 4 (for reliability)
+            # Update the list of packages
+            sudo apt-get update
 
-            # Resolve the final redirected release URL to extract the tag (e.g. v7.5.3)
-            LATEST_URL="https://github.com/PowerShell/PowerShell/releases/latest"
-            FINAL_URL=$(curl -Ls -o /dev/null -w '%{url_effective}' "$LATEST_URL")
-            TAG="${FINAL_URL##*/}"          # e.g. v7.5.3
-            VERSION="${TAG#v}"              # strip leading v -> 7.5.3
-            ARCH="x64"                      # Could be enhanced to auto-detect; left static to match original
-            FILE_NAME="powershell-${VERSION}-linux-${ARCH}.tar.gz"
-            DOWNLOAD_URL="https://github.com/PowerShell/PowerShell/releases/download/${TAG}/${FILE_NAME}"
+            # Install pre-requisite packages.
+            sudo apt-get install -y wget apt-transport-https software-properties-common
 
-            printf 'Latest PowerShell tag: %s\n' "$TAG"
-            printf 'Resolved version: %s\n' "$VERSION"
-            printf 'Downloading: %s\n' "$DOWNLOAD_URL"
+            # Get the version of Ubuntu
+            source /etc/os-release
 
-            curl -L "$DOWNLOAD_URL" -o "$FILE_NAME"
+            # Download the Microsoft repository keys
+            wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
 
-            # Install to versioned directory under /opt and symlink pwsh into /usr/bin
-            INSTALL_ROOT="/opt/microsoft/powershell"
-            VERSION_DIR="${INSTALL_ROOT}/${VERSION}"
+            # Register the Microsoft repository keys
+            sudo dpkg -i packages-microsoft-prod.deb
 
-            echo "Installing to: ${VERSION_DIR}" 
+            # Delete the Microsoft repository keys file
+            rm packages-microsoft-prod.deb
 
-            sudo mkdir -p "$VERSION_DIR"
-            sudo tar -xzf "$FILE_NAME" -C "$VERSION_DIR"
+            # Update the list of packages after we added packages.microsoft.com
+            sudo apt-get update
 
-            # The extracted archive contains the 'pwsh' executable at the root of the expanded directory.
-            sudo ln -sf "${VERSION_DIR}/pwsh" /usr/bin/pwsh
+            ###################################
+            # Install PowerShell
+            sudo apt-get install -y powershell
 
-            echo "PowerShell ${VERSION} installed. Run: pwsh --version"
-
-            # Verify
+            # Show PowerShell version
             pwsh --version
           displayName: Install PowerShell on Linux x64
       - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
