@@ -181,41 +181,41 @@ jobs:
 
     ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
       presteps:
-      # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
-      - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
-        # Script from here: https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.5#installation-via-package-repository-the-package-repository
-        - script: |
-            ###################################
-            # Prerequisites
+      # # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
+      # - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
+      #   # Script from here: https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.5#installation-via-package-repository-the-package-repository
+      #   - script: |
+      #       ###################################
+      #       # Prerequisites
 
-            # Update the list of packages
-            sudo apt-get update
+      #       # Update the list of packages
+      #       sudo apt-get update
 
-            # Install pre-requisite packages.
-            sudo apt-get install -y wget apt-transport-https software-properties-common
+      #       # Install pre-requisite packages.
+      #       sudo apt-get install -y wget apt-transport-https software-properties-common
 
-            # Get the version of Ubuntu
-            source /etc/os-release
+      #       # Get the version of Ubuntu
+      #       source /etc/os-release
 
-            # Download the Microsoft repository keys
-            wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+      #       # Download the Microsoft repository keys
+      #       wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
 
-            # Register the Microsoft repository keys
-            sudo dpkg -i packages-microsoft-prod.deb
+      #       # Register the Microsoft repository keys
+      #       sudo dpkg -i packages-microsoft-prod.deb
 
-            # Delete the Microsoft repository keys file
-            rm packages-microsoft-prod.deb
+      #       # Delete the Microsoft repository keys file
+      #       rm packages-microsoft-prod.deb
 
-            # Update the list of packages after we added packages.microsoft.com
-            sudo apt-get update
+      #       # Update the list of packages after we added packages.microsoft.com
+      #       sudo apt-get update
 
-            ###################################
-            # Install PowerShell
-            sudo apt-get install -y powershell
+      #       ###################################
+      #       # Install PowerShell
+      #       sudo apt-get install -y powershell
 
-            # Show PowerShell version
-            pwsh --version
-          displayName: Install PowerShell on Linux x64
+      #       # Show PowerShell version
+      #       pwsh --version
+      #     displayName: Install PowerShell on Linux x64
       - ${{ if eq(parameters.agentOs, 'Windows_NT') }}:
         - task: PowerShell@2
           displayName: Setup Private Feeds Credentials
