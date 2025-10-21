@@ -181,6 +181,11 @@ jobs:
 
     ${{ if and(not(parameters.isBuiltFromVmr), ne(variables['System.TeamProject'], 'public')) }}:
       presteps:
+      # Install Azure CLI for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing az).
+      - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
+        # Script from here: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?view=azure-cli-latest&pivots=apt#install-azure-cli
+        - script: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          displayName: Install Azure CLI on Linux x64
       # # Install pwsh for enable-internal-runtimes.yml when the container is ubuntu2204 (the image is missing pwsh).
       # - ${{ if and(eq(parameters.container, 'ubuntu2204'), eq(parameters.buildArchitecture, 'x64')) }}:
       #   # Script from here: https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.5#installation-via-package-repository-the-package-repository
