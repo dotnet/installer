@@ -37,7 +37,7 @@ variables:
     value: /p:DotNetRuntimeSourceFeed=http://ci.dot.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
-- template: /eng/common/templates/variables/pool-providers.yml
+- template: /eng/common/templates-official/variables/pool-providers.yml
 # Set the MicroBuild plugin installation directory to the agent temp directory to avoid SDL tool scanning.
 - name: MicroBuildOutputFolderOverride
   value: $(Agent.TempDirectory)
@@ -81,13 +81,6 @@ extends:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
-      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        componentgovernance:
-          ignoreDirectories: artifacts, .packages
-      # Temporary to workaround MicroBuild issues.
-      credscan:
-        enabled: false
-        justificationForDisabling: 'CredScan is failing on the MicroBuild signing plugin. "MicroBuild/Plugins/nuget.config" has changing content and thus cannot be baselined.'
     stages:
     - stage: Build
       jobs:
@@ -338,12 +331,7 @@ extends:
             buildArchitecture: arm64
             runTests: false
 
-      # Source Build
-      - template: /eng/common/templates-official/jobs/source-build.yml@self
-        parameters:
-          enableInternalSources: true
-
-    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.DefinitionName'], 'dotnet-installer-official-ci')) }}:
+    - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
       - stage: Publish
         dependsOn:
         - Build
