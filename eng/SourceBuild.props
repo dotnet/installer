@@ -1,0 +1,20 @@
+<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build-internal as a reviewer. -->
+
+<Project>
+
+  <PropertyGroup>
+    <GitHubRepositoryName>installer</GitHubRepositoryName>
+    <SourceBuildManagedOnly>true</SourceBuildManagedOnly>
+  </PropertyGroup>
+
+  <Target Name="ConfigureInnerBuildArg" BeforeTargets="GetSourceBuildCommandConfiguration">
+    <PropertyGroup>
+      <InnerBuildArgs>$(InnerBuildArgs) /p:SkipBuildingInstallers=true</InnerBuildArgs>
+      <InnerBuildArgs>$(InnerBuildArgs) /p:IncludeNuGetPackageArchive=false</InnerBuildArgs>
+      <InnerBuildArgs>$(InnerBuildArgs) /p:IncludeAdditionalSharedFrameworks=false</InnerBuildArgs>
+      <InnerBuildArgs>$(InnerBuildArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</InnerBuildArgs>
+      <InnerBuildArgs Condition="'$(SourceBuildUseMonoRuntime)' == 'true'">$(InnerBuildArgs) /p:DISABLE_CROSSGEN=true</InnerBuildArgs>
+    </PropertyGroup>
+  </Target>
+
+</Project>
