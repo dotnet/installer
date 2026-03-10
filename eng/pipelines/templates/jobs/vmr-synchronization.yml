@@ -40,10 +40,12 @@ jobs:
   pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       name: $(DncEngPublicBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64.Open
-    ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+      image: 1es-ubuntu-2204-open
+      os: linux
+    ${{ else }}:
       name: $(DncEngInternalBuildPool)
-      demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
+      demands: ImageOverride -equals 1es-ubuntu-2204
+      os: linux
 
   steps:
   - template: ../steps/vmr-prepare.yml
