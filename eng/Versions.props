@@ -7,8 +7,8 @@
   <PropertyGroup>
     <VersionMajor>8</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionSDKMinor>1</VersionSDKMinor>
-    <VersionFeature>26</VersionFeature>
+    <VersionSDKMinor>4</VersionSDKMinor>
+    <VersionFeature>20</VersionFeature>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
@@ -16,11 +16,10 @@
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">rtm</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
-    </PreReleaseVersionIteration>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">0</PreReleaseVersionIteration>
   </PropertyGroup>
   <PropertyGroup>
     <VersionFeature21>30</VersionFeature21>
@@ -30,12 +29,12 @@
     <VersionFeature70>20</VersionFeature70>
     <!-- Should be kept in sync with VersionFeature70. It should match the version of Microsoft.NET.ILLink.Tasks
          referenced by the same 7.0 SDK that references the 7.0.VersionFeature70 runtime pack. -->
-    <_NET70ILLinkPackVersion>7.0.100-1.23211.1</_NET70ILLinkPackVersion>
+    <_NET70ILLinkPackVersion>7.0.100-1.23401.1</_NET70ILLinkPackVersion>
   </PropertyGroup>
   <!-- Restore feeds -->
   <PropertyGroup Label="Restore feeds">
     <!-- In an orchestrated build, this may be overridden to other Azure feeds. -->
-    <DotNetAssetRootUrl Condition="'$(DotNetAssetRootUrl)'==''">http://ci.dot.net/public/</DotNetAssetRootUrl>
+    <DotNetAssetRootUrl Condition="'$(DotNetAssetRootUrl)'==''">https://ci.dot.net/public/</DotNetAssetRootUrl>
     <DotNetPrivateAssetRootUrl Condition="'$(DotNetPrivateAssetRootUrl)'==''">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotNetPrivateAssetRootUrl>
   </PropertyGroup>
   <PropertyGroup>
@@ -44,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/arcade-services -->
-    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.23621.3</MicrosoftDotNetDarcLibVersion>
+    <MicrosoftDotNetDarcLibVersion>1.1.0-beta.24306.1</MicrosoftDotNetDarcLibVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependency from https://github.com/dotnet/winforms -->
@@ -55,8 +54,9 @@
     <MicrosoftDotNetWpfProjectTemplatesPackageVersion>8.0.25-servicing.26112.4</MicrosoftDotNetWpfProjectTemplatesPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!-- Dependency from https://github.com/dotnet/test-templates -->
     <!-- Supported versions -->
-    <MicrosoftDotNetTestProjectTemplates80PackageVersion>1.1.0-rc.23410.2</MicrosoftDotNetTestProjectTemplates80PackageVersion>
+    <MicrosoftDotNetTestProjectTemplates80PackageVersion>1.1.0-rc.24059.1</MicrosoftDotNetTestProjectTemplates80PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- NUnit3.DotNetNew.Template versions do not 'flow in' -->
@@ -77,16 +77,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/sdk -->
-    <MicrosoftDotNetCommonItemTemplatesPackageVersion>8.0.125</MicrosoftDotNetCommonItemTemplatesPackageVersion>
-    <MicrosoftNETSdkPackageVersion>8.0.125-servicing.26113.2</MicrosoftNETSdkPackageVersion>
-    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>8.0.125-servicing.26113.2</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
+    <MicrosoftDotNetCommonItemTemplatesPackageVersion>8.0.419</MicrosoftDotNetCommonItemTemplatesPackageVersion>
+    <MicrosoftNETSdkPackageVersion>8.0.419-servicing.26113.3</MicrosoftNETSdkPackageVersion>
+    <MicrosoftDotNetMSBuildSdkResolverPackageVersion>8.0.419-servicing.26113.3</MicrosoftDotNetMSBuildSdkResolverPackageVersion>
     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
     <MicrosoftDotnetToolsetInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetToolsetInternalPackageVersion>
     <MicrosoftDotnetTemplateLocatorPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetTemplateLocatorPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/roslyn -->
-    <MicrosoftNetCompilersToolsetPackageVersion>4.8.0-7.25569.25</MicrosoftNetCompilersToolsetPackageVersion>
+    <MicrosoftNetCompilersToolsetPackageVersion>4.11.0-3.25569.22</MicrosoftNetCompilersToolsetPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/corefx -->
@@ -122,11 +122,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/NuGet/NuGet.Client -->
-    <NuGetBuildTasksPackageVersion>6.8.1-rc.2</NuGetBuildTasksPackageVersion>
+    <NuGetBuildTasksPackageVersion>6.11.1-rc.2</NuGetBuildTasksPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Dependencies from https://github.com/dotnet/msbuild -->
-    <MicrosoftBuildPackageVersion>17.8.49</MicrosoftBuildPackageVersion>
+    <MicrosoftBuildPackageVersion>17.11.48</MicrosoftBuildPackageVersion>
   </PropertyGroup>
   <!-- Dependencies from https://github.com/dotnet/deployment-tools -->
   <PropertyGroup>
@@ -168,7 +168,7 @@
   <PropertyGroup>
     <VersionToolsVersion>2.2.0-beta.19072.10</VersionToolsVersion>
     <DotnetDebToolVersion>2.0.0</DotnetDebToolVersion>
-    <MicrosoftNETTestSdkVersion>17.8.0-release-23615-02</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>17.11.1-release-24455-02</MicrosoftNETTestSdkVersion>
     <MicrosoftExtensionsLoggingConsoleVersion>8.0.0-alpha.1.22557.12</MicrosoftExtensionsLoggingConsoleVersion>
   </PropertyGroup>
   <!-- Workload manifest package versions -->
