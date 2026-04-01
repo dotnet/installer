@@ -84,6 +84,15 @@ jobs:
           scriptLocation: 'inlineScript'
           inlineScript: |
             $token = az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv
+            if ($LASTEXITCODE -ne 0) {
+              Write-Error "Failed to acquire Azure DevOps access token via 'az account get-access-token'. Exit code: $LASTEXITCODE"
+              exit 1
+            }
+            $token = $token.Trim()
+            if ([string]::IsNullOrWhiteSpace($token)) {
+              Write-Error "Received an empty or whitespace Azure DevOps access token from 'az account get-access-token'."
+              exit 1
+            }
             Write-Host "##vso[task.setvariable variable=WifAzdoToken;issecret=true]$token"
       - script: >
           ./.dotnet/dotnet darc vmr push
