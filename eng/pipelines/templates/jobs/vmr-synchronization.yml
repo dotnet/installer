@@ -32,8 +32,6 @@ jobs:
       - name: vmrPublicUrl
         value: https://github.com/dotnet/dotnet
     - ${{ if and( eq(variables['System.TeamProject'], 'internal'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/')) }}:
-      # https://dev.azure.com/dnceng/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=172&path=DotNetBot-AzDO-PAT
-      - group: DotNetBot-AzDO-PAT
       - name: vmrInternalUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
   
@@ -74,33 +72,17 @@ jobs:
         displayName: Push changes to dotnet/dotnet (public)
         workingDirectory: $(Agent.BuildDirectory)/installer
   
-    # Push internal/release branches to the internal VMR
+    # Push internal/release branches to the internal VMR.
+    # This branch should not exercise that path, so keep a non-secret placeholder here
+    # to remove the old PAT/service-connection references and fail fast if it ever runs.
     - ${{ if startsWith(parameters.vmrBranch, 'internal/release/') }}:
-      - task: AzureCLI@2
-        displayName: Mint AzDO token via WIF
-        inputs:
-          azureSubscription: 'dnceng-build-rw-code-rw-wif'
-          scriptType: 'pscore'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            $token = az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv
-            if ($LASTEXITCODE -ne 0) {
-              Write-Error "Failed to acquire Azure DevOps access token via 'az account get-access-token'. Exit code: $LASTEXITCODE"
-              exit 1
-            }
-            $token = $token.Trim()
-            if ([string]::IsNullOrWhiteSpace($token)) {
-              Write-Error "Received an empty or whitespace Azure DevOps access token from 'az account get-access-token'."
-              exit 1
-            }
-            Write-Host "##vso[task.setvariable variable=WifAzdoToken;issecret=true]$token"
       - script: >
           ./.dotnet/dotnet darc vmr push
           --vmr '$(vmrPath)'
           --skip-commit-verification
           --branch '${{ parameters.vmrBranch }}'
           --remote-url '$(vmrInternalUrl)'
-          --azdev-pat '$(WifAzdoToken)'
+          --azdev-pat '__unused_internal_vmr_push_auth_removed__'
           --verbose
         displayName: Push changes to dotnet-dotnet (internal)
         workingDirectory: $(Agent.BuildDirectory)/installer
