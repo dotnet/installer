@@ -34,15 +34,6 @@
       <SourceBuildReferencePackagesIntermediatePackage Include="$(SourceBuiltPackagesPath)$(SBRPIntermediateWildcard)"/>
     </ItemGroup>
 
-    <!-- Fallback to old SBRP intermediate package -->
-    <PropertyGroup Condition="'@(SourceBuildReferencePackagesIntermediatePackage)' != ''">
-      <SourceBuildReferencePackagesDestination>$(SourceBuiltPackagesPath)SourceBuildReferencePackages/</SourceBuildReferencePackagesDestination>
-      <SBRPIntermediateWildcard>Microsoft.SourceBuild.Intermediate.source-build-reference-packages*.nupkg</SBRPIntermediateWildcard>
-    </PropertyGroup>
-    <ItemGroup Condition="'@(SourceBuildReferencePackagesIntermediatePackage)' != ''">
-      <SourceBuildReferencePackagesIntermediatePackage Include="$(SourceBuiltPackagesPath)$(SBRPIntermediateWildcard)"/>
-    </ItemGroup>
-
     <MakeDir Directories="$(SourceBuildReferencePackagesDestination)" />
     <ZipFileExtractToDirectory Condition="'@(SourceBuildReferencePackagesIntermediatePackage)' != ''"
                             SourceArchive="%(SourceBuildReferencePackagesIntermediatePackage.Identity)"
