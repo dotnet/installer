@@ -151,7 +151,7 @@ public class LicenseScanTests : TestBase
         Assert.True(relativePathMatch.Success);
         _relativeScanPath = relativePathMatch.Value;
 
-        // Derive target name for baseline file naming.
+        // Derive target name for baseline file naming from the relative scan path.
         // For "src/runtime" -> "runtime"
         // For "src/source-build-reference-packages/src/externalPackages" -> "source-build-reference-packages.externalPackages"
         _targetRepo = _relativeScanPath.Split('/')[1];
