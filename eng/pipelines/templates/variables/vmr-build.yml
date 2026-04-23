@@ -38,7 +38,7 @@ variables:
 
 - ${{ if eq(variables['System.TeamProject'], 'public') }}:
   - name: defaultPoolName
-    value: NetCore-Public-XL
+    value: NetCore-Public-Svc-XL
   - name: poolImage_Linux
     value: build.azurelinux.3.amd64.open
   - name: poolImage_LinuxArm64
@@ -48,10 +48,10 @@ variables:
 - ${{ else }}:
   - ${{ if in(variables['Build.Reason'], 'PullRequest') }}:
     - name: defaultPoolName
-      value: NetCore1ESPool-Internal-XL
+      value: NetCore1ESPool-Internal-Svc-XL
   - ${{ else }}:
     - name: defaultPoolName
-      value: $(DncEngInternalBuildPool)
+      value: NetCore1ESPool-Svc-Internal
   - name: poolImage_Linux
     value: build.azurelinux.3.amd64
   - name: poolImage_LinuxArm64

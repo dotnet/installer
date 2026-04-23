@@ -16,14 +16,14 @@ parameters:
     name: NetCore1ESPool-Svc-Internal
     demands: ImageOverride -equals Build.Ubuntu.2204.Amd64
   poolInternalAmd64PR:
-    name: NetCore1ESPool-Internal-XL
+    name: NetCore1ESPool-Internal-Svc-XL
     demands: ImageOverride -equals Build.Ubuntu.2204.Amd64
   poolInternalArm64:
     name: Docker-Linux-Arm-Internal
 
   # Public builds / PRs
   poolPublicAmd64:
-    name: NetCore-Public-XL
+    name: NetCore-Public-Svc-XL
     demands: ImageOverride -equals Build.Ubuntu.2204.Amd64.Open
 
 stages:
