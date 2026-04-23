@@ -78,7 +78,7 @@ extends:
         image: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-22.04-debpkg
     sdl:
       sourceAnalysisPool:
-        name: $(DncEngInternalBuildPool)
+        name: NetCore1ESPool-Svc-Internal
         image: 1es-windows-2022
         os: windows
       ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
@@ -99,7 +99,7 @@ extends:
             image: 1es-windows-2022-open
             os: windows
           ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-            name: $(DncEngInternalBuildPool)
+            name: NetCore1ESPool-Svc-Internal
             image: 1es-windows-2022
             os: windows
         steps:
@@ -356,6 +356,6 @@ extends:
             publishUsingPipelines: true
             publishAssetsImmediately: true
             pool:
-              name: $(DncEngInternalBuildPool)
+              name: NetCore1ESPool-Svc-Internal
               image: 1es-windows-2022
               os: windows
