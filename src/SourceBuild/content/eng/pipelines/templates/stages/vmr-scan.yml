@@ -3,10 +3,7 @@ stages:
   displayName: Tag & Scan
   dependsOn: []
   variables:
-  - ${{ if eq(variables['System.TeamProject'], 'public') }}:
-    - template: /eng/common/templates/variables/pool-providers.yml
-  - ${{ else }}:
-    - template: /eng/common/templates-official/variables/pool-providers.yml
+  - template: /eng/common/templates/variables/pool-providers.yml
   jobs:
   - job: Tag_n_Scan
     displayName: Tag & Scan
