@@ -54,7 +54,7 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
       isBuiltFromVmr: false
 
-  - ${{ if and(not(parameters.noPush), eq(variables['System.TeamProject'], 'internal'), startswith(variables['Build.SourceBranch'], 'refs/heads/internal/release/')) }}:
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     - template: /eng/common/templates-official/steps/get-federated-access-token.yml
       parameters:
         federatedServiceConnection: VmrSyncPipeline
