@@ -51,6 +51,12 @@ jobs:
       vmrBranch: ${{ parameters.vmrBranch }}
       isBuiltFromVmr: false
 
+  - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    - template: /eng/common/templates-official/steps/get-federated-access-token.yml
+      parameters:
+        federatedServiceConnection: VmrSyncPipeline
+        outputVariableName: AzdoToken
+
   - template: ../steps/vmr-pull-updates.yml
     parameters:
       vmrPath: $(vmrPath)
