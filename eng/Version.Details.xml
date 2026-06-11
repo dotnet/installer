@@ -85,6 +85,7 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>bb9eccba9080e07bce32c0bc27c3564c753a7cfe</Sha>
     </Dependency>
+<<<<<<< HEAD
     <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.422">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
       <Sha>684f6dced73c7e36a29557ff9f25f6b452ef4739</Sha>
@@ -101,6 +102,24 @@
     <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.422-servicing.26269.15">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
       <Sha>684f6dced73c7e36a29557ff9f25f6b452ef4739</Sha>
+=======
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="8.0.128">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>0469530ded3939054a9235201f11d7a48a3b94ab</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.TemplateEngine.Cli" Version="8.0.128-servicing.26269.14">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>0469530ded3939054a9235201f11d7a48a3b94ab</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk" Version="8.0.128-servicing.26269.14">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>0469530ded3939054a9235201f11d7a48a3b94ab</Sha>
+      <SourceBuild RepoName="sdk" ManagedOnly="true" />
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.MSBuildSdkResolver" Version="8.0.128-servicing.26269.14">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>0469530ded3939054a9235201f11d7a48a3b94ab</Sha>
+>>>>>>> origin/release/8.0.1xx
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4.22406.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
@@ -171,17 +190,28 @@
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.28" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>35ebe6f3e6953f878ed92f637ad8d7f27202f7a6</Sha>
+<<<<<<< HEAD
     </Dependency>
     <Dependency Name="Microsoft.SourceBuild.Intermediate.emsdk" Version="8.0.28-servicing.26258.2" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>35ebe6f3e6953f878ed92f637ad8d7f27202f7a6</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
+=======
+>>>>>>> origin/release/8.0.1xx
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.0.0-preview.1.23557.2">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspire</Uri>
       <Sha>48e42f59d64d84b404e904996a9ed61f2a17a569</Sha>
       <SourceBuild RepoName="aspire" ManagedOnly="true" />
     </Dependency>
+<<<<<<< HEAD
+=======
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.emsdk" Version="8.0.28-servicing.26258.2" CoherentParentDependency="Microsoft.NETCore.App.Runtime.win-x64">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>35ebe6f3e6953f878ed92f637ad8d7f27202f7a6</Sha>
+      <SourceBuild RepoName="emsdk" ManagedOnly="true" />
+    </Dependency>
+>>>>>>> origin/release/8.0.1xx
     <Dependency Name="Microsoft.Deployment.DotNet.Releases" Version="2.0.0-rtm.1.25064.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/deployment-tools</Uri>
       <Sha>5255d40e228ea1d4b624781b5b97ec16484a3b4b</Sha>
