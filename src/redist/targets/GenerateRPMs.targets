@@ -88,13 +88,13 @@
     <!-- Replace config json variables -->
     <ItemGroup>
       <SDKTokenValue Include="%SHARED_FRAMEWORK_RPM_PACKAGE_VERSION%">
-        <ReplacementString>$(MicrosoftNETCoreAppRuntimeMajorMinorPatchVersion)</ReplacementString>
+        <ReplacementString>$(MicrosoftNETCoreAppMajorMinorPatchVersion)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%NETCOREAPP_TARGETING_PACK_RPM_PACKAGE_VERSION%">
         <ReplacementString>$(MicrosoftNETCoreAppRefMajorMinorPatchVersion)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%ASPNETCORE_SHAREDFX_RPM_PACKAGE_VERSION%">
-        <ReplacementString>$(AspNetCoreRuntimeMajorMinorPatchVersion)</ReplacementString>
+        <ReplacementString>$(AspNetCoreMajorMinorPatchVersion)</ReplacementString>
       </SDKTokenValue>
       <SDKTokenValue Include="%ASPNET_TARGETING_PACK_RPM_PACKAGE_VERSION%">
         <ReplacementString>$(AspNetCoreRefMajorMinorPatchVersion)</ReplacementString>
