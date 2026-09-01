@@ -102,7 +102,7 @@ namespace Microsoft.DotNet.Build.Tasks
                                     }
 
                                     Log.LogMessage(Path.GetDirectoryName(entry.FullName));
-                                    entry.ExtractToFile(Path.Combine(loc, entry.FullName));
+                                    entry.ExtractToFile(Path.Combine(loc, entry.FullName)); // CodeQL [SM02729] This only extracts trusted zip files owned by the .NET build, and this code is going out of support
                                 }
                             }
                         }
