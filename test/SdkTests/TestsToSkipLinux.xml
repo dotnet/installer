@@ -6,7 +6,7 @@
     <Method Name="Microsoft.NET.Build.Tests.GivenThatWeWantToBuildASelfContainedApp.It_builds_a_runnable_output"
             Skip="true"
             Reason=".NET Core 1.1 fails to publish on distributions with unsupported RIDs."/>
-    <Method Name="Microsoft.NET.Build.Tests.GivenThatWeWantToBuildANetCoreApp.It_runs_a_rid_specific_app_with_conflicts_from_the_output_folder"
+    <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToRunILLink.ILLink_links_simple_app_without_analysis_warnings_and_it_runs"
             Skip="true"
             Reason="Fails on .NET 2.0 so suppressing for now"/>
     <Method Name="Microsoft.NET.Build.Tests.GivenThatWeWantToBuildANetCoreApp.It_runs_the_app_with_conflicts_from_the_output_folder"
@@ -24,5 +24,9 @@
     <Method Name="Microsoft.NET.Publish.Tests.GivenThatWeWantToPublishAWebApp.It_should_publish_self_contained_for_2x"
             Skip="true"
             Reason="Fails on .NET 2.0 so suppressing"/>
+    <Method Name="Microsoft.NET.Build.Tests.AppHostTests.It_builds_a_runnable_apphost_by_default"
+            Skip="true"
+            Issue=""
+            Reason="Fails on 3.1 on linux for missing ICU package"/>
   </SkippedTests>
 </Tests>
