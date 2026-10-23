@@ -9,16 +9,18 @@
 
     <GetLinuxNativeInstallerDependencyVersions PackageVersion="$(MicrosoftNETCoreAppRefPackageVersion)">
       <Output TaskParameter="VersionWithTilde" PropertyName="MicrosoftNETCoreAppRefPackageVersionWithTilde" />
+      <Output TaskParameter="MajorMinorPatchVersion" PropertyName="MicrosoftNETCoreAppRefMajorMinorPatchVersion" />
     </GetLinuxNativeInstallerDependencyVersions>
 
     <GetLinuxNativeInstallerDependencyVersions PackageVersion="$(MicrosoftAspNetCoreAppRuntimePackageVersion)">
       <Output TaskParameter="VersionWithTilde" PropertyName="AspNetCoreRuntimeVersionWithTilde" />
       <Output TaskParameter="MajorMinorVersion" PropertyName="AspNetCoreMajorMinorVersion" />
-      <Output TaskParameter="MajorMinorVersion" PropertyName="AspNetCoreMajorMinorPatchVersion" />
+      <Output TaskParameter="MajorMinorPatchVersion" PropertyName="AspNetCoreMajorMinorPatchVersion" />
     </GetLinuxNativeInstallerDependencyVersions>
 
     <GetLinuxNativeInstallerDependencyVersions  PackageVersion="$(MicrosoftAspNetCoreAppRefPackageVersion)">
       <Output TaskParameter="VersionWithTilde" PropertyName="AspNetCoreRefVersionWithTilde" />
+      <Output TaskParameter="MajorMinorPatchVersion" PropertyName="AspNetCoreRefMajorMinorPatchVersion" />
     </GetLinuxNativeInstallerDependencyVersions>
 
     <GetLinuxNativeInstallerDependencyVersions PackageVersion="$(HostFxrVersion)">

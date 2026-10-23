@@ -1,3 +1,5 @@
+# Pipeline: https://dev.azure.com/dnceng-public/public/_build?definitionId=20
+
 trigger:
   batch: true
   branches:
@@ -28,7 +30,7 @@ variables:
 
 - ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - name: _InternalRuntimeDownloadArgs
-    value: /p:DotNetRuntimeSourceFeed=http://ci.dot.net/internal
+    value: /p:DotNetRuntimeSourceFeed=https://ci.dot.net/internal
       /p:DotNetRuntimeSourceFeedKey=$(dotnetbuilds-internal-container-read-token-base64)
       /p:dotnetbuilds-internal-container-read-token-base64=$(dotnetbuilds-internal-container-read-token-base64)
 
@@ -339,10 +341,6 @@ stages:
         buildArchitecture: arm64
         linuxPortable: true
         runTests: false
-
-  - template: /eng/common/templates/jobs/source-build.yml
-    parameters:
-      enableInternalSources: true
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - stage: Publish
